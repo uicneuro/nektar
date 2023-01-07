@@ -1,0 +1,424 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// File MMFNeuralEP.h
+//
+// For more information, please see: http://www.nektar.info
+//
+// The MIT License
+//
+// Copyright (c) 2006 Division of Applied Mathematics, Brown University (USA),
+// Department of Aeronautics, Imperial College London (UK), and Scientific
+// Computing and Imaging Institute, University of Utah (USA).
+//
+// License for the specific language governing rights and limitations under
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+//
+// Description: MMFNeuralEP
+//
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFNeuralEP_H
+#define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFNeuralEP_H
+
+#include <SolverUtils/MMFSystem.h>
+#include <SolverUtils/UnsteadySystem.h>
+
+#include <CardiacEPSolver/CellModels/CellModel.h>
+#include <CardiacEPSolver/Stimuli/Stimulus.h>
+
+#include <DiffusionSolver/NeuronModels/NeuronModel.h>
+
+namespace Nektar
+{
+
+enum NeuralEPType
+{
+    eNeuralEP1D,
+    eNeuralEP2p1D,
+    eNeuralEP2D,
+    eNeuralEP2DEmbed,
+    SIZE_NeuralEPType ///< Length of enum list
+};
+
+const char *const NeuralEPTypeMap[] = {
+      "NeuralEP1D", "NeuralEP2p1D", "NeuralEP2D", "NeuralEP2DEmbed",
+};
+
+enum SolverSchemeType
+{
+    eDefault,
+    eMMFFirst,
+    eTimeMap,
+    SIZE_SolverSchemeType,
+};
+
+const char *const SolverSchemeTypeMap[] = {
+    "Default", "MMFFirst", "TimeMap",
+};
+
+enum InitWaveType
+{
+    ePoint,
+    eLeft,
+    eBothEnds,
+    eCenter,
+    eLeftBottomCorner,
+    eSpiralDock,
+    SIZE_InitWaveType ///< Length of enum list
+};
+
+const char *const InitWaveTypeMap[] = {
+    "Point", "Left", "BothEnd", "Center", "LeftBottomCorner", "SpiralDock",
+};
+
+
+enum FluxType
+{
+    euflux,
+    eqflux,
+};
+
+const char *const FluxTypeMap[] = {
+    "qflux",
+    "uflux",
+};
+
+enum TimeMapType
+{
+    eDeActivated,
+    eActivated,
+    eProcessing,
+    SIZE_TimeMapType ///< Length of enum list
+};
+
+const char *const TimeMapTypeMap[] = {
+    "DeActivated",
+    "Activated",
+    "Processing",
+};
+
+/// A model for cardiac conduction.
+class MMFNeuralEP : public SolverUtils::MMFSystem
+{
+public:
+    friend class MemoryManager<MMFNeuralEP>;
+
+    /// Creates an instance of this class
+    static SolverUtils::EquationSystemSharedPtr create(
+        const LibUtilities::SessionReaderSharedPtr &pSession,
+        const SpatialDomains::MeshGraphSharedPtr &pGraph)
+    {
+        SolverUtils::EquationSystemSharedPtr p =
+            MemoryManager<MMFNeuralEP>::AllocateSharedPtr(pSession, pGraph);
+        p->InitObject();
+        return p;
+    }
+
+    /// Name of class
+    static std::string className;
+
+    NeuralEPType m_NeuralEPType;
+    SolverSchemeType m_SolverSchemeType;
+
+    NekDouble d_max, d_min;
+
+    virtual void v_InitObject(bool DeclareField = true) override;
+    virtual void v_DoSolve() override;
+
+    /// Desctructor
+    virtual ~MMFNeuralEP();
+
+protected:
+
+    int m_nfibers;
+
+    int m_ElemNodeEnd, m_ElemMyelenEnd;
+
+    int m_Convectiven;
+    int m_numelemperNode;
+    TimeMapType m_TimeMap;
+
+    // variables for phie-Poisson solver
+    StdRegions::VarCoeffMap m_phievarcoeff;
+    Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
+
+    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
+
+    // Elements for fiber 2D: Start and End index
+    int m_fiber2DElemStart, m_fiber2DElemEnd;
+
+    // Temperature parameter
+    NekDouble m_Temperature;
+
+    NekDouble m_TimeMapStart;
+    NekDouble m_TimeMapEnd;
+
+    SpatialDomains::GeomMMF m_phieMMFdir;
+
+    // NeuralEP1D: m_beta_e = r_e/r_i
+    NekDouble m_ratio_re_ri;
+
+    NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
+
+    // Scar tisseu related variables
+    NekDouble m_PVcond;
+    NekDouble m_ScarSize, m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy, m_ScarLocz;
+    NekDouble m_RelDivSize, m_RelDivStr, m_RelDivPis, m_RelDivLocx;
+
+    // Relative divergence related variables
+    NekDouble m_LambDivSmoothL;
+
+    // Neural EP: 
+    NekDouble m_beta;   // Relative Extracellular resistance: 1 < \beta < 10
+
+    // NeuralEP: Capacitance vectors for myeline or Ranvier node.
+    int m_Rnodelength, m_Rnodegap;
+
+    Array<OneD, int> m_ValidTimeMap;
+
+    Array<OneD, Array<OneD, int>> m_NodeZone;
+    Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
+    Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
+
+    Array<OneD, NekDouble> m_NeuralCmRf;
+    Array<OneD, int> m_NodeElement;
+
+    // NeuralEP2D variables
+    // Array<OneD, LibUtilities::TimeIntegrationWrapperSharedPtr> m_fiberintScheme;
+    // Array<OneD, LibUtilities::TimeIntegrationSchemeOperators> m_fiberode;
+    // Array<OneD, LibUtilities::TimeIntegrationSolutionSharedPtr> m_fiberintSoln;
+
+    // Moving frames
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_fibermovingframes;
+
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_ncdotfiberMFFwd;
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_ncdotfiberMFBwd;
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_DivfiberMF;
+
+    Array<OneD, MultiRegions::ExpListSharedPtr> m_fiberfields;
+    Array<OneD, Array<OneD, Array<OneD, int>>> m_fiberindex;
+
+    Array<OneD, StdRegions::VarCoeffMap> m_fibervarcoeff;
+
+    /// Constructor
+    MMFNeuralEP(const LibUtilities::SessionReaderSharedPtr &pSession,
+                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
+
+    LibUtilities::SessionReaderSharedPtr        m_session1D;
+    SpatialDomains::MeshGraphSharedPtr          m_graph1D;
+
+    Array<OneD, LibUtilities::SessionReaderSharedPtr> m_fibersession;
+    Array<OneD, SpatialDomains::MeshGraphSharedPtr> m_fibergraph;
+
+    Array<OneD, NekDouble> ExtractFiberValue(
+        const int nfib, 
+        const Array<OneD, const NekDouble> &inarray);
+
+    void UpdateFibertoField(
+        const int nfib, 
+        const Array<OneD, const NekDouble> &fiberinarray,
+        Array<OneD, NekDouble> &outarray);
+
+    InitWaveType m_InitWaveType;
+
+    void DoSolveMMFFirst();
+    void DoSolveMMFZero();
+
+    // void Plotphimphie(const Array<OneD, const NekDouble> &phim,
+    //                             const Array<OneD, const NekDouble> &phie,
+    //                             const Array<OneD, const NekDouble> &Exactphie,
+    //                             const int nstep);
+
+    // Coefficients for Anisotropy
+    int m_AnisotropyRegion;
+    NekDouble m_AnisotropyStrength;
+    void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
+
+    void DisplayphiatNode(const Array<OneD, const NekDouble> &field);
+
+    void CheckNodeZoneMF(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, int>> &NodeZone);
+
+    void OnlyValideinNode(
+        const Array<OneD, const int> &NodeZone, 
+        Array<OneD, NekDouble> &outarray);
+
+    // void ImportFiberXml(
+    //     const int nfibers,
+    //     Array<OneD, MultiRegions::ExpListSharedPtr> &fiberfields,
+    //     Array<OneD, Array<OneD, Array<OneD, int>>> &fiberindex,
+    //     Array<OneD, LibUtilities::SessionReaderSharedPtr> &fibersession,
+    //     Array<OneD, SpatialDomains::MeshGraphSharedPtr> &fibergraph);
+
+    /// Solve for the diffusion term.
+    void DoImplicitSolve(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP1D(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP2p1D(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP2D(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP2DEmbed(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP2p1Dfiber(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP2Dfiber(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    void DoNullSolve(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
+    /// Computes the reaction terms \f$f(u,v)\f$ and \f$g(u,v)\f$.
+    void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                     Array<OneD, Array<OneD, NekDouble>> &outarray,
+                     const NekDouble time);
+
+    void DoOdeRhsNeuralEP1D(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    void DoOdeRhsNeuralEP2p1D(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    void DoOdeRhsNeuralEP2D(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    void DoOdeRhsNeuralEP2DEmbed(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    Array<OneD, NekDouble> Computephie(
+            const Array<OneD, const Array<OneD, NekDouble>> &movingframes, 
+            const Array<OneD, const NekDouble> &phim);
+
+    void Updatephie(
+            const Array<OneD, const int> &NodeZone, 
+            const Array<OneD, const Array<OneD, NekDouble>> &movingframes, 
+            const Array<OneD, const NekDouble> &phim);      
+
+    void MembraneBoundary2D(
+    int                                   bcRegion,
+    int                                   cnt,
+    Array<OneD, Array<OneD, NekDouble> > &Fwd,
+    Array<OneD, Array<OneD, NekDouble> > &physarray);
+
+    void DoOdeRhsNeuralEP2p1Dfiber(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+   void DoOdeRhsNeuralEP2Dfiber(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    void DoOdeProjection(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);        
+        
+    void SetMembraneBoundaryCondition(const NekDouble time=0.0);
+
+    void PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray, const int nstep);
+
+    void SetAxonWallBoundaryConditions(Array<OneD, Array<OneD, NekDouble> > &inarray);
+
+    void AxonWallBoundary2D(
+        int bcRegion, 
+        int cnt, 
+        Array<OneD, Array<OneD, NekDouble> > &Fwd, 
+        Array<OneD, Array<OneD, NekDouble> > &physarray);
+
+    // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int Rnodegap);
+    Array<OneD, int> IndexNodeZone1D(const MultiRegions::ExpListSharedPtr &field, const int Nodegap);
+    Array<OneD, int> IndexNodeZone2D(
+        const MultiRegions::ExpListSharedPtr &field, 
+        const int ElemNodeEnd, const int ElemMyelenEnd);
+
+    /// Sets a custom initial condition.
+    virtual void v_SetInitialConditions(NekDouble initialtime,
+                                        bool dumpInitialConditions,
+                                        const int domain) override;
+
+    /// Prints a summary of the model parameters.
+    virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
+
+    virtual void v_EvaluateExactSolution(unsigned int field,
+                                         Array<OneD, NekDouble> &outfield,
+                                         const NekDouble time) override;
+
+private:
+    /// Variable diffusivity
+    NekDouble m_chi;
+    NekDouble m_capMembrane;
+    NekDouble m_conductivity;
+
+    CellModelSharedPtr m_cell;
+    
+    NeuronModelSharedPtr m_neuron;
+    Array<OneD, NeuronModelSharedPtr> m_fiberneurons;
+
+    std::vector<StimulusSharedPtr> m_stimulus;
+    std::vector<StimulusSharedPtr> m_fiberstimulus;
+
+    // Array<OneD, std::vector<StimulusSharedPtr>> m_fiberstimulus;
+
+    Array<OneD, NekDouble> ComputeLaplacianDiff(
+        const Array<OneD, const NekDouble> &Laplacian,
+        const Array<OneD, const NekDouble> &LaplacianNew);
+
+Array<OneD, NekDouble> m_epsilon;
+Array<OneD, NekDouble> m_epsu;
+
+/// Stimulus current
+NekDouble m_stimDuration;
+
+void LoadStimuli();
+
+int CountActivation(Array<OneD, int> &Activated);
+};
+
+} // namespace Nektar
+
+#endif
