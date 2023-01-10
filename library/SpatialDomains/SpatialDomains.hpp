@@ -72,24 +72,31 @@ enum GeomState
  */
 enum GeomMMF
 {
-    eTangentX,         ///< X coordinate direction.
-    eTangentY,         ///< Y coordinate direction.
-    eTangentXY,        ///< XY direction.
-    eTangentZ,         ///< Z coordinate direction.
-    eTangentCircular,  ///< Circular around the centre of domain.
-    eTangentIrregular, ///< Circular around the centre of domain.
-    eTangentNonconvex, ///< Circular around the centre of domain.
-    eLOCAL,            ///< No Principal direction.
+    eTangentX,        ///< X coordinate direction.
+    eTangentY,        ///< Y coordinate direction.
+    eTangentXY,       ///< XY direction.
+    eTangentZ,        ///< Z coordinate direction.
+    eTangentCircular, ///< Circular around the centre of domain.
+    ePolar,           ///< Polar Coordinate System.
+    eSpherical,       ///< Spherical Coordinate System.
+    ePseudospherical,       ///< Pseudospherical Coordinate System.
+    eLOCAL,           ///< Align the optimal tangent vector.
+    eLOCAL1,           ///< Align the optimal tangent vector.
+    eLOCAL2,           ///< Align the optimal tangent vector.
+    eLOCAL21,           ///< Align the optimal tangent vector.
+    eLOCAL3,           ///< Align the optimal tangent vector.
+    eLOCALSphere,     ///< Align the second tangent vector.
+    eLOCALEllipsoid,     ///< Align the second tangent vector.
 };
 
 /**
  * @brief Session file names associated with tangent principle
  * directions.
  */
-const char *const GeomMMFMap[] = {
-    "TangentX",        "TangentY",         "TangentXY",        "TangentZ",
-    "TangentCircular", "TangentIrregular", "TangentNonconvex", "LOCAL",
-};
+const char *const GeomMMFMap[] = {"TangentX",  "TangentY",        "TangentXY",
+                                  "TangentZ",  "TangentCircular", "Polar",
+                                  "Spherical", "Pseudospherical", "LOCAL", "LOCAL1", 
+                                  "LOCAL2", "LOCAL21", "LOCAL3", "LOCALSphere","LOCALEllipsoid"};
 
 } // namespace SpatialDomains
 } // namespace Nektar

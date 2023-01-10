@@ -1309,6 +1309,42 @@ ExpList::~ExpList()
 {
 }
 
+NekDouble ExpList::PhysIntegral()
+{
+    ASSERTL1(m_physState == true, "local physical space is not true ");
+
+    return PhysIntegral(m_phys);
+}
+
+/**
+ * The integration is evaluated locally, that is
+ * \f[\int
+ *    f(\boldsymbol{x})d\boldsymbol{x}=\sum_{e=1}^{{N_{\mathrm{el}}}}
+ * \left\{\int_{\Omega_e}f(\boldsymbol{x})d\boldsymbol{x}\right\},  \f]
+ * where the integration over the separate elements is done by the
+ * function StdRegions#StdExpansion#Integral, which discretely
+ * evaluates the integral using Gaussian quadrature.
+ *
+ * @param   inarray         An array of size \f$Q_{\mathrm{tot}}\f$
+ *                          containing the values of the function
+ *                          \f$f(\boldsymbol{x})\f$ at the quadrature
+ *                          points \f$\boldsymbol{x}_i\f$.
+ * @return  The value of the discretely evaluated integral
+ *          \f$\int f(\boldsymbol{x})d\boldsymbol{x}\f$.
+ */
+NekDouble ExpList::PhysIntegral(const Array<OneD, const NekDouble> &inarray)
+{
+    int i;
+    NekDouble sum = 0.0;
+
+    for (i = 0; i < (*m_exp).size(); ++i)
+    {
+        sum += (*m_exp)[i]->Integral(inarray + m_phys_offset[i]);
+    }
+
+    return sum;
+}
+
 /**
  * Retrieves the block matrix specified by \a bkey, and computes
  * \f$ y=Mx \f$.
@@ -3301,6 +3337,85 @@ void ExpList::v_ClearGlobalLinSysManager(void)
              "This method is not defined or valid for this class type");
 }
 
+// Return all 0 if there is at least one zero velocity.
+void ExpList::v_ElementWiseActivation(
+    const int sign, const Array<OneD, const NekDouble> &vector,
+    const NekDouble ActivationTol, Array<OneD, int> &Activated)
+{
+    int i, j, npts, offset;
+
+    bool ActZeroinElement;
+    NekDouble vmin, vmax;
+    Array<OneD, NekDouble> velemt;
+    for (i = 0; i < m_exp->size(); ++i)
+    {
+        npts   = (*m_exp)[i]->GetTotPoints();
+        offset = m_phys_offset[i];
+
+        ActZeroinElement = false;
+        velemt           = Array<OneD, NekDouble>(npts, 0.0);
+        for (j = 0; j < npts; ++j)
+        {
+            velemt[j] = vector[offset + j];
+            if (Activated[offset + j] < 1)
+            {
+                ActZeroinElement = true;
+            }
+        }
+
+        // When sign < 0, deactivate if vmin is less than Tol
+        if (ActZeroinElement)
+        {
+            for (j = 0; j < npts; ++j)
+            {
+                Activated[offset + j] = 0;
+            }
+        }
+
+        if (sign < 0)
+        {
+            vmin = Vmath::Vmin(npts, velemt, 1);
+            if (vmin < ActivationTol)
+            {
+                for (j = 0; j < npts; ++j)
+                {
+                    Activated[offset + j] = 0;
+                }
+            }
+        }
+
+        // When sign > 0, deactivate if vmax is larger than Tol
+        else if (sign > 0)
+        {
+            vmax = Vmath::Vmax(npts, velemt, 1);
+            if (vmax > ActivationTol)
+            {
+                for (j = 0; j < npts; ++j)
+                {
+                    Activated[offset + j] = 0;
+                }
+            }
+        }
+    }
+}
+
+void ExpList::v_GridIndexElementWise(Array<OneD, Array<OneD, int>> &outarray)
+{
+    int npts, offset;
+
+    outarray = Array<OneD, Array<OneD, int>>(m_exp->size());
+    for (int i = 0; i < m_exp->size(); ++i)
+    {
+        npts        = (*m_exp)[i]->GetTotPoints();
+        outarray[i] = Array<OneD, int>(npts);
+        offset      = m_phys_offset[i];
+        for (int j = 0; j < npts; ++j)
+        {
+            outarray[i][j] = offset + j;
+        }
+    }
+}
+
 void ExpList::ExtractFileBCs(const std::string &fileName,
                              LibUtilities::CommSharedPtr comm,
                              const std::string &varName,
@@ -3724,6 +3839,24 @@ void ExpList::v_GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
                              &outarray[j][k * nq + m_phys_offset[i]], 1);
             }
         }
+    }
+}
+
+// Get the Jacobian for the domain
+void ExpList::v_GetJac(Array<OneD, NekDouble> &outarray)
+{
+    int npts;
+    // Process each expansion.
+    for (int i = 0; i < m_exp->size(); ++i)
+    {
+        npts = (*m_exp)[i]->GetTotPoints();
+
+        // MF from LOCALREGIONS
+        Array<OneD, NekDouble> Jacloc(npts);
+        Jacloc =
+            (*m_exp)[i]->GetMetricInfo()->GetJac((*m_exp)[i]->GetPointsKeys());
+
+        Vmath::Vcopy(npts, &Jacloc[0], 1, &outarray[m_phys_offset[i]], 1);
     }
 }
 

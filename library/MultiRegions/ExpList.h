@@ -249,6 +249,15 @@ public:
     /// not.
     inline bool GetPhysState(void) const;
 
+    /// This function integrates a function \f$f(\boldsymbol{x})\f$
+    /// over the domain consisting of all the elements of the expansion.
+    MULTI_REGIONS_EXPORT NekDouble PhysIntegral(void);
+
+    /// This function integrates a function \f$f(\boldsymbol{x})\f$
+    /// over the domain consisting of all the elements of the expansion.
+    MULTI_REGIONS_EXPORT NekDouble
+    PhysIntegral(const Array<OneD, const NekDouble> &inarray);
+
     /// multiply the metric jacobi and quadrature weights
     MULTI_REGIONS_EXPORT void MultiplyByQuadratureMetric(
         const Array<OneD, const NekDouble> &inarray,
@@ -803,6 +812,8 @@ public:
                                 const Array<OneD, const NekDouble> &CircCentre,
                                 Array<OneD, Array<OneD, NekDouble>> &outarray);
 
+    inline void GetJacobian(Array<OneD, NekDouble> &outarray);
+
     // functions associated with DisContField
     inline const Array<OneD, const std::shared_ptr<ExpList>>
         &GetBndCondExpansions();
@@ -1068,6 +1079,12 @@ public:
         Collections::ImplementationType ImpType = Collections::eNoImpType);
 
     MULTI_REGIONS_EXPORT void ClearGlobalLinSysManager(void);
+
+    MULTI_REGIONS_EXPORT void GridIndexElementWise(Array<OneD, Array<OneD, int>> &outarray);
+
+    MULTI_REGIONS_EXPORT void ElementWiseActivation(
+        const int sign, const Array<OneD, const NekDouble> &velmag,
+        const NekDouble ActivationTol, Array<OneD, int> &Activated);
 
     /// Get m_coeffs to elemental value map
     MULTI_REGIONS_EXPORT inline const Array<OneD, const std::pair<int, int>>
@@ -1448,6 +1465,8 @@ protected:
         const Array<OneD, const NekDouble> &CircCentre,
         Array<OneD, Array<OneD, NekDouble>> &outarray);
 
+    virtual void v_GetJac(Array<OneD, NekDouble> &outarray);
+
     virtual void v_HomogeneousFwdTrans(
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray, bool Shuff = true,
@@ -1565,6 +1584,12 @@ protected:
 
     virtual void v_ClearGlobalLinSysManager(void);
 
+    virtual void v_GridIndexElementWise(Array<OneD, Array<OneD, int>> &outarray);
+
+    virtual void v_ElementWiseActivation(
+        const int sign, const Array<OneD, const NekDouble> &velmag,
+        const NekDouble ActivationTol, Array<OneD, int> &Activated);
+
     void ExtractFileBCs(const std::string &fileName,
                         LibUtilities::CommSharedPtr comm,
                         const std::string &varName,
@@ -1576,6 +1601,16 @@ protected:
     static SpatialDomains::BoundaryConditionShPtr GetBoundaryCondition(
         const SpatialDomains::BoundaryConditionCollection &collection,
         unsigned int index, const std::string &variable);
+
+private:
+    /// Definition of the total number of degrees of freedom and
+    /// quadrature points and offsets to access data
+    void SetupCoeffPhys(bool DeclareCoeffPhysArrays = true,
+                        bool SetupOffsets           = true);
+
+    /// Define a list of elements using the geometry and basis
+    /// key information in expmap;
+    void InitialiseExpVector(const SpatialDomains::ExpansionInfoMap &expmap);
 
     virtual const Array<OneD, const SpatialDomains::BoundaryConditionShPtr>
         &v_GetBndConditions();
@@ -1926,6 +1961,11 @@ inline void ExpList::GetMovingFrames(
     Array<OneD, Array<OneD, NekDouble>> &outarray)
 {
     v_GetMovingFrames(MMFdir, CircCentre, outarray);
+}
+
+inline void ExpList::GetJacobian(Array<OneD, NekDouble> &outarray)
+{
+    v_GetJac(outarray);
 }
 
 /**
@@ -2483,6 +2523,19 @@ inline void ExpList::GetBoundaryNormals(
     int i, Array<OneD, Array<OneD, NekDouble>> &normals)
 {
     v_GetBoundaryNormals(i, normals);
+}
+
+inline void ExpList::GridIndexElementWise(
+    Array<OneD, Array<OneD, int>> &outarray)
+{
+    v_GridIndexElementWise(outarray);
+}
+
+inline void ExpList::ElementWiseActivation(
+    const int sign, const Array<OneD, const NekDouble> &velmag,
+    const NekDouble ActivationTol, Array<OneD, int> &Activated)
+{
+    v_ElementWiseActivation(sign, velmag, ActivationTol, Activated);
 }
 
 inline std::vector<bool> &ExpList::GetLeftAdjacentTraces(void)

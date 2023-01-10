@@ -450,6 +450,12 @@ Array<TwoD, NekDouble> GeomFactors::ComputeDerivFactors(
     return factors;
 }
 
+
+// void GeomFactors::ComputeMovingFrames(
+//     const LibUtilities::PointsKeyVector &keyTgt,
+//     const SpatialDomains::GeomMMF MMFdir,
+//     const Array<OneD, const NekDouble> &factors,
+//     Array<OneD, Array<OneD, NekDouble>> &movingframes)
 void GeomFactors::ComputeMovingFrames(
     const LibUtilities::PointsKeyVector &keyTgt,
     const SpatialDomains::GeomMMF MMFdir,
@@ -463,6 +469,9 @@ void GeomFactors::ComputeMovingFrames(
     int i = 0, k = 0;
     int ptsTgt = 1;
     int nq     = 1;
+
+    // number of moving frames is requited to be 3, even for surfaces
+    int MFdim = 3;
 
     for (i = 0; i < m_expDim; ++i)
     {
@@ -480,9 +489,6 @@ void GeomFactors::ComputeMovingFrames(
 
     // Get derivative at geometry points
     DerivStorage deriv = ComputeDeriv(keyTgt);
-
-    // number of moving frames is requited to be 3, even for surfaces
-    int MFdim = 3;
 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmp(MFdim);
 
@@ -512,45 +518,108 @@ void GeomFactors::ComputeMovingFrames(
         }
     }
 
+    // LOCAL2 choose the second moving frame for local alignment
+    switch (MMFdir)
+    {
+        case eLOCAL2:
+        {
+            // Swap e_1 with e_2. Let e_2 = - e_2
+            Array<OneD, NekDouble> tmp(nq);
+            for (i = 0; i < m_coordDim; ++i)
+            {
+                Vmath::Vcopy(nq, MFtmp[0][i], 1, tmp, 1);
+                Vmath::Vcopy(nq, MFtmp[1][i], 1, MFtmp[0][i], 1);
+                Vmath::Vcopy(nq, tmp, 1, MFtmp[1][i], 1);
+                Vmath::Neg(nq, MFtmp[1][i], 1);
+            }
+        }
+        break;
+
+        case eLOCAL21:
+        {
+            for (i = 0; i < m_coordDim; ++i)
+            {
+                Vmath::Vadd(nq, MFtmp[0][i], 1, MFtmp[1][i], 1, MFtmp[0][i], 1);
+            }
+        }
+        break;
+
+        case eLOCAL3:
+        {
+            // Swap e_1 with e_3. Let e_2 = - e_2
+            Array<OneD, NekDouble> tmp(nq);
+            for (i = 0; i < m_coordDim; ++i)
+            {
+                Vmath::Vcopy(nq, MFtmp[0][i], 1, tmp, 1);
+                Vmath::Vcopy(nq, MFtmp[2][i], 1, MFtmp[0][i], 1);
+                Vmath::Vcopy(nq, tmp, 1, MFtmp[2][i], 1);
+                Vmath::Neg(nq, MFtmp[1][i], 1);
+            }
+        }
+        break;
+
+        default:
+            break;
+    }
+
     // Direction of MF1 is preserved: MF2 is considered in the same
     // tangent plane as MF1. MF3 is computed by cross product of MF1
     // and MF2. MF2 is consequently computed as the cross product of
     // MF3 and MF1.
+
     Array<OneD, Array<OneD, NekDouble>> PrincipleDir(m_coordDim);
     for (int k = 0; k < m_coordDim; k++)
     {
         PrincipleDir[k] = Array<OneD, NekDouble>(nq);
     }
 
-    if (!(MMFdir == eLOCAL))
+    switch (MMFdir)
     {
-        ComputePrincipleDirection(keyTgt, MMFdir, factors, PrincipleDir);
-    }
-
-    // MF3 = MF1 \times MF2
-    VectorCrossProd(MFtmp[0], MFtmp[1], MFtmp[2]);
-
-    // Normalizing MF3
-    VectorNormalise(MFtmp[2]);
-
-    if (!(MMFdir == eLOCAL))
-    {
-        Array<OneD, NekDouble> temp(nq, 0.0);
-
-        // Reorient MF1 along the PrincipleDir
-        for (i = 0; i < m_coordDim; ++i)
+        case eLOCAL:
+        case eLOCAL1:
+        case eLOCAL2:
+        case eLOCAL21:
+        case eLOCAL3:
+        case eLOCALSphere:
+        case ePolar:
+        case eSpherical:
+        case ePseudospherical:
         {
-            Vmath::Vvtvp(nq, MFtmp[2][i], 1, PrincipleDir[i], 1, temp, 1, temp,
-                         1);
-        }
-        Vmath::Neg(nq, temp, 1);
+            // MF3 = MF1 \times MF2
+            VectorCrossProd(MFtmp[0], MFtmp[1], MFtmp[2]);
 
-        // u2 = v2 - < u1 , v2 > ( u1 / < u1, u1 > )
-        for (i = 0; i < m_coordDim; ++i)
-        {
-            Vmath::Vvtvp(nq, temp, 1, MFtmp[2][i], 1, PrincipleDir[i], 1,
-                         MFtmp[0][i], 1);
+            // Normalizing MF3
+            VectorNormalise(MFtmp[2]);
         }
+        break;
+
+        default:
+        {
+            ComputePrincipleDirection(keyTgt, MMFdir, factors, PrincipleDir);
+
+            // MF3 = MF1 \times MF2
+            VectorCrossProd(MFtmp[0], MFtmp[1], MFtmp[2]);
+
+            // Normalizing MF3
+            VectorNormalise(MFtmp[2]);
+
+            Array<OneD, NekDouble> temp(nq, 0.0);
+            // Reorient MF1 along the PrincipleDir
+            for (i = 0; i < m_coordDim; ++i)
+            {
+                Vmath::Vvtvp(nq, MFtmp[2][i], 1, PrincipleDir[i], 1, temp, 1,
+                             temp, 1);
+            }
+            Vmath::Neg(nq, temp, 1);
+
+            // u2 = v2 - < u1 , v2 > ( u1 / < u1, u1 > )
+            for (i = 0; i < m_coordDim; ++i)
+            {
+                Vmath::Vvtvp(nq, temp, 1, MFtmp[2][i], 1, PrincipleDir[i], 1,
+                             MFtmp[0][i], 1);
+            }
+        }
+        break;
     }
 
     // Normalizing MF1
@@ -566,8 +635,7 @@ void GeomFactors::ComputeMovingFrames(
     {
         for (k = 0; k < m_coordDim; ++k)
         {
-            Vmath::Vcopy(nq, &MFtmp[i][k][0], 1,
-                         &movingframes[i * m_coordDim + k][0], 1);
+            Vmath::Vcopy(nq, &MFtmp[i][k][0], 1, &movingframes[i * m_coordDim + k][0], 1);
         }
     }
 }
@@ -787,8 +855,8 @@ void GeomFactors::ComputePrincipleDirection(
             }
 
             // circular around the center of the domain
-            NekDouble radius, xc = 0.0, yc = 0.0, xdis, ydis;
-            NekDouble la, lb;
+            NekDouble radius, la, lb, xdis, ydis;
+            NekDouble xc = 0.0, yc = 0.0;
 
             ASSERTL1(factors.size() >= 4, "factors is too short.");
 
