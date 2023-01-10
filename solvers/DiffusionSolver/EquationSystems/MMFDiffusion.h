@@ -45,34 +45,72 @@ namespace Nektar
 
 enum TestType
 {
+    eTestLine,
+    eTestLineY,
     eTestPlane,
     eTestCube,
     eTestLinearSphere,
     eTestNonlinearSphere,
-    eFHNStandard,
-    eFHNRogers,
-    eFHNAlievPanf,
     SIZE_TestType ///< Length of enum list
 };
 
 const char *const TestTypeMap[] = {
-    "TestPlane",   "TestCube",  "TestLinearSphere", "TestNonlinearSphere",
-    "FHNStandard", "FHNRogers", "FHNAlievPanf",
+    "TestLine", "TestLineY",        "TestPlane",
+    "TestCube", "TestLinearSphere", "TestNonlinearSphere",
+};
+
+enum SolverSchemeType
+{
+    eDefault,
+    eMMFFirst,
+    eTimeMap,
+    SIZE_SolverSchemeType,
+};
+
+const char *const SolverSchemeTypeMap[] = {
+    "Default",
+    "MMFFirst",
+    "TimeMap",
 };
 
 enum InitWaveType
 {
+    ePoint,
     eLeft,
     eBothEnds,
     eCenter,
     eLeftBottomCorner,
-    ePoint,
     eSpiralDock,
     SIZE_InitWaveType ///< Length of enum list
 };
 
 const char *const InitWaveTypeMap[] = {
-    "Left", "BothEnd", "Center", "LeftBottomCorner", "Point", "SpiralDock",
+    "Point", "Left", "BothEnd", "Center", "LeftBottomCorner", "SpiralDock",
+};
+
+enum FluxType
+{
+    euflux,
+    eqflux,
+};
+
+const char *const FluxTypeMap[] = {
+    "qflux",
+    "uflux",
+};
+
+enum TimeMapType
+{
+    eActivated,
+    eDeActivated,
+    eProcessing,
+    SIZE_TimeMapType ///< Length of enum list
+};
+
+const char *const TimeMapTypeMap[] = {
+    "Activated",
+    "DeActivated",
+    "Processing",
 };
 
 /// A model for cardiac conduction.
@@ -96,11 +134,29 @@ public:
     static std::string className;
 
     TestType m_TestType;
+    SolverSchemeType m_SolverSchemeType;
+
+    StdRegions::VarCoeffMap m_varDiffcoeff;
 
     /// Desctructor
     virtual ~MMFDiffusion();
 
 protected:
+    int m_Convectiven;
+    TimeMapType m_TimeMap;
+
+    // Temperature parameter
+
+    NekDouble m_TimeMapStart;
+    NekDouble m_TimeMapEnd;
+
+    NekDouble m_Helmtau;
+
+    NekDouble m_Diffbeta, m_Diffeta, m_Diffhe; // h_e for LDG
+
+    // Neural EP:
+    NekDouble m_beta; // Relative Extracellular resistance: 1 < \beta < 10
+
     /// Constructor
     MMFDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
                  const SpatialDomains::MeshGraphSharedPtr &pGraph);
@@ -129,6 +185,14 @@ protected:
     void Morphogenesis(const NekDouble time, unsigned int field,
                        Array<OneD, NekDouble> &outfield);
 
+    void ComputeVarCoeff2D(
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        StdRegions::VarCoeffMap &varcoeff);
+
+    void ComputeEuclideanDivMF(
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        Array<OneD, Array<OneD, NekDouble>> &DivMF);
+
     Array<OneD, NekDouble> PlanePhiWave();
 
     /// Sets a custom initial condition.
@@ -147,7 +211,6 @@ protected:
 
 private:
     /// Variable diffusivity
-    StdRegions::VarCoeffMap m_varcoeff;
 
     Array<OneD, NekDouble> m_epsilon;
     Array<OneD, NekDouble> m_epsu;

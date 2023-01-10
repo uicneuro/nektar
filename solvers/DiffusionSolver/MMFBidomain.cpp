@@ -323,8 +323,8 @@ void MMFBidomain::v_InitObject()
     else
     {
         // Create varcoeff for Helmsolver
-         ComputeVarCoeff2D(m_movingframes, m_varcoeff);
- 
+        ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
         switch (m_TestType)
         {
             case eBidomainCardiac:
@@ -418,7 +418,7 @@ void MMFBidomain::v_DoSolve()
 
     // Set up wrapper to fields data storage.
     Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
-    
+
     // Order storage to list time-integrated fields first.
     for (i = 0; i < nvariables; ++i)
     {
@@ -427,7 +427,8 @@ void MMFBidomain::v_DoSolve()
     }
 
     // Initialise time integration scheme
-    m_intSoln = m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
+    m_intSoln =
+        m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
 
     // Check uniqueness of checkpoint output
     ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
@@ -439,7 +440,7 @@ void MMFBidomain::v_DoSolve()
     Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
     for (int i = 0; i < m_spacedim; ++i)
     {
-        MF1st[i]    = Array<OneD, NekDouble>(3 * nq);
+        MF1st[i] = Array<OneD, NekDouble>(3 * nq);
         Vmath::Smul(3 * nq, 1.0, &m_movingframes[i][0], 1, &MF1st[i][0], 1);
     }
 
@@ -464,8 +465,11 @@ void MMFBidomain::v_DoSolve()
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
-            std::cout << "max u = " << Vmath::Vamax(nq, m_fields[0]->GetPhys(), 1) 
-            << ", max ue = " << Vmath::Vamax(nq, m_fields[1]->GetPhys(), 1) << std::endl;
+            std::cout << "max u = "
+                      << Vmath::Vamax(nq, m_fields[0]->GetPhys(), 1)
+                      << ", max ue = "
+                      << Vmath::Vamax(nq, m_fields[1]->GetPhys(), 1)
+                      << std::endl;
 
             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
                       << " "
@@ -480,7 +484,8 @@ void MMFBidomain::v_DoSolve()
             cpuTime = 0.0;
         }
 
-        // Transform data into coefficient space: Only for u. ue is updated at RHS
+        // Transform data into coefficient space: Only for u. ue is updated at
+        // RHS
         m_fields[m_intVariables[0]]->SetPhys(fields[0]);
         m_fields[m_intVariables[0]]->FwdTrans_IterPerExp(
             fields[0], m_fields[m_intVariables[0]]->UpdateCoeffs());
@@ -525,7 +530,7 @@ void MMFBidomain::DoImplicitSolveBidomain(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
-    int nq   = m_fields[0]->GetNpoints();
+    int nq = m_fields[0]->GetNpoints();
 
     // Set up factors for Helmsolver
     StdRegions::ConstFactorMap factors;
@@ -551,13 +556,13 @@ void MMFBidomain::DoImplicitSolveBidomain(
     // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),m_fields[0]->UpdateCoeffs(),
     //                        NullFlagList, factors, m_varcoeff);
 
-    // m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), m_fields[0]->UpdatePhys()); 
-    // m_fields[0]->SetPhysState(true);
+    // m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(),
+    // m_fields[0]->UpdatePhys()); m_fields[0]->SetPhysState(true);
 
     // outarray[0] = m_fields[0]->GetPhys();
 
     // No diffusion for the second variable
-        Vmath::Vcopy(nq, &inarray[0][0], 1, &outarray[0][0], 1);
+    Vmath::Vcopy(nq, &inarray[0][0], 1, &outarray[0][0], 1);
     Vmath::Vcopy(nq, &inarray[1][0], 1, &outarray[1][0], 1);
 }
 
@@ -566,7 +571,7 @@ void MMFBidomain::DoOdeRhsBidomain(
     const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
-    int nq = m_fields[0]->GetNpoints();
+    int nq      = m_fields[0]->GetNpoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
     if (RootMeanSquare(MF1st[0]) > 0)
@@ -593,9 +598,10 @@ void MMFBidomain::DoOdeRhsBidomain(
 
     Vmath::Vcopy(nq, tmp, 1, m_fields[1]->UpdatePhys(), 1);
 
-    // Find \phi_e satisfying \nabla \cdot (\sigma_e + \sigma_i) \nabla \phi_e = - nabla \cdot \sigma_i \nabla phi_m
+    // Find \phi_e satisfying \nabla \cdot (\sigma_e + \sigma_i) \nabla \phi_e =
+    // - nabla \cdot \sigma_i \nabla phi_m
     StdRegions::ConstFactorMap factorsPoisson;
-    factorsPoisson[StdRegions::eFactorTau] = m_Helmtau;
+    factorsPoisson[StdRegions::eFactorTau]    = m_Helmtau;
     factorsPoisson[StdRegions::eFactorLambda] = 0.0;
 
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(),
@@ -603,8 +609,8 @@ void MMFBidomain::DoOdeRhsBidomain(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 
-    // tmp = ComputeCovariantDiffusion(m_movingframes, m_fields[1]->GetPhys(), eEuclidean);
-    // Vmath::Neg(nq, tmp, 1);
+    // tmp = ComputeCovariantDiffusion(m_movingframes, m_fields[1]->GetPhys(),
+    // eEuclidean); Vmath::Neg(nq, tmp, 1);
 
     Array<OneD, NekDouble> tmpc(ncoeffs);
     WeakDGMMFDiffusion(0, m_fields[0]->GetPhys(), tmp);
@@ -624,14 +630,18 @@ void MMFBidomain::DoOdeRhsBidomain(
     // m_fields[0]->PhysDeriv(0, ggrad0, ggrad0);
     // m_fields[0]->PhysDeriv(1, ggrad1, ggrad1);
     // m_fields[0]->PhysDeriv(2, ggrad2, ggrad2);
-    // // if (m_session->DefinesFunction("IntracellularAnisotropicConductivity") &&
-    // //     m_session->DefinesFunction("ExtracellularAnisotropicConductivity"))
+    // // if (m_session->DefinesFunction("IntracellularAnisotropicConductivity")
+    // &&
+    // // m_session->DefinesFunction("ExtracellularAnisotropicConductivity"))
     // // {
-    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD00], 1, ggrad0, 1,
+    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD00], 1, ggrad0,
+    // 1,
     // //                 ggrad0, 1);
-    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD11], 1, ggrad1, 1,
+    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD11], 1, ggrad1,
+    // 1,
     // //                 ggrad1, 1);
-    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD22], 1, ggrad2, 1,
+    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD22], 1, ggrad2,
+    // 1,
     // //                 ggrad2, 1);
     // // }
     // // Add partial derivatives together
@@ -639,19 +649,22 @@ void MMFBidomain::DoOdeRhsBidomain(
     // Vmath::Vadd(nq, ggrad2, 1, ggrad, 1, ggrad, 1);
 
     // Vmath::Smul(nq, -1.0, ggrad, 1, m_fields[1]->UpdatePhys(), 1);
-    
+
     // std::cout << "time = " << time;
-    // std::cout << ", Laplacian phi_m = " << RootMeanSquare(m_fields[1]->GetPhys());
+    // std::cout << ", Laplacian phi_m = " <<
+    // RootMeanSquare(m_fields[1]->GetPhys());
 
     // // ----------------------------
     // // Solve Poisson problem for Ve
     // // ----------------------------
-    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(),
+    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(),
+    // m_fields[1]->UpdateCoeffs(),
     //                        NullFlagList, factorsPoisson, m_varcoeff);
-    // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    // m_fields[1]->SetPhysState(true);
+    // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(),
+    // m_fields[1]->UpdatePhys()); m_fields[1]->SetPhysState(true);
 
-    // std::cout << ", phi from Poisson = " << RootMeanSquare(m_fields[1]->GetPhys());
+    // std::cout << ", phi from Poisson = " <<
+    // RootMeanSquare(m_fields[1]->GetPhys());
 
     // // ------------------------------
     // // Compute Laplacian of Ve (forcing term)
@@ -660,14 +673,18 @@ void MMFBidomain::DoOdeRhsBidomain(
     // m_fields[1]->PhysDeriv(0, ggrad0, ggrad0);
     // m_fields[1]->PhysDeriv(1, ggrad1, ggrad1);
     // m_fields[1]->PhysDeriv(2, ggrad2, ggrad2);
-    // // if (m_session->DefinesFunction("IntracellularAnisotropicConductivity") &&
-    // //     m_session->DefinesFunction("ExtracellularAnisotropicConductivity"))
+    // // if (m_session->DefinesFunction("IntracellularAnisotropicConductivity")
+    // &&
+    // // m_session->DefinesFunction("ExtracellularAnisotropicConductivity"))
     // // {
-    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD00], 1, ggrad0, 1,
+    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD00], 1, ggrad0,
+    // 1,
     // //                 ggrad0, 1);
-    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD11], 1, ggrad1, 1,
+    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD11], 1, ggrad1,
+    // 1,
     // //                 ggrad1, 1);
-    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD22], 1, ggrad2, 1,
+    // //     Vmath::Vmul(nq, m_vardiffi[StdRegions::eVarCoeffD22], 1, ggrad2,
+    // 1,
     // //                 ggrad2, 1);
     // // }
 
@@ -677,7 +694,8 @@ void MMFBidomain::DoOdeRhsBidomain(
 
     // Vmath::Vadd(nq, ggrad, 1, outarray[0], 1, outarray[0], 1);
 
-    // std::cout << ", Laplacian phi_e = " << RootMeanSquare(outarray[0]) << std::endl;
+    // std::cout << ", Laplacian phi_e = " << RootMeanSquare(outarray[0]) <<
+    // std::endl;
 }
 
 void MMFBidomain::v_SetInitialConditions(NekDouble initialtime,
@@ -732,7 +750,7 @@ void MMFBidomain::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFSystem::v_GenerateSummary(s);
     SolverUtils::AddSummaryItem(s, "TestType", TestTypeMap[m_TestType]);
-    SolverUtils::AddSummaryItem(s, "MediumType", MediumTypeMap[m_MediumType]); 
+    SolverUtils::AddSummaryItem(s, "MediumType", MediumTypeMap[m_MediumType]);
     if (m_AnisotropyRegion)
     {
         SolverUtils::AddSummaryItem(s, "AnisotropyRegion", m_AnisotropyRegion);

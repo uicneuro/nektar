@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// File: MMFAdvection.cpp
+// File MMFAdvection.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -10,7 +10,8 @@
 // Department of Aeronautics, Imperial College London (UK), and Scientific
 // Computing and Imaging Institute, University of Utah (USA).
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
+// License for the specific language governing rights and limitations under
+// Permission is hereby granted, free of charge, to any person obtaining ag
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
 // the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -66,13 +67,13 @@ void MMFAdvection::v_InitObject(bool DeclareFields)
 
     int nq       = m_fields[0]->GetNpoints();
     int shapedim = m_fields[0]->GetShapeDimension();
-    Array<OneD, Array<OneD, NekDouble>> Anisotropy(shapedim);
+    Array<OneD, Array<OneD, NekDouble>> AniStrength(shapedim);
     for (int j = 0; j < shapedim; ++j)
     {
-        Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
+        AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    MMFSystem::MMFInitObject(Anisotropy);
+    MMFSystem::MMFInitObject(AniStrength);
 
     // Define TestType
     ASSERTL0(m_session->DefinesSolverInfo("TESTTYPE"),
@@ -80,16 +81,27 @@ void MMFAdvection::v_InitObject(bool DeclareFields)
     std::string TestTypeStr = m_session->GetSolverInfo("TESTTYPE");
     for (int i = 0; i < (int)SIZE_TestType; ++i)
     {
-        if (boost::iequals(TestTypeMap[i], TestTypeStr))
+        if (TestTypeMap[i] == TestTypeStr)
         {
             m_TestType = (TestType)i;
             break;
         }
     }
 
+    m_session->LoadParameter("Divergence Restore", m_DivergenceRestore, 0);
     m_session->LoadParameter("Angular Frequency", m_waveFreq, m_pi);
     m_session->LoadParameter("Rotational Angle", m_RotAngle, 0.0);
-    m_session->LoadParameter("Velocity Projection", m_VelProjection, 0);
+
+    if (m_DivergenceRestore > 1)
+    {
+        mf_LOCSPH = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+        GetLOCALMovingframes(mf_LOCSPH);
+        ComputeAxisAlignedLOCALMovingframes(m_sphereMF, mf_LOCSPH);
+    }
+
+    m_session->LoadParameter("theta_c", m_theta_c, 0.0);
+    m_session->LoadParameter("varphi_c", m_varphi_c, 3.0 * m_pi / 2.0);
+    m_session->LoadParameter("radius_limit", m_radius_limit, 7.0 * m_pi / 64.0);
 
     // Read the advection velocities from session file
     m_session->LoadParameter("advx", m_advx, 1.0);
@@ -120,7 +132,7 @@ void MMFAdvection::v_InitObject(bool DeclareFields)
         case SolverUtils::eNonconvex:
         {
             // true = project velocity onto the tangent plane
-            EvaluateAdvectionVelocity(m_velocity);
+            EvaluateAdvectionVelocity(m_movingframes, m_velocity);
         }
         break;
 
@@ -135,53 +147,19 @@ void MMFAdvection::v_InitObject(bool DeclareFields)
             break;
     }
 
-    std::cout << "|Velocity vector| = ( " << RootMeanSquare(m_velocity[0])
-              << " , " << RootMeanSquare(m_velocity[1]) << " , "
-              << RootMeanSquare(m_velocity[2]) << " ) " << std::endl;
+    // New Scheme
+    ComputeSphericalVector(m_SphericalVector);
 
-    // Define the normal velocity fields
-    if (m_fields[0]->GetTrace())
-    {
-        m_traceVn = Array<OneD, NekDouble>(GetTraceNpoints());
-    }
-
-    std::string advName;
-    std::string riemName;
-    m_session->LoadSolverInfo("AdvectionType", advName, "WeakDG");
-    m_advObject =
-        SolverUtils::GetAdvectionFactory().CreateInstance(advName, advName);
-    m_advObject->SetFluxVector(&MMFAdvection::GetFluxVector, this);
-    m_session->LoadSolverInfo("UpwindType", riemName, "Upwind");
-    m_riemannSolver = SolverUtils::GetRiemannSolverFactory().CreateInstance(
-        riemName, m_session);
-    m_riemannSolver->SetScalar("Vn", &MMFAdvection::GetNormalVelocity, this);
-
-    m_advObject->SetRiemannSolver(m_riemannSolver);
-    m_advObject->InitObject(m_session, m_fields);
+    CheckMeshErr(m_movingframes, m_velocity);
 
     // Compute m_traceVn = n \cdot v
-    GetNormalVelocity();
-
-    // Compute m_vellc = nabal a^j \cdot m_vel
-    ComputeNablaCdotVelocity(m_vellc);
-    std::cout << "m_vellc is generated with mag = " << AvgInt(m_vellc)
-              << std::endl;
+    m_traceVn = GetNormalVelocity(m_velocity);
 
     // Compute vel \cdot MF
-    ComputeveldotMF(m_veldotMF);
-
-    // Modify e^i as v^i e^i
-    for (int j = 0; j < m_shapedim; j++)
-    {
-        for (int k = 0; k < m_spacedim; k++)
-        {
-            Vmath::Vmul(nq, &m_veldotMF[j][0], 1, &m_movingframes[j][k * nq], 1,
-                        &m_movingframes[j][k * nq], 1);
-        }
-    }
+    ComputevelodotMF(m_velocity, m_movingframes);
 
     // Reflect it into m_ncdotMFFwd and Bwd
-    ComputencdotMF();
+    ComputencdotMF(m_movingframes, m_ncdotMFFwd, m_ncdotMFBwd);
 
     // If explicit it computes RHS and PROJECTION for the time integration
     if (m_explicitAdvection)
@@ -255,9 +233,9 @@ void MMFAdvection::v_DoSolve()
 
     int Ntot, indx;
     // Perform integration in time.
-    Ntot = m_checksteps ? m_steps / m_checksteps + 1 : 0;
+    Ntot = m_steps / m_checksteps + 1;
 
-    Array<OneD, NekDouble> dMass(Ntot ? Ntot : 1);
+    Array<OneD, NekDouble> dMass(Ntot);
 
     Array<OneD, NekDouble> zeta(nq);
     Array<OneD, Array<OneD, NekDouble>> fieldsprimitive(nvariables);
@@ -278,24 +256,34 @@ void MMFAdvection::v_DoSolve()
         cpuTime += elapsed;
 
         // Write out status information
-        if (m_infosteps && !((step + 1) % m_infosteps) &&
-            m_session->GetComm()->GetRank() == 0)
+        if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
-            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
+            std::cout << "Steps: " << std::setw(5) << std::left << step + 1
                       << " "
-                      << "Time: " << std::setw(12) << std::left << m_time;
+                      << "Time: " << std::setw(6) << std::left << m_time;
 
             std::stringstream ss;
             ss << cpuTime << "s";
-            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
-                      << std::endl;
+            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str();
 
             // Masss = h^*
-            indx = m_checksteps ? (step + 1) / m_checksteps : 0;
-            dMass[indx] =
-                (m_fields[0]->Integral(fields[0]) - m_Mass0) / m_Mass0;
+            indx = (step + 1) / m_checksteps - 1;
 
-            std::cout << "dMass = " << std::setw(8) << std::left << dMass[indx]
+            dMass[indx] =
+                abs((m_fields[0]->PhysIntegral(fields[0]) - m_Mass0) / m_Mass0);
+            std::cout << ",   dMass: " << std::setw(8) << std::left
+                      << dMass[indx] << std::endl
+                      << std::endl;
+
+            NekDouble L2Err, LinfErr;
+
+            Array<OneD, NekDouble> exactsoln(nq);
+            v_EvaluateExactSolution(0, exactsoln, 0.0);
+
+            L2Err   = v_L2Error(0, exactsoln, 0);
+            LinfErr = v_LinfError(0, exactsoln);
+
+            std::cout << "L2error = " << L2Err << ", LinfErr = " << LinfErr
                       << std::endl;
 
             cpuTime = 0.0;
@@ -304,6 +292,10 @@ void MMFAdvection::v_DoSolve()
         // Transform data into coefficient space
         for (i = 0; i < nvariables; ++i)
         {
+            // m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+            // m_fields[m_intVariables[i]]->FwdTrans_IterPerExp(
+            //     fields[i], m_fields[m_intVariables[i]]->UpdateCoeffs());
+            // m_fields[m_intVariables[i]]->SetPhysState(false);
             m_fields[m_intVariables[i]]->SetPhys(fields[i]);
             m_fields[m_intVariables[i]]->FwdTransLocalElmt(
                 fields[i], m_fields[m_intVariables[i]]->UpdateCoeffs());
@@ -322,13 +314,6 @@ void MMFAdvection::v_DoSolve()
         ++step;
     }
 
-    std::cout << "dMass = ";
-    for (i = 0; i < Ntot; ++i)
-    {
-        std::cout << dMass[i] << " , ";
-    }
-    std::cout << std::endl << std::endl;
-
     // Print out summary statistics
     if (m_session->GetComm()->GetRank() == 0)
     {
@@ -345,6 +330,13 @@ void MMFAdvection::v_DoSolve()
         }
     }
 
+    std::cout << "dMass =  ";
+    for (int i = 0; i < Ntot; i++)
+    {
+        std::cout << dMass[i] << " , ";
+    }
+    std::cout << std::endl << std::endl;
+
     for (i = 0; i < nvariables; ++i)
     {
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
@@ -358,30 +350,37 @@ void MMFAdvection::v_DoSolve()
     }
 }
 
-/**
- * @brief Get the normal velocity for the linear advection equation.
- */
-Array<OneD, NekDouble> &MMFAdvection::GetNormalVelocity()
+void MMFAdvection::Checkpoint_Err(
+    const int n, const NekDouble time,
+    const Array<OneD, const Array<OneD, NekDouble>> &fieldphys)
 {
-    // Number of trace (interface) points
-    int i;
-    int nTracePts = GetTraceNpoints();
+    int nvar    = m_fields.size();
+    int nq      = GetTotPoints();
+    int ncoeffs = GetNcoeffs();
 
-    // Auxiliary variable to compute the normal velocity
-    Array<OneD, NekDouble> tmp(nTracePts);
+    std::string outname =
+        m_sessionName + boost::lexical_cast<std::string>(n) + "Err.chk";
 
-    // Reset the normal velocity
-    Vmath::Zero(nTracePts, m_traceVn, 1);
-
-    for (i = 0; i < m_velocity.size(); ++i)
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
     {
-        m_fields[0]->ExtractTracePhys(m_velocity[i], tmp);
-
-        Vmath::Vvtvp(nTracePts, m_traceNormals[i], 1, tmp, 1, m_traceVn, 1,
-                     m_traceVn, 1);
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
 
-    return m_traceVn;
+    std::vector<std::string> variables(nvar);
+    variables[0] = "Linf";
+
+    Array<OneD, NekDouble> exactsoln(m_fields[0]->GetNpoints());
+    v_EvaluateExactSolution(0, exactsoln, time);
+
+    Vmath::Vsub(nq, exactsoln, 1, fieldphys[0], 1, exactsoln, 1);
+    for (int i = 0; i < nq; ++i)
+    {
+        exactsoln[i] = fabs(exactsoln[i]);
+    }
+
+    m_fields[0]->FwdTrans(exactsoln, fieldcoeffs[0]);
+    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
 
 /**
@@ -395,52 +394,80 @@ void MMFAdvection::DoOdeRhs(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
-    boost::ignore_unused(time);
-
-    int i;
     int nvariables = inarray.size();
-    int npoints    = GetNpoints();
+    int ncoeffs    = GetNcoeffs();
+    int nq         = GetNpoints();
+
+    if (time > 0)
+    {
+    }
 
     switch (m_projectionType)
     {
         case MultiRegions::eDiscontinuous:
         {
-            int ncoeffs = inarray[0].size();
+            Array<OneD, Array<OneD, NekDouble>> WeakAdv(nvariables);
 
-            if (m_spacedim == 3)
+            WeakAdv[0] = Array<OneD, NekDouble>(ncoeffs * nvariables);
+            for (int i = 1; i < nvariables; ++i)
             {
-                Array<OneD, Array<OneD, NekDouble>> WeakAdv(nvariables);
-
-                WeakAdv[0] = Array<OneD, NekDouble>(ncoeffs * nvariables);
-                for (i = 1; i < nvariables; ++i)
-                {
-                    WeakAdv[i] = WeakAdv[i - 1] + ncoeffs;
-                }
-
-                // Compute \nabla \cdot \vel u according to MMF scheme
-                WeakDGDirectionalAdvection(inarray, WeakAdv);
-
-                for (i = 0; i < nvariables; ++i)
-                {
-                    m_fields[i]->MultiplyByElmtInvMass(WeakAdv[i], WeakAdv[i]);
-                    m_fields[i]->BwdTrans(WeakAdv[i], outarray[i]);
-
-                    // Add  m_vellc * inarray[i] = \nabla v^m \cdot e^m to
-                    // outarray[i]
-                    // Vmath::Vvtvp(npoints, &m_vellc[0], 1, &inarray[i][0], 1,
-                    // &outarray[i][0], 1, &outarray[i][0], 1);
-                    Vmath::Neg(npoints, outarray[i], 1);
-                }
+                WeakAdv[i] = WeakAdv[i - 1] + ncoeffs;
             }
-            else
-            {
-                m_advObject->Advect(2, m_fields, m_velocity, inarray, outarray,
-                                    0.0);
 
-                for (i = 0; i < nvariables; ++i)
+            // Compute \nabla \cdot \vel u according to MMF scheme
+            WeakDGDirectionalAdvection(inarray, WeakAdv);
+
+            for (int i = 0; i < nvariables; ++i)
+            {
+                if (m_DivergenceRestore > 0)
                 {
-                    Vmath::Neg(npoints, outarray[i], 1);
+                    Array<OneD, NekDouble> tmpc(ncoeffs);
+                    Array<OneD, NekDouble> tmp(nq);
+
+                    Array<OneD, NekDouble> velvector(m_spacedim * nq);
+                    for (int k = 0; k < m_spacedim; ++k)
+                    {
+                        Vmath::Vmul(nq, &inarray[0][0], 1, &m_velocity[k][0], 1,
+                                    &velvector[k * nq], 1);
+                    }
+
+                    switch (m_DivergenceRestore)
+                    {
+                        case 1:
+                        {
+                            tmp = ComputeSpuriousDivergence(
+                                m_movingframes, m_SphericalVector[2],
+                                velvector);
+                            Vmath::Neg(nq, tmp, 1);
+                        }
+                        break;
+
+                        case 2:
+                        {
+                            tmp = ComputeSpuriousDivergence(
+                                mf_LOCSPH, m_movingframes[2], velvector);
+                        }
+                        break;
+
+                        case 3:
+                        {
+                            tmp = ComputeSpuriousDivergence(
+                                mf_LOCSPH, m_SphericalVector[2], velvector);
+                        }
+                        break;
+
+                        default:
+                            break;
+                    }
+
+                    m_fields[i]->IProductWRTBase(tmp, tmpc);
+                    Vmath::Vadd(ncoeffs, tmpc, 1, WeakAdv[i], 1, WeakAdv[i], 1);
                 }
+
+                m_fields[i]->MultiplyByElmtInvMass(WeakAdv[i], WeakAdv[i]);
+                m_fields[i]->BwdTrans(WeakAdv[i], outarray[i]);
+
+                Vmath::Neg(nq, outarray[i], 1);
             }
         }
         break;
@@ -452,6 +479,7 @@ void MMFAdvection::DoOdeRhs(
         break;
     }
 }
+
 /**
  * @brief Compute the projection for the linear advection equation.
  *
@@ -465,46 +493,16 @@ void MMFAdvection::DoOdeProjection(
 {
     // Counter variable
     int i;
-
-    // Number of fields (variables of the problem)
-    int nVariables = inarray.size();
+    int nQuadraturePts = GetNpoints();
+    int nVariables     = inarray.size();
 
     // Set the boundary conditions
     SetBoundaryConditions(time);
 
     // Switch on the projection type (Discontinuous or Continuous)
-    switch (m_projectionType)
+    for (i = 0; i < nVariables; ++i)
     {
-        // Discontinuous projection
-        case MultiRegions::eDiscontinuous:
-        {
-            // Number of quadrature points
-            int nQuadraturePts = GetNpoints();
-
-            // Just copy over array
-            for (i = 0; i < nVariables; ++i)
-            {
-                Vmath::Vcopy(nQuadraturePts, inarray[i], 1, outarray[i], 1);
-            }
-            break;
-        }
-
-        // Continuous projection
-        case MultiRegions::eGalerkin:
-        case MultiRegions::eMixed_CG_Discontinuous:
-        {
-            Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs(), 0.0);
-            for (i = 0; i < nVariables; ++i)
-            {
-                m_fields[i]->FwdTrans(inarray[i], coeffs);
-                m_fields[i]->BwdTrans(coeffs, outarray[i]);
-            }
-            break;
-        }
-
-        default:
-            ASSERTL0(false, "Unknown projection scheme");
-            break;
+        Vmath::Vcopy(nQuadraturePts, inarray[i], 1, outarray[i], 1);
     }
 }
 
@@ -535,7 +533,7 @@ void MMFAdvection::GetFluxVector(
 }
 
 void MMFAdvection::WeakDGDirectionalAdvection(
-    const Array<OneD, Array<OneD, NekDouble>> &InField,
+    const Array<OneD, const Array<OneD, NekDouble>> &InField,
     Array<OneD, Array<OneD, NekDouble>> &OutField)
 {
     int i, j;
@@ -570,18 +568,16 @@ void MMFAdvection::WeakDGDirectionalAdvection(
         // if the NumericalFluxs function already includes the
         // normal in the output
 
+        Array<OneD, NekDouble> flux(nTracePointsTot, 0.0);
         Array<OneD, NekDouble> Fwd(nTracePointsTot);
         Array<OneD, NekDouble> Bwd(nTracePointsTot);
-
-        Array<OneD, NekDouble> flux(nTracePointsTot, 0.0);
-        Array<OneD, NekDouble> fluxFwd(nTracePointsTot);
-        Array<OneD, NekDouble> fluxBwd(nTracePointsTot);
 
         // Evaluate numerical flux in physical space which may in
         // general couple all component of vectors
         m_fields[i]->GetFwdBwdTracePhys(physfield[i], Fwd, Bwd);
 
-        // evaulate upwinded m_fields[i]
+        // evaulate upwinded m_fields[i]:
+        // m_traceVn = V \cdot n. flux = u+ or u-
         m_fields[i]->GetTrace()->Upwind(m_traceVn, Fwd, Bwd, flux);
 
         OutField[i] = Array<OneD, NekDouble>(ncoeffs, 0.0);
@@ -589,14 +585,14 @@ void MMFAdvection::WeakDGDirectionalAdvection(
         {
             // calculate numflux = (n \cdot MF)*flux
             Vmath::Vmul(nTracePointsTot, &flux[0], 1, &m_ncdotMFFwd[j][0], 1,
-                        &fluxFwd[0], 1);
+                        &Fwd[0], 1);
             Vmath::Vmul(nTracePointsTot, &flux[0], 1, &m_ncdotMFBwd[j][0], 1,
-                        &fluxBwd[0], 1);
+                        &Bwd[0], 1);
             Vmath::Neg(ncoeffs, WeakDeriv[j], 1);
 
             // FwdBwdtegral because generallize (N \cdot MF)_{FWD} \neq -(N
             // \cdot MF)_{BWD}
-            m_fields[i]->AddFwdBwdTraceIntegral(fluxFwd, fluxBwd, WeakDeriv[j]);
+            m_fields[i]->AddFwdBwdTraceIntegral(Fwd, Bwd, WeakDeriv[j]);
             m_fields[i]->SetPhysState(false);
 
             Vmath::Vadd(ncoeffs, &WeakDeriv[j][0], 1, &OutField[i][0], 1,
@@ -606,12 +602,10 @@ void MMFAdvection::WeakDGDirectionalAdvection(
 }
 
 void MMFAdvection::EvaluateAdvectionVelocity(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     Array<OneD, Array<OneD, NekDouble>> &velocity)
 {
     int nq = m_fields[0]->GetNpoints();
-
-    NekDouble vel_phi, vel_theta, sin_varphi, cos_varphi, sin_theta, cos_theta;
-    NekDouble x0j, x1j, x2j;
 
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
@@ -620,254 +614,37 @@ void MMFAdvection::EvaluateAdvectionVelocity(
     m_fields[0]->GetCoords(x0, x1, x2);
 
     // theta = a*sin(z/r),  phi = a*tan(y/x);
+    NekDouble uhat, vhat, sin_varphi, cos_varphi, sin_theta, cos_theta;
+    NekDouble x0j, x1j, x2j;
     for (int j = 0; j < nq; j++)
     {
         x0j = x0[j];
         x1j = x1[j];
         x2j = x2[j];
 
-        CartesianToSpherical(x0j, x1j, x2j, sin_varphi, cos_varphi, sin_theta,
-                             cos_theta);
+        CartesianToNewSpherical(x0j, x1j, x2j, sin_varphi, cos_varphi,
+                                sin_theta, cos_theta);
 
-        vel_phi   = m_waveFreq * (cos_theta * cos(m_RotAngle) +
-                                sin_theta * cos_varphi * sin(m_RotAngle));
-        vel_theta = -1.0 * m_waveFreq * sin_theta * sin(m_RotAngle);
+        uhat = m_waveFreq * (sin_theta * cos(m_RotAngle) +
+                             cos_theta * cos_varphi * sin(m_RotAngle));
+        vhat = -1.0 * m_waveFreq * sin_varphi * sin(m_RotAngle);
 
         velocity[0][j] =
-            -1.0 * vel_phi * sin_varphi - vel_theta * sin_theta * cos_varphi;
-        velocity[1][j] =
-            vel_phi * cos_varphi - vel_theta * sin_theta * sin_varphi;
-        velocity[2][j] = vel_theta * cos_theta;
+            -1.0 * uhat * sin_varphi - vhat * cos_theta * cos_varphi;
+        velocity[1][j] = uhat * cos_varphi - vhat * cos_theta * sin_varphi;
+        velocity[2][j] = vhat * sin_theta;
     }
 
     // Project the veloicty on the tangent plane
-
-    if (m_VelProjection)
-    {
-        // Check MovingFrames \cdot SurfaceNormals = 0
-        Array<OneD, Array<OneD, NekDouble>> newvelocity(m_spacedim);
-
-        Array<OneD, Array<OneD, NekDouble>> MF1(m_spacedim);
-        Array<OneD, Array<OneD, NekDouble>> MF2(m_spacedim);
-        Array<OneD, Array<OneD, NekDouble>> SN(m_spacedim);
-
-        for (int k = 0; k < m_spacedim; ++k)
-        {
-            newvelocity[k] = Array<OneD, NekDouble>(nq);
-            MF1[k]         = Array<OneD, NekDouble>(nq);
-            MF2[k]         = Array<OneD, NekDouble>(nq);
-            SN[k]          = Array<OneD, NekDouble>(nq);
-
-            Vmath::Vcopy(nq, &m_movingframes[0][k * nq], 1, &MF1[k][0], 1);
-            Vmath::Vcopy(nq, &m_movingframes[1][k * nq], 1, &MF2[k][0], 1);
-        }
-
-        VectorCrossProd(MF1, MF2, SN);
-        GramSchumitz(SN, m_velocity, newvelocity, true);
-
-        Array<OneD, NekDouble> tmp(nq, 0.0);
-        Array<OneD, NekDouble> Projection(nq, 0.0);
-
-        for (int k = 0; k < m_spacedim; ++k)
-        {
-            Vmath::Vsub(nq, &m_velocity[0][0], 1, &newvelocity[0][0], 1,
-                        &tmp[0], 1);
-            Vmath::Vmul(nq, &tmp[0], 1, &tmp[0], 1, &tmp[0], 1);
-            Vmath::Vadd(nq, tmp, 1, Projection, 1, Projection, 1);
-        }
-
-        std::cout
-            << "Velocity vector is projected onto the tangent plane: Diff = "
-            << RootMeanSquare(Projection) << std::endl;
-
-        for (int k = 0; k < m_spacedim; ++k)
-        {
-            Vmath::Vcopy(nq, &newvelocity[k][0], 1, &m_velocity[k][0], 1);
-        }
-    }
+    ProjectionOntoMovingFrames(movingframes, velocity, velocity);
 }
-
-/*
-void MMFAdvection::EvaluateAdvectionVelocity(Array<OneD, Array<OneD, NekDouble>
-> &velocity)
-  {
-    int nq = m_fields[0]->GetNpoints();
-
-    NekDouble vel_phi, sin_phi, cos_phi;
-    NekDouble vel_theta, sin_theta, cos_theta;
-    NekDouble radius, xyrad, Tol = 0.00001;
-
-    Array<OneD,NekDouble> x0(nq);
-    Array<OneD,NekDouble> x1(nq);
-    Array<OneD,NekDouble> x2(nq);
-
-    m_fields[0]->GetCoords(x0,x1,x2);
-
-    // theta = a*sin(z/r),  phi = a*tan(y/x);
-    for (int j = 0; j < nq; j++)
-      {
-        switch(m_surfaceType)
-          {
-          case SolverUtils::eSphere:
-          case SolverUtils::eTRSphere:
-            {
-              radius = sqrt( x0[j]*x0[j] + x1[j]*x1[j] + x2[j]*x2[j] );
-            }
-            break;
-
-          case SolverUtils::eIrregular:
-            {
-              radius = sqrt( 2.0*x0[j]*x0[j] + x1[j]*x1[j]*x1[j]*x1[j] +
-x1[j]*x1[j]
-                             + x2[j]*x2[j]*x2[j]*x2[j] + x2[j]*x2[j] );
-            }
-            break;
-
-            // 2 x^2 + 2(y^4 - y ) + z^4 + z^2 = 2.0
-          case SolverUtils::eNonconvex:
-            {
-              radius = sqrt( 2.0*x0[j]*x0[j] + 2.0*( x1[j]*x1[j]*x1[j]*x1[j] -
-x1[j]*x1[j] )
-                             + x2[j]*x2[j]*x2[j]*x2[j] + x2[j]*x2[j] );
-            }
-            break;
-
-          default:
-            break;
-          }
-
-            // At North and South poles, (ax,ay,ax) = (0, Omega_f*sin(alpha),0)
-            if( fabs(fabs(x2[j]) - radius) < Tol )
-              {
-                sin_theta = x2[j]/radius;
-
-                velocity[0][j] = 0.0;
-                velocity[1][j] = 0.0;
-                velocity[2][j] = 0.0;
-              }
-            else
-              {
-                // Compute the arc length of the trajectory
-                NekDouble zp, velmag0, velmag, length0, zcutoff=0.0, zmax;
-
-                zp = fabs(x2[j]);
-
-                zmax = Vmath::Vmax(nq, x2, 1);
-                velmag = ComputeCirculatingArclength(x2[j], radius*radius);
-
-                switch(m_surfaceType)
-                  {
-
-                  case SolverUtils::eSphere:
-                  case SolverUtils::eTRSphere:
-                    {
-                      zcutoff = 0.7;
-                      velmag0 = velmag;
-                    }
-                    break;
-
-                  case SolverUtils::eIrregular:
-                    {
-                      zcutoff = 0.7;
-                      length0 = 0.88;
-                      //   velmag0 = length0*( 1.0 - (zp -
-zcutoff)/(1.0-zcutoff) );
-                      velmag0 = (length0/(zcutoff*zcutoff-zmax*zmax))*( zp*zp -
-zmax*zmax);
-                    }
-                    break;
-
-                  case SolverUtils::eNonconvex:
-                    {
-                      zcutoff = 0.7;
-                      length0 = 1.21;
-                      //   velmag0 = length0*( 1.0 - (zp -
-zcutoff)/(1.0-zcutoff) );
-                      velmag0 = (length0/(zcutoff*zcutoff - 1.0))*( zp*zp -
-1.0);
-                    }
-                    break;
-
-                  default:
-                    break;
-                  }
-
-                if( zp > zcutoff )
-                  {
-                    velmag = velmag0;
-                  }
-
-                vel_phi = m_waveFreq*velmag;
-                vel_theta = 0.0;
-
-                xyrad = sqrt( x0[j]*x0[j] + x1[j]*x1[j] );
-                if(xyrad<Tol)
-                  {
-                    sin_phi = 0.0;
-                    cos_phi = 0.0;
-                  }
-
-                else
-                  {
-                    sin_phi = x1[j]/xyrad;
-                    cos_phi = x0[j]/xyrad;
-                  }
-
-                // sin_theta = x2[j]/radius;
-                cos_theta = sqrt( x0[j]*x0[j] + x1[j]*x1[j] )/radius;
-
-                if(fabs(velmag) < 0.001)
-                  {
-                    velocity[0][j] = 0.0 ;
-                    velocity[1][j] = 0.0  ;
-                    velocity[2][j] = 0.0;
-                  }
-
-                else
-                  {
-                    velocity[0][j] = -1.0*vel_phi*sin_phi ;
-                    velocity[1][j] = vel_phi*cos_phi  ;
-                    velocity[2][j] = 0.0;
-                  }
-
-              } // else-loop
-      }
-
-    // Project the veloicty on the tangent plane
-      int nq = m_fields[0]->GetNpoints();
-
-      // Check MovingFrames \cdot SurfaceNormals = 0
-      Array<OneD, NekDouble> temp0(nq,0.0);
-      Array<OneD, NekDouble> temp1(nq,0.0);
-      Array<OneD, Array<OneD, NekDouble> > newvelocity(m_spacedim);
-
-      for(int k=0; k<m_spacedim; ++k)
-        {
-          newvelocity[k] = Array<OneD, NekDouble>(nq);
-        }
-
-        std::cout <<"=====================================================" <<
-std::endl;
-        std::cout << "Velocity vector is projected onto the tangent plane " <<
-std::endl;
-        std::cout <<"=====================================================" <<
-std::endl;
-        GramSchumitz(m_surfaceNormal, m_velocity, newvelocity);
-
-      for(int k=0; k<m_spacedim; ++k)
-        {
-          Vmath::Vcopy(nq, &newvelocity[k][0], 1, &m_velocity[k][0], 1);
-        }
-  }
-
-*/
 
 NekDouble MMFAdvection::ComputeCirculatingArclength(const NekDouble zlevel,
                                                     const NekDouble Rhs)
 {
 
     NekDouble Tol = 0.0001, Maxiter = 1000, N = 100;
-    NekDouble newy, F = 0.0, dF = 1.0, y0, tmp;
+    NekDouble newy, F = 0.0, dF = 0.0, y0, tmp;
 
     Array<OneD, NekDouble> xp(N + 1);
     Array<OneD, NekDouble> yp(N + 1);
@@ -882,6 +659,7 @@ NekDouble MMFAdvection::ComputeCirculatingArclength(const NekDouble zlevel,
         }
         break;
 
+            //  2*x^2 + y^4 + y + z^4 + z^2 = 1
         case SolverUtils::eIrregular:
         {
             intval = sqrt(0.5 * (Rhs - zlevel * zlevel * zlevel * zlevel -
@@ -889,6 +667,7 @@ NekDouble MMFAdvection::ComputeCirculatingArclength(const NekDouble zlevel,
         }
         break;
 
+            //  2 x^2 + 2 (y^4 - y^2 ) + z^4 + z^2 = 2
         case SolverUtils::eNonconvex:
         {
             tmp = 0.5 *
@@ -903,7 +682,7 @@ NekDouble MMFAdvection::ComputeCirculatingArclength(const NekDouble zlevel,
 
     switch (m_surfaceType)
     {
-        // Find the half of all the xp and yp on zlevel ....
+            // Find the half of all the xp and yp on zlevel ....
         case SolverUtils::eSphere:
         case SolverUtils::eTRSphere:
         case SolverUtils::eIrregular:
@@ -917,7 +696,7 @@ NekDouble MMFAdvection::ComputeCirculatingArclength(const NekDouble zlevel,
                 {
                     switch (m_surfaceType)
                     {
-                        // Find the half of all the xp and yp on zlevel ....
+                            // Find the half of all the xp and yp on zlevel ....
                         case SolverUtils::eSphere:
                         case SolverUtils::eTRSphere:
                         {
@@ -1000,20 +779,22 @@ void MMFAdvection::v_SetInitialConditions(const NekDouble initialtime,
                                           bool dumpInitialConditions,
                                           const int domain)
 {
-    boost::ignore_unused(domain);
-
     int nq = m_fields[0]->GetNpoints();
 
     Array<OneD, NekDouble> u(nq);
+
+    if (domain == 0)
+    {
+    }
 
     switch (m_TestType)
     {
         case eAdvectionBell:
         {
             AdvectionBellSphere(u);
-            m_fields[0]->SetPhys(u);
 
-            m_Mass0 = m_fields[0]->Integral(u);
+            m_Mass0 = m_fields[0]->PhysIntegral(u);
+            m_fields[0]->SetPhys(u);
 
             // forward transform to fill the modal coeffs
             for (int i = 0; i < m_fields.size(); ++i)
@@ -1030,7 +811,7 @@ void MMFAdvection::v_SetInitialConditions(const NekDouble initialtime,
             Test2Dproblem(initialtime, u);
             m_fields[0]->SetPhys(u);
 
-            m_Mass0 = m_fields[0]->Integral(u);
+            m_Mass0 = m_fields[0]->PhysIntegral(u);
 
             // forward transform to fill the modal coeffs
             for (int i = 0; i < m_fields.size(); ++i)
@@ -1047,7 +828,7 @@ void MMFAdvection::v_SetInitialConditions(const NekDouble initialtime,
             AdvectionBellPlane(u);
             m_fields[0]->SetPhys(u);
 
-            m_Mass0 = m_fields[0]->Integral(u);
+            m_Mass0 = m_fields[0]->PhysIntegral(u);
             std::cout << "m_Mass0 = " << m_Mass0 << std::endl;
 
             // forward transform to fill the modal coeffs
@@ -1111,6 +892,7 @@ void MMFAdvection::AdvectionBellPlane(Array<OneD, NekDouble> &outfield)
 
         dist = sqrt(x0j * x0j + x1j * x1j);
 
+        // h = (h0/2)*(1+cos(pi*r/R))
         if (dist < m_radius_limit)
         {
             outfield[j] = 0.5 * (1.0 + cos(m_pi * dist / m_radius_limit));
@@ -1128,19 +910,12 @@ void MMFAdvection::AdvectionBellSphere(Array<OneD, NekDouble> &outfield)
 
     NekDouble dist, radius, cosdiff, sin_theta, cos_theta, sin_varphi,
         cos_varphi;
-    NekDouble m_theta_c, m_varphi_c, m_radius_limit, m_c0;
 
     Array<OneD, NekDouble> x(nq);
     Array<OneD, NekDouble> y(nq);
     Array<OneD, NekDouble> z(nq);
 
     m_fields[0]->GetCoords(x, y, z);
-
-    // Sets of parameters
-    m_theta_c      = 0.0;
-    m_varphi_c     = 3.0 * m_pi / 2.0;
-    m_radius_limit = 7.0 * m_pi / 64.0;
-    m_c0           = 0.0;
 
     NekDouble x0j, x1j, x2j;
     outfield = Array<OneD, NekDouble>(nq, 0.0);
@@ -1160,18 +935,25 @@ void MMFAdvection::AdvectionBellSphere(Array<OneD, NekDouble> &outfield)
 
         cosdiff = cos_varphi * cos(m_varphi_c) + sin_varphi * sin(m_varphi_c);
         dist    = radius * acos(sin(m_theta_c) * sin_theta +
-                             cos(m_theta_c) * cos_theta * cosdiff);
+                                cos(m_theta_c) * cos_theta * cosdiff);
 
         if (dist < m_radius_limit)
         {
-            outfield[j] =
-                0.5 * (1.0 + cos(m_pi * dist / m_radius_limit)) + m_c0;
+            outfield[j] = 0.5 * (1.0 + cos(m_pi * dist / m_radius_limit));
         }
         else
         {
-            outfield[j] = m_c0;
+            outfield[j] = 0.0;
         }
     }
+
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    Array<OneD, NekDouble> tempc(ncoeffs);
+    // Smooth cosine bell
+    // m_fields[0]->FwdTrans_IterPerExp(outfield, tempc);
+    m_fields[0]->FwdTransLocalElmt(outfield, tempc);
+    m_fields[0]->BwdTrans(tempc, outfield);
 }
 
 void MMFAdvection::Test2Dproblem(const NekDouble time,
@@ -1219,7 +1001,7 @@ void MMFAdvection::Test3Dproblem(const NekDouble time,
     outfield = u;
 }
 
-void MMFAdvection::ComputeNablaCdotVelocity(Array<OneD, NekDouble> &vellc)
+Array<OneD, NekDouble> MMFAdvection::ComputeNablaCdotVelocity()
 {
     int nq = m_fields[0]->GetNpoints();
 
@@ -1230,7 +1012,7 @@ void MMFAdvection::ComputeNablaCdotVelocity(Array<OneD, NekDouble> &vellc)
     Array<OneD, NekDouble> Dtmp2(nq);
     Array<OneD, NekDouble> Drv(nq);
 
-    vellc = Array<OneD, NekDouble>(nq, 0.0);
+    Array<OneD, NekDouble> vellc(nq, 0.0);
 
     // m_vellc = \nabla m_vel \cdot tan_i
     Array<OneD, NekDouble> tmp(nq);
@@ -1277,39 +1059,179 @@ void MMFAdvection::ComputeNablaCdotVelocity(Array<OneD, NekDouble> &vellc)
             }
         }
     }
+    return vellc;
 }
 
-void MMFAdvection::ComputeveldotMF(
-    Array<OneD, Array<OneD, NekDouble>> &veldotMF)
+void MMFAdvection::ComputevelodotMF(
+    const Array<OneD, const Array<OneD, NekDouble>> &velocity,
+    Array<OneD, Array<OneD, NekDouble>> &movingframes)
 {
     int nq = m_fields[0]->GetNpoints();
 
-    veldotMF = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-
-    Array<OneD, NekDouble> magMF(nq);
+    Array<OneD, NekDouble> veldotMF(nq);
     for (int j = 0; j < m_shapedim; ++j)
     {
-        veldotMF[j] = Array<OneD, NekDouble>(nq, 0.0);
-
+        veldotMF = Array<OneD, NekDouble>(nq, 0.0);
         for (int k = 0; k < m_spacedim; ++k)
         {
-            Vmath::Vvtvp(nq, &m_movingframes[j][k * nq], 1, &m_velocity[k][0],
-                         1, &veldotMF[j][0], 1, &veldotMF[j][0], 1);
+            Vmath::Vvtvp(nq, &movingframes[j][k * nq], 1, &velocity[k][0], 1,
+                         &veldotMF[0], 1, &veldotMF[0], 1);
+        }
+
+        // Modify e^i as v^i e^i
+        for (int k = 0; k < m_spacedim; k++)
+        {
+            Vmath::Vmul(nq, &veldotMF[0], 1, &movingframes[j][k * nq], 1,
+                        &movingframes[j][k * nq], 1);
         }
     }
 }
+
+NekDouble MMFAdvection::v_L2Error(unsigned int field,
+                                  const Array<OneD, NekDouble> &exactsoln,
+                                  bool Normalised)
+{
+    if (Normalised)
+    {
+    }
+
+    NekDouble L2error;
+
+    L2error = m_fields[field]->L2(m_fields[field]->GetPhys(), exactsoln);
+
+    return L2error;
+}
+
+NekDouble MMFAdvection::v_LinfError(unsigned int field,
+                                    const Array<OneD, NekDouble> &exactsoln)
+{
+    NekDouble Linferror;
+
+    Linferror = m_fields[field]->Linf(m_fields[field]->GetPhys(), exactsoln);
+
+    return Linferror;
+}
+
+// NekDouble MMFAdvection::v_L2Error(unsigned int field,
+//                                   const Array<OneD, NekDouble> &exactsoln,
+//                                   bool Normalised)
+// {
+//     int nq = m_fields[0]->GetNpoints();
+
+//     NekDouble dist, radius, cosdiff, sin_theta, cos_theta, sin_varphi,
+//         cos_varphi;
+
+//     Array<OneD, NekDouble> x(nq);
+//     Array<OneD, NekDouble> y(nq);
+//     Array<OneD, NekDouble> z(nq);
+
+//     Array<OneD, NekDouble> uBell(nq);
+
+//     m_fields[0]->GetCoords(x, y, z);
+
+//     NekDouble x0j, x1j, x2j;
+//     for (int j = 0; j < nq; ++j)
+//     {
+//         x0j = x[j];
+//         x1j = y[j];
+//         x2j = z[j];
+
+//         radius = sqrt(x0j * x0j + x1j * x1j + x2j * x2j);
+
+//         sin_varphi = x1j / sqrt(x0j * x0j + x1j * x1j);
+//         cos_varphi = x0j / sqrt(x0j * x0j + x1j * x1j);
+
+//         sin_theta = x2j / radius;
+//         cos_theta = sqrt(x0j * x0j + x1j * x1j) / radius;
+
+//         cosdiff = cos_varphi * cos(m_varphi_c) + sin_varphi *
+//         sin(m_varphi_c); dist    = radius * acos(sin(m_theta_c) * sin_theta +
+//                              cos(m_theta_c) * cos_theta * cosdiff);
+
+//         if (dist < m_radius_limit)
+//         {
+//             uBell[j] = (m_fields[field]->GetPhys())[j];
+//         }
+
+//         else
+//         {
+//             uBell[j] = (m_fields[field]->GetPhys())[j];
+//         }
+
+//         if (Normalised)
+//         {
+//             uBell[j] = uBell[j];
+//         }
+//     }
+
+//     NekDouble L2error = m_fields[field]->L2(uBell, exactsoln);
+//     return L2error;
+// }
+
+// NekDouble MMFAdvection::v_LinfError(unsigned int field,
+//                                     const Array<OneD, NekDouble> &exactsoln)
+// {
+//     int nq = m_fields[0]->GetNpoints();
+
+//     NekDouble dist, radius, cosdiff, sin_theta, cos_theta, sin_varphi,
+//         cos_varphi;
+
+//     Array<OneD, NekDouble> x(nq);
+//     Array<OneD, NekDouble> y(nq);
+//     Array<OneD, NekDouble> z(nq);
+
+//     Array<OneD, NekDouble> uBell(nq);
+
+//     m_fields[0]->GetCoords(x, y, z);
+
+//     NekDouble x0j, x1j, x2j;
+//     for (int j = 0; j < nq; ++j)
+//     {
+//         x0j = x[j];
+//         x1j = y[j];
+//         x2j = z[j];
+
+//         radius = sqrt(x0j * x0j + x1j * x1j + x2j * x2j);
+
+//         sin_varphi = x1j / sqrt(x0j * x0j + x1j * x1j);
+//         cos_varphi = x0j / sqrt(x0j * x0j + x1j * x1j);
+
+//         sin_theta = x2j / radius;
+//         cos_theta = sqrt(x0j * x0j + x1j * x1j) / radius;
+
+//         cosdiff = cos_varphi * cos(m_varphi_c) + sin_varphi *
+//         sin(m_varphi_c); dist    = radius * acos(sin(m_theta_c) * sin_theta +
+//                              cos(m_theta_c) * cos_theta * cosdiff);
+
+//         if (dist < m_radius_limit)
+//         {
+//             uBell[j] = (m_fields[field]->GetPhys())[j];
+//         }
+
+//         else
+//         {
+//             uBell[j] = (m_fields[field]->GetPhys())[j];
+//         }
+//     }
+
+//     NekDouble Linferror = m_fields[field]->Linf(uBell, exactsoln);
+//     return Linferror;
+// }
 
 void MMFAdvection::v_EvaluateExactSolution(unsigned int field,
                                            Array<OneD, NekDouble> &outfield,
                                            const NekDouble time)
 {
-    boost::ignore_unused(field);
+    // int ncoeffs = GetNcoeffs();
 
     switch (m_TestType)
     {
         case eAdvectionBell:
         {
-            AdvectionBellSphere(outfield);
+            if (field == 0)
+            {
+                AdvectionBellSphere(outfield);
+            }
         }
         break;
 
@@ -1334,12 +1256,23 @@ void MMFAdvection::v_EvaluateExactSolution(unsigned int field,
         default:
             break;
     }
+
+    // Array<OneD, NekDouble> tmpc(ncoeffs);
+
+    // m_fields[0]->IProductWRTBase(outfield, tmpc);
+    // m_fields[0]->BwdTrans(tmpc, outfield);
 }
 
 void MMFAdvection::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFSystem::v_GenerateSummary(s);
     SolverUtils::AddSummaryItem(s, "TestType", TestTypeMap[m_TestType]);
+    SolverUtils::AddSummaryItem(s, "Divergence Restore", m_DivergenceRestore);
     SolverUtils::AddSummaryItem(s, "Rotation Angle", m_RotAngle);
+
+    SolverUtils::AddSummaryItem(s, "theta_c", m_theta_c);
+    SolverUtils::AddSummaryItem(s, "varphi_c", m_varphi_c);
+    SolverUtils::AddSummaryItem(s, "radius_limit", m_radius_limit);
 }
+
 } // namespace Nektar

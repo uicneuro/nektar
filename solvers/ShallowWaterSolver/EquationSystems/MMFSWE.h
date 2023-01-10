@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: MMFSWE.h
+// File MMFSWE.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -10,6 +10,7 @@
 // Department of Aeronautics, Imperial College London (UK), and Scientific
 // Computing and Imaging Institute, University of Utah (USA).
 //
+// License for the specific language governing rights and limitations under
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -100,6 +101,8 @@ protected:
 
     NekDouble m_Vorticity0, m_Mass0, m_Energy0, m_Enstrophy0;
 
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_LOCAL_cdot_LOCSPH;
+
     /// Indicates if variables are primitive or conservative
     bool m_primitive;
 
@@ -175,8 +178,12 @@ protected:
     void PrimitiveToConservative();
     void ConservativeToPrimitive();
 
-    void WeakDGSWEDirDeriv(const Array<OneD, Array<OneD, NekDouble>> &InField,
-                           Array<OneD, Array<OneD, NekDouble>> &OutField);
+    void WeakDGSWEDivergence(const Array<OneD, Array<OneD, NekDouble>> &InField,
+                             Array<OneD, Array<OneD, NekDouble>> &OutField);
+
+    void WeakDGSWEDivergenceCNR(
+        const Array<OneD, Array<OneD, NekDouble>> &InField,
+        Array<OneD, Array<OneD, NekDouble>> &OutField);
 
     void AddDivForGradient(Array<OneD, Array<OneD, NekDouble>> &physarray,
                            Array<OneD, Array<OneD, NekDouble>> &outarray);
@@ -186,8 +193,14 @@ protected:
                           Array<OneD, Array<OneD, NekDouble>> &numfluxBwd);
 
     void GetSWEFluxVector(
-        const int i, const Array<OneD, const Array<OneD, NekDouble>> &physfield,
-        Array<OneD, Array<OneD, NekDouble>> &flux);
+        const int i, const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &flux,
+        const int AddGradientTerm = 0);
+
+    void ComputephysfieldinMF(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &physfield,
+        const int DivergenceRestore = 0);
 
     void RiemannSolverHLLC(const int index, NekDouble hL, NekDouble uL,
                            NekDouble vL, NekDouble hR, NekDouble uR,
@@ -204,10 +217,15 @@ protected:
                      Array<OneD, NekDouble> &numfluxF,
                      Array<OneD, NekDouble> &numfluxB);
 
-    void LaxFriedrichFlux(const int index, NekDouble hL, NekDouble uL,
-                          NekDouble vL, NekDouble hR, NekDouble uR,
-                          NekDouble vR, Array<OneD, NekDouble> &numfluxF,
-                          Array<OneD, NekDouble> &numfluxB);
+    void LaxFriedrichFlux(
+        const int index, const NekDouble velL, const NekDouble velR,
+        const NekDouble hL, const NekDouble uL, const NekDouble vL,
+        const NekDouble hR, const NekDouble uR, const NekDouble vR,
+        const NekDouble MageF1, const NekDouble MageF2, const NekDouble MageB1,
+        const NekDouble MageB2, const NekDouble eF1_cdot_eB1,
+        const NekDouble eF1_cdot_eB2, const NekDouble eF2_cdot_eB1,
+        const NekDouble eF2_cdot_eB2, Array<OneD, NekDouble> &numfluxF,
+        Array<OneD, NekDouble> &numfluxB);
 
     void RusanovFlux(const int index, NekDouble hL, NekDouble uL, NekDouble vL,
                      NekDouble hR, NekDouble uR, NekDouble vR,
@@ -222,15 +240,25 @@ protected:
     void AddCoriolis(Array<OneD, Array<OneD, NekDouble>> &physarray,
                      Array<OneD, Array<OneD, NekDouble>> &outarray);
 
+    void AddCoriolisSDR(Array<OneD, Array<OneD, NekDouble>> &physarray,
+                        Array<OneD, Array<OneD, NekDouble>> &outarray);
+
     void AddElevationEffect(Array<OneD, Array<OneD, NekDouble>> &physarray,
                             Array<OneD, Array<OneD, NekDouble>> &outarray);
 
-    void AddRotation(Array<OneD, Array<OneD, NekDouble>> &physarray,
-                     Array<OneD, Array<OneD, NekDouble>> &outarray);
+    void AddElevationEffectPhys(Array<OneD, Array<OneD, NekDouble>> &physarray,
+                                Array<OneD, Array<OneD, NekDouble>> &outarray);
+
+    void AddTimeVariantFrames(
+        const Array<OneD, const Array<OneD, NekDouble>> &physarray,
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        Array<OneD, Array<OneD, NekDouble>> &outarray,
+        const int DivergenceRestore = 0);
 
     void Compute_demdt_cdot_ek(
         const int indm, const int indk,
         const Array<OneD, const Array<OneD, NekDouble>> &physarray,
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         Array<OneD, NekDouble> &outarray);
 
     void TestVorticityComputation();
@@ -245,6 +273,23 @@ protected:
                                NekDouble time);
     void WallBoundary2D(int bcRegion, int cnt,
                         Array<OneD, Array<OneD, NekDouble>> &physarray);
+
+    void CheckPlot_ThetaPhiMap(
+        const Array<OneD, const Array<OneD, NekDouble>> &fieldphys);
+
+    void SpuriousDivRemove(
+        const Array<OneD, const Array<OneD, NekDouble>> &physarray,
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        Array<OneD, Array<OneD, NekDouble>> &outarray);
+
+    // void SpuriousDivRemoveCAD(
+    // const Array<OneD, const Array<OneD, NekDouble>> &physarray,
+    // Array<OneD, Array<OneD, NekDouble>> &outarray);
+
+    void Convert_LOCAL_TO_LOCALSPHERE(const Array<OneD, const NekDouble> &physu,
+                                      const Array<OneD, const NekDouble> &physv,
+                                      Array<OneD, NekDouble> &newu,
+                                      Array<OneD, NekDouble> &newv);
 
     /// Initialise the object
     virtual void v_InitObject(bool DeclareFields = true) override;
@@ -279,6 +324,10 @@ private:
                           Array<OneD, NekDouble> &outfield);
 
     void Checkpoint_Output_Cartesian(std::string outname);
+
+    void Checkpoint_ErrMap(
+        const NekDouble time,
+        const Array<OneD, const Array<OneD, NekDouble>> &fieldphys);
 };
 } // namespace Nektar
 

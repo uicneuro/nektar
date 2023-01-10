@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: MMFMaxwell.h
+// File MMFMaxwell.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -32,11 +32,64 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+
 #ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFMAXWELL_H
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFMAXWELL_H
 
 #include <SolverUtils/MMFSystem.h>
 #include <SolverUtils/UnsteadySystem.h>
+
+enum TestMaxwellType
+{
+    eMaxwell1D,
+    eTestMaxwell2DPEC,
+    eTestMaxwell2DPECAVGFLUX,
+    eTestMaxwell2DPMC,
+    eMaxwell3D,
+    eScatField1D,
+    eScatField2D,
+    eScatField3D,
+    eTotField1D,
+    eTotField2D,
+    eTotField3D,
+    eMaxwellSphere,
+    eELF2DSurface,
+    SIZE_TestMaxwellType ///< Length of enum list
+};
+
+const char *const TestMaxwellTypeMap[] = {
+    "Maxwell1D",        "TestMaxwell2DPEC", "TestMaxwell2DPECAVGFLUX",
+    "TestMaxwell2DPMC", "Maxwell3D",        "ScatField1D",
+    "ScatField2D",      "ScatField3D",      "TotField1D",
+    "TotField2D",       "TotField3D",       "MaxwellSphere",
+    "ELF2DSurface",
+};
+
+enum PolType
+{
+    eTransMagnetic,
+    eTransElectric,
+    SIZE_PolType
+};
+
+const char *const PolTypeMap[] = {
+    "TransMagnetic",
+    "TransElectric",
+};
+
+enum IncType
+{
+    ePlaneWave,
+    ePlaneWaveImag,
+    eCylindricalWave,
+    SIZE_IncType
+};
+
+const char *const IncTypeMap[] = {
+    "PlaneWave",
+    "PlaneWaveImag",
+    "CylindricalWave",
+};
 
 enum CloakType
 {
@@ -79,10 +132,14 @@ public:
     SourceType m_SourceType;
     bool m_DispersiveCloak;
 
+    TestMaxwellType m_TestMaxwellType;
+    PolType m_PolType;
+    IncType m_IncType;
+
     /// Creates an instance of this class
     static SolverUtils::EquationSystemSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
-        const SpatialDomains::MeshGraphSharedPtr &pGraph)
+        const SpatialDomains::MeshGraphSharedPtr& pGraph)
     {
         SolverUtils::EquationSystemSharedPtr p =
             MemoryManager<MMFMaxwell>::AllocateSharedPtr(pSession, pGraph);
@@ -111,6 +168,8 @@ protected:
 
     int m_AddRotation;
 
+    NekDouble m_Energy0;
+
     bool m_Cloaking;
     NekDouble m_CloakNlayer;
     NekDouble m_Cloakraddelta;
@@ -120,13 +179,13 @@ protected:
 
     Array<OneD, NekDouble> m_SourceVector;
     NekDouble m_Psx, m_Psy, m_Psz;
-    NekDouble m_PSduration, m_Gaussianradius;
+    NekDouble m_PSduration, m_Gaussianradius, m_PSstrength;
 
     Array<OneD, Array<OneD, NekDouble>> m_CrossProductMF;
 
     /// Session reader
     MMFMaxwell(const LibUtilities::SessionReaderSharedPtr &pSession,
-               const SpatialDomains::MeshGraphSharedPtr &pGraph);
+               const SpatialDomains::MeshGraphSharedPtr& pGraph);
 
     NekDouble m_freq;
 
@@ -138,6 +197,21 @@ protected:
     int m_PMLelement, m_RecPML;
     NekDouble m_PMLthickness, m_PMLstart, m_PMLmaxsigma;
     Array<OneD, Array<OneD, NekDouble>> m_SigmaPML;
+
+        // m_dedxi_cdot_e[m][j][n][] = de^m / d \xi^j \cdot e^n
+    Array<OneD, Array<OneD, Array<OneD, Array<OneD, NekDouble>>>>
+        m_dedxi_cdot_e;
+
+    Array<OneD, Array<OneD, NekDouble>> m_ZimFwd;
+    Array<OneD, Array<OneD, NekDouble>> m_ZimBwd;
+    Array<OneD, Array<OneD, NekDouble>> m_YimFwd;
+    Array<OneD, Array<OneD, NekDouble>> m_YimBwd;
+
+    Array<OneD, Array<OneD, NekDouble>> m_epsvec;
+    Array<OneD, Array<OneD, NekDouble>> m_muvec;
+
+    Array<OneD, Array<OneD, NekDouble>> m_negepsvecminus1;
+    Array<OneD, Array<OneD, NekDouble>> m_negmuvecminus1;
 
     int m_NoInc;
 
@@ -153,14 +227,68 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void AddGreenDerivCompensate(
-        const Array<OneD, const Array<OneD, NekDouble>> &physarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray);
+    Array<OneD, NekDouble> GreenDerivCompensate(const int var,
+        const Array<OneD, const Array<OneD, NekDouble>> &physarray);
+
+    Array<OneD, NekDouble> ComputeSDMaxwell(const int var,
+        const Array<OneD, const Array<OneD, NekDouble>> &physarray);
 
     void WeakDGMaxwellDirDeriv(
         const Array<OneD, const Array<OneD, NekDouble>> &InField,
         Array<OneD, Array<OneD, NekDouble>> &OutField,
         const NekDouble time = 0.0);
+
+    // Maxwell 2D flux
+    void NumericalMaxwellFlux(
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &numfluxFwd,
+        Array<OneD, Array<OneD, NekDouble>> &numfluxBwd,
+        const NekDouble time = 0.0);
+
+    void NumericalMaxwellFluxTM(
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &numfluxFwd,
+        Array<OneD, Array<OneD, NekDouble>> &numfluxBwd,
+        const NekDouble time = 0.0);
+
+    void NumericalMaxwellFluxTE(
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &numfluxFwd,
+        Array<OneD, Array<OneD, NekDouble>> &numfluxBwd,
+        const NekDouble time = 0.0);
+
+void ComputeNtimesFz(const int dir,
+                                const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                                const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+                                const Array<OneD, const NekDouble> &imFwd,
+                                const Array<OneD, const NekDouble> &imBwd,
+                                Array<OneD, NekDouble> &outarrayFwd,
+                                Array<OneD, NekDouble> &outarrayBwd);
+
+void ComputeNtimestimesdFz(
+    const int dir, const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+    const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+    const Array<OneD, const NekDouble> &imFwd,
+    const Array<OneD, const NekDouble> &imBwd,
+    Array<OneD, NekDouble> &outarrayFwd, Array<OneD, NekDouble> &outarrayBwd);
+
+    void ComputeNtimestimesdF12(
+    const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+    const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+    const Array<OneD, const NekDouble> &im1Fwd,
+    const Array<OneD, const NekDouble> &im1Bwd,
+    const Array<OneD, const NekDouble> &im2Fwd,
+    const Array<OneD, const NekDouble> &im2Bwd,
+    Array<OneD, NekDouble> &outarrayFwd, Array<OneD, NekDouble> &outarrayBwd);
+
+    void ComputeNtimesF12(const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                                 const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+                                 const Array<OneD, const NekDouble> &im1Fwd,
+                                 const Array<OneD, const NekDouble> &im1Bwd,
+                                 const Array<OneD, const NekDouble> &im2Fwd,
+                                 const Array<OneD, const NekDouble> &im2Bwd,
+                                 Array<OneD, NekDouble> &outarrayFwd,
+                                 Array<OneD, NekDouble> &outarrayBwd);
 
     NekDouble ComputeEnergyDensity(Array<OneD, Array<OneD, NekDouble>> &fields);
 
@@ -168,15 +296,45 @@ protected:
                                          unsigned int field);
     Array<OneD, NekDouble> TestMaxwell2DPEC(
         const NekDouble time, unsigned int field,
-        const SolverUtils::PolType Polarization);
+        const PolType Polarization);
 
     Array<OneD, NekDouble> TestMaxwell2DPMC(
         const NekDouble time, unsigned int field,
-        const SolverUtils::PolType Polarization);
+        const PolType Polarization);
 
     Array<OneD, NekDouble> TestMaxwellSphere(const NekDouble time,
                                              const NekDouble omega,
                                              unsigned int field);
+
+     void ComputeZimYim(
+    const Array<OneD, const Array<OneD, NekDouble>> &epsvec,
+    const Array<OneD, const Array<OneD, NekDouble>> &muvec,
+    Array<OneD, Array<OneD, NekDouble>> &ZimFwd,
+    Array<OneD, Array<OneD, NekDouble>> &ZimBwd,
+    Array<OneD, Array<OneD, NekDouble>> &YimFwd,
+    Array<OneD, Array<OneD, NekDouble>> &YimBwd);
+
+     Array<OneD, NekDouble> GetIncidentField(const int var, const NekDouble time);
+
+    void AdddedtMaxwell(
+    const Array<OneD, const Array<OneD, NekDouble>> &physarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray);
+
+        void GetMaxwellFluxVector(
+        const int var,
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &flux);
+
+    void GetMaxwellFlux1D(
+        const int var,
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &flux);
+
+    void GetMaxwellFlux2D(
+        const int var,
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &flux);
+
 
     void Printout_SurfaceCurrent(Array<OneD, Array<OneD, NekDouble>> &fields,
                                  const int time);
@@ -248,10 +406,11 @@ protected:
     virtual void v_EvaluateExactSolution(unsigned int field,
                                          Array<OneD, NekDouble> &outfield,
                                          const NekDouble time) override;
+
     void print_MMF(Array<OneD, Array<OneD, NekDouble>> &inarray);
 
 private:
 };
-} // namespace Nektar
+}
 
 #endif

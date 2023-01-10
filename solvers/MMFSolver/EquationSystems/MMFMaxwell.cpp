@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// File: MMFMaxwell.cpp
+// File MMFMaxwell.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -32,20 +32,23 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <MMFSolver/EquationSystems/MMFMaxwell.h>
-
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/core/ignore_unused.hpp>
 #include <iomanip>
 #include <iostream>
+#include <typeinfo>
+
+#include <SolverUtils/MMFSystem.h>
+
+#include <MMFSolver/EquationSystems/MMFMaxwell.h>
+
+#include <boost/core/ignore_unused.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <LibUtilities/BasicUtils/Timer.h>
+#include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
 
 #include <LibUtilities/BasicUtils/Timer.h>
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
-#include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
-#include <SolverUtils/MMFSystem.h>
-
-#include <typeinfo>
 
 namespace Nektar
 {
@@ -54,7 +57,7 @@ std::string MMFMaxwell::className =
         "MMFMaxwell", MMFMaxwell::create, "MMFMaxwell equation.");
 
 MMFMaxwell::MMFMaxwell(const LibUtilities::SessionReaderSharedPtr &pSession,
-                       const SpatialDomains::MeshGraphSharedPtr &pGraph)
+                       const SpatialDomains::MeshGraphSharedPtr& pGraph)
     : UnsteadySystem(pSession, pGraph), MMFSystem(pSession, pGraph)
 {
 }
@@ -75,8 +78,8 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("boundaryforSF", m_boundaryforSF, 0);
     m_session->LoadParameter("PrintoutSurfaceCurrent", m_PrintoutSurfaceCurrent,
                              0);
-
     m_session->LoadParameter("AddRotation", m_AddRotation, 0);
+
 
     m_session->LoadParameter("NoInc", m_NoInc, 0);
 
@@ -86,7 +89,7 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("RecPML", m_RecPML, 0);
 
     m_session->LoadParameter("AddPML", m_AddPML, 0);
-    if (m_AddPML == 1)
+    if (m_AddPML)
     {
         m_RecPML = m_PMLelement;
     }
@@ -100,7 +103,9 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Psx", m_Psx, 0.0);
     m_session->LoadParameter("Psy", m_Psy, 0.0);
     m_session->LoadParameter("Psz", m_Psz, 0.0);
+    m_session->LoadParameter("PSstrength", m_PSstrength, 1.0);
     m_session->LoadParameter("PSduration", m_PSduration, 1.0);
+
     m_session->LoadParameter("Gaussianradius", m_Gaussianradius, 1.0);
 
     // Cloaking parameter
@@ -111,40 +116,47 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("varepsilon1", m_varepsilon[0], 1.0);
     m_session->LoadParameter("varepsilon2", m_varepsilon[1], 1.0);
     m_session->LoadParameter("varepsilon3", m_varepsilon[2], 1.0);
-    m_n1 = sqrt(m_varepsilon[0]);
-    m_n2 = sqrt(m_varepsilon[1]);
-    m_n3 = sqrt(m_varepsilon[2]);
 
     m_mu = Array<OneD, NekDouble>(m_spacedim);
     m_session->LoadParameter("mu1", m_mu[0], 1.0);
     m_session->LoadParameter("mu2", m_mu[1], 1.0);
     m_session->LoadParameter("mu3", m_mu[2], 1.0);
 
-    Array<OneD, Array<OneD, NekDouble>> Anisotropy(shapedim);
+    Array<OneD, Array<OneD, NekDouble>> AniStrength(shapedim);
     for (int j = 0; j < shapedim; ++j)
     {
-        Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
+        AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
     // Add Rectangular PML
-    MMFSystem::MMFInitObject(Anisotropy, m_RecPML);
+    MMFSystem::MMFInitObject(AniStrength);
 
+
+    m_session->LoadParameter("DivergenceRestore", m_DivergenceRestore, 0);
+
+    if(m_DivergenceRestore>1)
+    {
+        mf_LOCSPH = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+        GetLOCALMovingframes(mf_LOCSPH);
+        std::cout << "HERE 1";
+        ComputeAxisAlignedLOCALMovingframes(m_sphereMF, mf_LOCSPH);
+                std::cout << "HERE 2";
+    }
     // Compute the cross producted MF
-    DeriveCrossProductMF(m_CrossProductMF);
+    ComputeMFtimesMF(m_movingframes, m_CrossProductMF);
 
-    m_session->LoadParameter("Frequency", m_freq, 1.0);
+    m_session->LoadParameter("Frequency", m_freq, sqrt(2.0));
 
     // Define TestMaxwellType
     if (m_session->DefinesSolverInfo("TESTMAXWELLTYPE"))
     {
         std::string TestMaxwellTypeStr =
             m_session->GetSolverInfo("TESTMAXWELLTYPE");
-        for (int i = 0; i < (int)SolverUtils::SIZE_TestMaxwellType; ++i)
+        for (int i = 0; i < (int)SIZE_TestMaxwellType; ++i)
         {
-            if (boost::iequals(SolverUtils::TestMaxwellTypeMap[i],
-                               TestMaxwellTypeStr))
+            if (TestMaxwellTypeMap[i] == TestMaxwellTypeStr)
             {
-                m_TestMaxwellType = (SolverUtils::TestMaxwellType)i;
+                m_TestMaxwellType = (TestMaxwellType)i;
                 break;
             }
         }
@@ -152,61 +164,43 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
 
     else
     {
-        m_TestMaxwellType = (SolverUtils::TestMaxwellType)0;
+        m_TestMaxwellType = (TestMaxwellType)0;
     }
 
     // Define Polarization
     if (m_session->DefinesSolverInfo("POLTYPE"))
     {
         std::string PolTypeStr = m_session->GetSolverInfo("POLTYPE");
-        for (int i = 0; i < (int)SolverUtils::SIZE_PolType; ++i)
+        for (int i = 0; i < (int)SIZE_PolType; ++i)
         {
-            if (boost::iequals(SolverUtils::PolTypeMap[i], PolTypeStr))
+            if (PolTypeMap[i] == PolTypeStr)
             {
-                m_PolType = (SolverUtils::PolType)i;
+                m_PolType = (PolType)i;
                 break;
             }
         }
     }
     else
     {
-        m_PolType = (SolverUtils::PolType)0;
+        m_PolType = (PolType)0;
     }
 
     // Define Incident wave Type
     if (m_session->DefinesSolverInfo("INCTYPE"))
     {
         std::string IncTypeStr = m_session->GetSolverInfo("INCTYPE");
-        for (int i = 0; i < (int)SolverUtils::SIZE_IncType; ++i)
+        for (int i = 0; i < (int)SIZE_IncType; ++i)
         {
-            if (boost::iequals(SolverUtils::IncTypeMap[i], IncTypeStr))
+            if (IncTypeMap[i] == IncTypeStr)
             {
-                m_IncType = (SolverUtils::IncType)i;
+                m_IncType = (IncType)i;
                 break;
             }
         }
     }
     else
     {
-        m_IncType = (SolverUtils::IncType)0;
-    }
-
-    // Define Cloak Type
-    if (m_session->DefinesSolverInfo("CLOAKTYPE"))
-    {
-        std::string CloakTypeStr = m_session->GetSolverInfo("CLOAKTYPE");
-        for (int i = 0; i < (int)SIZE_CloakType; ++i)
-        {
-            if (boost::iequals(CloakTypeMap[i], CloakTypeStr))
-            {
-                m_CloakType = (CloakType)i;
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_CloakType = (CloakType)0;
+        m_IncType = (IncType)0;
     }
 
     // Define Source Type
@@ -215,7 +209,7 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
         std::string SourceTypeStr = m_session->GetSolverInfo("SOURCETYPE");
         for (int i = 0; i < (int)SIZE_SourceType; ++i)
         {
-            if (boost::iequals(SourceTypeMap[i], SourceTypeStr))
+            if (SourceTypeMap[i] == SourceTypeStr)
             {
                 m_SourceType = (SourceType)i;
                 break;
@@ -227,8 +221,24 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
         m_SourceType = (SourceType)0;
     }
 
+    Array<OneD, Array<OneD, NekDouble>>m_velocity(m_spacedim);
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        m_velocity[k] = Array<OneD, NekDouble>(nq);
+
+        Vmath::Vadd(nq, &m_movingframes[0][k*nq], 1, &m_movingframes[1][k*nq], 1, &m_velocity[k][0], 1);
+    }
+
+    ComputeSphericalVector(m_SphericalVector);
+
+    CheckMeshErr(m_movingframes, m_velocity);
+
     // Compute n_timesMFFwd and m_times_timesMFFwd
-    ComputeNtimesMF();
+    ComputentimesMF(m_movingframes, m_ntimesMFFwd, m_ntimesMFBwd,
+                    m_ntimes_ntimesMFFwd, m_ntimes_ntimesMFBwd);
+
+    // Compute Covariant Curl of MF
+    ComputeCurlMF(SolverUtils::eCovariant, m_movingframes, m_CurlMF);
 
     // Compute vaepsilon and mu vector (m_epsveci, m_muvec0);
     m_epsvec = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
@@ -239,136 +249,27 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
         m_muvec[k]  = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    Array<OneD, NekDouble> radvec(nq);
-    m_DispersiveCloak = false;
-    switch (m_CloakType)
-    {
-        case eOpticalCloak:
-        {
-            radvec = ComputeRadCloak();
-            ComputeMaterialOpticalCloak(radvec, m_epsvec, m_muvec, false);
-        }
-        break;
-
-        case eOpticalConstCloak:
-        {
-            radvec = ComputeRadCloak(m_CloakNlayer);
-            ComputeMaterialOpticalCloak(radvec, m_epsvec, m_muvec, false);
-
-            std::cout << "*** rad = [ " << Vmath::Vmax(nq, radvec, 1) << " , "
-                      << Vmath::Vmin(nq, radvec, 1) << " ) " << std::endl;
-        }
-        break;
-
-        case eOpticalDispersiveCloak:
-        {
-            m_DispersiveCloak = true;
-            m_wp2Tol          = 0.01;
-            radvec            = ComputeRadCloak();
-            ComputeMaterialOpticalCloak(radvec, m_epsvec, m_muvec, true);
-
-            std::cout << "*** rad = [ " << Vmath::Vmax(nq, radvec, 1) << " , "
-                      << Vmath::Vmin(nq, radvec, 1) << " ) " << std::endl;
-            std::cout << "*** wp2 = [ " << Vmath::Vmax(nq, m_wp2, 1) << " , "
-                      << Vmath::Vmin(nq, m_wp2, 1) << " ) " << std::endl;
-        }
-        break;
-
-        case eMicroWaveCloak:
-        {
-            radvec = ComputeRadCloak();
-            ComputeMaterialMicroWaveCloak(radvec, m_epsvec, m_muvec);
-        }
-        break;
-
-        default:
-        {
-            ComputeMaterialVector(m_epsvec, m_muvec);
-        }
-        break;
-    }
-
-    NekDouble eps1min, eps1max, eps2min, eps2max, eps3min, eps3max;
-    NekDouble mu1min, mu1max, mu2min, mu2max, mu3min, mu3max;
-
-    eps1min = Vmath::Vmin(nq, m_epsvec[0], 1);
-    eps3min = Vmath::Vmin(nq, m_epsvec[2], 1);
-    eps1max = Vmath::Vmax(nq, m_epsvec[0], 1);
-    eps3max = Vmath::Vmax(nq, m_epsvec[2], 1);
-
-    if (m_DispersiveCloak)
-    {
-        Array<OneD, NekDouble> realepsr(nq);
-        Vmath::Sadd(nq, -m_wp2Tol, m_wp2, 1, realepsr, 1);
-        Vmath::Smul(nq, 1.0 / (m_Incfreq * m_Incfreq), realepsr, 1, realepsr,
-                    1);
-        Vmath::Neg(nq, realepsr, 1);
-        Vmath::Sadd(nq, 1.0, realepsr, 1, realepsr, 1);
-
-        eps2min = Vmath::Vmin(nq, realepsr, 1);
-        eps2max = Vmath::Vmax(nq, realepsr, 1);
-    }
-
-    else
-    {
-        eps2min = Vmath::Vmin(nq, m_epsvec[1], 1);
-        eps2max = Vmath::Vmax(nq, m_epsvec[1], 1);
-    }
-
-    mu1min = Vmath::Vmin(nq, m_muvec[0], 1);
-    mu2min = Vmath::Vmin(nq, m_muvec[1], 1);
-    mu3min = Vmath::Vmin(nq, m_muvec[2], 1);
-    mu1max = Vmath::Vmax(nq, m_muvec[0], 1);
-    mu2max = Vmath::Vmax(nq, m_muvec[1], 1);
-    mu3max = Vmath::Vmax(nq, m_muvec[2], 1);
-
-    std::cout << "muvec0 = " << RootMeanSquare(m_muvec[0])
-              << ", muvec1 = " << RootMeanSquare(m_muvec[1]) << std::endl;
-
-    std::cout << "*** epsvec1 = [ " << eps1min << " , " << eps1max
-              << " ], epsvec2 = [ " << eps2min << " , " << eps2max
-              << " ], epsvec3 = [ " << eps3min << " , " << eps3max << " ] "
-              << std::endl;
-    std::cout << "*** muvec1 = [ " << mu1min << " , " << mu1max
-              << " ], muvec2 = [ " << mu2min << " , " << mu2max
-              << " ], muvec3 = [ " << mu3min << " , " << mu3max << " ] "
-              << std::endl;
-
-    NekDouble dtFactor;
-    switch (m_PolType)
-    {
-        // eTransMagnetic
-        case SolverUtils::eTransMagnetic:
-        {
-            dtFactor = mu1min * eps3min;
-            if (mu1min > mu2min)
-            {
-                dtFactor = mu2min * eps3min;
-            }
-        }
-        break;
-
-        case SolverUtils::eTransElectric:
-        {
-            dtFactor = eps1min * mu3min;
-            if (eps1min > eps2min)
-            {
-                dtFactor = eps2min * mu3min;
-            }
-        }
-        break;
-
-        default:
-        {
-            dtFactor = 1.0;
-        }
-        break;
-    }
-    std::cout << "*** dt factor proportional to varepsilon * mu is " << dtFactor
-              << std::endl;
+    // InitializeCloakVariables();
 
     // Compute m_Zim and m_Yim
-    ComputeZimYim(m_epsvec, m_muvec);
+    // ZimFwd = sqrt( muFwd / epsFwd),  ZimBwd = sqrt( muBwd /
+    // epsBwd)
+    int nTraceNumPoints = GetTraceNpoints();
+
+    m_ZimFwd = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
+    m_ZimBwd = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
+    m_YimFwd = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
+    m_YimBwd = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
+
+    for (int j = 0; j < m_shapedim; ++j)
+    {
+        m_ZimFwd[j] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+        m_ZimBwd[j] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+        m_YimFwd[j] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+        m_YimBwd[j] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+    }
+
+    ComputeZimYim(m_epsvec, m_muvec, m_ZimFwd, m_ZimBwd, m_YimFwd, m_YimBwd);
 
     // Compute m_epsvecminus1 and m_muminus1
     m_negepsvecminus1 = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
@@ -388,40 +289,17 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
         }
     }
 
-    eps1min = Vmath::Vmin(nq, m_negepsvecminus1[0], 1);
-    eps2min = Vmath::Vmin(nq, m_negepsvecminus1[1], 1);
-    eps3min = Vmath::Vmin(nq, m_negepsvecminus1[2], 1);
-    eps1max = Vmath::Vmax(nq, m_negepsvecminus1[0], 1);
-    eps2max = Vmath::Vmax(nq, m_negepsvecminus1[1], 1);
-    eps3max = Vmath::Vmax(nq, m_negepsvecminus1[2], 1);
-
-    mu1min = Vmath::Vmin(nq, m_negmuvecminus1[0], 1);
-    mu2min = Vmath::Vmin(nq, m_negmuvecminus1[1], 1);
-    mu3min = Vmath::Vmin(nq, m_negmuvecminus1[2], 1);
-    mu1max = Vmath::Vmax(nq, m_negmuvecminus1[0], 1);
-    mu2max = Vmath::Vmax(nq, m_negmuvecminus1[1], 1);
-    mu3max = Vmath::Vmax(nq, m_negmuvecminus1[2], 1);
-
-    std::cout << "*** negepsvecminus1 = [ " << eps1min << " , " << eps1max
-              << " ], negepsvecminus1 = [ " << eps2min << " , " << eps2max
-              << " ], negepsvecminus1 = [ " << eps3min << " , " << eps3max
-              << " ] " << std::endl;
-    std::cout << "*** negmuvecminus1 = [ " << mu1min << " , " << mu1max
-              << " ], negmuvecminus1 = [ " << mu2min << " , " << mu2max
-              << " ], negmuvecminus1 = [ " << mu3min << " , " << mu3max << " ] "
-              << std::endl;
-
     // Compute de^m/dt \cdot e^k
     if (m_AddRotation)
     {
         m_coriolis = Array<OneD, NekDouble>(nq);
         m_coriolis = EvaluateCoriolis();
 
-        Computedemdxicdote();
+       // Computedemdxicdote(m_movingframes, m_dedxi_cdot_e);
     }
 
     // Generate Sigma Block with thicknes of m_PMLthickness and m_PMLmax
-    if (m_AddPML > 0)
+    if (m_AddPML)
     {
         GenerateSigmaPML(m_PMLthickness, m_PMLstart, m_PMLmaxsigma, m_SigmaPML);
     }
@@ -432,6 +310,7 @@ void MMFMaxwell::v_InitObject(bool DeclareFields)
         m_ode.DefineOdeRhs(&MMFMaxwell::DoOdeRhs, this);
         m_ode.DefineProjection(&MMFMaxwell::DoOdeProjection, this);
     }
+
     // Otherwise it gives an error (no implicit integration)
     else
     {
@@ -479,6 +358,9 @@ void MMFMaxwell::v_DoSolve()
         m_fields[m_intVariables[i]]->SetPhysState(false);
     }
 
+    // Compute Initial Energy
+    m_Energy0 = ComputeEnergyDensity(fields);
+
     // Initialise time integration scheme
     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
 
@@ -489,10 +371,10 @@ void MMFMaxwell::v_DoSolve()
              "Only one of IO_CheckTime and IO_CheckSteps "
              "should be set!");
 
-    int Ntot = m_checksteps ? m_steps / m_checksteps + 1 : 0;
+    int Ntot = m_steps / m_checksteps + 1;
 
-    Array<OneD, NekDouble> TimeSeries(Ntot ? Ntot : 1);
-    Array<OneD, NekDouble> Energy(Ntot ? Ntot : 1);
+    Array<OneD, NekDouble> TimeSeries(Ntot);
+    Array<OneD, NekDouble> Energy(Ntot);
 
     LibUtilities::Timer timer;
     bool doCheckTime  = false;
@@ -509,8 +391,7 @@ void MMFMaxwell::v_DoSolve()
     {
         case ePointSource:
         {
-            Ezantipod = Array<OneD, NekDouble>(
-                m_checksteps ? m_steps / m_checksteps : 1);
+            Ezantipod = Array<OneD, NekDouble>(m_steps / m_checksteps);
 
             Array<OneD, NekDouble> x(nq);
             Array<OneD, NekDouble> y(nq);
@@ -525,7 +406,6 @@ void MMFMaxwell::v_DoSolve()
                 rad = sqrt((x[i] + m_Psx) * (x[i] + m_Psx) +
                            (y[i] + m_Psy) * (y[i] + m_Psy) +
                            (z[i] + m_Psz) * (z[i] + m_Psz));
-                std::cout << "rad" << rad << std::endl;
                 if (rad < Tol)
                 {
                     indxantipod = i;
@@ -557,7 +437,7 @@ void MMFMaxwell::v_DoSolve()
             }
 
             std::cout << "*** Area of Planar Source = "
-                      << m_fields[0]->Integral(m_SourceVector) << std::endl;
+                      << m_fields[0]->PhysIntegral(m_SourceVector) << std::endl;
         }
         break;
 
@@ -572,9 +452,9 @@ void MMFMaxwell::v_DoSolve()
     Array<OneD, NekDouble> P3;
     if (m_TestPML)
     {
-        P1 = Array<OneD, NekDouble>(m_checksteps ? m_steps / m_checksteps : 1);
-        P2 = Array<OneD, NekDouble>(m_checksteps ? m_steps / m_checksteps : 1);
-        P3 = Array<OneD, NekDouble>(m_checksteps ? m_steps / m_checksteps : 1);
+        P1 = Array<OneD, NekDouble>(m_steps / m_checksteps);
+        P2 = Array<OneD, NekDouble>(m_steps / m_checksteps);
+        P3 = Array<OneD, NekDouble>(m_steps / m_checksteps);
 
         Array<OneD, NekDouble> x(nq);
         Array<OneD, NekDouble> y(nq);
@@ -621,7 +501,6 @@ void MMFMaxwell::v_DoSolve()
     int indx;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
-
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
@@ -632,11 +511,9 @@ void MMFMaxwell::v_DoSolve()
         cpuTime += elapsed;
 
         // Write out status information
-        if (m_infosteps && !((step + 1) % m_infosteps) &&
-            m_session->GetComm()->GetRank() == 0)
+        if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
-            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
-                      << " "
+            std::cout << "Steps: " << std::setw(8) << std::left << step + 1 << " "
                       << "Time: " << std::setw(12) << std::left << m_time;
 
             std::stringstream ss;
@@ -647,39 +524,39 @@ void MMFMaxwell::v_DoSolve()
             cpuTime = 0.0;
         }
 
-        switch (m_SourceType)
-        {
-            case ePointSource:
-            {
-                if (m_time <= m_PSduration)
-                {
-                    Array<OneD, NekDouble> Impulse(nq);
-                    Impulse = GaussianPulse(m_time, m_Psx, m_Psy, m_Psz,
-                                            m_Gaussianradius);
-                    Vmath::Vadd(nq, &Impulse[0], 1,
-                                &fields[m_intVariables[2]][0], 1,
-                                &fields[m_intVariables[2]][0], 1);
-                }
-            }
-            break;
+        // switch (m_SourceType)
+        // {
+        //     case ePointSource:
+        //     {
+        //         if (m_time <= m_PSduration)
+        //         {
+        //             Array<OneD, NekDouble> Impulse(nq);
+        //             Impulse = GaussianPulse(m_time, m_Psx, m_Psy, m_Psz,
+        //                                     m_Gaussianradius);
+        //             Vmath::Vadd(nq, &Impulse[0], 1,
+        //                         &fields[m_intVariables[2]][0], 1,
+        //                         &fields[m_intVariables[2]][0], 1);
+        //         }
+        //     }
+        //     break;
 
-            case ePlanarSource:
-            {
-                Array<OneD, NekDouble> Impulse(nq);
-                for (int i = 0; i < 3; ++i)
-                {
-                    Impulse = GetIncidentField(i, m_time);
-                    Vmath::Vmul(nq, m_SourceVector, 1, Impulse, 1, Impulse, 1);
-                    Vmath::Vadd(nq, &Impulse[0], 1,
-                                &fields[m_intVariables[i]][0], 1,
-                                &fields[m_intVariables[i]][0], 1);
-                }
-            }
-            break;
+        //     case ePlanarSource:
+        //     {
+        //         Array<OneD, NekDouble> Impulse(nq);
+        //         for (int i = 0; i < 3; ++i)
+        //         {
+        //             Impulse = GetIncidentField(i, m_time);
+        //             Vmath::Vmul(nq, m_SourceVector, 1, Impulse, 1, Impulse, 1);
+        //             Vmath::Vadd(nq, &Impulse[0], 1,
+        //                         &fields[m_intVariables[i]][0], 1,
+        //                         &fields[m_intVariables[i]][0], 1);
+        //         }
+        //     }
+        //     break;
 
-            default:
-                break;
-        }
+        //     default:
+        //         break;
+        // }
 
         // Transform data into coefficient space
         for (i = 0; i < nvariables; ++i)
@@ -699,94 +576,22 @@ void MMFMaxwell::v_DoSolve()
             indx             = (step + 1) / m_checksteps;
             TimeSeries[indx] = m_time;
 
-            if (m_TestMaxwellType == SolverUtils::eScatField2D)
-            {
-                Checkpoint_TotalFieldOutput(nchk, m_time, fields);
-                Checkpoint_TotPlotOutput(nchk, m_time, fields);
-            }
+            // if (m_TestMaxwellType == eScatField2D)
+            // {
+            //     Checkpoint_TotalFieldOutput(nchk, m_time, fields);
+            //     Checkpoint_TotPlotOutput(nchk, m_time, fields);
+            // }
             Checkpoint_PlotOutput(nchk, fields);
-            Checkpoint_EDFluxOutput(nchk, m_time, fields);
-            Checkpoint_EnergyOutput(nchk, m_time, fields);
+            // Checkpoint_EDFluxOutput(nchk, m_time, fields);
+            // Checkpoint_EnergyOutput(nchk, m_time, fields);
             Checkpoint_Output(nchk++);
 
-            Energy[indx] = ComputeEnergyDensity(fields);
+            Energy[indx] = ComputeEnergyDensity(fields)-m_Energy0;
 
             std::cout << "|EHr|: F1 = " << RootMeanSquare(fields[0])
                       << ", F2 = " << RootMeanSquare(fields[1])
                       << ", F3 = " << RootMeanSquare(fields[2])
-                      << ", Energy = " << Energy[indx] << std::endl;
-            if (nfields > 3)
-            {
-                std::cout << "|DBr|: D1 = " << RootMeanSquare(fields[3])
-                          << ", D2 = " << RootMeanSquare(fields[4])
-                          << ", D3 = " << RootMeanSquare(fields[5])
-                          << std::endl;
-
-                int nTraceNumPoints = GetTraceNpoints();
-                int totbdryexp =
-                    m_fields[0]->GetBndCondExpansions()[0]->GetExpSize();
-                int npts = m_fields[0]
-                               ->GetBndCondExpansions()[0]
-                               ->GetExp(0)
-                               ->GetNumPoints(0);
-
-                Array<OneD, NekDouble> x0(nq);
-                Array<OneD, NekDouble> x1(nq);
-                Array<OneD, NekDouble> x2(nq);
-
-                m_fields[0]->GetCoords(x0, x1, x2);
-
-                Array<OneD, NekDouble> E1Fwd(nTraceNumPoints);
-                Array<OneD, NekDouble> E2Fwd(nTraceNumPoints);
-                Array<OneD, NekDouble> H3Fwd(nTraceNumPoints);
-
-                m_fields[0]->ExtractTracePhys(fields[0], E1Fwd);
-                m_fields[0]->ExtractTracePhys(fields[1], E2Fwd);
-                m_fields[0]->ExtractTracePhys(fields[2], H3Fwd);
-
-                int id2, cnt                  = 0;
-                NekDouble E1atPECloc, E1atPEC = 0.0;
-                NekDouble E2atPECloc, E2atPEC = 0.0;
-                NekDouble H3atPECloc, H3atPEC = 0.0;
-
-                Array<OneD, NekDouble> E1Fwdloc(npts);
-                Array<OneD, NekDouble> E2Fwdloc(npts);
-                Array<OneD, NekDouble> H3Fwdloc(npts);
-
-                for (int e = 0; e < totbdryexp; ++e)
-                {
-                    id2 = m_fields[0]->GetTrace()->GetPhys_Offset(
-                        m_fields[0]->GetTraceMap()->GetBndCondIDToGlobalTraceID(
-                            cnt + e));
-
-                    Vmath::Vcopy(npts, &E1Fwd[id2], 1, &E1Fwdloc[0], 1);
-                    Vmath::Vcopy(npts, &E2Fwd[id2], 1, &E2Fwdloc[0], 1);
-                    Vmath::Vcopy(npts, &H3Fwd[id2], 1, &H3Fwdloc[0], 1);
-
-                    E1atPECloc = Vmath::Vamax(npts, E1Fwdloc, 1);
-                    E2atPECloc = Vmath::Vamax(npts, E2Fwdloc, 1);
-                    H3atPECloc = Vmath::Vamax(npts, H3Fwdloc, 1);
-
-                    if (E1atPEC < E1atPECloc)
-                    {
-                        E1atPEC = E1atPECloc;
-                    }
-
-                    if (E2atPEC < E2atPECloc)
-                    {
-                        E2atPEC = E2atPECloc;
-                    }
-
-                    if (H3atPEC < H3atPECloc)
-                    {
-                        H3atPEC = H3atPECloc;
-                    }
-                }
-
-                std::cout << "At PEC, Max. E1 = " << E1atPEC
-                          << ", E2 = " << E2atPEC << ", H3 =  " << H3atPEC
-                          << std::endl;
-            }
+                      << ", Energy = " << Energy[indx] << std::endl << std::endl;
 
             if (m_SourceType == ePointSource)
             {
@@ -808,7 +613,7 @@ void MMFMaxwell::v_DoSolve()
     }
 
     // Print out summary statistics
-    if (m_checksteps && m_session->GetComm()->GetRank() == 0)
+    if (m_session->GetComm()->GetRank() == 0)
     {
         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
 
@@ -826,6 +631,20 @@ void MMFMaxwell::v_DoSolve()
         }
         std::cout << std::endl << std::endl;
 
+        // Print out total Error
+        NekDouble L2err, TotalL2err=0.0;
+         Array<OneD, NekDouble> exactsoln(nq);
+         for (int i=0; i<nvariables; ++i)
+        {
+            v_EvaluateExactSolution(i, exactsoln, m_time);
+
+            L2err = m_fields[i]->L2(m_fields[i]->GetPhys(), exactsoln);
+            TotalL2err += L2err*L2err;
+        }
+        TotalL2err = sqrt(TotalL2err/3.0);
+
+        std::cout << "Total L2 error = " << TotalL2err << std::endl;
+
         if (m_PrintoutSurfaceCurrent)
         {
             Printout_SurfaceCurrent(fields, m_time);
@@ -837,30 +656,6 @@ void MMFMaxwell::v_DoSolve()
             for (int i = 0; i < m_steps / m_checksteps; ++i)
             {
                 std::cout << Ezantipod[i] << ", ";
-            }
-            std::cout << std::endl << std::endl;
-        }
-
-        if (m_TestPML)
-        {
-            std::cout << "P1 = " << std::endl;
-            for (int i = 0; i < m_steps / m_checksteps; ++i)
-            {
-                std::cout << P1[i] << ", ";
-            }
-            std::cout << std::endl << std::endl;
-
-            std::cout << "P2 = " << std::endl;
-            for (int i = 0; i < m_steps / m_checksteps; ++i)
-            {
-                std::cout << P2[i] << ", ";
-            }
-            std::cout << std::endl << std::endl;
-
-            std::cout << "P3 = " << std::endl;
-            for (int i = 0; i < m_steps / m_checksteps; ++i)
-            {
-                std::cout << P3[i] << ", ";
             }
             std::cout << std::endl << std::endl;
         }
@@ -913,11 +708,10 @@ void MMFMaxwell::DoOdeRhs(
     // Compute Curl
     switch (m_TestMaxwellType)
     {
-        case SolverUtils::eScatField2D:
-        case SolverUtils::eTotField2D:
+        case eScatField2D:
+        case eTotField2D:
 
         {
-
             // Imaginary part is computed the same as Real part
             Array<OneD, Array<OneD, NekDouble>> tmpin(3);
             Array<OneD, Array<OneD, NekDouble>> tmpout(3);
@@ -930,8 +724,7 @@ void MMFMaxwell::DoOdeRhs(
                 Vmath::Vcopy(nq, &physarray[i][0], 1, &tmpin[i][0], 1);
             }
 
-            WeakDGMaxwellDirDeriv(tmpin, tmpout, time);
-            AddGreenDerivCompensate(tmpin, tmpout);
+            WeakDGMaxwellDirDeriv(physarray, tmpout, time);
 
             for (int i = 0; i < 3; ++i)
             {
@@ -943,9 +736,7 @@ void MMFMaxwell::DoOdeRhs(
 
         default:
         {
-
             WeakDGMaxwellDirDeriv(physarray, modarray, time);
-            AddGreenDerivCompensate(physarray, modarray);
         }
         break;
     }
@@ -956,7 +747,7 @@ void MMFMaxwell::DoOdeRhs(
         m_fields[i]->BwdTrans(modarray[i], outarray[i]);
     }
 
-    if (m_TestMaxwellType == SolverUtils::eMaxwellSphere)
+    if (m_TestMaxwellType == eMaxwellSphere)
     {
         Array<OneD, NekDouble> F(nq);
         for (int j = 0; j < 2; ++j)
@@ -983,7 +774,7 @@ void MMFMaxwell::DoOdeRhs(
     Array<OneD, NekDouble> dFdt(nq, 0.0);
     switch (m_TestMaxwellType)
     {
-        case SolverUtils::eMaxwell1D:
+        case eMaxwell1D:
         {
             Vmath::Vdiv(nq, outarray[0], 1, m_epsvec[0], 1, outarray[0], 1);
             Vmath::Vdiv(nq, outarray[1], 1, m_muvec[0], 1, outarray[1], 1);
@@ -991,7 +782,7 @@ void MMFMaxwell::DoOdeRhs(
         break;
 
         // TO BE CHANGED
-        case SolverUtils::eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPECAVGFLUX:
         {
             Array<OneD, NekDouble> Hxdt(nq, 0.0);
             Array<OneD, NekDouble> Hydt(nq, 0.0);
@@ -1056,15 +847,15 @@ void MMFMaxwell::DoOdeRhs(
         }
         break;
 
-        case SolverUtils::eTestMaxwell2DPEC:
-        case SolverUtils::eScatField2D:
-        case SolverUtils::eTotField2D:
+        case eTestMaxwell2DPEC:
+        case eScatField2D:
+        case eTotField2D:
         {
             switch (m_PolType)
             {
-                case SolverUtils::eTransMagnetic:
+                case eTransMagnetic:
                 {
-                    if (m_TestMaxwellType == SolverUtils::eTestMaxwell2DPEC)
+                    if (m_TestMaxwellType == eTestMaxwell2DPEC)
                     {
                         dFdt = TestMaxwell2DPEC(time, 10, m_PolType);
                         Vmath::Vvtvp(nq, m_negmuvecminus1[0], 1, dFdt, 1,
@@ -1079,7 +870,7 @@ void MMFMaxwell::DoOdeRhs(
                                      outarray[2], 1, outarray[2], 1);
                     }
 
-                    if (m_TestMaxwellType == SolverUtils::eScatField2D)
+                    if (m_TestMaxwellType == eScatField2D)
                     {
                         dFdt = GetIncidentField(10, time);
                         Vmath::Vvtvp(nq, m_negmuvecminus1[0], 1, dFdt, 1,
@@ -1103,9 +894,9 @@ void MMFMaxwell::DoOdeRhs(
                 }
                 break;
 
-                case SolverUtils::eTransElectric:
+                case eTransElectric:
                 {
-                    if (m_TestMaxwellType == SolverUtils::eTestMaxwell2DPEC)
+                    if (m_TestMaxwellType == eTestMaxwell2DPEC)
                     {
                         // (I - \mu^i) d F^{inc} / dt
                         dFdt = TestMaxwell2DPEC(time, 10, m_PolType);
@@ -1121,7 +912,7 @@ void MMFMaxwell::DoOdeRhs(
                                      outarray[2], 1, outarray[2], 1);
                     }
 
-                    if (m_TestMaxwellType == SolverUtils::eScatField2D)
+                    if (m_TestMaxwellType == eScatField2D)
                     {
                         dFdt = GetIncidentField(10, time);
                         Vmath::Vvtvp(nq, m_negepsvecminus1[0], 1, dFdt, 1,
@@ -1168,16 +959,15 @@ void MMFMaxwell::DoOdeRhs(
     } // switch(m_TestMaxwellType)
 }
 
-void MMFMaxwell::AddGreenDerivCompensate(
-    const Array<OneD, const Array<OneD, NekDouble>> &physarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray)
+Array<OneD, NekDouble> MMFMaxwell::GreenDerivCompensate(const int var,
+    const Array<OneD, const Array<OneD, NekDouble>> &physarray)
 {
     // routine works for both primitive and conservative formulations
-    int ncoeffs = outarray[0].size();
-    int nq      = physarray[0].size();
+    int nq              = GetNpoints();
+    int ncoeffs         = GetNcoeffs();
 
     Array<OneD, NekDouble> tmp(nq);
-    Array<OneD, NekDouble> tmpc(ncoeffs);
+    Array<OneD, NekDouble> outarray(ncoeffs);
 
     Array<OneD, Array<OneD, NekDouble>> fluxvector(m_shapedim);
     for (int j = 0; j < m_shapedim; ++j)
@@ -1185,55 +975,156 @@ void MMFMaxwell::AddGreenDerivCompensate(
         fluxvector[j] = Array<OneD, NekDouble>(nq);
     }
 
-    // m_CurlMF[0][0] = e^3 \cdot (\nabla \times e^1) [ NEW m_CurlMF[0][2] ]
-    // m_CurlMF[0][1] = 0.0
-    // m_CurlMF[1][0] = 0.0,
-    // m_CurlMF[1][1] = e^3 \cdot (\nabla \times e^2) [ NEW m_CurlMF[1][2]  ]
-    // m_CurlMF[2][0] = e^1 \cdot (\nabla \times e^3) [ NEW m_CurlMF[2][0]  ]
-    // m_CurlMF[2][1] = e^2 \cdot (\nabla \times e^3) [ NEW m_CurlMF[2][1]  ]
+    // TM: (-E3,0), (0,E3), (-H1, H2)
+    // TE: (H3,0), (0,-H3), (E1, -E2)
+    GetMaxwellFluxVector(var, physarray, fluxvector);
 
-    int var;
-
-    switch (m_TestMaxwellType)
+    // CurlMF[0] = e^3 \cdot (\nabla \times e^1)
+    // CurlMF[1] = e^3 \cdot (\nabla \times e^2)
+    // CurlMF[2] = e^1 \cdot (\nabla \times e^3)
+    // CurlMF[3] = e^2 \cdot (\nabla \times e^3)
+    switch(var)
     {
-        case SolverUtils::eTestMaxwell2DPEC:
-        case SolverUtils::eTestMaxwell2DPECAVGFLUX:
-        case SolverUtils::eTestMaxwell2DPMC:
-        case SolverUtils::eScatField2D:
-        case SolverUtils::eTotField2D:
-        case SolverUtils::eMaxwellSphere:
-        case SolverUtils::eELF2DSurface:
+        case 0:
         {
-            var = 0;
-            GetMaxwellFluxVector(var, physarray, fluxvector);
-            Vmath::Vmul(nq, &fluxvector[0][0], 1, &m_CurlMF[0][2][0], 1,
-                        &tmp[0], 1);
-            m_fields[var]->IProductWRTBase(tmp, tmpc);
-            Vmath::Vadd(ncoeffs, tmpc, 1, outarray[var], 1, outarray[var], 1);
-
-            var = 1;
-            GetMaxwellFluxVector(var, physarray, fluxvector);
-            Vmath::Vmul(nq, &fluxvector[1][0], 1, &m_CurlMF[1][2][0], 1,
-                        &tmp[0], 1);
+            Vmath::Vmul(nq, &fluxvector[0][0], 1, &m_CurlMF[0][0], 1, &tmp[0], 1);
             Vmath::Neg(nq, tmp, 1);
-            m_fields[var]->IProductWRTBase(tmp, tmpc);
-            Vmath::Vadd(ncoeffs, tmpc, 1, outarray[var], 1, outarray[var], 1);
+        }
+        break;
 
-            var = 2;
-            GetMaxwellFluxVector(var, physarray, fluxvector);
-            Vmath::Vmul(nq, &fluxvector[0][0], 1, &m_CurlMF[2][0][0], 1,
+        case 1:
+        {
+            Vmath::Vmul(nq, &fluxvector[1][0], 1, &m_CurlMF[1][0], 1, &tmp[0], 1);
+            Vmath::Neg(nq, tmp, 1);
+        }
+        break;
+
+        case 2:
+        {
+            Vmath::Vmul(nq, &fluxvector[0][0], 1, &m_CurlMF[2][0], 1, &tmp[0], 1);
+            Vmath::Neg(nq, tmp, 1);
+            Vmath::Vvtvm(nq, &fluxvector[1][0], 1, &m_CurlMF[3][0], 1, &tmp[0], 1,
                         &tmp[0], 1);
-            Vmath::Vvtvm(nq, &fluxvector[1][0], 1, &m_CurlMF[2][1][0], 1,
-                         &tmp[0], 1, &tmp[0], 1);
-            m_fields[var]->IProductWRTBase(tmp, tmpc);
-            Vmath::Vadd(ncoeffs, tmpc, 1, outarray[var], 1, outarray[var], 1);
         }
         break;
 
         default:
-            break;
+          break;
     }
+
+    m_fields[0]->IProductWRTBase(tmp, outarray);
+
+    return outarray;
 }
+
+
+Array<OneD, NekDouble> MMFMaxwell::ComputeSDMaxwell(const int var,
+    const Array<OneD, const Array<OneD, NekDouble>> &physarray)
+{
+    int nq              = GetNpoints();
+    int ncoeffs         = GetNcoeffs();
+ 
+    Array<OneD, NekDouble> tmpc(ncoeffs);
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> outarray(ncoeffs,0.0);
+
+    Array<OneD, NekDouble> velvector(m_spacedim * nq);
+
+    Array<OneD, Array<OneD, NekDouble>> fluxvector(m_shapedim);
+    for (int j = 0; j < m_shapedim; ++j)
+    {
+        fluxvector[j] = Array<OneD, NekDouble>(nq);
+    }
+
+    GetMaxwellFluxVector(var, physarray, fluxvector);
+
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        Vmath::Vmul(nq, &fluxvector[0][0], 1, &m_CrossProductMF[0][k*nq], 1, &velvector[k * nq], 1);
+    }
+
+    switch(m_DivergenceRestore)
+    {
+        case 1:
+        {
+            tmp = ComputeSpuriousDivergence(m_movingframes, m_SphericalVector[2], velvector);
+        }
+        break;
+
+        case 2:
+        {
+            // m_movingframes = LOCALsphere, mf_LOCAL = LOCAL
+              tmp = ComputeSpuriousDivergence(mf_LOCSPH, m_movingframes[2], velvector);
+              // tmp = ComputeSpuriousDivergence(m_movingframes, mf_LOCAL[2], velvector);
+              Vmath::Neg(nq, tmp, 1);
+        }
+        break;
+
+        case 3:
+        {
+            // tmp = ComputeSpuriousDivergence(mf_LOCSPH, m_SphericalVector[2], velvector);
+            tmp = ComputeSpuriousDivergence(m_movingframes, m_movingframes[2], velvector);
+            Vmath::Neg(nq, tmp, 1);
+        }
+        break;
+
+        default:
+        break;
+    }
+
+    m_fields[0]->IProductWRTBase(tmp, outarray);
+
+    return outarray;
+}
+    // switch(var)
+    // {
+    //     case 0:
+    //     {
+    //         for (int k = 0; k < m_spacedim; ++k)
+    //         {
+    //             Vmath::Vmul(nq, &fluxvector[0][0], 1, &m_CrossProductMF[0][k*nq], 1, &velvector[k * nq], 1);
+    //         }
+    //             tmp = ComputeSurfaceDiv(m_movingframes[2], velvector);
+    //             m_fields[0]->IProductWRTBase(tmp, outarray);
+    //     }
+    //     break;
+
+    //     case 1:
+    //     {
+    //         for (int k = 0; k < m_spacedim; ++k)
+    //         {
+    //             Vmath::Vmul(nq, &fluxvector[1][0], 1, &m_CrossProductMF[1][k*nq], 1, &velvector[k * nq], 1);
+    //         }
+    //             tmp = ComputeSurfaceDiv(m_movingframes[2], velvector);
+    //             m_fields[0]->IProductWRTBase(tmp, outarray);
+    //     }
+    //     break;
+
+    //     case 2:
+    //     {
+    //         for (int j=0; j < m_shapedim; ++j)
+    //         {
+    //             for (int k = 0; k < m_spacedim; ++k)
+    //             {
+    //                 Vmath::Vmul(nq, &fluxvector[j][0], 1, &m_CrossProductMF[j][k*nq], 1, &velvector[k * nq], 1);
+    //             }
+                
+    //             tmp = ComputeSurfaceDiv(m_movingframes[2], velvector);
+    //             if(j==0)
+    //             {
+    //                 Vmath::Neg(nq, tmp, 1);  
+    //             }
+    //             m_fields[0]->IProductWRTBase(tmp, tmpc);
+
+    //             Vmath::Vadd(ncoeffs, tmpc, 1, outarray, 1, outarray, 1);
+    //         }
+    //     }
+    //     break;
+
+    //     default:
+    //     break;    
+    // }
+
 
 /**
  * @brief Calculate weak DG advection in the form \f$ \langle\phi,
@@ -1289,7 +1180,6 @@ void MMFMaxwell::WeakDGMaxwellDirDeriv(
     // normal in the output
     Array<OneD, Array<OneD, NekDouble>> numfluxFwd(nvar);
     Array<OneD, Array<OneD, NekDouble>> numfluxBwd(nvar);
-
     for (i = 0; i < nvar; ++i)
     {
         numfluxFwd[i] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
@@ -1301,12 +1191,486 @@ void MMFMaxwell::WeakDGMaxwellDirDeriv(
     NumericalMaxwellFlux(physfield, numfluxFwd, numfluxBwd, time);
 
     // Evaulate  <\phi, \hat{F}\cdot n> - OutField[i]
+    Array<OneD, NekDouble> GreenCompensation(ncoeffs);
+    Array<OneD, NekDouble> SpuriousDiv(ncoeffs);
     for (i = 0; i < nvar; ++i)
     {
         Vmath::Neg(ncoeffs, OutField[i], 1);
         m_fields[i]->AddFwdBwdTraceIntegral(numfluxFwd[i], numfluxBwd[i],
                                             OutField[i]);
+
+        GreenCompensation = GreenDerivCompensate(i, physfield);                                       
+
+        // Add GreenCompensation
+        Vmath::Vadd(ncoeffs, &GreenCompensation[0], 1, &OutField[i][0], 1, &OutField[i][0], 1);
         m_fields[i]->SetPhysState(false);
+
+        if(m_DivergenceRestore>0)
+        {
+            SpuriousDiv = ComputeSDMaxwell(i, physfield);
+            Vmath::Vadd(ncoeffs, &SpuriousDiv[0], 1, &OutField[i][0], 1, &OutField[i][0], 1);
+        }
+    }
+
+}
+
+
+void MMFMaxwell::NumericalMaxwellFlux(
+    const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+    Array<OneD, Array<OneD, NekDouble>> &numfluxFwd,
+    Array<OneD, Array<OneD, NekDouble>> &numfluxBwd, const NekDouble time)
+{
+
+    switch (m_TestMaxwellType)
+    {
+        case eTestMaxwell2DPEC:
+        case eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPMC:
+        case eScatField2D:
+        case eTotField2D:
+        case eMaxwellSphere:
+        case eELF2DSurface:
+        {
+            switch (m_PolType)
+            {
+                case eTransMagnetic:
+                {
+                    NumericalMaxwellFluxTM(physfield, numfluxFwd, numfluxBwd, time);
+                }
+                break;
+
+                case eTransElectric:
+                {
+                    NumericalMaxwellFluxTE(physfield, numfluxFwd, numfluxBwd, time);
+                }
+                break;
+
+                default:
+                    break;
+            }
+        }
+        break; // eMaxwell2D
+
+        default:
+            break;
+    } // m_TestMaxwellType
+}
+
+void MMFMaxwell::NumericalMaxwellFluxTM(
+    const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+    Array<OneD, Array<OneD, NekDouble>> &numfluxFwd,
+    Array<OneD, Array<OneD, NekDouble>> &numfluxBwd, const NekDouble time)
+{
+    int nq              = GetNpoints();
+    int nTraceNumPoints = GetTraceTotPoints();
+    int nvar            = 3;
+
+    // get temporary arrays
+    Array<OneD, Array<OneD, NekDouble>> Fwd(nvar);
+    Array<OneD, Array<OneD, NekDouble>> Bwd(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        Fwd[i] = Array<OneD, NekDouble>(nTraceNumPoints, 0.0);
+        Bwd[i] = Array<OneD, NekDouble>(nTraceNumPoints, 0.0);
+
+        // get the physical values at the trace
+        m_fields[i]->GetFwdBwdTracePhys(physfield[i], Fwd[i], Bwd[i]);
+    }
+
+    // E^|| = 0 at the PEC boundaries vs. H^|| = 0 at PMC boundaries
+    Array<OneD, NekDouble> IncField(nq, 0.0);
+    Array<OneD, NekDouble> IncFieldBwd(nTraceNumPoints, 0.0);
+    Array<OneD, Array<OneD, NekDouble>> IncFieldFwd(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
+    {
+        IncFieldFwd[i] = Array<OneD, NekDouble>(nTraceNumPoints, 0.0);
+
+        IncField = GetIncidentField(i, time);
+        m_fields[0]->GetFwdBwdTracePhys(IncField, IncFieldFwd[i], IncFieldBwd);
+
+        Vmath::Svtvp(nTraceNumPoints, 2.0, &IncFieldFwd[i][0], 1, &Fwd[i][0], 1,
+                     &IncFieldFwd[i][0], 1);
+    }
+
+    // Total Field Formulation
+    // CopyBoundaryTrace(Fwd[0], Bwd[0], SolverUtils::eFwdEQBwd, 0,
+    //                   SpatialDomains::ePEC_Forces);
+    // CopyBoundaryTrace(Fwd[1], Bwd[1], SolverUtils::eFwdEQBwd, 1,
+    //                   SpatialDomains::ePEC_Forces);
+    // CopyBoundaryTrace(IncFieldFwd[2], Bwd[2], SolverUtils::eFwdEQNegBwd, 2,
+    //                   SpatialDomains::ePEC_Forces);
+
+    // CopyBoundaryTrace(IncFieldFwd[0], Bwd[0], SolverUtils::eFwdEQNegBwd, 0,
+    //                   SpatialDomains::ePMC_Forces);
+    // CopyBoundaryTrace(IncFieldFwd[1], Bwd[1], SolverUtils::eFwdEQNegBwd, 1,
+    //                   SpatialDomains::ePMC_Forces);
+    // CopyBoundaryTrace(Fwd[2], Bwd[2], SolverUtils::eFwdEQBwd, 2,
+    //                   SpatialDomains::ePMC_Forces);
+
+    // CopyBoundaryTrace(Fwd[0], Bwd[0], SolverUtils::eFwdEQBwd, 0,
+    //                   SpatialDomains::ePEC);
+    // CopyBoundaryTrace(Fwd[1], Bwd[1], SolverUtils::eFwdEQBwd, 1,
+    //                   SpatialDomains::ePEC);
+    // CopyBoundaryTrace(Fwd[2], Bwd[2], SolverUtils::eFwdEQNegBwd, 2,
+    //                   SpatialDomains::ePEC);
+
+    // CopyBoundaryTrace(Fwd[0], Bwd[0], SolverUtils::eFwdEQNegBwd, 0,
+    //                   SpatialDomains::ePMC);
+    // CopyBoundaryTrace(Fwd[1], Bwd[1], SolverUtils::eFwdEQNegBwd, 1,
+    //                   SpatialDomains::ePMC);
+    // CopyBoundaryTrace(Fwd[2], Bwd[2], SolverUtils::eFwdEQBwd, 2,
+    //                   SpatialDomains::ePMC);
+
+    Array<OneD, NekDouble> e1Fwd_cdot_ncrossdH(nTraceNumPoints, 0.0);
+    Array<OneD, NekDouble> e1Bwd_cdot_ncrossdH(nTraceNumPoints, 0.0);
+    Array<OneD, NekDouble> e2Fwd_cdot_ncrossdH(nTraceNumPoints, 0.0);
+    Array<OneD, NekDouble> e2Bwd_cdot_ncrossdH(nTraceNumPoints, 0.0);
+    Array<OneD, NekDouble> e3Fwd_cdot_dEe3(nTraceNumPoints, 0.0);
+    Array<OneD, NekDouble> e3Bwd_cdot_dEe3(nTraceNumPoints, 0.0);
+
+    // Compute  numfluxFwd[dir] = (eFwd^[dir] \cdot n \times e^3) * (YimFwd *
+    // EFwd^3 + YimBwd * EBwd^3 )
+    ComputeNtimesFz(0, Fwd, Bwd, m_YimFwd[0], m_YimBwd[0], numfluxFwd[0],
+                    numfluxBwd[0]);
+    ComputeNtimesFz(1, Fwd, Bwd, m_YimFwd[1], m_YimBwd[1], numfluxFwd[1],
+                    numfluxBwd[1]);
+
+    // Compute numfluxFwd[2] = eFwd^3 \cdot ( n1e1 \times ( ZimFwd HFwd + ZimBwd
+    // HBwd ) ) / 2 {{Z_i}}
+    ComputeNtimesF12(Fwd, Bwd, m_ZimFwd[0], m_ZimBwd[0], m_ZimFwd[1],
+                     m_ZimBwd[1], numfluxFwd[2], numfluxBwd[2]);
+
+    // Compute e1Fwd_cdot_ncrossdE = eFwd[dir] \cdot \alpha n \times n \times
+    // [H] / 2 {{YimFwd}}
+    ComputeNtimestimesdFz(0, Fwd, Bwd, m_YimFwd[0], m_YimBwd[0],
+                          e1Fwd_cdot_ncrossdH, e1Bwd_cdot_ncrossdH);
+    ComputeNtimestimesdFz(1, Fwd, Bwd, m_YimFwd[1], m_YimBwd[1],
+                          e2Fwd_cdot_ncrossdH, e2Bwd_cdot_ncrossdH);
+
+    // Compute  \alpha [E3] * ( 1/2{{Zim1}} + 1/2{{Zim2}} )
+    ComputeNtimestimesdF12(Fwd, Bwd, m_ZimFwd[0], m_ZimBwd[0], m_ZimFwd[1],
+                           m_ZimBwd[1], e3Fwd_cdot_dEe3, e3Bwd_cdot_dEe3);
+
+    Vmath::Svtvp(nTraceNumPoints, -1.0, numfluxFwd[0], 1, e1Fwd_cdot_ncrossdH,
+                 1, numfluxFwd[0], 1);
+    Vmath::Svtvp(nTraceNumPoints, -1.0, numfluxFwd[1], 1, e2Fwd_cdot_ncrossdH,
+                 1, numfluxFwd[1], 1);
+    Vmath::Svtvp(nTraceNumPoints, 1.0, numfluxFwd[2], 1, e3Fwd_cdot_dEe3, 1,
+                 numfluxFwd[2], 1);
+
+    Vmath::Svtvp(nTraceNumPoints, -1.0, numfluxBwd[0], 1, e1Bwd_cdot_ncrossdH,
+                 1, numfluxBwd[0], 1);
+    Vmath::Svtvp(nTraceNumPoints, -1.0, numfluxBwd[1], 1, e2Bwd_cdot_ncrossdH,
+                 1, numfluxBwd[1], 1);
+    Vmath::Svtvp(nTraceNumPoints, 1.0, numfluxBwd[2], 1, e3Bwd_cdot_dEe3, 1,
+                 numfluxBwd[2], 1);
+}
+
+void MMFMaxwell::NumericalMaxwellFluxTE(
+    const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+    Array<OneD, Array<OneD, NekDouble>> &numfluxFwd,
+    Array<OneD, Array<OneD, NekDouble>> &numfluxBwd, const NekDouble time)
+
+{
+    int nq              = GetNpoints();
+    int nTraceNumPoints = GetTraceTotPoints();
+    int nvar            = 3;
+
+    // Get temporary arrays
+    Array<OneD, Array<OneD, NekDouble>> Fwd(nvar);
+    Array<OneD, Array<OneD, NekDouble>> Bwd(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        Fwd[i] = Array<OneD, NekDouble>(nTraceNumPoints, 0.0);
+        Bwd[i] = Array<OneD, NekDouble>(nTraceNumPoints, 0.0);
+
+        // get the physical values at the trace
+        m_fields[i]->GetFwdBwdTracePhys(physfield[i], Fwd[i], Bwd[i]);
+    }
+
+    // E = 0 at the PEC boundaries:
+    Array<OneD, NekDouble> IncField(nq, 0.0);
+    Array<OneD, NekDouble> IncFieldBwd(nTraceNumPoints, 0.0);
+    Array<OneD, Array<OneD, NekDouble>> IncFieldFwd(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
+    {
+        IncFieldFwd[i] = Array<OneD, NekDouble>(nTraceNumPoints, 0.0);
+
+        IncField = GetIncidentField(i, time);
+        m_fields[0]->GetFwdBwdTracePhys(IncField, IncFieldFwd[i], IncFieldBwd);
+
+        Vmath::Svtvp(nTraceNumPoints, 2.0, &IncFieldFwd[i][0], 1, &Fwd[i][0], 1,
+                     &IncFieldFwd[i][0], 1);
+    }
+
+    // CopyBoundaryTrace(IncFieldFwd[0], Bwd[0], SolverUtils::eFwdEQNegBwd, 0,
+    //                   SpatialDomains::ePEC_Forces);
+    // CopyBoundaryTrace(IncFieldFwd[1], Bwd[1], SolverUtils::eFwdEQNegBwd, 1,
+    //                   SpatialDomains::ePEC_Forces);
+    // CopyBoundaryTrace(Fwd[2], Bwd[2], SolverUtils::eFwdEQBwd, 2,
+    //                   SpatialDomains::ePEC_Forces);
+
+    // CopyBoundaryTrace(Fwd[0], Bwd[0], SolverUtils::eFwdEQBwd, 0,
+    //                   SpatialDomains::ePMC_Forces);
+    // CopyBoundaryTrace(Fwd[1], Bwd[1], SolverUtils::eFwdEQBwd, 1,
+    //                   SpatialDomains::ePMC_Forces);
+    // CopyBoundaryTrace(IncFieldFwd[2], Bwd[2], SolverUtils::eFwdEQNegBwd, 2,
+    //                   SpatialDomains::ePMC_Forces);
+
+    // // Boundary conditions for scattered waves
+    // CopyBoundaryTrace(Fwd[0], Bwd[0], SolverUtils::eFwdEQNegBwd, 0,
+    //                   SpatialDomains::ePEC);
+    // CopyBoundaryTrace(Fwd[1], Bwd[1], SolverUtils::eFwdEQNegBwd, 1,
+    //                   SpatialDomains::ePEC);
+    // CopyBoundaryTrace(Fwd[2], Bwd[2], SolverUtils::eFwdEQBwd, 2,
+    //                   SpatialDomains::ePEC);
+
+    // CopyBoundaryTrace(Fwd[0], Bwd[0], SolverUtils::eFwdEQBwd, 0,
+    //                   SpatialDomains::ePMC);
+    // CopyBoundaryTrace(Fwd[1], Bwd[1], SolverUtils::eFwdEQBwd, 1,
+    //                   SpatialDomains::ePMC);
+    // CopyBoundaryTrace(Fwd[2], Bwd[2], SolverUtils::eFwdEQNegBwd, 2,
+    //                   SpatialDomains::ePMC);
+
+    Array<OneD, NekDouble> e1Fwd_cdot_ncrossdE(nTraceNumPoints);
+    Array<OneD, NekDouble> e1Bwd_cdot_ncrossdE(nTraceNumPoints);
+    Array<OneD, NekDouble> e2Fwd_cdot_ncrossdE(nTraceNumPoints);
+    Array<OneD, NekDouble> e2Bwd_cdot_ncrossdE(nTraceNumPoints);
+    Array<OneD, NekDouble> e3Fwd_cdot_dHe3(nTraceNumPoints);
+    Array<OneD, NekDouble> e3Bwd_cdot_dHe3(nTraceNumPoints);
+
+    // Compute  numfluxFwd[dir] = (eFwd^[dir] \cdot n \times e^3) * (ZimFwd *
+    // HFwd^3 + ZimBwd * HBwd^3 )
+    // Compute  numfluxBwd[dir] = (eBwd^[dir] \cdot n \times e^3) * (ZimFwd *
+    // HFwd^3 + ZimBwd * HBwd^3 )
+    ComputeNtimesFz(0, Fwd, Bwd, m_ZimFwd[0], m_ZimBwd[0], numfluxFwd[0],
+                    numfluxBwd[0]);
+    ComputeNtimesFz(1, Fwd, Bwd, m_ZimFwd[1], m_ZimBwd[1], numfluxFwd[1],
+                    numfluxBwd[1]);
+
+    // Compute numfluxFwd[2] = eFwd^3 \cdot ( n1e1 \times ( imFwd EFwd + imBwd
+    // EBwd ) ) / 2 {{Y_i}}
+    ComputeNtimesF12(Fwd, Bwd, m_YimFwd[0], m_YimBwd[0], m_YimFwd[1],
+                     m_YimBwd[1], numfluxFwd[2], numfluxBwd[2]);
+
+    // Compute e1Fwd_cdot_ncrossdE = eFwd[dir] \cdot \alpha n \times n \times
+    // [E] / 2 {{ZimFwd}}
+    ComputeNtimestimesdFz(0, Fwd, Bwd, m_ZimFwd[0], m_ZimBwd[0],
+                          e1Fwd_cdot_ncrossdE, e1Bwd_cdot_ncrossdE);
+    ComputeNtimestimesdFz(1, Fwd, Bwd, m_ZimFwd[1], m_ZimBwd[1],
+                          e2Fwd_cdot_ncrossdE, e2Bwd_cdot_ncrossdE);
+
+    // Compute  - \alpha [H3] * ( 1/2{{Yim1}} + 1/2{{Yim2}} )
+    ComputeNtimestimesdF12(Fwd, Bwd, m_YimFwd[0], m_YimBwd[0], m_YimFwd[1],
+                           m_YimBwd[1], e3Fwd_cdot_dHe3, e3Bwd_cdot_dHe3);
+
+    Vmath::Svtvp(nTraceNumPoints, 1.0, numfluxFwd[0], 1, e1Fwd_cdot_ncrossdE, 1,
+                 numfluxFwd[0], 1);
+    Vmath::Svtvp(nTraceNumPoints, 1.0, numfluxFwd[1], 1, e2Fwd_cdot_ncrossdE, 1,
+                 numfluxFwd[1], 1);
+    Vmath::Svtvp(nTraceNumPoints, -1.0, numfluxFwd[2], 1, e3Fwd_cdot_dHe3, 1,
+                 numfluxFwd[2], 1);
+
+    Vmath::Svtvp(nTraceNumPoints, 1.0, numfluxBwd[0], 1, e1Bwd_cdot_ncrossdE, 1,
+                 numfluxBwd[0], 1);
+    Vmath::Svtvp(nTraceNumPoints, 1.0, numfluxBwd[1], 1, e2Bwd_cdot_ncrossdE, 1,
+                 numfluxBwd[1], 1);
+    Vmath::Svtvp(nTraceNumPoints, -1.0, numfluxBwd[2], 1, e3Bwd_cdot_dHe3, 1,
+                 numfluxBwd[2], 1);
+}
+
+
+
+// Compute  (e^[dir] \cdot ( n \times e^3)) * (imFwd * Fwd^3 + imBwd * Bwd^3 )
+void MMFMaxwell::ComputeNtimesFz(const int dir,
+                                const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                                const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+                                const Array<OneD, const NekDouble> &imFwd,
+                                const Array<OneD, const NekDouble> &imBwd,
+                                Array<OneD, NekDouble> &outarrayFwd,
+                                Array<OneD, NekDouble> &outarrayBwd)
+
+{
+    int nTraceNumPoints = GetTraceTotPoints();
+
+    NekDouble tmpFwd, tmpBwd;
+    NekDouble Aver, ntimesz;
+
+    for (int i = 0; i < nTraceNumPoints; ++i)
+    {
+        Aver = 0.5 * (imFwd[i] + imBwd[i]);
+
+        tmpFwd = 0.0;
+        tmpBwd = 0.0;
+        for (int k = 0; k < m_spacedim; ++k)
+        {
+            ntimesz = 0.5 * (imFwd[i] * Fwd[2][i] + imBwd[i] * Bwd[2][i]);
+
+            tmpFwd +=
+                m_MFtraceFwd[dir][k][i] * m_ntimesMFFwd[2][k][i] * ntimesz;
+            tmpBwd +=
+                m_MFtraceBwd[dir][k][i] * m_ntimesMFBwd[2][k][i] * ntimesz;
+        }
+
+        outarrayFwd[i] = tmpFwd / Aver;
+        outarrayBwd[i] = tmpBwd / Aver;
+    }
+}
+
+// Compute e^3 \cdot ( n1e1 \times ( imFwd EFwd + imBwd EBwd ) ) / 2{{Y_i}}
+void MMFMaxwell::ComputeNtimesF12(const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                                 const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+                                 const Array<OneD, const NekDouble> &im1Fwd,
+                                 const Array<OneD, const NekDouble> &im1Bwd,
+                                 const Array<OneD, const NekDouble> &im2Fwd,
+                                 const Array<OneD, const NekDouble> &im2Bwd,
+                                 Array<OneD, NekDouble> &outarrayFwd,
+                                 Array<OneD, NekDouble> &outarrayBwd)
+{
+    int nTraceNumPoints = GetTraceTotPoints();
+
+    NekDouble tmpFwd, tmpBwd, Aver1, Aver2, HFwdk, HBwdk;
+
+    Array<OneD, NekDouble> z1HAver(m_spacedim);
+    Array<OneD, NekDouble> z2HAver(m_spacedim);
+    Array<OneD, NekDouble> n1e1(m_spacedim);
+    Array<OneD, NekDouble> n2e2(m_spacedim);
+
+    Array<OneD, NekDouble> n1e1_times_z1HAver(m_spacedim);
+    Array<OneD, NekDouble> n2e2_times_z2HAver(m_spacedim);
+
+    for (int i = 0; i < nTraceNumPoints; ++i)
+    {
+        Aver1 = 0.5 * (im1Fwd[i] + im1Bwd[i]);
+        Aver2 = 0.5 * (im2Fwd[i] + im2Bwd[i]);
+
+        for (int k = 0; k < m_spacedim; k++)
+        {
+            // Compute \vec{HFwd} and \vec{HBwd}
+            HFwdk = Fwd[0][i] * m_MFtraceFwd[0][k][i] +
+                    Fwd[1][i] * m_MFtraceFwd[1][k][i];
+            HBwdk = Bwd[0][i] * m_MFtraceBwd[0][k][i] +
+                    Bwd[1][i] * m_MFtraceBwd[1][k][i];
+
+            // Compute z_i {{ \vec{H} }}
+            z1HAver[k] = 0.5 * (im1Fwd[i] * HFwdk + im1Bwd[i] * HBwdk);
+            z2HAver[k] = 0.5 * (im2Fwd[i] * HFwdk + im2Bwd[i] * HBwdk);
+
+            // Choose e^i for the one in anisotropy region
+            n1e1[k] = m_ncdotMFFwd[0][i] * m_MFtraceFwd[0][k][i];
+            n2e2[k] = m_ncdotMFFwd[1][i] * m_MFtraceFwd[1][k][i];
+        }
+
+        // Compute n1e1 \times z1HAver and n2e2 \times z2HAver
+        VectorCrossProd(n1e1, z1HAver, n1e1_times_z1HAver);
+        VectorCrossProd(n2e2, z2HAver, n2e2_times_z2HAver);
+
+        // e^3 \cdot ( n1e1 \times z1HAver + n2e2 \times z2HAver)
+        tmpFwd = 0.0;
+        tmpBwd = 0.0;
+        for (int k = 0; k < m_spacedim; k++)
+        {
+            tmpFwd += m_MFtraceFwd[2][k][i] * (n1e1_times_z1HAver[k] / Aver1 +
+                                               n2e2_times_z2HAver[k] / Aver2);
+            tmpBwd += m_MFtraceBwd[2][k][i] * (n1e1_times_z1HAver[k] / Aver1 +
+                                               n2e2_times_z2HAver[k] / Aver2);
+        }
+
+        outarrayFwd[i] = tmpFwd;
+        outarrayBwd[i] = tmpBwd;
+    }
+}
+
+void MMFMaxwell::ComputeNtimestimesdFz(
+    const int dir, const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+    const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+    const Array<OneD, const NekDouble> &imFwd,
+    const Array<OneD, const NekDouble> &imBwd,
+    Array<OneD, NekDouble> &outarrayFwd, Array<OneD, NekDouble> &outarrayBwd)
+{
+    int nTraceNumPoints = GetTraceTotPoints();
+
+    Array<OneD, NekDouble> dH(m_spacedim);
+    Array<OneD, NekDouble> nFwd(m_spacedim);
+
+    Array<OneD, NekDouble> eiFwd(m_spacedim);
+    Array<OneD, NekDouble> eiBwd(m_spacedim);
+
+    Array<OneD, NekDouble> eitimesdHFwd(m_spacedim);
+    Array<OneD, NekDouble> eitimesdHBwd(m_spacedim);
+
+    Array<OneD, NekDouble> ntimeseitimesdHFwd(m_spacedim);
+    Array<OneD, NekDouble> ntimeseitimesdHBwd(m_spacedim);
+
+    NekDouble Aver, HFwdk, HBwdk, tmpFwd, tmpBwd;
+    for (int i = 0; i < nTraceNumPoints; ++i)
+    {
+        Aver = 0.5 * (imFwd[i] + imBwd[i]);
+
+        // Get [H]
+        for (int k = 0; k < m_spacedim; k++)
+        {
+            HFwdk = Fwd[0][i] * m_MFtraceFwd[0][k][i] +
+                    Fwd[1][i] * m_MFtraceFwd[1][k][i];
+            HBwdk = Bwd[0][i] * m_MFtraceBwd[0][k][i] +
+                    Bwd[1][i] * m_MFtraceBwd[1][k][i];
+            dH[k] = HFwdk - HBwdk;
+
+            eiFwd[k] = m_MFtraceFwd[dir][k][i];
+            eiBwd[k] = m_MFtraceBwd[dir][k][i];
+
+            nFwd[k] = m_traceNormals[k][i];
+        }
+
+        // MFtraceFwd (MFtraceBwd) \times [H]
+        // VectorCrossProd(eiFwd, dH, eitimesdHFwd);
+        // VectorCrossProd(eiBwd, dH, eitimesdHBwd);
+        VectorCrossProd(nFwd, dH, eitimesdHFwd);
+        VectorCrossProd(nFwd, dH, eitimesdHBwd);
+
+        // n times eitimesdH
+        VectorCrossProd(nFwd, eitimesdHFwd, ntimeseitimesdHFwd);
+        VectorCrossProd(nFwd, eitimesdHBwd, ntimeseitimesdHBwd);
+
+        // MFtraceFwd \cdot ntimeseitimesdH
+        tmpFwd = 0.0;
+        tmpBwd = 0.0;
+        for (int k = 0; k < m_spacedim; k++)
+        {
+            tmpFwd += eiFwd[k] * ntimeseitimesdHFwd[k];
+            tmpBwd += eiBwd[k] * ntimeseitimesdHBwd[k];
+        }
+
+        outarrayFwd[i] = 0.5 * m_alpha * tmpFwd / Aver;
+        outarrayBwd[i] = 0.5 * m_alpha * tmpBwd / Aver;
+    }
+}
+
+// Compute - \alpha [E3] / ( {{im1}} + {{im2}} )
+void MMFMaxwell::ComputeNtimestimesdF12(
+    const Array<OneD, Array<OneD, NekDouble>> &Fwd,
+    const Array<OneD, Array<OneD, NekDouble>> &Bwd,
+    const Array<OneD, const NekDouble> &im1Fwd,
+    const Array<OneD, const NekDouble> &im1Bwd,
+    const Array<OneD, const NekDouble> &im2Fwd,
+    const Array<OneD, const NekDouble> &im2Bwd,
+    Array<OneD, NekDouble> &outarrayFwd, Array<OneD, NekDouble> &outarrayBwd)
+{
+    int nTraceNumPoints = GetTraceTotPoints();
+
+    Array<OneD, NekDouble> directFwd(nTraceNumPoints);
+    Array<OneD, NekDouble> directBwd(nTraceNumPoints);
+
+    NekDouble Aver1, Aver2;
+    for (int i = 0; i < nTraceNumPoints; ++i)
+    {
+        Aver1 = im1Fwd[i] + im1Bwd[i];
+        Aver2 = im2Fwd[i] + im2Bwd[i];
+
+        outarrayFwd[i] =
+            -m_alpha * (Fwd[2][i] - Bwd[2][i]) * (1.0 / Aver1 + 1.0 / Aver2);
+        outarrayBwd[i] =
+            -m_alpha * (Fwd[2][i] - Bwd[2][i]) * (1.0 / Aver1 + 1.0 / Aver2);
     }
 }
 
@@ -1345,15 +1709,15 @@ void MMFMaxwell::v_SetInitialConditions(const NekDouble initialtime,
 
     switch (m_TestMaxwellType)
     {
-        case SolverUtils::eMaxwell1D:
+        case eMaxwell1D:
         {
             m_fields[0]->SetPhys(TestMaxwell1D(initialtime, 0));
             m_fields[1]->SetPhys(TestMaxwell1D(initialtime, 1));
         }
         break;
 
-        case SolverUtils::eTestMaxwell2DPEC:
-        case SolverUtils::eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPEC:
+        case eTestMaxwell2DPECAVGFLUX:
         {
             m_fields[0]->SetPhys(TestMaxwell2DPEC(initialtime, 0, m_PolType));
             m_fields[1]->SetPhys(TestMaxwell2DPEC(initialtime, 1, m_PolType));
@@ -1361,7 +1725,7 @@ void MMFMaxwell::v_SetInitialConditions(const NekDouble initialtime,
         }
         break;
 
-        case SolverUtils::eTestMaxwell2DPMC:
+        case eTestMaxwell2DPMC:
         {
             m_fields[0]->SetPhys(TestMaxwell2DPMC(initialtime, 0, m_PolType));
             m_fields[1]->SetPhys(TestMaxwell2DPMC(initialtime, 1, m_PolType));
@@ -1369,8 +1733,8 @@ void MMFMaxwell::v_SetInitialConditions(const NekDouble initialtime,
         }
         break;
 
-        case SolverUtils::eScatField2D:
-        case SolverUtils::eTotField2D:
+        case eScatField2D:
+        case eTotField2D:
         {
             Array<OneD, NekDouble> Zeros(nq, 0.0);
 
@@ -1381,7 +1745,7 @@ void MMFMaxwell::v_SetInitialConditions(const NekDouble initialtime,
         }
         break;
 
-        case SolverUtils::eMaxwellSphere:
+        case eMaxwellSphere:
         {
             m_fields[0]->SetPhys(TestMaxwellSphere(initialtime, m_freq, 0));
             m_fields[1]->SetPhys(TestMaxwellSphere(initialtime, m_freq, 1));
@@ -1389,7 +1753,7 @@ void MMFMaxwell::v_SetInitialConditions(const NekDouble initialtime,
         }
         break;
 
-        case SolverUtils::eELF2DSurface:
+        case eELF2DSurface:
         {
             m_fields[2]->SetPhys(GaussianPulse(initialtime, m_Psx, m_Psy, m_Psz,
                                                m_Gaussianradius));
@@ -1427,31 +1791,31 @@ void MMFMaxwell::v_EvaluateExactSolution(unsigned int field,
                                          Array<OneD, NekDouble> &outfield,
                                          const NekDouble time)
 {
-    int nq   = m_fields[0]->GetNpoints();
+    int nq              = GetNpoints();
     outfield = Array<OneD, NekDouble>(nq);
 
     switch (m_TestMaxwellType)
     {
-        case SolverUtils::eMaxwell1D:
+        case eMaxwell1D:
         {
             outfield = TestMaxwell1D(time, field);
         }
         break;
 
-        case SolverUtils::eTestMaxwell2DPEC:
-        case SolverUtils::eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPEC:
+        case eTestMaxwell2DPECAVGFLUX:
         {
             outfield = TestMaxwell2DPEC(time, field, m_PolType);
         }
         break;
 
-        case SolverUtils::eTestMaxwell2DPMC:
+        case eTestMaxwell2DPMC:
         {
             outfield = TestMaxwell2DPMC(time, field, m_PolType);
         }
         break;
 
-        case SolverUtils::eMaxwellSphere:
+        case eMaxwellSphere:
         {
             outfield = TestMaxwellSphere(time, m_freq, field);
         }
@@ -1468,7 +1832,7 @@ void MMFMaxwell::v_EvaluateExactSolution(unsigned int field,
 Array<OneD, NekDouble> MMFMaxwell::TestMaxwell1D(const NekDouble time,
                                                  unsigned int field)
 {
-    int nq = m_fields[0]->GetNpoints();
+    int nq              = GetNpoints();
 
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
@@ -1494,10 +1858,10 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell1D(const NekDouble time,
         NekDouble newomega, F, Fprime;
         for (int i = 0; i < 10000; ++i)
         {
-            F      = m_n1 * tan(m_n2 * omega) + m_n2 * tan(m_n1 * omega);
-            Fprime = m_n1 * m_n2 *
-                     (1.0 / cos(m_n2 * omega) / cos(m_n2 * omega) +
-                      1.0 / cos(m_n1 * omega) / cos(m_n1 * omega));
+            F = m_n1 * tan(m_n2 * omega) + m_n2 * tan(m_n1 * omega);
+            Fprime =
+                m_n1 * m_n2 * (1.0 / cos(m_n2 * omega) / cos(m_n2 * omega) +
+                               1.0 / cos(m_n1 * omega) / cos(m_n1 * omega));
 
             newomega = omega - F / Fprime;
 
@@ -1543,9 +1907,8 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell1D(const NekDouble time,
         Ec = (Ak * exp(im * nk * omega * x0[i]) -
               Bk * exp(-im * nk * omega * x0[i])) *
              exp(im * omega * time);
-        Hc = nk *
-             (Ak * exp(im * nk * omega * x0[i]) +
-              Bk * exp(-im * nk * omega * x0[i])) *
+        Hc = nk * (Ak * exp(im * nk * omega * x0[i]) +
+                   Bk * exp(-im * nk * omega * x0[i])) *
              exp(im * omega * time);
 
         E[i] = Ec.real();
@@ -1573,9 +1936,9 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell1D(const NekDouble time,
 
 Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPEC(
     const NekDouble time, unsigned int field,
-    const SolverUtils::PolType Polarization)
+    const PolType Polarization)
 {
-    int nq = m_fields[0]->GetNpoints();
+    int nq              = GetNpoints();
 
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
@@ -1600,7 +1963,7 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPEC(
     {
         switch (Polarization)
         {
-            case SolverUtils::eTransMagnetic:
+            case eTransMagnetic:
             {
                 Fx = -1.0 * (npi / omega) * sin(mpi * x0[i]) *
                      cos(npi * x1[i]) * sin(omega * time);
@@ -1627,7 +1990,7 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPEC(
             }
             break;
 
-            case SolverUtils::eTransElectric:
+            case eTransElectric:
             {
                 Fx = -1.0 * (npi / omega) * cos(mpi * x0[i]) *
                      sin(npi * x1[i]) * sin(omega * time);
@@ -1704,9 +2067,9 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPEC(
 
 Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPMC(
     const NekDouble time, unsigned int field,
-    const SolverUtils::PolType Polarization)
+    const PolType Polarization)
 {
-    int nq = m_fields[0]->GetNpoints();
+    int nq              = GetNpoints();
 
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
@@ -1724,11 +2087,12 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPMC(
     Array<OneD, NekDouble> Fz(nq);
     NekDouble Fx, Fy;
 
+
     for (int i = 0; i < nq; ++i)
     {
         switch (Polarization)
         {
-            case SolverUtils::eTransMagnetic:
+            case eTransMagnetic:
             {
                 Fx = (npi / omega) * cos(mpi * x0[i]) * sin(npi * x1[i]) *
                      sin(omega * time);
@@ -1743,7 +2107,7 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwell2DPMC(
             }
             break;
 
-            case SolverUtils::eTransElectric:
+            case eTransElectric:
             {
                 Fx = (npi / omega) * sin(mpi * x0[i]) * cos(npi * x1[i]) *
                      sin(omega * time);
@@ -1792,7 +2156,7 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwellSphere(const NekDouble time,
                                                      const NekDouble omega,
                                                      unsigned int field)
 {
-    int nq = m_fields[0]->GetTotPoints();
+    int nq = GetNpoints();
 
     Array<OneD, NekDouble> outfield(nq);
 
@@ -1825,39 +2189,65 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwellSphere(const NekDouble time,
         yj = y[i];
         zj = z[i];
 
-        CartesianToSpherical(xj, yj, zj, sin_varphi, cos_varphi, sin_theta,
+        // CartesianToSpherical(xj, yj, zj, sin_varphi, cos_varphi, sin_theta,
+        //                      cos_theta);
+
+        // vth = -4.0 * sin_varphi * cos_varphi * cos_theta * cos_theta *
+        //       cos_theta * sin_theta;
+        // vphi = -1.0 * sin_varphi * sin_varphi * cos_theta * cos_theta * cos_theta;
+
+        // velvec[0][i] = -vth * sin_theta * cos_varphi - vphi * sin_varphi;
+        // velvec[1][i] = -vth * sin_theta * sin_varphi + vphi * cos_varphi;
+        // velvec[2][i] = vth * cos_theta;
+
+        // E3[i] = (-4.0 * cos_theta * cos_theta * sin_theta * cos_varphi *
+        //          cos_varphi) *
+        //         (1.0 / omega * sin(omega * time));
+
+        // Fth = -omega * vth -
+        //       (8.0 / omega) * cos_theta * sin_theta * cos_varphi * sin_varphi;
+        // Fphi = -omega * vphi +
+        //        (4.0 / omega) * cos_varphi * cos_varphi * cos_theta *
+        //            (2.0 * sin_theta * sin_theta - cos_theta * cos_theta);
+        // Fvec[0][i] = -Fth * sin_theta * cos_varphi - Fphi * sin_varphi;
+        // Fvec[1][i] = -Fth * sin_theta * sin_varphi + Fphi * cos_varphi;
+        // Fvec[2][i] = Fth * cos_theta;
+
+        CartesianToNewSpherical(xj, yj, zj, sin_varphi, cos_varphi, sin_theta,
                              cos_theta);
 
-        vth = -4.0 * sin_varphi * cos_varphi * cos_theta * cos_theta *
-              cos_theta * sin_theta;
-        vphi =
-            -1.0 * sin_varphi * sin_varphi * cos_theta * cos_theta * cos_theta;
-        velvec[0][i] = -vth * sin_theta * cos_varphi - vphi * sin_varphi;
-        velvec[1][i] = -vth * sin_theta * sin_varphi + vphi * cos_varphi;
-        velvec[2][i] = vth * cos_theta;
+        vth = -4.0 * sin_varphi * cos_varphi * sin_theta * sin_theta *
+              sin_theta * cos_theta;
+        vphi = -1.0 * sin_varphi * sin_varphi * sin_theta * sin_theta * sin_theta;
 
-        E3[i] = (-4.0 * cos_theta * cos_theta * sin_theta * cos_varphi *
-                 cos_varphi) *
+        velvec[0][i] = -vth * cos_theta * cos_varphi - vphi * sin_varphi;
+        velvec[1][i] = -vth * cos_theta * sin_varphi + vphi * cos_varphi;
+        velvec[2][i] = vth * sin_theta;
+
+        E3[i] = (-4.0 * sin_theta * sin_theta * cos_theta * cos_varphi * cos_varphi) *
                 (1.0 / omega * sin(omega * time));
 
-        Fth = -omega * vth -
-              (8.0 / omega) * cos_theta * sin_theta * cos_varphi * sin_varphi;
+        Fth = -omega * vth - (8.0 / omega) * sin_theta * cos_theta * cos_varphi * sin_varphi;
+
         Fphi = -omega * vphi +
-               (4.0 / omega) * cos_varphi * cos_varphi * cos_theta *
-                   (2.0 * sin_theta * sin_theta - cos_theta * cos_theta);
-        Fvec[0][i] = -Fth * sin_theta * cos_varphi - Fphi * sin_varphi;
-        Fvec[1][i] = -Fth * sin_theta * sin_varphi + Fphi * cos_varphi;
-        Fvec[2][i] = Fth * cos_theta;
+               (4.0 / omega) * cos_varphi * cos_varphi * sin_theta *
+                   (2.0 * cos_theta * cos_theta - sin_theta * sin_theta);
+
+        Fvec[0][i] = -Fth * cos_theta * cos_varphi - Fphi * sin_varphi;
+        Fvec[1][i] = -Fth * cos_theta * sin_varphi + Fphi * cos_varphi;
+        Fvec[2][i] = Fth * sin_theta;
     }
 
-    H1 = CartesianToMovingframes(velvec, 0);
-    H2 = CartesianToMovingframes(velvec, 1);
+
+
+    H1 = CartesianToMovingframes(m_movingframes,velvec, 0);
+    H2 = CartesianToMovingframes(m_movingframes,velvec, 1);
 
     Vmath::Smul(nq, cos(omega * time), H1, 1, H1, 1);
     Vmath::Smul(nq, cos(omega * time), H2, 1, H2, 1);
 
-    F1 = CartesianToMovingframes(Fvec, 0);
-    F2 = CartesianToMovingframes(Fvec, 1);
+    F1 = CartesianToMovingframes(m_movingframes,Fvec, 0);
+    F2 = CartesianToMovingframes(m_movingframes,Fvec, 1);
 
     Vmath::Smul(nq, sin(omega * time), F1, 1, F1, 1);
     Vmath::Smul(nq, sin(omega * time), F2, 1, F2, 1);
@@ -1905,7 +2295,7 @@ Array<OneD, NekDouble> MMFMaxwell::TestMaxwellSphere(const NekDouble time,
 void MMFMaxwell::Printout_SurfaceCurrent(
     Array<OneD, Array<OneD, NekDouble>> &fields, const int time)
 {
-    int nq              = m_fields[0]->GetTotPoints();
+    int nq              = GetNpoints();
     int nTraceNumPoints = GetTraceTotPoints();
 
     int totbdryexp =
@@ -1947,43 +2337,43 @@ void MMFMaxwell::Printout_SurfaceCurrent(
     ntimesHFwd = ComputeSurfaceCurrent(time, fields);
 
     // The surface for current should be the first boundary
-    int id2, cnt = 0;
-    for (int e = 0; e < totbdryexp; ++e)
-    {
-        id2 = m_fields[0]->GetTrace()->GetPhys_Offset(
-            m_fields[0]->GetTraceMap()->GetBndCondIDToGlobalTraceID(cnt + e));
+    // int id2, cnt = 0;
+    // for (int e = 0; e < totbdryexp; ++e)
+    // {
+    //     id2 = m_fields[0]->GetTrace()->GetPhys_Offset(
+    //         m_fields[0]->GetTraceMap()->GetBndCondIDToGlobalTraceID(cnt +                      e));
 
-        Vmath::Vcopy(npts, &phiFwd[id2], 1, &Jphi[e * npts], 1);
-        Vmath::Vcopy(npts, &radFwd[id2], 1, &Jrad[e * npts], 1);
-        Vmath::Vcopy(npts, &ntimesHFwd[id2], 1, &Jcurrent[e * npts], 1);
-    }
+    //     Vmath::Vcopy(npts, &phiFwd[id2], 1, &Jphi[e * npts], 1);
+    //     Vmath::Vcopy(npts, &radFwd[id2], 1, &Jrad[e * npts], 1);
+    //     Vmath::Vcopy(npts, &ntimesHFwd[id2], 1, &Jcurrent[e * npts], 1);
+    // }
 
     // Vmath::Vmul(totnpts, tmpr, 1, tmpr, 1, Jcurrent, 1);
     // Vmath::Vvtvp(totnpts, tmpi, 1, tmpi, 1, Jcurrent, 1, Jcurrent, 1);
     // Vmath::Vsqrt(totnpts, Jcurrent, 1, Jcurrent, 1);
 
-    std::cout << "========================================================"
-              << std::endl;
+    // std::cout << "========================================================"
+    //          << std::endl;
 
-    std::cout << "phi = " << std::endl;
-    for (int i = 0; i < totnpts; ++i)
-    {
-        std::cout << Jphi[i] << ", ";
-    }
-    std::cout << std::endl << std::endl;
+    // std::cout << "phi = " << std::endl;
+    // for (int i = 0; i < totnpts; ++i)
+    // {
+    //     std::cout << Jphi[i] << ", ";
+    // }
+    // std::cout << std::endl << std::endl;
 
-    std::cout << "J = " << std::endl;
-    for (int i = 0; i < totnpts; ++i)
-    {
-        std::cout << Jcurrent[i] << ", ";
-    }
-    std::cout << std::endl << std::endl;
+    // std::cout << "J = " << std::endl;
+    // for (int i = 0; i < totnpts; ++i)
+    // {
+    //     std::cout << Jcurrent[i] << ", ";
+    // }
+    // std::cout << std::endl << std::endl;
 }
 
 Array<OneD, NekDouble> MMFMaxwell::ComputeSurfaceCurrent(
     const int time, const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
-    int nq              = m_fields[0]->GetTotPoints();
+    int nq              = GetNpoints();
     int nTraceNumPoints = GetTraceTotPoints();
 
     Array<OneD, NekDouble> outfield(nTraceNumPoints, 0.0);
@@ -1991,7 +2381,7 @@ Array<OneD, NekDouble> MMFMaxwell::ComputeSurfaceCurrent(
     switch (m_PolType)
     {
         // (n \times H^r)_z = H1r (n \times e^1)_z + H2r (n \times e^2)_z,
-        case SolverUtils::eTransMagnetic:
+        case eTransMagnetic:
         {
             Array<OneD, NekDouble> tmp(nq);
             Array<OneD, NekDouble> tmpFwd(nTraceNumPoints);
@@ -2008,7 +2398,7 @@ Array<OneD, NekDouble> MMFMaxwell::ComputeSurfaceCurrent(
         }
         break;
 
-        case SolverUtils::eTransElectric:
+        case eTransElectric:
         {
             Array<OneD, NekDouble> tmp(nq);
 
@@ -2030,7 +2420,7 @@ void MMFMaxwell::GenerateSigmaPML(const NekDouble PMLthickness,
                                   const NekDouble PMLmaxsigma,
                                   Array<OneD, Array<OneD, NekDouble>> &SigmaPML)
 {
-    int nq = m_fields[0]->GetNpoints();
+    int nq              = GetNpoints();
 
     // Construct sigmaX and sigmaY for UPML
     Array<OneD, NekDouble> x(nq);
@@ -2184,18 +2574,19 @@ void MMFMaxwell::GenerateSigmaPML(const NekDouble PMLthickness,
 NekDouble MMFMaxwell::ComputeEnergyDensity(
     Array<OneD, Array<OneD, NekDouble>> &fields)
 {
+    int nvar            = 3;
     int nq = GetTotPoints();
+
     NekDouble energy;
 
     Array<OneD, NekDouble> tmp(nq, 0.0);
-
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < nvar; ++i)
     {
         Vmath::Vvtvp(nq, &fields[i][0], 1, &fields[i][0], 1, &tmp[0], 1,
                      &tmp[0], 1);
     }
 
-    energy = 0.5 * (m_fields[0]->Integral(tmp));
+    energy = 0.5 * (m_fields[0]->PhysIntegral(tmp));
     return energy;
 }
 
@@ -2205,7 +2596,7 @@ void MMFMaxwell::ComputeMaterialVector(
 {
     switch (m_TestMaxwellType)
     {
-        case SolverUtils::eMaxwell1D:
+        case eMaxwell1D:
         {
             m_fields[0]->GenerateElementVector(m_ElemtGroup1, m_varepsilon[0],
                                                m_varepsilon[1], epsvec[0]);
@@ -2214,15 +2605,15 @@ void MMFMaxwell::ComputeMaterialVector(
         }
         break;
 
-        case SolverUtils::eTestMaxwell2DPEC:
-        case SolverUtils::eTestMaxwell2DPECAVGFLUX:
-        case SolverUtils::eTestMaxwell2DPMC:
-        case SolverUtils::eScatField2D:
-        case SolverUtils::eTotField2D:
+        case eTestMaxwell2DPEC:
+        case eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPMC:
+        case eScatField2D:
+        case eTotField2D:
         {
             switch (m_PolType)
             {
-                case SolverUtils::eTransMagnetic:
+                case eTransMagnetic:
                 {
                     m_fields[0]->GenerateElementVector(m_ElemtGroup1, m_mu[0],
                                                        1.0, muvec[0]);
@@ -2253,7 +2644,7 @@ void MMFMaxwell::ComputeMaterialVector(
                 }
                 break;
 
-                case SolverUtils::eTransElectric:
+                case eTransElectric:
                 {
                     m_fields[0]->GenerateElementVector(
                         m_ElemtGroup1, m_varepsilon[0], 1.0, epsvec[0]);
@@ -2333,7 +2724,7 @@ void MMFMaxwell::ComputeMaterialOpticalCloak(
 
     m_fields[0]->GenerateElementVector(m_ElemtGroup1, 1.0, 0.0, Cloakregion);
 
-    ExactCloakArea = ExactCloakArea - (m_fields[0]->Integral(Cloakregion));
+    ExactCloakArea = ExactCloakArea - (m_fields[0]->PhysIntegral(Cloakregion));
     std::cout << "*** Error of Cloakregion area = " << ExactCloakArea
               << std::endl;
 
@@ -2392,7 +2783,7 @@ void MMFMaxwell::ComputeMaterialMicroWaveCloak(
         Vmath::Vsub(nq, Cloakregion, 1, Vacregion, 1, Cloakregion, 1);
     }
 
-    ExactCloakArea = ExactCloakArea - (m_fields[0]->Integral(Cloakregion));
+    ExactCloakArea = ExactCloakArea - (m_fields[0]->PhysIntegral(Cloakregion));
     std::cout << "*** Error of Cloakregion area = " << ExactCloakArea
               << std::endl;
 
@@ -2442,7 +2833,7 @@ void MMFMaxwell::AddPML(
 
     switch (m_PolType)
     {
-        case SolverUtils::eTransMagnetic:
+        case eTransMagnetic:
         {
             int indxH0 = 0;
             int indxH1 = 1;
@@ -2498,7 +2889,7 @@ void MMFMaxwell::AddPML(
         }
         break;
 
-        case SolverUtils::eTransElectric:
+        case eTransElectric:
         {
             int indxE0 = 0;
             int indxE1 = 1;
@@ -2721,7 +3112,7 @@ void MMFMaxwell::Checkpoint_EDFluxOutput(
 
         Vmath::Vmul(nq, &fieldphys[2][0], 1, &tmp[0], 1, &tmp[0], 1);
 
-        if (m_PolType == SolverUtils::eTransMagnetic)
+        if (m_PolType == eTransMagnetic)
         {
             Vmath::Neg(nq, tmp, 1);
         }
@@ -2824,10 +3215,11 @@ Array<OneD, NekDouble> MMFMaxwell::GaussianPulse(const NekDouble time,
     {
         rad = sqrt((x[j] - Psx) * (x[j] - Psx) + (y[j] - Psy) * (y[j] - Psy) +
                    (z[j] - Psz) * (z[j] - Psz));
-        outarray[j] = SmoothFactor * exp(-1.0 * (rad / Gaussianradius) *
+        outarray[j] = m_PSstrength * SmoothFactor * exp(-1.0 * (rad / Gaussianradius) *
                                          (rad / Gaussianradius));
     }
 
+    // m_fields[0]->FwdTrans_IterPerExp(outarray, tmpc);
     m_fields[0]->FwdTransLocalElmt(outarray, tmpc);
     m_fields[0]->BwdTrans(tmpc, outarray);
 
@@ -2856,10 +3248,15 @@ Array<OneD, NekDouble> MMFMaxwell::EvaluateCoriolis()
         x1j = y[j];
         x2j = z[j];
 
-        CartesianToSpherical(x0j, x1j, x2j, sin_varphi, cos_varphi, sin_theta,
-                             cos_theta);
+        // CartesianToSpherical(x0j, x1j, x2j, sin_varphi, cos_varphi, sin_theta,
+        //                      cos_theta);
 
-        outarray[j] = 2.0 * m_Omega * sin_theta;
+        // outarray[j] = 2.0 * m_Omega * sin_theta;
+
+        CartesianToNewSpherical(x0j, x1j, x2j, sin_varphi, cos_varphi, sin_theta, cos_theta);
+
+        outarray[j] = 2.0 * m_Omega * cos_theta;
+
     }
 
     return outarray;
@@ -2889,13 +3286,13 @@ void MMFMaxwell::AddCoriolis(Array<OneD, Array<OneD, NekDouble>> &physarray,
 
         switch (m_PolType)
         {
-            case SolverUtils::eTransMagnetic:
+            case eTransMagnetic:
             {
                 Vmath::Vmul(nq, m_muvec[indx], 1, tmp, 1, tmp, 1);
             }
             break;
 
-            case SolverUtils::eTransElectric:
+            case eTransElectric:
             {
                 Vmath::Vmul(nq, m_epsvec[indx], 1, tmp, 1, tmp, 1);
             }
@@ -3032,8 +3429,9 @@ Array<OneD, NekDouble> MMFMaxwell::ComputeRadCloak(const int CloakNlayer)
             {
                 if ((Cloakregion[i] > 0) && (CloakNlayer > 0))
                 {
-                    radvec[i] = 1.0 + (m_b - m_a) / CloakNlayer *
-                                          (Cloakregion[i] - 0.5);
+                    radvec[i] =
+                        1.0 +
+                        (m_b - m_a) / CloakNlayer * (Cloakregion[i] - 0.5);
                 }
 
                 else
@@ -3044,19 +3442,19 @@ Array<OneD, NekDouble> MMFMaxwell::ComputeRadCloak(const int CloakNlayer)
             }
             break;
 
-            case SpatialDomains::eTangentIrregular:
-            {
-                radvec[i] = sqrt(2.0 * x0[i] * x0[i] +
-                                 x1[i] * x1[i] * x1[i] * x1[i] + x1[i] * x1[i]);
-            }
-            break;
+            // case SpatialDomains::eTangentIrregular:
+            // {
+            //     radvec[i] = sqrt(2.0 * x0[i] * x0[i] +
+            //                      x1[i] * x1[i] * x1[i] * x1[i] + x1[i] * x1[i]);
+            // }
+            // break;
 
-            case SpatialDomains::eTangentNonconvex:
-            {
-                radvec[i] = sqrt(3.0 * x0[i] * x0[i] +
-                                 x1[i] * x1[i] * x1[i] * x1[i] - x1[i] * x1[i]);
-            }
-            break;
+            // case SpatialDomains::eTangentNonconvex:
+            // {
+            //     radvec[i] = sqrt(3.0 * x0[i] * x0[i] +
+            //                      x1[i] * x1[i] * x1[i] * x1[i] - x1[i] * x1[i]);
+            // }
+            // break;
 
             default:
                 break;
@@ -3071,11 +3469,11 @@ void MMFMaxwell::v_GenerateSummary(SolverUtils::SummaryList &s)
     MMFSystem::v_GenerateSummary(s);
     SolverUtils::AddSummaryItem(
         s, "TestMaxwellType",
-        SolverUtils::TestMaxwellTypeMap[m_TestMaxwellType]);
+        TestMaxwellTypeMap[m_TestMaxwellType]);
     SolverUtils::AddSummaryItem(s, "PolType",
-                                SolverUtils::PolTypeMap[m_PolType]);
+                                PolTypeMap[m_PolType]);
     SolverUtils::AddSummaryItem(s, "IncType",
-                                SolverUtils::IncTypeMap[m_IncType]);
+                                IncTypeMap[m_IncType]);
 
     if (m_varepsilon[0] * m_varepsilon[1] * m_varepsilon[2] > 1.0)
     {
@@ -3102,6 +3500,7 @@ void MMFMaxwell::v_GenerateSummary(SolverUtils::SummaryList &s)
         SolverUtils::AddSummaryItem(s, "ElemtGroup1", m_ElemtGroup1);
     }
 
+    SolverUtils::AddSummaryItem(s, "DivergenceRestore", m_DivergenceRestore);
     SolverUtils::AddSummaryItem(s, "AddRotation", m_AddRotation);
 
     if (m_AddPML > 0)
@@ -3123,6 +3522,7 @@ void MMFMaxwell::v_GenerateSummary(SolverUtils::SummaryList &s)
         SolverUtils::AddSummaryItem(s, "Psy", m_Psy);
         SolverUtils::AddSummaryItem(s, "Psz", m_Psz);
         SolverUtils::AddSummaryItem(s, "PSduration", m_PSduration);
+        SolverUtils::AddSummaryItem(s, "PSstrength", m_PSstrength);
         SolverUtils::AddSummaryItem(s, "Gaussianradius", m_Gaussianradius);
     }
 
@@ -3134,6 +3534,680 @@ void MMFMaxwell::v_GenerateSummary(SolverUtils::SummaryList &s)
         SolverUtils::AddSummaryItem(s, "Cloakraddelta", m_Cloakraddelta);
     }
 }
+
+// dim = dimension, pol = polarization, 0 = TM, 1 = TE.
+void MMFMaxwell::ComputeZimYim(
+    const Array<OneD, const Array<OneD, NekDouble>> &epsvec,
+    const Array<OneD, const Array<OneD, NekDouble>> &muvec,
+    Array<OneD, Array<OneD, NekDouble>> &ZimFwd,
+    Array<OneD, Array<OneD, NekDouble>> &ZimBwd,
+    Array<OneD, Array<OneD, NekDouble>> &YimFwd,
+    Array<OneD, Array<OneD, NekDouble>> &YimBwd)
+
+{
+    int nTraceNumPoints = GetTraceNpoints();
+
+    switch (m_TestMaxwellType)
+    {
+        case eMaxwell1D:
+        case eScatField1D:
+        {
+            Array<OneD, NekDouble> Fwdeps(nTraceNumPoints, 1.0);
+            Array<OneD, NekDouble> Bwdeps(nTraceNumPoints, 1.0);
+            Array<OneD, NekDouble> Fwdmu(nTraceNumPoints, 1.0);
+            Array<OneD, NekDouble> Bwdmu(nTraceNumPoints, 1.0);
+            m_fields[0]->GetFwdBwdTracePhys(epsvec[0], Fwdeps, Bwdeps);
+            m_fields[0]->GetFwdBwdTracePhys(muvec[0], Fwdeps, Bwdeps);
+
+            CopyBoundaryTrace(Fwdeps, Bwdeps, SolverUtils::eFwdEQBwd, 0);
+            CopyBoundaryTrace(Fwdmu, Bwdmu, SolverUtils::eFwdEQBwd, 1);
+
+            ZimFwd = Array<OneD, Array<OneD, NekDouble>>(1);
+            ZimBwd = Array<OneD, Array<OneD, NekDouble>>(1);
+            YimFwd = Array<OneD, Array<OneD, NekDouble>>(1);
+            YimBwd = Array<OneD, Array<OneD, NekDouble>>(1);
+
+            ZimFwd[0] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+            ZimBwd[0] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+            YimFwd[0] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+            YimBwd[0] = Array<OneD, NekDouble>(nTraceNumPoints, 1.0);
+
+            // ZimFwd = sqrt( muFwd / epsFwd),  ZimBwd = sqrt( muBwd / epsBwd)
+            for (int i = 0; i < nTraceNumPoints; ++i)
+            {
+                m_ZimFwd[0][i] = sqrt(Fwdmu[i] / Fwdeps[i]);
+                m_ZimBwd[0][i] = sqrt(Bwdmu[i] / Bwdeps[i]);
+
+                m_YimFwd[0][i] = 1.0 / m_ZimFwd[0][i];
+                m_YimBwd[0][i] = 1.0 / m_ZimBwd[0][i];
+            }
+
+            std::cout << "*** ZimFwd = " << RootMeanSquare(m_ZimFwd[0])
+                      << ", ZimBwd = " << RootMeanSquare(m_ZimBwd[0])
+                      << ", YimFwd = " << RootMeanSquare(m_YimFwd[0])
+                      << ", YimBwd = " << RootMeanSquare(m_YimBwd[0])
+                      << std::endl;
+        }
+        break;
+
+        case eTestMaxwell2DPEC:
+        case eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPMC:
+        case eScatField2D:
+        case eTotField2D:
+        case eMaxwellSphere:
+        case eELF2DSurface:
+        {
+            switch (m_PolType)
+            {
+                case eTransMagnetic:
+                {
+                    Array<OneD, NekDouble> Fwdmu1(nTraceNumPoints);
+                    Array<OneD, NekDouble> Bwdmu1(nTraceNumPoints);
+                    Array<OneD, NekDouble> Fwdmu2(nTraceNumPoints);
+                    Array<OneD, NekDouble> Bwdmu2(nTraceNumPoints);
+                    Array<OneD, NekDouble> Fwdeps3(nTraceNumPoints);
+                    Array<OneD, NekDouble> Bwdeps3(nTraceNumPoints);
+
+                    m_fields[0]->GetFwdBwdTracePhys(muvec[0], Fwdmu1, Bwdmu1);
+                    m_fields[0]->GetFwdBwdTracePhys(muvec[1], Fwdmu2, Bwdmu2);
+                    m_fields[0]->GetFwdBwdTracePhys(epsvec[2], Fwdeps3,
+                                                    Bwdeps3);
+
+                    CopyBoundaryTrace(Fwdmu1, Bwdmu1, SolverUtils::eFwdEQBwd,
+                                      0);
+                    CopyBoundaryTrace(Fwdmu2, Bwdmu2, SolverUtils::eFwdEQBwd,
+                                      1);
+                    CopyBoundaryTrace(Fwdeps3, Bwdeps3, SolverUtils::eFwdEQBwd,
+                                      2);
+
+                    for (int i = 0; i < nTraceNumPoints; ++i)
+                    {
+                        ZimFwd[0][i] = sqrt(Fwdmu2[i] / Fwdeps3[i]);
+                        ZimBwd[0][i] = sqrt(Bwdmu2[i] / Bwdeps3[i]);
+
+                        YimFwd[0][i] = 1.0 / ZimFwd[0][i];
+                        YimBwd[0][i] = 1.0 / ZimBwd[0][i];
+
+                        ZimFwd[1][i] = sqrt(Fwdmu1[i] / Fwdeps3[i]);
+                        ZimBwd[1][i] = sqrt(Bwdmu1[i] / Bwdeps3[i]);
+
+                        YimFwd[1][i] = 1.0 / ZimFwd[1][i];
+                        YimBwd[1][i] = 1.0 / ZimBwd[1][i];
+                    }
+                }
+                break; // eTransMagnetic
+
+                case eTransElectric:
+                {
+                    Array<OneD, NekDouble> Fwdeps1(nTraceNumPoints);
+                    Array<OneD, NekDouble> Bwdeps1(nTraceNumPoints);
+                    Array<OneD, NekDouble> Fwdeps2(nTraceNumPoints);
+                    Array<OneD, NekDouble> Bwdeps2(nTraceNumPoints);
+                    Array<OneD, NekDouble> Fwdmu3(nTraceNumPoints);
+                    Array<OneD, NekDouble> Bwdmu3(nTraceNumPoints);
+
+                    m_fields[0]->GetFwdBwdTracePhys(epsvec[0], Fwdeps1,
+                                                    Bwdeps1);
+                    m_fields[0]->GetFwdBwdTracePhys(epsvec[1], Fwdeps2,
+                                                    Bwdeps2);
+                    m_fields[0]->GetFwdBwdTracePhys(muvec[2], Fwdmu3, Bwdmu3);
+
+                    CopyBoundaryTrace(Fwdeps1, Bwdeps1, SolverUtils::eFwdEQBwd,
+                                      0);
+                    CopyBoundaryTrace(Fwdeps2, Bwdeps2, SolverUtils::eFwdEQBwd,
+                                      1);
+                    CopyBoundaryTrace(Fwdmu3, Bwdmu3, SolverUtils::eFwdEQBwd,
+                                      2);
+
+                    for (int i = 0; i < nTraceNumPoints; ++i)
+                    {
+                        ZimFwd[0][i] = sqrt(Fwdmu3[i] / Fwdeps2[i]);
+                        ZimBwd[0][i] = sqrt(Bwdmu3[i] / Bwdeps2[i]);
+
+                        YimFwd[0][i] = 1.0 / ZimFwd[0][i];
+                        YimBwd[0][i] = 1.0 / ZimBwd[0][i];
+
+                        ZimFwd[1][i] = sqrt(Fwdmu3[i] / Fwdeps1[i]);
+                        ZimBwd[1][i] = sqrt(Bwdmu3[i] / Bwdeps1[i]);
+
+                        YimFwd[1][i] = 1.0 / ZimFwd[1][i];
+                        YimBwd[1][i] = 1.0 / ZimBwd[1][i];
+                    }
+                }
+                break; // eTransELectric
+
+                default:
+                    break;
+            } // PolType
+
+            std::cout << "*** ZimFwd0 = [ "
+                      << Vmath::Vmin(nTraceNumPoints, ZimFwd[0], 1) << " , "
+                      << Vmath::Vmax(nTraceNumPoints, ZimFwd[0], 1)
+                      << " ], ZimBwd0 = [ "
+                      << Vmath::Vmin(nTraceNumPoints, ZimBwd[0], 1) << " , "
+                      << Vmath::Vmax(nTraceNumPoints, ZimBwd[0], 1) << " ] "
+                      << std::endl;
+            std::cout << "*** ZimFwd1 = [ "
+                      << Vmath::Vmin(nTraceNumPoints, ZimFwd[1], 1) << " , "
+                      << Vmath::Vmax(nTraceNumPoints, ZimFwd[1], 1)
+                      << " ], ZimBwd1 = [ "
+                      << Vmath::Vmin(nTraceNumPoints, ZimBwd[1], 1) << " , "
+                      << Vmath::Vmax(nTraceNumPoints, ZimBwd[1], 1) << " ] "
+                      << std::endl;
+        }
+        break; // eMaxwell2D
+
+        default:
+            break;
+    } // TestMaxwellType
+}
+
+
+void MMFMaxwell::AdddedtMaxwell(
+    const Array<OneD, const Array<OneD, NekDouble>> &physarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray)
+{
+    int i, j;
+    int nq = GetTotPoints();
+
+    // m_dedxi_cdot_e[m][j][n][] = de^m / d \xi^j \cdot e^n
+    Array<OneD, NekDouble> dedtej(nq);
+    Array<OneD, NekDouble> de1dtcdotej(nq);
+    Array<OneD, NekDouble> de2dtcdotej(nq);
+
+    Array<OneD, NekDouble> normH(nq);
+    Array<OneD, NekDouble> NormedH1(nq, 0.0);
+    Array<OneD, NekDouble> NormednegH2(nq, 0.0);
+
+    Vmath::Vmul(nq, &physarray[0][0], 1, &physarray[0][0], 1, &normH[0], 1);
+    Vmath::Vvtvp(nq, &physarray[1][0], 1, &physarray[1][0], 1, &normH[0], 1,
+                 &normH[0], 1);
+    Vmath::Vsqrt(nq, normH, 1, normH, 1);
+
+    NekDouble Tol = 0.001;
+    for (i = 0; i < nq; ++i)
+    {
+        if (normH[i] > Tol)
+        {
+            NormedH1[i]    = physarray[0][i] / normH[i];
+            NormednegH2[i] = -1.0 * physarray[1][i] / normH[i];
+        }
+    }
+
+    for (j = 0; j < m_shapedim; ++j)
+    {
+        // Compute de1 / dt \cdot ej = (-H2 de^1/d\xi1 \cdot e^j + H1 de^1/d\xi2
+        // \cdot e^j) / sqrt{ H1^2 + H2^2 }
+        Vmath::Vmul(nq, &NormednegH2[0], 1, &m_dedxi_cdot_e[0][0][j][0], 1,
+                    &de1dtcdotej[0], 1);
+        Vmath::Vvtvp(nq, &NormedH1[0], 1, &m_dedxi_cdot_e[0][1][j][0], 1,
+                     &de1dtcdotej[0], 1, &de1dtcdotej[0], 1);
+
+        // Compute de2 / dt \cdot ej = (-H2 de2/d\xi1 \cdot e^j + H1 de2/d\xi2
+        // \cdot e^j) / sqrt{ H1^2 + H2^2 }
+        Vmath::Vmul(nq, &NormednegH2[0], 1, &m_dedxi_cdot_e[1][0][j][0], 1,
+                    &de2dtcdotej[0], 1);
+        Vmath::Vvtvp(nq, &NormedH1[0], 1, &m_dedxi_cdot_e[1][1][j][0], 1,
+                     &de2dtcdotej[0], 1, &de2dtcdotej[0], 1);
+
+        // Add dedt component: (H1 (de1/dt) + H2 (de2/dt) ) \cdot ej
+        Vmath::Vmul(nq, &physarray[0][0], 1, &de1dtcdotej[0], 1, &dedtej[0], 1);
+        Vmath::Vvtvp(nq, &physarray[1][0], 1, &de2dtcdotej[0], 1, &dedtej[0], 1,
+                     &dedtej[0], 1);
+
+        Vmath::Neg(nq, dedtej, 1);
+
+        switch (m_PolType)
+        {
+            case eTransMagnetic:
+            {
+                if (j == 0)
+                {
+                    Vmath::Vmul(nq, m_muvec[0], 1, dedtej, 1, dedtej, 1);
+                }
+
+                else if (j == 1)
+                {
+                    Vmath::Vmul(nq, m_muvec[1], 1, dedtej, 1, dedtej, 1);
+                }
+            }
+            break;
+
+            case eTransElectric:
+            {
+                if (j == 0)
+                {
+                    Vmath::Vmul(nq, m_epsvec[0], 1, dedtej, 1, dedtej, 1);
+                }
+
+                else if (j == 1)
+                {
+                    Vmath::Vmul(nq, m_epsvec[1], 1, dedtej, 1, dedtej, 1);
+                }
+            }
+            break;
+
+            default:
+                break;
+        }
+
+        Vmath::Vadd(nq, &dedtej[0], 1, &outarray[j][0], 1, &outarray[j][0], 1);
+    }
+}
+
+Array<OneD, NekDouble> MMFMaxwell::GetIncidentField(const int var,
+                                                   const NekDouble time)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    // GetSmoothFactor such that wave propages from the left to the object.
+    // a = 0.1, ta = 1, f = 1.0./(1.0 + exp( -0.5.*(time-ta)/a ));
+    Array<OneD, NekDouble> SmoothFactor(nq, 1.0);
+    switch (m_SmoothFactor)
+    {
+        case 0:
+        {
+            for (int i = 0; i < nq; i++)
+            {
+                SmoothFactor[i] = 1.0 / (1.0 + exp(-1.0 * (time - 1.0) / 0.1));
+            }
+        }
+        break;
+
+        case 1:
+        {
+            NekDouble xmin = Vmath::Vmin(nq, x0, 1);
+            NekDouble xp;
+            for (int i = 0; i < nq; i++)
+            {
+                xp = x0[i] - xmin - time - m_SFinit;
+                if (xp > 0.0)
+                {
+                    SmoothFactor[i] =
+                        2.0 / (1.0 + exp(0.5 * (sqrt(xp * xp) - 0.1)));
+                }
+
+                else
+                {
+                    SmoothFactor[i] = 1.0;
+                }
+            }
+        }
+        break;
+
+        default:
+            break;
+    }
+
+    // Generate a factor for smoothly increasing wave
+    Array<OneD, NekDouble> F1(nq);
+    Array<OneD, NekDouble> F2(nq);
+    Array<OneD, NekDouble> F3(nq);
+
+    Array<OneD, NekDouble> dF1dt(nq);
+    Array<OneD, NekDouble> dF2dt(nq);
+    Array<OneD, NekDouble> dF3dt(nq);
+
+    Array<OneD, NekDouble> F1int(nq);
+    Array<OneD, NekDouble> F2int(nq);
+    Array<OneD, NekDouble> F3int(nq);
+
+    Array<OneD, NekDouble> outarray(nq);
+
+    switch (m_IncType)
+    {
+        case ePlaneWave:
+        {
+            NekDouble cs, sn;
+            NekDouble e1y, e2y;
+            switch (m_PolType)
+            {
+                case eTransMagnetic:
+                {
+                    // H = 0 \hat{x} - e^{ikx} \hat{y}
+                    // E = e^{ikx} \hat{z}
+                    // outarray1 = Hr1inc
+                    // outarray2 = Hr2inc
+                    // outarray3 = Ezrinc
+                    for (int i = 0; i < nq; i++)
+                    {
+                        e1y = m_movingframes[0][nq + i];
+                        e2y = m_movingframes[1][nq + i];
+
+                        cs = SmoothFactor[i] * cos(m_Incfreq * (x0[i] - time));
+                        sn = SmoothFactor[i] * sin(m_Incfreq * (x0[i] - time));
+
+                        F1[i] = -1.0 * cs * e1y;
+                        F2[i] = -1.0 * cs * e2y;
+                        F3[i] = cs;
+
+                        dF1dt[i] = -1.0 * m_Incfreq * sn * e1y;
+                        dF2dt[i] = -1.0 * m_Incfreq * sn * e2y;
+                        dF3dt[i] = 1.0 * m_Incfreq * sn;
+
+                        F1int[i] = (1.0 / m_Incfreq) * sn * e1y;
+                        F2int[i] = (1.0 / m_Incfreq) * sn * e2y;
+                        F3int[i] = (-1.0 / m_Incfreq) * sn;
+                    }
+                }
+                break;
+
+                case eTransElectric:
+                {
+                    // E = 0 \hat{x} + e^{ikx} \hat{y}
+                    // H = e^{ikx} \hat{z}
+                    // outarray1 = Er1inc
+                    // outarray2 = Er2inc
+                    // outarray3 = Hzrinc
+                    // outarray1 = Ei1inc
+                    // outarray2 = Ei2inc
+                    // outarray3 = Hziinc
+                    for (int i = 0; i < nq; i++)
+                    {
+                        e1y = m_movingframes[0][nq + i];
+                        e2y = m_movingframes[1][nq + i];
+
+                        cs = SmoothFactor[i] * cos(m_Incfreq * (x0[i] - time));
+                        sn = SmoothFactor[i] * sin(m_Incfreq * (x0[i] - time));
+
+                        F1[i] = cs * e1y;
+                        F2[i] = cs * e2y;
+                        F3[i] = cs;
+
+                        dF1dt[i] = m_Incfreq * sn * e1y;
+                        dF2dt[i] = m_Incfreq * sn * e2y;
+                        dF3dt[i] = m_Incfreq * sn;
+
+                        F1int[i] = (-1.0 / m_Incfreq) * sn * e1y;
+                        F2int[i] = (-1.0 / m_Incfreq) * sn * e2y;
+                        F3int[i] = (-1.0 / m_Incfreq) * sn;
+                    }
+                }
+                break;
+
+                default:
+                    break;
+            }
+        }
+        break;
+
+        case ePlaneWaveImag:
+        {
+            NekDouble cs, sn;
+            NekDouble e1y, e2y;
+            switch (m_PolType)
+            {
+                case eTransMagnetic:
+                {
+                    // H = 0 \hat{x} - e^{ikx} \hat{y}
+                    // E = e^{ikx} \hat{z}
+                    // outarray1 = Hr1inc
+                    // outarray2 = Hr2inc
+                    // outarray3 = Ezrinc
+                    for (int i = 0; i < nq; i++)
+                    {
+                        e1y = m_movingframes[0][nq + i];
+                        e2y = m_movingframes[1][nq + i];
+
+                        cs = SmoothFactor[i] * cos(m_Incfreq * (x0[i] - time));
+                        sn = SmoothFactor[i] * sin(m_Incfreq * (x0[i] - time));
+
+                        F1[i] = -1.0 * sn * e1y;
+                        F2[i] = -1.0 * sn * e2y;
+                        F3[i] = sn;
+
+                        dF1dt[i] = m_Incfreq * cs * e1y;
+                        dF2dt[i] = m_Incfreq * cs * e2y;
+                        dF3dt[i] = -1.0 * m_Incfreq * cs;
+
+                        F1int[i] = (-1.0 / m_Incfreq) * cs * e1y;
+                        F2int[i] = (-1.0 / m_Incfreq) * cs * e2y;
+                        F3int[i] = (1.0 / m_Incfreq) * cs;
+                    }
+                }
+                break;
+
+                case eTransElectric:
+                {
+                    // E = 0 \hat{x} + e^{ikx} \hat{y}
+                    // H = e^{ikx} \hat{z}
+                    // outarray1 = Er1inc
+                    // outarray2 = Er2inc
+                    // outarray3 = Hzrinc
+                    // outarray1 = Ei1inc
+                    // outarray2 = Ei2inc
+                    // outarray3 = Hziinc
+                    for (int i = 0; i < nq; i++)
+                    {
+                        e1y = m_movingframes[0][nq + i];
+                        e2y = m_movingframes[1][nq + i];
+
+                        cs = SmoothFactor[i] * cos(m_Incfreq * (x0[i] - time));
+                        sn = SmoothFactor[i] * sin(m_Incfreq * (x0[i] - time));
+
+                        F1[i] = sn * e1y;
+                        F2[i] = sn * e2y;
+                        F3[i] = sn;
+
+                        dF1dt[i] = -1.0 * m_Incfreq * cs * e1y;
+                        dF2dt[i] = -1.0 * m_Incfreq * cs * e2y;
+                        dF3dt[i] = -1.0 * m_Incfreq * cs;
+
+                        F1int[i] = (1.0 / m_Incfreq) * cs * e1y;
+                        F2int[i] = (1.0 / m_Incfreq) * cs * e2y;
+                        F3int[i] = (1.0 / m_Incfreq) * cs;
+                    }
+                }
+                break;
+
+                default:
+                    break;
+            }
+        }
+        break;
+
+        default:
+            break;
+    }
+
+    switch (var)
+    {
+        case 0:
+        {
+            outarray = F1;
+        }
+        break;
+
+        case 1:
+        {
+            outarray = F2;
+        }
+        break;
+
+        case 2:
+        {
+            outarray = F3;
+        }
+        break;
+
+        case 10:
+        {
+            outarray = dF1dt;
+        }
+        break;
+
+        case 11:
+        {
+            outarray = dF2dt;
+        }
+        break;
+
+        case 12:
+        {
+            outarray = dF3dt;
+        }
+        break;
+
+        case 20:
+        {
+            outarray = F1int;
+        }
+        break;
+
+        case 21:
+        {
+            outarray = F2int;
+        }
+        break;
+
+        case 22:
+        {
+            outarray = F3int;
+        }
+        break;
+
+        default:
+        {
+            Vmath::Zero(nq, outarray, 1);
+        }
+        break;
+    }
+
+    return outarray;
+}
+
+
+void MMFMaxwell::GetMaxwellFluxVector(
+    const int var, const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+    Array<OneD, Array<OneD, NekDouble>> &flux)
+{
+    switch (m_TestMaxwellType)
+    {
+        case eMaxwell1D:
+        case eScatField1D:
+        {
+            GetMaxwellFlux1D(var, physfield, flux);
+        }
+        break;
+
+        case eTestMaxwell2DPEC:
+        case eTestMaxwell2DPECAVGFLUX:
+        case eTestMaxwell2DPMC:
+        case eScatField2D:
+        case eTotField2D:
+        case eMaxwellSphere:
+        case eELF2DSurface:
+        {
+            GetMaxwellFlux2D(var, physfield, flux);
+        }
+        break;
+
+        default:
+            break;
+    }
+}
+
+void MMFMaxwell::GetMaxwellFlux1D(
+    const int var, const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+    Array<OneD, Array<OneD, NekDouble>> &flux)
+{
+    int nq = m_fields[0]->GetTotPoints();
+
+    switch (var)
+    {
+        case 0:
+        {
+            // H in flux 0
+            Vmath::Vcopy(nq, physfield[1], 1, flux[0], 1);
+
+            // E in flux 1
+            Vmath::Zero(nq, flux[1], 1);
+        }
+        break;
+
+        case 1:
+        {
+            // E in flux 0
+            Vmath::Vcopy(nq, physfield[0], 1, flux[0], 1);
+
+            // H in flux 1
+            Vmath::Zero(nq, flux[1], 1);
+        }
+        break;
+            //----------------------------------------------------
+
+        default:
+            break;
+    }
+}
+
+
+// TM: (-E3,0), (0,E3), (-H1, H2)
+// TE: (H3,0), (0,-H3), (E1, -E2)
+void MMFMaxwell::GetMaxwellFlux2D(
+    const int var, const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+    Array<OneD, Array<OneD, NekDouble>> &flux)
+{
+    int nq = m_fields[0]->GetTotPoints();
+
+    NekDouble sign = 1.0;
+    switch (m_PolType)
+    {
+            // TransMagnetic
+        case eTransMagnetic:
+        {
+            sign = -1.0;
+        }
+        break;
+
+            // TransElectric
+        case eTransElectric:
+        {
+            sign = 1.0;
+        }
+        break;
+
+        default:
+            break;
+    }
+
+    switch (var)
+    {
+        case 0:
+        {
+            // -Ez in flux 1
+            Vmath::Smul(nq, sign, physfield[2], 1, flux[0], 1);
+            Vmath::Zero(nq, flux[1], 1);
+        }
+        break;
+
+        case 1:
+        {
+            // Ez in flux 0
+            Vmath::Zero(nq, flux[0], 1);
+            Vmath::Smul(nq, -sign, physfield[2], 1, flux[1], 1);
+        }
+        break;
+
+        case 2:
+        {
+            Vmath::Smul(nq, sign, physfield[0], 1, flux[0], 1);
+            Vmath::Smul(nq, -sign, physfield[1], 1, flux[1], 1);
+        }
+        break;
+
+        default:
+            ASSERTL0(false, "GetFluxVector2D: illegal vector index");
+    }
+}
+
 void MMFMaxwell::print_MMF(Array<OneD, Array<OneD, NekDouble>> &inarray)
 {
     int Ntot = inarray.size();
@@ -3146,4 +4220,4 @@ void MMFMaxwell::print_MMF(Array<OneD, Array<OneD, NekDouble>> &inarray)
     }
     reval = sqrt(reval / Ntot);
 }
-} // namespace Nektar
+}

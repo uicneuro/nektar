@@ -57,7 +57,10 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
-      "NeuralEP1D", "NeuralEP2p1D", "NeuralEP2D", "NeuralEP2DEmbed",
+    "NeuralEP1D",
+    "NeuralEP2p1D",
+    "NeuralEP2D",
+    "NeuralEP2DEmbed",
 };
 
 enum SolverSchemeType
@@ -69,7 +72,9 @@ enum SolverSchemeType
 };
 
 const char *const SolverSchemeTypeMap[] = {
-    "Default", "MMFFirst", "TimeMap",
+    "Default",
+    "MMFFirst",
+    "TimeMap",
 };
 
 enum InitWaveType
@@ -86,7 +91,6 @@ enum InitWaveType
 const char *const InitWaveTypeMap[] = {
     "Point", "Left", "BothEnd", "Center", "LeftBottomCorner", "SpiralDock",
 };
-
 
 enum FluxType
 {
@@ -145,7 +149,6 @@ public:
     virtual ~MMFNeuralEP();
 
 protected:
-
     int m_nfibers;
 
     int m_ElemNodeEnd, m_ElemMyelenEnd;
@@ -174,18 +177,19 @@ protected:
     // NeuralEP1D: m_beta_e = r_e/r_i
     NekDouble m_ratio_re_ri;
 
-    NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
+    NekDouble m_Diffbeta, m_Diffeta, m_Diffhe; // h_e for LDG
 
     // Scar tisseu related variables
     NekDouble m_PVcond;
-    NekDouble m_ScarSize, m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy, m_ScarLocz;
+    NekDouble m_ScarSize, m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy,
+        m_ScarLocz;
     NekDouble m_RelDivSize, m_RelDivStr, m_RelDivPis, m_RelDivLocx;
 
     // Relative divergence related variables
     NekDouble m_LambDivSmoothL;
 
-    // Neural EP: 
-    NekDouble m_beta;   // Relative Extracellular resistance: 1 < \beta < 10
+    // Neural EP:
+    NekDouble m_beta; // Relative Extracellular resistance: 1 < \beta < 10
 
     // NeuralEP: Capacitance vectors for myeline or Ranvier node.
     int m_Rnodelength, m_Rnodegap;
@@ -200,9 +204,10 @@ protected:
     Array<OneD, int> m_NodeElement;
 
     // NeuralEP2D variables
-    // Array<OneD, LibUtilities::TimeIntegrationWrapperSharedPtr> m_fiberintScheme;
-    // Array<OneD, LibUtilities::TimeIntegrationSchemeOperators> m_fiberode;
-    // Array<OneD, LibUtilities::TimeIntegrationSolutionSharedPtr> m_fiberintSoln;
+    // Array<OneD, LibUtilities::TimeIntegrationWrapperSharedPtr>
+    // m_fiberintScheme; Array<OneD,
+    // LibUtilities::TimeIntegrationSchemeOperators> m_fiberode; Array<OneD,
+    // LibUtilities::TimeIntegrationSolutionSharedPtr> m_fiberintSoln;
 
     // Moving frames
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_fibermovingframes;
@@ -218,22 +223,20 @@ protected:
 
     /// Constructor
     MMFNeuralEP(const LibUtilities::SessionReaderSharedPtr &pSession,
-                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
+                const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    LibUtilities::SessionReaderSharedPtr        m_session1D;
-    SpatialDomains::MeshGraphSharedPtr          m_graph1D;
+    LibUtilities::SessionReaderSharedPtr m_session1D;
+    SpatialDomains::MeshGraphSharedPtr m_graph1D;
 
     Array<OneD, LibUtilities::SessionReaderSharedPtr> m_fibersession;
     Array<OneD, SpatialDomains::MeshGraphSharedPtr> m_fibergraph;
 
     Array<OneD, NekDouble> ExtractFiberValue(
-        const int nfib, 
-        const Array<OneD, const NekDouble> &inarray);
+        const int nfib, const Array<OneD, const NekDouble> &inarray);
 
-    void UpdateFibertoField(
-        const int nfib, 
-        const Array<OneD, const NekDouble> &fiberinarray,
-        Array<OneD, NekDouble> &outarray);
+    void UpdateFibertoField(const int nfib,
+                            const Array<OneD, const NekDouble> &fiberinarray,
+                            Array<OneD, NekDouble> &outarray);
 
     InitWaveType m_InitWaveType;
 
@@ -242,8 +245,8 @@ protected:
 
     // void Plotphimphie(const Array<OneD, const NekDouble> &phim,
     //                             const Array<OneD, const NekDouble> &phie,
-    //                             const Array<OneD, const NekDouble> &Exactphie,
-    //                             const int nstep);
+    //                             const Array<OneD, const NekDouble>
+    //                             &Exactphie, const int nstep);
 
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
@@ -253,12 +256,11 @@ protected:
     void DisplayphiatNode(const Array<OneD, const NekDouble> &field);
 
     void CheckNodeZoneMF(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const Array<OneD, int>> &NodeZone);
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        const Array<OneD, const Array<OneD, int>> &NodeZone);
 
-    void OnlyValideinNode(
-        const Array<OneD, const int> &NodeZone, 
-        Array<OneD, NekDouble> &outarray);
+    void OnlyValideinNode(const Array<OneD, const int> &NodeZone,
+                          Array<OneD, NekDouble> &outarray);
 
     // void ImportFiberXml(
     //     const int nfibers,
@@ -303,15 +305,14 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoNullSolve(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-        const NekDouble lambda);
+    void DoNullSolve(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                     Array<OneD, Array<OneD, NekDouble>> &outarray,
+                     const NekDouble time, const NekDouble lambda);
 
     /// Computes the reaction terms \f$f(u,v)\f$ and \f$g(u,v)\f$.
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-                     Array<OneD, Array<OneD, NekDouble>> &outarray,
-                     const NekDouble time);
+                  Array<OneD, Array<OneD, NekDouble>> &outarray,
+                  const NekDouble time);
 
     void DoOdeRhsNeuralEP1D(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -330,51 +331,51 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     Array<OneD, NekDouble> Computephie(
-            const Array<OneD, const Array<OneD, NekDouble>> &movingframes, 
-            const Array<OneD, const NekDouble> &phim);
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        const Array<OneD, const NekDouble> &phim);
 
     void Updatephie(
-            const Array<OneD, const int> &NodeZone, 
-            const Array<OneD, const Array<OneD, NekDouble>> &movingframes, 
-            const Array<OneD, const NekDouble> &phim);      
+        const Array<OneD, const int> &NodeZone,
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        const Array<OneD, const NekDouble> &phim);
 
-    void MembraneBoundary2D(
-    int                                   bcRegion,
-    int                                   cnt,
-    Array<OneD, Array<OneD, NekDouble> > &Fwd,
-    Array<OneD, Array<OneD, NekDouble> > &physarray);
+    void MembraneBoundary2D(int bcRegion, int cnt,
+                            Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                            Array<OneD, Array<OneD, NekDouble>> &physarray);
 
     void DoOdeRhsNeuralEP2p1Dfiber(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-   void DoOdeRhsNeuralEP2Dfiber(
+    void DoOdeRhsNeuralEP2Dfiber(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);        
-        
-    void SetMembraneBoundaryCondition(const NekDouble time=0.0);
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray, const int nstep);
+    void SetMembraneBoundaryCondition(const NekDouble time = 0.0);
 
-    void SetAxonWallBoundaryConditions(Array<OneD, Array<OneD, NekDouble> > &inarray);
+    void PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray,
+                          const int nstep);
 
-    void AxonWallBoundary2D(
-        int bcRegion, 
-        int cnt, 
-        Array<OneD, Array<OneD, NekDouble> > &Fwd, 
-        Array<OneD, Array<OneD, NekDouble> > &physarray);
+    void SetAxonWallBoundaryConditions(
+        Array<OneD, Array<OneD, NekDouble>> &inarray);
 
-    // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int Rnodegap);
-    Array<OneD, int> IndexNodeZone1D(const MultiRegions::ExpListSharedPtr &field, const int Nodegap);
+    void AxonWallBoundary2D(int bcRegion, int cnt,
+                            Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                            Array<OneD, Array<OneD, NekDouble>> &physarray);
+
+    // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int
+    // Rnodegap);
+    Array<OneD, int> IndexNodeZone1D(
+        const MultiRegions::ExpListSharedPtr &field, const int Nodegap);
     Array<OneD, int> IndexNodeZone2D(
-        const MultiRegions::ExpListSharedPtr &field, 
-        const int ElemNodeEnd, const int ElemMyelenEnd);
+        const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
+        const int ElemMyelenEnd);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
@@ -395,7 +396,7 @@ private:
     NekDouble m_conductivity;
 
     CellModelSharedPtr m_cell;
-    
+
     NeuronModelSharedPtr m_neuron;
     Array<OneD, NeuronModelSharedPtr> m_fiberneurons;
 
@@ -408,15 +409,15 @@ private:
         const Array<OneD, const NekDouble> &Laplacian,
         const Array<OneD, const NekDouble> &LaplacianNew);
 
-Array<OneD, NekDouble> m_epsilon;
-Array<OneD, NekDouble> m_epsu;
+    Array<OneD, NekDouble> m_epsilon;
+    Array<OneD, NekDouble> m_epsu;
 
-/// Stimulus current
-NekDouble m_stimDuration;
+    /// Stimulus current
+    NekDouble m_stimDuration;
 
-void LoadStimuli();
+    void LoadStimuli();
 
-int CountActivation(Array<OneD, int> &Activated);
+    int CountActivation(Array<OneD, int> &Activated);
 };
 
 } // namespace Nektar

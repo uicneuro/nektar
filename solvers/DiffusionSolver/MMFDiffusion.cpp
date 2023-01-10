@@ -60,6 +60,199 @@ MMFDiffusion::MMFDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
 {
 }
 
+// void MMFDiffusion::v_InitObject(bool DeclareFields)
+// {
+//     UnsteadySystem::v_InitObject(DeclareFields);
+
+//     int nq = GetTotPoints();
+//     int nvar = m_fields.size();
+
+//     // Helmsolver parameter
+//     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
+
+//     // Define ProblemType
+//     if (m_session->DefinesSolverInfo("TESTTYPE"))
+//     {
+//         std::string TestTypeStr;
+//         TestTypeStr = m_session->GetSolverInfo("TESTTYPE");
+//         for (int i = 0; i < (int)SIZE_TestType; ++i)
+//         {
+//             if (boost::iequals(TestTypeMap[i], TestTypeStr))
+//             {
+//                 m_TestType = (TestType)i;
+//                 break;
+//             }
+//         }
+//     }
+//     else
+//     {
+//         m_TestType = (TestType)0;
+//     }
+
+//     // Define SovlerSchemeType
+//     if (m_session->DefinesSolverInfo("SolverSchemeType"))
+//     {
+//         std::string SolverSchemeTypeStr;
+//         SolverSchemeTypeStr = m_session->GetSolverInfo("SolverSchemeType");
+//         for (int i = 0; i < (int)SIZE_SolverSchemeType; ++i)
+//         {
+//             if (boost::iequals(SolverSchemeTypeMap[i], SolverSchemeTypeStr))
+//             {
+//                 m_SolverSchemeType = (SolverSchemeType)i;
+//                 break;
+//             }
+//         }
+//     }
+//     else
+//     {
+//         m_SolverSchemeType = (SolverSchemeType)0;
+//     }
+
+//     // TimeMap ?
+//     if (m_session->DefinesSolverInfo("TimeMapType"))
+//     {
+//         std::string TIMEMAPTYPEStr;
+//         TIMEMAPTYPEStr = m_session->GetSolverInfo("TimeMapType");
+//         for (int i = 0; i < (int)SIZE_TimeMapType; ++i)
+//         {
+//             if (boost::iequals(TimeMapTypeMap[i], TIMEMAPTYPEStr))
+//             {
+//                 m_TimeMap = (TimeMapType)i;
+//                 break;
+//             }
+//         }
+//     }
+//     else
+//     {
+//         m_TimeMap = (TimeMapType)0;
+//     }
+
+//     // Diffusivity coefficient for e^j
+//     m_epsilon = Array<OneD, NekDouble>(m_expdim);
+//     m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
+//     m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
+//     m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
+
+//     // Diffusivity coefficient for u^j
+//     m_epsu = Array<OneD, NekDouble>(nvar + 1);
+//     m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
+//     m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
+
+//     m_session->LoadParameter("Diffbeta", m_Diffbeta, 0.5);
+//     m_session->LoadParameter("Diffeta", m_Diffeta, 100.0);
+//     m_session->LoadParameter("Diffhe", m_Diffhe, 0.5);
+
+//     // Derive AnisotropyStrength.
+//     Array<OneD, Array<OneD, NekDouble>> AniStrength(m_expdim);
+//     for (int j = 0; j < m_expdim; ++j)
+//     {
+//         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+//     }
+
+//     MMFSystem::MMFInitObject(AniStrength);
+
+//     // if (m_explicitDiffusion)
+//     // {
+//     //     m_ode.DefineImplicitSolve(&MMFDiffusion::DoNullSolve, this);
+//     //     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
+//     // }
+
+//     // else
+//     // {
+//         // Create varcoeff for Helmsolver
+//         // m_varcoeff = ComputeVarCoeff2D(m_movingframes);
+
+//     // StdRegions::VarCoeffType MMFCoeffs[15] = {
+//     //     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+//     //     StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+//     //     StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+//     //     StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+//     //     StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+//     //     StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+//     //     StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+//     //     StdRegions::eVarCoeffMF3Mag};
+
+//     //   int indx;
+//     //     for (int k = 0; k < m_mfdim; ++k)
+//     //     {
+//     //         // For Moving Frames
+//     //         indx = 5 * k;
+
+//     //         std::cout << "indx = " << indx << std::endl;
+//     //                 std::cout << "MF = ( " <<
+//     RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 0]]) << " , "
+//     //         << RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 1]]) << " , "
+//     //         << RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 2]]) << " ) " <<
+//     std::endl;
+
+//     //         std::cout << "DivMF = " <<
+//     RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 3]]) << std::endl;
+
+//     //         std::cout << "emag = " <<
+//     RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 4]]) << std::endl;
+//     //     }
+
+//     StdRegions::VarCoeffType MMFCoeffs[15] = {
+//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+//         StdRegions::eVarCoeffMF3Mag};
+
+//     int indx;
+//     Array<OneD, NekDouble> tmp(nq);
+//     for (int k = 0; k < m_expdim; ++k)
+//     {
+//         // For Moving Frames
+//         indx = 5 * k;
+
+//         // std::cout << "indx = " << indx << std::endl;
+
+//         for (int j = 0; j < m_spacedim; ++j)
+//         {
+//             m_varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq,
+//             0.0); Vmath::Vcopy(nq, &m_movingframes[k][j * nq], 1,
+//                          &m_varcoeff[MMFCoeffs[indx + j]][0], 1);
+//         }
+
+//         // std::cout << "MF = ( " <<
+//         RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 0]]) << " , "
+//         // << RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 1]]) << " , "
+//         // << RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 2]]) << " ) " <<
+//         std::endl;
+
+//         // m_DivMF
+//         m_varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
+//         Vmath::Vcopy(nq, &m_DivMF[k][0], 1, &m_varcoeff[MMFCoeffs[indx +
+//         3]][0],
+//                      1);
+
+//         // std::cout << "DivMF = " <<
+//         RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 3]]) << std::endl;
+
+//         // \| e^k \|
+//         m_varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
+//         tmp                             = Array<OneD, NekDouble>(nq, 0.0);
+//         for (int i = 0; i < m_spacedim; ++i)
+//         {
+//             Vmath::Vvtvp(nq, &m_movingframes[k][i * nq], 1,
+//                          &m_movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0],
+//                          1);
+//         }
+//         Vmath::Vcopy(nq, &tmp[0], 1, &m_varcoeff[MMFCoeffs[indx + 4]][0], 1);
+
+//         // std::cout << "emag = " <<
+//         RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 4]]) << std::endl <<
+//         std::endl;
+//     }
+
+//         m_ode.DefineImplicitSolve(&MMFDiffusion::DoImplicitSolve, this);
+//             m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
+//     }
+
 void MMFDiffusion::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
@@ -129,6 +322,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_InitWaveType = (InitWaveType)0;
     }
 
+    // ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+
     StdRegions::VarCoeffType MMFCoeffs[15] = {
         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
@@ -148,26 +343,28 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
         for (int j = 0; j < m_spacedim; ++j)
         {
-            m_varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
+            m_varDiffcoeff[MMFCoeffs[indx + j]] =
+                Array<OneD, NekDouble>(nq, 0.0);
             Vmath::Vcopy(nq, &m_movingframes[k][j * nq], 1,
-                         &m_varcoeff[MMFCoeffs[indx + j]][0], 1);
+                         &m_varDiffcoeff[MMFCoeffs[indx + j]][0], 1);
         }
 
         // m_DivMF
-        m_varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-        Vmath::Vcopy(nq, &m_DivMF[k][0], 1, &m_varcoeff[MMFCoeffs[indx + 3]][0],
-                     1);
+        m_varDiffcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
+        Vmath::Vcopy(nq, &m_DivMF[k][0], 1,
+                     &m_varDiffcoeff[MMFCoeffs[indx + 3]][0], 1);
 
         // \| e^k \|
-        m_varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-        tmp                             = Array<OneD, NekDouble>(nq, 0.0);
+        m_varDiffcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
+        tmp                                 = Array<OneD, NekDouble>(nq, 0.0);
         for (int i = 0; i < m_spacedim; ++i)
         {
             Vmath::Vvtvp(nq, &m_movingframes[k][i * nq], 1,
                          &m_movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
         }
 
-        Vmath::Vcopy(nq, &tmp[0], 1, &m_varcoeff[MMFCoeffs[indx + 4]][0], 1);
+        Vmath::Vcopy(nq, &tmp[0], 1, &m_varDiffcoeff[MMFCoeffs[indx + 4]][0],
+                     1);
     }
 
     if (!m_explicitDiffusion)
@@ -205,11 +402,9 @@ void MMFDiffusion::DoImplicitSolve(
     Array<OneD, Array<OneD, NekDouble>> F(nvariables);
     factors[StdRegions::eFactorLambda] = 1.0 / lambda;
     F[0] = Array<OneD, NekDouble>(nq * nvariables);
-
     for (int n = 1; n < nvariables; ++n)
     {
         F[n] = F[n - 1] + nq;
-        // cout << "F["<< n<<"=" << F[n][1] <<endl;
     }
 
     // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
@@ -225,22 +420,10 @@ void MMFDiffusion::DoImplicitSolve(
         // Multiply 1.0/timestep
         Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[i], 1,
                     F[i], 1);
-
-        /* for (int k = 0; k < 15; ++k)
-             cout << "inarray["<<i << "]"<< k<<"=" << inarray[i][k]<<endl;*/
-        // Solve a system of equations with Helmholtz solver and transform
-        // back into physical space.
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-                               m_varcoeff);
-
+                               m_varDiffcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
-        /* Array<OneD, NekDouble> coefarray = m_fields[i]->GetCoeffs();
-         for (int k = 0; k < 15; ++k)
-             cout << "inarray["<< k<<"=" << coefarray[k]<<endl;*/
     }
-    /* for (int kk = 0; kk < 15; ++kk)
-         cout << "inarray["<< kk<<"=" <<
-       m_varcoeff[StdRegions::eVarCoeffMF3Mag][kk]<<endl;*/
 }
 
 /**
@@ -340,102 +523,103 @@ void MMFDiffusion::DoOdeRhs(
         }
         break;
 
-        case eFHNStandard:
-        {
-            // \phi - \phi^3/3 - \psi
-            NekDouble a  = 0.12;
-            NekDouble b  = 0.011;
-            NekDouble c1 = 0.175;
-            NekDouble c2 = 0.03;
-            NekDouble d  = 0.55;
+            // case eFHNStandard:
+            // {
+            //     // \phi - \phi^3/3 - \psi
+            //     NekDouble a  = 0.12;
+            //     NekDouble b  = 0.011;
+            //     NekDouble c1 = 0.175;
+            //     NekDouble c2 = 0.03;
+            //     NekDouble d  = 0.55;
 
-            Array<OneD, NekDouble> tmp(nq);
+            //     Array<OneD, NekDouble> tmp(nq);
 
-            // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 v
-            Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
-            Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, tmp, 1, inarray[0], 1, outarray[0], 1);
-            Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 v
+            //     Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
+            //     Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, tmp, 1, inarray[0], 1, outarray[0], 1);
+            //     Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
 
-            Vmath::Smul(nq, -1.0 * c2, inarray[1], 1, tmp, 1);
-            Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     Vmath::Smul(nq, -1.0 * c2, inarray[1], 1, tmp, 1);
+            //     Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
 
-            // Reaction for \psi = b (\phi - d \psi )
-            Vmath::Svtvp(nq, -1.0 * d, inarray[1], 1, inarray[0], 1,
-                         outarray[1], 1);
-            Vmath::Smul(nq, b, outarray[1], 1, outarray[1], 1);
-        }
-        break;
+            //     // Reaction for \psi = b (\phi - d \psi )
+            //     Vmath::Svtvp(nq, -1.0 * d, inarray[1], 1, inarray[0], 1,
+            //                  outarray[1], 1);
+            //     Vmath::Smul(nq, b, outarray[1], 1, outarray[1], 1);
+            // }
+            // break;
 
-        case eFHNRogers:
-        {
-            NekDouble a  = 0.13;
-            NekDouble b  = 0.013;
-            NekDouble c1 = 0.26;
-            NekDouble c2 = 0.1;
-            NekDouble d  = 1.0;
+            // case eFHNRogers:
+            // {
+            //     NekDouble a  = 0.13;
+            //     NekDouble b  = 0.013;
+            //     NekDouble c1 = 0.26;
+            //     NekDouble c2 = 0.1;
+            //     NekDouble d  = 1.0;
 
-            Array<OneD, NekDouble> tmp(nq);
+            //     Array<OneD, NekDouble> tmp(nq);
 
-            // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 u v
-            Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
-            Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-            Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 u
+            //     v Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
+            //     Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
 
-            Vmath::Vmul(nq, inarray[0], 1, inarray[1], 1, tmp, 1);
-            Vmath::Smul(nq, -1.0 * c2, tmp, 1, tmp, 1);
-            Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     Vmath::Vmul(nq, inarray[0], 1, inarray[1], 1, tmp, 1);
+            //     Vmath::Smul(nq, -1.0 * c2, tmp, 1, tmp, 1);
+            //     Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
 
-            // Reaction for \psi = b (\phi - d \psi )
-            Vmath::Svtvp(nq, -1.0 * d, inarray[1], 1, inarray[0], 1,
-                         outarray[1], 1);
-            Vmath::Smul(nq, b, outarray[1], 1, outarray[1], 1);
-        }
-        break;
+            //     // Reaction for \psi = b (\phi - d \psi )
+            //     Vmath::Svtvp(nq, -1.0 * d, inarray[1], 1, inarray[0], 1,
+            //                  outarray[1], 1);
+            //     Vmath::Smul(nq, b, outarray[1], 1, outarray[1], 1);
+            // }
+            // break;
 
-        case eFHNAlievPanf:
-        {
+            // case eFHNAlievPanf:
+            // {
 
-            NekDouble a   = 0.15;
-            NekDouble c1  = 8.0;
-            NekDouble c2  = 1.0;
-            NekDouble c0  = 0.002;
-            NekDouble mu1 = 0.2;
-            NekDouble mu2 = 0.3;
+            //     NekDouble a   = 0.15;
+            //     NekDouble c1  = 8.0;
+            //     NekDouble c2  = 1.0;
+            //     NekDouble c0  = 0.002;
+            //     NekDouble mu1 = 0.2;
+            //     NekDouble mu2 = 0.3;
 
-            Array<OneD, NekDouble> tmp(nq);
+            //     Array<OneD, NekDouble> tmp(nq);
 
-            // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 u v
-            Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
-            Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-            Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 u
+            //     v Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
+            //     Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
 
-            Vmath::Vmul(nq, inarray[0], 1, inarray[1], 1, tmp, 1);
-            Vmath::Smul(nq, -1.0 * c2, tmp, 1, tmp, 1);
-            Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
+            //     Vmath::Vmul(nq, inarray[0], 1, inarray[1], 1, tmp, 1);
+            //     Vmath::Smul(nq, -1.0 * c2, tmp, 1, tmp, 1);
+            //     Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
 
-            // Reaction for \psi = (c0 + (\mu1 \psi/(\mu2+\phi) ) )*(-\psi - c1
-            // * \phi*(\phi - a - 1) )
+            //     // Reaction for \psi = (c0 + (\mu1 \psi/(\mu2+\phi) )
+            //     )*(-\psi - c1
+            //     // * \phi*(\phi - a - 1) )
 
-            Vmath::Smul(nq, mu1, inarray[1], 1, outarray[1], 1);
-            Vmath::Sadd(nq, mu2, inarray[0], 1, tmp, 1);
-            Vmath::Vdiv(nq, outarray[1], 1, tmp, 1, outarray[1], 1);
-            Vmath::Sadd(nq, c0, outarray[1], 1, outarray[1], 1);
+            //     Vmath::Smul(nq, mu1, inarray[1], 1, outarray[1], 1);
+            //     Vmath::Sadd(nq, mu2, inarray[0], 1, tmp, 1);
+            //     Vmath::Vdiv(nq, outarray[1], 1, tmp, 1, outarray[1], 1);
+            //     Vmath::Sadd(nq, c0, outarray[1], 1, outarray[1], 1);
 
-            Vmath::Sadd(nq, (-a - 1.0), inarray[0], 1, tmp, 1);
-            Vmath::Vmul(nq, inarray[0], 1, tmp, 1, tmp, 1);
-            Vmath::Smul(nq, c1, tmp, 1, tmp, 1);
-            Vmath::Vadd(nq, inarray[1], 1, tmp, 1, tmp, 1);
-            Vmath::Neg(nq, tmp, 1);
+            //     Vmath::Sadd(nq, (-a - 1.0), inarray[0], 1, tmp, 1);
+            //     Vmath::Vmul(nq, inarray[0], 1, tmp, 1, tmp, 1);
+            //     Vmath::Smul(nq, c1, tmp, 1, tmp, 1);
+            //     Vmath::Vadd(nq, inarray[1], 1, tmp, 1, tmp, 1);
+            //     Vmath::Neg(nq, tmp, 1);
 
-            Vmath::Vmul(nq, tmp, 1, outarray[1], 1, outarray[1], 1);
-        }
-        break;
+            //     Vmath::Vmul(nq, tmp, 1, outarray[1], 1, outarray[1], 1);
+            // }
+            // break;
 
         default:
             break;
@@ -494,15 +678,15 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         }
         break;
 
-        case eFHNStandard:
-        case eFHNRogers:
-        case eFHNAlievPanf:
-        {
-            Array<OneD, NekDouble> Zero(nq, 0.0);
-            m_fields[0]->SetPhys(PlanePhiWave());
-            m_fields[1]->SetPhys(Zero);
-        }
-        break;
+            // case eFHNStandard:
+            // case eFHNRogers:
+            // case eFHNAlievPanf:
+            // {
+            //     Array<OneD, NekDouble> Zero(nq, 0.0);
+            //     m_fields[0]->SetPhys(PlanePhiWave());
+            //     m_fields[1]->SetPhys(Zero);
+            // }
+            // break;
 
         default:
         {
@@ -856,19 +1040,107 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
         }
         break;
 
-        case eFHNStandard:
-        case eFHNRogers:
-        case eFHNAlievPanf:
-        {
-            int nq   = GetTotPoints();
-            outfield = Array<OneD, NekDouble>(nq, 0.0);
-        }
+            // case eFHNStandard:
+            // case eFHNRogers:
+            // case eFHNAlievPanf:
+            // {
+            //     int nq   = GetTotPoints();
+            //     outfield = Array<OneD, NekDouble>(nq, 0.0);
+            // }
             /* Falls through. */
         default:
         {
             EquationSystem::v_EvaluateExactSolution(field, outfield, time);
         }
         break;
+    }
+}
+
+void MMFDiffusion::ComputeVarCoeff2D(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    StdRegions::VarCoeffMap &varcoeff)
+{
+    int nq = GetTotPoints();
+
+    StdRegions::VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag};
+
+    int indx;
+    Array<OneD, NekDouble> tmp(nq);
+    for (int k = 0; k < m_expdim; ++k)
+    {
+        // For Moving Frames
+        indx = 5 * k;
+
+        for (int j = 0; j < m_spacedim; ++j)
+        {
+            varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
+            Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
+                         &varcoeff[MMFCoeffs[indx + j]][0], 1);
+        }
+
+        // m_DivMF
+        varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
+
+        Array<OneD, Array<OneD, NekDouble>> DivMF;
+        // ComputeDivMF(eCovariant, movingframes, DivMF);
+
+        ComputeEuclideanDivMF(movingframes, DivMF);
+
+        Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
+        // \| e^k \|
+        varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
+        tmp                           = Array<OneD, NekDouble>(nq, 0.0);
+        for (int i = 0; i < m_spacedim; ++i)
+        {
+            Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
+                         &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
+        }
+
+        Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+    }
+
+    std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
+              << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
+
+    std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
+              << std::endl;
+}
+
+void MMFDiffusion::ComputeEuclideanDivMF(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    Array<OneD, Array<OneD, NekDouble>> &DivMF)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    DivMF = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        DivMF[j] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> Dtmp(nq);
+
+    // case eEuclidean:
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        for (int k = 0; k < m_spacedim; ++k)
+        {
+            Vmath::Vcopy(nq, &movingframes[j][k * nq], 1, &tmp[0], 1);
+            m_fields[0]->PhysDeriv(MultiRegions::DirCartesianMap[k], tmp, Dtmp);
+            Vmath::Vadd(nq, &Dtmp[0], 1, &DivMF[j][0], 1, &DivMF[j][0], 1);
+        }
     }
 }
 

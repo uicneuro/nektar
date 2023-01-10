@@ -35,8 +35,8 @@
 #include <boost/algorithm/string.hpp>
 #include <iomanip>
 #include <iostream>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <DiffusionSolver/EquationSystems/MMFCardiacEP.h>
 
@@ -63,8 +63,8 @@ string MMFCardiacEP::className =
         "MMFCardiacEP", MMFCardiacEP::create, "MMFCardiacEP equation.");
 
 MMFCardiacEP::MMFCardiacEP(const LibUtilities::SessionReaderSharedPtr &pSession,
-                           const SpatialDomains::MeshGraphSharedPtr &pGraph) 
-                           : UnsteadySystem(pSession, pGraph), MMFSystem(pSession, pGraph)
+                           const SpatialDomains::MeshGraphSharedPtr &pGraph)
+    : UnsteadySystem(pSession, pGraph), MMFSystem(pSession, pGraph)
 {
 }
 
@@ -72,72 +72,78 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    int nq = GetTotPoints();
+    int nq   = GetTotPoints();
     int nvar = m_fields.size();
 
-        // // Moving frames generate for Curves in Plane mesh
-        // // Fiber is expressed as edges for id >= 1
+    // // Moving frames generate for Curves in Plane mesh
+    // // Fiber is expressed as edges for id >= 1
 
-        // int bcRegions =m_fields[0]->GetBndCondExpansions().size();
-        // int nTracePts = m_fields[0]->GetTrace()->GetTotPoints();
+    // int bcRegions =m_fields[0]->GetBndCondExpansions().size();
+    // int nTracePts = m_fields[0]->GetTrace()->GetTotPoints();
 
-        // // LocalRegions::Expansion1DSharedPtr fibre;
-        // // fibre = m_fields[0]->GetBndCondExpansions()[bcRegion];
+    // // LocalRegions::Expansion1DSharedPtr fibre;
+    // // fibre = m_fields[0]->GetBndCondExpansions()[bcRegion];
 
-        // Array<OneD, NekDouble> x0(nq);
-        // Array<OneD, NekDouble> x1(nq);
-        // Array<OneD, NekDouble> x2(nq);
+    // Array<OneD, NekDouble> x0(nq);
+    // Array<OneD, NekDouble> x1(nq);
+    // Array<OneD, NekDouble> x2(nq);
 
-        // m_fields[0]->GetCoords(x0, x1, x2);
+    // m_fields[0]->GetCoords(x0, x1, x2);
 
-        // Array<OneD, NekDouble> traceX(nTracePts);
-        // Array<OneD, NekDouble> traceY(nTracePts);
-        // Array<OneD, NekDouble> traceZ(nTracePts);
+    // Array<OneD, NekDouble> traceX(nTracePts);
+    // Array<OneD, NekDouble> traceY(nTracePts);
+    // Array<OneD, NekDouble> traceZ(nTracePts);
 
-        // m_fields[0]->ExtractTracePhys(x0, traceX);
-        // m_fields[0]->ExtractTracePhys(x1, traceY);
-        // m_fields[0]->ExtractTracePhys(x2, traceZ);
+    // m_fields[0]->ExtractTracePhys(x0, traceX);
+    // m_fields[0]->ExtractTracePhys(x1, traceY);
+    // m_fields[0]->ExtractTracePhys(x2, traceZ);
 
-        // int id2;
-        // int maxe, npts, Ntot;
-        // int cnt=0;
+    // int id2;
+    // int maxe, npts, Ntot;
+    // int cnt=0;
 
-        // for (int i=0; i<1; ++i)
-        // {
-        //     maxe = m_fields[0]->GetBndCondExpansions()[i]->GetExpSize();
-        //     for (int e=0; e<maxe; ++e)
-        //     {
-        //         cnt++;
-        //     }
-        // }
+    // for (int i=0; i<1; ++i)
+    // {
+    //     maxe = m_fields[0]->GetBndCondExpansions()[i]->GetExpSize();
+    //     for (int e=0; e<maxe; ++e)
+    //     {
+    //         cnt++;
+    //     }
+    // }
 
-        // Array<OneD, Array<OneD, NekDouble>> fiberPts(bcRegions-1);
-        // for (int fid = 1; fid<bcRegions; ++fid)
-        // {
-        //     npts = m_fields[0]->GetBndCondExpansions()[fid]->GetExp(0)->GetNumPoints(0);
+    // Array<OneD, Array<OneD, NekDouble>> fiberPts(bcRegions-1);
+    // for (int fid = 1; fid<bcRegions; ++fid)
+    // {
+    //     npts =
+    //     m_fields[0]->GetBndCondExpansions()[fid]->GetExp(0)->GetNumPoints(0);
 
-        //     maxe = m_fields[0]->GetBndCondExpansions()[fid]->GetExpSize();
+    //     maxe = m_fields[0]->GetBndCondExpansions()[fid]->GetExpSize();
 
-        //     Ntot = npts*maxe;
-        //     fiberPts[fid] = Array<OneD, NekDouble>(m_spacedim*Ntot);
+    //     Ntot = npts*maxe;
+    //     fiberPts[fid] = Array<OneD, NekDouble>(m_spacedim*Ntot);
 
-        //     for (int e=0;e<maxe;++e)
-        //     {
-        //         // id1 = m_fields[0]->GetBndCondExpansions()[fid]->GetPhys_Offset(e);
-        //         id2 =  m_fields[0]->GetTrace()->GetPhys_Offset(m_fields[0]->GetTraceMap()->GetBndCondTraceToGlobalTraceMap(cnt++));
+    //     for (int e=0;e<maxe;++e)
+    //     {
+    //         // id1 =
+    //         m_fields[0]->GetBndCondExpansions()[fid]->GetPhys_Offset(e); id2
+    //         =
+    //         m_fields[0]->GetTrace()->GetPhys_Offset(m_fields[0]->GetTraceMap()->GetBndCondTraceToGlobalTraceMap(cnt++));
 
-        //         Vmath::Vcopy(npts, &traceX[id2], 1, &fiberPts[fid][e*npts], 1);
-        //         Vmath::Vcopy(npts, &traceY[id2], 1, &fiberPts[fid][e*npts+Ntot], 1);
-        //         Vmath::Vcopy(npts, &traceZ[id2], 1, &fiberPts[fid][e*npts+2*Ntot], 1);
-        //     }            
+    //         Vmath::Vcopy(npts, &traceX[id2], 1, &fiberPts[fid][e*npts], 1);
+    //         Vmath::Vcopy(npts, &traceY[id2], 1, &fiberPts[fid][e*npts+Ntot],
+    //         1); Vmath::Vcopy(npts, &traceZ[id2], 1,
+    //         &fiberPts[fid][e*npts+2*Ntot], 1);
+    //     }
 
-        //     for (int i=0; i<Ntot; ++i)
-        //     {
-        //         std::cout << "Trace: fid = " << fid << ", i = " << i << ", fiber pts = ( " << fiberPts[fid][i] << " , " << fiberPts[fid][i+Ntot] << " , " << fiberPts[fid][i+2*Ntot] << " ) " << std::endl;
-        //     }
-        //     std::cout << std::endl;
-        // }
-        
+    //     for (int i=0; i<Ntot; ++i)
+    //     {
+    //         std::cout << "Trace: fid = " << fid << ", i = " << i << ", fiber
+    //         pts = ( " << fiberPts[fid][i] << " , " << fiberPts[fid][i+Ntot]
+    //         << " , " << fiberPts[fid][i+2*Ntot] << " ) " << std::endl;
+    //     }
+    //     std::cout << std::endl;
+    // }
+
     // Conductance parameters
     m_session->LoadParameter("Chi", m_chi, 28.0);
     m_session->LoadParameter("Cm", m_capMembrane, 0.125);
@@ -165,13 +171,12 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     }
 
     std::string vCellModel;
-    m_session->LoadSolverInfo("CELLMODEL", vCellModel,
-                                "FitzHughNagumo");
+    m_session->LoadSolverInfo("CELLMODEL", vCellModel, "FitzHughNagumo");
 
     ASSERTL0(vCellModel != "", "Cell Model not specified.");
 
     m_cell = GetCellModelFactory().CreateInstance(vCellModel, m_session,
-                                                    m_fields[0]);
+                                                  m_fields[0]);
 
     // Stimulus
     m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
@@ -192,18 +197,18 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("PVcond", m_PVcond, 1.0);
 
     m_session->LoadParameter("ScarSize", m_ScarSize, 0.0);
-    m_session->LoadParameter("ScarStr",  m_ScarStr, 1.0);
-    m_session->LoadParameter("ScarPis",  m_ScarPis, 0.2);
+    m_session->LoadParameter("ScarStr", m_ScarStr, 1.0);
+    m_session->LoadParameter("ScarPis", m_ScarPis, 0.2);
     m_session->LoadParameter("ScarLocx", m_ScarLocx, 0.0);
     m_session->LoadParameter("ScarLocy", m_ScarLocy, 0.0);
     m_session->LoadParameter("ScarLocz", m_ScarLocz, 0.0);
 
     m_session->LoadParameter("RelDivSize", m_RelDivSize, 0.0);
-    m_session->LoadParameter("RelDivStr",  m_RelDivStr, 1.0);
-    m_session->LoadParameter("RelDivPis",  m_RelDivPis, 1.0);
+    m_session->LoadParameter("RelDivStr", m_RelDivStr, 1.0);
+    m_session->LoadParameter("RelDivPis", m_RelDivPis, 1.0);
     m_session->LoadParameter("RelDivLocx", m_RelDivLocx, 10.0);
 
-    // Derive AnisotropyStrength. 
+    // Derive AnisotropyStrength.
     Array<OneD, Array<OneD, NekDouble>> AniStrength(m_expdim);
     for (int j = 0; j < m_expdim; ++j)
     {
@@ -211,13 +216,14 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     }
 
     // Ratio between along the fiber and orthogonal to the fiber
-    switch(m_MediumType)
+    switch (m_MediumType)
     {
         case eAnisotropy:
         case eHeterogeneousAnisotropy:
         {
             Array<OneD, NekDouble> CardiacFibre;
-            LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, AniStrength, CardiacFibre);
+            LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, AniStrength,
+                             CardiacFibre);
             MMFSystem::MMFInitObject(AniStrength, CardiacFibre);
         }
         break;
@@ -236,20 +242,22 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
             Array<OneD, NekDouble> Anitmp(nq, 1.0);
 
             // Scar Tissue case
-            if(m_ScarSize>0.0001)
+            if (m_ScarSize > 0.0001)
             {
-                Anitmp = SmoothCircle(m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy, m_ScarLocz, m_ScarSize);
+                Anitmp = SmoothCircle(m_ScarStr, m_ScarPis, m_ScarLocx,
+                                      m_ScarLocy, m_ScarLocz, m_ScarSize);
             }
 
             // Relative Divergence Case
             // if(m_RelDivSize>0.001)
             // {
-            //     Anitmp = SmoothLine(m_RelDivStr, m_RelDivPis, m_RelDivLocx, m_RelDivSize);
+            //     Anitmp = SmoothLine(m_RelDivStr, m_RelDivPis, m_RelDivLocx,
+            //     m_RelDivSize);
             // }
 
-            // PV conductance 
+            // PV conductance
             // NekDouble diff;
-            if( (m_PVcond>1.0) || (m_PVcond<1.0) )
+            if ((m_PVcond > 1.0) || (m_PVcond < 1.0))
             {
                 Array<OneD, NekDouble> PVAnitmp(nq, 1.0);
                 PVAnitmp = SmoothLine(m_PVcond, 1.0, 10.0, 2.0);
@@ -274,8 +282,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         break;
     }
 
-    std::cout << " HERE 1, AniStrength = " << RootMeanSquare(AniStrength[0]) << std::endl;
-    
+    std::cout << " HERE 1, AniStrength = " << RootMeanSquare(AniStrength[0])
+              << std::endl;
+
     // plot Conductivity map
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -294,7 +303,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
     m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[0]);
     m_fields[0]->FwdTrans(AniStrength[1], fieldcoeffs[1]);
-    
+
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 
     std::cout << " HERE 2" << std::endl;
@@ -306,7 +315,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     //     PlotHHDStr = m_session->GetSolverInfo("GenerateHHDPlot");
     //     if (PlotHHDMap[0] == PlotHHDStr)
     //     {
-    //         std::cout << "PlotHHD initated ======================================="
+    //         std::cout << "PlotHHD initated
+    //         ======================================="
     //                   << std::endl;
     //         int nstep;
     //         m_session->LoadParameter("HHDPlotnstep", nstep, 0);
@@ -324,7 +334,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         // Create varcoeff for Helmsolver
         ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-        m_ode.DefineImplicitSolve(&MMFCardiacEP::DoImplicitSolveCardiacEP, this);
+        m_ode.DefineImplicitSolve(&MMFCardiacEP::DoImplicitSolveCardiacEP,
+                                  this);
     }
 
     m_ode.DefineOdeRhs(&MMFCardiacEP::DoOdeRhsCardiacEP, this);
@@ -338,14 +349,14 @@ MMFCardiacEP::~MMFCardiacEP()
 }
 
 void MMFCardiacEP::LoadCardiacFiber(
-                const SolverUtils::MediumType CardiacMediumType,
-                const NekDouble AnisotropyStrength, 
-                Array<OneD, Array<OneD, NekDouble>> &AniStrength,
-                Array<OneD, NekDouble> &CardiacFibre)
+    const SolverUtils::MediumType CardiacMediumType,
+    const NekDouble AnisotropyStrength,
+    Array<OneD, Array<OneD, NekDouble>> &AniStrength,
+    Array<OneD, NekDouble> &CardiacFibre)
 {
-    int nq   = m_fields[0]->GetNpoints();
+    int nq = m_fields[0]->GetNpoints();
 
-    switch(CardiacMediumType)
+    switch (CardiacMediumType)
     {
         case eAnisotropy:
         {
@@ -366,7 +377,8 @@ void MMFCardiacEP::LoadCardiacFiber(
             AniStrength[0] = ReadFibermap(AnisotropyStrength, CardiacFibre);
 
             Array<OneD, NekDouble> tmp = ReadConductivityMap();
-            Vmath::Vmul(nq, &tmp[0], 1, &AniStrength[0][0], 1, &AniStrength[0][0], 1);
+            Vmath::Vmul(nq, &tmp[0], 1, &AniStrength[0][0], 1,
+                        &AniStrength[0][0], 1);
         }
         break;
 
@@ -382,7 +394,7 @@ void MMFCardiacEP::LoadCardiacFiber(
             {
                 for (int j = 0; j < nptsj; ++j)
                 {
-                    index = EWIndex[i][j];
+                    index                 = EWIndex[i][j];
                     AniStrength[0][index] = AnisotropyStrength;
                 }
             }
@@ -390,7 +402,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         break;
 
         default:
-        break;
+            break;
     }
 
     // Plot Cardiac fibre projection map
@@ -401,13 +413,13 @@ void MMFCardiacEP::LoadCardiacFiber(
 Array<OneD, NekDouble> MMFCardiacEP::ReadFibermap(
     const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre)
 {
-    int nq   = m_fields[0]->GetNpoints();
+    int nq = m_fields[0]->GetNpoints();
 
     cout << "Loading Anisotropic Fibre map ===========" << endl;
     Array<OneD, NekDouble> outarray(nq);
 
     std::string anisotropy[3] = {"fx", "fy", "fz"};
-    CardiacFibre = Array<OneD, NekDouble> (m_spacedim * nq, 0.0);
+    CardiacFibre              = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
 
     Array<OneD, NekDouble> tmp(nq);
     for (int i = 0; i < m_spacedim; ++i)
@@ -420,7 +432,7 @@ Array<OneD, NekDouble> MMFCardiacEP::ReadFibermap(
 
     // If there is a fibre, let it be with a strength of m_AnisotropyStrength;
     NekDouble Tol = 1.0e-4;
-    NekDouble mag, fx, fy, fz; 
+    NekDouble mag, fx, fy, fz;
     for (int k = 0; k < nq; ++k)
     {
         fx = CardiacFibre[k];
@@ -440,7 +452,7 @@ Array<OneD, NekDouble> MMFCardiacEP::ReadFibermap(
 
 Array<OneD, NekDouble> MMFCardiacEP::ReadConductivityMap()
 {
-    int nq   = m_fields[0]->GetNpoints();
+    int nq = m_fields[0]->GetNpoints();
 
     cout << "Loading Isotropic Conductivity map." << endl;
 
@@ -463,7 +475,7 @@ Array<OneD, NekDouble> MMFCardiacEP::ReadConductivityMap()
     }
 
     std::cout << "vTemp: Max = " << Vmath::Vmax(nq, vTemp, 1)
-            << ", min =" << Vmath::Vmin(nq, vTemp, 1) << std::endl;
+              << ", min =" << Vmath::Vmin(nq, vTemp, 1) << std::endl;
 
     // Rescale to s \in [0,1] (0 maps to d_max, 1 maps to d_min)
     Vmath::Sadd(nq, -f_min, vTemp, 1, vTemp, 1);
@@ -496,7 +508,7 @@ void MMFCardiacEP::DoOdeProjection(
 
 void MMFCardiacEP::v_DoSolve()
 {
-    switch(m_SolverSchemeType)
+    switch (m_SolverSchemeType)
     {
         case eMMFFirst:
         {
@@ -506,7 +518,7 @@ void MMFCardiacEP::v_DoSolve()
 
         default:
         {
-           // DoSolveCurrent();
+            // DoSolveCurrent();
         }
         break;
     }
@@ -584,7 +596,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
         TimeMapMF[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
 
-        Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1, &MF1st[i][0], 1);
+        Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
+                    &MF1st[i][0], 1);
     }
 
     // Connection 1-form
@@ -596,23 +609,23 @@ void MMFCardiacEP::DoSolveMMFFirst()
     for (int i = 0; i < m_mfdim; i++)
     {
         MF1stCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
-        TMMFCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
+        TMMFCurvature[i]  = Array<OneD, NekDouble>(nq, 0.0);
 
-        TMMFConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+        TMMFConnection[i]  = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
         MF1stConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
         for (int j = 0; j < m_mfdim; j++)
         {
-            TMMFConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
+            TMMFConnection[i][j]  = Array<OneD, NekDouble>(nq, 0.0);
             MF1stConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
     }
 
     Array<OneD, Array<OneD, NekDouble>> Relacc(m_shapedim);
     Array<OneD, Array<OneD, NekDouble>> TMRelacc(m_shapedim);
-    for (int j=0; j<m_shapedim; ++j)
+    for (int j = 0; j < m_shapedim; ++j)
     {
-        Relacc[j] = Array<OneD, NekDouble>(nq,0.0);
-        TMRelacc[j] = Array<OneD, NekDouble>(nq,0.0);
+        Relacc[j]   = Array<OneD, NekDouble>(nq, 0.0);
+        TMRelacc[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
     Array<OneD, int> ActivatedPre(nq, 0);
@@ -641,7 +654,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
     Array<OneD, NekDouble> TimeMap(nq, 0.0);
     Array<OneD, NekDouble> IappMap(nq, 0.0);
-    Array<OneD, NekDouble> UnitVelMap(m_spacedim*nq, 0.0);
+    Array<OneD, NekDouble> UnitVelMap(m_spacedim * nq, 0.0);
 
     int totsteps = (m_steps + 1) / m_checksteps;
     Array<OneD, NekDouble> uval(totsteps, 0.0);
@@ -677,7 +690,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
         // dudtsign: wavefront = -1.0, waveback = 1.0
         //  dudt = Computedudt(m_uTol, fields[0], fieldsold[0]);
         Vmath::Vsub(nq, fields[0], 1, fieldsold[0], 1, dudtval, 1);
-        Vmath::Smul(nq, 1.0/m_timestep, dudtval, 1, dudtval, 1);
+        Vmath::Smul(nq, 1.0 / m_timestep, dudtval, 1, dudtval, 1);
 
         // Smoothing dudt map for a smooth time map
         // HelmSolveSmoothing(m_TimeMapSmoothL, dudtval);
@@ -688,9 +701,10 @@ void MMFCardiacEP::DoSolveMMFFirst()
         // Output = Propertimemap: time when the cell is excited.
         //          fieldHistory: sum of field is updated
 
-        if( (m_TimeMapStart<=m_time) && (m_TimeMapEnd>=m_time) )
+        if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap, dudtvalHistory, IappMap, TimeMap);
+            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+                           dudtvalHistory, IappMap, TimeMap);
         }
 
         // Aligning moving frames along the velocity vector
@@ -709,12 +723,13 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
         // Activated = 1 only where u > m_uTol. is rad >
         // m_NoAlignInitRadius.
-        ActivatedPre = ComputeZoneActivation(m_uTol, fields[0], m_NoAlignInitRadius);
+        ActivatedPre =
+            ComputeZoneActivation(m_uTol, fields[0], m_NoAlignInitRadius);
 
         // Elementwise activation: Activate when velmag is larger than
         // VATol
         m_fields[0]->ElementWiseActivation(-1, velmag, m_VelActivationTol,
-                                            ActivatedPre);
+                                           ActivatedPre);
 
         // Align MF to Velocity vector if Activated is on.
         // Input: Activated, velocity, MF1st_old (movingframes)
@@ -734,7 +749,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
         // Elementwise activation: Activate when DivDiff is smaller than
         // AdaptNewFramesTol
         Vmath::Vcopy(nq, ActivatedPre, 1, Activated, 1);
-        m_fields[0]->ElementWiseActivation(1, DivDiff, m_AdaptNewFramesTol, Activated);
+        m_fields[0]->ElementWiseActivation(1, DivDiff, m_AdaptNewFramesTol,
+                                           Activated);
 
         // Align MF to Velocity vector if Activated is on.
         // Input: Activated, velocity, MF1st_old (movingframes)
@@ -747,7 +763,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
         // activated.
         //         MF1stAligned: MF1st is updated and stored
         //         VelmagHistory: sum of velmag is updated and stored
-        UpdateMF1st(Activated, MF1st, velmag, VelmagHistory, MF1stAligned, ActivatedHistory);
+        UpdateMF1st(Activated, MF1st, velmag, VelmagHistory, MF1stAligned,
+                    ActivatedHistory);
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
@@ -757,8 +774,10 @@ void MMFCardiacEP::DoSolveMMFFirst()
                       << std::endl;
 
             std::cout << "DivDiff = " << Vmath::Vamax(nq, DivDiff, 1)
-            << ", ActivatedHistory = " << CountActivated(ActivatedHistory) 
-            << " ( " << 100.0 * CountActivated(ActivatedHistory)/nq << " % ) " << std::endl;
+                      << ", ActivatedHistory = "
+                      << CountActivated(ActivatedHistory) << " ( "
+                      << 100.0 * CountActivated(ActivatedHistory) / nq
+                      << " % ) " << std::endl;
 
             std::stringstream ss;
             ss << cpuTime / 60.0 << " min.";
@@ -768,7 +787,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
             if (CountActivated(ActivatedHistory) > 0)
             {
                 // Check the Curvature 2-form of the aligned moving frames
-                Compute2DConnectionCurvature(MF1stAligned, MF1stConnection, MF1stCurvature);
+                Compute2DConnectionCurvature(MF1stAligned, MF1stConnection,
+                                             MF1stCurvature);
 
                 // Test moving frames Connection whenever it is possible
                 Test2DConnectionCurvature(m_Initx, m_Inity, m_Initz,
@@ -780,14 +800,16 @@ void MMFCardiacEP::DoSolveMMFFirst()
         }
 
         // Write out checkpoint files
-        if ((m_checksteps && step && !((step + 1) % m_checksteps)) || doCheckTime)
+        if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
+            doCheckTime)
         {
             // NekDouble dudtpros, dudtneg;
             // dudtpros = Computedudtpercent(1, dudt);
             // dudtneg  = Computedudtpercent(-1, dudt);
 
             // NekDouble udiff;
-            // udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq, fields[0], 1);
+            // udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq,
+            // fields[0], 1);
 
             Array<OneD, NekDouble> x0(nq);
             Array<OneD, NekDouble> x1(nq);
@@ -796,10 +818,14 @@ void MMFCardiacEP::DoSolveMMFFirst()
             m_fields[0]->GetCoords(x0, x1, x2);
 
             int Iumax = Vmath::Iamax(nq, fields[0], 1);
-            std::cout << "u_max= " << Vmath::Vamax(nq, fields[0], 1) << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << std::endl;
+            std::cout << "u_max= " << Vmath::Vamax(nq, fields[0], 1)
+                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax]
+                      << std::endl;
 
             int Ivelmax = Vmath::Iamax(nq, velmag, 1);
-            std::cout << "vel_max= " << Vmath::Vamax(nq, velmag, 1) << " at x = " << x0[Ivelmax] << ", y = " << x1[Ivelmax] << std::endl;
+            std::cout << "vel_max= " << Vmath::Vamax(nq, velmag, 1)
+                      << " at x = " << x0[Ivelmax] << ", y = " << x1[Ivelmax]
+                      << std::endl;
 
             // Array<OneD, Array<OneD, NekDouble>> stimulusstrength(nvariables);
             // for (unsigned int i = 0; i < m_stimulus.size(); ++i)
@@ -813,9 +839,11 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
             //     if(Vmath::Vmax(nq, stimulusstrength[0], 1)>0.01)
             //     {
-            //         std::cout << " =================================== " << std::endl;
-            //         std::cout << "i = " << i << ", Stimulus: = " << Vmath::Vmax(nq, stimulusstrength[0], 1) << std::endl;
-            //     std::cout << " =================================== " << std::endl;
+            //         std::cout << " =================================== " <<
+            //         std::endl; std::cout << "i = " << i << ", Stimulus: = "
+            //         << Vmath::Vmax(nq, stimulusstrength[0], 1) << std::endl;
+            //     std::cout << " =================================== " <<
+            //     std::endl;
             //     }
             // }
 
@@ -823,28 +851,35 @@ void MMFCardiacEP::DoSolveMMFFirst()
             {
                 ComputeRelacc(MF1stAligned, Relacc);
 
-                PlotTrajectoryMF(ActivatedHistory, fields[0], MF1stAligned, MF1stConnection, Relacc, NoBoundaryZone, nchk);
+                PlotTrajectoryMF(ActivatedHistory, fields[0], MF1stAligned,
+                                 MF1stConnection, Relacc, NoBoundaryZone, nchk);
 
                 // Plot relative acceleration and conduction block zone
-                // PlotRelacc2D(ActivatedHistory, MF1stConnection, MF1stCurvature, Relacc, RelaccOmega, nchk);
+                // PlotRelacc2D(ActivatedHistory, MF1stConnection,
+                // MF1stCurvature, Relacc, RelaccOmega, nchk);
             }
-                
+
             if (m_TimeMap == eActivated)
             {
                 // Compute velocity field
-               // VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
-                ComputeMFTimeMap(m_ValidTimeMap, TimeMap, NewValidTimeMap, TimeMapMF);
+                // VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
+                ComputeMFTimeMap(m_ValidTimeMap, TimeMap, NewValidTimeMap,
+                                 TimeMapMF);
 
-               // Compute2DConnectionCurvature(TimeMapMF, TMMFConnection, TMMFCurvature);
+                // Compute2DConnectionCurvature(TimeMapMF, TMMFConnection,
+                // TMMFCurvature);
 
                 Compute2DConnection1form(TimeMapMF, TMMFConnection);
 
                 // Compute Relative Acceleration
                 ComputeRelacc(TimeMapMF, TMRelacc);
 
-                PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned, TMMFConnection, TMRelacc, nchk);
+                PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned,
+                              TMMFConnection, TMRelacc, nchk);
 
-                std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
+                std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+                          << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
+                          << std::endl;
             }
 
             Checkpoint_Output(nchk++);
@@ -865,10 +900,10 @@ void MMFCardiacEP::DoSolveMMFFirst()
     {
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
         m_fields[m_intVariables[i]]->SetPhysState(true);
-        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(), m_fields[i]->UpdateCoeffs());
+        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
+                              m_fields[i]->UpdateCoeffs());
     }
 } // namespace Nektar
-
 
 // void MMFCardiacEP::DoSolveCurrent()
 // {
@@ -907,8 +942,9 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //     }
 
 //     // Initialise time integration scheme
-//     m_intSoln = m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
-    
+//     m_intSoln = m_intScheme->InitializeScheme(m_timestep, fields, m_time,
+//     m_ode);
+
 //     Array<OneD, Array<OneD, NekDouble>> fiberfields(m_nfibers);
 //     // Initialize fiber
 //     if(m_TestType==eNeuralEP2D)
@@ -918,7 +954,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             fiberfields[nfib] = m_fiberfields[nfib]->GetPhys();
 //             m_fiberfields[nfib]->SetPhysState(false);
 
-//             m_fiberintSoln[nfib] = m_intScheme->InitializeScheme(m_timestep, fiberfields, m_time, m_fiberode[nfib]);
+//             m_fiberintSoln[nfib] = m_intScheme->InitializeScheme(m_timestep,
+//             fiberfields, m_time, m_fiberode[nfib]);
 //         }
 //     }
 
@@ -952,7 +989,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
 //         MF1stAligned[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
 
-//         Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1, &MF1st[i][0], 1);
+//         Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
+//         &MF1st[i][0], 1);
 //     }
 
 //     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFfiber(m_nfibers);
@@ -971,9 +1009,9 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //     }
 
 //     // Connection 1-form
-//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MF1stConnection(m_mfdim);
-//     Array<OneD, Array<OneD, NekDouble>> MF1stCurvature(m_mfdim);
-//     for (int i = 0; i < m_mfdim; i++)
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>>
+//     MF1stConnection(m_mfdim); Array<OneD, Array<OneD, NekDouble>>
+//     MF1stCurvature(m_mfdim); for (int i = 0; i < m_mfdim; i++)
 //     {
 //         MF1stCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
 
@@ -1032,16 +1070,19 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //         timer.Start();
 
 //         // field time integration
-//         fields = m_intScheme->TimeIntegrateMMF(step, m_timestep, m_intSoln, MF1st, m_ode);
+//         fields = m_intScheme->TimeIntegrateMMF(step, m_timestep, m_intSoln,
+//         MF1st, m_ode);
 
 //         // fiberfields time integration
 //         if(m_TestType==eNeuralEP2D)
 //         {
 //             for (int nfib = 0; nfib < m_nfibers; ++nfib)
 //             {
-//                 fiberfields = m_intScheme->TimeIntegrateMMF(step, m_timestep, m_fiberintSoln[nfib], m_fibermovingframes[nfib], m_fiberode[nfib]);
+//                 fiberfields = m_intScheme->TimeIntegrateMMF(step, m_timestep,
+//                 m_fiberintSoln[nfib], m_fibermovingframes[nfib],
+//                 m_fiberode[nfib]);
 //             }
-//         }                                       
+//         }
 //         timer.Stop();
 
 //         m_time += m_timestep;
@@ -1066,7 +1107,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
 //         if( (m_TimeMapStart<=m_time) && (m_TimeMapEnd>=m_time) )
 //         {
-//             ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap, dudtvalHistory, IappMap, TimeMap);
+//             ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+//             dudtvalHistory, IappMap, TimeMap);
 //         }
 
 //         // Aligning moving frames along the velocity vector
@@ -1079,7 +1121,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             // ComputedudtHistory(dudt, fields[0], dudtHistory, APindex);
 
 //             // vector = the gradient of u
-//             velocity = ComputeDirectionVector(m_movingframes, fields[0], dudt,
+//             velocity = ComputeDirectionVector(m_movingframes, fields[0],
+//             dudt,
 //                                               m_GradComptType);
 
 //             // Compute the magnitude of velocity
@@ -1088,17 +1131,20 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             // Activated = 1 only where u > m_uTol. is rad >
 //             // m_NoAlignInitRadius.
 //             ActivatedPre =
-//                 ComputeZoneActivation(m_uTol, fields[0], m_NoAlignInitRadius);
+//                 ComputeZoneActivation(m_uTol, fields[0],
+//                 m_NoAlignInitRadius);
 
 //             // Elementwise activation: Activate when velmag is larger than
 //             // VATol
-//             m_fields[0]->ElementWiseActivation(-1, velmag, m_VelActivationTol,
+//             m_fields[0]->ElementWiseActivation(-1, velmag,
+//             m_VelActivationTol,
 //                                                ActivatedPre);
 
 //             // Align MF to Velocity vector if Activated is on.
 //             // Input: Activated, velocity, MF1st_old (movingframes)
 //             // Output: MF1st
-//             AlignMFtoVelocity(ActivatedPre, velocity, m_movingframes, MF1sttmp);
+//             AlignMFtoVelocity(ActivatedPre, velocity, m_movingframes,
+//             MF1sttmp);
 
 //             // MF1sttmp has the same magnitude with m_movingframes which may
 //             // have anisotropy
@@ -1113,7 +1159,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             // Elementwise activation: Activate when DivDiff is smaller than
 //             // AdaptNewFramesTol
 //             Vmath::Vcopy(nq, ActivatedPre, 1, Activated, 1);
-//             m_fields[0]->ElementWiseActivation(1, DivDiff, m_AdaptNewFramesTol,
+//             m_fields[0]->ElementWiseActivation(1, DivDiff,
+//             m_AdaptNewFramesTol,
 //                                                Activated);
 
 //             // Align MF to Velocity vector if Activated is on.
@@ -1127,11 +1174,13 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             // activated.
 //             //         MF1stAligned: MF1st is updated and stored
 //             //         VelmagHistory: sum of velmag is updated and stored
-//             UpdateMF1st(Activated, MF1st, velmag, VelmagHistory, MF1stAligned,
+//             UpdateMF1st(Activated, MF1st, velmag, VelmagHistory,
+//             MF1stAligned,
 //                         ActivatedHistory);
 //         }
 
-//         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
+//         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) %
+//         m_infosteps))
 //         {
 //             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
 //                       << " "
@@ -1140,13 +1189,16 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
 //             std::stringstream ss;
 //             ss << cpuTime / 60.0 << " min.";
-//             std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+//             std::cout << " CPU Time: " << std::setw(8) << std::left <<
+//             ss.str()
 //                       << std::endl;
 
-//             if ((m_MMFOrder == SolverUtils::eMMFFirst) && (CountActivated(ActivatedHistory) > 0))
+//             if ((m_MMFOrder == SolverUtils::eMMFFirst) &&
+//             (CountActivated(ActivatedHistory) > 0))
 //             {
 //                 // Check the Curvature 2-form of the aligned moving frames
-//                 Compute2DConnectionCurvature(MF1stAligned, MF1stConnection, MF1stCurvature);
+//                 Compute2DConnectionCurvature(MF1stAligned, MF1stConnection,
+//                 MF1stCurvature);
 
 //                 // Test moving frames Connection whenever it is possible
 //                 Test2DConnectionCurvature(m_Initx, m_Inity, m_Initz,
@@ -1161,7 +1213,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //         for (i = 0; i < nvariables; ++i)
 //         {
 //             m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-//             m_fields[m_intVariables[i]]->FwdTrans_IterPerExp(fields[i], m_fields[m_intVariables[i]]->UpdateCoeffs());
+//             m_fields[m_intVariables[i]]->FwdTrans_IterPerExp(fields[i],
+//             m_fields[m_intVariables[i]]->UpdateCoeffs());
 //             m_fields[m_intVariables[i]]->SetPhysState(false);
 //         }
 
@@ -1183,57 +1236,61 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //                 Array<OneD, NekDouble> tmp(fnq);
 //                 Array<OneD, NekDouble> tmpc(fncoeffs);
 
-
-
-//                 m_fiberfields[nfib]->FwdTrans_IterPerExp(fiberfields[nfib], tmpc);
-//                 m_fiberfields[nfib]->BwdTrans(tmpc, tmp);
+//                 m_fiberfields[nfib]->FwdTrans_IterPerExp(fiberfields[nfib],
+//                 tmpc); m_fiberfields[nfib]->BwdTrans(tmpc, tmp);
 
 //                 m_fiberfields[nfib]->PhysDeriv(1, tmp, dphimf);
 //                // m_fiberfields[nfib]->PhysDeriv(1, dphimf, d2phimf);
 
 //                 for (int i=0; i<fnq; ++i)
 //                 {
-//                     std::cout << " f = " << fiberfields[nfib][i] << ", df = " << dphimf[i] << ", df2 = " << d2phimf[i] << std::endl;
+//                     std::cout << " f = " << fiberfields[nfib][i] << ", df = "
+//                     << dphimf[i] << ", df2 = " << d2phimf[i] << std::endl;
 //                 }
 
 //                 UpdateFibertoField(nfib, d2phimf, d2phim);
 
-
 //                 // UpdateFibertoField(nfib, fiberfields[nfib], d2phim);
 
-
-                
 //                 SetBoundaryConditions(0.0);
 //                 m_fields[0]->HelmSolve(d2phim, m_fields[0]->UpdateCoeffs(),
-//                                     NullFlagList, factorsPoisson, m_varcoeff);
-//                 m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), m_fields[0]->UpdatePhys());
-//                 m_fields[0]->SetPhysState(true);
+//                                     NullFlagList, factorsPoisson,
+//                                     m_varcoeff);
+//                 m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(),
+//                 m_fields[0]->UpdatePhys()); m_fields[0]->SetPhysState(true);
 
-//                 std::cout << "Phys = " << Vmath::Vamax(fnq, fiberfields[nfib], 1) << ", d2phim = " << Vmath::Vamax(nq, d2phim, 1) 
-//                 << ", field = " << Vmath::Vamax(nq, m_fields[0]->UpdatePhys(), 1)  << std::endl;
+//                 std::cout << "Phys = " << Vmath::Vamax(fnq,
+//                 fiberfields[nfib], 1) << ", d2phim = " << Vmath::Vamax(nq,
+//                 d2phim, 1)
+//                 << ", field = " << Vmath::Vamax(nq,
+//                 m_fields[0]->UpdatePhys(), 1)  << std::endl;
 
-
-//                 // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(),
-//                 //                     NullFlagList, factorsPoisson, m_vardiffie);
-//                 // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+//                 // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(),
+//                 m_fields[1]->UpdateCoeffs(),
+//                 //                     NullFlagList, factorsPoisson,
+//                 m_vardiffie);
+//                 // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(),
+//                 m_fields[1]->UpdatePhys());
 //                 // m_fields[1]->SetPhysState(true);
 
-
 //                 m_fiberfields[nfib]->SetPhys(fiberfields[nfib]);
-//                 m_fiberfields[nfib]->FwdTrans_IterPerExp(fiberfields[nfib], m_fiberfields[nfib]->UpdateCoeffs());
+//                 m_fiberfields[nfib]->FwdTrans_IterPerExp(fiberfields[nfib],
+//                 m_fiberfields[nfib]->UpdateCoeffs());
 //                 m_fiberfields[nfib]->SetPhysState(false);
 //             }
 //         }
 
 //         // Write out checkpoint files
-//         if ((m_checksteps && step && !((step + 1) % m_checksteps)) || doCheckTime)
+//         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
+//         doCheckTime)
 //         {
 //             NekDouble dudtpros, dudtneg;
 //             dudtpros = Computedudtpercent(1, dudt);
 //             dudtneg  = Computedudtpercent(-1, dudt);
 
 //             NekDouble udiff;
-//             udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq, fields[0], 1);
+//             udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq,
+//             fields[0], 1);
 
 //             Array<OneD, NekDouble> x0(nq);
 //             Array<OneD, NekDouble> x1(nq);
@@ -1244,8 +1301,11 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             int Imax = Vmath::Imax(nq, fields[0], 1);
 //             int Imin = Vmath::Imin(nq, fields[0], 1);
 
-//             std::cout << "u_max= " << Vmath::Vmax(nq, fields[0], 1) << " at x = " << x0[Imax] << ", y = " << x1[Imax]
-//                         << ", u_min= " << Vmath::Vmin(nq, fields[0], 1) << " at x = " << x0[Imin] << ", y = " << x1[Imin] << std::endl;
+//             std::cout << "u_max= " << Vmath::Vmax(nq, fields[0], 1) << " at x
+//             = " << x0[Imax] << ", y = " << x1[Imax]
+//                         << ", u_min= " << Vmath::Vmin(nq, fields[0], 1) << "
+//                         at x = " << x0[Imin] << ", y = " << x1[Imin] <<
+//                         std::endl;
 
 //             Array<OneD, Array<OneD, NekDouble>> stimulusstrength(nvariables);
 //             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
@@ -1259,23 +1319,26 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
 //                 if(Vmath::Vmax(nq, stimulusstrength[0], 1)>0.01)
 //                 {
-//                    std::cout << " =================================== " << std::endl;
-//                    std::cout << "i = " << i << ", Stimulus: = " << Vmath::Vmax(nq, stimulusstrength[0], 1) << std::endl;
-//                 std::cout << " =================================== " << std::endl;
+//                    std::cout << " =================================== " <<
+//                    std::endl; std::cout << "i = " << i << ", Stimulus: = " <<
+//                    Vmath::Vmax(nq, stimulusstrength[0], 1) << std::endl;
+//                 std::cout << " =================================== " <<
+//                 std::endl;
 //                 }
 //             }
 
 //             if( m_TestType==eNeuralEP1D )
 //             {
-//                 Vmath::Vsub(nq, fields[0], 1, fieldoldchk, 1, fieldchkdiff, 1);
-//                 int stp = floor(nq/50);
-//                 std::cout << "t = " << m_time << ", stp = " << stp << std::endl;
-//                 for (int i=0; i<nq; i+=stp)
+//                 Vmath::Vsub(nq, fields[0], 1, fieldoldchk, 1, fieldchkdiff,
+//                 1); int stp = floor(nq/50); std::cout << "t = " << m_time <<
+//                 ", stp = " << stp << std::endl; for (int i=0; i<nq; i+=stp)
 //                 {
 //                     if(fabs(fieldchkdiff[i])>0.0000001)
 //                     {
-//                        std::cout << "NodeZone = " << m_NodeZone[0][i] << ", u = " 
-//                        << fields[0][i]  << " dudt = " << fieldchkdiff[i]/fabs(fieldchkdiff[i]) 
+//                        std::cout << "NodeZone = " << m_NodeZone[0][i] << ", u
+//                        = "
+//                        << fields[0][i]  << " dudt = " <<
+//                        fieldchkdiff[i]/fabs(fieldchkdiff[i])
 //                        << " at y = " << x1[i] << std::endl;
 //                     }
 //                 }
@@ -1297,13 +1360,15 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //                     m_fiberfields[nfib]->GetCoords(fx0, fx1, fx2);
 
 //                     int stp = floor(fnq/50);
-//                     std::cout << "t = " << m_time << ", stp = " << stp << std::endl;
-//                     for (int i=0; i<fnq; i+=stp)
+//                     std::cout << "t = " << m_time << ", stp = " << stp <<
+//                     std::endl; for (int i=0; i<fnq; i+=stp)
 //                     {
 //                         if(fiberfields[0][i]>0.1)
 //                         {
-//                         std::cout << "i = " << i << ", NodeZone = " << m_NodeZone[nfib][i] << ", u = " 
-//                         << fiberfields[0][i] << " at y = " << fx1[i] << std::endl;
+//                         std::cout << "i = " << i << ", NodeZone = " <<
+//                         m_NodeZone[nfib][i] << ", u = "
+//                         << fiberfields[0][i] << " at y = " << fx1[i] <<
+//                         std::endl;
 //                         }
 //                     }
 //                     Vmath::Vcopy(nq, fields[0], 1, fieldoldchk, 1);
@@ -1319,7 +1384,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //                           << ", MaxAPindex = " << Vmath::Vmax(nq, APindex, 1)
 //                           << std::endl;
 
-//                 PlotConnection2D(ActivatedHistory, fields[0], MF1stAligned, MF1stConnection, nchk);
+//                 PlotConnection2D(ActivatedHistory, fields[0], MF1stAligned,
+//                 MF1stConnection, nchk);
 
 //                 // Plot relative acceleration and conduction block zone
 //                 Array<OneD, Array<OneD, NekDouble>> RelAcc(m_shapedim);
@@ -1338,9 +1404,10 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //                 VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
 
 //                 PlotTimeMap(TimeMap, IappMap, VelocityMap, nchk);
-//                 std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
+//                 std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap,
+//                 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 //             }
-                
+
 //             Checkpoint_Output(nchk++);
 //             doCheckTime = false;
 //         }
@@ -1363,7 +1430,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
 //     for (i = 0; i < nvariables; ++i)
 //     {
-//         m_fields[i]->FwdTrans(m_fields[i]->GetPhys(), m_fields[i]->UpdateCoeffs());
+//         m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
+//         m_fields[i]->UpdateCoeffs());
 //     }
 
 //     if(m_TestType==eNeuralEP2D)
@@ -1373,7 +1441,8 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //             m_fiberfields[nfib]->SetPhys(fiberfields[nfib]);
 //             m_fiberfields[nfib]->SetPhysState(true);
 
-//             m_fiberfields[nfib]->FwdTrans(m_fiberfields[nfib]->GetPhys(), m_fiberfields[nfib]->UpdateCoeffs());
+//             m_fiberfields[nfib]->FwdTrans(m_fiberfields[nfib]->GetPhys(),
+//             m_fiberfields[nfib]->UpdateCoeffs());
 //         }
 //     }
 
@@ -1420,7 +1489,6 @@ void MMFCardiacEP::DoSolveMMFFirst()
 //         break;
 // }
 
-
 void MMFCardiacEP::DoImplicitSolveCardiacEP(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
@@ -1451,7 +1519,8 @@ void MMFCardiacEP::DoImplicitSolveCardiacEP(
 
     // Solve a system of equations with Helmholtz solver and transform
     // back into physical space.
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                           factors, m_varcoeff);
 
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
@@ -1487,7 +1556,7 @@ void MMFCardiacEP::DoOdeRhsCardiacEP(
     // Compute the reaction function
     // input: inarray
     // output: outarray
-     m_cell->TimeIntegrate(inarray, outarray, time);
+    m_cell->TimeIntegrate(inarray, outarray, time);
 
     // Compute I_stim
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
@@ -1507,7 +1576,6 @@ void MMFCardiacEP::DoOdeRhsCardiacEP(
                     1);
     }
 }
-
 
 /**
  *
@@ -1541,7 +1609,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
     m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
 
-    if(m_TimeMap==eProcessing)
+    if (m_TimeMap == eProcessing)
     {
         TimeMapProcess();
     }
@@ -1612,9 +1680,11 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
 //                 outarray[i] =
 //                     1.0 / (1.0 +
-//                            exp((sqrt(xp * xp) - radiusofinit) / frontstiff)) +
+//                            exp((sqrt(xp * xp) - radiusofinit) / frontstiff))
+//                            +
 //                     1.0 / (1.0 +
-//                            exp((sqrt(xp2 * xp2) - radiusofinit) / frontstiff));
+//                            exp((sqrt(xp2 * xp2) - radiusofinit) /
+//                            frontstiff));
 //             }
 //             break;
 
@@ -1642,7 +1712,8 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 //                 yp = y[i] - ymin;
 //                 outarray[i] =
 //                     1.0 /
-//                     (1.0 + exp((sqrt(xp * xp + yp * yp) / bs - radiusofinit) /
+//                     (1.0 + exp((sqrt(xp * xp + yp * yp) / bs - radiusofinit)
+//                     /
 //                                frontstiff));
 //             }
 //             break;
@@ -1786,7 +1857,6 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     m_cell->GenerateSummary(s);
 }
 } // namespace Nektar
-
 
 int main(int argc, char *argv[])
 {
