@@ -31,7 +31,6 @@
 //  Description: Spatial domains definitions and enumerations.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 #ifndef NEKTAR_SPATIALDOMAINS_SPATIALDOMAINS_H
 #define NEKTAR_SPATIALDOMAINS_SPATIALDOMAINS_H
 
@@ -89,7 +88,7 @@ enum GeomMMF
     eLOCALEllipsoid,     ///< Align the second tangent vector.
 };
 
-/**
+/*
  * @brief Session file names associated with tangent principle
  * directions.
  */

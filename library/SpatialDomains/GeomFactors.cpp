@@ -30,8 +30,7 @@
 //
 //  Description: Geometric factors base class.
 //
-////////////////////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////
 #include <LibUtilities/Foundations/Interp.h>
 #include <SpatialDomains/GeomFactors.h>
 
@@ -450,7 +449,6 @@ Array<TwoD, NekDouble> GeomFactors::ComputeDerivFactors(
     return factors;
 }
 
-
 // void GeomFactors::ComputeMovingFrames(
 //     const LibUtilities::PointsKeyVector &keyTgt,
 //     const SpatialDomains::GeomMMF MMFdir,
@@ -635,7 +633,8 @@ void GeomFactors::ComputeMovingFrames(
     {
         for (k = 0; k < m_coordDim; ++k)
         {
-            Vmath::Vcopy(nq, &MFtmp[i][k][0], 1, &movingframes[i * m_coordDim + k][0], 1);
+            Vmath::Vcopy(nq, &MFtmp[i][k][0], 1,
+                         &movingframes[i * m_coordDim + k][0], 1);
         }
     }
 }
@@ -872,76 +871,6 @@ void GeomFactors::ComputePrincipleDirection(
                 radius = sqrt(xdis * xdis / la / la + ydis * ydis / lb / lb);
                 output[0][i] = ydis / radius;
                 output[1][i] = -1.0 * xdis / radius;
-            }
-            break;
-        }
-        case eTangentIrregular:
-        {
-            // Tangent direction depends on spatial location.
-            Array<OneD, Array<OneD, NekDouble>> x(m_coordDim);
-            for (int k = 0; k < m_coordDim; k++)
-            {
-                x[k] = Array<OneD, NekDouble>(nq);
-            }
-
-            int nqtot_map = 1;
-            LibUtilities::PointsKeyVector map_points(m_expDim);
-            for (int i = 0; i < m_expDim; ++i)
-            {
-                map_points[i] = m_xmap->GetBasis(i)->GetPointsKey();
-                nqtot_map *= map_points[i].GetNumPoints();
-            }
-            Array<OneD, NekDouble> tmp(nqtot_map);
-            for (int k = 0; k < m_coordDim; k++)
-            {
-                m_xmap->BwdTrans(m_coords[k], tmp);
-                Interp(map_points, tmp, keyTgt, x[k]);
-            }
-
-            // circular around the center of the domain
-            NekDouble xtan, ytan, mag;
-            for (int i = 0; i < nq; i++)
-            {
-                xtan         = -1.0 * (x[1][i] * x[1][i] * x[1][i] + x[1][i]);
-                ytan         = 2.0 * x[0][i];
-                mag          = sqrt(xtan * xtan + ytan * ytan);
-                output[0][i] = xtan / mag;
-                output[1][i] = ytan / mag;
-            }
-            break;
-        }
-        case eTangentNonconvex:
-        {
-            // Tangent direction depends on spatial location.
-            Array<OneD, Array<OneD, NekDouble>> x(m_coordDim);
-            for (int k = 0; k < m_coordDim; k++)
-            {
-                x[k] = Array<OneD, NekDouble>(nq);
-            }
-
-            int nqtot_map = 1;
-            LibUtilities::PointsKeyVector map_points(m_expDim);
-            for (int i = 0; i < m_expDim; ++i)
-            {
-                map_points[i] = m_xmap->GetBasis(i)->GetPointsKey();
-                nqtot_map *= map_points[i].GetNumPoints();
-            }
-            Array<OneD, NekDouble> tmp(nqtot_map);
-            for (int k = 0; k < m_coordDim; k++)
-            {
-                m_xmap->BwdTrans(m_coords[k], tmp);
-                Interp(map_points, tmp, keyTgt, x[k]);
-            }
-
-            // circular around the center of the domain
-            NekDouble xtan, ytan, mag;
-            for (int i = 0; i < nq; i++)
-            {
-                xtan         = -2.0 * x[1][i] * x[1][i] * x[1][i] + x[1][i];
-                ytan         = sqrt(3.0) * x[0][i];
-                mag          = sqrt(xtan * xtan + ytan * ytan);
-                output[0][i] = xtan / mag;
-                output[1][i] = ytan / mag;
             }
             break;
         }

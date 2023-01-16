@@ -1651,16 +1651,6 @@ private:
         const Array<OneD, const NekDouble> &FwdFlux,
         const Array<OneD, const NekDouble> &BwdFlux,
         Array<OneD, NekDouble> &outarray);
-
-private:
-    /// Definition of the total number of degrees of freedom and
-    /// quadrature points and offsets to access data
-    void SetupCoeffPhys(bool DeclareCoeffPhysArrays = true,
-                        bool SetupOffsets           = true);
-
-    /// Define a list of elements using the geometry and basis
-    /// key information in expmap;
-    void InitialiseExpVector(const SpatialDomains::ExpansionInfoMap &expmap);
 };
 
 /// An empty ExpList object.

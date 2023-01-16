@@ -31,7 +31,6 @@
 // Description: Expansion list definition
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 #include <iomanip>
 
 #include <boost/core/ignore_unused.hpp>
@@ -1344,6 +1343,7 @@ NekDouble ExpList::PhysIntegral(const Array<OneD, const NekDouble> &inarray)
 
     return sum;
 }
+
 
 /**
  * Retrieves the block matrix specified by \a bkey, and computes
