@@ -3810,6 +3810,7 @@ Array<OneD, NekDouble> MMFMaxwell::GetIncidentField(const int var,
     // GetSmoothFactor such that wave propages from the left to the object.
     // a = 0.1, ta = 1, f = 1.0./(1.0 + exp( -0.5.*(time-ta)/a ));
     Array<OneD, NekDouble> SmoothFactor(nq, 1.0);
+    int m_SmoothFactor = 1;
     switch (m_SmoothFactor)
     {
         case 0:

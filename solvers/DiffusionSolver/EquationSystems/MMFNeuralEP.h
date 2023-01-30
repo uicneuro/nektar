@@ -49,6 +49,7 @@ namespace Nektar
 
 enum NeuralEPType
 {
+    eNeuralTest,
     eNeuralEP1D,
     eNeuralEP2p1D,
     eNeuralEP2D,
@@ -57,6 +58,8 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
+    "NeuralTest",
+    "NeuralEP1D",
     "NeuralEP1D",
     "NeuralEP2p1D",
     "NeuralEP2D",
@@ -147,14 +150,13 @@ public:
 
     /// Desctructor
     virtual ~MMFNeuralEP();
-
 protected:
-    int m_nfibers;
 
-    int m_ElemNodeEnd, m_ElemMyelenEnd;
+    NekDouble m_InitPtx, m_InitPty, m_InitPtz;
 
-    int m_Convectiven;
-    int m_numelemperNode;
+    int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd;
+    int m_Convectiven, m_numelemperNode;
+
     TimeMapType m_TimeMap;
 
     // variables for phie-Poisson solver
@@ -193,6 +195,7 @@ protected:
 
     // NeuralEP: Capacitance vectors for myeline or Ranvier node.
     int m_Rnodelength, m_Rnodegap;
+    StdRegions::VarCoeffMap m_varDiffcoeff;
 
     Array<OneD, int> m_ValidTimeMap;
 
@@ -280,10 +283,10 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoImplicitSolveNeuralEP2p1D(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-        const NekDouble lambda);
+    // void DoImplicitSolveNeuralEP2p1D(
+    //     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    //     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+    //     const NekDouble lambda);
 
     void DoImplicitSolveNeuralEP2D(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -295,10 +298,10 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoImplicitSolveNeuralEP2p1Dfiber(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-        const NekDouble lambda);
+    // void DoImplicitSolveNeuralEP2p1Dfiber(
+    //     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    //     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+    //     const NekDouble lambda);
 
     void DoImplicitSolveNeuralEP2Dfiber(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -368,6 +371,22 @@ protected:
     void AxonWallBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,
                             Array<OneD, Array<OneD, NekDouble>> &physarray);
+
+    void TestPlaneProblem(const NekDouble time,
+                          Array<OneD, NekDouble> &outfield);
+
+    void TestCubeProblem(const NekDouble time,
+                         Array<OneD, NekDouble> &outfield);
+
+    void Morphogenesis(const NekDouble time, unsigned int field,
+                       Array<OneD, NekDouble> &outfield);
+
+    void ComputeEuclideanDivMF(
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        Array<OneD, Array<OneD, NekDouble>> &DivMF);
+
+
+    Array<OneD, NekDouble> PlanePhiWave();
 
     // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int
     // Rnodegap);

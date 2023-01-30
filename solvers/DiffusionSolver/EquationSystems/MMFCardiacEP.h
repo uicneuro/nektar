@@ -164,6 +164,7 @@ protected:
 
     InitWaveType m_InitWaveType;
 
+    void DoSolveMMF();
     void DoSolveMMFFirst();
 
     Array<OneD, NekDouble> ReadFibermap(const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre);

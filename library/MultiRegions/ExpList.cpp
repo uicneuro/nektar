@@ -3347,7 +3347,7 @@ void ExpList::v_ElementWiseActivation(
     bool ActZeroinElement;
     NekDouble vmin, vmax;
     Array<OneD, NekDouble> velemt;
-    for (i = 0; i < m_exp->size(); ++i)
+    for (i = 0; i < (*m_exp).size(); ++i)
     {
         npts   = (*m_exp)[i]->GetTotPoints();
         offset = m_phys_offset[i];
@@ -3395,23 +3395,6 @@ void ExpList::v_ElementWiseActivation(
                     Activated[offset + j] = 0;
                 }
             }
-        }
-    }
-}
-
-void ExpList::v_GridIndexElementWise(Array<OneD, Array<OneD, int>> &outarray)
-{
-    int npts, offset;
-
-    outarray = Array<OneD, Array<OneD, int>>(m_exp->size());
-    for (int i = 0; i < m_exp->size(); ++i)
-    {
-        npts        = (*m_exp)[i]->GetTotPoints();
-        outarray[i] = Array<OneD, int>(npts);
-        offset      = m_phys_offset[i];
-        for (int j = 0; j < npts; ++j)
-        {
-            outarray[i][j] = offset + j;
         }
     }
 }
@@ -3814,6 +3797,7 @@ void ExpList::v_GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
 
     // Assume whole array is of same coordinate dimension
     int coordim = (*m_exp)[0]->GetGeom()->GetCoordim();
+                std::cout << "v_GetMovingFrames 1, coordim = " << coordim << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> MFloc(MFdim * coordim);
     // Process each expansion.
@@ -3825,10 +3809,12 @@ void ExpList::v_GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
         {
             MFloc[j] = Array<OneD, NekDouble>(npts, 0.0);
         }
+                std::cout << "v_GetMovingFrames 2" << std::endl;
 
         // MF from LOCALREGIONS
         (*m_exp)[i]->GetMetricInfo()->GetMovingFrames(
             (*m_exp)[i]->GetPointsKeys(), MMFdir, CircCentre, MFloc);
+                std::cout << "v_GetMovingFrames 3" << std::endl;
 
         // Get the physical data offset for this expansion.
         for (int j = 0; j < MFdim; ++j)

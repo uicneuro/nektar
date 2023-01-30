@@ -114,11 +114,8 @@ namespace Nektar
         read_csv(csvfile, DTIcsv);
         
         // Assign a vector or value to each element =================================================================
-        Array<OneD, Array<OneD, int>> EWIndex;
-        m_fields[0]->GridIndexElementWise(EWIndex);
-
-        int Nelemtj = EWIndex.size();
-        int nptsj   = EWIndex[0].size();
+        int Nelemtj = m_fields[0]->GetExpSize();
+        int nptsj   = m_fields[0]->GetTotPoints(0);
 
         std::cout << "Nelemtj = " << Nelemtj << ", nptsj = " << nptsj << ", nq = " << nq << std::endl;
         
@@ -161,7 +158,7 @@ namespace Nektar
 
                     for (int pt = 0; pt < nptsj; ++pt)
                     {
-                        index = EWIndex[elemid][pt];
+                        index = m_fields[0]->GetPhys_Offset(elemid) + j;
 
                         DTIVector[index] = DTIcsv[i][j][k];
                     }

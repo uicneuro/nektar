@@ -63,8 +63,12 @@ StimulusCirc::StimulusCirc(const LibUtilities::SessionReaderSharedPtr &pSession,
     m_session = pSession;
     m_field   = pField;
     m_nq      = pField->GetTotPoints();
-    m_chiCapMembrane =
-        m_session->GetParameter("chi") * m_session->GetParameter("Cm");
+
+    NekDouble chi, Cm;
+    m_session->LoadParameter("Chi", chi, 28.0);
+    m_session->LoadParameter("Cm", Cm, 0.125);
+
+    m_chiCapMembrane = chi * Cm;
 
     if (!pXml)
     {

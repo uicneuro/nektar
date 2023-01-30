@@ -940,6 +940,7 @@ void EquationSystem::v_SetInitialConditions(NekDouble initialtime,
     {
         GetFunction("InitialConditions")
             ->Evaluate(m_session->GetVariables(), m_fields, m_time, domain);
+
         // Enforce C0 Continutiy of initial condiiton
         if ((m_projectionType == MultiRegions::eGalerkin) ||
             (m_projectionType == MultiRegions::eMixed_CG_Discontinuous))
@@ -955,7 +956,6 @@ void EquationSystem::v_SetInitialConditions(NekDouble initialtime,
 
         if (m_session->GetComm()->GetRank() == 0)
         {
-
             for (int i = 0; i < m_fields.size(); ++i)
             {
                 std::string varName = m_session->GetVariable(i);

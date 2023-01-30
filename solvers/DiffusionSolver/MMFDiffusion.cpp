@@ -322,50 +322,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_InitWaveType = (InitWaveType)0;
     }
 
-    // ComputeVarCoeff2D(m_movingframes,m_varcoeff);
-
-    StdRegions::VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag};
-
-    int indx;
-    Array<OneD, NekDouble> tmp(nq);
-    for (int k = 0; k < MFdim; ++k)
-    {
-        // For Moving Frames
-        indx = 5 * k;
-
-        for (int j = 0; j < m_spacedim; ++j)
-        {
-            m_varDiffcoeff[MMFCoeffs[indx + j]] =
-                Array<OneD, NekDouble>(nq, 0.0);
-            Vmath::Vcopy(nq, &m_movingframes[k][j * nq], 1,
-                         &m_varDiffcoeff[MMFCoeffs[indx + j]][0], 1);
-        }
-
-        // m_DivMF
-        m_varDiffcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-        Vmath::Vcopy(nq, &m_DivMF[k][0], 1,
-                     &m_varDiffcoeff[MMFCoeffs[indx + 3]][0], 1);
-
-        // \| e^k \|
-        m_varDiffcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-        tmp                                 = Array<OneD, NekDouble>(nq, 0.0);
-        for (int i = 0; i < m_spacedim; ++i)
-        {
-            Vmath::Vvtvp(nq, &m_movingframes[k][i * nq], 1,
-                         &m_movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-        }
-
-        Vmath::Vcopy(nq, &tmp[0], 1, &m_varDiffcoeff[MMFCoeffs[indx + 4]][0],
-                     1);
-    }
+    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
     if (!m_explicitDiffusion)
     {
@@ -439,7 +396,6 @@ void MMFDiffusion::DoOdeRhs(
     {
         case eTestPlane:
         {
-
             Array<OneD, NekDouble> x(nq);
             Array<OneD, NekDouble> y(nq);
             Array<OneD, NekDouble> z(nq);
@@ -637,6 +593,8 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
 
     int nq = GetTotPoints();
 
+    EquationSystem::v_SetInitialConditions(initialtime, false);
+
     switch (m_TestType)
     {
         case eTestPlane:
@@ -695,13 +653,8 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         break;
     }
 
-    // forward transform to fill the modal coeffs
-    for (int i = 0; i < m_fields.size(); ++i)
-    {
-        m_fields[i]->SetPhysState(true);
-        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
-                              m_fields[i]->UpdateCoeffs());
-    }
+    std::cout << "Initial: max um = "
+              << Vmath::Vmax(nq, m_fields[0]->GetPhys(), 1) << std::endl;
 
     if (dumpInitialConditions)
     {

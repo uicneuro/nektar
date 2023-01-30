@@ -157,7 +157,6 @@ const char *const DerivTypeMap[] = {"Euclidean", "Covariant", "Exact"};
 
 enum MediumType
 {
-    eVoid,
     eIsotropy,
     eAnisotropy,
     eHeterogeneousIsotropy,
@@ -167,7 +166,6 @@ enum MediumType
 };
 
 const char *const MediumTypeMap[] = {
-    "Void",
     "Isotropy",
     "Anisotropy",
     "HeterogeneousIsotropy",
@@ -262,9 +260,6 @@ public:
     int m_shapedim;
     int m_mfdim;
 
-    MMFOrder m_MMFOrder;
-    MMFLinearAlign m_MMFLinearAlign;
-
     SurfaceType m_surfaceType;
     UpwindType m_upwindType;
     DerivType m_DerivType;
@@ -311,8 +306,7 @@ public:
 
     SOLVER_UTILS_EXPORT void MMFInitObject(
         const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
-        const Array<OneD, const NekDouble> &AniDirection =
-            NullNekDouble1DArray);
+        const Array<OneD, const NekDouble> &AniDirection = NullNekDouble1DArray);
 
     // SOLVER_UTILS_EXPORT void MMFInitObject(
     // const Array<OneD, const Array<OneD, NekDouble>> &Anisotropy);
@@ -349,7 +343,7 @@ public:
 
 protected:
     // True or False to Rebuild MF with the Maurer-Cartan matrix
-    int m_SmoothFactor;
+    int m_ImportedFiberExist = 0;    
 
     NekDouble m_Helmtau, m_HHDtau;
     NekDouble m_ZoneVarIndex;

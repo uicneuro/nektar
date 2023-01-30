@@ -449,12 +449,7 @@ Array<TwoD, NekDouble> GeomFactors::ComputeDerivFactors(
     return factors;
 }
 
-// void GeomFactors::ComputeMovingFrames(
-//     const LibUtilities::PointsKeyVector &keyTgt,
-//     const SpatialDomains::GeomMMF MMFdir,
-//     const Array<OneD, const NekDouble> &factors,
-//     Array<OneD, Array<OneD, NekDouble>> &movingframes)
-void GeomFactors::ComputeMovingFrames(
+void GeomFactors::Compute1DMovingFrames(
     const LibUtilities::PointsKeyVector &keyTgt,
     const SpatialDomains::GeomMMF MMFdir,
     const Array<OneD, const NekDouble> &factors,
@@ -467,10 +462,7 @@ void GeomFactors::ComputeMovingFrames(
     int i = 0, k = 0;
     int ptsTgt = 1;
     int nq     = 1;
-
-    // number of moving frames is requited to be 3, even for surfaces
-    int MFdim = 3;
-
+    
     for (i = 0; i < m_expDim; ++i)
     {
         nq *= keyTgt[i].GetNumPoints();
@@ -487,11 +479,105 @@ void GeomFactors::ComputeMovingFrames(
 
     // Get derivative at geometry points
     DerivStorage deriv = ComputeDeriv(keyTgt);
-
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmp(MFdim);
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmp(m_coordDim);
 
     // Compute g_{ij} as t_i \cdot t_j and store in tmp
-    for (i = 0; i < MFdim; ++i)
+    for (i = 0; i < m_coordDim; ++i)
+    {
+        MFtmp[i] = Array<OneD, Array<OneD, NekDouble>>(m_coordDim);
+        for (k = 0; k < m_coordDim; ++k)
+        {
+            MFtmp[i][k] = Array<OneD, NekDouble>(nq,0.0);
+        }
+    }
+
+    // Compute g_{ij} as t_i \cdot t_j and store in tmp
+    for (i = 0; i < m_expDim; ++i)
+    {
+        for (k = 0; k < m_coordDim; ++k)
+        {
+            if (m_type == eDeformed)
+            {
+                Vmath::Vcopy(ptsTgt, &deriv[i][k][0], 1, &MFtmp[i][k][0], 1);
+            }
+            else
+            {
+                Vmath::Fill(nq, deriv[i][k][0], MFtmp[i][k], 1);
+            }
+        }
+    }
+
+    // Construction of Connection
+    Array<OneD, NekDouble> one(nq, 1.0);
+    switch (MMFdir)
+    {
+        // projection to x-axis
+        case eTangentX:
+        {
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[0][0][0], 1);
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[1][1][0], 1);
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[2][2][0], 1);
+        }
+        break;
+
+        case eTangentY:
+        {
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[0][1][0], 1);
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[1][2][0], 1);
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[2][0][0], 1);
+        }
+        break;
+
+        default:
+        break;
+    }
+
+    // Finalizing the construction of moving frames
+    for (i = 0; i < m_coordDim; ++i)
+    {
+        for (k = 0; k < m_coordDim; ++k)
+        {
+            Vmath::Vcopy(nq, &MFtmp[i][k][0], 1,
+                         &movingframes[i * m_coordDim + k][0], 1);
+        }
+    }
+}
+
+
+void GeomFactors::Compute2DMovingFrames(
+    const LibUtilities::PointsKeyVector &keyTgt,
+    const SpatialDomains::GeomMMF MMFdir,
+    const Array<OneD, const NekDouble> &factors,
+    Array<OneD, Array<OneD, NekDouble>> &movingframes)
+{
+    ASSERTL1(keyTgt.size() == m_expDim,
+             "Dimension of target point distribution does not match "
+             "expansion dimension.");
+
+    int i = 0, k = 0;
+    int ptsTgt = 1;
+    int nq     = 1;
+    
+    for (i = 0; i < m_expDim; ++i)
+    {
+        nq *= keyTgt[i].GetNumPoints();
+    }
+
+    if (m_type == eDeformed)
+    {
+        // Allocate storage and compute number of points
+        for (i = 0; i < m_expDim; ++i)
+        {
+            ptsTgt *= keyTgt[i].GetNumPoints();
+        }
+    }
+
+    // Get derivative at geometry points
+    DerivStorage deriv = ComputeDeriv(keyTgt);
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmp(m_coordDim);
+
+    // Compute g_{ij} as t_i \cdot t_j and store in tmp
+    for (i = 0; i < m_coordDim; ++i)
     {
         MFtmp[i] = Array<OneD, Array<OneD, NekDouble>>(m_coordDim);
         for (k = 0; k < m_coordDim; ++k)
@@ -501,7 +587,7 @@ void GeomFactors::ComputeMovingFrames(
     }
 
     // Compute g_{ij} as t_i \cdot t_j and store in tmp
-    for (i = 0; i < MFdim - 1; ++i)
+    for (i = 0; i < m_expDim; ++i)
     {
         for (k = 0; k < m_coordDim; ++k)
         {
@@ -629,7 +715,7 @@ void GeomFactors::ComputeMovingFrames(
     // Normalizing MF2
     VectorNormalise(MFtmp[1]);
 
-    for (i = 0; i < MFdim; ++i)
+    for (i = 0; i < m_coordDim; ++i)
     {
         for (k = 0; k < m_coordDim; ++k)
         {

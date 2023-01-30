@@ -1,0 +1,19 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/MMFNeuralEP-obj.dir/NeuronModels/FitzhughNagumo.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/NeuronModels/FrankenHuxley.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/NeuronModels/HodgkinHuxley.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/NeuronModels/NeuronModel.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/Protocol.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/ProtocolS1.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/ProtocolS1S2.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/ProtocolSingle.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/Stimulus.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/StimulusCircle.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/StimulusPoint.cpp.o"
+  "CMakeFiles/MMFNeuralEP-obj.dir/__/CardiacEPSolver/Stimuli/StimulusRect.cpp.o"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/MMFNeuralEP-obj.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

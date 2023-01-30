@@ -64,8 +64,12 @@ StimulusRect::StimulusRect(const LibUtilities::SessionReaderSharedPtr &pSession,
     m_session = pSession;
     m_field   = pField;
     m_nq      = pField->GetTotPoints();
-    m_chiCapMembrane =
-        m_session->GetParameter("chi") * m_session->GetParameter("Cm");
+
+    NekDouble chi, Cm;
+    m_session->LoadParameter("Chi", chi, 28.0);
+    m_session->LoadParameter("Cm", Cm, 0.125);
+
+    m_chiCapMembrane = chi * Cm;
 
     if (!pXml)
     {
@@ -74,6 +78,7 @@ StimulusRect::StimulusRect(const LibUtilities::SessionReaderSharedPtr &pSession,
 
     const TiXmlElement *pXmlparameter;
 
+    // Get the dimension of the expansion
     pXmlparameter = pXml->FirstChildElement("p_x1");
     m_px1         = atof(pXmlparameter->GetText());
 
@@ -117,8 +122,7 @@ void StimulusRect::v_Update(Array<OneD, Array<OneD, NekDouble>> &outarray,
         return;
     }
 
-    // Get the dimension of the expansion
-    int dim = m_field->GetCoordim(0);
+    int dim = m_field->GetShapeDimension();
 
     // Retrieve coordinates of quadrature points
     int nq = m_field->GetNpoints();

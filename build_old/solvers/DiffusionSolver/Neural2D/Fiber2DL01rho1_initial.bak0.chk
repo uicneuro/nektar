@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>828f440f29615d8b8a01626b3e07fbe328472641</GitSHA1>
+            <Hostname>laurel.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>20-Jan-2023 15:37:57</Timestamp>
+        </Provenance>
+        <ChkFileNum>0</ChkFileNum>
+        <SessionName0>Fiber2DL01rho1.opt</SessionName0>
+        <SessionName1>Fiber2DL01rho1.xml</SessionName1>
+        <Time>0</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="um,ue" SHAPE="Triangle" BASIS="Modified_A,Modified_B" NUMMODESPERDIR="UNIORDER:4,4" ID="0-107" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAADArwFDgAAB</ELEMENTS>
+</NEKTAR>

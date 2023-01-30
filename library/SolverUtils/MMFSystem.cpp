@@ -54,33 +54,11 @@ void MMFSystem::MMFInitObject(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
     const Array<OneD, const NekDouble> &AniDirection)
 {
-
     m_pi       = 3.14159265358979323846;
     m_shapedim = m_expdim;
     m_mfdim    = 3;
 
     ASSERTL0(m_spacedim == 3, "Space Dimension should be 3");
-
-    // Rebuild moving frames with given values of K1, K2, K3?
-    // m_session->LoadParameter("REBUILDMF", m_REBUILDMF, 0);
-    // Define MMFOrderType
-    if (m_session->DefinesSolverInfo("MMFORDER"))
-    {
-        std::string MMFOrderStr;
-        MMFOrderStr = m_session->GetSolverInfo("MMFORDER");
-        for (int i = 0; i < (int)SIZE_MMFOrderType; ++i)
-        {
-            if (MMFOrderMap[i] == MMFOrderStr)
-            {
-                m_MMFOrder = (MMFOrder)i;
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_MMFOrder = (MMFOrder)0;
-    }
 
     // Define MMFOrderType
     if (m_session->DefinesSolverInfo("DerivType"))
@@ -98,7 +76,7 @@ void MMFSystem::MMFInitObject(
     else
     {
         m_DerivType = (DerivType)0;
-    }
+    }           
 
     // Define SurfaceType
     if (m_session->DefinesSolverInfo("SURFACETYPE"))
@@ -125,6 +103,9 @@ void MMFSystem::MMFInitObject(
         m_session->LoadParameter("Rady", m_Rady, 1.0);
         m_session->LoadParameter("Radz", m_Radz, 1.0);
     }
+
+        std::cout << "MMFINit 1" << std::endl;
+
 
     // Define Gradient Location Type
     if (m_session->DefinesSolverInfo("GRADLOCTYPE"))
@@ -175,6 +156,7 @@ void MMFSystem::MMFInitObject(
     {
         m_MediumType = (MediumType)0;
     }
+        std::cout << "MMFINit 2" << std::endl;
 
     m_session->LoadParameter("SphereExactRadius", m_SphereExactRadius, 1.0);
 
@@ -208,11 +190,11 @@ void MMFSystem::MMFInitObject(
     m_session->LoadParameter("Incfreq", m_Incfreq, 1.0);
 
     // SmoothFactor
-    m_session->LoadParameter("SmoothFactor", m_SmoothFactor, 1);
     m_session->LoadParameter("SFinit", m_SFinit, 0.0);
 
     // boost::ignore_unused(AniStrength, AniDirection);
     int nq = m_fields[0]->GetNpoints();
+        std::cout << "MMFINit 3" << std::endl;
 
     // if 1D, computed trajectory length from the left botom to right top.
     if (m_expdim == 1)
@@ -235,6 +217,7 @@ void MMFSystem::MMFInitObject(
             m_seglength[i] = totlength;
         }
     }
+        std::cout << "MMFINit 4" << std::endl;
 
     switch (m_surfaceType)
     {
@@ -280,7 +263,10 @@ void MMFSystem::MMFInitObject(
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
 
+    std::cout << "MMFINit 5" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
+
+    std::cout << "MMFINit 6" << std::endl;
 
     ComputeMFtrace(m_movingframes, m_MFtraceFwd, m_MFtraceBwd);
 
@@ -464,18 +450,15 @@ void MMFSystem::ConstructSphericalMF(
     NekDouble Tol = 0.1;
     Array<OneD, NekDouble> radvec;
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
-        radvec = Array<OneD, NekDouble>(nptsj);
-        for (int j = 0; j < nptsj; ++j)
+        radvec = Array<OneD, NekDouble>(m_fields[0]->GetTotPoints(i));
+
+        // j iteration
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             xp = x0[indexj];
             yp = x1[indexj];
@@ -501,9 +484,10 @@ void MMFSystem::ConstructSphericalMF(
         // \theta \in [0, \pi], \varphi = [0, 2 \pi]
         // if (fabs(zpavg) < m_SphereExactRadius * (1.0 - Tol))
 
-        for (int k = 0; k < nptsj; ++k)
+        // k iteration
+        for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
         {
-            indexk = EWIndex[i][k];
+            indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
             xp = x0[indexk];
             yp = x1[indexk];
@@ -512,7 +496,7 @@ void MMFSystem::ConstructSphericalMF(
             CartesianToNewSpherical(xp, yp, zp, sin_varphi, cos_varphi,
                                     sin_theta, cos_theta);
 
-            if (Vmath::Vmin(nptsj, radvec, 1) > Tol)
+            if (Vmath::Vmin(m_fields[0]->GetTotPoints(i), radvec, 1) > Tol)
             {
                 SphereMFActivate[indexk] = 1;
             }
@@ -564,19 +548,14 @@ void MMFSystem::ConstructPseudosphericalMF(
     NekDouble Tol = 0.001;
     int flag;
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         flag = 0;
-
-        for (int j = 0; j < nptsj; ++j)
+        
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             xp = x0[indexj];
             yp = x1[indexj];
@@ -588,9 +567,9 @@ void MMFSystem::ConstructPseudosphericalMF(
             }
         }
 
-        for (int k = 0; k < nptsj; ++k)
+        for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
         {
-            indexk = EWIndex[i][k];
+            indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
             xp = x0[indexk];
             yp = x1[indexk];
@@ -656,19 +635,14 @@ void MMFSystem::ConstructEllipticalMF(
     NekDouble Tol = 0.1;
     Array<OneD, NekDouble> radvec;
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
     NekDouble tmpx, tmpy, tmpz, mag;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
-        radvec = Array<OneD, NekDouble>(nptsj);
-        for (int j = 0; j < nptsj; ++j)
+        radvec = Array<OneD, NekDouble>(m_fields[0]->GetTotPoints(i));
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             xp = x0[indexj];
             yp = x1[indexj];
@@ -694,9 +668,9 @@ void MMFSystem::ConstructEllipticalMF(
         // \theta \in [0, \pi], \varphi = [0, 2 \pi]
         // if (fabs(zpavg) < m_SphereExactRadius * (1.0 - Tol))
 
-        for (int k = 0; k < nptsj; ++k)
+        for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
         {
-            indexk = EWIndex[i][k];
+            indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
             xp = x0[indexk];
             yp = x1[indexk];
@@ -705,7 +679,7 @@ void MMFSystem::ConstructEllipticalMF(
             CartesianToElliptical(xp, yp, zp, rad, sin_varphi, cos_varphi,
                                   sin_theta, cos_theta);
 
-            if (Vmath::Vmin(nptsj, radvec, 1) > Tol)
+            if (Vmath::Vmin(m_fields[0]->GetTotPoints(i), radvec, 1) > Tol)
             {
                 EllipticalMFActivate[indexk] = 1;
             }
@@ -845,19 +819,14 @@ void MMFSystem::ConstructPolarMF(Array<OneD, Array<OneD, NekDouble>> &PolarMF,
 
     PolarMFActivate = Array<OneD, int>(nq, 0);
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
     int cnt = 0;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
-        radvec = Array<OneD, NekDouble>(nptsj, 0.0);
-        for (int j = 0; j < nptsj; ++j)
+        radvec = Array<OneD, NekDouble>(m_fields[0]->GetTotPoints(i), 0.0);
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             xp = x0[indexj];
             yp = x1[indexj];
@@ -869,11 +838,11 @@ void MMFSystem::ConstructPolarMF(Array<OneD, Array<OneD, NekDouble>> &PolarMF,
         // y = r \sin \theta \sin \varphi
         // z = r \cos \theta
         // \theta \in [0, \pi], \varphi = [0, 2 \pi]
-        if (Vmath::Vmin(nptsj, radvec, 1) > Tol)
+        if (Vmath::Vmin(m_fields[0]->GetTotPoints(i), radvec, 1) > Tol)
         {
-            for (int k = 0; k < nptsj; ++k)
+            for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
             {
-                indexk = EWIndex[i][k];
+                indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
                 xp = x0[indexk];
                 yp = x1[indexk];
@@ -899,7 +868,7 @@ void MMFSystem::ConstructPolarMF(Array<OneD, Array<OneD, NekDouble>> &PolarMF,
         }
     }
 
-    std::cout << "Polar Activation = " << cnt << " / " << Nelemtj << std::endl;
+    std::cout << "Polar Activation = " << cnt << " / " << m_fields[0]->GetExpSize() << std::endl;
 }
 
 void MMFSystem::ComputeCurl(
@@ -982,7 +951,6 @@ void MMFSystem::SetUpMovingFrames(
                         &m_movingframes[j][k * nq], 1);
         }
     }
-
     // Test the moving frames
     CheckMovingFrames(m_movingframes);
 }
@@ -1016,7 +984,6 @@ void MMFSystem::SetUpMovingFrames(
     m_session->LoadParameter("MMFCircCentreY", m_MMFfactors[3], 0.0);
 
     // Get LOCAL moving frames such that \nabla \cdot e^i is the minimum
-    GetLOCALMovingframes(movingframes);
     // m_fields[0]->GetMovingFrames(m_MMFdir, m_MMFfactors, movingframes);
 
     // Further alignment of moving frames
@@ -1074,15 +1041,26 @@ void MMFSystem::SetUpMovingFrames(
         }
         break;
 
+        case SpatialDomains::eLOCAL:
+        {
+            GetLOCALMovingframes(movingframes);
+        }
+        break;
+
         case SpatialDomains::eLOCALSphere:
         case SpatialDomains::eLOCALEllipsoid:
         {
+            GetLOCALMovingframes(movingframes);
             ComputeAxisAlignedLOCALMovingframes(m_sphereMF, movingframes);
         }
         break;
 
         default:
         {
+                std::cout << "GetMovingFrames: BEFORE" << std::endl;
+            m_fields[0]->GetMovingFrames(MMFdir, m_MMFfactors, movingframes);
+                            std::cout << "GetMovingFrames: AFTER" << std::endl;
+
         }
         break;
     }
@@ -1094,21 +1072,21 @@ void MMFSystem::SetUpMovingFrames(
     // if (m_MediumType == eAnisotropy || m_MediumType ==
     // eHeterogeneousAnisotropy )
 
-    if (AniDirection != NullNekDouble1DArray)
+    if(m_ImportedFiberExist)
     {
         std::cout << "Moving frames are aligned along a specific direction "
-                     "============"
-                  << std::endl;
+            "============"
+        << std::endl;
 
         Array<OneD, NekDouble> AniConstruction(nq, 1.0);
         ConstructAnisotropicFrames(AniDirection, movingframes, AniConstruction);
 
         std::cout << "AniConstruction = "
-                  << 100 * RootMeanSquare(AniConstruction)
-                  << " % activated, Anistrength[0]: max = "
-                  << Vmath::Vmax(nq, Anistrength[0], 1)
-                  << ", min = " << Vmath::Vmin(nq, Anistrength[0], 1)
-                  << std::endl;
+                << 100 * RootMeanSquare(AniConstruction)
+                << "  activated, Anistrength[0]: max = "
+                << Vmath::Vmax(nq, Anistrength[0], 1)
+                << ", min = " << Vmath::Vmin(nq, Anistrength[0], 1)
+                << std::endl;
     }
 
     // Multiply Anisotropic magnitude to moving frames
@@ -1337,22 +1315,15 @@ void MMFSystem::GetLOCALMovingframes3D(
     }
 
     // Elementwise comparison
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
-
-    // NekDouble DivMF1sum, DivMF2sum, DivMF3sum;
     Array<OneD, NekDouble> DivMFsum(m_mfdim);
     int MF1cnt = 0, MF2cnt = 0, MF0cnt = 0;
     int MFINDEX = 0, indexj;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         DivMFsum = Array<OneD, NekDouble>(m_mfdim, 0.0);
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             // For each element, compute \sqrt{Dx^2 + Dy^2}
             for (int k = 0; k < m_mfdim; ++k)
@@ -1395,18 +1366,17 @@ void MMFSystem::GetLOCALMovingframes3D(
         // Use such Index for the local frames
         for (int k = 0; k < m_mfdim; ++k)
         {
-            for (int j = 0; j < nptsj; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                indexj = EWIndex[i][j];
+                indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
                 movingframes[k][indexj]      = MF[MFINDEX][k][indexj];
                 movingframes[k][indexj + nq] = MF[MFINDEX][k][indexj + nq];
-                movingframes[k][indexj + 2 * nq] =
-                    MF[MFINDEX][k][indexj + 2 * nq];
+                movingframes[k][indexj + 2 * nq] = MF[MFINDEX][k][indexj + 2 * nq];
             }
         }
     }
-
+    
     // Simple orientation check if e^3 is away from zero. origin = (0,0,0)
     CheckMFOrientation(movingframes);
 
@@ -1414,7 +1384,8 @@ void MMFSystem::GetLOCALMovingframes3D(
               << "D MF: "
                  "***********************************************************"
               << std::endl;
-    std::cout << "LOCAL construction for " << Nelemtj
+
+    std::cout << "LOCAL construction for " << m_fields[0]->GetExpSize()
               << " elements, adapated from MF1 = " << MF0cnt
               << ", MF2 = " << MF1cnt << ", MF3 = " << MF2cnt << std::endl;
 }
@@ -1426,11 +1397,6 @@ void MMFSystem::ConstructAnisotropicFrames(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
     int fibreElemnt = 0, cntflipped = 0;
     int verticalfibre = 0, crossingfibre = 0;
@@ -1448,7 +1414,7 @@ void MMFSystem::ConstructAnisotropicFrames(
     NekDouble magTol    = 0.1;
     NekDouble e1ProjErr = 0.0;
     int FibreConstruction;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         // Change moving frames along fibre direction if fibre exist for
         // all points for the element
@@ -1456,9 +1422,9 @@ void MMFSystem::ConstructAnisotropicFrames(
         fxavg             = 0.0;
         fyavg             = 0.0;
         fzavg             = 0.0;
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             fx = AniDirection[indexj];
             fy = AniDirection[indexj + nq];
@@ -1488,9 +1454,9 @@ void MMFSystem::ConstructAnisotropicFrames(
                 FibreConstruction = -1;
             }
 
-            for (int k = j; k < nptsj; ++k)
+            for (int k = j; k < m_fields[0]->GetTotPoints(i); ++k)
             {
-                indexk = EWIndex[i][k];
+                indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
                 ekx = AniDirection[indexk];
                 eky = AniDirection[indexk + nq];
@@ -1525,9 +1491,9 @@ void MMFSystem::ConstructAnisotropicFrames(
             crossingfibre++;
         }
 
-        fxavg = fxavg / nptsj;
-        fyavg = fyavg / nptsj;
-        fzavg = fzavg / nptsj;
+        fxavg = fxavg / m_fields[0]->GetTotPoints(i);
+        fyavg = fyavg / m_fields[0]->GetTotPoints(i);
+        fzavg = fzavg / m_fields[0]->GetTotPoints(i);
 
         // If fibre's magnitude is too small, i.e.,
         // if it is aligned along the normal direction, then do not
@@ -1536,9 +1502,9 @@ void MMFSystem::ConstructAnisotropicFrames(
         {
             fibreElemnt++;
 
-            for (int k = 0; k < nptsj; ++k)
+            for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
             {
-                indexk = EWIndex[i][k];
+                indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
                 fx = AniDirection[indexk];
                 fy = AniDirection[indexk + nq];
@@ -1598,22 +1564,22 @@ void MMFSystem::ConstructAnisotropicFrames(
 
     int Nondifferentiable = 0, indj = 0, indk = 0;
     int cnt = 0;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
         Nondifferentiable = 0;
         ejcdotekmin       = 1.0;
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             ejx = movingframes[0][indexj];
             ejy = movingframes[0][indexj + nq];
             ejz = movingframes[0][indexj + 2 * nq];
 
             magej = sqrt(ejx * ejx + ejy * ejy + ejz * ejz);
-            for (int k = j; k < nptsj; ++k)
+            for (int k = j; k < m_fields[0]->GetTotPoints(i); ++k)
             {
-                indexk = EWIndex[i][k];
+                indexk = m_fields[0]->GetPhys_Offset(i) + k;
 
                 ekx = movingframes[0][indexk];
                 eky = movingframes[0][indexk + nq];
@@ -1641,9 +1607,9 @@ void MMFSystem::ConstructAnisotropicFrames(
             cnt++;
             std::cout << "Nel = " << i << ", min. dot = " << ejcdotekmin
                       << " at j = " << indj << ", k = " << indk << std::endl;
-            for (int j = 0; j < nptsj; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                indexj = EWIndex[i][j];
+                indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
                 ejx = movingframes[0][indexj];
                 ejy = movingframes[0][indexj + nq];
@@ -1671,8 +1637,8 @@ void MMFSystem::ConstructAnisotropicFrames(
 
     e1ProjErr = e1ProjErr / nq;
 
-    NekDouble fibreconstr = 1.0 * fibreElemnt / Nelemtj * 100.0;
-    std::cout << "Total " << fibreElemnt << " / " << Nelemtj << " ( "
+    NekDouble fibreconstr = 1.0 * fibreElemnt / m_fields[0]->GetTotPoints(0) * 100.0;
+    std::cout << "Total " << fibreElemnt << " / " << m_fields[0]->GetTotPoints(0) << " ( "
               << fibreconstr << " % ) "
               << " elements are aligned along the fibre direction, "
                  "fiber_Proj_err = "
@@ -6208,27 +6174,22 @@ Array<OneD, NekDouble> MMFSystem::ComputeJacobianAvg(
 
     m_fields[0]->GetCoords(x, y, z);
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int ind;
     NekDouble sum;
 
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
         sum = 0.0;
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            ind = EWIndex[i][j];
+            ind = m_fields[0]->GetPhys_Offset(i) + j;
             sum += Jacobian[ind];
         }
-        sum = sum / nptsj;
+        sum = sum / m_fields[0]->GetTotPoints(i);
 
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            ind           = EWIndex[i][j];
+            ind           = m_fields[0]->GetPhys_Offset(i) + j;
             outarray[ind] = sum;
         }
     }
@@ -7022,22 +6983,17 @@ Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
 {
     int nq = GetTotPoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
     Array<OneD, int> outarray(nq, 1);
 
     int TMflag, index;
-    int Nelemtj         = EWIndex.size();
-    int nptsj           = EWIndex[0].size();
     int cnt             = 0;
     const NekDouble Tol = 0.1;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
         TMflag = 0;
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
             if ((fabs(inarray[index]) > Tol) || (m_MMFActivation[index] == 0))
             {
                 TMflag = 1;
@@ -7046,9 +7002,9 @@ Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
 
         if (TMflag == 1)
         {
-            for (int j = 0; j < nptsj; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                index           = EWIndex[i][j];
+                index           = m_fields[0]->GetPhys_Offset(i) + j;
                 outarray[index] = 0;
                 cnt++;
             }
@@ -7297,28 +7253,23 @@ Array<OneD, NekDouble> MMFSystem::ComputeLambDiv(
     // HelmSolveSmoothing(m_LambDivSmoothL, LambDiv);
 
     // Find a large LambDiv
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int index, Lambflag;
     NekDouble LambDivTol = 10.0;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
         Lambflag = 0;
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
             if (fabs(LambDiv[index]) > LambDivTol)
             {
                 Lambflag = 1;
             }
         }
 
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
             if (Lambflag == 1)
             {
                 LambDiv[index] = LambDivTol;
@@ -7671,19 +7622,14 @@ void MMFSystem::VectorCutOff(const NekDouble Tol,
 {
     int nq = m_fields[0]->GetTotPoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int index, Velmagflag = 0;
     NekDouble vx, vy, vz, velmag;
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
         Velmagflag = 0;
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
 
             vx = vector[index];
             vy = vector[index + nq];
@@ -7699,9 +7645,9 @@ void MMFSystem::VectorCutOff(const NekDouble Tol,
 
         if (Velmagflag == 1)
         {
-            for (int j = 0; j < nptsj; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                index                  = EWIndex[i][j];
+                index                  = m_fields[0]->GetPhys_Offset(i) + j;
                 vector[index]          = 0.0;
                 vector[index + nq]     = 0.0;
                 vector[index + 2 * nq] = 0.0;
@@ -9051,25 +8997,19 @@ void MMFSystem::ActivateRegion(
 
     // Compare outarray and outarraynew one by one. If the difference is
     // more than tolerance, set ActNow = 0 again
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
-
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
             // When \| \vec{E}_0 - \vec{E}_{new} \| > Tol, where Tol =
             // ANF*dt to be independent of timestep
             if (ZoneActivation[indexj] == 0)
             {
-                for (int k = 0; k < nptsj; ++k)
+                for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
                 {
-                    indexk            = EWIndex[i][k];
+                    indexk            = m_fields[0]->GetPhys_Offset(i) + k;
                     Activated[indexk] = 0;
 
                     // Retrieve the original moving frames
@@ -9189,23 +9129,18 @@ int MMFSystem::NewValueReplacerElementWise(
 {
     int nq = GetTotPoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-    int Nelemt = EWIndex.size();
-    int npts   = EWIndex[0].size();
-
     Array<OneD, int> NewActivated(nq);
 
     Vmath::Vcopy(nq, Activated, 1, NewActivated, 1);
 
     int index, Voting;
     bool Voting_Yes;
-    for (int i = 0; i < Nelemt; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         Voting = 0;
-        for (int j = 0; j < npts; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
             if (Activated[index])
             {
                 Voting_Yes = false;
@@ -9241,11 +9176,11 @@ int MMFSystem::NewValueReplacerElementWise(
 
         // Activated if Intensity is larger than Intensity History at
         // all points
-        if (Voting < npts)
+        if (Voting < m_fields[0]->GetTotPoints(i))
         {
-            for (int j = 0; j < npts; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                index               = EWIndex[i][j];
+                index               = m_fields[0]->GetPhys_Offset(i) + j;
                 NewActivated[index] = 0;
             }
         }
@@ -9290,21 +9225,16 @@ int MMFSystem::NewValueReplacerPointWise(
 {
     int nq = GetTotPoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-    int Nelemt = EWIndex.size();
-    int npts   = EWIndex[0].size();
-
     Array<OneD, int> NewActivated(nq);
 
     Vmath::Vcopy(nq, Activated, 1, NewActivated, 1);
 
     int index;
-    for (int i = 0; i < Nelemt; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
-        for (int j = 0; j < npts; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
             if (Activated[index])
             {
                 // Stronger Replacer
@@ -9461,22 +9391,17 @@ int MMFSystem::WeakerValueReplacer(
 {
     int nq = GetTotPoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-    int Nelemt = EWIndex.size();
-    int npts   = EWIndex[0].size();
-
     Array<OneD, int> NewActivated(nq);
 
     Vmath::Vcopy(nq, Activated, 1, NewActivated, 1);
 
     int index, Voting;
-    for (int i = 0; i < Nelemt; ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         Voting = 0;
-        for (int j = 0; j < npts; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index = EWIndex[i][j];
+            index = m_fields[0]->GetPhys_Offset(i) + j;
             if (Activated[index])
             {
                 // If it is the first time, then, we count it
@@ -9494,11 +9419,11 @@ int MMFSystem::WeakerValueReplacer(
 
         // Activated if Intensity is larger than Intensity History at
         // all points
-        if (Voting < npts)
+        if (Voting < m_fields[0]->GetTotPoints(i))
         {
-            for (int j = 0; j < npts; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                index               = EWIndex[i][j];
+                index               = m_fields[0]->GetPhys_Offset(i) + j;
                 NewActivated[index] = 0;
             }
         }
@@ -9542,27 +9467,21 @@ void MMFSystem::ValidateNewFrames(
 
     // Compare outarray and outarraynew one by one. If the difference is
     // more than tolerance, set ActNow = 0 again
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
     int indexj, indexk;
-
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            indexj = EWIndex[i][j];
+            indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             // When \| \vec{E}_0 - \vec{E}_{new} \| > Tol, where Tol =
             // ANF*dt to be independent of timestep If vecdiff < 0 is
             // the case when dE/dt or dH/dt is too small
             if (vecdiff[indexj] > AdaptNewFramesToldt)
             {
-                for (int k = 0; k < nptsj; ++k)
+                for (int k = 0; k < m_fields[0]->GetTotPoints(i); ++k)
                 {
-                    indexk            = EWIndex[i][k];
+                    indexk            = m_fields[0]->GetPhys_Offset(i) + k;
                     Activated[indexk] = 0;
 
                     // Retrieve the original moving frames
@@ -11936,11 +11855,13 @@ void MMFSystem::ComputeVarCoeff1D(
     StdRegions::VarCoeffType MMFCoeffs[3] = {StdRegions::eVarCoeffD00,
                                              StdRegions::eVarCoeffD11,
                                              StdRegions::eVarCoeffD22};
+                std::cout << "ComputeVarCoeff1D 1 " << std::endl;
 
     for (int k = 0; k < m_mfdim; ++k)
     {
         varcoeff[MMFCoeffs[k]] = Array<OneD, NekDouble>(nq, 0.0);
     }
+                std::cout << "ComputeVarCoeff1D 2 " << std::endl;
 
     Array<OneD, NekDouble> tmp(nq, 0.0);
     for (int k = 0; k < m_spacedim; ++k)
@@ -11948,6 +11869,7 @@ void MMFSystem::ComputeVarCoeff1D(
         Vmath::Vvtvp(nq, &movingframes[0][k * nq], 1, &movingframes[0][k * nq],
                      1, &tmp[0], 1, &tmp[0], 1);
     }
+                std::cout << "ComputeVarCoeff1D 3 " << std::endl;
 
     Vmath::Vsqrt(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[0]][0], 1);
 
@@ -12098,34 +12020,28 @@ Array<OneD, NekDouble> MMFSystem::ElementwiseAverage(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, int>> EWIndex;
-    m_fields[0]->GridIndexElementWise(EWIndex);
-
-    int Nelemtj = EWIndex.size();
-    int nptsj   = EWIndex[0].size();
-
     Array<OneD, NekDouble> outarray(nq, 0.0);
 
     int index;
     NekDouble Avg, Avgjac;
     Array<OneD, NekDouble> inarrayelemt(nq);
     Array<OneD, NekDouble> jacelemt(nq);
-    for (int i = 0; i < Nelemtj; ++i)
+    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
     {
         Vmath::Fill(nq, 0.0, inarrayelemt, 1);
         Vmath::Fill(nq, 0.0, jacelemt, 1);
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index               = EWIndex[i][j];
+            index               = m_fields[0]->GetPhys_Offset(i) + j;
             inarrayelemt[index] = inarray[index];
             jacelemt[index]     = 1.0;
         }
         Avgjac = m_fields[0]->PhysIntegral(jacelemt);
         Avg    = (m_fields[0]->PhysIntegral(inarrayelemt)) / Avgjac;
 
-        for (int j = 0; j < nptsj; ++j)
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
-            index           = EWIndex[i][j];
+            index           = m_fields[0]->GetPhys_Offset(i) + j;
             outarray[index] = Avg;
         }
     }
@@ -12192,29 +12108,23 @@ void MMFSystem::GenerateHHDPlot(const int nstep)
 
         m_fields[0]->GetCoords(x0, x1, x2);
 
-        Array<OneD, Array<OneD, int>> EWIndex;
-        m_fields[0]->GridIndexElementWise(EWIndex);
-
-        int Nelemtj = EWIndex.size();
-        int nptsj   = EWIndex[0].size();
-
         int indexj, Ncnt       = 0;
         NekDouble zpavg, zpTol = 5.0;
-        for (int i = 0; i < Nelemtj; ++i)
+        for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
         {
             zpavg = 0.0;
-            for (int j = 0; j < nptsj; ++j)
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
-                indexj = EWIndex[i][j];
+                indexj = m_fields[0]->GetPhys_Offset(i) + j;
                 zpavg += x2[indexj];
             }
-            zpavg = zpavg / nptsj;
+            zpavg = zpavg / m_fields[0]->GetTotPoints(i);
 
             if (zpavg < zpTol)
             {
-                for (int j = 0; j < nptsj; ++j)
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                 {
-                    indexj                 = EWIndex[i][j];
+                    indexj                 = m_fields[0]->GetPhys_Offset(i) + j;
                     MFvec[indexj]          = 0.0;
                     MFvec[indexj + nq]     = 0.0;
                     MFvec[indexj + 2 * nq] = 0.0;
@@ -14276,7 +14186,6 @@ void MMFSystem::v_GenerateSummary(SummaryList &s)
     int nq = m_fields[0]->GetNpoints();
     UnsteadySystem::v_GenerateSummary(s);
 
-    AddSummaryItem(s, "MMFOrder", MMFOrderMap[m_MMFOrder]);
     AddSummaryItem(s, "Surface", SurfaceTypeMap[m_surfaceType]);
     if (m_expdim == 1)
     {

@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/schun/nektar/build/CMakeFiles/tinyxml-2.6.2"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/CMakeFiles/tinyxml-2.6.2.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/CMakeFiles/tinyxml-2.6.2-complete.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-install.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-mkdir.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-download.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-update.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-patch.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-configure.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/tinyxml-2.6.2-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"tinyxml-2.6.2"
+		],
+		"name" : "tinyxml-2.6.2"
+	}
+}

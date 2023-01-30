@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>828f440f29615d8b8a01626b3e07fbe328472641</GitSHA1>
+            <Hostname>laurel.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>23-Jan-2023 07:49:07</Timestamp>
+        </Provenance>
+        <ChkFileNum>1</ChkFileNum>
+        <SessionName0>Fiber2DL01mono.opt</SessionName0>
+        <SessionName1>Fiber2DL01mono.xml</SessionName1>
+        <Time>1.0000000000000004e-06</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="um" SHAPE="Triangle" BASIS="Modified_A,Modified_B" NUMMODESPERDIR="UNIORDER:4,4" ID="0-107" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">eJztWDtu3DAQ5RH2AAnAI2wtIICOkCMscgKWKlW4UJFiYbhQ4UIIAsNAUqRmpTLllin3CHsDx4Y1Q/HxjaSUAfQaQVzuaL5vhnRux44dO3bs2LHj/8Lt5eXHxw9fPl2n5/tqV8nv+brgXDkDtXM/3/Yfpuf7ahvlf0MmT+T0MX8X9NVl2l9n8gbZ//acrZ9j/hT8muSeoqf6hSh6eqp3C/JGkaf65XqEypAH9om9Y1yW91jN/v+z9B/KE3tDlPjl9graONJ4IEb1g8i55f+b+4f4TyBxS/rdqL0p//yivYjGkCf6tdWV6i1xOYN+J5WX2/vwj/EVhOpA868z/HfW74B+un8mh8rj9dtDXMTeRv3D+aCtlvNlkPyLosfnSS9P6+01szJ5GIdSP7HX0uNK1zEugqbi8RX/tTGXl3iM65nim8sL8zxbqA+U11R+2n+l8tB/vWGvxOOk8T3SfOkhn4e53kS/+3ik+ZfxOatDzGeN75H6T3kY6ndY8d/XitfHoP7heXSGOAv/BYMPrPqQ74j+A8jrNP+28UFrxEPkNZHbm+zxxvqkn8gr+M/R/oH1ZvVLQag4HzxJ/oF+yFPP0/sf7b/cf6k+/CKfCsr64PaekQ+Qn7GfG/NGAufn9L38/aT+AXvnemzgl9R/j1Resmek+rWQL+K/xFecX1A/tE9Qzgc3o09wvld74b1VPrDmWr5e5IvWx5Xq16/EA/lAEJQvLwbfO5rPaK/EI+g86Y06qBfjUfhP58VcntjbG/UheIb6aNQ/Vv0u93OsN4v/vlnyVua/1K832mvlczGvGTwC/RLzA+1N/dA6z/D5yuY/T+1Nc0BtzNX5+2WuN4lvr/r5xfoo+e9A9Vs9v2G/LPqbMf9BPFAeIhjzUNYfyHnBmq8arV+Dr6B+US+cj+50Ht82XyGK81HF7w8Sb/hN8RB0kfffTvfn8gTIB8let5IvjualhTYOVL/suyy+xvx3H/n9htXPh5jLQ3S6P++/Dwb/6ZwOz8R/vN4edT+Xh/PBb80XT/lvLR5Wvd3p92tj3sjXvxv6pX7uuH7qj9qua+K/oP1o4PMLzrvABziPN8b8ku5L6kV+EaT7Jkf5Ss8zOL+szBuNzou5fk9GfWA/x/uD106yeL9WyIN4INponBfU3m3nmVHje+H9w/Df2n1JMPg5s4ueIyZ5UG+Ncd+UeGnYxvdFP/Sb4oE8j/wXjPPCg/rdUz5A/ZK9jtqr9Qn1VvQjiI81T6bzvqfxMO+b1s4LhjzUS/LvTvntYNfBQv9A/3UG31v9A+c/Qcpnt8hXGF+B5b97jcfJmBs9zRe0d1T5fwHLSTvg</ELEMENTS>
+</NEKTAR>

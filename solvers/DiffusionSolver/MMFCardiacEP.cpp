@@ -32,25 +32,25 @@
 // Description: MMFCardiacEP.
 //
 ///////////////////////////////////////////////////////////////////////////////
-#include <boost/algorithm/string.hpp>
 #include <iomanip>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/math/special_functions/spherical_harmonic.hpp>
+
 #include <DiffusionSolver/EquationSystems/MMFCardiacEP.h>
 
 #include <CardiacEPSolver/Filters/FilterCellHistoryPoints.h>
 #include <CardiacEPSolver/Filters/FilterCheckpointCellModel.h>
+
 #include <SolverUtils/Driver.h>
+#include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
 
 #include <LibUtilities/BasicUtils/Timer.h>
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
-
 #include <LibUtilities/BasicUtils/SessionReader.h>
-#include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
-
-#include <boost/math/special_functions/spherical_harmonic.hpp>
 
 using namespace std;
 using namespace Nektar::SolverUtils;
@@ -282,9 +282,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         break;
     }
 
-    std::cout << " HERE 1, AniStrength = " << RootMeanSquare(AniStrength[0])
-              << std::endl;
-
     // plot Conductivity map
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -305,8 +302,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     m_fields[0]->FwdTrans(AniStrength[1], fieldcoeffs[1]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-
-    std::cout << " HERE 2" << std::endl;
 
     // Plot HHD
     // if (m_session->DefinesSolverInfo("GenerateHHDPlot"))
@@ -360,6 +355,7 @@ void MMFCardiacEP::LoadCardiacFiber(
     {
         case eAnisotropy:
         {
+            m_ImportedFiberExist = 1;
             AniStrength[0] = ReadFibermap(AnisotropyStrength, CardiacFibre);
         }
         break;
@@ -374,6 +370,7 @@ void MMFCardiacEP::LoadCardiacFiber(
 
         case eHeterogeneousAnisotropy:
         {
+            m_ImportedFiberExist = 1;
             AniStrength[0] = ReadFibermap(AnisotropyStrength, CardiacFibre);
 
             Array<OneD, NekDouble> tmp = ReadConductivityMap();
@@ -384,17 +381,12 @@ void MMFCardiacEP::LoadCardiacFiber(
 
         case eRegionalHeterogeneous:
         {
-            Array<OneD, Array<OneD, int>> EWIndex;
-            m_fields[0]->GridIndexElementWise(EWIndex);
-
-            int nptsj = EWIndex[0].size();
-
             int index;
             for (int i = 0; i < m_AnisotropyRegion; ++i)
             {
-                for (int j = 0; j < nptsj; ++j)
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                 {
-                    index                 = EWIndex[i][j];
+                    index                 = m_fields[0]->GetPhys_Offset(i) + j;
                     AniStrength[0][index] = AnisotropyStrength;
                 }
             }
@@ -518,7 +510,7 @@ void MMFCardiacEP::v_DoSolve()
 
         default:
         {
-            // DoSolveCurrent();
+            DoSolveMMF();
         }
         break;
     }
@@ -905,589 +897,135 @@ void MMFCardiacEP::DoSolveMMFFirst()
     }
 } // namespace Nektar
 
-// void MMFCardiacEP::DoSolveCurrent()
-// {
-//     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
+void MMFCardiacEP::DoSolveMMF()
+{
+    ASSERTL0(m_intScheme != 0, "No time integration scheme.");
+
+    int i, nchk = 1;
+    int nq         = GetTotPoints();
+    int ncoeffs    = GetNcoeffs();
+    int nvariables = 0;
+    int nfields    = m_fields.size();
+
+    if (m_intVariables.empty())
+    {
+        for (i = 0; i < nfields; ++i)
+        {
+            m_intVariables.push_back(i);
+        }
+        nvariables = nfields;
+    }
+    else
+    {
+        nvariables = m_intVariables.size();
+    }
+
+    // Set up wrapper to fields data storage.
+    Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
+
+    for (i = 0; i < nvariables; ++i)
+    {
+        fields[i] = m_fields[m_intVariables[i]]->GetPhys();
+        m_fields[m_intVariables[i]]->SetPhysState(false);
+    }
+
+    // Initialise time integration scheme
+    m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
+
+    // Check uniqueness of checkpoint output
+    ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
+                 (m_checktime > 0.0 && m_checksteps == 0) ||
+                 (m_checktime == 0.0 && m_checksteps > 0),
+             "Only one of IO_CheckTime and IO_CheckSteps "
+             "should be set!");
+
+    LibUtilities::Timer timer;
+    bool doCheckTime  = false;
+    int step          = 0;
+    NekDouble intTime = 0.0;
+    NekDouble cpuTime = 0.0;
+    NekDouble elapsed = 0.0;
+
+    Array<OneD, NekDouble> tmpc(ncoeffs);
+
+    Array<OneD, NekDouble> velmag(nq, 0.0);
+    Array<OneD, NekDouble> velocity(m_spacedim * nq);
+
+    // Aligh Moving Frames along the velocit vector
+    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
+    {
+        MF1st[i]    = Array<OneD, NekDouble>(m_spacedim * nq);
+    }
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    std::cout << "xmax = " << Vmath::Vmax(nq, x0, 1) << ", xmin = " << Vmath::Vmin(nq, x0, 1)
+    << ", ymax = " << Vmath::Vmax(nq, x1, 1) << ", ymin = " << Vmath::Vmin(nq, x1, 1) << std::endl;
+
+    while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
+    {
+        // field time integration
+        timer.Start();
+        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        timer.Stop();
+
+        m_time += m_timestep;
+        elapsed = timer.TimePerTest(1);
+        intTime += elapsed;
+        cpuTime += elapsed;
+
+        if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
+        {
+            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
+                      << " "
+                      << "Time: " << std::setw(12) << std::left << m_time
+                      << std::endl;
+
+            std::stringstream ss;
+            ss << cpuTime / 60.0 << " min.";
+            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+                      << std::endl;
+
+            cpuTime = 0.0;
+        }
+
+        // Write out checkpoint files
+        if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
+            doCheckTime)
+        {
+            int Iumax = Vmath::Iamax(nq, fields[0], 1);
+            std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
+                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
+                      << std::endl;
+
+            Checkpoint_Output(nchk++);
+            doCheckTime = false;
+        }
+
+        // Step advance
+        ++step;
+    } // namespace Nektar
+
+    // Print out summary statistics
+    if (m_session->GetComm()->GetRank() == 0)
+    {
+        std::cout << "Time-integration  : " << intTime << "s" << std::endl;
+    }
+
+    for (i = 0; i < nvariables; ++i)
+    {
+        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+        m_fields[m_intVariables[i]]->SetPhysState(true);
+        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
+                              m_fields[i]->UpdateCoeffs());
+    }
+} // namespace Nektar
 
-//     int i, nchk = 1;
-//     int nq         = GetTotPoints();
-//     int ncoeffs    = GetNcoeffs();
-//     int nvariables = 0;
-//     int nfields    = m_fields.size();
-
-//     if (m_intVariables.empty())
-//     {
-//         for (i = 0; i < nfields; ++i)
-//         {
-//             m_intVariables.push_back(i);
-//         }
-//         nvariables = nfields;
-//     }
-//     else
-//     {
-//         nvariables = m_intVariables.size();
-//     }
-
-//     // Set up wrapper to fields data storage.
-//     Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
-//     Array<OneD, Array<OneD, NekDouble>> fieldsold(nvariables);
-
-//     // Order storage to list time-integrated fields first.
-//     for (i = 0; i < nvariables; ++i)
-//     {
-//         fields[i] = m_fields[m_intVariables[i]]->GetPhys();
-//         m_fields[m_intVariables[i]]->SetPhysState(false);
-
-//         fieldsold[i] = Array<OneD, NekDouble>(nq);
-//     }
-
-//     // Initialise time integration scheme
-//     m_intSoln = m_intScheme->InitializeScheme(m_timestep, fields, m_time,
-//     m_ode);
-
-//     Array<OneD, Array<OneD, NekDouble>> fiberfields(m_nfibers);
-//     // Initialize fiber
-//     if(m_TestType==eNeuralEP2D)
-//     {
-//         for (int nfib = 0; nfib < m_nfibers; ++nfib)
-//         {
-//             fiberfields[nfib] = m_fiberfields[nfib]->GetPhys();
-//             m_fiberfields[nfib]->SetPhysState(false);
-
-//             m_fiberintSoln[nfib] = m_intScheme->InitializeScheme(m_timestep,
-//             fiberfields, m_time, m_fiberode[nfib]);
-//         }
-//     }
-
-//     // Check uniqueness of checkpoint output
-//     ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
-//                  (m_checktime > 0.0 && m_checksteps == 0) ||
-//                  (m_checktime == 0.0 && m_checksteps > 0),
-//              "Only one of IO_CheckTime and IO_CheckSteps "
-//              "should be set!");
-
-//     LibUtilities::Timer timer;
-//     bool doCheckTime  = false;
-//     int step          = 0;
-//     NekDouble intTime = 0.0;
-//     NekDouble cpuTime = 0.0;
-//     NekDouble elapsed = 0.0;
-
-//     Array<OneD, NekDouble> tmpc(ncoeffs);
-
-//     Array<OneD, NekDouble> velmag(nq, 0.0);
-//     Array<OneD, NekDouble> velocity(m_spacedim * nq);
-
-//     // Aligh Moving Frames along the velocit vector
-//     Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
-//     Array<OneD, Array<OneD, NekDouble>> MF1sttmp(m_spacedim);
-//     Array<OneD, Array<OneD, NekDouble>> MF1stAligned(m_spacedim);
-//     for (int i = 0; i < m_spacedim; ++i)
-//     {
-//         MF1st[i]    = Array<OneD, NekDouble>(m_spacedim * nq);
-//         MF1sttmp[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-
-//         MF1stAligned[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
-
-//         Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
-//         &MF1st[i][0], 1);
-//     }
-
-//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFfiber(m_nfibers);
-//     if(m_TestType==eNeuralEP2D)
-//     {
-//         for (int nfib = 0; nfib < m_nfibers; ++nfib)
-//         {
-//             int fnq = m_fiberfields[nfib]->GetNpoints();
-
-//             MFfiber[nfib] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
-//             for (int i = 0; i < m_spacedim; ++i)
-//             {
-//                 MFfiber[nfib][i] = Array<OneD, NekDouble>(m_spacedim * fnq);
-//             }
-//         }
-//     }
-
-//     // Connection 1-form
-//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>>
-//     MF1stConnection(m_mfdim); Array<OneD, Array<OneD, NekDouble>>
-//     MF1stCurvature(m_mfdim); for (int i = 0; i < m_mfdim; i++)
-//     {
-//         MF1stCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
-
-//         MF1stConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-//         for (int j = 0; j < m_mfdim; j++)
-//         {
-//             MF1stConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
-//         }
-//     }
-
-//     Array<OneD, int> ActivatedPre(nq, 0);
-//     Array<OneD, int> Activated(nq, 0);
-//     Array<OneD, int> ActivatedHistory(nq, 0);
-
-//     Array<OneD, NekDouble> VelmagHistory(nq, 0.0);
-//     Array<OneD, NekDouble> fieldHistory(nq, 0.0);
-
-//     Array<OneD, NekDouble> DivDiff(nq, 0.0);
-
-//     Array<OneD, NekDouble> dudtval(nq);
-//     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
-
-//     Array<OneD, int> dudt(nq);
-//     Array<OneD, int> APindex(nq, 1);
-
-//     Array<OneD, NekDouble> Laplacian(nq);
-//     Array<OneD, NekDouble> LaplacianNew(nq);
-
-//     Array<OneD, Array<OneD, NekDouble>> qfield(m_expdim);
-//     Array<OneD, Array<OneD, NekDouble>> qfieldNew(m_expdim);
-
-//     Array<OneD, NekDouble> TimeMap(nq, 0.0);
-//     Array<OneD, NekDouble> IappMap(nq, 0.0);
-//     Array<OneD, NekDouble> VelocityMap(m_spacedim*nq, 0.0);
-
-//     int totsteps = (m_steps + 1) / m_checksteps;
-//     Array<OneD, NekDouble> uval(totsteps, 0.0);
-//     Array<OneD, NekDouble> mval(totsteps, 0.0);
-//     Array<OneD, NekDouble> nval(totsteps, 0.0);
-//     Array<OneD, NekDouble> hval(totsteps, 0.0);
-//     Array<OneD, NekDouble> pval(totsteps, 0.0);
-
-//     Array<OneD, NekDouble> fieldoldchk(nq, 0.0);
-//     Array<OneD, NekDouble> fieldchkdiff(nq, 0.0);
-//     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
-//     {
-//         // Initialize Activated
-//         Activated = Array<OneD, int>(nq, 0);
-
-//         // Save fields into fieldsold
-//         for (i = 0; i < nvariables; ++i)
-//         {
-//             Vmath::Vcopy(nq, &fields[i][0], 1, &fieldsold[i][0], 1);
-//         }
-
-//         timer.Start();
-
-//         // field time integration
-//         fields = m_intScheme->TimeIntegrateMMF(step, m_timestep, m_intSoln,
-//         MF1st, m_ode);
-
-//         // fiberfields time integration
-//         if(m_TestType==eNeuralEP2D)
-//         {
-//             for (int nfib = 0; nfib < m_nfibers; ++nfib)
-//             {
-//                 fiberfields = m_intScheme->TimeIntegrateMMF(step, m_timestep,
-//                 m_fiberintSoln[nfib], m_fibermovingframes[nfib],
-//                 m_fiberode[nfib]);
-//             }
-//         }
-//         timer.Stop();
-
-//         m_time += m_timestep;
-//         elapsed = timer.TimePerTest(1);
-//         intTime += elapsed;
-//         cpuTime += elapsed;
-
-//         // Compute TimeMap
-//         // dudtsign: wavefront = -1.0, waveback = 1.0
-//         //  dudt = Computedudt(m_uTol, fields[0], fieldsold[0]);
-//         Vmath::Vsub(nq, fields[0], 1, fieldsold[0], 1, dudtval, 1);
-//         Vmath::Smul(nq, 1.0/m_timestep, dudtval, 1, dudtval, 1);
-
-//         // Smoothing dudt map for a smooth time map
-//         // HelmSolveSmoothing(m_TimeMapSmoothL, dudtval);
-//         // Vmath::Vmul(nq, m_ValidTimeMap, 1, dudtval, 1, dudtval, 1);
-
-//         // Compute Proper Time Map by weight integration of field.
-//         // TMmode = 0 (Gradient-weighted time)
-//         // Output = Propertimemap: time when the cell is excited.
-//         //          fieldHistory: sum of field is updated
-
-//         if( (m_TimeMapStart<=m_time) && (m_TimeMapEnd>=m_time) )
-//         {
-//             ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
-//             dudtvalHistory, IappMap, TimeMap);
-//         }
-
-//         // Aligning moving frames along the velocity vector
-//         if (m_MMFOrder == SolverUtils::eMMFFirst)
-//         {
-//             // For multiple waves, if dudt changes from positive to
-//             // negative, it is a peak to distinguish WB from WF. if dudt
-//             // changes from negative to a negligible magnitude or positive,
-//             // then it is another peak to change index of AP.
-//             // ComputedudtHistory(dudt, fields[0], dudtHistory, APindex);
-
-//             // vector = the gradient of u
-//             velocity = ComputeDirectionVector(m_movingframes, fields[0],
-//             dudt,
-//                                               m_GradComptType);
-
-//             // Compute the magnitude of velocity
-//             velmag = ComputeVelocityMag(velocity);
-
-//             // Activated = 1 only where u > m_uTol. is rad >
-//             // m_NoAlignInitRadius.
-//             ActivatedPre =
-//                 ComputeZoneActivation(m_uTol, fields[0],
-//                 m_NoAlignInitRadius);
-
-//             // Elementwise activation: Activate when velmag is larger than
-//             // VATol
-//             m_fields[0]->ElementWiseActivation(-1, velmag,
-//             m_VelActivationTol,
-//                                                ActivatedPre);
-
-//             // Align MF to Velocity vector if Activated is on.
-//             // Input: Activated, velocity, MF1st_old (movingframes)
-//             // Output: MF1st
-//             AlignMFtoVelocity(ActivatedPre, velocity, m_movingframes,
-//             MF1sttmp);
-
-//             // MF1sttmp has the same magnitude with m_movingframes which may
-//             // have anisotropy
-
-//             // Compute the difference of the divergence of the gradient
-//             WeakDGMMFirstLaplacian(0, m_movingframes, fields[0], Laplacian);
-//             WeakDGMMFirstLaplacian(0, MF1sttmp, fields[0], LaplacianNew);
-
-//             DivDiff = ComputeLaplacianDiff(Laplacian, LaplacianNew);
-
-//             // Validate New frames to modify MF1st and Activated
-//             // Elementwise activation: Activate when DivDiff is smaller than
-//             // AdaptNewFramesTol
-//             Vmath::Vcopy(nq, ActivatedPre, 1, Activated, 1);
-//             m_fields[0]->ElementWiseActivation(1, DivDiff,
-//             m_AdaptNewFramesTol,
-//                                                Activated);
-
-//             // Align MF to Velocity vector if Activated is on.
-//             // Input: Activated, velocity, MF1st_old (movingframes)
-//             // Output: MF1st
-//             AlignMFtoVelocity(Activated, velocity, m_movingframes, MF1st);
-
-//             // For Weighted integration
-//             // ================================================== Input:
-//             // Activated, MF1st Output: ActivatedHistory: 0 or 1. 1 is
-//             // activated.
-//             //         MF1stAligned: MF1st is updated and stored
-//             //         VelmagHistory: sum of velmag is updated and stored
-//             UpdateMF1st(Activated, MF1st, velmag, VelmagHistory,
-//             MF1stAligned,
-//                         ActivatedHistory);
-//         }
-
-//         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) %
-//         m_infosteps))
-//         {
-//             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
-//                       << " "
-//                       << "Time: " << std::setw(12) << std::left << m_time
-//                       << std::endl;
-
-//             std::stringstream ss;
-//             ss << cpuTime / 60.0 << " min.";
-//             std::cout << " CPU Time: " << std::setw(8) << std::left <<
-//             ss.str()
-//                       << std::endl;
-
-//             if ((m_MMFOrder == SolverUtils::eMMFFirst) &&
-//             (CountActivated(ActivatedHistory) > 0))
-//             {
-//                 // Check the Curvature 2-form of the aligned moving frames
-//                 Compute2DConnectionCurvature(MF1stAligned, MF1stConnection,
-//                 MF1stCurvature);
-
-//                 // Test moving frames Connection whenever it is possible
-//                 Test2DConnectionCurvature(m_Initx, m_Inity, m_Initz,
-//                                           ActivatedHistory, MF1stAligned,
-//                                           MF1stConnection, MF1stCurvature);
-//             }
-
-//             cpuTime = 0.0;
-//         }
-
-//         // Transform data into coefficient space
-//         for (i = 0; i < nvariables; ++i)
-//         {
-//             m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-//             m_fields[m_intVariables[i]]->FwdTrans_IterPerExp(fields[i],
-//             m_fields[m_intVariables[i]]->UpdateCoeffs());
-//             m_fields[m_intVariables[i]]->SetPhysState(false);
-//         }
-
-//         if(m_TestType==eNeuralEP2D)
-//         {
-//             for (int nfib = 0; nfib < m_nfibers; ++nfib)
-//             {
-//                 int fnq = m_fiberfields[nfib]->GetNpoints();
-//                 int fncoeffs = m_fiberfields[nfib]->GetNcoeffs();
-
-//                 StdRegions::ConstFactorMap factorsPoisson;
-//                 factorsPoisson[StdRegions::eFactorLambda] = 0.0;
-//                 factorsPoisson[StdRegions::eFactorTau] = m_Helmtau;
-
-//                 Array<OneD, NekDouble> dphimf(fnq,0.0);
-//                 Array<OneD, NekDouble> d2phimf(fnq,0.0);
-//                 Array<OneD, NekDouble> d2phim(nq,0.0);
-
-//                 Array<OneD, NekDouble> tmp(fnq);
-//                 Array<OneD, NekDouble> tmpc(fncoeffs);
-
-//                 m_fiberfields[nfib]->FwdTrans_IterPerExp(fiberfields[nfib],
-//                 tmpc); m_fiberfields[nfib]->BwdTrans(tmpc, tmp);
-
-//                 m_fiberfields[nfib]->PhysDeriv(1, tmp, dphimf);
-//                // m_fiberfields[nfib]->PhysDeriv(1, dphimf, d2phimf);
-
-//                 for (int i=0; i<fnq; ++i)
-//                 {
-//                     std::cout << " f = " << fiberfields[nfib][i] << ", df = "
-//                     << dphimf[i] << ", df2 = " << d2phimf[i] << std::endl;
-//                 }
-
-//                 UpdateFibertoField(nfib, d2phimf, d2phim);
-
-//                 // UpdateFibertoField(nfib, fiberfields[nfib], d2phim);
-
-//                 SetBoundaryConditions(0.0);
-//                 m_fields[0]->HelmSolve(d2phim, m_fields[0]->UpdateCoeffs(),
-//                                     NullFlagList, factorsPoisson,
-//                                     m_varcoeff);
-//                 m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(),
-//                 m_fields[0]->UpdatePhys()); m_fields[0]->SetPhysState(true);
-
-//                 std::cout << "Phys = " << Vmath::Vamax(fnq,
-//                 fiberfields[nfib], 1) << ", d2phim = " << Vmath::Vamax(nq,
-//                 d2phim, 1)
-//                 << ", field = " << Vmath::Vamax(nq,
-//                 m_fields[0]->UpdatePhys(), 1)  << std::endl;
-
-//                 // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(),
-//                 m_fields[1]->UpdateCoeffs(),
-//                 //                     NullFlagList, factorsPoisson,
-//                 m_vardiffie);
-//                 // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(),
-//                 m_fields[1]->UpdatePhys());
-//                 // m_fields[1]->SetPhysState(true);
-
-//                 m_fiberfields[nfib]->SetPhys(fiberfields[nfib]);
-//                 m_fiberfields[nfib]->FwdTrans_IterPerExp(fiberfields[nfib],
-//                 m_fiberfields[nfib]->UpdateCoeffs());
-//                 m_fiberfields[nfib]->SetPhysState(false);
-//             }
-//         }
-
-//         // Write out checkpoint files
-//         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
-//         doCheckTime)
-//         {
-//             NekDouble dudtpros, dudtneg;
-//             dudtpros = Computedudtpercent(1, dudt);
-//             dudtneg  = Computedudtpercent(-1, dudt);
-
-//             NekDouble udiff;
-//             udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq,
-//             fields[0], 1);
-
-//             Array<OneD, NekDouble> x0(nq);
-//             Array<OneD, NekDouble> x1(nq);
-//             Array<OneD, NekDouble> x2(nq);
-
-//             m_fields[0]->GetCoords(x0, x1, x2);
-
-//             int Imax = Vmath::Imax(nq, fields[0], 1);
-//             int Imin = Vmath::Imin(nq, fields[0], 1);
-
-//             std::cout << "u_max= " << Vmath::Vmax(nq, fields[0], 1) << " at x
-//             = " << x0[Imax] << ", y = " << x1[Imax]
-//                         << ", u_min= " << Vmath::Vmin(nq, fields[0], 1) << "
-//                         at x = " << x0[Imin] << ", y = " << x1[Imin] <<
-//                         std::endl;
-
-//             Array<OneD, Array<OneD, NekDouble>> stimulusstrength(nvariables);
-//             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-//             {
-//                 for (int j=0; j<nvariables; ++j)
-//                 {
-//                     stimulusstrength[j] = Array<OneD, NekDouble>(nq, 0.0);
-//                 }
-
-//                 m_stimulus[0]->Update(stimulusstrength, m_time);
-
-//                 if(Vmath::Vmax(nq, stimulusstrength[0], 1)>0.01)
-//                 {
-//                    std::cout << " =================================== " <<
-//                    std::endl; std::cout << "i = " << i << ", Stimulus: = " <<
-//                    Vmath::Vmax(nq, stimulusstrength[0], 1) << std::endl;
-//                 std::cout << " =================================== " <<
-//                 std::endl;
-//                 }
-//             }
-
-//             if( m_TestType==eNeuralEP1D )
-//             {
-//                 Vmath::Vsub(nq, fields[0], 1, fieldoldchk, 1, fieldchkdiff,
-//                 1); int stp = floor(nq/50); std::cout << "t = " << m_time <<
-//                 ", stp = " << stp << std::endl; for (int i=0; i<nq; i+=stp)
-//                 {
-//                     if(fabs(fieldchkdiff[i])>0.0000001)
-//                     {
-//                        std::cout << "NodeZone = " << m_NodeZone[0][i] << ", u
-//                        = "
-//                        << fields[0][i]  << " dudt = " <<
-//                        fieldchkdiff[i]/fabs(fieldchkdiff[i])
-//                        << " at y = " << x1[i] << std::endl;
-//                     }
-//                 }
-//                 Vmath::Vcopy(nq, fields[0], 1, fieldoldchk, 1);
-
-//                 Checkpoint_Output_1D(nchk, m_seglength, fields[0], TimeMap);
-//             }
-
-//             if( m_TestType==eNeuralEP2D )
-//             {
-//                 for (int nfib=0; nfib<m_nfibers; ++nfib)
-//                 {
-//                     int fnq = m_fiberfields[nfib]->GetNpoints();
-
-//                     Array<OneD, NekDouble> fx0(fnq);
-//                     Array<OneD, NekDouble> fx1(fnq);
-//                     Array<OneD, NekDouble> fx2(fnq);
-
-//                     m_fiberfields[nfib]->GetCoords(fx0, fx1, fx2);
-
-//                     int stp = floor(fnq/50);
-//                     std::cout << "t = " << m_time << ", stp = " << stp <<
-//                     std::endl; for (int i=0; i<fnq; i+=stp)
-//                     {
-//                         if(fiberfields[0][i]>0.1)
-//                         {
-//                         std::cout << "i = " << i << ", NodeZone = " <<
-//                         m_NodeZone[nfib][i] << ", u = "
-//                         << fiberfields[0][i] << " at y = " << fx1[i] <<
-//                         std::endl;
-//                         }
-//                     }
-//                     Vmath::Vcopy(nq, fields[0], 1, fieldoldchk, 1);
-//                 }
-//             }
-
-//             if ((m_MMFOrder == SolverUtils::eMMFFirst) &&
-//                 (CountActivated(ActivatedHistory) > 0))
-//             {
-//                 std::cout << "u_diff = " << udiff << ", WF = " << dudtpros
-//                           << " %, WB = " << dudtneg << " % "
-//                           << ", TimeMap = " << RootMeanSquare(TimeMap)
-//                           << ", MaxAPindex = " << Vmath::Vmax(nq, APindex, 1)
-//                           << std::endl;
-
-//                 PlotConnection2D(ActivatedHistory, fields[0], MF1stAligned,
-//                 MF1stConnection, nchk);
-
-//                 // Plot relative acceleration and conduction block zone
-//                 Array<OneD, Array<OneD, NekDouble>> RelAcc(m_shapedim);
-//                 for (int j=0; j<m_shapedim; ++j)
-//                 {
-//                     RelAcc[j] = Array<OneD, NekDouble>(nq,0.0);
-//                 }
-//                 ComputeRelAcc(MF1stAligned, RelAcc);
-
-//                 PlotRelAcc2D(MF1stConnection[0][1], RelAcc[1], nchk);
-//             }
-
-//             if (m_TimeMap == eActivated)
-//             {
-//                 // Compute velocity field
-//                 VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
-
-//                 PlotTimeMap(TimeMap, IappMap, VelocityMap, nchk);
-//                 std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap,
-//                 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
-//             }
-
-//             Checkpoint_Output(nchk++);
-//             doCheckTime = false;
-//         }
-
-//         // Step advance
-//         ++step;
-//     } // namespace Nektar
-
-//     // Print out summary statistics
-//     if (m_session->GetComm()->GetRank() == 0)
-//     {
-//         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
-//     }
-
-//     for (i = 0; i < nvariables; ++i)
-//     {
-//         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-//         m_fields[m_intVariables[i]]->SetPhysState(true);
-//     }
-
-//     for (i = 0; i < nvariables; ++i)
-//     {
-//         m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
-//         m_fields[i]->UpdateCoeffs());
-//     }
-
-//     if(m_TestType==eNeuralEP2D)
-//     {
-//         for (int nfib = 0; nfib < m_nfibers; ++nfib)
-//         {
-//             m_fiberfields[nfib]->SetPhys(fiberfields[nfib]);
-//             m_fiberfields[nfib]->SetPhysState(true);
-
-//             m_fiberfields[nfib]->FwdTrans(m_fiberfields[nfib]->GetPhys(),
-//             m_fiberfields[nfib]->UpdateCoeffs());
-//         }
-//     }
-
-// } // namespace Nektar
-
-// switch (m_GradIntType)
-// {
-//     case eStr:
-//     {
-//         // Strength-based activation
-//         // ================================================== Input:
-//         // ActivatedIntensity, Activated, MF1st Output:
-//         // ActivatedIntensityHistory, ActivatedStrength,
-//         // MF1stAligned
-//         ACT = NewValueReplacerElementWise(SolverUtils::eStronger, velmag,
-//         Activated, MF1st,
-//             VelocityIntensityHistory, ActivatedHistory, MF1stAligned);
-//     }
-//     break;
-
-//     case eInt:
-//     {
-//         // For Linear integration
-//         ==================================================
-//         // Input: Activated, MF1st
-//         // Output: ActivatedHistory, MF1stAlignedInt
-//         ACT = UpdatebyLinearTimeIntegration(Activated, MF1st,
-//         ActivatedHistory, MF1stAligned);
-//     }
-//     break;
-
-//     case eWint:
-//     {
-//         // For Weighted integration
-//         ==================================================
-//         // Input: Activated, MF1st
-//         // Output: ActivatedHistory, MF1stAlignedInt
-//         ACT = UpdatebyWeightedTimeIntegration(Activated, MF1st, velmag,
-//         ActivatedHistory, MF1stAligned);
-//     }
-//     break;
-
-//     default:
-//         break;
-// }
 
 void MMFCardiacEP::DoImplicitSolveCardiacEP(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -1572,14 +1110,10 @@ void MMFCardiacEP::DoOdeRhsCardiacEP(
         Array<OneD, NekDouble> Laplacian(nq);
         WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
 
-        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
-                    1);
+        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
     }
 }
 
-/**
- *
- */
 void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
                                           bool dumpInitialConditions,
                                           const int domain)
@@ -1853,8 +1387,10 @@ void MMFCardiacEP::v_EvaluateExactSolution(unsigned int field,
 void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFSystem::v_GenerateSummary(s);
+    AddSummaryItem(s, "SolverSchemeType", SolverSchemeTypeMap[m_SolverSchemeType]);
 
     m_cell->GenerateSummary(s);
+    
 }
 } // namespace Nektar
 
