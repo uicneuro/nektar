@@ -3797,7 +3797,6 @@ void ExpList::v_GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
 
     // Assume whole array is of same coordinate dimension
     int coordim = (*m_exp)[0]->GetGeom()->GetCoordim();
-                std::cout << "v_GetMovingFrames 1, coordim = " << coordim << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> MFloc(MFdim * coordim);
     // Process each expansion.
@@ -3809,12 +3808,10 @@ void ExpList::v_GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
         {
             MFloc[j] = Array<OneD, NekDouble>(npts, 0.0);
         }
-                std::cout << "v_GetMovingFrames 2" << std::endl;
 
         // MF from LOCALREGIONS
         (*m_exp)[i]->GetMetricInfo()->GetMovingFrames(
             (*m_exp)[i]->GetPointsKeys(), MMFdir, CircCentre, MFloc);
-                std::cout << "v_GetMovingFrames 3" << std::endl;
 
         // Get the physical data offset for this expansion.
         for (int j = 0; j < MFdim; ++j)

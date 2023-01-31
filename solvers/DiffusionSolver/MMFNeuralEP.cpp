@@ -479,9 +479,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         {
             case eNeuralEP1D:
             {
-                std::cout << "ComputeVarCoeff1D: Starts " << std::endl;
                 ComputeVarCoeff1D(m_movingframes, m_varcoeff);
-                std::cout << "ComputeVarCoeff1D: Ends " << std::endl;
             }
             break;
 
@@ -1035,7 +1033,7 @@ void MMFNeuralEP::DoSolveMMFZero()
                       << std::endl;
 
             // Print phim and phie at each node
-            if(m_NeuralEPType !=eNeuralTest)
+            if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
             {
                 DisplayphiatNode(fields[0]);
             }
@@ -1729,17 +1727,16 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
     // inarray = input: \hat{rhs} -> output: \hat{Y}
     // outarray = output: \hat{Y} where \hat = modal coeffs
 
+    SetBoundaryConditions(time);
+
     // For the variable of membrane potential: Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
-
-    SetBoundaryConditions(time);
 
     // Solve a system of equations with Helmholtz solver and transform
     // back into physical space.
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
-
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
@@ -1773,22 +1770,15 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
 
     factors[StdRegions::eFactorLambda] = Cv / lambda;
 
-    std::cout << "factors_Lambda = " << factors[StdRegions::eFactorLambda] << std::endl;
-
     SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition(time);
-                std::cout << "DoImplicit: HERE 4" << std::endl;
 
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
-                std::cout << "DoImplicit: HERE 5" << std::endl;
 
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
-
-                std::cout << "DoImplicit: HERE 6" << std::endl;
-
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
@@ -2368,11 +2358,24 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     for (int k = 0; k < nq; ++k)
     {
         // if( (m_NodeZone[0][k]>=0) && (m_NodeZone[0][k]<=1) )
-        if (m_NodeZone[0][k] >= 0)
+        if (m_NodeZone[0][k] == 1)
         {
-            outarray[0][k] = outarray[0][k] + RHSstimulus[0][k] / Cn;
+            RHSstimulus[0][k] = RHSstimulus[0][k] / Cn;
+        }
+
+        else
+        {
+            RHSstimulus[0][k] = 0.0;
         }
     }
+
+    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+
+    // for (int i=0;i<20;++i)
+    // {
+    //     std::cout << "OdeRhs: i = " << i << ", Nodezone = " << m_NodeZone[0][i] 
+    //     << ", RHSstimulus = " << RHSstimulus[0][i] << ", outarray = " << outarray[0][i] << std::endl;
+    // }
 
     // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)

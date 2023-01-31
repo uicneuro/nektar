@@ -104,9 +104,6 @@ void MMFSystem::MMFInitObject(
         m_session->LoadParameter("Radz", m_Radz, 1.0);
     }
 
-        std::cout << "MMFINit 1" << std::endl;
-
-
     // Define Gradient Location Type
     if (m_session->DefinesSolverInfo("GRADLOCTYPE"))
     {
@@ -156,7 +153,6 @@ void MMFSystem::MMFInitObject(
     {
         m_MediumType = (MediumType)0;
     }
-        std::cout << "MMFINit 2" << std::endl;
 
     m_session->LoadParameter("SphereExactRadius", m_SphereExactRadius, 1.0);
 
@@ -194,7 +190,6 @@ void MMFSystem::MMFInitObject(
 
     // boost::ignore_unused(AniStrength, AniDirection);
     int nq = m_fields[0]->GetNpoints();
-        std::cout << "MMFINit 3" << std::endl;
 
     // if 1D, computed trajectory length from the left botom to right top.
     if (m_expdim == 1)
@@ -217,7 +212,6 @@ void MMFSystem::MMFInitObject(
             m_seglength[i] = totlength;
         }
     }
-        std::cout << "MMFINit 4" << std::endl;
 
     switch (m_surfaceType)
     {
@@ -263,10 +257,7 @@ void MMFSystem::MMFInitObject(
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
 
-    std::cout << "MMFINit 5" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
-
-    std::cout << "MMFINit 6" << std::endl;
 
     ComputeMFtrace(m_movingframes, m_MFtraceFwd, m_MFtraceBwd);
 
@@ -281,10 +272,13 @@ void MMFSystem::MMFInitObject(
     ComputeCurlMF(m_DerivType, m_movingframes, m_CurlMF, Verbose);
 
     // Connection 2-form
-    Compute2DConnection1form(m_movingframes, m_MFConnection);
+    if(m_expdim>1)
+    {
+        Compute2DConnection1form(m_movingframes, m_MFConnection);
 
-    // Check the Curvature 2-form of the aligned moving frames
-    Compute2DCurvatureForm(m_movingframes, m_MFConnection, m_MFCurvature);
+        // Check the Curvature 2-form of the aligned moving frames
+        Compute2DCurvatureForm(m_movingframes, m_MFConnection, m_MFCurvature);
+    }
 
     std::cout << "============ End of MMFInitObect ============" << std::endl;
 }
@@ -11855,13 +11849,11 @@ void MMFSystem::ComputeVarCoeff1D(
     StdRegions::VarCoeffType MMFCoeffs[3] = {StdRegions::eVarCoeffD00,
                                              StdRegions::eVarCoeffD11,
                                              StdRegions::eVarCoeffD22};
-                std::cout << "ComputeVarCoeff1D 1 " << std::endl;
 
     for (int k = 0; k < m_mfdim; ++k)
     {
         varcoeff[MMFCoeffs[k]] = Array<OneD, NekDouble>(nq, 0.0);
     }
-                std::cout << "ComputeVarCoeff1D 2 " << std::endl;
 
     Array<OneD, NekDouble> tmp(nq, 0.0);
     for (int k = 0; k < m_spacedim; ++k)
@@ -11869,7 +11861,6 @@ void MMFSystem::ComputeVarCoeff1D(
         Vmath::Vvtvp(nq, &movingframes[0][k * nq], 1, &movingframes[0][k * nq],
                      1, &tmp[0], 1, &tmp[0], 1);
     }
-                std::cout << "ComputeVarCoeff1D 3 " << std::endl;
 
     Vmath::Vsqrt(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[0]][0], 1);
 
