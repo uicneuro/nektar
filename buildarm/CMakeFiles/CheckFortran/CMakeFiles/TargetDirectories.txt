@@ -1,2 +1,0 @@
-/Users/schun/nektar/buildarm/CMakeFiles/CheckFortran/CMakeFiles/rebuild_cache.dir
-/Users/schun/nektar/buildarm/CMakeFiles/CheckFortran/CMakeFiles/edit_cache.dir
