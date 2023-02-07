@@ -354,6 +354,8 @@ public:
     {
         NekDouble lambda = 0.4358665215;
 
+        std::cout << "Setupschemedata_3_4_3" << std::endl;
+
         phase->m_A[0][1][1] = lambda;
         phase->m_A[0][2][1] = 0.5 * (1.0 - lambda);
         phase->m_A[0][3][1] =

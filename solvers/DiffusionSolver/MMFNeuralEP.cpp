@@ -243,8 +243,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Stimulus
             m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
+            break;
         }
-        break;
 
         case eNeuralEP2D:
         case eNeuralEP2DEmbed:
@@ -319,8 +319,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Stimulus
             m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
+            break;
         }
-        break;
 
         default:
             break;
@@ -364,8 +364,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                       << Vmath::Vmin(nq, AniStrength[0], 1) << std::endl;
 
             MMFSystem::MMFInitObject(AniStrength);
+            break;
         }
-        break;
 
         case eNeuralEP2D:
         case eNeuralEP2DEmbed:
@@ -452,8 +452,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                                   m_phiemovingframes);
                 CheckMovingFrames(m_phiemovingframes);
             }
+                    break;
         }
-        break;
 
         default:
         {
@@ -463,8 +463,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
             MMFSystem::MMFInitObject(AniStrength);
+                    break;
         }
-        break;
     }
 
     if (m_explicitDiffusion)
@@ -480,8 +480,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEP1D:
             {
                 ComputeVarCoeff1D(m_movingframes, m_varcoeff);
+                break;
             }
-            break;
 
             case eNeuralEP2D:
             case eNeuralEP2DEmbed:
@@ -491,8 +491,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
                 }
+                break;
             }
-            break;
 
             default:
                 break;
@@ -517,66 +517,40 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         {
             case eNeuralTest:
             {
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhs, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolve, this);
+                break;
             }
-            break;
 
             case eNeuralEP1D:
             {
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP1D, this);
+                break;
             }
-            break;
 
             case eNeuralEP2D:
             {
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2D, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2D, this);
+                break;
             }
-            break;
 
             case eNeuralEP2DEmbed:
             {
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbed, this);
+                break;
             }
-            break;
 
             default:
                 break;
         }
-    }
 
-    switch (m_NeuralEPType)
-    {
-        case eNeuralTest:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhs, this);
-
-        }
-        break;
-
-        case eNeuralEP1D:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
-        }
-        break;
-
-        case eNeuralEP2D:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2D, this);
-        }
-        break;
-
-        case eNeuralEP2DEmbed:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed, this);
-        }
-        break;
-
-        default:
-        break;
     }
 }
 
@@ -891,14 +865,14 @@ void MMFNeuralEP::v_DoSolve()
         case eMMFFirst:
         {
             DoSolveMMFFirst();
+            break;
         }
-        break;
 
         default:
         {
             DoSolveMMFZero();
+            break;
         }
-        break;
     }
 }
 
@@ -977,15 +951,12 @@ void MMFNeuralEP::DoSolveMMFZero()
     }
 
     Array<OneD, int> phimhistory(nq, 0.0);
-    // NekDouble frontloc=0.0, frontloc_old=0.0, time_old=0.0;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // field time integration
-        // std::cout << "TimeIntegrate: Before" << std::endl;
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
-        // std::cout << "TimeIntegrate: After" << std::endl;
 
         m_time += m_timestep;
         elapsed = timer.TimePerTest(1);
@@ -2400,25 +2371,20 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
 
-    std::cout << "OdeRhs 1" << std::endl;
-
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time,
                             m_Temperature);
-    std::cout << "OdeRhs 2" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
     for (int i = 0; i < nvar; ++i)
     {
         RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
-    std::cout << "OdeRhs 3" << std::endl;
 
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
         m_stimulus[j]->Update(RHSstimulus, time);
     }
-    std::cout << "OdeRhs 4" << std::endl;
 
     // ONLY simulation at node zone:
     // No excitation at myelinated region
@@ -2434,7 +2400,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
             outarray[0][k] = outarray[0][k] + RHSstimulus[0][k] / Cn;
         }
     }
-                std::cout << "DoOdeRhs: HERE 5, nvar = " << nvar << std::endl;
 
     if (nvar == 2)
     {
@@ -2442,18 +2407,15 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
         // (\sigma_i \nabla \phi_m)
         Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
-                std::cout << "DoOdeRhs: HERE 6" << std::endl;
 
         // Add the current changes by the external current
         Array<OneD, NekDouble> extcurrent;
         extcurrent = ComputeCovariantDiffusion(m_unitmovingframes,
                                                m_fields[1]->GetPhys());
         Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
-                std::cout << "DoOdeRhs: HERE 7" << std::endl;
 
         // Let the extcurrent be zero at Myeline nodes (-1).
         OnlyValideinNode(m_NodeZone[0], extcurrent);
-                std::cout << "DoOdeRhs: HERE 8" << std::endl;
 
         // add divergence of phie to the current
         Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0],
@@ -2779,8 +2741,8 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             }
 
             m_fields[0]->SetPhys(outfield);
+            break;
         }
-        break;
 
         case eNeuralEP1D:
         case eNeuralEP2D:
@@ -2801,8 +2763,8 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                 m_stimulus[i]->Update(tmp, initialtime);
                 m_fields[0]->SetPhys(tmp[0]);
             }
+            break;
         }
-        break;
 
             // case eNeuralEP2p1D:
             // {
@@ -2842,8 +2804,8 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         default:
         {
             EquationSystem::v_SetInitialConditions(initialtime, false);
+            break;
         }
-        break;
     }
     
     std::cout << "Initial: max um = "
@@ -3111,14 +3073,14 @@ void MMFNeuralEP::v_EvaluateExactSolution(unsigned int field,
                 outfield[k] = exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * x[k]) *
                             cos(m_pi * y[k]);
             }
+            break;
         }
-        break;
 
         default:
         {
             EquationSystem::v_EvaluateExactSolution(field, outfield, time);
+            break;
         }
-         break;
     }
 }
 

@@ -51,7 +51,6 @@ enum NeuralEPType
 {
     eNeuralTest,
     eNeuralEP1D,
-    eNeuralEP2p1D,
     eNeuralEP2D,
     eNeuralEP2DEmbed,
     SIZE_NeuralEPType ///< Length of enum list
@@ -60,8 +59,6 @@ enum NeuralEPType
 const char *const NeuralEPTypeMap[] = {
     "NeuralTest",
     "NeuralEP1D",
-    "NeuralEP1D",
-    "NeuralEP2p1D",
     "NeuralEP2D",
     "NeuralEP2DEmbed",
 };
