@@ -196,8 +196,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 vNeuronModel, m_session, m_fields[0]);
 
             // Node and Myelen elements range
-            m_session->LoadParameter("ElemNodeEnd", m_ElemNodeEnd, 0);
-            m_session->LoadParameter("ElemMyelenEnd", m_ElemMyelenEnd, 0);
+            m_session->LoadParameter("ElemNodeEnd", m_ElemNodeEnd, 4);
+            m_session->LoadParameter("ElemMyelenEnd", m_ElemMyelenEnd, 1000);
 
             // Relative Extracellular resistance: 1 < \beta < 10
             m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
@@ -1006,7 +1006,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             // Print phim and phie at each node
             if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
             {
-                DisplayphiatNode(fields[0]);
+                DisplayatNode(fields[0]);
             }
 
             // Array<OneD, NekDouble> PoissonRHS(nq,0.0);
@@ -1059,7 +1059,55 @@ void MMFNeuralEP::DoSolveMMFZero()
 } // namespace Nektar
 
 
-void MMFNeuralEP::DisplayphiatNode(const Array<OneD, const NekDouble> &field)
+void MMFNeuralEP::DisplayatNode(const Array<OneD, const NekDouble> &field)
+{
+    int nvar = m_fields.size();
+
+    if(nvar ==1 )
+    {
+        DisplayatNodevar1(field);
+    }
+
+    else if(nvar==2)
+    {
+        DisplayatNodevar2(field);
+    }
+}
+
+void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const NekDouble> &field)
+{
+    int nq = GetTotPoints();
+
+    // Print phim and phie at each node
+    int index, Rnodeid = 0;
+    NekDouble locphimsum, locphiesum;
+
+    Array<OneD, NekDouble> phimavg(m_ElemNodeEnd);
+    for (int i = 0; i < m_ElemNodeEnd; ++i)
+    {
+        Rnodeid = i / m_numelemperNode;
+
+        locphimsum = 0.0;
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index =  m_fields[0]->GetPhys_Offset(i) + j;
+
+            locphimsum = locphimsum + field[index];
+        }
+
+        phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
+    }
+
+    std::cout << " " << std::endl;
+    std::cout << "(Nodeid,phim): ";
+    for (int i = 0; i < Rnodeid + 1; ++i)
+    {
+        std::cout << "(" << i << "," << phimavg[i] << "), ";
+    }
+    std::cout << " " << std::endl << std::endl;
+}
+
+void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const NekDouble> &field)
 {
     int nq = GetTotPoints();
 
@@ -1094,8 +1142,7 @@ void MMFNeuralEP::DisplayphiatNode(const Array<OneD, const NekDouble> &field)
     std::cout << "(Nodeid,phim,phie): ";
     for (int i = 0; i < Rnodeid + 1; ++i)
     {
-        std::cout << "(" << i << "," << phimavg[i] << "," << phieavg[i]
-                  << "), ";
+        std::cout << "(" << i << "," << phimavg[i] << "," << phieavg[i] << "), ";
     }
     std::cout << " " << std::endl << std::endl;
 }

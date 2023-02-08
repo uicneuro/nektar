@@ -253,7 +253,9 @@ protected:
     NekDouble m_AnisotropyStrength;
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
 
-    void DisplayphiatNode(const Array<OneD, const NekDouble> &field);
+    void DisplayatNode(const Array<OneD, const NekDouble> &field);
+    void DisplayatNodevar1(const Array<OneD, const NekDouble> &field);
+    void DisplayatNodevar2(const Array<OneD, const NekDouble> &field);
 
     void CheckNodeZoneMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
