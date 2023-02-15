@@ -1051,10 +1051,7 @@ void MMFSystem::SetUpMovingFrames(
 
         default:
         {
-                std::cout << "GetMovingFrames: BEFORE" << std::endl;
             m_fields[0]->GetMovingFrames(MMFdir, m_MMFfactors, movingframes);
-                            std::cout << "GetMovingFrames: AFTER" << std::endl;
-
         }
         break;
     }
@@ -1769,8 +1766,6 @@ void MMFSystem::CheckMovingFrames(
                   << RootMeanSquare(tmpy) << " , " << RootMeanSquare(tmpz)
                   << " ) " << std::endl;
     }
-
-    std::cout << "Check MovingFrmaes: END ===================" << std::endl;
 }
 
 // 	RebuildMovingFrames(m_K1, m_K2, m_K3, m_distance);

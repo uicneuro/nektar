@@ -326,6 +326,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
     }
 
+    if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
+    {
+        std::string MediumTypeStr;
+        MediumTypeStr = m_session->GetSolverInfo("MEDIUMTYPE");
+        for (int i = 0; i < (int)SIZE_MediumType; ++i)
+        {
+            if (boost::iequals(MediumTypeMap[i], MediumTypeStr))
+            {
+                m_MediumType = (MediumType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_MediumType = (MediumType)0;
+    }
+
     // Derive AnisotropyStrength.
     switch (m_NeuralEPType)
     {
@@ -347,6 +365,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // AniStrength: Node = Cn/Cm, Myelined = 1.0
             m_AnisotropyStrength = Cn / Cm;
 
+            std::cout << "MediumType = " << m_MediumType << std::endl;
             if (m_MediumType == eAnisotropy)
             {
                 for (int j = 0; j < m_expdim; ++j)
@@ -383,6 +402,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // AniStrength: Node = Cn/Cm, Myelined = 1.0
             m_AnisotropyStrength = Cn / Cm;
 
+            std::cout << "MediumType = " << m_MediumType << std::endl;
             if (m_MediumType == eAnisotropy)
             {
                 for (int j = 0; j < m_expdim; ++j)
@@ -509,9 +529,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
         factors[StdRegions::eFactorLambda] = 1.0;
 
-        std::cout << "HelmSolve test starts" << std::endl;
-        m_fields[0]->HelmSolve(testphys, testcoeffs, factors, m_varcoeff);
-        std::cout << "HelmSolve test ends, testcoeffs = " << RootMeanSquare(testcoeffs) << std::endl;
+        // std::cout << "HelmSolve test starts" << std::endl;
+        // m_fields[0]->HelmSolve(testphys, testcoeffs, factors, m_varcoeff);
+        // std::cout << "HelmSolve test ends, testcoeffs = " << RootMeanSquare(testcoeffs) << std::endl;
 
         switch (m_NeuralEPType)
         {
@@ -1076,11 +1096,9 @@ void MMFNeuralEP::DisplayatNode(const Array<OneD, const NekDouble> &field)
 
 void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const NekDouble> &field)
 {
-    int nq = GetTotPoints();
-
     // Print phim and phie at each node
     int index, Rnodeid = 0;
-    NekDouble locphimsum, locphiesum;
+    NekDouble locphimsum;
 
     Array<OneD, NekDouble> phimavg(m_ElemNodeEnd);
     for (int i = 0; i < m_ElemNodeEnd; ++i)
