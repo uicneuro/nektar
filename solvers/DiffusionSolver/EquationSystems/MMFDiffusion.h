@@ -164,6 +164,11 @@ protected:
     InitWaveType m_InitWaveType;
 
     virtual void v_InitObject(bool DeclareField = true) override;
+    
+    
+    void DoOdeProjection(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     /// Solve for the diffusion term.
     void DoImplicitSolve(

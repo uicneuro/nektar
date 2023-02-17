@@ -326,10 +326,17 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     if (!m_explicitDiffusion)
     {
+        m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
+        m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
+    }
+
+    else
+    {
+        m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
+        m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
         m_ode.DefineImplicitSolve(&MMFDiffusion::DoImplicitSolve, this);
     }
 
-    m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
 }
 
 /**
@@ -337,6 +344,47 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
  */
 MMFDiffusion::~MMFDiffusion()
 {
+}
+
+void MMFDiffusion::DoOdeProjection(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+{
+    int i;
+    int nvariables = inarray.size();
+    SetBoundaryConditions(time);
+
+    switch (m_projectionType)
+    {
+        case MultiRegions::eDiscontinuous:
+        {
+            // Just copy over array
+            int npoints = GetNpoints();
+
+            for (i = 0; i < nvariables; ++i)
+            {
+                Vmath::Vcopy(npoints, inarray[i], 1, outarray[i], 1);
+            }
+            break;
+        }
+        case MultiRegions::eGalerkin:
+        case MultiRegions::eMixed_CG_Discontinuous:
+        {
+            Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
+
+            for (i = 0; i < nvariables; ++i)
+            {
+                m_fields[i]->FwdTrans(inarray[i], coeffs);
+                m_fields[i]->BwdTrans(coeffs, outarray[i]);
+            }
+            break;
+        }
+        default:
+        {
+            ASSERTL0(false, "Unknown projection scheme");
+            break;
+        }
+    }
 }
 
 /**OdeRhs
@@ -479,112 +527,22 @@ void MMFDiffusion::DoOdeRhs(
         }
         break;
 
-            // case eFHNStandard:
-            // {
-            //     // \phi - \phi^3/3 - \psi
-            //     NekDouble a  = 0.12;
-            //     NekDouble b  = 0.011;
-            //     NekDouble c1 = 0.175;
-            //     NekDouble c2 = 0.03;
-            //     NekDouble d  = 0.55;
-
-            //     Array<OneD, NekDouble> tmp(nq);
-
-            //     // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 v
-            //     Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
-            //     Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, tmp, 1, inarray[0], 1, outarray[0], 1);
-            //     Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-
-            //     Vmath::Smul(nq, -1.0 * c2, inarray[1], 1, tmp, 1);
-            //     Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-
-            //     // Reaction for \psi = b (\phi - d \psi )
-            //     Vmath::Svtvp(nq, -1.0 * d, inarray[1], 1, inarray[0], 1,
-            //                  outarray[1], 1);
-            //     Vmath::Smul(nq, b, outarray[1], 1, outarray[1], 1);
-            // }
-            // break;
-
-            // case eFHNRogers:
-            // {
-            //     NekDouble a  = 0.13;
-            //     NekDouble b  = 0.013;
-            //     NekDouble c1 = 0.26;
-            //     NekDouble c2 = 0.1;
-            //     NekDouble d  = 1.0;
-
-            //     Array<OneD, NekDouble> tmp(nq);
-
-            //     // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 u
-            //     v Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
-            //     Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-            //     Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-
-            //     Vmath::Vmul(nq, inarray[0], 1, inarray[1], 1, tmp, 1);
-            //     Vmath::Smul(nq, -1.0 * c2, tmp, 1, tmp, 1);
-            //     Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-
-            //     // Reaction for \psi = b (\phi - d \psi )
-            //     Vmath::Svtvp(nq, -1.0 * d, inarray[1], 1, inarray[0], 1,
-            //                  outarray[1], 1);
-            //     Vmath::Smul(nq, b, outarray[1], 1, outarray[1], 1);
-            // }
-            // break;
-
-            // case eFHNAlievPanf:
-            // {
-
-            //     NekDouble a   = 0.15;
-            //     NekDouble c1  = 8.0;
-            //     NekDouble c2  = 1.0;
-            //     NekDouble c0  = 0.002;
-            //     NekDouble mu1 = 0.2;
-            //     NekDouble mu2 = 0.3;
-
-            //     Array<OneD, NekDouble> tmp(nq);
-
-            //     // Reaction for \phi = c1 \phi ( \phi - a)*(1 - \phi) - c2 u
-            //     v Vmath::Smul(nq, -1.0 * c1, inarray[0], 1, outarray[0], 1);
-            //     Vmath::Sadd(nq, -1.0 * a, inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-            //     Vmath::Sadd(nq, -1.0, inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-
-            //     Vmath::Vmul(nq, inarray[0], 1, inarray[1], 1, tmp, 1);
-            //     Vmath::Smul(nq, -1.0 * c2, tmp, 1, tmp, 1);
-            //     Vmath::Vadd(nq, tmp, 1, outarray[0], 1, outarray[0], 1);
-
-            //     // Reaction for \psi = (c0 + (\mu1 \psi/(\mu2+\phi) )
-            //     )*(-\psi - c1
-            //     // * \phi*(\phi - a - 1) )
-
-            //     Vmath::Smul(nq, mu1, inarray[1], 1, outarray[1], 1);
-            //     Vmath::Sadd(nq, mu2, inarray[0], 1, tmp, 1);
-            //     Vmath::Vdiv(nq, outarray[1], 1, tmp, 1, outarray[1], 1);
-            //     Vmath::Sadd(nq, c0, outarray[1], 1, outarray[1], 1);
-
-            //     Vmath::Sadd(nq, (-a - 1.0), inarray[0], 1, tmp, 1);
-            //     Vmath::Vmul(nq, inarray[0], 1, tmp, 1, tmp, 1);
-            //     Vmath::Smul(nq, c1, tmp, 1, tmp, 1);
-            //     Vmath::Vadd(nq, inarray[1], 1, tmp, 1, tmp, 1);
-            //     Vmath::Neg(nq, tmp, 1);
-
-            //     Vmath::Vmul(nq, tmp, 1, outarray[1], 1, outarray[1], 1);
-            // }
-            // break;
-
         default:
             break;
     }
+
+    if (m_explicitDiffusion)
+    {
+        int nq = m_fields[0]->GetNpoints();
+
+        // Laplacian only to the first variable
+        Array<OneD, NekDouble> Laplacian(nq);
+        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
+
+        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    }
 }
 
-/**
- *
- */
 void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
                                           bool dumpInitialConditions,
                                           const int domain)
