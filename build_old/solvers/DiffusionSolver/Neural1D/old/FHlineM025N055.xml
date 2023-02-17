@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <GEOMETRY DIM="1" SPACE="3">
+        <VERTEX>
+            <V ID="0">0.00000000e+00 0.00000000e+00 0.00000000e+00</V>
+            <V ID="1">0.00000000e+00 5.00000000e-05 0.00000000e+00</V>
+            <V ID="2">0.00000000e+00 1.00000000e-04 0.00000000e+00</V>
+            <V ID="3">0.00000000e+00 5.10000000e-03 0.00000000e+00</V>
+            <V ID="4">0.00000000e+00 1.01000000e-02 0.00000000e+00</V>
+            <V ID="5">0.00000000e+00 1.51000000e-02 0.00000000e+00</V>
+            <V ID="6">0.00000000e+00 2.01000000e-02 0.00000000e+00</V>
+            <V ID="7">0.00000000e+00 2.51000000e-02 0.00000000e+00</V>
+            <V ID="8">0.00000000e+00 3.01000000e-02 0.00000000e+00</V>
+            <V ID="9">0.00000000e+00 3.51000000e-02 0.00000000e+00</V>
+            <V ID="10">0.00000000e+00 4.01000000e-02 0.00000000e+00</V>
+            <V ID="11">0.00000000e+00 4.51000000e-02 0.00000000e+00</V>
+            <V ID="12">0.00000000e+00 5.01000000e-02 0.00000000e+00</V>
+            <V ID="13">0.00000000e+00 5.01500000e-02 0.00000000e+00</V>
+            <V ID="14">0.00000000e+00 5.51500000e-02 0.00000000e+00</V>
+            <V ID="15">0.00000000e+00 6.01500000e-02 0.00000000e+00</V>
+            <V ID="16">0.00000000e+00 6.51500000e-02 0.00000000e+00</V>
+            <V ID="17">0.00000000e+00 7.01500000e-02 0.00000000e+00</V>
+            <V ID="18">0.00000000e+00 7.51500000e-02 0.00000000e+00</V>
+            <V ID="19">0.00000000e+00 8.01500000e-02 0.00000000e+00</V>
+            <V ID="20">0.00000000e+00 8.51500000e-02 0.00000000e+00</V>
+            <V ID="21">0.00000000e+00 9.01500000e-02 0.00000000e+00</V>
+            <V ID="22">0.00000000e+00 9.51500000e-02 0.00000000e+00</V>
+            <V ID="23">0.00000000e+00 1.00150000e-01 0.00000000e+00</V>
+            <V ID="24">0.00000000e+00 1.00200000e-01 0.00000000e+00</V>
+        </VERTEX>
+        <ELEMENT>
+            <S ID="0">0 1</S>
+            <S ID="1">1 2</S>
+            <S ID="2">2 3</S>
+            <S ID="3">3 4</S>
+            <S ID="4">4 5</S>
+            <S ID="5">5 6</S>
+            <S ID="6">6 7</S>
+            <S ID="7">7 8</S>
+            <S ID="8">8 9</S>
+            <S ID="9">9 10</S>
+            <S ID="10">10 11</S>
+            <S ID="11">11 12</S>
+            <S ID="12">12 13</S>
+            <S ID="13">13 14</S>
+            <S ID="14">14 15</S>
+            <S ID="15">15 16</S>
+            <S ID="16">16 17</S>
+            <S ID="17">17 18</S>
+            <S ID="18">18 19</S>
+            <S ID="19">19 20</S>
+            <S ID="20">20 21</S>
+            <S ID="21">21 22</S>
+            <S ID="22">22 23</S>
+            <S ID="23">23 24</S>
+        </ELEMENT>
+        <CURVED />
+       <COMPOSITE>
+            <C ID="0"> S[0-1] </C>
+            <C ID="1"> S[2-11] </C>
+            <C ID="2"> S[12] </C>
+            <C ID="3"> S[13-22] </C>
+            <C ID="4"> S[23] </C>
+            <C ID="5"> V[0] </C>
+            <C ID="6"> V[24] </C>
+        </COMPOSITE>
+        <DOMAIN> C[0-4] </DOMAIN>
+    </GEOMETRY>
+    <Metadata>
+        <Provenance>
+            <Hostname>Sehun-Macbook-Pro.local</Hostname>
+            <NektarVersion>5.0.0</NektarVersion>
+            <Timestamp>20-Jul-2021 11:37:06</Timestamp>
+        </Provenance>
+        <NekMeshCommandLine>OneDylinenode.msh FHlineM02N05.xml:xml:uncompress </NekMeshCommandLine>
+    </Metadata>
+  <EXPANSIONS>
+        <E COMPOSITE="C[0]" NUMMODES="3" TYPE="MODIFIED" FIELDS="u" />
+        <E COMPOSITE="C[1]" NUMMODES="5" TYPE="MODIFIED" FIELDS="u" />
+        <E COMPOSITE="C[2]" NUMMODES="3" TYPE="MODIFIED" FIELDS="u" />
+        <E COMPOSITE="C[3]" NUMMODES="5" TYPE="MODIFIED" FIELDS="u" />
+        <E COMPOSITE="C[4]" NUMMODES="3" TYPE="MODIFIED" FIELDS="u" />
+    </EXPANSIONS>
+
+    <CONDITIONS>
+
+        <SOLVERINFO>
+            <I PROPERTY="EQTYPE" VALUE="MMFDiffusion" />
+            <I PROPERTY="Projection" VALUE="DisContinuous"/>
+            <I PROPERTY="DiffusionAdvancement" VALUE="Implicit" />
+            <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXdirk_3_4_3" />
+            <I PROPERTY="TestType" VALUE="NeuralEP1D" />
+            <I PROPERTY="NeuronModel" VALUE="FrankenHuxley" />
+            <I PROPERTY="SurfaceType" VALUE="Line" />
+            <I PROPERTY="MediumType" VALUE="Anisotropy" />
+            <I PROPERTY="MMFDir" VALUE="LOCAL" />
+           <I PROPERTY="TimeMapType" VALUE="DeActivated" />
+        </SOLVERINFO>
+
+        <PARAMETERS>
+            <P> TimeStep       = 1e-8     </P>
+            <P> NumSteps       = 1e8             </P>
+            <P> IO_CheckSteps  = 1e6             </P>
+            <P> IO_InfoSteps   = 1e6              </P>
+            <P> Temperature    = 24.0             </P>
+            <P> beta_e = 1.0        </P>
+        </PARAMETERS>
+
+        <FUNCTION NAME="InitialConditions">
+            <E VAR="u" VALUE="0" />
+        </FUNCTION>
+
+        <VARIABLES>
+            <V ID="0"> u </V>
+        </VARIABLES>
+
+        <BOUNDARYREGIONS>
+            <B ID="0"> C[5-6]  </B>
+        </BOUNDARYREGIONS>
+
+        <BOUNDARYCONDITIONS>
+            <REGION REF="0">
+                <N VAR="u" VALUE="0" />
+            </REGION>
+        </BOUNDARYCONDITIONS>
+
+    </CONDITIONS>
+
+    <STIMULI>
+        <STIMULUS ID="0" TYPE = "StimulusRect">
+            <dim> 2  </dim>
+            <p_x1> -1.0</p_x1>
+            <p_y1> -0.001</p_y1>
+            <p_z1> 0.0</p_z1>
+            <p_x2> 1.0</p_x2>
+            <p_y2> 0.0005</p_y2>
+            <p_z2> 0.0</p_z2>
+            <p_is> 10000.0</p_is>
+            <p_strength> 2.0 </p_strength>
+
+            <PROTOCOL TYPE = "ProtocolSingle">
+                <START> 0.0  </START>
+                <DURATION>  0.1 </DURATION>
+            </PROTOCOL>
+        </STIMULUS>
+    </STIMULI>
+</NEKTAR>

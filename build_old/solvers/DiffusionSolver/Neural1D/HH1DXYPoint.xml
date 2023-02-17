@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <GEOMETRY DIM="1" SPACE="3">
+        <VERTEX>
+            <V ID="0">-4.00000000e+01 -4.00000000e+01 0.00000000e+00</V>
+            <V ID="1">-3.96475771e+01 -3.96475771e+01 0.00000000e+00</V>
+            <V ID="2">-3.92951542e+01 -3.92951542e+01 0.00000000e+00</V>
+        </VERTEX>
+        <ELEMENT>
+            <S ID="0">0 1</S>
+            <S ID="1">1 2</S>
+        </ELEMENT>
+        <CURVED />
+        <COMPOSITE>
+            <C ID="0"> S[0-1] </C>
+            <C ID="1"> V[0] </C>
+            <C ID="2"> V[2] </C>
+        </COMPOSITE>
+        <DOMAIN> C[0] </DOMAIN>
+    </GEOMETRY>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/master</GitBranch>
+            <GitSHA1>8685829d0c0a37463f6d841e292fffd3372c539f</GitSHA1>
+            <Hostname>Sehuns-Mac-Pro.local</Hostname>
+            <NektarVersion>5.0.0</NektarVersion>
+            <Timestamp>02-Mar-2021 17:08:50</Timestamp>
+        </Provenance>
+        <NekMeshCommandLine>OneDXYline.msh AP1DXYlinetest.xml:xml:uncompress </NekMeshCommandLine>
+    </Metadata>
+    <EXPANSIONS>
+        <E COMPOSITE="C[0]" NUMMODES="5" TYPE="MODIFIED" FIELDS="u" />
+    </EXPANSIONS>
+
+    <CONDITIONS>
+
+        <SOLVERINFO>
+            <I PROPERTY="EQTYPE" VALUE="MMFDiffusion" />
+            <I PROPERTY="Projection" VALUE="DisContinuous"/>
+            <I PROPERTY="DiffusionAdvancement" VALUE="Explicit" />
+            <I PROPERTY="TimeIntegrationMethod" VALUE="ForwardEuler" />
+            <I PROPERTY="TestType" VALUE="NeuralEP" />
+            <I PROPERTY="CellModel" VALUE="HodgkinHuxley" />
+            <I PROPERTY="SurfaceType" VALUE="Line" />
+            <!-- TangentX, TangentY, TangentXY, TangentZ, TangentCircular, LOCAL-->
+            <I PROPERTY="MMFDir" VALUE="LOCAL" />
+        </SOLVERINFO>
+
+        <PARAMETERS>
+            <P> TimeStep       = 2e-8      </P>
+            <P> NumSteps       = 1.5e7             </P>
+            <P> IO_CheckSteps  = 2e5              </P>
+            <P> IO_InfoSteps   = 2e5              </P>
+            <P> Chi            = 28                </P>
+            <P> Cm             = 0.125             </P>
+        </PARAMETERS>
+
+        <FUNCTION NAME="InitialConditions">
+            <E VAR="u" VALUE="-0.065" />
+        </FUNCTION>
+
+        <VARIABLES>
+            <V ID="0"> u </V>
+        </VARIABLES>
+
+        <BOUNDARYREGIONS>
+            <B ID="0"> C[1-2]  </B>
+        </BOUNDARYREGIONS>
+
+        <BOUNDARYCONDITIONS>
+            <REGION REF="0">
+                <N VAR="u" VALUE="0" />
+            </REGION>
+        </BOUNDARYCONDITIONS>
+
+    </CONDITIONS>
+
+    <STIMULI>
+        <STIMULUS ID="0" TYPE="StimulusPoint">
+            <p_strength> 0.22e-9 </p_strength>
+
+            <PROTOCOL TYPE = "ProtocolS1S2">
+                <START> 0.1  </START>
+                <DURATION>  0.1 </DURATION>
+                <S1CYCLELENGTH> 700.0 </S1CYCLELENGTH>
+                <NUM_S1> 50 </NUM_S1>
+                <S2CYCLELENGTH>0.0 </S2CYCLELENGTH>
+            </PROTOCOL>
+        </STIMULUS>
+    </STIMULI>
+</NEKTAR>
+

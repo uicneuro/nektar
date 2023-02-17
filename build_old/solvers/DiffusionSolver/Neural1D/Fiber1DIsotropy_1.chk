@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>abcb91c854670d8d9b28f99190d2c454d8d78aeb</GitSHA1>
+            <Hostname>laurel.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>30-Jan-2023 13:42:35</Timestamp>
+        </Provenance>
+        <ChkFileNum>1</ChkFileNum>
+        <SessionName0>Fiber1DIsotropy.xml</SessionName0>
+        <Time>0.0010000000000020409</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="u" SHAPE="Segment" BASIS="Modified_A" NUMMODESPERDIR="UNIORDER:4" ID="0-332" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">eJztwTEBAAAAwqD1T20JT6AAAAAAAAAAAAAAeBopoAAB</ELEMENTS>
+</NEKTAR>

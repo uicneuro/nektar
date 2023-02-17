@@ -973,7 +973,6 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
-        // field time integration
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
@@ -986,26 +985,24 @@ void MMFNeuralEP::DoSolveMMFZero()
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
             // Print out at every info step
-            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
-                      << " "
-                      << "Time: " << std::setw(12) << std::left << m_time
-                      << std::endl;
-
-            std::stringstream ss;
-            ss << cpuTime / 60.0 << " min.";
-            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
-                      << std::endl;
-
-            // fulltext.append("******************************");
-            // fulltext.append("\n");
-            // fulltext.append("Steps: " + std::to_string((step+1)));
-            // fulltext.append("\n");
-            // fulltext.append("Time: " + std::to_string(m_time));
-            // fulltext.append("\n");
+            // std::cout << "Steps: " << std::setw(8) << std::left << step + 1
+            //           << " "
+            //           << "Time: " << std::setw(12) << std::left << m_time
+            //           << std::endl;
 
             // std::stringstream ss;
-            // fulltext.append("CPU Time: " + ss.str());
-            // fulltext.append("\n");
+            // ss << cpuTime / 60.0 << " min.";
+            // std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+            //           << std::endl;
+
+            fulltext.append("\n");
+            fulltext.append("Steps: " + std::to_string((step+1)));
+            fulltext.append("\n");
+            fulltext.append("Time: " + std::to_string(m_time));
+            fulltext.append("\n");
+
+            fulltext.append("CPU Time: " + std::to_string(cpuTime / 60.0) + " min.");
+            fulltext.append("\n");
 
             cpuTime = 0.0;
         }
@@ -1014,37 +1011,24 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            // Array<OneD, NekDouble> dudt(nq);
-            // Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudt, 1);
-            // DisplayConductionVelocity(fields[0],dudt);
-
             int Iumax = Vmath::Iamax(nq, fields[0], 1);
-            std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
-                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
-                      << std::endl;
+            // std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
+            //           << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
+            //           << std::endl;
+
+            NekDouble umax = Vmath::Vamax(nq, fields[0], 1);
+            fulltext.append("u_max = " + std::to_string(umax));
+            fulltext.append(", x = " + std::to_string(x0[Iumax]));
+            fulltext.append(", y = " + std::to_string(x1[Iumax]));
+            fulltext.append("\n");
 
             // Print phim and phie at each node
-            if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
-            {
-                DisplayatNode(fields[0]);
-            }
-
-            // Array<OneD, NekDouble> PoissonRHS(nq,0.0);
-            // Array<OneD, NekDouble> PoissonLHS(nq,0.0);
-            // PoissonLHS = ComputeCovariantDiffusion(m_phiemovingframes,
-            // m_fields[1]->GetPhys());
-            // // PoissonRHS = ComputeCovariantDiffusion(m_unitmovingframes,
-            // m_fields[0]->GetPhys());
-
-            // Array<OneD, NekDouble> Poissonerr(nq);
-            // Vmath::Vadd(nq, PoissonRHS, 1, PoissonLHS, 1, Poissonerr, 1);
-
-            // OnlyValideinNode(m_NodeZone[0], Poissonerr);
-
-            // std::cout << "PoissonLHS = " << RootMeanSquare(PoissonLHS) << ",
-            // PoissonRHS = " << RootMeanSquare(PoissonRHS)
-            // << ", Poisson Error = " << RootMeanSquare(Poissonerr) <<
-            // std::endl;
+            // if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
+            // {
+            //     DisplayatNode(fields[0]);
+            // }
+            
+            std::cout << fulltext << "\n";
 
             Checkpoint_Output(nchk++);
             doCheckTime = false;
@@ -3226,6 +3210,8 @@ void MMFNeuralEP::v_EvaluateExactSolution(unsigned int field,
 
 void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
+    int nvar = m_fields.size();
+
     MMFSystem::v_GenerateSummary(s);
 
     SolverUtils::AddSummaryItem(s, "NeuralEPType",
@@ -3240,7 +3226,10 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
-    SolverUtils::AddSummaryItem(s, "ratio_re_ri", m_ratio_re_ri);
+    if(nvar==1)
+    {
+        SolverUtils::AddSummaryItem(s, "ratio_re_ri", m_ratio_re_ri);
+    }
 }
 } // namespace Nektar
 

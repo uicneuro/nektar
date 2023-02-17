@@ -1,0 +1,4313 @@
+Setupschemedata_3_4_3
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 1600, Myelin = 560, extracell = 0
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+GetMovingFrames: BEFORE
+GetMovingFrames: AFTER
+*** 1st Moving frames are NOT in unit length, Avg mag. = 6.65388 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 6.65388 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 6.65388 , 0 ) 
+*** MF 1 = ( 6.65388 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+ncdotMFFwd = ( 4.9015 , 5.02918 , 0 ) 
+ncdotMFBwd = ( 3.90381 , 5.02918 , 0 ) 
+Div: Euc - Cov = ( 1.11646e-10 , 1.12142e-10 , 0 ) 
+Curl: Euc - Cov = ( 1.12142e-10 , 1.11646e-10 , 9.40621e-11 , 9.34701e-11 ) 
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 29, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 30, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 31, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 32, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 33, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 34, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 35, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 36, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 37, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 38, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 39, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 40, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 41, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 42, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 43, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 44, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 45, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 46, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 47, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 48, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 49, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 50, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 51, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 52, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 53, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 54, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 55, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 56, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 57, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 58, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 59, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 60, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 61, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 62, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 63, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 64, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 65, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 66, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 67, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 68, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 69, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 70, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 71, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 72, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 73, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 74, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 75, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 76, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 77, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 78, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 79, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 80, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 81, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 82, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 83, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 84, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 85, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 86, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 87, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 88, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 89, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 90, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 91, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 92, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 93, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 94, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 95, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 96, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 97, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 98, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 99, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 100, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 101, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 102, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 103, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 104, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 105, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 106, Nodeid = -1, e1mag = 1, e2mag = 1
+Elemid = 107, Nodeid = -1, e1mag = 1, e2mag = 1
+
+Constructing phieunitMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 108 elements, adapated from MF1 = 56, MF2 = 42, MF3 = 10
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.468527 , 0.883449 , 0 ) 
+*** MF 1 = ( 0.883449 , 0.468527 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.468527 , 0.883449 , 0 ) 
+*** MF 1 = ( 0.883449 , 0.468527 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 108 elements, adapated from MF1 = 56, MF2 = 42, MF3 = 10
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.662597 , 1.24939 , 0 ) 
+*** MF 1 = ( 1.24939 , 0.662597 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.662597 , 1.24939 , 0 ) 
+*** MF 1 = ( 1.24939 , 0.662597 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+m_varcoeff = 0 , 6.65388 , 0 , 1.11646e-10 , 85.5022
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.662597 , 1.24939 , 0 , 3.82219e-09 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: TestMMFNeuralEP2DbiS10
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 4
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 5e-08
+	        No. of Steps: 20000000
+	 Checkpoints (steps): 20000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	          MediumType: Anisotropy
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2D
+	    SolverSchemeType: Default
+	             TimeMap: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         ElemNodeEnd: 27
+	       ElemMyelenEnd: 107
+	         Temperature: 24
+	             Helmtau: 1
+=======================================================================
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Initial: max um = 0
+Initial: max ue = 0
+Writing: "TestMMFNeuralEP2DbiS10_initial.chk"
+ (0.0002294s, XML)
+Steps: 20000    Time: 0.001       
+ CPU Time: 2.68708 min.
+u_max = 108.032 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,107.979,-0.0972147), (1,107.774,-0.147397), (2,2.1647,-0.120954), (3,0.0421614,-0.0900944), (4,-0.000188505,-0.06027), (5,-0.00103427,-0.0304457), (6,-0.00105082,-0.00062134),  
+
+Writing: "TestMMFNeuralEP2DbiS10_1.chk"
+ (0.000484399s, XML)
+Steps: 40000    Time: 0.002       
+ CPU Time: 2.68625 min.
+u_max = 110.211 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,110.158,-0.0972136), (1,109.953,-0.147394), (2,2.2448,-0.120951), (3,0.0437575,-0.0900922), (4,-0.000159156,-0.0602686), (5,-0.00103622,-0.0304449), (6,-0.0010534,-0.000621325),  
+
+Writing: "TestMMFNeuralEP2DbiS10_2.chk"
+ (0.000427792s, XML)
+Steps: 60000    Time: 0.003       
+ CPU Time: 2.686 min.
+u_max = 113.323 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,113.269,-0.0972119), (1,113.065,-0.147388), (2,2.36529,-0.120947), (3,0.0461597,-0.090089), (4,-0.000113714,-0.0602664), (5,-0.00103784,-0.0304439), (6,-0.00105593,-0.000621303),  
+
+Writing: "TestMMFNeuralEP2DbiS10_3.chk"
+ (0.000426009s, XML)
+Steps: 80000    Time: 0.004       
+ CPU Time: 2.68609 min.
+u_max = 116.926 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,116.873,-0.09721), (1,116.668,-0.147382), (2,2.51635,-0.120941), (3,0.049172,-0.0900851), (4,-5.59436e-05,-0.0602638), (5,-0.00103914,-0.0304426), (6,-0.00105839,-0.000621276),  
+
+Writing: "TestMMFNeuralEP2DbiS10_4.chk"
+ (0.000436248s, XML)
+Steps: 100000   Time: 0.005       
+ CPU Time: 2.68671 min.
+u_max = 120.656 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,120.602,-0.097208), (1,120.398,-0.147376), (2,2.69023,-0.120936), (3,0.0526397,-0.0900809), (4,1.08598e-05,-0.060261), (5,-0.00104023,-0.0304411), (6,-0.0010608,-0.000621247),  
+
+Writing: "TestMMFNeuralEP2DbiS10_5.chk"
+ (0.00043173s, XML)
+Steps: 120000   Time: 0.006       
+ CPU Time: 2.68423 min.
+u_max = 124.248 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,124.195,-0.097206), (1,123.99,-0.147369), (2,2.88176,-0.12093), (3,0.0564597,-0.0900767), (4,8.48224e-05,-0.0602582), (5,-0.00104111,-0.0304397), (6,-0.00106316,-0.000621218),  
+
+Writing: "TestMMFNeuralEP2DbiS10_6.chk"
+ (0.00042642s, XML)
+Steps: 140000   Time: 0.007       
+ CPU Time: 2.68568 min.
+u_max = 127.543 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,127.49,-0.0972041), (1,127.285,-0.147362), (2,3.08817,-0.120924), (3,0.0605766,-0.0900725), (4,0.000164731,-0.0602554), (5,-0.00104186,-0.0304383), (6,-0.00106547,-0.000621189),  
+
+Writing: "TestMMFNeuralEP2DbiS10_7.chk"
+ (0.000434454s, XML)
+Steps: 160000   Time: 0.008       
+ CPU Time: 2.68573 min.
+u_max = 130.46 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,130.406,-0.0972024), (1,130.202,-0.147356), (2,3.30849,-0.120919), (3,0.0649711,-0.0900686), (4,0.00025016,-0.0602528), (5,-0.00104243,-0.030437), (6,-0.00106773,-0.000621162),  
+
+Writing: "TestMMFNeuralEP2DbiS10_8.chk"
+ (0.000428774s, XML)
+Steps: 180000   Time: 0.009       
+ CPU Time: 2.68238 min.
+u_max = 132.974 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,132.921,-0.0972008), (1,132.716,-0.14735), (2,3.54296,-0.120914), (3,0.0696481,-0.090065), (4,0.000341401,-0.0602504), (5,-0.00104285,-0.0304358), (6,-0.00106994,-0.000621138),  
+
+Writing: "TestMMFNeuralEP2DbiS10_9.chk"
+ (0.000431509s, XML)
+Steps: 200000   Time: 0.01        
+ CPU Time: 2.68179 min.
+u_max = 135.097 at x = 0.00025, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,135.044,-0.0971994), (1,134.839,-0.147345), (2,3.79256,-0.12091), (3,0.0746269,-0.0900617), (4,0.000438686,-0.0602482), (5,-0.0010431,-0.0304346), (6,-0.0010721,-0.000621115),  
+
+Writing: "TestMMFNeuralEP2DbiS10_10.chk"
+ (0.000432201s, XML)
+Steps: 220000   Time: 0.011       
+ CPU Time: 2.67069 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_11.chk"
+ (0.000171371s, XML)
+Steps: 240000   Time: 0.012       
+ CPU Time: 2.64248 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_12.chk"
+ (0.000179186s, XML)
+Steps: 260000   Time: 0.013       
+ CPU Time: 2.64299 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_13.chk"
+ (0.000180609s, XML)
+Steps: 280000   Time: 0.014       
+ CPU Time: 2.64266 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_14.chk"
+ (0.000182682s, XML)
+Steps: 300000   Time: 0.015       
+ CPU Time: 2.64361 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_15.chk"
+ (0.000188504s, XML)
+Steps: 320000   Time: 0.016       
+ CPU Time: 2.64104 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_16.chk"
+ (0.000180298s, XML)
+Steps: 340000   Time: 0.017       
+ CPU Time: 2.64336 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_17.chk"
+ (0.000177463s, XML)
+Steps: 360000   Time: 0.018       
+ CPU Time: 2.63873 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_18.chk"
+ (0.000181501s, XML)
+Steps: 380000   Time: 0.019       
+ CPU Time: 2.6367 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_19.chk"
+ (0.000182282s, XML)
+Steps: 400000   Time: 0.02        
+ CPU Time: 2.64412 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_20.chk"
+ (0.00018153s, XML)
+Steps: 420000   Time: 0.021       
+ CPU Time: 2.64291 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_21.chk"
+ (0.000182442s, XML)
+Steps: 440000   Time: 0.022       
+ CPU Time: 2.64212 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_22.chk"
+ (0.000187612s, XML)
+Steps: 460000   Time: 0.023       
+ CPU Time: 2.64054 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_23.chk"
+ (0.00018126s, XML)
+Steps: 480000   Time: 0.024       
+ CPU Time: 2.63805 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_24.chk"
+ (0.000188173s, XML)
+Steps: 500000   Time: 0.025       
+ CPU Time: 2.6422 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_25.chk"
+ (0.000188944s, XML)
+Steps: 520000   Time: 0.026       
+ CPU Time: 2.63954 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_26.chk"
+ (0.00675534s, XML)
+Steps: 540000   Time: 0.027       
+ CPU Time: 2.64439 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_27.chk"
+ (0.000190337s, XML)
+Steps: 560000   Time: 0.028       
+ CPU Time: 2.64067 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_28.chk"
+ (0.000188915s, XML)
+Steps: 580000   Time: 0.029       
+ CPU Time: 2.64032 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_29.chk"
+ (0.000191118s, XML)
+Steps: 600000   Time: 0.03        
+ CPU Time: 2.6425 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_30.chk"
+ (0.000184776s, XML)
+Steps: 620000   Time: 0.031       
+ CPU Time: 2.62158 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_31.chk"
+ (0.00019238s, XML)
+Steps: 640000   Time: 0.032       
+ CPU Time: 2.58926 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_32.chk"
+ (0.000183124s, XML)
+Steps: 660000   Time: 0.033       
+ CPU Time: 2.58551 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_33.chk"
+ (0.000184416s, XML)
+Steps: 680000   Time: 0.034       
+ CPU Time: 2.58661 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_34.chk"
+ (0.000190086s, XML)
+Steps: 700000   Time: 0.035       
+ CPU Time: 2.58673 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_35.chk"
+ (0.000185097s, XML)
+Steps: 720000   Time: 0.036       
+ CPU Time: 2.58877 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_36.chk"
+ (0.000190117s, XML)
+Steps: 740000   Time: 0.037       
+ CPU Time: 2.58613 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_37.chk"
+ (0.000190427s, XML)
+Steps: 760000   Time: 0.038       
+ CPU Time: 2.57704 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_38.chk"
+ (0.000185538s, XML)
+Steps: 780000   Time: 0.039       
+ CPU Time: 2.57438 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_39.chk"
+ (0.000177483s, XML)
+Steps: 800000   Time: 0.04        
+ CPU Time: 2.57498 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_40.chk"
+ (0.00018132s, XML)
+Steps: 820000   Time: 0.041       
+ CPU Time: 2.57581 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_41.chk"
+ (0.000188443s, XML)
+Steps: 840000   Time: 0.042       
+ CPU Time: 2.57741 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_42.chk"
+ (0.000182663s, XML)
+Steps: 860000   Time: 0.043       
+ CPU Time: 2.57588 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_43.chk"
+ (0.00658293s, XML)
+Steps: 880000   Time: 0.044       
+ CPU Time: 2.57486 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_44.chk"
+ (0.000186289s, XML)
+Steps: 900000   Time: 0.045       
+ CPU Time: 2.57689 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_45.chk"
+ (0.000187782s, XML)
+Steps: 920000   Time: 0.046       
+ CPU Time: 2.57598 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_46.chk"
+ (0.000180769s, XML)
+Steps: 940000   Time: 0.047       
+ CPU Time: 2.57439 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_47.chk"
+ (0.000185588s, XML)
+Steps: 960000   Time: 0.048       
+ CPU Time: 2.57502 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_48.chk"
+ (0.000190167s, XML)
+Steps: 980000   Time: 0.049       
+ CPU Time: 2.57458 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_49.chk"
+ (0.000190408s, XML)
+Steps: 1000000  Time: 0.05        
+ CPU Time: 2.57532 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_50.chk"
+ (0.000188674s, XML)
+Steps: 1020000  Time: 0.051       
+ CPU Time: 2.5735 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_51.chk"
+ (0.00018642s, XML)
+Steps: 1040000  Time: 0.052       
+ CPU Time: 2.57095 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_52.chk"
+ (0.000182983s, XML)
+Steps: 1060000  Time: 0.053       
+ CPU Time: 2.57231 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_53.chk"
+ (0.000191138s, XML)
+Steps: 1080000  Time: 0.054       
+ CPU Time: 2.581 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_54.chk"
+ (0.000177092s, XML)
+Steps: 1100000  Time: 0.055       
+ CPU Time: 2.57785 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_55.chk"
+ (0.000189796s, XML)
+Steps: 1120000  Time: 0.056       
+ CPU Time: 2.57424 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_56.chk"
+ (0.000184706s, XML)
+Steps: 1140000  Time: 0.057       
+ CPU Time: 2.57198 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_57.chk"
+ (0.000180178s, XML)
+Steps: 1160000  Time: 0.058       
+ CPU Time: 2.57365 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_58.chk"
+ (0.000182202s, XML)
+Steps: 1180000  Time: 0.059       
+ CPU Time: 2.57338 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_59.chk"
+ (0.000188694s, XML)
+Steps: 1200000  Time: 0.06        
+ CPU Time: 2.57454 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_60.chk"
+ (0.000181971s, XML)
+Steps: 1220000  Time: 0.061       
+ CPU Time: 2.57541 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_61.chk"
+ (0.00678796s, XML)
+Steps: 1240000  Time: 0.062       
+ CPU Time: 2.57246 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_62.chk"
+ (0.000181962s, XML)
+Steps: 1260000  Time: 0.063       
+ CPU Time: 2.57582 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_63.chk"
+ (0.000184756s, XML)
+Steps: 1280000  Time: 0.064       
+ CPU Time: 2.57151 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_64.chk"
+ (0.000181741s, XML)
+Steps: 1300000  Time: 0.065       
+ CPU Time: 2.57297 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_65.chk"
+ (0.000183103s, XML)
+Steps: 1320000  Time: 0.066       
+ CPU Time: 2.57275 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_66.chk"
+ (0.000182252s, XML)
+Steps: 1340000  Time: 0.067       
+ CPU Time: 2.56394 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_67.chk"
+ (0.00018096s, XML)
+Steps: 1360000  Time: 0.068       
+ CPU Time: 2.57189 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_68.chk"
+ (0.000188343s, XML)
+Steps: 1380000  Time: 0.069       
+ CPU Time: 2.57416 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_69.chk"
+ (0.000179156s, XML)
+Steps: 1400000  Time: 0.07        
+ CPU Time: 2.57628 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_70.chk"
+ (0.000193453s, XML)
+Steps: 1420000  Time: 0.071       
+ CPU Time: 2.57364 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_71.chk"
+ (0.000182582s, XML)
+Steps: 1440000  Time: 0.072       
+ CPU Time: 2.57547 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_72.chk"
+ (0.000189686s, XML)
+Steps: 1460000  Time: 0.073       
+ CPU Time: 2.57271 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_73.chk"
+ (0.000199655s, XML)
+Steps: 1480000  Time: 0.074       
+ CPU Time: 2.58423 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_74.chk"
+ (0.000181931s, XML)
+Steps: 1500000  Time: 0.075       
+ CPU Time: 2.57382 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_75.chk"
+ (0.000185949s, XML)
+Steps: 1520000  Time: 0.076       
+ CPU Time: 2.57773 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_76.chk"
+ (0.000188985s, XML)
+Steps: 1540000  Time: 0.077       
+ CPU Time: 2.57487 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_77.chk"
+ (0.000183695s, XML)
+Steps: 1560000  Time: 0.078       
+ CPU Time: 2.57543 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_78.chk"
+ (0.000186249s, XML)
+Steps: 1580000  Time: 0.079       
+ CPU Time: 2.57494 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_79.chk"
+ (0.0001866s, XML)
+Steps: 1600000  Time: 0.08        
+ CPU Time: 2.57731 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_80.chk"
+ (0.000196128s, XML)
+Steps: 1620000  Time: 0.081       
+ CPU Time: 2.57568 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_81.chk"
+ (0.000183734s, XML)
+Steps: 1640000  Time: 0.082       
+ CPU Time: 2.57781 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_82.chk"
+ (0.000185428s, XML)
+Steps: 1660000  Time: 0.083       
+ CPU Time: 2.57821 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_83.chk"
+ (0.000192521s, XML)
+Steps: 1680000  Time: 0.084       
+ CPU Time: 2.57783 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_84.chk"
+ (0.000177262s, XML)
+Steps: 1700000  Time: 0.085       
+ CPU Time: 2.57631 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_85.chk"
+ (0.000185749s, XML)
+Steps: 1720000  Time: 0.086       
+ CPU Time: 2.57869 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_86.chk"
+ (0.000189786s, XML)
+Steps: 1740000  Time: 0.087       
+ CPU Time: 2.57924 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_87.chk"
+ (0.000187332s, XML)
+Steps: 1760000  Time: 0.088       
+ CPU Time: 2.57616 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_88.chk"
+ (0.00017606s, XML)
+Steps: 1780000  Time: 0.089       
+ CPU Time: 2.58012 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_89.chk"
+ (0.000169368s, XML)
+Steps: 1800000  Time: 0.09        
+ CPU Time: 2.57827 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_90.chk"
+ (0.000205606s, XML)
+Steps: 1820000  Time: 0.091       
+ CPU Time: 2.582 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_91.chk"
+ (0.000199805s, XML)
+Steps: 1840000  Time: 0.092       
+ CPU Time: 2.58627 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_92.chk"
+ (0.000202209s, XML)
+Steps: 1860000  Time: 0.093       
+ CPU Time: 2.5832 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_93.chk"
+ (0.000189967s, XML)
+Steps: 1880000  Time: 0.094       
+ CPU Time: 2.58469 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_94.chk"
+ (0.00660376s, XML)
+Steps: 1900000  Time: 0.095       
+ CPU Time: 2.58484 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_95.chk"
+ (0.000190898s, XML)
+Steps: 1920000  Time: 0.096       
+ CPU Time: 2.5833 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_96.chk"
+ (0.000190147s, XML)
+Steps: 1940000  Time: 0.097       
+ CPU Time: 2.58 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_97.chk"
+ (0.000184726s, XML)
+Steps: 1960000  Time: 0.098       
+ CPU Time: 2.58039 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_98.chk"
+ (0.000189155s, XML)
+Steps: 1980000  Time: 0.099       
+ CPU Time: 2.58216 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_99.chk"
+ (0.000179737s, XML)
+Steps: 2000000  Time: 0.1         
+ CPU Time: 2.57947 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_100.chk"
+ (0.000185888s, XML)
+Steps: 2020000  Time: 0.101       
+ CPU Time: 2.57659 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_101.chk"
+ (0.000192631s, XML)
+Steps: 2040000  Time: 0.102       
+ CPU Time: 2.57962 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_102.chk"
+ (0.000183163s, XML)
+Steps: 2060000  Time: 0.103       
+ CPU Time: 2.57777 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_103.chk"
+ (0.000194024s, XML)
+Steps: 2080000  Time: 0.104       
+ CPU Time: 2.57924 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_104.chk"
+ (0.000186911s, XML)
+Steps: 2100000  Time: 0.105       
+ CPU Time: 2.57791 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_105.chk"
+ (0.000187642s, XML)
+Steps: 2120000  Time: 0.106       
+ CPU Time: 2.57905 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_106.chk"
+ (0.000182973s, XML)
+Steps: 2140000  Time: 0.107       
+ CPU Time: 2.5821 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_107.chk"
+ (0.000193543s, XML)
+Steps: 2160000  Time: 0.108       
+ CPU Time: 2.58118 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_108.chk"
+ (0.00018128s, XML)
+Steps: 2180000  Time: 0.109       
+ CPU Time: 2.58075 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_109.chk"
+ (0.000190698s, XML)
+Steps: 2200000  Time: 0.11        
+ CPU Time: 2.58264 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_110.chk"
+ (0.000185458s, XML)
+Steps: 2220000  Time: 0.111       
+ CPU Time: 2.57984 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_111.chk"
+ (0.000177423s, XML)
+Steps: 2240000  Time: 0.112       
+ CPU Time: 2.57791 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_112.chk"
+ (0.000189816s, XML)
+Steps: 2260000  Time: 0.113       
+ CPU Time: 2.57225 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_113.chk"
+ (0.00019176s, XML)
+Steps: 2280000  Time: 0.114       
+ CPU Time: 2.57264 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_114.chk"
+ (0.000184396s, XML)
+Steps: 2300000  Time: 0.115       
+ CPU Time: 2.57399 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_115.chk"
+ (0.000187652s, XML)
+Steps: 2320000  Time: 0.116       
+ CPU Time: 2.57778 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_116.chk"
+ (0.000192781s, XML)
+Steps: 2340000  Time: 0.117       
+ CPU Time: 2.57731 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_117.chk"
+ (0.000192732s, XML)
+Steps: 2360000  Time: 0.118       
+ CPU Time: 2.57634 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_118.chk"
+ (0.000188664s, XML)
+Steps: 2380000  Time: 0.119       
+ CPU Time: 2.57416 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_119.chk"
+ (0.000190778s, XML)
+Steps: 2400000  Time: 0.12        
+ CPU Time: 2.57093 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_120.chk"
+ (0.000184396s, XML)
+Steps: 2420000  Time: 0.121       
+ CPU Time: 2.57186 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_121.chk"
+ (0.000189686s, XML)
+Steps: 2440000  Time: 0.122       
+ CPU Time: 2.57512 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_122.chk"
+ (0.000197811s, XML)
+Steps: 2460000  Time: 0.123       
+ CPU Time: 2.57727 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_123.chk"
+ (0.000191108s, XML)
+Steps: 2480000  Time: 0.124       
+ CPU Time: 2.58282 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_124.chk"
+ (0.000191079s, XML)
+Steps: 2500000  Time: 0.125       
+ CPU Time: 2.57516 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_125.chk"
+ (0.000187441s, XML)
+Steps: 2520000  Time: 0.126       
+ CPU Time: 2.57544 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_126.chk"
+ (0.000188013s, XML)
+Steps: 2540000  Time: 0.127       
+ CPU Time: 2.57581 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_127.chk"
+ (0.000191689s, XML)
+Steps: 2560000  Time: 0.128       
+ CPU Time: 2.57461 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_128.chk"
+ (0.000188914s, XML)
+Steps: 2580000  Time: 0.129       
+ CPU Time: 2.57467 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_129.chk"
+ (0.000179256s, XML)
+Steps: 2600000  Time: 0.13        
+ CPU Time: 2.57734 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_130.chk"
+ (0.000189716s, XML)
+Steps: 2620000  Time: 0.131       
+ CPU Time: 2.57761 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_131.chk"
+ (0.00019181s, XML)
+Steps: 2640000  Time: 0.132       
+ CPU Time: 2.57747 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_132.chk"
+ (0.000191289s, XML)
+Steps: 2660000  Time: 0.133       
+ CPU Time: 2.57577 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_133.chk"
+ (0.000187632s, XML)
+Steps: 2680000  Time: 0.134       
+ CPU Time: 2.58146 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_134.chk"
+ (0.000193663s, XML)
+Steps: 2700000  Time: 0.135       
+ CPU Time: 2.58274 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_135.chk"
+ (0.000187943s, XML)
+Steps: 2720000  Time: 0.136       
+ CPU Time: 2.5837 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_136.chk"
+ (0.000185167s, XML)
+Steps: 2740000  Time: 0.137       
+ CPU Time: 2.58718 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_137.chk"
+ (0.000188714s, XML)
+Steps: 2760000  Time: 0.138       
+ CPU Time: 2.5835 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_138.chk"
+ (0.000188644s, XML)
+Steps: 2780000  Time: 0.139       
+ CPU Time: 2.58203 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_139.chk"
+ (0.000189566s, XML)
+Steps: 2800000  Time: 0.14        
+ CPU Time: 2.58083 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_140.chk"
+ (0.000192702s, XML)
+Steps: 2820000  Time: 0.141       
+ CPU Time: 2.58542 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_141.chk"
+ (0.000190687s, XML)
+Steps: 2840000  Time: 0.142       
+ CPU Time: 2.58169 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_142.chk"
+ (0.000189756s, XML)
+Steps: 2860000  Time: 0.143       
+ CPU Time: 2.58014 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_143.chk"
+ (0.000189736s, XML)
+Steps: 2880000  Time: 0.144       
+ CPU Time: 2.58401 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_144.chk"
+ (0.000177383s, XML)
+Steps: 2900000  Time: 0.145       
+ CPU Time: 2.58217 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_145.chk"
+ (0.000186069s, XML)
+Steps: 2920000  Time: 0.146       
+ CPU Time: 2.57881 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_146.chk"
+ (0.00678793s, XML)
+Steps: 2940000  Time: 0.147       
+ CPU Time: 2.57468 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_147.chk"
+ (0.000196137s, XML)
+Steps: 2960000  Time: 0.148       
+ CPU Time: 2.57905 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_148.chk"
+ (0.000182923s, XML)
+Steps: 2980000  Time: 0.149       
+ CPU Time: 2.57928 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_149.chk"
+ (0.000189977s, XML)
+Steps: 3000000  Time: 0.15        
+ CPU Time: 2.58369 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_150.chk"
+ (0.000191069s, XML)
+Steps: 3020000  Time: 0.151       
+ CPU Time: 2.58318 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_151.chk"
+ (0.000203131s, XML)
+Steps: 3040000  Time: 0.152       
+ CPU Time: 2.58287 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_152.chk"
+ (0.000199795s, XML)
+Steps: 3060000  Time: 0.153       
+ CPU Time: 2.58329 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_153.chk"
+ (0.00019185s, XML)
+Steps: 3080000  Time: 0.154       
+ CPU Time: 2.58414 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_154.chk"
+ (0.000183574s, XML)
+Steps: 3100000  Time: 0.155       
+ CPU Time: 2.58127 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_155.chk"
+ (0.000185418s, XML)
+Steps: 3120000  Time: 0.156       
+ CPU Time: 2.58355 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_156.chk"
+ (0.00019721s, XML)
+Steps: 3140000  Time: 0.157       
+ CPU Time: 2.57963 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_157.chk"
+ (0.000190177s, XML)
+Steps: 3160000  Time: 0.158       
+ CPU Time: 2.57829 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_158.chk"
+ (0.000196648s, XML)
+Steps: 3180000  Time: 0.159       
+ CPU Time: 2.58031 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_159.chk"
+ (0.00019239s, XML)
+Steps: 3200000  Time: 0.16        
+ CPU Time: 2.58316 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_160.chk"
+ (0.000195256s, XML)
+Steps: 3220000  Time: 0.161       
+ CPU Time: 2.58167 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_161.chk"
+ (0.000193032s, XML)
+Steps: 3240000  Time: 0.162       
+ CPU Time: 2.58151 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_162.chk"
+ (0.000182663s, XML)
+Steps: 3260000  Time: 0.163       
+ CPU Time: 2.58223 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_163.chk"
+ (0.000185909s, XML)
+Steps: 3280000  Time: 0.164       
+ CPU Time: 2.58406 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_164.chk"
+ (0.000184606s, XML)
+Steps: 3300000  Time: 0.165       
+ CPU Time: 2.58278 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_165.chk"
+ (0.000184055s, XML)
+Steps: 3320000  Time: 0.166       
+ CPU Time: 2.5828 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_166.chk"
+ (0.000194064s, XML)
+Steps: 3340000  Time: 0.167       
+ CPU Time: 2.57878 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_167.chk"
+ (0.000195466s, XML)
+Steps: 3360000  Time: 0.168       
+ CPU Time: 2.58271 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_168.chk"
+ (0.000183875s, XML)
+Steps: 3380000  Time: 0.169       
+ CPU Time: 2.58312 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_169.chk"
+ (0.000186079s, XML)
+Steps: 3400000  Time: 0.17        
+ CPU Time: 2.57703 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_170.chk"
+ (0.000187051s, XML)
+Steps: 3420000  Time: 0.171       
+ CPU Time: 2.5821 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_171.chk"
+ (0.000184346s, XML)
+Steps: 3440000  Time: 0.172       
+ CPU Time: 2.5829 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_172.chk"
+ (0.00018636s, XML)
+Steps: 3460000  Time: 0.173       
+ CPU Time: 2.58195 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_173.chk"
+ (0.000189035s, XML)
+Steps: 3480000  Time: 0.174       
+ CPU Time: 2.58385 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_174.chk"
+ (0.000175219s, XML)
+Steps: 3500000  Time: 0.175       
+ CPU Time: 2.58362 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_175.chk"
+ (0.000184115s, XML)
+Steps: 3520000  Time: 0.176       
+ CPU Time: 2.58291 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_176.chk"
+ (0.000185488s, XML)
+Steps: 3540000  Time: 0.177       
+ CPU Time: 2.58212 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_177.chk"
+ (0.000183504s, XML)
+Steps: 3560000  Time: 0.178       
+ CPU Time: 2.58648 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_178.chk"
+ (0.000191459s, XML)
+Steps: 3580000  Time: 0.179       
+ CPU Time: 2.58558 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_179.chk"
+ (0.000185448s, XML)
+Steps: 3600000  Time: 0.18        
+ CPU Time: 2.58066 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_180.chk"
+ (0.000182803s, XML)
+Steps: 3620000  Time: 0.181       
+ CPU Time: 2.57117 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_181.chk"
+ (0.000189486s, XML)
+Steps: 3640000  Time: 0.182       
+ CPU Time: 2.57759 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_182.chk"
+ (0.000187401s, XML)
+Steps: 3660000  Time: 0.183       
+ CPU Time: 2.57024 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_183.chk"
+ (0.00019743s, XML)
+Steps: 3680000  Time: 0.184       
+ CPU Time: 2.56894 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_184.chk"
+ (0.000184546s, XML)
+Steps: 3700000  Time: 0.185       
+ CPU Time: 2.57067 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_185.chk"
+ (0.000189716s, XML)
+Steps: 3720000  Time: 0.186       
+ CPU Time: 2.57991 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_186.chk"
+ (0.000199174s, XML)
+Steps: 3740000  Time: 0.187       
+ CPU Time: 2.56745 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_187.chk"
+ (0.000188935s, XML)
+Steps: 3760000  Time: 0.188       
+ CPU Time: 2.56762 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_188.chk"
+ (0.000193132s, XML)
+Steps: 3780000  Time: 0.189       
+ CPU Time: 2.56948 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_189.chk"
+ (0.000182843s, XML)
+Steps: 3800000  Time: 0.19        
+ CPU Time: 2.57042 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_190.chk"
+ (0.000196579s, XML)
+Steps: 3820000  Time: 0.191       
+ CPU Time: 2.58062 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_191.chk"
+ (0.000188483s, XML)
+Steps: 3840000  Time: 0.192       
+ CPU Time: 2.57234 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_192.chk"
+ (0.000187712s, XML)
+Steps: 3860000  Time: 0.193       
+ CPU Time: 2.57084 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_193.chk"
+ (0.000192992s, XML)
+Steps: 3880000  Time: 0.194       
+ CPU Time: 2.57768 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_194.chk"
+ (0.000188354s, XML)
+Steps: 3900000  Time: 0.195       
+ CPU Time: 2.5777 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_195.chk"
+ (0.000199444s, XML)
+Steps: 3920000  Time: 0.196       
+ CPU Time: 2.57256 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_196.chk"
+ (0.00019166s, XML)
+Steps: 3940000  Time: 0.197       
+ CPU Time: 2.57181 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_197.chk"
+ (0.000189154s, XML)
+Steps: 3960000  Time: 0.198       
+ CPU Time: 2.5716 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_198.chk"
+ (0.000195236s, XML)
+Steps: 3980000  Time: 0.199       
+ CPU Time: 2.57556 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_199.chk"
+ (0.000192001s, XML)
+Steps: 4000000  Time: 0.2         
+ CPU Time: 2.57787 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_200.chk"
+ (0.000192411s, XML)
+Steps: 4020000  Time: 0.201       
+ CPU Time: 2.57902 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_201.chk"
+ (0.000189154s, XML)
+Steps: 4040000  Time: 0.202       
+ CPU Time: 2.57851 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_202.chk"
+ (0.000189956s, XML)
+Steps: 4060000  Time: 0.203       
+ CPU Time: 2.58039 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_203.chk"
+ (0.000196299s, XML)
+Steps: 4080000  Time: 0.204       
+ CPU Time: 2.57985 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_204.chk"
+ (0.000181851s, XML)
+Steps: 4100000  Time: 0.205       
+ CPU Time: 2.57734 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_205.chk"
+ (0.000191489s, XML)
+Steps: 4120000  Time: 0.206       
+ CPU Time: 2.57754 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_206.chk"
+ (0.000197089s, XML)
+Steps: 4140000  Time: 0.207       
+ CPU Time: 2.57496 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_207.chk"
+ (0.00019222s, XML)
+Steps: 4160000  Time: 0.208       
+ CPU Time: 2.57043 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_208.chk"
+ (0.000184917s, XML)
+Steps: 4180000  Time: 0.209       
+ CPU Time: 2.57452 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_209.chk"
+ (0.000190517s, XML)
+Steps: 4200000  Time: 0.21        
+ CPU Time: 2.57294 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_210.chk"
+ (0.000200255s, XML)
+Steps: 4220000  Time: 0.211       
+ CPU Time: 2.57122 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_211.chk"
+ (0.000192491s, XML)
+Steps: 4240000  Time: 0.212       
+ CPU Time: 2.57245 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_212.chk"
+ (0.000191368s, XML)
+Steps: 4260000  Time: 0.213       
+ CPU Time: 2.57608 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_213.chk"
+ (0.000189846s, XML)
+Steps: 4280000  Time: 0.214       
+ CPU Time: 2.57932 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_214.chk"
+ (0.000190076s, XML)
+Steps: 4300000  Time: 0.215       
+ CPU Time: 2.58058 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_215.chk"
+ (0.000190207s, XML)
+Steps: 4320000  Time: 0.216       
+ CPU Time: 2.58048 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_216.chk"
+ (0.000193373s, XML)
+Steps: 4340000  Time: 0.217       
+ CPU Time: 2.57729 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_217.chk"
+ (0.000201137s, XML)
+Steps: 4360000  Time: 0.218       
+ CPU Time: 2.57503 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_218.chk"
+ (0.000197581s, XML)
+Steps: 4380000  Time: 0.219       
+ CPU Time: 2.5797 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_219.chk"
+ (0.000180709s, XML)
+Steps: 4400000  Time: 0.22        
+ CPU Time: 2.57717 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_220.chk"
+ (0.000195286s, XML)
+Steps: 4420000  Time: 0.221       
+ CPU Time: 2.58081 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_221.chk"
+ (0.000188523s, XML)
+Steps: 4440000  Time: 0.222       
+ CPU Time: 2.57782 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_222.chk"
+ (0.000187692s, XML)
+Steps: 4460000  Time: 0.223       
+ CPU Time: 2.58015 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_223.chk"
+ (0.000188503s, XML)
+Steps: 4480000  Time: 0.224       
+ CPU Time: 2.58238 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_224.chk"
+ (0.000189175s, XML)
+Steps: 4500000  Time: 0.225       
+ CPU Time: 2.58142 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_225.chk"
+ (0.000240251s, XML)
+Steps: 4520000  Time: 0.226       
+ CPU Time: 2.57649 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_226.chk"
+ (0.000180879s, XML)
+Steps: 4540000  Time: 0.227       
+ CPU Time: 2.57705 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_227.chk"
+ (0.000179827s, XML)
+Steps: 4560000  Time: 0.228       
+ CPU Time: 2.57701 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_228.chk"
+ (0.000174868s, XML)
+Steps: 4580000  Time: 0.229       
+ CPU Time: 2.57676 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_229.chk"
+ (0.000182573s, XML)
+Steps: 4600000  Time: 0.23        
+ CPU Time: 2.57723 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_230.chk"
+ (0.000172784s, XML)
+Steps: 4620000  Time: 0.231       
+ CPU Time: 2.57975 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_231.chk"
+ (0.000174998s, XML)
+Steps: 4640000  Time: 0.232       
+ CPU Time: 2.58229 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_232.chk"
+ (0.000179226s, XML)
+Steps: 4660000  Time: 0.233       
+ CPU Time: 2.58388 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_233.chk"
+ (0.000179166s, XML)
+Steps: 4680000  Time: 0.234       
+ CPU Time: 2.58085 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_234.chk"
+ (0.000173936s, XML)
+Steps: 4700000  Time: 0.235       
+ CPU Time: 2.57195 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_235.chk"
+ (0.000179827s, XML)
+Steps: 4720000  Time: 0.236       
+ CPU Time: 2.57289 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_236.chk"
+ (0.000178345s, XML)
+Steps: 4740000  Time: 0.237       
+ CPU Time: 2.57549 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_237.chk"
+ (0.000182973s, XML)
+Steps: 4760000  Time: 0.238       
+ CPU Time: 2.57722 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_238.chk"
+ (0.000181129s, XML)
+Steps: 4780000  Time: 0.239       
+ CPU Time: 2.57361 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_239.chk"
+ (0.000174518s, XML)
+Steps: 4800000  Time: 0.24        
+ CPU Time: 2.56851 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_240.chk"
+ (0.000177843s, XML)
+Steps: 4820000  Time: 0.241       
+ CPU Time: 2.58422 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_241.chk"
+ (0.000166482s, XML)
+Steps: 4840000  Time: 0.242       
+ CPU Time: 2.57672 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_242.chk"
+ (0.000166993s, XML)
+Steps: 4860000  Time: 0.243       
+ CPU Time: 2.57802 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_243.chk"
+ (0.000163707s, XML)
+Steps: 4880000  Time: 0.244       
+ CPU Time: 2.57578 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_244.chk"
+ (0.000198763s, XML)
+Steps: 4900000  Time: 0.245       
+ CPU Time: 2.57645 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_245.chk"
+ (0.000238056s, XML)
+Steps: 4920000  Time: 0.246       
+ CPU Time: 2.58022 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_246.chk"
+ (0.000196108s, XML)
+Steps: 4940000  Time: 0.247       
+ CPU Time: 2.5819 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_247.chk"
+ (0.000194605s, XML)
+Steps: 4960000  Time: 0.248       
+ CPU Time: 2.58371 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_248.chk"
+ (0.000193232s, XML)
+Steps: 4980000  Time: 0.249       
+ CPU Time: 2.57769 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_249.chk"
+ (0.00018667s, XML)
+Steps: 5000000  Time: 0.25        
+ CPU Time: 2.57924 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_250.chk"
+ (0.000190097s, XML)
+Steps: 5020000  Time: 0.251       
+ CPU Time: 2.57993 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_251.chk"
+ (0.000197431s, XML)
+Steps: 5040000  Time: 0.252       
+ CPU Time: 2.57904 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_252.chk"
+ (0.000193553s, XML)
+Steps: 5060000  Time: 0.253       
+ CPU Time: 2.57631 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_253.chk"
+ (0.000187031s, XML)
+Steps: 5080000  Time: 0.254       
+ CPU Time: 2.57904 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_254.chk"
+ (0.000195827s, XML)
+Steps: 5100000  Time: 0.255       
+ CPU Time: 2.57653 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_255.chk"
+ (0.00018149s, XML)
+Steps: 5120000  Time: 0.256       
+ CPU Time: 2.57766 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_256.chk"
+ (0.000183665s, XML)
+Steps: 5140000  Time: 0.257       
+ CPU Time: 2.58007 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_257.chk"
+ (0.000186259s, XML)
+Steps: 5160000  Time: 0.258       
+ CPU Time: 2.57734 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_258.chk"
+ (0.000180819s, XML)
+Steps: 5180000  Time: 0.259       
+ CPU Time: 2.57516 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_259.chk"
+ (0.000188594s, XML)
+Steps: 5200000  Time: 0.26        
+ CPU Time: 2.57592 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_260.chk"
+ (0.000184576s, XML)
+Steps: 5220000  Time: 0.261       
+ CPU Time: 2.57562 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_261.chk"
+ (0.000187312s, XML)
+Steps: 5240000  Time: 0.262       
+ CPU Time: 2.57798 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_262.chk"
+ (0.000184065s, XML)
+Steps: 5260000  Time: 0.263       
+ CPU Time: 2.57867 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_263.chk"
+ (0.000186229s, XML)
+Steps: 5280000  Time: 0.264       
+ CPU Time: 2.57501 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_264.chk"
+ (0.000176701s, XML)
+Steps: 5300000  Time: 0.265       
+ CPU Time: 2.57652 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_265.chk"
+ (0.00019199s, XML)
+Steps: 5320000  Time: 0.266       
+ CPU Time: 2.57565 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_266.chk"
+ (0.000185137s, XML)
+Steps: 5340000  Time: 0.267       
+ CPU Time: 2.57464 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_267.chk"
+ (0.000187842s, XML)
+Steps: 5360000  Time: 0.268       
+ CPU Time: 2.57563 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_268.chk"
+ (0.000183695s, XML)
+Steps: 5380000  Time: 0.269       
+ CPU Time: 2.57748 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_269.chk"
+ (0.000188714s, XML)
+Steps: 5400000  Time: 0.27        
+ CPU Time: 2.57667 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_270.chk"
+ (0.000182893s, XML)
+Steps: 5420000  Time: 0.271       
+ CPU Time: 2.57808 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_271.chk"
+ (0.000184436s, XML)
+Steps: 5440000  Time: 0.272       
+ CPU Time: 2.57749 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_272.chk"
+ (0.000185828s, XML)
+Steps: 5460000  Time: 0.273       
+ CPU Time: 2.57504 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_273.chk"
+ (0.000189195s, XML)
+Steps: 5480000  Time: 0.274       
+ CPU Time: 2.57699 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_274.chk"
+ (0.000194345s, XML)
+Steps: 5500000  Time: 0.275       
+ CPU Time: 2.57768 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_275.chk"
+ (0.000193814s, XML)
+Steps: 5520000  Time: 0.276       
+ CPU Time: 2.56878 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_276.chk"
+ (0.000185568s, XML)
+Steps: 5540000  Time: 0.277       
+ CPU Time: 2.56554 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_277.chk"
+ (0.000188614s, XML)
+Steps: 5560000  Time: 0.278       
+ CPU Time: 2.56449 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_278.chk"
+ (0.000186891s, XML)
+Steps: 5580000  Time: 0.279       
+ CPU Time: 2.56341 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_279.chk"
+ (0.000186499s, XML)
+Steps: 5600000  Time: 0.28        
+ CPU Time: 2.56307 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_280.chk"
+ (0.000192601s, XML)
+Steps: 5620000  Time: 0.281       
+ CPU Time: 2.56978 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_281.chk"
+ (0.000188724s, XML)
+Steps: 5640000  Time: 0.282       
+ CPU Time: 2.56591 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_282.chk"
+ (0.000189606s, XML)
+Steps: 5660000  Time: 0.283       
+ CPU Time: 2.56907 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_283.chk"
+ (0.000186509s, XML)
+Steps: 5680000  Time: 0.284       
+ CPU Time: 2.57239 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_284.chk"
+ (0.000195457s, XML)
+Steps: 5700000  Time: 0.285       
+ CPU Time: 2.57133 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_285.chk"
+ (0.000194485s, XML)
+Steps: 5720000  Time: 0.286       
+ CPU Time: 2.56946 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_286.chk"
+ (0.000198232s, XML)
+Steps: 5740000  Time: 0.287       
+ CPU Time: 2.5697 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_287.chk"
+ (0.000194605s, XML)
+Steps: 5760000  Time: 0.288       
+ CPU Time: 2.56902 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_288.chk"
+ (0.000196929s, XML)
+Steps: 5780000  Time: 0.289       
+ CPU Time: 2.56812 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_289.chk"
+ (0.000195857s, XML)
+Steps: 5800000  Time: 0.29        
+ CPU Time: 2.56944 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_290.chk"
+ (0.000194525s, XML)
+Steps: 5820000  Time: 0.291       
+ CPU Time: 2.56776 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_291.chk"
+ (0.000195898s, XML)
+Steps: 5840000  Time: 0.292       
+ CPU Time: 2.56786 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_292.chk"
+ (0.000194094s, XML)
+Steps: 5860000  Time: 0.293       
+ CPU Time: 2.56903 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_293.chk"
+ (0.00019762s, XML)
+Steps: 5880000  Time: 0.294       
+ CPU Time: 2.57502 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_294.chk"
+ (0.000187231s, XML)
+Steps: 5900000  Time: 0.295       
+ CPU Time: 2.56717 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_295.chk"
+ (0.000195066s, XML)
+Steps: 5920000  Time: 0.296       
+ CPU Time: 2.56655 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_296.chk"
+ (0.000195637s, XML)
+Steps: 5940000  Time: 0.297       
+ CPU Time: 2.5645 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_297.chk"
+ (0.0001924s, XML)
+Steps: 5960000  Time: 0.298       
+ CPU Time: 2.56547 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_298.chk"
+ (0.000193503s, XML)
+Steps: 5980000  Time: 0.299       
+ CPU Time: 2.56447 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_299.chk"
+ (0.000195647s, XML)
+Steps: 6000000  Time: 0.3         
+ CPU Time: 2.56634 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_300.chk"
+ (0.000198582s, XML)
+Steps: 6020000  Time: 0.301       
+ CPU Time: 2.56374 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_301.chk"
+ (0.000191429s, XML)
+Steps: 6040000  Time: 0.302       
+ CPU Time: 2.56565 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_302.chk"
+ (0.000199384s, XML)
+Steps: 6060000  Time: 0.303       
+ CPU Time: 2.56628 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_303.chk"
+ (0.000195267s, XML)
+Steps: 6080000  Time: 0.304       
+ CPU Time: 2.56725 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_304.chk"
+ (0.00019747s, XML)
+Steps: 6100000  Time: 0.305       
+ CPU Time: 2.56334 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_305.chk"
+ (0.000193132s, XML)
+Steps: 6120000  Time: 0.306       
+ CPU Time: 2.56141 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_306.chk"
+ (0.000195297s, XML)
+Steps: 6140000  Time: 0.307       
+ CPU Time: 2.56243 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_307.chk"
+ (0.000193583s, XML)
+Steps: 6160000  Time: 0.308       
+ CPU Time: 2.56551 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_308.chk"
+ (0.000194164s, XML)
+Steps: 6180000  Time: 0.309       
+ CPU Time: 2.567 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_309.chk"
+ (0.000187201s, XML)
+Steps: 6200000  Time: 0.31        
+ CPU Time: 2.56629 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_310.chk"
+ (0.000193574s, XML)
+Steps: 6220000  Time: 0.311       
+ CPU Time: 2.56733 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_311.chk"
+ (0.000195416s, XML)
+Steps: 6240000  Time: 0.312       
+ CPU Time: 2.56666 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_312.chk"
+ (0.000190958s, XML)
+Steps: 6260000  Time: 0.313       
+ CPU Time: 2.56557 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_313.chk"
+ (0.00019675s, XML)
+Steps: 6280000  Time: 0.314       
+ CPU Time: 2.5666 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_314.chk"
+ (0.00019206s, XML)
+Steps: 6300000  Time: 0.315       
+ CPU Time: 2.56874 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_315.chk"
+ (0.000195176s, XML)
+Steps: 6320000  Time: 0.316       
+ CPU Time: 2.56715 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_316.chk"
+ (0.000196238s, XML)
+Steps: 6340000  Time: 0.317       
+ CPU Time: 2.56479 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_317.chk"
+ (0.000196248s, XML)
+Steps: 6360000  Time: 0.318       
+ CPU Time: 2.56461 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_318.chk"
+ (0.000203001s, XML)
+Steps: 6380000  Time: 0.319       
+ CPU Time: 2.56604 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_319.chk"
+ (0.000195908s, XML)
+Steps: 6400000  Time: 0.32        
+ CPU Time: 2.56483 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_320.chk"
+ (0.000196549s, XML)
+Steps: 6420000  Time: 0.321       
+ CPU Time: 2.56382 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_321.chk"
+ (0.000193212s, XML)
+Steps: 6440000  Time: 0.322       
+ CPU Time: 2.56642 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_322.chk"
+ (0.00020821s, XML)
+Steps: 6460000  Time: 0.323       
+ CPU Time: 2.56517 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_323.chk"
+ (0.000192221s, XML)
+Steps: 6480000  Time: 0.324       
+ CPU Time: 2.56354 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_324.chk"
+ (0.00018665s, XML)
+Steps: 6500000  Time: 0.325       
+ CPU Time: 2.56568 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_325.chk"
+ (0.000194325s, XML)
+Steps: 6520000  Time: 0.326       
+ CPU Time: 2.56254 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_326.chk"
+ (0.000191349s, XML)
+Steps: 6540000  Time: 0.327       
+ CPU Time: 2.56426 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_327.chk"
+ (0.000195025s, XML)
+Steps: 6560000  Time: 0.328       
+ CPU Time: 2.564 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_328.chk"
+ (0.000191229s, XML)
+Steps: 6580000  Time: 0.329       
+ CPU Time: 2.56678 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_329.chk"
+ (0.000193393s, XML)
+Steps: 6600000  Time: 0.33        
+ CPU Time: 2.56713 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_330.chk"
+ (0.000200816s, XML)
+Steps: 6620000  Time: 0.331       
+ CPU Time: 2.55961 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_331.chk"
+ (0.000193513s, XML)
+Steps: 6640000  Time: 0.332       
+ CPU Time: 2.56554 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_332.chk"
+ (0.000193643s, XML)
+Steps: 6660000  Time: 0.333       
+ CPU Time: 2.56735 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_333.chk"
+ (0.000194144s, XML)
+Steps: 6680000  Time: 0.334       
+ CPU Time: 2.56575 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_334.chk"
+ (0.000191819s, XML)
+Steps: 6700000  Time: 0.335       
+ CPU Time: 2.56945 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_335.chk"
+ (0.000195246s, XML)
+Steps: 6720000  Time: 0.336       
+ CPU Time: 2.57116 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_336.chk"
+ (0.000193263s, XML)
+Steps: 6740000  Time: 0.337       
+ CPU Time: 2.57246 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_337.chk"
+ (0.000193593s, XML)
+Steps: 6760000  Time: 0.338       
+ CPU Time: 2.58439 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_338.chk"
+ (0.000194114s, XML)
+Steps: 6780000  Time: 0.339       
+ CPU Time: 2.57394 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_339.chk"
+ (0.000188203s, XML)
+Steps: 6800000  Time: 0.34        
+ CPU Time: 2.57768 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_340.chk"
+ (0.000192741s, XML)
+Steps: 6820000  Time: 0.341       
+ CPU Time: 2.57651 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_341.chk"
+ (0.000189195s, XML)
+Steps: 6840000  Time: 0.342       
+ CPU Time: 2.57457 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_342.chk"
+ (0.000193553s, XML)
+Steps: 6860000  Time: 0.343       
+ CPU Time: 2.57188 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_343.chk"
+ (0.00019215s, XML)
+Steps: 6880000  Time: 0.344       
+ CPU Time: 2.56924 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_344.chk"
+ (0.00019178s, XML)
+Steps: 6900000  Time: 0.345       
+ CPU Time: 2.57149 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_345.chk"
+ (0.000195887s, XML)
+Steps: 6920000  Time: 0.346       
+ CPU Time: 2.57229 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_346.chk"
+ (0.000192621s, XML)
+Steps: 6940000  Time: 0.347       
+ CPU Time: 2.56981 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_347.chk"
+ (0.000196989s, XML)
+Steps: 6960000  Time: 0.348       
+ CPU Time: 2.57433 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_348.chk"
+ (0.000195888s, XML)
+Steps: 6980000  Time: 0.349       
+ CPU Time: 2.57496 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_349.chk"
+ (0.000194174s, XML)
+Steps: 7000000  Time: 0.35        
+ CPU Time: 2.57385 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_350.chk"
+ (0.000197571s, XML)
+Steps: 7020000  Time: 0.351       
+ CPU Time: 2.5744 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_351.chk"
+ (0.000192992s, XML)
+Steps: 7040000  Time: 0.352       
+ CPU Time: 2.57699 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_352.chk"
+ (0.000195317s, XML)
+Steps: 7060000  Time: 0.353       
+ CPU Time: 2.57575 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_353.chk"
+ (0.000196649s, XML)
+Steps: 7080000  Time: 0.354       
+ CPU Time: 2.57562 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_354.chk"
+ (0.000192491s, XML)
+Steps: 7100000  Time: 0.355       
+ CPU Time: 2.57392 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_355.chk"
+ (0.000194184s, XML)
+Steps: 7120000  Time: 0.356       
+ CPU Time: 2.57309 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_356.chk"
+ (0.000198281s, XML)
+Steps: 7140000  Time: 0.357       
+ CPU Time: 2.57357 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_357.chk"
+ (0.000195096s, XML)
+Steps: 7160000  Time: 0.358       
+ CPU Time: 2.57704 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_358.chk"
+ (0.000194705s, XML)
+Steps: 7180000  Time: 0.359       
+ CPU Time: 2.57103 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_359.chk"
+ (0.00018133s, XML)
+Steps: 7200000  Time: 0.36        
+ CPU Time: 2.57246 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_360.chk"
+ (0.000185248s, XML)
+Steps: 7220000  Time: 0.361       
+ CPU Time: 2.57413 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_361.chk"
+ (0.000182201s, XML)
+Steps: 7240000  Time: 0.362       
+ CPU Time: 2.5728 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_362.chk"
+ (0.000185257s, XML)
+Steps: 7260000  Time: 0.363       
+ CPU Time: 2.57196 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_363.chk"
+ (0.000183915s, XML)
+Steps: 7280000  Time: 0.364       
+ CPU Time: 2.56358 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_364.chk"
+ (0.00018147s, XML)
+Steps: 7300000  Time: 0.365       
+ CPU Time: 2.57013 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_365.chk"
+ (0.000183845s, XML)
+Steps: 7320000  Time: 0.366       
+ CPU Time: 2.56638 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_366.chk"
+ (0.000187492s, XML)
+Steps: 7340000  Time: 0.367       
+ CPU Time: 2.56374 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_367.chk"
+ (0.000190187s, XML)
+Steps: 7360000  Time: 0.368       
+ CPU Time: 2.56036 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_368.chk"
+ (0.000184856s, XML)
+Steps: 7380000  Time: 0.369       
+ CPU Time: 2.5645 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_369.chk"
+ (0.00017609s, XML)
+Steps: 7400000  Time: 0.37        
+ CPU Time: 2.5639 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_370.chk"
+ (0.00018121s, XML)
+Steps: 7420000  Time: 0.371       
+ CPU Time: 2.56121 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_371.chk"
+ (0.000195366s, XML)
+Steps: 7440000  Time: 0.372       
+ CPU Time: 2.56601 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_372.chk"
+ (0.000188033s, XML)
+Steps: 7460000  Time: 0.373       
+ CPU Time: 2.5667 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_373.chk"
+ (0.000180218s, XML)
+Steps: 7480000  Time: 0.374       
+ CPU Time: 2.56242 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_374.chk"
+ (0.000179236s, XML)
+Steps: 7500000  Time: 0.375       
+ CPU Time: 2.56541 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_375.chk"
+ (0.000182943s, XML)
+Steps: 7520000  Time: 0.376       
+ CPU Time: 2.56444 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_376.chk"
+ (0.00018133s, XML)
+Steps: 7540000  Time: 0.377       
+ CPU Time: 2.56444 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_377.chk"
+ (0.000180518s, XML)
+Steps: 7560000  Time: 0.378       
+ CPU Time: 2.56261 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_378.chk"
+ (0.000179637s, XML)
+Steps: 7580000  Time: 0.379       
+ CPU Time: 2.56296 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_379.chk"
+ (0.000189194s, XML)
+Steps: 7600000  Time: 0.38        
+ CPU Time: 2.56324 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_380.chk"
+ (0.000177573s, XML)
+Steps: 7620000  Time: 0.381       
+ CPU Time: 2.56342 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_381.chk"
+ (0.000174257s, XML)
+Steps: 7640000  Time: 0.382       
+ CPU Time: 2.56366 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_382.chk"
+ (0.000181601s, XML)
+Steps: 7660000  Time: 0.383       
+ CPU Time: 2.56488 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_383.chk"
+ (0.000180188s, XML)
+Steps: 7680000  Time: 0.384       
+ CPU Time: 2.56702 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_384.chk"
+ (0.0001813s, XML)
+Steps: 7700000  Time: 0.385       
+ CPU Time: 2.56799 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_385.chk"
+ (0.000183705s, XML)
+Steps: 7720000  Time: 0.386       
+ CPU Time: 2.56589 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_386.chk"
+ (0.000188414s, XML)
+Steps: 7740000  Time: 0.387       
+ CPU Time: 2.56471 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_387.chk"
+ (0.000179487s, XML)
+Steps: 7760000  Time: 0.388       
+ CPU Time: 2.56516 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_388.chk"
+ (0.000182462s, XML)
+Steps: 7780000  Time: 0.389       
+ CPU Time: 2.56541 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_389.chk"
+ (0.000190307s, XML)
+Steps: 7800000  Time: 0.39        
+ CPU Time: 2.56233 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_390.chk"
+ (0.000179867s, XML)
+Steps: 7820000  Time: 0.391       
+ CPU Time: 2.56133 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_391.chk"
+ (0.00018671s, XML)
+Steps: 7840000  Time: 0.392       
+ CPU Time: 2.56296 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_392.chk"
+ (0.000178665s, XML)
+Steps: 7860000  Time: 0.393       
+ CPU Time: 2.55902 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_393.chk"
+ (0.00018646s, XML)
+Steps: 7880000  Time: 0.394       
+ CPU Time: 2.56191 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_394.chk"
+ (0.000179216s, XML)
+Steps: 7900000  Time: 0.395       
+ CPU Time: 2.56183 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_395.chk"
+ (0.000184656s, XML)
+Steps: 7920000  Time: 0.396       
+ CPU Time: 2.56597 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_396.chk"
+ (0.000192571s, XML)
+Steps: 7940000  Time: 0.397       
+ CPU Time: 2.57519 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_397.chk"
+ (0.000201468s, XML)
+Steps: 7960000  Time: 0.398       
+ CPU Time: 2.57401 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_398.chk"
+ (0.000197601s, XML)
+Steps: 7980000  Time: 0.399       
+ CPU Time: 2.56783 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_399.chk"
+ (0.000182612s, XML)
+Steps: 8000000  Time: 0.4         
+ CPU Time: 2.56876 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_400.chk"
+ (0.000203281s, XML)
+Steps: 8020000  Time: 0.401       
+ CPU Time: 2.57088 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_401.chk"
+ (0.000196308s, XML)
+Steps: 8040000  Time: 0.402       
+ CPU Time: 2.56716 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_402.chk"
+ (0.000196208s, XML)
+Steps: 8060000  Time: 0.403       
+ CPU Time: 2.56524 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_403.chk"
+ (0.000198762s, XML)
+Steps: 8080000  Time: 0.404       
+ CPU Time: 2.56658 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_404.chk"
+ (0.000202981s, XML)
+Steps: 8100000  Time: 0.405       
+ CPU Time: 2.56531 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_405.chk"
+ (0.000200035s, XML)
+Steps: 8120000  Time: 0.406       
+ CPU Time: 2.565 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_406.chk"
+ (0.000196689s, XML)
+Steps: 8140000  Time: 0.407       
+ CPU Time: 2.56463 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_407.chk"
+ (0.000192862s, XML)
+Steps: 8160000  Time: 0.408       
+ CPU Time: 2.56318 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_408.chk"
+ (0.00019702s, XML)
+Steps: 8180000  Time: 0.409       
+ CPU Time: 2.56438 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_409.chk"
+ (0.000199364s, XML)
+Steps: 8200000  Time: 0.41        
+ CPU Time: 2.56538 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_410.chk"
+ (0.00020288s, XML)
+Steps: 8220000  Time: 0.411       
+ CPU Time: 2.56234 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_411.chk"
+ (0.000197912s, XML)
+Steps: 8240000  Time: 0.412       
+ CPU Time: 2.56566 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_412.chk"
+ (0.000200737s, XML)
+Steps: 8260000  Time: 0.413       
+ CPU Time: 2.56601 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_413.chk"
+ (0.000197039s, XML)
+Steps: 8280000  Time: 0.414       
+ CPU Time: 2.57326 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_414.chk"
+ (0.000182713s, XML)
+Steps: 8300000  Time: 0.415       
+ CPU Time: 2.56996 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_415.chk"
+ (0.000193573s, XML)
+Steps: 8320000  Time: 0.416       
+ CPU Time: 2.57266 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_416.chk"
+ (0.000193182s, XML)
+Steps: 8340000  Time: 0.417       
+ CPU Time: 2.57737 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_417.chk"
+ (0.000191339s, XML)
+Steps: 8360000  Time: 0.418       
+ CPU Time: 2.57949 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_418.chk"
+ (0.000190457s, XML)
+Steps: 8380000  Time: 0.419       
+ CPU Time: 2.57345 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_419.chk"
+ (0.000186981s, XML)
+Steps: 8400000  Time: 0.42        
+ CPU Time: 2.57788 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_420.chk"
+ (0.000186059s, XML)
+Steps: 8420000  Time: 0.421       
+ CPU Time: 2.57182 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_421.chk"
+ (0.000180929s, XML)
+Steps: 8440000  Time: 0.422       
+ CPU Time: 2.56647 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_422.chk"
+ (0.000181981s, XML)
+Steps: 8460000  Time: 0.423       
+ CPU Time: 2.57284 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_423.chk"
+ (0.00018651s, XML)
+Steps: 8480000  Time: 0.424       
+ CPU Time: 2.57378 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_424.chk"
+ (0.000192702s, XML)
+Steps: 8500000  Time: 0.425       
+ CPU Time: 2.57386 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_425.chk"
+ (0.000180108s, XML)
+Steps: 8520000  Time: 0.426       
+ CPU Time: 2.57356 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_426.chk"
+ (0.000198212s, XML)
+Steps: 8540000  Time: 0.427       
+ CPU Time: 2.57276 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_427.chk"
+ (0.000180779s, XML)
+Steps: 8560000  Time: 0.428       
+ CPU Time: 2.57773 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_428.chk"
+ (0.000183945s, XML)
+Steps: 8580000  Time: 0.429       
+ CPU Time: 2.57773 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_429.chk"
+ (0.000177002s, XML)
+Steps: 8600000  Time: 0.43        
+ CPU Time: 2.57674 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_430.chk"
+ (0.000187972s, XML)
+Steps: 8620000  Time: 0.431       
+ CPU Time: 2.576 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_431.chk"
+ (0.000190667s, XML)
+Steps: 8640000  Time: 0.432       
+ CPU Time: 2.57498 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_432.chk"
+ (0.000199825s, XML)
+Steps: 8660000  Time: 0.433       
+ CPU Time: 2.56967 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_433.chk"
+ (0.000197531s, XML)
+Steps: 8680000  Time: 0.434       
+ CPU Time: 2.57557 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_434.chk"
+ (0.00019744s, XML)
+Steps: 8700000  Time: 0.435       
+ CPU Time: 2.57647 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_435.chk"
+ (0.000189315s, XML)
+Steps: 8720000  Time: 0.436       
+ CPU Time: 2.57547 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_436.chk"
+ (0.000197691s, XML)
+Steps: 8740000  Time: 0.437       
+ CPU Time: 2.57481 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_437.chk"
+ (0.000193443s, XML)
+Steps: 8760000  Time: 0.438       
+ CPU Time: 2.57738 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_438.chk"
+ (0.000192s, XML)
+Steps: 8780000  Time: 0.439       
+ CPU Time: 2.5768 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_439.chk"
+ (0.000196669s, XML)
+Steps: 8800000  Time: 0.44        
+ CPU Time: 2.5774 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_440.chk"
+ (0.000185247s, XML)
+Steps: 8820000  Time: 0.441       
+ CPU Time: 2.57625 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_441.chk"
+ (0.000189134s, XML)
+Steps: 8840000  Time: 0.442       
+ CPU Time: 2.57766 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_442.chk"
+ (0.000193714s, XML)
+Steps: 8860000  Time: 0.443       
+ CPU Time: 2.5804 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_443.chk"
+ (0.000192772s, XML)
+Steps: 8880000  Time: 0.444       
+ CPU Time: 2.57883 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_444.chk"
+ (0.000185599s, XML)
+Steps: 8900000  Time: 0.445       
+ CPU Time: 2.57989 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_445.chk"
+ (0.000194014s, XML)
+Steps: 8920000  Time: 0.446       
+ CPU Time: 2.58162 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_446.chk"
+ (0.000196468s, XML)
+Steps: 8940000  Time: 0.447       
+ CPU Time: 2.57934 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_447.chk"
+ (0.000193403s, XML)
+Steps: 8960000  Time: 0.448       
+ CPU Time: 2.58049 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_448.chk"
+ (0.000187862s, XML)
+Steps: 8980000  Time: 0.449       
+ CPU Time: 2.57984 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_449.chk"
+ (0.000194044s, XML)
+Steps: 9000000  Time: 0.45        
+ CPU Time: 2.57931 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_450.chk"
+ (0.000190417s, XML)
+Steps: 9020000  Time: 0.451       
+ CPU Time: 2.57491 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_451.chk"
+ (0.000188584s, XML)
+Steps: 9040000  Time: 0.452       
+ CPU Time: 2.57832 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_452.chk"
+ (0.000189225s, XML)
+Steps: 9060000  Time: 0.453       
+ CPU Time: 2.57754 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_453.chk"
+ (0.000190247s, XML)
+Steps: 9080000  Time: 0.454       
+ CPU Time: 2.57755 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_454.chk"
+ (0.000226905s, XML)
+Steps: 9100000  Time: 0.455       
+ CPU Time: 2.57541 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_455.chk"
+ (0.000192511s, XML)
+Steps: 9120000  Time: 0.456       
+ CPU Time: 2.5761 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_456.chk"
+ (0.000188483s, XML)
+Steps: 9140000  Time: 0.457       
+ CPU Time: 2.57608 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_457.chk"
+ (0.000200917s, XML)
+Steps: 9160000  Time: 0.458       
+ CPU Time: 2.5799 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_458.chk"
+ (0.00019183s, XML)
+Steps: 9180000  Time: 0.459       
+ CPU Time: 2.58281 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_459.chk"
+ (0.000191268s, XML)
+Steps: 9200000  Time: 0.46        
+ CPU Time: 2.57871 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_460.chk"
+ (0.000192331s, XML)
+Steps: 9220000  Time: 0.461       
+ CPU Time: 2.58052 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_461.chk"
+ (0.000195256s, XML)
+Steps: 9240000  Time: 0.462       
+ CPU Time: 2.58022 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_462.chk"
+ (0.00019237s, XML)
+Steps: 9260000  Time: 0.463       
+ CPU Time: 2.58101 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_463.chk"
+ (0.000181601s, XML)
+Steps: 9280000  Time: 0.464       
+ CPU Time: 2.58025 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_464.chk"
+ (0.000204494s, XML)
+Steps: 9300000  Time: 0.465       
+ CPU Time: 2.58018 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_465.chk"
+ (0.000189726s, XML)
+Steps: 9320000  Time: 0.466       
+ CPU Time: 2.57743 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_466.chk"
+ (0.000194936s, XML)
+Steps: 9340000  Time: 0.467       
+ CPU Time: 2.57753 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_467.chk"
+ (0.000195457s, XML)
+Steps: 9360000  Time: 0.468       
+ CPU Time: 2.57844 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_468.chk"
+ (0.000198913s, XML)
+Steps: 9380000  Time: 0.469       
+ CPU Time: 2.58006 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_469.chk"
+ (0.000200146s, XML)
+Steps: 9400000  Time: 0.47        
+ CPU Time: 2.58137 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_470.chk"
+ (0.000185688s, XML)
+Steps: 9420000  Time: 0.471       
+ CPU Time: 2.58109 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_471.chk"
+ (0.000196879s, XML)
+Steps: 9440000  Time: 0.472       
+ CPU Time: 2.58158 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_472.chk"
+ (0.000195437s, XML)
+Steps: 9460000  Time: 0.473       
+ CPU Time: 2.58004 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_473.chk"
+ (0.000196589s, XML)
+Steps: 9480000  Time: 0.474       
+ CPU Time: 2.57793 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_474.chk"
+ (0.000189015s, XML)
+Steps: 9500000  Time: 0.475       
+ CPU Time: 2.57771 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_475.chk"
+ (0.000184086s, XML)
+Steps: 9520000  Time: 0.476       
+ CPU Time: 2.58028 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_476.chk"
+ (0.000196448s, XML)
+Steps: 9540000  Time: 0.477       
+ CPU Time: 2.5792 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_477.chk"
+ (0.000189245s, XML)
+Steps: 9560000  Time: 0.478       
+ CPU Time: 2.57734 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_478.chk"
+ (0.000198652s, XML)
+Steps: 9580000  Time: 0.479       
+ CPU Time: 2.57904 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_479.chk"
+ (0.000191469s, XML)
+Steps: 9600000  Time: 0.48        
+ CPU Time: 2.57883 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_480.chk"
+ (0.000194815s, XML)
+Steps: 9620000  Time: 0.481       
+ CPU Time: 2.58044 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_481.chk"
+ (0.000199444s, XML)
+Steps: 9640000  Time: 0.482       
+ CPU Time: 2.57912 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_482.chk"
+ (0.000184846s, XML)
+Steps: 9660000  Time: 0.483       
+ CPU Time: 2.58276 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_483.chk"
+ (0.000194776s, XML)
+Steps: 9680000  Time: 0.484       
+ CPU Time: 2.57956 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_484.chk"
+ (0.000195527s, XML)
+Steps: 9700000  Time: 0.485       
+ CPU Time: 2.58024 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_485.chk"
+ (0.000196618s, XML)
+Steps: 9720000  Time: 0.486       
+ CPU Time: 2.58062 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_486.chk"
+ (0.000208381s, XML)
+Steps: 9740000  Time: 0.487       
+ CPU Time: 2.57189 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_487.chk"
+ (0.000177232s, XML)
+Steps: 9760000  Time: 0.488       
+ CPU Time: 2.56789 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_488.chk"
+ (0.000191189s, XML)
+Steps: 9780000  Time: 0.489       
+ CPU Time: 2.5727 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_489.chk"
+ (0.000178705s, XML)
+Steps: 9800000  Time: 0.49        
+ CPU Time: 2.57293 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_490.chk"
+ (0.000196749s, XML)
+Steps: 9820000  Time: 0.491       
+ CPU Time: 2.57171 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_491.chk"
+ (0.000192321s, XML)
+Steps: 9840000  Time: 0.492       
+ CPU Time: 2.57858 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_492.chk"
+ (0.000200065s, XML)
+Steps: 9860000  Time: 0.493       
+ CPU Time: 2.5807 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_493.chk"
+ (0.000196699s, XML)
+Steps: 9880000  Time: 0.494       
+ CPU Time: 2.58037 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_494.chk"
+ (0.000179486s, XML)
+Steps: 9900000  Time: 0.495       
+ CPU Time: 2.58278 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_495.chk"
+ (0.000195788s, XML)
+Steps: 9920000  Time: 0.496       
+ CPU Time: 2.5802 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_496.chk"
+ (0.000192111s, XML)
+Steps: 9940000  Time: 0.497       
+ CPU Time: 2.5798 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_497.chk"
+ (0.000192892s, XML)
+Steps: 9960000  Time: 0.498       
+ CPU Time: 2.5807 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_498.chk"
+ (0.000203773s, XML)
+Steps: 9980000  Time: 0.499       
+ CPU Time: 2.58088 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_499.chk"
+ (0.00019725s, XML)
+Steps: 10000000 Time: 0.5         
+ CPU Time: 2.57975 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_500.chk"
+ (0.000194785s, XML)
+Steps: 10020000 Time: 0.501       
+ CPU Time: 2.58071 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_501.chk"
+ (0.00018687s, XML)
+Steps: 10040000 Time: 0.502       
+ CPU Time: 2.57892 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_502.chk"
+ (0.000192522s, XML)
+Steps: 10060000 Time: 0.503       
+ CPU Time: 2.57782 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_503.chk"
+ (0.000195267s, XML)
+Steps: 10080000 Time: 0.504       
+ CPU Time: 2.5773 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_504.chk"
+ (0.000199364s, XML)
+Steps: 10100000 Time: 0.505       
+ CPU Time: 2.57765 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_505.chk"
+ (0.000193593s, XML)
+Steps: 10120000 Time: 0.506       
+ CPU Time: 2.5795 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_506.chk"
+ (0.000199273s, XML)
+Steps: 10140000 Time: 0.507       
+ CPU Time: 2.57411 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_507.chk"
+ (0.000193203s, XML)
+Steps: 10160000 Time: 0.508       
+ CPU Time: 2.5749 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_508.chk"
+ (0.000185858s, XML)
+Steps: 10180000 Time: 0.509       
+ CPU Time: 2.57568 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_509.chk"
+ (0.000195857s, XML)
+Steps: 10200000 Time: 0.51        
+ CPU Time: 2.57645 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_510.chk"
+ (0.000189596s, XML)
+Steps: 10220000 Time: 0.511       
+ CPU Time: 2.57429 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_511.chk"
+ (0.000196528s, XML)
+Steps: 10240000 Time: 0.512       
+ CPU Time: 2.57343 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_512.chk"
+ (0.000192251s, XML)
+Steps: 10260000 Time: 0.513       
+ CPU Time: 2.57422 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_513.chk"
+ (0.000179496s, XML)
+Steps: 10280000 Time: 0.514       
+ CPU Time: 2.57384 min.
+u_max = nan at x = 0, y = 0, z = 0
+ 
+(Nodeid,phim,phie): (0,nan,nan), (1,nan,nan), (2,nan,nan), (3,nan,nan), (4,nan,nan), (5,nan,nan), (6,nan,nan),  
+
+Writing: "TestMMFNeuralEP2DbiS10_514.chk"
+ (0.000196509s, XML)

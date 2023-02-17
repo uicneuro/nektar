@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>a00b34010e2dbe53d930b3d3dd7788b5bcedd8b0</GitSHA1>
+            <Hostname>apple.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>16-Feb-2023 18:16:15</Timestamp>
+        </Provenance>
+        <ChkFileNum>1</ChkFileNum>
+        <SessionName0>TestMMFNeuralEP2Dbi.xml</SessionName0>
+        <Time>0</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="um,ue" SHAPE="Triangle" BASIS="Modified_A,Modified_B" NUMMODESPERDIR="UNIORDER:4,4" ID="0-107" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAADArwFDgAAB</ELEMENTS>
+</NEKTAR>

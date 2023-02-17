@@ -1,0 +1,1264 @@
+gs_setup: 40 unique labels shared
+   pairwise times (avg, min, max): 1.56819e-06 1.3225e-06 1.7202e-06
+   crystal router                : 3.65749e-06 3.6278e-06 3.6949e-06
+   all reduce                    : 3.90057e-06 3.8423e-06 3.9604e-06
+   used all_to_all method: pairwise
+   handle bytes (avg, min, max): 492 420 676
+   buffer bytes (avg, min, max): 160 128 256
+gs_setup: 40 unique labels shared
+   pairwise times (avg, min, max): 1.30259e-06 1.059e-06 1.4177e-06
+   crystal router                : 1.88241e-06 1.8435e-06 1.8975e-06
+   all reduce                    : 3.05514e-06 3.0407e-06 3.0688e-06
+   used all_to_all method: pairwise
+   handle bytes (avg, min, max): 492 420 676
+   buffer bytes (avg, min, max): 160 128 256
+Setupschemedata_3_4_3
+Setupschemedata_3_4_3
+Setupschemedata_3_4_3
+Setupschemedata_3_4_3
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+Setupschemedata_3_4_3
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+Setupschemedata_3_4_3
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+Setupschemedata_3_4_3
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+Setupschemedata_3_4_3
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+MediumType = 1
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+MediumType = 1
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+v_InitObject: Node = 0, Myelin = 1520, extracell = 0
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+GetMovingFrames: BEFORE
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MediumType = 1
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+GetMovingFrames: BEFORE
+GetMovingFrames: BEFORE
+GetMovingFrames: BEFORE
+GetMovingFrames: BEFORE
+GetMovingFrames: BEFORE
+GetMovingFrames: BEFORE
+GetMovingFrames: BEFORE
+GetMovingFrames: AFTER
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+GetMovingFrames: AFTER
+GetMovingFrames: AFTER
+GetMovingFrames: AFTER
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+GetMovingFrames: AFTER
+GetMovingFrames: AFTER
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+GetMovingFrames: AFTER
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+GetMovingFrames: AFTER
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+ncdotMFFwd = ( 7.24492 , 10.7436 , 0 ) 
+ncdotMFBwd = ( 7.24492 , 10.7436 , 0 ) 
+ncdotMFFwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFBwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFFwd = ( 7.3472 , 10.6739 , 0 ) 
+ncdotMFBwd = ( 7.3472 , 10.6739 , 0 ) 
+ncdotMFFwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFBwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFFwd = ( 7.07981 , 10.8531 , 0 ) 
+ncdotMFBwd = ( 7.07981 , 10.8531 , 0 ) 
+ncdotMFFwd = ( 7.24492 , 10.7436 , 0 ) 
+ncdotMFBwd = ( 7.24492 , 10.7436 , 0 ) 
+ncdotMFFwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFBwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFFwd = ( 6.9728 , 10.9222 , 0 ) 
+ncdotMFBwd = ( 6.9728 , 10.9222 , 0 ) 
+Div: Euc - Cov = ( 1.46441e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.39831e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.46441e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.32893e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.32893e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.32893e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.32893e-10 , 2.18943e-10 , 0 ) 
+Div: Euc - Cov = ( 1.52765e-10 , 2.18943e-10 , 0 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.46441e-10 , 1.83182e-10 , 1.22523e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.46441e-10 , 1.83182e-10 , 1.22523e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.32893e-10 , 1.83182e-10 , 1.11188e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.32893e-10 , 1.83182e-10 , 1.11188e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.32893e-10 , 1.83182e-10 , 1.11188e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.39831e-10 , 1.83182e-10 , 1.16992e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.32893e-10 , 1.83182e-10 , 1.11188e-10 ) 
+Curl: Euc - Cov = ( 2.18943e-10 , 1.52765e-10 , 1.83182e-10 , 1.27814e-10 ) 
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+============ End of MMFInitObect ============
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+============ End of MMFInitObect ============
+Elemid = 0, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 1, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 2, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 3, Nodeid = 0, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 4, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 5, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 6, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 7, Nodeid = 1, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 8, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 9, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 10, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+Elemid = 11, Nodeid = 2, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 12, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 13, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 14, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 15, Nodeid = 3, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 16, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 17, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 18, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 19, Nodeid = 4, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 20, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 21, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+Elemid = 22, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 23, Nodeid = 5, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 24, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 25, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 26, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 27, Nodeid = 6, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 28, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 29, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 30, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 31, Nodeid = 7, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 32, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 33, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 34, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+Elemid = 35, Nodeid = 8, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 36, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 37, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 38, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 39, Nodeid = 9, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 40, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 41, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 42, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 43, Nodeid = 10, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 44, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 45, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 46, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 47, Nodeid = 11, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 48, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 49, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 50, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 51, Nodeid = 12, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 52, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 53, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 54, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 55, Nodeid = 13, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 56, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 57, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 58, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 59, Nodeid = 14, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 60, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 61, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 62, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 63, Nodeid = 15, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 64, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 65, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 66, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 67, Nodeid = 16, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 68, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 69, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 70, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 71, Nodeid = 17, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 72, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 73, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 74, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+Elemid = 75, Nodeid = 18, e1mag = 12.9582, e2mag = 12.9582
+
+Constructing phieunitMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 47, MF2 = 24, MF3 = 5
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.503831 , 0.863802 , 0 ) 
+*** MF 1 = ( 0.863802 , 0.503831 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.503831 , 0.863802 , 0 ) 
+*** MF 1 = ( 0.863802 , 0.503831 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 44, MF2 = 31, MF3 = 1
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.438298 , 0.89883 , 0 ) 
+*** MF 1 = ( 0.89883 , 0.438298 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 39, MF2 = 29, MF3 = 8
+*** MF 0 = ( 0.438298 , 0.89883 , 0 ) 
+*** MF 1 = ( 0.89883 , 0.438298 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 42, MF2 = 31, MF3 = 3
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.429904 , 0.902874 , 0 ) 
+*** MF 1 = ( 0.902874 , 0.429904 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.429904 , 0.902874 , 0 ) 
+*** MF 1 = ( 0.902874 , 0.429904 , 0 ) 
+*** MF 0 = ( 0.430905 , 0.902397 , 0 ) 
+*** MF 1 = ( 0.902397 , 0.430905 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.430905 , 0.902397 , 0 ) 
+*** MF 1 = ( 0.902397 , 0.430905 , 0 ) 
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 42, MF2 = 30, MF3 = 4
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 43, MF2 = 30, MF3 = 3
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 40, MF2 = 28, MF3 = 8
+*** MF 0 = ( 0.425883 , 0.904778 , 0 ) 
+*** MF 1 = ( 0.904778 , 0.425883 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.436563 , 0.899674 , 0 ) 
+*** MF 1 = ( 0.899674 , 0.436563 , 0 ) 
+*** MF 0 = ( 0.425883 , 0.904778 , 0 ) 
+*** MF 1 = ( 0.904778 , 0.425883 , 0 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.434704 , 0.900573 , 0 ) 
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 39, MF2 = 31, MF3 = 6
+*** MF 0 = ( 0.436563 , 0.899674 , 0 ) 
+*** MF 1 = ( 0.899674 , 0.436563 , 0 ) 
+*** MF 1 = ( 0.900573 , 0.434704 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.434704 , 0.900573 , 0 ) 
+*** MF 1 = ( 0.900573 , 0.434704 , 0 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+*** MF 0 = ( 0.476155 , 0.879361 , 0 ) 
+*** MF 1 = ( 0.879361 , 0.476155 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.476155 , 0.879361 , 0 ) 
+*** MF 1 = ( 0.879361 , 0.476155 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 47, MF2 = 24, MF3 = 5
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.712525 , 1.2216 , 0 ) 
+*** MF 1 = ( 1.2216 , 0.712525 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.712525 , 1.2216 , 0 ) 
+*** MF 1 = ( 1.2216 , 0.712525 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 44, MF2 = 31, MF3 = 1
+m_varcoeff = 0 , 12.9582 , 0 , 1.46441e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.619847 , 1.27114 , 0 ) 
+*** MF 1 = ( 1.27114 , 0.619847 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.619847 , 1.27114 , 0 ) 
+*** MF 1 = ( 1.27114 , 0.619847 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 39, MF2 = 29, MF3 = 8
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 42, MF2 = 31, MF3 = 3
+m_varcoeff = 0.712525 , 1.2216 , 0 , 3.94705e-08 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+*** MF 0 = ( 0.607977 , 1.27686 , 0 ) 
+*** MF 1 = ( 1.27686 , 0.607977 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.609392 , 1.27618 , 0 ) 
+*** MF 1 = ( 1.27618 , 0.609392 , 0 ) 
+*** MF 0 = ( 0.607977 , 1.27686 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 1 = ( 1.27686 , 0.607977 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 0 = ( 0.609392 , 1.27618 , 0 ) 
+*** MF 1 = ( 1.27618 , 0.609392 , 0 ) 
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 42, MF2 = 30, MF3 = 4
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+m_varcoeff = 0 , 12.9582 , 0 , 1.46441e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 43, MF2 = 30, MF3 = 3
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: Fiber2DL06bimpi
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 4
+	      Num. Processes: 8
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 5e-08
+	        No. of Steps: 60000000
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+	 Checkpoints (steps): 20000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	          MediumType: Anisotropy
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2D
+	*** MF 0 = ( 0.60229 , 1.27955 , 0 ) 
+*** MF 1 = ( 1.27955 , 0.60229 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+    SolverSchemeType: Default
+	             TimeMap: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         ElemNodeEnd: 127
+	       ElemMyelenEnd: 607
+	         Temperature: 24
+	             Helmtau: 1
+=======================================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 40, MF2 = 28, MF3 = 8
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.617393 , 1.27233 , 0 ) 
+*** MF 1 = ( 1.27233 , 0.617393 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.60229 , 1.27955 , 0 ) 
+*** MF 1 = ( 1.27955 , 0.60229 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 76 elements, adapated from MF1 = 39, MF2 = 31, MF3 = 6
+*** MF 0 = ( 0.614764 , 1.2736 , 0 ) 
+*** MF 1 = ( 1.2736 , 0.614764 , 0 ) 
+*** MF 0 = ( 0.617393 , 1.27233 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 1 = ( 1.27233 , 0.617393 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+Initial Conditions:
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.614764 , 1.2736 , 0 ) 
+*** MF 1 = ( 1.2736 , 0.614764 , 0 ) 
+m_varcoeff = 0 , 12.9582 , 0 , 1.32893e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+*** MF 0 = ( 0.673385 , 1.2436 , 0 ) 
+*** MF 1 = ( 1.2436 , 0.673385 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+m_varcoeff = 0 , 12.9582 , 0 , 1.32893e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+*** MF 0 = ( 0.673385 , 1.2436 , 0 ) 
+*** MF 1 = ( 1.2436 , 0.673385 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Check MovingFrmaes: END ===================
+m_varcoeff = 0.619847 , 1.27114 , 0 , 2.11768e-08 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0 , 12.9582 , 0 , 1.32893e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0 , 12.9582 , 0 , 1.39831e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.607977 , 1.27686 , 0 , 1.43457e-08 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0 , 12.9582 , 0 , 1.32893e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.609392 , 1.27618 , 0 , 2.51528e-08 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0 , 12.9582 , 0 , 1.52765e-10 , 167.914
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.60229 , 1.27955 , 0 , 1.91476e-08 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.617393 , 1.27233 , 0 , 1.18685e-08 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.614764 , 1.2736 , 0 , 6.16629e-09 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+m_varcoeff = 0.673385 , 1.2436 , 0 , 3.94823e-09 , 2
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+  - Field um: 0
+  - Field ue: 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Initial: max um = 0
+Initial: max ue = 0
+Writing: "Fiber2DL06bimpi_initial.chk"
+ (0.00126747s, XML)
+u_max = 12173.9 at x = 0.00025, y = 0.03425, z = 0
+u_max = 12174.2 at x = 0.000125, y = 0.034, z = 0
+u_max = 12159 at x = 0, y = 0.05225, z = 0
+Steps: 20000    Time: 0.001       
+ CPU Time: 81.3577 min.
+u_max = 12159.7 at x = 0.00025, y = 0.051, z = 0
+u_max = 12218.1 at x = 0.00025, y = 0, z = 0
+u_max = 12210.3 at x = 0.00025, y = 0.00725, z = 0
+u_max = 12197.4 at x = 0, y = 0.01675, z = 0
+u_max = 12185.1 at x = 0, y = 0.02525, z = 0
+[cedrus:2441361] *** Process received signal ***
+[cedrus:2441361] Signal: Segmentation fault (11)
+[cedrus:2441361] Signal code: Address not mapped (1)
+[cedrus:2441361] Failing at address: (nil)
+[cedrus:2441364] *** Process received signal ***
+[cedrus:2441364] Signal: Segmentation fault (11)
+[cedrus:2441364] Signal code: Address not mapped (1)
+[cedrus:2441364] Failing at address: (nil)
+[cedrus:2441366] *** Process received signal ***
+[cedrus:2441366] Signal: Segmentation fault (11)
+[cedrus:2441366] Signal code: Address not mapped (1)
+[cedrus:2441366] Failing at address: (nil)
+[cedrus:2441355] *** Process received signal ***
+[cedrus:2441355] Signal: Segmentation fault (11)
+[cedrus:2441355] Signal code: Address not mapped (1)
+[cedrus:2441355] Failing at address: (nil)
+[cedrus:2441357] *** Process received signal ***
+[cedrus:2441357] Signal: Segmentation fault (11)
+[cedrus:2441357] Signal code: Address not mapped (1)
+[cedrus:2441357] Failing at address: (nil)
+[cedrus:2441358] *** Process received signal ***
+[cedrus:2441358] Signal: Segmentation fault (11)
+[cedrus:2441358] Signal code: Address not mapped (1)
+[cedrus:2441358] Failing at address: (nil)
+[cedrus:2441359] *** Process received signal ***
+[cedrus:2441359] Signal: Segmentation fault (11)
+[cedrus:2441359] Signal code: Address not mapped (1)
+[cedrus:2441359] Failing at address: (nil)
+[cedrus:2441360] *** Process received signal ***
+[cedrus:2441360] Signal: Segmentation fault (11)
+[cedrus:2441360] Signal code: Address not mapped (1)
+[cedrus:2441360] Failing at address: (nil)
+[cedrus:2441360] [ 0] [cedrus:2441366] [ 0] [cedrus:2441355] [ 0] [cedrus:2441357] [ 0] [cedrus:2441359] [ 0] [cedrus:2441361] [ 0] [cedrus:2441364] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f4c0fd52520]
+[cedrus:2441355] [ 1] ../MMFNeuralEP(+0x288af)[0x55d0be1198af]
+[cedrus:2441355] [ 2] ../MMFNeuralEP(+0x2cac5)[0x55d0be11dac5]
+[cedrus:2441355] [ 3] [cedrus:2441358] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f6edb9e1520]
+[cedrus:2441358] [ 1] ../MMFNeuralEP(+0x288af)[0x55ea2def98af]
+[cedrus:2441358] [ 2] ../MMFNeuralEP(+0x2cac5)[0x55ea2defdac5]
+[cedrus:2441358] [ 3] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7fddc9a86520]
+[cedrus:2441357] [ 1] ../MMFNeuralEP(+0x288af)[0x559a595158af]
+[cedrus:2441357] [ 2] ../MMFNeuralEP(+0x2cac5)[0x559a59519ac5]
+[cedrus:2441357] [ 3] /home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7fddcad74c02]
+[cedrus:2441357] [ 4] ../MMFNeuralEP(+0x15324)[0x559a59502324]
+[cedrus:2441357] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f35cbd46520]
+[cedrus:2441359] [ 1] ../MMFNeuralEP(+0x288af)[0x55cc0e6138af]
+[cedrus:2441359] [ 2] ../MMFNeuralEP(+0x2cac5)[0x55cc0e617ac5]
+[cedrus:2441359] [ 3] /home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f35cd034c02]
+[cedrus:2441359] [ 4] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f3283738520]
+[cedrus:2441361] [ 1] ../MMFNeuralEP(+0x288af)[0x55880d8258af]
+[cedrus:2441361] [ 2] ../MMFNeuralEP(+0x2cac5)[0x55880d829ac5]
+[cedrus:2441361] [ 3] /home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f3284a26c02]
+[cedrus:2441361] [ 4] ../MMFNeuralEP(+0x15324)[0x55880d812324]
+[cedrus:2441361] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f4b66759520]
+[cedrus:2441364] [ 1] ../MMFNeuralEP(+0x288af)[0x5631ba7e38af]
+[cedrus:2441364] [ 2] ../MMFNeuralEP(+0x2cac5)[0x5631ba7e7ac5]
+[cedrus:2441364] [ 3] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f7451923520]
+[cedrus:2441360] [ 1] ../MMFNeuralEP(+0x288af)[0x55f030bf08af]
+[cedrus:2441360] [ 2] ../MMFNeuralEP(+0x2cac5)[0x55f030bf4ac5]
+[cedrus:2441360] [ 3] /home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f7452c11c02]
+[cedrus:2441360] [ 4] ../MMFNeuralEP(+0x15324)[0x55f030bdd324]
+[cedrus:2441360] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f111dfba520]
+[cedrus:2441366] [ 1] ../MMFNeuralEP(+0x288af)[0x55d21503d8af]
+[cedrus:2441366] [ 2] ../MMFNeuralEP(+0x2cac5)[0x55d215041ac5]
+[cedrus:2441366] [ 3] /home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f111f2a8c02]
+[cedrus:2441366] [ 4] ../MMFNeuralEP(+0x15324)[0x55d21502a324]
+[cedrus:2441366] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7fddc9a6dd90]
+[cedrus:2441357] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7fddc9a6de40]
+[cedrus:2441357] [ 7] ../MMFNeuralEP(+0x23fc5)[0x559a59510fc5]
+[cedrus:2441357] *** End of error message ***
+../MMFNeuralEP(+0x15324)[0x55cc0e600324]
+[cedrus:2441359] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f35cbd2dd90]
+[cedrus:2441359] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f35cbd2de40]
+[cedrus:2441359] [ 7] ../MMFNeuralEP(+0x23fc5)[0x55cc0e60efc5]
+[cedrus:2441359] *** End of error message ***
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f111dfa1d90]
+[cedrus:2441366] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f111dfa1e40]
+[cedrus:2441366] [ 7] ../MMFNeuralEP(+0x23fc5)[0x55d215038fc5]
+[cedrus:2441366] *** End of error message ***
+/home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f4b67a47c02]
+[cedrus:2441364] [ 4] ../MMFNeuralEP(+0x15324)[0x5631ba7d0324]
+[cedrus:2441364] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f4b66740d90]
+[cedrus:2441364] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f4b66740e40]
+[cedrus:2441364] [ 7] ../MMFNeuralEP(+0x23fc5)[0x5631ba7defc5]
+[cedrus:2441364] *** End of error message ***
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f745190ad90]
+[cedrus:2441360] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f745190ae40]
+[cedrus:2441360] [ 7] ../MMFNeuralEP(+0x23fc5)[0x55f030bebfc5]
+[cedrus:2441360] *** End of error message ***
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f328371fd90]
+[cedrus:2441361] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f328371fe40]
+[cedrus:2441361] [ 7] ../MMFNeuralEP(+0x23fc5)[0x55880d820fc5]
+[cedrus:2441361] *** End of error message ***
+/home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f4c11040c02]
+[cedrus:2441355] [ 4] ../MMFNeuralEP(+0x15324)[0x55d0be106324]
+[cedrus:2441355] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f4c0fd39d90]
+[cedrus:2441355] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f4c0fd39e40]
+[cedrus:2441355] [ 7] ../MMFNeuralEP(+0x23fc5)[0x55d0be114fc5]
+[cedrus:2441355] *** End of error message ***
+/home/schun/nektar/build/library/SolverUtils/libSolverUtils.so.5.3.0(_ZN6Nektar11SolverUtils14DriverStandard9v_ExecuteERSo+0x302)[0x7f6edcccfc02]
+[cedrus:2441358] [ 4] ../MMFNeuralEP(+0x15324)[0x55ea2dee6324]
+[cedrus:2441358] [ 5] /lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f6edb9c8d90]
+[cedrus:2441358] [ 6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f6edb9c8e40]
+[cedrus:2441358] [ 7] ../MMFNeuralEP(+0x23fc5)[0x55ea2def4fc5]
+[cedrus:2441358] *** End of error message ***
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 5 with PID 0 on node cedrus exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------
