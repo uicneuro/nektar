@@ -2323,6 +2323,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 {
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
+    NekDouble Rf = m_neuron->GetRecistanceValue();
+    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time,
@@ -2339,10 +2341,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
         m_stimulus[i]->Update(RHSstimulus, time);
     }
 
-    // ONLY simulation at node zone:
-    // No excitation at myelinated region
+    // ONLY simulation at node zone: No excitation at myelinated region
     StimulusAtNode(RHSstimulus[0]);
 
+    // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
     // Multiply by 1/Cm for myeline or 1/Cm for node
@@ -2350,13 +2352,14 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     {
         int nq = m_fields[0]->GetNpoints();
 
+
         // Laplacian only to the first variable
         Array<OneD, NekDouble> Laplacian(nq);
         WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
         // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
 
-        Vmath::Vmul(nq, &m_NeuralCmRf[0], 1, &Laplacian[0], 1, &Laplacian[0],
-                    1);
+        Vmath::Smul(nq, 1.0 / (Cn * Rf), Laplacian, 1, Laplacian, 1);
+
         Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
                     1);
     }
@@ -2368,6 +2371,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
 {
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
+    NekDouble Rf = m_neuron->GetRecistanceValue();
+    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time,
@@ -2384,41 +2389,32 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         m_stimulus[j]->Update(RHSstimulus, time);
     }
 
-    // ONLY simulation at node zone:
-    // No excitation at myelinated region
-    // const NekDouble Cm = m_neuron->GetCapacitanceValue(0);
+    // ONLY simulation at node zone: No excitation at myelinated region
+    StimulusAtNode(RHSstimulus[0]);
 
-    const NekDouble Rf = m_neuron->GetRecistanceValue();
-    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
-    for (int k = 0; k < nq; ++k)
-    {
-        // Exict only the first and the second node.
-        if ((m_NodeZone[0][k] >= 0) && (m_NodeZone[0][k] <= 1))
-        {
-            outarray[0][k] = outarray[0][k] + RHSstimulus[0][k] / Cn;
-        }
-    }
+    // Add it to the RHS
+    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
-    if (nvar == 2)
-    {
-        // Compute phi_e to satisfy the following equation
-        // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
-        // (\sigma_i \nabla \phi_m)
-        Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
+    // if (nvar == 2)
+    // {
+    //     // Compute phi_e to satisfy the following equation
+    //     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
+    //     // (\sigma_i \nabla \phi_m)
+    //     Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
 
-        // Add the current changes by the external current
-        Array<OneD, NekDouble> extcurrent;
-        extcurrent = ComputeCovariantDiffusion(m_unitmovingframes,
-                                               m_fields[1]->GetPhys());
-        Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+    //     // Add the current changes by the external current
+    //     Array<OneD, NekDouble> extcurrent;
+    //     extcurrent = ComputeCovariantDiffusion(m_unitmovingframes,
+    //                                            m_fields[1]->GetPhys());
+    //     Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
-        // Let the extcurrent be zero at Myeline nodes (-1).
-        OnlyValideinNode(m_NodeZone[0], extcurrent);
+    //     // Let the extcurrent be zero at Myeline nodes (-1).
+    //     OnlyValideinNode(m_NodeZone[0], extcurrent);
 
-        // add divergence of phie to the current
-        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0],
-                    1);
-    }
+    //     // add divergence of phie to the current
+    //     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0],
+    //                 1);
+    // }
 
     // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)
@@ -2430,8 +2426,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
         // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
 
-        Vmath::Vmul(nq, &m_NeuralCmRf[0], 1, &Laplacian[0], 1, &Laplacian[0],
-                    1);
+        Vmath::Smul(nq, 1.0 / (Cn * Rf), Laplacian, 1, Laplacian, 1);
+
         Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
                     1);
     }
@@ -2777,7 +2773,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, 0.001);
+                m_stimulus[i]->Update(tmp, initialtime);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }

@@ -324,18 +324,18 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
-    if (!m_explicitDiffusion)
-    {
-        m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
-        m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
-    }
+    m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
+    m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
+    m_ode.DefineImplicitSolve(&MMFDiffusion::DoImplicitSolve, this);
 
-    else
-    {
-        m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
-        m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
-        m_ode.DefineImplicitSolve(&MMFDiffusion::DoImplicitSolve, this);
-    }
+    // if (!m_explicitDiffusion)
+    // {
+    // }
+
+    // else
+    // {
+    //     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
+    // }
 
 }
 
@@ -400,6 +400,7 @@ void MMFDiffusion::DoImplicitSolve(
 {
     int nvariables = inarray.size();
     int nq         = m_fields[0]->GetNpoints();
+    std::cout << "DoImplicitSolve " << std::endl;
 
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = 1.0;
