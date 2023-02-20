@@ -284,6 +284,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     else
                     {
                         m_NeuralCm[0][index] = 1.0 / Cm / m_ratio_re_ri;
+                        // m_NeuralCm[0][index] = 0.0 / Cm / m_ratio_re_ri;
                         cnte++;
                     }
                 }
@@ -477,9 +478,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEP2D:
             case eNeuralEP2DEmbed:
             {
+                std::cout << "Compute Varcoeff for phim ====================== " << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 if (nvar == 2)
                 {
+                    std::cout << "Compute Varcoeff for phie ====================== " << std::endl;
                     ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
                 }
                 break;
@@ -489,26 +492,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 break;
         }
 
-        // Test Helmsolve
-        int ncoeffs          = GetNcoeffs();
-
-        Array<OneD, NekDouble> testphys(nq,0.0);
-        Array<OneD, NekDouble> testcoeffs(ncoeffs,0.0);
-
-        StdRegions::ConstFactorMap factors;
-        factors[StdRegions::eFactorTau] = 1.0;
-
-        factors[StdRegions::eFactorLambda] = 1.0;
-
-        // std::cout << "HelmSolve test starts" << std::endl;
-        // m_fields[0]->HelmSolve(testphys, testcoeffs, factors, m_varcoeff);
-        // std::cout << "HelmSolve test ends, testcoeffs = " << RootMeanSquare(testcoeffs) << std::endl;
-
         switch (m_NeuralEPType)
         {
             case eNeuralTest:
             {
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhs, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolve, this);
                 break;
@@ -516,7 +503,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             case eNeuralEP1D:
             {
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP1D, this);
                 break;
@@ -524,7 +510,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             case eNeuralEP2D:
             {
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2D, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2D, this);
                 break;
@@ -532,7 +517,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             case eNeuralEP2DEmbed:
             {
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed, this);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbed, this);
                 break;
@@ -541,7 +525,36 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             default:
                 break;
         }
+    }
 
+    switch (m_NeuralEPType)
+    {
+        case eNeuralTest:
+        {
+            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhs, this);
+            break;
+        }
+
+        case eNeuralEP1D:
+        {
+            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
+            break;
+        }
+
+        case eNeuralEP2D:
+        {
+            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2D, this);
+            break;
+        }
+
+        case eNeuralEP2DEmbed:
+        {
+            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed, this);
+            break;
+        }
+
+        default:
+            break;
     }
 }
 
@@ -591,10 +604,13 @@ void MMFNeuralEP::CheckNodeZoneMF(
         xp = sqrt(xp / npts);
         yp = sqrt(yp / npts);
 
-        std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
-                  << ", x = " << xp << ", y = " << yp 
-                  << ", e1mag = " << e1mag << ", e2mag = " << e1mag
-                  << ", um = " << inarray[index] << std::endl;
+        // if(NodeZone[0][index]>=0)
+        {
+            std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
+                    << ", x = " << xp << ", y = " << yp 
+                    << ", e1mag = " << e1mag << ", e2mag = " << e1mag
+                    << ", um = " << inarray[index] << std::endl;
+        }
     }
 }
 
@@ -1741,7 +1757,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
 
     factors[StdRegions::eFactorLambda] = Cv / lambda;
 
-    SetBoundaryConditions(time);
+    // SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition(time);
 
     // Multiply 1.0/timestep
@@ -2325,7 +2341,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
     // ONLY simulation at node zone:
     // No excitation at myelinated region
-    Stimulus_On_Node(RHSstimulus[0]);
+    StimulusAtNode(RHSstimulus[0]);
 
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
@@ -2336,31 +2352,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
         // Laplacian only to the first variable
         Array<OneD, NekDouble> Laplacian(nq);
+        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
         // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
 
         Vmath::Vmul(nq, &m_NeuralCmRf[0], 1, &Laplacian[0], 1, &Laplacian[0],
                     1);
         Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
                     1);
-    }
-}
-
-void MMFNeuralEP::Stimulus_On_Node(Array<OneD, NekDouble> &outarray)
-{
-    int nq   = m_fields[0]->GetNpoints();
-
-    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
-    for (int k = 0; k < nq; ++k)
-    {
-        if ( (m_NodeZone[0][k] == 0) || (m_NodeZone[0][k] == 1) )
-        {
-            outarray[k] = outarray[k] / Cn;
-        }
-
-        else
-        {
-            outarray[k] = 0.0;
-        }
     }
 }
 
@@ -2429,6 +2427,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
 
         // Laplacian only to the first variable
         Array<OneD, NekDouble> Laplacian(nq);
+        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
         // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
 
         Vmath::Vmul(nq, &m_NeuralCmRf[0], 1, &Laplacian[0], 1, &Laplacian[0],
@@ -2506,6 +2505,24 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
     }
 }
 
+void MMFNeuralEP::StimulusAtNode(Array<OneD, NekDouble> &outarray)
+{
+    int nq   = m_fields[0]->GetNpoints();
+
+    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+    for (int k = 0; k < nq; ++k)
+    {
+        if ( (m_NodeZone[0][k] == 0) || (m_NodeZone[0][k] == 1) )
+        {
+            outarray[k] = outarray[k] / Cn;
+        }
+
+        else
+        {
+            outarray[k] = 0.0;
+        }
+    }
+}
 
 void MMFNeuralEP::OnlyValideinNode(const Array<OneD, const int> &NodeZone,
                                    Array<OneD, NekDouble> &outarray)
@@ -2761,7 +2778,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
                 m_stimulus[i]->Update(tmp, 0.001);
-                Stimulus_On_Node(tmp[0]);
+                StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
             

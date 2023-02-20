@@ -333,7 +333,7 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
         
-    void Stimulus_On_Node(Array<OneD, NekDouble> &outarray);
+    void StimulusAtNode(Array<OneD, NekDouble> &outarray);
 
     Array<OneD, NekDouble> Computephie(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
