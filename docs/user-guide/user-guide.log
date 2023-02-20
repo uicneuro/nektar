@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.9)  17 FEB 2023 15:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.9)  18 FEB 2023 18:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1433,7 +1433,7 @@ LaTeX Info: Redefining \nameref on input line 412.
 \@outlinefile=\write6
 \openout6 = `user-guide.out'.
 
-<img/icon-blue.png, id=400, 33.2442pt x 36.3759pt>
+<img/icon-blue.png, id=1253, 33.2442pt x 36.3759pt>
 File: img/icon-blue.png Graphic file (type png)
 <use img/icon-blue.png>
 Package pdftex.def Info: img/icon-blue.png  used on input line 427.
@@ -1618,6 +1618,11 @@ Overfull \hbox (1.91618pt too wide) detected at line 457
 
 Overfull \hbox (1.91618pt too wide) detected at line 458
  [][]\T1/lmr/bx/n/10.95 291[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 461
+ [][]\T1/lmr/bx/n/10.95 295[][]
  []
 
 ) [10] (./introduction/introduction.tex
@@ -2281,13 +2286,13 @@ Overfull \hbox (6.22229pt too wide) in paragraph at lines 36--36
 ]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 39.
-<utilities//img/mc-example-gmsh.png, id=2498, 832.10875pt x 499.8675pt>
+<utilities//img/mc-example-gmsh.png, id=3142, 832.10875pt x 499.8675pt>
 File: utilities//img/mc-example-gmsh.png Graphic file (type png)
 <use utilities//img/mc-example-gmsh.png>
 Package pdftex.def Info: utilities//img/mc-example-gmsh.png  used on input line
  68.
 (pdftex.def)             Requested size: 167.19745pt x 100.437pt.
-<utilities//img/mc-example-mesh.png, id=2499, 808.01875pt x 505.89pt>
+<utilities//img/mc-example-mesh.png, id=3143, 808.01875pt x 505.89pt>
 File: utilities//img/mc-example-mesh.png Graphic file (type png)
 <use utilities//img/mc-example-mesh.png>
 Package pdftex.def Info: utilities//img/mc-example-mesh.png  used on input line
@@ -2330,12 +2335,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [87]
 [88] [89] [90]
-<utilities//img/noSphnoBL.jpg, id=2736, 501.875pt x 446.66875pt>
+<utilities//img/noSphnoBL.jpg, id=3379, 501.875pt x 446.66875pt>
 File: utilities//img/noSphnoBL.jpg Graphic file (type jpg)
 <use utilities//img/noSphnoBL.jpg>
 Package pdftex.def Info: utilities//img/noSphnoBL.jpg  used on input line 627.
 (pdftex.def)             Requested size: 196.46051pt x 174.8544pt.
-<utilities//img/SphnoBL.jpg, id=2737, 501.875pt x 446.66875pt>
+<utilities//img/SphnoBL.jpg, id=3380, 501.875pt x 446.66875pt>
 File: utilities//img/SphnoBL.jpg Graphic file (type jpg)
 <use utilities//img/SphnoBL.jpg>
 Package pdftex.def Info: utilities//img/SphnoBL.jpg  used on input line 628.
@@ -2358,13 +2363,13 @@ LaTeX Warning: Citation `MoHaPeSh14' on page 93 undefined on input line 704.
 
 LaTeX Warning: Citation `MoHaPeSh14b' on page 93 undefined on input line 705.
 
-<utilities//img/stdprism_split.pdf, id=2769, 149.1994pt x 140.62738pt>
+<utilities//img/stdprism_split.pdf, id=3412, 149.1994pt x 140.62738pt>
 File: utilities//img/stdprism_split.pdf Graphic file (type pdf)
 <use utilities//img/stdprism_split.pdf>
 Package pdftex.def Info: utilities//img/stdprism_split.pdf  used on input line 
 722.
 (pdftex.def)             Requested size: 149.19904pt x 140.62703pt.
-<utilities//img/prism_split.png, id=2770, 1686.3pt x 1655.18375pt>
+<utilities//img/prism_split.png, id=3413, 1686.3pt x 1655.18375pt>
 File: utilities//img/prism_split.png Graphic file (type png)
 <use utilities//img/prism_split.png>
 Package pdftex.def Info: utilities//img/prism_split.png  used on input line 724
@@ -2374,7 +2379,7 @@ File: utilities//img/SphnoBL.jpg Graphic file (type jpg)
 <use utilities//img/SphnoBL.jpg>
 Package pdftex.def Info: utilities//img/SphnoBL.jpg  used on input line 743.
 (pdftex.def)             Requested size: 196.46051pt x 174.8544pt.
-<utilities//img/SphBL.jpg, id=2771, 501.875pt x 446.66875pt>
+<utilities//img/SphBL.jpg, id=3414, 501.875pt x 446.66875pt>
 File: utilities//img/SphBL.jpg Graphic file (type jpg)
 <use utilities//img/SphBL.jpg>
 Package pdftex.def Info: utilities//img/SphBL.jpg  used on input line 744.
@@ -2412,7 +2417,7 @@ LaTeX Warning: Citation `TuPeMo16' on page 96 undefined on input line 897.
 LaTeX Warning: Citation `GaRoPeSa15' on page 97 undefined on input line 905.
 
 [97] [98] [99] [100] [101] [102] [103] [104]
-<utilities//img/Car_mesh.png, id=2959, 1787.67876pt x 634.37pt>
+<utilities//img/Car_mesh.png, id=3602, 1787.67876pt x 634.37pt>
 File: utilities//img/Car_mesh.png Graphic file (type png)
 <use utilities//img/Car_mesh.png>
 Package pdftex.def Info: utilities//img/Car_mesh.png  used on input line 1300.
@@ -2546,7 +2551,7 @@ Overfull \hbox (6.22229pt too wide) in paragraph at lines 1374--1374
  []
 
 [131]
-<utilities//img/module_wallNormalData.jpg, id=3398, 632.3625pt x 268.00125pt>
+<utilities//img/module_wallNormalData.jpg, id=4041, 632.3625pt x 268.00125pt>
 File: utilities//img/module_wallNormalData.jpg Graphic file (type jpg)
 <use utilities//img/module_wallNormalData.jpg>
 Package pdftex.def Info: utilities//img/module_wallNormalData.jpg  used on inpu
@@ -2556,7 +2561,7 @@ t line 1458.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [132]
-<utilities//img/module_bodyFittedVelocity.png, id=3407, 526.914pt x 175.638pt>
+<utilities//img/module_bodyFittedVelocity.png, id=4051, 526.914pt x 175.638pt>
 File: utilities//img/module_bodyFittedVelocity.png Graphic file (type png)
 <use utilities//img/module_bodyFittedVelocity.png>
 Package pdftex.def Info: utilities//img/module_bodyFittedVelocity.png  used on 
@@ -2611,24 +2616,24 @@ spec-i-fied by the [] and []
  []
 
 [144]
-<solvers//img/Acoustics_F_0_p.png, id=3608, 588.1975pt x 705.63625pt>
+<solvers//img/Acoustics_F_0_p.png, id=4252, 588.1975pt x 705.63625pt>
 File: solvers//img/Acoustics_F_0_p.png Graphic file (type png)
 <use solvers//img/Acoustics_F_0_p.png>
 Package pdftex.def Info: solvers//img/Acoustics_F_0_p.png  used on input line 3
 76.
 (pdftex.def)             Requested size: 167.19745pt x 200.58083pt.
-<solvers//img/Acoustics_u0.png, id=3609, 588.1975pt x 705.63625pt>
+<solvers//img/Acoustics_u0.png, id=4253, 588.1975pt x 705.63625pt>
 File: solvers//img/Acoustics_u0.png Graphic file (type png)
 <use solvers//img/Acoustics_u0.png>
 Package pdftex.def Info: solvers//img/Acoustics_u0.png  used on input line 377.
 
 (pdftex.def)             Requested size: 167.19745pt x 200.58083pt.
-<solvers//img/Acoustics_p.png, id=3610, 588.1975pt x 705.63625pt>
+<solvers//img/Acoustics_p.png, id=4254, 588.1975pt x 705.63625pt>
 File: solvers//img/Acoustics_p.png Graphic file (type png)
 <use solvers//img/Acoustics_p.png>
 Package pdftex.def Info: solvers//img/Acoustics_p.png  used on input line 379.
 (pdftex.def)             Requested size: 167.19745pt x 200.58083pt.
-<solvers//img/Acoustics_v.png, id=3611, 588.1975pt x 705.63625pt>
+<solvers//img/Acoustics_v.png, id=4255, 588.1975pt x 705.63625pt>
 File: solvers//img/Acoustics_v.png Graphic file (type png)
 <use solvers//img/Acoustics_v.png>
 Package pdftex.def Info: solvers//img/Acoustics_v.png  used on input line 380.
@@ -2653,20 +2658,20 @@ Overfull \hbox (7.47868pt too wide) in paragraph at lines 78--90
  []
 
 [148] [149] [150] [151] [152] [153]
-<solvers//img/Helmholtz2D.png, id=3822, 602.25pt x 602.25pt>
+<solvers//img/Helmholtz2D.png, id=4466, 602.25pt x 602.25pt>
 File: solvers//img/Helmholtz2D.png Graphic file (type png)
 <use solvers//img/Helmholtz2D.png>
 Package pdftex.def Info: solvers//img/Helmholtz2D.png  used on input line 389.
 (pdftex.def)             Requested size: 170.71652pt x 170.71487pt.
  [154 <./solvers//img/Helmholtz2D.png>]
-<solvers//img/pipe.png, id=3831, 411.5375pt x 439.6425pt>
+<solvers//img/pipe.png, id=4475, 411.5375pt x 439.6425pt>
 File: solvers//img/pipe.png Graphic file (type png)
 <use solvers//img/pipe.png>
 Package pdftex.def Info: solvers//img/pipe.png  used on input line 448.
 (pdftex.def)             Requested size: 170.71652pt x 182.37444pt.
 
 [155 <./solvers//img/pipe.png>] [156]
-<solvers//img/graetz-nusselt.png, id=3872, 472.6458pt x 354.123pt>
+<solvers//img/graetz-nusselt.png, id=4515, 472.6458pt x 354.123pt>
 File: solvers//img/graetz-nusselt.png Graphic file (type png)
 <use solvers//img/graetz-nusselt.png>
 Package pdftex.def Info: solvers//img/graetz-nusselt.png  used on input line 56
@@ -2764,12 +2769,12 @@ LaTeX Warning: Citation `persson2006sub' on page 176 undefined on input line 57
 6.
 
 [176]
-<solvers//img/Mach_P4.pdf, id=4237, 582.175pt x 517.935pt>
+<solvers//img/Mach_P4.pdf, id=4881, 582.175pt x 517.935pt>
 File: solvers//img/Mach_P4.pdf Graphic file (type pdf)
 <use solvers//img/Mach_P4.pdf>
 Package pdftex.def Info: solvers//img/Mach_P4.pdf  used on input line 632.
 (pdftex.def)             Requested size: 196.46051pt x 174.77576pt.
-<solvers//img/ArtVisc_P4.pdf, id=4238, 582.175pt x 517.935pt>
+<solvers//img/ArtVisc_P4.pdf, id=4882, 582.175pt x 517.935pt>
 File: solvers//img/ArtVisc_P4.pdf Graphic file (type pdf)
 <use solvers//img/ArtVisc_P4.pdf>
 Package pdftex.def Info: solvers//img/ArtVisc_P4.pdf  used on input line 633.
@@ -2788,7 +2793,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 641--654
 Underfull \vbox (badness 2556) has occurred while \output is active []
 
  [178 <./solvers//img/Mach_P4.pdf> <./solvers//img/ArtVisc_P4.pdf>] [179] [180]
-<solvers//img/CylinderSubsonic.jpeg, id=4315, 2055.68pt x 1016.79875pt>
+<solvers//img/CylinderSubsonic.jpeg, id=4958, 2055.68pt x 1016.79875pt>
 File: solvers//img/CylinderSubsonic.jpeg Graphic file (type jpg)
 <use solvers//img/CylinderSubsonic.jpeg>
 Package pdftex.def Info: solvers//img/CylinderSubsonic.jpeg  used on input line
@@ -2835,7 +2840,7 @@ LaTeX Warning: Citation `XiShDoKa' on page 188 undefined on input line 305.
 
 LaTeX Warning: Citation `MaPaRo' on page 188 undefined on input line 307.
 
-<solvers//img/substepimage.png, id=4416, 475.0548pt x 166.7028pt>
+<solvers//img/substepimage.png, id=5059, 475.0548pt x 166.7028pt>
 File: solvers//img/substepimage.png Graphic file (type png)
 <use solvers//img/substepimage.png>
 Package pdftex.def Info: solvers//img/substepimage.png  used on input line 312.
@@ -2867,7 +2872,7 @@ LaTeX Warning: Citation `LuoSPM' on page 190 undefined on input line 412.
 
 LaTeX Warning: Citation `WangSPM' on page 190 undefined on input line 412.
 
-<solvers//img/concentration.pdf, id=4449, 301.22035pt x 86.35764pt>
+<solvers//img/concentration.pdf, id=5093, 301.22035pt x 86.35764pt>
 File: solvers//img/concentration.pdf Graphic file (type pdf)
 <use solvers//img/concentration.pdf>
 Package pdftex.def Info: solvers//img/concentration.pdf  used on input line 438
@@ -2896,7 +2901,7 @@ LaTeX Warning: Citation `AiSh' on page 195 undefined on input line 707.
 LaTeX Warning: Citation `ShAi' on page 195 undefined on input line 707.
 
 [195] [196] [197]
-<solvers//img/transient_growth.png, id=4567, 416.757pt x 197.0562pt>
+<solvers//img/transient_growth.png, id=5211, 416.757pt x 197.0562pt>
 File: solvers//img/transient_growth.png Graphic file (type png)
 <use solvers//img/transient_growth.png>
 Package pdftex.def Info: solvers//img/transient_growth.png  used on input line 
@@ -3040,12 +3045,12 @@ efin-ing the func-tions []
  []
 
 [216] [217] [218] [219] [220] [221]
-<solvers//img/KF2DCVP8.png, id=4968, 794.97pt x 706.64pt>
+<solvers//img/KF2DCVP8.png, id=5612, 794.97pt x 706.64pt>
 File: solvers//img/KF2DCVP8.png Graphic file (type png)
 <use solvers//img/KF2DCVP8.png>
 Package pdftex.def Info: solvers//img/KF2DCVP8.png  used on input line 2032.
 (pdftex.def)             Requested size: 199.16928pt x 177.03694pt.
-<solvers//img/KF2DCVP8SL.png, id=4969, 794.97pt x 706.64pt>
+<solvers//img/KF2DCVP8SL.png, id=5613, 794.97pt x 706.64pt>
 File: solvers//img/KF2DCVP8SL.png Graphic file (type png)
 <use solvers//img/KF2DCVP8SL.png>
 Package pdftex.def Info: solvers//img/KF2DCVP8SL.png  used on input line 2033.
@@ -3056,13 +3061,13 @@ LaTeX Warning: Citation `DoKa14' on page 222 undefined on input line 2044.
 
 [222 <./solvers//img/KF2DCVP8.png (PNG copy)> <./solvers//img/KF2DCVP8SL.png (P
 NG copy)>]
-<solvers//img/KF2DCVP8HOBC_U.png, id=4995, 850.17625pt x 513.92pt>
+<solvers//img/KF2DCVP8HOBC_U.png, id=5638, 850.17625pt x 513.92pt>
 File: solvers//img/KF2DCVP8HOBC_U.png Graphic file (type png)
 <use solvers//img/KF2DCVP8HOBC_U.png>
 Package pdftex.def Info: solvers//img/KF2DCVP8HOBC_U.png  used on input line 21
 10.
 (pdftex.def)             Requested size: 199.16928pt x 120.3948pt.
-<solvers//img/KF2DCVP8HOBC_V.png, id=4996, 850.17625pt x 513.92pt>
+<solvers//img/KF2DCVP8HOBC_V.png, id=5639, 850.17625pt x 513.92pt>
 File: solvers//img/KF2DCVP8HOBC_V.png Graphic file (type png)
 <use solvers//img/KF2DCVP8HOBC_V.png>
 Package pdftex.def Info: solvers//img/KF2DCVP8HOBC_V.png  used on input line 21
@@ -3078,12 +3083,12 @@ Overfull \hbox (6.22229pt too wide) in paragraph at lines 2143--2143
 
 [224 <./solvers//img/KF2DCVP8HOBC_U.png (PNG copy)> <./solvers//img/KF2DCVP8HOB
 C_V.png (PNG copy)>] [225]
-<solvers//img/CF2DSKP3PR.png, id=5079, 794.97pt x 706.64pt>
+<solvers//img/CF2DSKP3PR.png, id=5723, 794.97pt x 706.64pt>
 File: solvers//img/CF2DSKP3PR.png Graphic file (type png)
 <use solvers//img/CF2DSKP3PR.png>
 Package pdftex.def Info: solvers//img/CF2DSKP3PR.png  used on input line 2245.
 (pdftex.def)             Requested size: 199.16928pt x 177.03694pt.
-<solvers//img/CF2DSKP3.png, id=5080, 794.97pt x 706.64pt>
+<solvers//img/CF2DSKP3.png, id=5724, 794.97pt x 706.64pt>
 File: solvers//img/CF2DSKP3.png Graphic file (type png)
 <use solvers//img/CF2DSKP3.png>
 Package pdftex.def Info: solvers//img/CF2DSKP3.png  used on input line 2246.
@@ -3097,12 +3102,12 @@ Overfull \hbox (6.22229pt too wide) in paragraph at lines 2262--2262
 
 [226 <./solvers//img/CF2DSKP3PR.png (PNG copy)> <./solvers//img/CF2DSKP3.png (P
 NG copy)>] [227]
-<solvers//img/CF3DP8PR.png, id=5144, 676.5275pt x 631.35875pt>
+<solvers//img/CF3DP8PR.png, id=5787, 676.5275pt x 631.35875pt>
 File: solvers//img/CF3DP8PR.png Graphic file (type png)
 <use solvers//img/CF3DP8PR.png>
 Package pdftex.def Info: solvers//img/CF3DP8PR.png  used on input line 2342.
 (pdftex.def)             Requested size: 199.16928pt x 185.87349pt.
-<solvers//img/CF3DP8.png, id=5145, 676.5275pt x 631.35875pt>
+<solvers//img/CF3DP8.png, id=5788, 676.5275pt x 631.35875pt>
 File: solvers//img/CF3DP8.png Graphic file (type png)
 <use solvers//img/CF3DP8.png>
 Package pdftex.def Info: solvers//img/CF3DP8.png  used on input line 2343.
@@ -3128,37 +3133,37 @@ Overfull \hbox (6.22229pt too wide) in paragraph at lines 2418--2418
 [] 
  []
 
-<solvers//img/ChanMesh.png, id=5191, 604.2575pt x 144.54pt>
+<solvers//img/ChanMesh.png, id=5835, 604.2575pt x 144.54pt>
 File: solvers//img/ChanMesh.png Graphic file (type png)
 <use solvers//img/ChanMesh.png>
 Package pdftex.def Info: solvers//img/ChanMesh.png  used on input line 2431.
 (pdftex.def)             Requested size: 284.52756pt x 68.05951pt.
 [230 <./solvers//img/ChanMesh.png>] [231]
-<solvers//img/ChanCont.png, id=5241, 567.11874pt x 349.305pt>
+<solvers//img/ChanCont.png, id=5884, 567.11874pt x 349.305pt>
 File: solvers//img/ChanCont.png Graphic file (type png)
 <use solvers//img/ChanCont.png>
 Package pdftex.def Info: solvers//img/ChanCont.png  used on input line 2525.
 (pdftex.def)             Requested size: 341.43306pt x 210.30415pt.
-<solvers//img/PipeDomain.png, id=5243, 616.3025pt x 363.3575pt>
+<solvers//img/PipeDomain.png, id=5886, 616.3025pt x 363.3575pt>
 File: solvers//img/PipeDomain.png Graphic file (type png)
 <use solvers//img/PipeDomain.png>
 Package pdftex.def Info: solvers//img/PipeDomain.png  used on input line 2546.
 (pdftex.def)             Requested size: 284.52756pt x 167.75081pt.
  [232 <./solvers//img/ChanCont.png>]
-<solvers//img/PipeCont.png, id=5260, 1044.90375pt x 602.25pt>
+<solvers//img/PipeCont.png, id=5903, 1044.90375pt x 602.25pt>
 File: solvers//img/PipeCont.png Graphic file (type png)
 <use solvers//img/PipeCont.png>
 Package pdftex.def Info: solvers//img/PipeCont.png  used on input line 2593.
 (pdftex.def)             Requested size: 341.43306pt x 196.79492pt.
 
 [233 <./solvers//img/PipeDomain.png>]
-<solvers//img/IntercostalGeometry.png, id=5275, 1293.83376pt x 508.90125pt>
+<solvers//img/IntercostalGeometry.png, id=5918, 1293.83376pt x 508.90125pt>
 File: solvers//img/IntercostalGeometry.png Graphic file (type png)
 <use solvers//img/IntercostalGeometry.png>
 Package pdftex.def Info: solvers//img/IntercostalGeometry.png  used on input li
 ne 2620.
 (pdftex.def)             Requested size: 284.52756pt x 111.91202pt.
-<solvers//img/spherigons.png, id=5276, 878.28125pt x 613.29124pt>
+<solvers//img/spherigons.png, id=5919, 878.28125pt x 613.29124pt>
 File: solvers//img/spherigons.png Graphic file (type png)
 <use solvers//img/spherigons.png>
 Package pdftex.def Info: solvers//img/spherigons.png  used on input line 2629.
@@ -3168,26 +3173,26 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [234 <./solvers//img/PipeCont.png>] [235 <./solvers//img/IntercostalGeometry.p
 ng (PNG copy)> <./solvers//img/spherigons.png (PNG copy)>] [236]
-<solvers//img/velocityRendered.png, id=5350, 673.51625pt x 330.23375pt>
+<solvers//img/velocityRendered.png, id=5993, 673.51625pt x 330.23375pt>
 File: solvers//img/velocityRendered.png Graphic file (type png)
 <use solvers//img/velocityRendered.png>
 Package pdftex.def Info: solvers//img/velocityRendered.png  used on input line 
 2730.
 (pdftex.def)             Requested size: 284.52756pt x 139.50848pt.
-<solvers//img/WSS.png, id=5351, 759.83875pt x 358.33875pt>
+<solvers//img/WSS.png, id=5994, 759.83875pt x 358.33875pt>
 File: solvers//img/WSS.png Graphic file (type png)
 <use solvers//img/WSS.png>
 Package pdftex.def Info: solvers//img/WSS.png  used on input line 2739.
 (pdftex.def)             Requested size: 341.43306pt x 161.0213pt.
  [237 <./solvers//img/velocityRendered.png>] [238 <./solvers//img/WSS.png (PNG 
 copy)>]
-<solvers//img/strip-16-time-100.png, id=5386, 637.38126pt x 513.92pt>
+<solvers//img/strip-16-time-100.png, id=6029, 637.38126pt x 513.92pt>
 File: solvers//img/strip-16-time-100.png Graphic file (type png)
 <use solvers//img/strip-16-time-100.png>
 Package pdftex.def Info: solvers//img/strip-16-time-100.png  used on input line
  2802.
 (pdftex.def)             Requested size: 199.16928pt x 160.58391pt.
-<solvers//img/strip-16-time-600.png, id=5387, 637.38126pt x 513.92pt>
+<solvers//img/strip-16-time-600.png, id=6030, 637.38126pt x 513.92pt>
 File: solvers//img/strip-16-time-600.png Graphic file (type png)
 <use solvers//img/strip-16-time-600.png>
 Package pdftex.def Info: solvers//img/strip-16-time-600.png  used on input line
@@ -3195,50 +3200,50 @@ Package pdftex.def Info: solvers//img/strip-16-time-600.png  used on input line
 (pdftex.def)             Requested size: 199.16928pt x 160.58391pt.
  [239] [240 <./solvers//img/strip-16-time-100.png (PNG copy)> <./solvers//img/s
 trip-16-time-600.png (PNG copy)>] [241] [242] [243]
-<solvers//img/chan_u.png, id=5555, 416.757pt x 163.3302pt>
+<solvers//img/chan_u.png, id=6198, 416.757pt x 163.3302pt>
 File: solvers//img/chan_u.png Graphic file (type png)
 <use solvers//img/chan_u.png>
 Package pdftex.def Info: solvers//img/chan_u.png  used on input line 3015.
 (pdftex.def)             Requested size: 418.0pt x 163.81825pt.
-<solvers//img/chan_v.png, id=5556, 416.757pt x 158.994pt>
+<solvers//img/chan_v.png, id=6199, 416.757pt x 158.994pt>
 File: solvers//img/chan_v.png Graphic file (type png)
 <use solvers//img/chan_v.png>
 Package pdftex.def Info: solvers//img/chan_v.png  used on input line 3021.
 (pdftex.def)             Requested size: 418.0pt x 159.4691pt.
  [244] [245 <./solvers//img/chan_u.png> <./solvers//img/chan_v.png>] [246]
-<solvers//img/chan_u_adj.png, id=5643, 416.757pt x 165.2574pt>
+<solvers//img/chan_u_adj.png, id=6286, 416.757pt x 165.2574pt>
 File: solvers//img/chan_u_adj.png Graphic file (type png)
 <use solvers//img/chan_u_adj.png>
 Package pdftex.def Info: solvers//img/chan_u_adj.png  used on input line 3150.
 (pdftex.def)             Requested size: 418.0pt x 165.7512pt.
-<solvers//img/chan_v_adj.png, id=5644, 416.757pt x 165.2574pt>
+<solvers//img/chan_v_adj.png, id=6287, 416.757pt x 165.2574pt>
 File: solvers//img/chan_v_adj.png Graphic file (type png)
 <use solvers//img/chan_v_adj.png>
 Package pdftex.def Info: solvers//img/chan_v_adj.png  used on input line 3156.
 (pdftex.def)             Requested size: 418.0pt x 165.7512pt.
-<solvers//img/bfs_geo.png, id=5646, 722.7pt x 167.6664pt>
+<solvers//img/bfs_geo.png, id=6289, 722.7pt x 167.6664pt>
 File: solvers//img/bfs_geo.png Graphic file (type png)
 <use solvers//img/bfs_geo.png>
 Package pdftex.def Info: solvers//img/bfs_geo.png  used on input line 3166.
 (pdftex.def)             Requested size: 418.0pt x 96.97537pt.
  [247] [248 <./solvers//img/chan_u_adj.png> <./solvers//img/chan_v_adj.png> <./
 solvers//img/bfs_geo.png>] [249] [250] [251]
-<solvers//img/bfs_eig_u.png, id=5812, 1284.8pt x 676.5275pt>
+<solvers//img/bfs_eig_u.png, id=6455, 1284.8pt x 676.5275pt>
 File: solvers//img/bfs_eig_u.png Graphic file (type png)
 <use solvers//img/bfs_eig_u.png>
 Package pdftex.def Info: solvers//img/bfs_eig_u.png  used on input line 3341.
 (pdftex.def)             Requested size: 418.0pt x 220.09593pt.
-<solvers//img/bfs_eig_v.png, id=5813, 1284.8pt x 676.5275pt>
+<solvers//img/bfs_eig_v.png, id=6456, 1284.8pt x 676.5275pt>
 File: solvers//img/bfs_eig_v.png Graphic file (type png)
 <use solvers//img/bfs_eig_v.png>
 Package pdftex.def Info: solvers//img/bfs_eig_v.png  used on input line 3347.
 (pdftex.def)             Requested size: 418.0pt x 220.09593pt.
-<solvers//img/energy_bfs.png, id=5814, 416.757pt x 212.4738pt>
+<solvers//img/energy_bfs.png, id=6457, 416.757pt x 212.4738pt>
 File: solvers//img/energy_bfs.png Graphic file (type png)
 <use solvers//img/energy_bfs.png>
 Package pdftex.def Info: solvers//img/energy_bfs.png  used on input line 3356.
 (pdftex.def)             Requested size: 418.0pt x 213.1087pt.
-<solvers//img/cylinder_geo.png, id=5815, 416.757pt x 251.4996pt>
+<solvers//img/cylinder_geo.png, id=6458, 416.757pt x 251.4996pt>
 File: solvers//img/cylinder_geo.png Graphic file (type png)
 <use solvers//img/cylinder_geo.png>
 Package pdftex.def Info: solvers//img/cylinder_geo.png  used on input line 3366
@@ -3250,7 +3255,7 @@ png (PNG copy)> <./solvers//img/energy_bfs.png>]
 Underfull \vbox (badness 5475) has occurred while \output is active []
 
  [254 <./solvers//img/cylinder_geo.png>] [255]
-<solvers//img/floquet.png, id=5877, 722.7pt x 345.9324pt>
+<solvers//img/floquet.png, id=6520, 722.7pt x 345.9324pt>
 File: solvers//img/floquet.png Graphic file (type png)
 <use solvers//img/floquet.png>
 Package pdftex.def Info: solvers//img/floquet.png  used on input line 3429.
@@ -3267,23 +3272,23 @@ p-ply when the []
 
 LaTeX Warning: Citation `Ko07' on page 259 undefined on input line 134.
 
-<solvers//img/l-shape.png, id=5898, 691.58376pt x 850.17625pt>
+<solvers//img/l-shape.png, id=6541, 691.58376pt x 850.17625pt>
 File: solvers//img/l-shape.png Graphic file (type png)
 <use solvers//img/l-shape.png>
 Package pdftex.def Info: solvers//img/l-shape.png  used on input line 167.
 (pdftex.def)             Requested size: 209.0pt x 256.9229pt.
 [259]
-<solvers//img/bl-0.png, id=5906, 904.37875pt x 905.3825pt>
+<solvers//img/bl-0.png, id=6549, 904.37875pt x 905.3825pt>
 File: solvers//img/bl-0.png Graphic file (type png)
 <use solvers//img/bl-0.png>
 Package pdftex.def Info: solvers//img/bl-0.png  used on input line 200.
 (pdftex.def)             Requested size: 125.40128pt x 125.53696pt.
-<solvers//img/bl-1.png, id=5907, 901.3675pt x 897.3525pt>
+<solvers//img/bl-1.png, id=6550, 901.3675pt x 897.3525pt>
 File: solvers//img/bl-1.png Graphic file (type png)
 <use solvers//img/bl-1.png>
 Package pdftex.def Info: solvers//img/bl-1.png  used on input line 201.
 (pdftex.def)             Requested size: 125.40128pt x 124.83432pt.
-<solvers//img/bl-2.png, id=5908, 902.37125pt x 900.36375pt>
+<solvers//img/bl-2.png, id=6551, 902.37125pt x 900.36375pt>
 File: solvers//img/bl-2.png Graphic file (type png)
 <use solvers//img/bl-2.png>
 Package pdftex.def Info: solvers//img/bl-2.png  used on input line 202.
@@ -3304,7 +3309,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{equation.13.1
                                                   \__shipout_drop_firstpage_...
 l.25 
      ]
-<solvers//img/PulseWaveBifurcation.png, id=5959, 334.3692pt x 221.1462pt>
+<solvers//img/PulseWaveBifurcation.png, id=6603, 334.3692pt x 221.1462pt>
 File: solvers//img/PulseWaveBifurcation.png Graphic file (type png)
 <use solvers//img/PulseWaveBifurcation.png>
 Package pdftex.def Info: solvers//img/PulseWaveBifurcation.png  used on input l
@@ -3329,25 +3334,25 @@ LaTeX Warning: Citation `We69' on page 268 undefined on input line 264.
 
 LaTeX Warning: Citation `ShFoPeFr03' on page 268 undefined on input line 265.
 
-<solvers//img/55_artery_network.jpg, id=6077, 434.62375pt x 567.11874pt>
+<solvers//img/55_artery_network.jpg, id=6720, 434.62375pt x 567.11874pt>
 File: solvers//img/55_artery_network.jpg Graphic file (type jpg)
 <use solvers//img/55_artery_network.jpg>
 Package pdftex.def Info: solvers//img/55_artery_network.jpg  used on input line
  271.
 (pdftex.def)             Requested size: 204.8223pt x 267.26408pt.
-<solvers//img/Data_Table.png, id=6078, 578.16pt x 883.3pt>
+<solvers//img/Data_Table.png, id=6721, 578.16pt x 883.3pt>
 File: solvers//img/Data_Table.png Graphic file (type png)
 <use solvers//img/Data_Table.png>
 Package pdftex.def Info: solvers//img/Data_Table.png  used on input line 272.
 (pdftex.def)             Requested size: 204.8223pt x 312.92001pt.
 [268] [269 <./solvers//img/55_artery_network.jpg> <./solvers//img/Data_Table.pn
 g>] [270]
-<solvers//img/Bifurcation.png, id=6180, 334.3692pt x 221.1462pt>
+<solvers//img/Bifurcation.png, id=6823, 334.3692pt x 221.1462pt>
 File: solvers//img/Bifurcation.png Graphic file (type png)
 <use solvers//img/Bifurcation.png>
 Package pdftex.def Info: solvers//img/Bifurcation.png  used on input line 395.
 (pdftex.def)             Requested size: 204.8223pt x 135.46925pt.
-<solvers//img/Network_Inflow.png, id=6181, 564.1878pt x 403.7484pt>
+<solvers//img/Network_Inflow.png, id=6824, 564.1878pt x 403.7484pt>
 File: solvers//img/Network_Inflow.png Graphic file (type png)
 <use solvers//img/Network_Inflow.png>
 Package pdftex.def Info: solvers//img/Network_Inflow.png  used on input line 39
@@ -3359,7 +3364,7 @@ LaTeX Warning: Citation `ShFoPeFr03' on page 271 undefined on input line 409.
 
 [271 <./solvers//img/Bifurcation.png> <./solvers//img/Network_Inflow.png>]
 [272]
-<solvers//img/Network_Results.png, id=6258, 542.025pt x 289.08pt>
+<solvers//img/Network_Results.png, id=6902, 542.025pt x 289.08pt>
 File: solvers//img/Network_Results.png Graphic file (type png)
 <use solvers//img/Network_Results.png>
 Package pdftex.def Info: solvers//img/Network_Results.png  used on input line 4
@@ -3370,19 +3375,19 @@ Package pdftex.def Info: solvers//img/Network_Results.png  used on input line 4
 LaTeX Warning: Hyper reference `PulseWaveSolver' on page 273 undefined on input
  line 496.
 
-<solvers//img/StentGeometry.png, id=6259, 460.72125pt x 185.69376pt>
+<solvers//img/StentGeometry.png, id=6903, 460.72125pt x 185.69376pt>
 File: solvers//img/StentGeometry.png Graphic file (type png)
 <use solvers//img/StentGeometry.png>
 Package pdftex.def Info: solvers//img/StentGeometry.png  used on input line 500
 .
 (pdftex.def)             Requested size: 199.16928pt x 80.2746pt.
 [273 <./solvers//img/Network_Results.png> <./solvers//img/StentGeometry.png>]
-<solvers//img/StentDomain.png, id=6266, 532.389pt x 85.2786pt>
+<solvers//img/StentDomain.png, id=6910, 532.389pt x 85.2786pt>
 File: solvers//img/StentDomain.png Graphic file (type png)
 <use solvers//img/StentDomain.png>
 Package pdftex.def Info: solvers//img/StentDomain.png  used on input line 509.
 (pdftex.def)             Requested size: 199.16928pt x 31.9026pt.
-<solvers//img/StentComposite.png, id=6267, 532.1481pt x 158.7531pt>
+<solvers//img/StentComposite.png, id=6911, 532.1481pt x 158.7531pt>
 File: solvers//img/StentComposite.png Graphic file (type png)
 <use solvers//img/StentComposite.png>
 Package pdftex.def Info: solvers//img/StentComposite.png  used on input line 53
@@ -3398,38 +3403,38 @@ LaTeX Warning: Hyper reference `PulseWaveSolver' on page 275 undefined on input
 LaTeX Warning: Citation `ShFoPeFr03' on page 275 undefined on input line 588.
 
 [275]
-<solvers//img/StentPressureProfile.png, id=6346, 561.7788pt x 421.575pt>
+<solvers//img/StentPressureProfile.png, id=6989, 561.7788pt x 421.575pt>
 File: solvers//img/StentPressureProfile.png Graphic file (type png)
 <use solvers//img/StentPressureProfile.png>
 Package pdftex.def Info: solvers//img/StentPressureProfile.png  used on input l
 ine 614.
 (pdftex.def)             Requested size: 199.16928pt x 149.46396pt.
-<solvers//img/StentMaterial.png, id=6348, 561.7788pt x 421.575pt>
+<solvers//img/StentMaterial.png, id=6991, 561.7788pt x 421.575pt>
 File: solvers//img/StentMaterial.png Graphic file (type png)
 <use solvers//img/StentMaterial.png>
 Package pdftex.def Info: solvers//img/StentMaterial.png  used on input line 654
 .
 (pdftex.def)             Requested size: 199.16928pt x 149.46396pt.
  [276 <./solvers//img/StentPressureProfile.png>]
-<solvers//img/normal_vessel.jpg, id=6383, 198.9834pt x 109.8504pt>
+<solvers//img/normal_vessel.jpg, id=7027, 198.9834pt x 109.8504pt>
 File: solvers//img/normal_vessel.jpg Graphic file (type jpg)
 <use solvers//img/normal_vessel.jpg>
 Package pdftex.def Info: solvers//img/normal_vessel.jpg  used on input line 682
 .
 (pdftex.def)             Requested size: 204.8223pt x 113.08179pt.
-<solvers//img/stented_vessel.jpg, id=6384, 198.9834pt x 109.8504pt>
+<solvers//img/stented_vessel.jpg, id=7028, 198.9834pt x 109.8504pt>
 File: solvers//img/stented_vessel.jpg Graphic file (type jpg)
 <use solvers//img/stented_vessel.jpg>
 Package pdftex.def Info: solvers//img/stented_vessel.jpg  used on input line 68
 3.
 (pdftex.def)             Requested size: 204.8223pt x 113.08179pt.
-<solvers//img/pressure_normal_vessel.jpg, id=6385, 198.9834pt x 149.8398pt>
+<solvers//img/pressure_normal_vessel.jpg, id=7029, 198.9834pt x 149.8398pt>
 File: solvers//img/pressure_normal_vessel.jpg Graphic file (type jpg)
 <use solvers//img/pressure_normal_vessel.jpg>
 Package pdftex.def Info: solvers//img/pressure_normal_vessel.jpg  used on input
  line 696.
 (pdftex.def)             Requested size: 204.8223pt x 154.24753pt.
-<solvers//img/pressure_stented_vessel.jpg, id=6386, 198.9834pt x 149.8398pt>
+<solvers//img/pressure_stented_vessel.jpg, id=7030, 198.9834pt x 149.8398pt>
 File: solvers//img/pressure_stented_vessel.jpg Graphic file (type jpg)
 <use solvers//img/pressure_stented_vessel.jpg>
 Package pdftex.def Info: solvers//img/pressure_stented_vessel.jpg  used on inpu
@@ -3459,7 +3464,7 @@ Overfull \hbox (3.71996pt too wide) in paragraph at lines 172--176
 -put file [].
  []
 
-<solvers//img/RossbyModon.png, id=6461, 792.9625pt x 460.72125pt>
+<solvers//img/RossbyModon.png, id=7104, 792.9625pt x 460.72125pt>
 File: solvers//img/RossbyModon.png Graphic file (type png)
 <use solvers//img/RossbyModon.png>
 Package pdftex.def Info: solvers//img/RossbyModon.png  used on input line 184.
@@ -3478,33 +3483,35 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 ])
 (./faq/faq.tex [290] [291
 
-] [292] [293]) [294]
-No file user-guide.bbl.
+] [292] [293]) [294] (./user-guide.bbl
+bibitemlist
+
+LaTeX Warning: Empty `thebibliography' environment on input line 3.
+
+)
 No file user-guide.ind.
+[295
+
+
+]
 \tf@toc=\write7
 \openout7 = `user-guide.toc'.
 
-(./user-guide.aux)
+ (./user-guide.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
 LaTeX Warning: There were undefined references.
 
-
-Package rerunfilecheck Warning: File `user-guide.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `user-guide.out':
-(rerunfilecheck)             Before: 5FFBA0944F1F00FD4954EBA6ED5358AC;14090
-(rerunfilecheck)             After:  330D8532A0FFCD7A402817F697EA62EA;57249.
+Package rerunfilecheck Info: File `user-guide.out' has not changed.
+(rerunfilecheck)             Checksum: 19BA7868BBF230976BD8C234EC7021AA;57362.
  ) 
 Here is how much of TeX's memory you used:
- 38867 strings out of 478268
- 699511 string characters out of 5846348
- 1620548 words of memory out of 5000000
- 51388 multiletter control sequences out of 15000+600000
+ 39083 strings out of 478268
+ 703504 string characters out of 5846348
+ 1621670 words of memory out of 5000000
+ 51600 multiletter control sequences out of 15000+600000
  638358 words of font info for 343 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  88i,15n,140p,2127b,2139s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -3547,10 +3554,10 @@ lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
 al/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr
 /local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><
 /usr/local/texlive/2022/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on user-guide.pdf (306 pages, 8714499 bytes).
+Output written on user-guide.pdf (307 pages, 8729549 bytes).
 PDF statistics:
- 7637 PDF objects out of 8907 (max. 8388607)
- 7047 compressed objects within 71 object streams
- 4299 named destinations out of 5155 (max. 500000)
- 95949 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 8287 PDF objects out of 8907 (max. 8388607)
+ 7690 compressed objects within 77 object streams
+ 4301 named destinations out of 5155 (max. 500000)
+ 97645 words of extra memory for PDF output out of 106986 (max. 10000000)
 

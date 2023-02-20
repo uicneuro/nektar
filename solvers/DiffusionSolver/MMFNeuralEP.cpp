@@ -32,29 +32,6 @@
 // Description: MMFNeuralEP.
 //
 ///////////////////////////////////////////////////////////////////////////////
-// #include <boost/algorithm/string.hpp>
-// #include <iomanip>
-// #include <iostream>
-// #include <stdio.h>
-// #include <string.h>
-
-// #include <CardiacEPSolver/Filters/FilterCellHistoryPoints.h>
-// #include <CardiacEPSolver/Filters/FilterCheckpointCellModel.h>
-// #include <DiffusionSolver/EquationSystems/MMFNeuralEP.h>
-// #include <SolverUtils/Driver.h>
-
-// #include <LibUtilities/BasicUtils/Timer.h>
-// #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
-
-// #include <LibUtilities/BasicUtils/SessionReader.h>
-// #include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
-
-// #include <boost/math/special_functions/spherical_harmonic.hpp>
-
-// using namespace std;
-// using namespace Nektar::SolverUtils;
-// using namespace Nektar;
-
 #include <iomanip>
 #include <iostream>
 
@@ -267,8 +244,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Ranvier node zone: 0>: Myelin, -1: node, -2: Extracellular space
             m_NodeZone = Array<OneD, Array<OneD, int>>(1);
-            m_NodeZone[0] =
-                IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
+            m_NodeZone[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
 
             // Constrct m_NeuralCm: node: 1/Cn, Myelin: 1/Cm
             const NekDouble Rf = m_neuron->GetRecistanceValue();
@@ -365,7 +341,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // AniStrength: Node = Cn/Cm, Myelined = 1.0
             m_AnisotropyStrength = Cn / Cm;
 
-            std::cout << "MediumType = " << m_MediumType << std::endl;
             if (m_MediumType == eAnisotropy)
             {
                 for (int j = 0; j < m_expdim; ++j)
@@ -402,7 +377,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // AniStrength: Node = Cn/Cm, Myelined = 1.0
             m_AnisotropyStrength = Cn / Cm;
 
-            std::cout << "MediumType = " << m_MediumType << std::endl;
             if (m_MediumType == eAnisotropy)
             {
                 for (int j = 0; j < m_expdim; ++j)
@@ -425,9 +399,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Create MMF init object
             MMFSystem::MMFInitObject(AniStrength);
-
-            // Check NodeZone and moving frames
-            CheckNodeZoneMF(m_movingframes, m_NodeZone);
 
             // Set up for phie Poisson solver
             std::string phieMMFdirStr = "LOCAL";
@@ -583,19 +554,31 @@ MMFNeuralEP::~MMFNeuralEP()
 
 void MMFNeuralEP::CheckNodeZoneMF(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const Array<OneD, int>> &NodeZone)
+    const Array<OneD, const Array<OneD, int>> &NodeZone,
+    const Array<OneD, const NekDouble> &inarray)
 {
     int nq = GetTotPoints();
 
-    int i, j, index;
-    NekDouble e1mag, e2mag;
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    int i, j, index, npts;;
+    NekDouble xp, yp, e1mag, e2mag;
     for (i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
+        npts = m_fields[0]->GetTotPoints(i);
+        xp = 0.0;
+        yp = 0.0;
         e1mag = 0.0;
         e2mag = 0.0;
-        for (j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        for (j = 0; j < npts; ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
+            xp += x0[index];
+            yp += x1[index];
             e1mag = e1mag +
                     (movingframes[0][index] * movingframes[0][index] +
                      movingframes[0][nq + index] * movingframes[0][nq + index]);
@@ -603,12 +586,15 @@ void MMFNeuralEP::CheckNodeZoneMF(
                     (movingframes[1][index] * movingframes[1][index] +
                      movingframes[1][nq + index] * movingframes[1][nq + index]);
         }
-        e1mag = sqrt(e1mag / m_fields[0]->GetTotPoints(i));
-        e2mag = sqrt(e2mag / m_fields[0]->GetTotPoints(i));
+        e1mag = sqrt(e1mag / npts);
+        e2mag = sqrt(e2mag / npts);
+        xp = sqrt(xp / npts);
+        yp = sqrt(yp / npts);
 
         std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
+                  << ", x = " << xp << ", y = " << yp 
                   << ", e1mag = " << e1mag << ", e2mag = " << e1mag
-                  << std::endl;
+                  << ", um = " << inarray[index] << std::endl;
     }
 }
 
@@ -781,7 +767,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
 }
 
 // Constrcuct Cm vector: 1.0/Cn if node. 1.0/Cm if myeline.
-
 Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
     const int ElemMyelenEnd)
@@ -789,17 +774,15 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     // int nq         = fields[0].size();
     int fnq = field->GetNpoints();
 
-    int index;
+    int index, npts;
     int cntn = 0, cntm = 0, cnte = 0;
-
-    // std::cout << "Nelemtj = " << Nelemtj
-    // << ", ElemNodeEnd = " << ElemNodeEnd << ", ElemMyelenEnd = " <<
-    // ElemMyelenEnd << std::endl;
+    int Nelem = m_fields[0]->GetExpSize();
 
     Array<OneD, int> outarray(fnq, 0);
-    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    for (int i = 0; i < Nelem; ++i)
     {
-        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        npts = m_fields[0]->GetTotPoints(i);
+        for (int j = 0; j < npts; ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j ;
 
@@ -823,38 +806,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
             }
         }
     }
-
-    // std::cout << "IndexNodeZone2D: cntn = " << cntn << ", cntm =" << cntm <<
-    // ", cnte = " << cnte << std::endl;
-
-    // Check Node Zone
-    // int nq         = GetTotPoints();
-
-    // Array<OneD, NekDouble> x0(nq);
-    // Array<OneD, NekDouble> x1(nq);
-    // Array<OneD, NekDouble> x2(nq);
-
-    // m_fields[0]->GetCoords(x0, x1, x2);
-
-    // NekDouble yavg, e1mag, e2mag;
-    // for (int i = 0; i < Nelemtj; ++i)
-    // {
-    //     yavg=0.0;
-    //     e1mag=0.0;
-    //     e2mag=0.0;
-    //     for (int j = 0; j < nptsj; ++j)
-    //     {
-    //         index = EWIndex[i][j];
-    //         yavg = yavg + x1[index];
-    //     }
-
-    //     yavg = yavg/nptsj;
-    //     if(outarray[index]>=0)
-    //     {
-    //         std::cout << "Elemid = " << i << ", Nodeid = " << outarray[index]
-    //         << ", y = " << yavg << std::endl;
-    //     }
-    // }
 
     return outarray;
 }
@@ -985,24 +936,24 @@ void MMFNeuralEP::DoSolveMMFZero()
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
             // Print out at every info step
-            // std::cout << "Steps: " << std::setw(8) << std::left << step + 1
-            //           << " "
-            //           << "Time: " << std::setw(12) << std::left << m_time
-            //           << std::endl;
+            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
+                      << " "
+                      << "Time: " << std::setw(12) << std::left << m_time
+                      << std::endl;
 
-            // std::stringstream ss;
-            // ss << cpuTime / 60.0 << " min.";
-            // std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
-            //           << std::endl;
+            std::stringstream ss;
+            ss << cpuTime / 60.0 << " min.";
+            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+                      << std::endl;
 
-            fulltext.append("\n");
-            fulltext.append("Steps: " + std::to_string((step+1)));
-            fulltext.append("\n");
-            fulltext.append("Time: " + std::to_string(m_time));
-            fulltext.append("\n");
+            // fulltext.append("\n");
+            // fulltext.append("Steps: " + std::to_string((step+1)));
+            // fulltext.append("\n");
+            // fulltext.append("Time: " + std::to_string(m_time));
+            // fulltext.append("\n");
 
-            fulltext.append("CPU Time: " + std::to_string(cpuTime / 60.0) + " min.");
-            fulltext.append("\n");
+            // fulltext.append("CPU Time: " + std::to_string(cpuTime / 60.0) + " min.");
+            // fulltext.append("\n");
 
             cpuTime = 0.0;
         }
@@ -1012,23 +963,23 @@ void MMFNeuralEP::DoSolveMMFZero()
             doCheckTime)
         {
             int Iumax = Vmath::Iamax(nq, fields[0], 1);
-            // std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
-            //           << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
-            //           << std::endl;
+            std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
+                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
+                      << std::endl;
 
-            NekDouble umax = Vmath::Vamax(nq, fields[0], 1);
-            fulltext.append("u_max = " + std::to_string(umax));
-            fulltext.append(", x = " + std::to_string(x0[Iumax]));
-            fulltext.append(", y = " + std::to_string(x1[Iumax]));
-            fulltext.append("\n");
+            // NekDouble umax = Vmath::Vamax(nq, fields[0], 1);
+            // fulltext.append("u_max = " + std::to_string(umax));
+            // fulltext.append(", x = " + std::to_string(x0[Iumax]));
+            // fulltext.append(", y = " + std::to_string(x1[Iumax]));
+            // fulltext.append("\n");
 
             // Print phim and phie at each node
-            // if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
-            // {
-            //     DisplayatNode(fields[0]);
-            // }
+            if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
+            {
+                DisplayatNode(fields[0]);
+            }
             
-            std::cout << fulltext << "\n";
+            // std::cout << fulltext << "\n";
 
             Checkpoint_Output(nchk++);
             doCheckTime = false;
@@ -2374,28 +2325,9 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
     // ONLY simulation at node zone:
     // No excitation at myelinated region
-    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
-    for (int k = 0; k < nq; ++k)
-    {
-        // if( (m_NodeZone[0][k]>=0) && (m_NodeZone[0][k]<=1) )
-        if (m_NodeZone[0][k] == 1)
-        {
-            RHSstimulus[0][k] = RHSstimulus[0][k] / Cn;
-        }
-
-        else
-        {
-            RHSstimulus[0][k] = 0.0;
-        }
-    }
+    Stimulus_On_Node(RHSstimulus[0]);
 
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
-
-    // for (int i=0;i<20;++i)
-    // {
-    //     std::cout << "OdeRhs: i = " << i << ", Nodezone = " << m_NodeZone[0][i] 
-    //     << ", RHSstimulus = " << RHSstimulus[0][i] << ", outarray = " << outarray[0][i] << std::endl;
-    // }
 
     // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)
@@ -2410,6 +2342,25 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
                     1);
         Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
                     1);
+    }
+}
+
+void MMFNeuralEP::Stimulus_On_Node(Array<OneD, NekDouble> &outarray)
+{
+    int nq   = m_fields[0]->GetNpoints();
+
+    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+    for (int k = 0; k < nq; ++k)
+    {
+        if ( (m_NodeZone[0][k] == 0) || (m_NodeZone[0][k] == 1) )
+        {
+            outarray[k] = outarray[k] / Cn;
+        }
+
+        else
+        {
+            outarray[k] = 0.0;
+        }
     }
 }
 
@@ -2809,9 +2760,14 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->Update(tmp, 0.001);
+                Stimulus_On_Node(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
+            
+            // Check NodeZone and moving frames
+            CheckNodeZoneMF(m_movingframes, m_NodeZone, tmp[0]);
+
             break;
         }
 

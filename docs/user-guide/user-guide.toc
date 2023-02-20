@@ -458,3 +458,4 @@
 \contentsline {chapter}{\chapternumberline {17}Frequently Asked Questions}{291}{chapter.17}%
 \contentsline {section}{\numberline {17.1}Compilation and Testing}{291}{section.17.1}%
 \contentsline {section}{\numberline {17.2}Usage}{293}{section.17.2}%
+\contentsline {chapter}{Bibliography}{295}{chapter*.13}%

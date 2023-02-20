@@ -1,0 +1,2816 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.9)  18 FEB 2023 18:31
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**developer-guide.tex
+(./developer-guide.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (./shared/devguide-preamble.tex
+(/usr/local/texlive/2022/texmf-dist/tex/latex/memoir/memoir.cls
+Document Class: memoir 2022/02/20 v3.7q configurable book, report, article docu
+ment class
+(/usr/local/texlive/2022/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count185
+)
+\onelineskip=\skip47
+\lxvchars=\skip48
+\xlvchars=\skip49
+\@memcnta=\count186
+\c@@memmarkcntra=\count187
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+)
+\stockheight=\skip50
+\stockwidth=\skip51
+\trimtop=\skip52
+\trimedge=\skip53
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/memoir/mem11.clo
+File: mem11.clo 2008/01/30 v0.3 memoir class 11pt size option
+)
+\binding=\skip54
+\spinemargin=\skip55
+\foremargin=\skip56
+\uppermargin=\skip57
+\lowermargin=\skip58
+\headdrop=\skip59
+\normalrulethickness=\skip60
+\mem@maxheadheight=\skip61
+\mem@maxfootheight=\skip62
+\headwidth=\skip63
+\c@storedpagenumber=\count188
+\memPD=\dimen138
+\m@mabparskip=\skip64
+\thanksmarkwidth=\skip65
+\thanksmarksep=\skip66
+\droptitle=\skip67
+\c@book=\count189
+\c@part=\count190
+\c@chapter=\count191
+\c@section=\count192
+\c@subsection=\count193
+\c@subsubsection=\count194
+\c@paragraph=\count195
+\c@subparagraph=\count196
+\beforechapskip=\skip68
+\midchapskip=\skip69
+\afterchapskip=\skip70
+\chapindent=\skip71
+\bottomsectionskip=\skip72
+\secindent=\skip73
+\beforesecskip=\skip74
+\aftersecskip=\skip75
+\subsecindent=\skip76
+\beforesubsecskip=\skip77
+\aftersubsecskip=\skip78
+\subsubsecindent=\skip79
+\beforesubsubsecskip=\skip80
+\aftersubsubsecskip=\skip81
+\paraindent=\skip82
+\beforeparaskip=\skip83
+\afterparaskip=\skip84
+\subparaindent=\skip85
+\beforesubparaskip=\skip86
+\aftersubparaskip=\skip87
+\pfbreakskip=\skip88
+\c@@ppsavesec=\count197
+\c@@ppsaveapp=\count198
+\ragrparindent=\dimen139
+\everylistparindent=\dimen140
+\parsepi=\skip89
+\topsepi=\skip90
+\itemsepi=\skip91
+\parsepii=\skip92
+\topsepii=\skip93
+\topsepiii=\skip94
+\itemsepii=\skip95
+\itemsepiii=\skip96
+\partopsepii=\skip97
+\partopsepiii=\skip98
+\m@msavetopsep=\skip99
+\m@msavepartopsep=\skip100
+\@enLab=\toks16
+\abstitleskip=\skip101
+\absleftindent=\skip102
+\abs@leftindent=\dimen141
+\absrightindent=\skip103
+\absparindent=\skip104
+\absparsep=\skip105
+\c@vslineno=\count199
+\c@poemline=\count266
+\c@modulo@vs=\count267
+\c@memfvsline=\count268
+\vleftskip=\skip106
+\vrightskip=\skip107
+\stanzaskip=\skip108
+\versewidth=\skip109
+\vgap=\skip110
+\vindent=\skip111
+\vleftmargin=\dimen142
+\c@verse=\count269
+\c@chrsinstr=\count270
+\beforepoemtitleskip=\skip112
+\afterpoemtitleskip=\skip113
+\c@poem=\count271
+\beforePoemTitleskip=\skip114
+\midPoemTitleskip=\skip115
+\afterPoemTitleskip=\skip116
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/array.sty
+Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
+\col@sep=\dimen143
+\ar@mcellbox=\box50
+\extrarowheight=\dimen144
+\NC@list=\toks17
+\extratabsurround=\skip117
+\backup@length=\skip118
+\ar@cellbox=\box51
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/dcolumn.sty
+Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/delarray.sty
+Package: delarray 2014/10/28 v1.01 array delimiter package (DPC)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2020/01/15 v2.11c `tabularx' package (DPC)
+\TX@col@width=\dimen145
+\TX@old@table=\dimen146
+\TX@old@col=\dimen147
+\TX@target=\dimen148
+\TX@delta=\dimen149
+\TX@cols=\count272
+\TX@ftn=\toks18
+)
+\heavyrulewidth=\dimen150
+\lightrulewidth=\dimen151
+\cmidrulewidth=\dimen152
+\belowrulesep=\dimen153
+\belowbottomsep=\dimen154
+\aboverulesep=\dimen155
+\abovetopsep=\dimen156
+\cmidrulesep=\dimen157
+\cmidrulekern=\dimen158
+\defaultaddspace=\dimen159
+\@cmidla=\count273
+\@cmidlb=\count274
+\@aboverulesep=\dimen160
+\@belowrulesep=\dimen161
+\@thisruleclass=\count275
+\@lastruleclass=\count276
+\@thisrulewidth=\dimen162
+\ctableftskip=\skip119
+\ctabrightskip=\skip120
+\abovecolumnspenalty=\count277
+\@linestogo=\count278
+\@cellstogo=\count279
+\@cellsincolumn=\count280
+\crtok=\toks19
+\@mincolumnwidth=\dimen163
+\c@newflo@tctr=\count281
+\mem@margin@floatbox=\box52
+\@contcwidth=\skip121
+\@contindw=\skip122
+\abovecaptionskip=\skip123
+\belowcaptionskip=\skip124
+\subfloattopskip=\skip125
+\subfloatcapskip=\skip126
+\subfloatcaptopadj=\skip127
+\subfloatbottomskip=\skip128
+\subfloatlabelskip=\skip129
+\subfloatcapmargin=\dimen164
+\c@@contsubnum=\count282
+\m@mscap@capbox=\box53
+\m@mscap@fbox=\box54
+\sidecapsep=\dimen165
+\sidecapwidth=\dimen166
+\m@m@tempdima=\dimen167
+\m@mscapraise=\dimen168
+\sidecapraise=\dimen169
+\m@mscapmainwidth=\dimen170
+\m@mscaplkern=\dimen171
+\beforeepigraphskip=\skip130
+\afterepigraphskip=\skip131
+\epigraphwidth=\skip132
+\epigraphrule=\skip133
+LaTeX Info: Redefining \em on input line 7655.
+LaTeX Info: Redefining \emph on input line 7663.
+\tocentryskip=\skip134
+\tocbaseline=\skip135
+\cftparskip=\skip136
+\cftbeforebookskip=\skip137
+\cftbookindent=\dimen172
+\cftbooknumwidth=\dimen173
+\cftbeforepartskip=\skip138
+\cftpartindent=\skip139
+\cftpartnumwidth=\skip140
+\cftbeforechapterskip=\skip141
+\cftchapterindent=\skip142
+\cftchapternumwidth=\skip143
+\cftbeforesectionskip=\skip144
+\cftsectionindent=\skip145
+\cftsectionnumwidth=\skip146
+\cftbeforesubsectionskip=\skip147
+\cftsubsectionindent=\skip148
+\cftsubsectionnumwidth=\skip149
+\cftbeforesubsubsectionskip=\skip150
+\cftsubsubsectionindent=\skip151
+\cftsubsubsectionnumwidth=\skip152
+\cftbeforeparagraphskip=\skip153
+\cftparagraphindent=\skip154
+\cftparagraphnumwidth=\skip155
+\cftbeforesubparagraphskip=\skip156
+\cftsubparagraphindent=\skip157
+\cftsubparagraphnumwidth=\skip158
+\prechapterprecisshift=\dimen174
+\c@maxsecnumdepth=\count283
+\bibindent=\dimen175
+\bibitemsep=\skip159
+\indexcolsep=\skip160
+\indexrule=\skip161
+\indexmarkstyle=\toks20
+\@indexbox=\insert252
+\glossarycolsep=\dimen176
+\glossaryrule=\dimen177
+\sideparvshift=\skip162
+\sideins=\insert251
+\sidebartopsep=\skip163
+\sidebarhsep=\skip164
+\sidebarvsep=\skip165
+\sidebarwidth=\skip166
+\footmarkwidth=\skip167
+\footmarksep=\skip168
+\footparindent=\skip169
+\footinsdim=\skip170
+\footinsv@r=\insert250
+\@mpfootinsv@r=\insert249
+\m@m@k=\count284
+\m@m@h=\dimen178
+\m@mipn@skip=\skip171
+\sidefootins=\insert248
+\sidefootadjust=\skip172
+\sidefootheight=\skip173
+\sidefoothsep=\skip174
+\sidefootvsep=\skip175
+\sidefootwidth=\skip176
+\m@mdownsf=\skip177
+\c@sidefootnote=\count285
+\sidefootmarkwidth=\skip178
+\sidefootmarksep=\skip179
+\sidefootparindent=\skip180
+\c@pagenote=\count286
+\c@pagenoteshadow=\count287
+\mem@pn@lastkern=\skip181
+\every@verbatim=\toks21
+\afterevery@verbatim=\toks22
+\verbatim@line=\toks23
+\tab@position=\count288
+\verbatim@in@stream=\read2
+\verbatimindent=\skip182
+\verbatim@out=\write3
+\bvboxsep=\skip183
+\c@memfbvline=\count289
+\c@bvlinectr=\count290
+\bvnumlength=\skip184
+\fb@frw=\dimen179
+\fb@frh=\dimen180
+\FrameRule=\dimen181
+\FrameSep=\dimen182
+\c@cp@cntr=\count291
+\c@ism@mctr=\count292
+\c@xsm@mctr=\count293
+\c@csm@mctr=\count294
+\c@ksm@mctr=\count295
+\c@xksm@mctr=\count296
+\c@cksm@mctr=\count297
+\c@msm@mctr=\count298
+\c@xmsm@mctr=\count299
+\c@cmsm@mctr=\count300
+\c@bsm@mctr=\count301
+\c@workm@mctr=\count302
+\c@sheetsequence=\count303
+\c@lastsheet=\count304
+\c@lastpage=\count305
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/textcase/textcase.sty
+Package: textcase 2019/09/14 v1.00 Text only upper/lower case changing (DPC)
+)
+\c@figure=\count306
+\c@lofdepth=\count307
+\cftbeforefigureskip=\skip185
+\cftfigureindent=\skip186
+\cftfigurenumwidth=\skip187
+\c@table=\count308
+\c@lotdepth=\count309
+\cftbeforetableskip=\skip188
+\cfttableindent=\skip189
+\cfttablenumwidth=\skip190
+Package abstract [2008/07/23] emulated by memoir.
+Package appendix [2008/07/23] emulated by memoir.
+Package booktabs [2016/05/16] emulated by memoir.
+Package ccaption [2008/07/23] emulated by memoir.
+Package changepage [2008/07/23] emulated by memoir.
+Package chngcntr [2008/07/23] emulated by memoir.
+Package chngpage [2008/07/23] emulated by memoir.
+Package crop emulated by memoir.
+Package enumerate [2008/07/23] emulated by memoir.
+Package epigraph [2008/07/23] emulated by memoir.
+Package ifmtarg [2008/07/23] emulated by memoir.
+Package index [2008/07/23] emulated by memoir.
+Package makeidx [2008/07/23] emulated by memoir.
+Package moreverb [2008/07/23] emulated by memoir.
+Package needspace [2008/07/23] emulated by memoir.
+Package newfile [2008/07/23] emulated by memoir.
+Package nextpage [2008/07/23] emulated by memoir.
+Package pagenote [2008/07/23] emulated by memoir.
+Package parskip [2008/07/23] emulated by memoir.
+Package patchcmd [2008/07/23] emulated by memoir.
+Package setspace [2008/07/23] emulated by memoir.
+Package shortvrb [2008/07/23] emulated by memoir.
+Package showidx [2008/07/23] emulated by memoir.
+Package titleref [2008/07/23] emulated by memoir.
+Package titling [2008/07/23] emulated by memoir.
+Package tocbibind [2008/07/23] emulated by memoir.
+Package tocloft [2008/07/23] emulated by memoir.
+Package tocvsec2 [2008/07/23] emulated by memoir.
+Package verbatim [2008/07/23] emulated by memoir.
+Package verse [2008/07/23] emulated by memoir.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks24
+\inpenc@posthook=\toks25
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2022/02/26 3.73 The Babel package
+\babel@savecnt=\count310
+\U@D=\dimen183
+\l@unhyphenated=\language87
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/babel/txtbabel.def)
+\bbl@readstream=\read3
+\bbl@dirlevel=\count311
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/babel-english/english.ldf
+Language: english 2017/06/06 v3.3r English support from the babel system
+Package babel Info: Hyphen rules for 'canadian' set to \l@english
+(babel)             (\language0). Reported on input line 102.
+Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
+(babel)             (\language21). Reported on input line 105.
+Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
+(babel)             (\language21). Reported on input line 108.
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/microtype.sty
+Package: microtype 2022/03/14 v3.0d Micro-typographical refinements (RS)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks26
+)
+\MT@toks=\toks27
+\MT@tempbox=\box55
+\MT@count=\count312
+LaTeX Info: Redefining \noprotrusionifhmode on input line 1027.
+LaTeX Info: Redefining \leftprotrusion on input line 1028.
+LaTeX Info: Redefining \rightprotrusion on input line 1036.
+LaTeX Info: Redefining \textls on input line 1195.
+\MT@outer@kern=\dimen184
+LaTeX Info: Redefining \textmicrotypecontext on input line 1781.
+\MT@listname@count=\count313
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/microtype-pdftex.def
+File: microtype-pdftex.def 2022/03/14 v3.0d Definitions specific to pdftex (RS)
+
+LaTeX Info: Redefining \lsstyle on input line 900.
+LaTeX Info: Redefining \lslig on input line 900.
+\MT@outer@space=\skip191
+)
+Package microtype Info: Loading configuration file microtype.cfg.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2022/03/14 v3.0d microtype main configuration file (RS)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/footmisc/footmisc.sty
+Package: footmisc 2022/03/08 v6.0d a miscellany of footnote facilities
+\FN@temptoken=\toks28
+\footnotemargin=\dimen185
+\@outputbox@depth=\dimen186
+Package footmisc Info: Declaring symbol style bringhurst on input line 695.
+Package footmisc Info: Declaring symbol style chicago on input line 703.
+Package footmisc Info: Declaring symbol style wiley on input line 712.
+Package footmisc Info: Declaring symbol style lamport-robust on input line 723.
+
+Package footmisc Info: Declaring symbol style lamport* on input line 743.
+Package footmisc Info: Declaring symbol style lamport*-robust on input line 764
+.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/mathrsfs.sty
+Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
+\symrsfs=\mathgroup4
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2021/10/15 v2.17l AMS math features
+\@mathmargin=\skip192
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks29
+\ex@=\dimen187
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen188
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2021/08/26 v2.02 operator names
+)
+\inf@bad=\count314
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count315
+\leftroot@=\count316
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count317
+\DOTSCASE@=\count318
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box56
+\strutbox@=\box57
+\big@size=\dimen189
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count319
+\c@MaxMatrixCols=\count320
+\dotsspace@=\muskip17
+\c@parentequation=\count321
+\dspbrk@lvl=\count322
+\tag@help=\toks30
+\row@=\count323
+\column@=\count324
+\maxfields@=\count325
+\andhelp@=\toks31
+\eqnshift@=\dimen190
+\alignsep@=\dimen191
+\tagshift@=\dimen192
+\tagwidth@=\dimen193
+\totwidth@=\dimen194
+\lineht@=\dimen195
+\@envbody=\toks32
+\multlinegap=\skip193
+\multlinetaggap=\skip194
+\mathdisplay@stack=\toks33
+LaTeX Info: Redefining \[ on input line 2938.
+LaTeX Info: Redefining \] on input line 2939.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup5
+\symAMSb=\mathgroup6
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/mathtools/mathtools.sty
+Package: mathtools 2022/02/07 v1.28a mathematical typesetting tools
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count326
+\calc@Bcount=\count327
+\calc@Adimen=\dimen196
+\calc@Bdimen=\dimen197
+\calc@Askip=\skip195
+\calc@Bskip=\skip196
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count328
+\calc@Cskip=\skip197
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/mathtools/mhsetup.sty
+Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
+)
+\g_MT_multlinerow_int=\count329
+\l_MT_multwidth_dim=\dimen198
+\origjot=\skip198
+\l_MT_shortvdotswithinadjustabove_dim=\dimen199
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen256
+\l_MT_above_intertext_sep=\dimen257
+\l_MT_below_intertext_sep=\dimen258
+\l_MT_above_shortintertext_sep=\dimen259
+\l_MT_below_shortintertext_sep=\dimen260
+\xmathstrut@box=\box58
+\xmathstrut@dim=\dimen261
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen262
+\Gin@req@width=\dimen263
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/import/import.sty
+Package: import 2020/04/01  v 6.2
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2022/01/07 v1.5 Sub-captions (AR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen264
+\captionmargin=\dimen265
+\caption@leftmargin=\dimen266
+\caption@rightmargin=\dimen267
+\caption@width=\dimen268
+\caption@indent=\dimen269
+\caption@parindent=\dimen270
+\caption@hangindent=\dimen271
+Package caption Info: memoir document class detected.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/caption/caption-memoir.sto
+File: caption-memoir.sto 2022/03/02 v2.2b Adaption of the caption package to th
+e memoir document class (AR)
+))
+\c@caption@flags=\count330
+\c@continuedfloat=\count331
+Package caption Info: changepage package is loaded.
+\caption@adjustwidth@hsize=\dimen272
+\caption@adjustwidth@linewidth=\dimen273
+)
+\c@subfigure=\count332
+\c@subtable=\count333
+)
+
+******************************************************
+Stock height and width: 845.04684pt by 597.50787pt
+Top and edge trims: 0pt and 0pt
+Page height and width: 845.04684pt by 597.50787pt
+Text height and width: 609.40027pt by 418pt
+Spine and edge margins: 89.62253pt and 89.62253pt
+Upper and lower margins: 119.49974pt and 116.14684pt
+Headheight and headsep: 13.6pt and 19.8738pt
+Footskip: 27.46295pt
+Columnsep and columnseprule: 10pt and 0pt
+Marginparsep and marginparwidth: 7pt and 75.62253pt
+Sidecapsep and sidecapwidth: 7pt and 101pt
+Sidebarhsep and sidebarwidth: 7pt and 101pt
+Sidebarvsep and sidebartopsep: 13.6pt and 0pt
+Sidebarheight: 594.32022pt
+Sidefoothsep and sidefootwidth: 7pt and 101pt
+Sidefootvsep and sidefootheight: 13.6pt and 594.32022pt
+******************************************************
+
+\forceindent=\skip199
+\filever=\read4
+(/usr/local/texlive/2022/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2021/10/31 v2.13 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 227.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1352.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1356.
+Package xcolor Info: Model `RGB' extended on input line 1368.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1370.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1372.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count334
+\lst@gtempboxa=\box59
+\lst@token=\toks34
+\lst@length=\count335
+\lst@currlwidth=\dimen274
+\lst@column=\count336
+\lst@pos=\count337
+\lst@lostspace=\dimen275
+\lst@width=\dimen276
+\lst@newlines=\count338
+\lst@lineno=\count339
+\lst@maxwidth=\dimen277
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+\c@lstnumber=\count340
+\lst@skipnumbers=\count341
+\lst@framebox=\box60
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2020/03/24 1.8d listings configuration
+))
+Package: listings 2020/03/24 1.8d (Carsten Heinz)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lstaddons/lstautogobble.sty
+Package: lstautogobble 2012/05/03 v0.1 Implements 'autogobble' option for 'list
+ings'
+\lstag@spacecount=\count342
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/environ/environ.sty
+Package: environ 2014/05/04 v0.3 A new way to define environments
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/trimspaces/trimspaces.sty
+Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/bclogo/bclogo.sty
+Package: bclogo 2016/01/10 v3.1
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks35
+\XKV@tempa@toks=\toks36
+)
+\XKV@depth=\count343
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\bc@invboxh=\skip256
+\bc@invboxd=\skip257
+\bc@titleLength=\skip258
+\logowidth=\skip259
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.te
+x
+\pgfutil@everybye=\toks37
+\pgfutil@tempdima=\dimen278
+\pgfutil@tempdimb=\dimen279
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-li
+sts.tex))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box61
+) (/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2021/05/15 v3.1.9a (3.1.9a)
+))
+Package: pgf 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks38
+\pgfkeys@temptoks=\toks39
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.c
+ode.tex
+\pgfkeys@tmptoks=\toks40
+))
+\pgf@x=\dimen280
+\pgf@y=\dimen281
+\pgf@xa=\dimen282
+\pgf@ya=\dimen283
+\pgf@xb=\dimen284
+\pgf@yb=\dimen285
+\pgf@xc=\dimen286
+\pgf@yc=\dimen287
+\pgf@xd=\dimen288
+\pgf@yd=\dimen289
+\w@pgf@writea=\write4
+\r@pgf@reada=\read5
+\c@pgf@counta=\count344
+\c@pgf@countb=\count345
+\c@pgf@countc=\count346
+\c@pgf@countd=\count347
+\t@pgf@toka=\toks41
+\t@pgf@tokb=\toks42
+\t@pgf@tokc=\toks43
+\pgf@sys@id@count=\count348
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2021/05/15 v3.1.9a (3.1.9a)
+)
+Driver file for pgf: pgfsys-pdftex.def
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.d
+ef
+File: pgfsys-pdftex.def 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-p
+df.def
+File: pgfsys-common-pdf.def 2021/05/15 v3.1.9a (3.1.9a)
+)))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.
+code.tex
+File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfsyssoftpath@smallbuffer@items=\count349
+\pgfsyssoftpath@bigbuffer@items=\count350
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.
+code.tex
+File: pgfsysprotocol.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen290
+\pgfmath@count=\count351
+\pgfmath@box=\box62
+\pgfmath@toks=\toks44
+\pgfmath@stack@operand=\toks45
+\pgfmath@stack@operation=\toks46
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.
+tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic
+.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigo
+nometric.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.rando
+m.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.compa
+rison.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.
+code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round
+.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.
+code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integ
+erarithmetics.code.tex)))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count352
+)) (/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.co
+de.tex
+File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@picminx=\dimen291
+\pgf@picmaxx=\dimen292
+\pgf@picminy=\dimen293
+\pgf@picmaxy=\dimen294
+\pgf@pathminx=\dimen295
+\pgf@pathmaxx=\dimen296
+\pgf@pathminy=\dimen297
+\pgf@pathmaxy=\dimen298
+\pgf@xx=\dimen299
+\pgf@xy=\dimen300
+\pgf@yx=\dimen301
+\pgf@yy=\dimen302
+\pgf@zx=\dimen303
+\pgf@zy=\dimen304
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconst
+ruct.code.tex
+File: pgfcorepathconstruct.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@path@lastx=\dimen305
+\pgf@path@lasty=\dimen306
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage
+.code.tex
+File: pgfcorepathusage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@shorten@end@additional=\dimen307
+\pgf@shorten@start@additional=\dimen308
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.co
+de.tex
+File: pgfcorescopes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfpic=\box63
+\pgf@hbox=\box64
+\pgf@layerbox@main=\box65
+\pgf@picture@serial@count=\count353
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicst
+ate.code.tex
+File: pgfcoregraphicstate.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgflinewidth=\dimen309
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransform
+ations.code.tex
+File: pgfcoretransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@pt@x=\dimen310
+\pgf@pt@y=\dimen311
+\pgf@pt@temp=\dimen312
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.cod
+e.tex
+File: pgfcorequick.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.c
+ode.tex
+File: pgfcoreobjects.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathproce
+ssing.code.tex
+File: pgfcorepathprocessing.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.co
+de.tex
+File: pgfcorearrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfarrowsep=\dimen313
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.cod
+e.tex
+File: pgfcoreshade.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@max=\dimen314
+\pgf@sys@shading@range@num=\count354
+\pgf@shadingcount=\count355
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.cod
+e.tex
+File: pgfcoreimage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.
+code.tex
+File: pgfcoreexternal.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfexternal@startupbox=\box66
+))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.co
+de.tex
+File: pgfcorelayers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretranspare
+ncy.code.tex
+File: pgfcoretransparency.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.
+code.tex
+File: pgfcorepatterns.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.
+tex
+File: pgfcorerdf.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.cod
+e.tex
+File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfnodeparttextbox=\box67
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.
+tex
+File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
+-0-65.sty
+Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@nodesepstart=\dimen315
+\pgf@nodesepend=\dimen316
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
+-1-18.sty
+Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/pgf/math/pgfmath.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
+\pgffor@iter=\dimen317
+\pgffor@skip=\dimen318
+\pgffor@stack=\toks47
+\pgffor@toks=\toks48
+))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.cod
+e.tex
+Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothan
+dlers.code.tex
+File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@plot@mark@count=\count356
+\pgfplotmarksize=\dimen319
+)
+\tikz@lastx=\dimen320
+\tikz@lasty=\dimen321
+\tikz@lastxsaved=\dimen322
+\tikz@lastysaved=\dimen323
+\tikz@lastmovetox=\dimen324
+\tikz@lastmovetoy=\dimen325
+\tikzleveldistance=\dimen326
+\tikzsiblingdistance=\dimen327
+\tikz@figbox=\box68
+\tikz@figbox@bg=\box69
+\tikz@tempbox=\box70
+\tikz@tempbox@bg=\box71
+\tikztreelevel=\count357
+\tikznumberofchildren=\count358
+\tikznumberofcurrentchild=\count359
+\tikz@fig@count=\count360
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.cod
+e.tex
+File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfmatrixcurrentrow=\count361
+\pgfmatrixcurrentcolumn=\count362
+\pgf@matrix@numberofcolumns=\count363
+)
+\tikz@expandcount=\count364
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/mdframed/mdframed.sty
+Package: mdframed 2013/07/01 1.9b: mdframed
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2022-02-24 L3 programming layer (loader) 
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count365
+\l__pdf_internal_box=\box72
+))
+Package: xparse 2022-01-12 L3 Experimental document command parser
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/zref/zref-abspage.sty
+Package: zref-abspage 2020-07-03 v2.32 Module abspage for zref (HO)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/zref/zref-base.sty
+Package: zref-base 2020-07-03 v2.32 Module base for zref (HO)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+)
+Package zref Info: New property list: main on input line 764.
+Package zref Info: New property: default on input line 765.
+Package zref Info: New property: page on input line 766.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\c@abspage=\count366
+Package zref Info: New property: abspage on input line 66.
+)
+\mdf@templength=\skip260
+\c@mdf@globalstyle@cnt=\count367
+\mdf@skipabove@length=\skip261
+\mdf@skipbelow@length=\skip262
+\mdf@leftmargin@length=\skip263
+\mdf@rightmargin@length=\skip264
+\mdf@innerleftmargin@length=\skip265
+\mdf@innerrightmargin@length=\skip266
+\mdf@innertopmargin@length=\skip267
+\mdf@innerbottommargin@length=\skip268
+\mdf@splittopskip@length=\skip269
+\mdf@splitbottomskip@length=\skip270
+\mdf@outermargin@length=\skip271
+\mdf@innermargin@length=\skip272
+\mdf@linewidth@length=\skip273
+\mdf@innerlinewidth@length=\skip274
+\mdf@middlelinewidth@length=\skip275
+\mdf@outerlinewidth@length=\skip276
+\mdf@roundcorner@length=\skip277
+\mdf@footenotedistance@length=\skip278
+\mdf@userdefinedwidth@length=\skip279
+\mdf@needspace@length=\skip280
+\mdf@frametitleaboveskip@length=\skip281
+\mdf@frametitlebelowskip@length=\skip282
+\mdf@frametitlerulewidth@length=\skip283
+\mdf@frametitleleftmargin@length=\skip284
+\mdf@frametitlerightmargin@length=\skip285
+\mdf@shadowsize@length=\skip286
+\mdf@extratopheight@length=\skip287
+\mdf@subtitleabovelinewidth@length=\skip288
+\mdf@subtitlebelowlinewidth@length=\skip289
+\mdf@subtitleaboveskip@length=\skip290
+\mdf@subtitlebelowskip@length=\skip291
+\mdf@subtitleinneraboveskip@length=\skip292
+\mdf@subtitleinnerbelowskip@length=\skip293
+\mdf@subsubtitleabovelinewidth@length=\skip294
+\mdf@subsubtitlebelowlinewidth@length=\skip295
+\mdf@subsubtitleaboveskip@length=\skip296
+\mdf@subsubtitlebelowskip@length=\skip297
+\mdf@subsubtitleinneraboveskip@length=\skip298
+\mdf@subsubtitleinnerbelowskip@length=\skip299
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/mdframed/md-frame-1.mdf
+File: md-frame-1.mdf 2013/07/01\ 1.9b: md-frame-1
+)
+\mdf@frametitlebox=\box73
+\mdf@footnotebox=\box74
+\mdf@splitbox@one=\box75
+\mdf@splitbox@two=\box76
+\mdf@splitbox@save=\box77
+\mdfsplitboxwidth=\skip300
+\mdfsplitboxtotalwidth=\skip301
+\mdfsplitboxheight=\skip302
+\mdfsplitboxdepth=\skip303
+\mdfsplitboxtotalheight=\skip304
+\mdfframetitleboxwidth=\skip305
+\mdfframetitleboxtotalwidth=\skip306
+\mdfframetitleboxheight=\skip307
+\mdfframetitleboxdepth=\skip308
+\mdfframetitleboxtotalheight=\skip309
+\mdffootnoteboxwidth=\skip310
+\mdffootnoteboxtotalwidth=\skip311
+\mdffootnoteboxheight=\skip312
+\mdffootnoteboxdepth=\skip313
+\mdffootnoteboxtotalheight=\skip314
+\mdftotallinewidth=\skip315
+\mdfboundingboxwidth=\skip316
+\mdfboundingboxtotalwidth=\skip317
+\mdfboundingboxheight=\skip318
+\mdfboundingboxdepth=\skip319
+\mdfboundingboxtotalheight=\skip320
+\mdf@freevspace@length=\skip321
+\mdf@horizontalwidthofbox@length=\skip322
+\mdf@verticalmarginwhole@length=\skip323
+\mdf@horizontalspaceofbox=\skip324
+\mdfsubtitleheight=\skip325
+\mdfsubsubtitleheight=\skip326
+\c@mdfcountframes=\count368
+
+****** mdframed patching \endmdf@trivlist
+
+****** -- success******
+
+\mdf@envdepth=\count369
+\c@mdf@env@i=\count370
+\c@mdf@env@ii=\count371
+\c@mdf@zref@counter=\count372
+Package zref Info: New property: mdf@pagevalue on input line 895.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibraryshadows.code.tex
+File: tikzlibraryshadows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibraryfadings.code.tex
+File: tikzlibraryfadings.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/libraries/pgflibraryfadings
+.code.tex
+File: pgflibraryfadings.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarydecorations.pathmorphing.code.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarydecorations.code.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmoduledecoration
+s.code.tex
+\pgfdecoratedcompleteddistance=\dimen328
+\pgfdecoratedremainingdistance=\dimen329
+\pgfdecoratedinputsegmentcompleteddistance=\dimen330
+\pgfdecoratedinputsegmentremainingdistance=\dimen331
+\pgf@decorate@distancetomove=\dimen332
+\pgf@decorate@repeatstate=\count373
+\pgfdecorationsegmentamplitude=\dimen333
+\pgfdecorationsegmentlength=\dimen334
+)
+\tikz@lib@dec@box=\box78
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/libraries/decorations/pgfli
+brarydecorations.pathmorphing.code.tex))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/ifpdf.sty
+Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
+)
+\c@bclogocompteur=\count374
+\bcval@epBarre=\skip327
+\bcval@framesep=\skip328
+\bcval@tailleOndu=\skip329
+\bcval@borderWidth=\skip330
+\bcval@margeG=\skip331
+\bcval@margeD=\skip332
+\bc@envbox=\box79
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+\developer-guide@idxfile=\write5
+\openout5 = `developer-guide.idx'.
+
+
+Writing index file developer-guide.idx 
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2022-02-21 v7.00n Hypertext links for LaTeX
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+)
+\@linkdim=\dimen335
+\Hy@linkcounter=\count375
+\Hy@pagecounter=\count376
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2022-02-21 v7.00n Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count377
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2022-02-21 v7.00n Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `hyperfootnotes' set `false' on input line 4018.
+Package hyperref Info: Hyper figures OFF on input line 4137.
+Package hyperref Info: Link nesting OFF on input line 4142.
+Package hyperref Info: Hyper index ON on input line 4145.
+Package hyperref Info: Plain pages OFF on input line 4152.
+Package hyperref Info: Backreferencing OFF on input line 4157.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4390.
+\c@Hy@tempcnt=\count378
+LaTeX Info: Redefining \url on input line 4749.
+\XeTeXLinkMargin=\dimen336
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count379
+\Field@Width=\dimen337
+\Fld@charsize=\dimen338
+Package hyperref Info: Hyper figures OFF on input line 6027.
+Package hyperref Info: Link nesting OFF on input line 6032.
+Package hyperref Info: Hyper index ON on input line 6035.
+Package hyperref Info: backreferencing OFF on input line 6042.
+Package hyperref Info: Link coloring OFF on input line 6047.
+Package hyperref Info: Link coloring with OCG OFF on input line 6052.
+Package hyperref Info: PDF/A mode OFF on input line 6057.
+LaTeX Info: Redefining \ref on input line 6097.
+LaTeX Info: Redefining \pageref on input line 6101.
+\Hy@abspage=\count380
+\c@Item=\count381
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/memoir/memhfixc.sty
+Package: memhfixc 2021/06/16 v1.19 nameref/hyperref package fixes for memoir cl
+ass
+\c@memhycontfloat=\count382
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2022-02-21 v7.00n Hyperref driver for pdfTeX
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
+kage
+with kernel methods
+)
+\HyAnn@Count=\count383
+\Fld@listcount=\count384
+\c@bookmark@seq@number=\count385
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+86.
+)
+\Hy@SectionHShift=\skip333
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 360.
+\drop=\skip334
+\c@taskcount=\count386
+)
+LaTeX Info: Redefining \bf on input line 3.
+ (/usr/local/texlive/2022/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip335
+\multirow@cntb=\count387
+\multirow@dima=\skip336
+\bigstrutjot=\dimen339
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 13.
+\developer-guide@idxfile=\write6
+\openout6 = `developer-guide.idx'.
+
+
+Writing index file developer-guide.idx 
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibrary
+shapes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibraryarrows.code.tex
+File: tikzlibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.
+code.tex
+File: pgflibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\arrowsize=\dimen340
+))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibraryautomata.code.tex
+File: tikzlibraryautomata.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
+s/tikzlibraryshapes.multipart.code.tex
+File: tikzlibraryshapes.multipart.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibrary
+shapes.multipart.code.tex
+File: pgflibraryshapes.multipart.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfnodepartlowerbox=\box80
+\pgfnodeparttwobox=\box81
+\pgfnodepartthreebox=\box82
+\pgfnodepartfourbox=\box83
+\pgfnodeparttwentybox=\box84
+\pgfnodepartnineteenbox=\box85
+\pgfnodeparteighteenbox=\box86
+\pgfnodepartseventeenbox=\box87
+\pgfnodepartsixteenbox=\box88
+\pgfnodepartfifteenbox=\box89
+\pgfnodepartfourteenbox=\box90
+\pgfnodepartthirteenbox=\box91
+\pgfnodeparttwelvebox=\box92
+\pgfnodepartelevenbox=\box93
+\pgfnodeparttenbox=\box94
+\pgfnodepartninebox=\box95
+\pgfnodeparteightbox=\box96
+\pgfnodepartsevenbox=\box97
+\pgfnodepartsixbox=\box98
+\pgfnodepartfivebox=\box99
+)))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/standalone/standalone.sty
+Package: standalone 2018/03/26 v1.3a Package to include TeX sub-files with prea
+mbles
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/shellesc.sty
+Package: shellesc 2019/11/08 v1.0c unified shell escape interface for LaTeX
+Package shellesc Info: Restricted shell escape enabled on input line 77.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/currfile/currfile.sty
+Package: currfile 2020/09/29 v0.7d Provides the file path elements of the curre
+nt input file
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/filehook/filehook.sty
+Package: filehook 2020/09/29 v0.8a Hooks for input files
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/filehook/filehook-2020.sty
+Package: filehook-2020 2020/09/29 v0.8a Hooks for input files
+))
+\c@currfiledepth=\count388
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/gincltex/gincltex.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/svn-prov/svn-prov.sty
+Package: svn-prov 2010/04/24 v3.1862 Package Date/Version from SVN Keywords
+)
+Package: gincltex 2011/09/04 v0.3 Include external LaTeX files like graphics
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/adjustbox/adjustbox.sty
+Package: adjustbox 2020/08/19 v1.3 Adjusting TeX boxes (trim, clip, ...)
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/adjustbox/adjcalc.sty
+Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back
+-ends (calc, etex, pgfmath)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/adjustbox/trimclip.sty
+Package: trimclip 2020/08/19 v1.2 Trim and clip general TeX material
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/collectbox/collectbox.sty
+Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
+\collectedbox=\box100
+)
+\tc@llx=\dimen341
+\tc@lly=\dimen342
+\tc@urx=\dimen343
+\tc@ury=\dimen344
+Package trimclip Info: Using driver 'tc-pdftex.def'.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/adjustbox/tc-pdftex.def
+File: tc-pdftex.def 2019/01/04 v2.2 Clipping driver for pdftex
+))
+\adjbox@Width=\dimen345
+\adjbox@Height=\dimen346
+\adjbox@Depth=\dimen347
+\adjbox@Totalheight=\dimen348
+\adjbox@pwidth=\dimen349
+\adjbox@pheight=\dimen350
+\adjbox@pdepth=\dimen351
+\adjbox@ptotalheight=\dimen352
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
+\c@checkoddpage=\count389
+LaTeX Info: Redefining \checkoddpage on input line 45.
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/varwidth/varwidth.sty
+Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
+\@vwid@box=\box101
+\sift@deathcycles=\count390
+\@vwid@loff=\dimen353
+\@vwid@roff=\dimen354
+))
+\gincltex@box=\box102
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/filemod/filemod-expmin.sty
+Package: filemod-expmin 2011/09/19 v1.2 Get and compare file modification times
+ (expandable; minimal)
+))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/rotating.sty
+Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
+\c@r@tfl@t=\count391
+\rotFPtop=\skip337
+\rotFPbot=\skip338
+\rot@float@box=\box103
+\rot@mess@toks=\toks49
+)
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 49
+.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+(./developer-guide.aux
+
+LaTeX Warning: Label `eqn:jacobianmat' multiply defined.
+
+)
+\openout1 = `developer-guide.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Info: Redefining \microtypecontext on input line 49.
+Package microtype Info: Applying patch `item' on input line 49.
+Package microtype Info: Applying patch `toc' on input line 49.
+Package microtype Info: Applying patch `eqnum' on input line 49.
+
+
+Package microtype Warning: Unable to apply patch `footnote' on input line 49.
+
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
+Package microtype Info: Using default expansion set `alltext-nott'.
+LaTeX Info: Redefining \showhyphens on input line 49.
+Package microtype Info: No adjustment of tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count392
+\scratchdimen=\dimen355
+\scratchbox=\box104
+\nofMPsegments=\count393
+\nofMParguments=\count394
+\everyMPshowfont=\toks50
+\MPscratchCnt=\count395
+\MPscratchDim=\dimen356
+\MPnumerator=\count396
+\makeMPintoPDFobject=\count397
+\everyMPtoPDFconversion=\toks51
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: rotating package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\c@lstlisting=\count398
+Package hyperref Info: Link coloring ON on input line 49.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count399
+)
+Redoing nameref's sectioning
+Redoing nameref's label
+LaTeX Info: Redefining \nameref on input line 49.
+LaTeX Info: Redefining \ref on input line 49.
+LaTeX Info: Redefining \pageref on input line 49.
+LaTeX Info: Redefining \nameref on input line 49.
+(./developer-guide.out) (./developer-guide.out)
+\@outlinefile=\write7
+\openout7 = `developer-guide.out'.
+
+<img/icon-blue.png, id=730, 33.2442pt x 36.3759pt>
+File: img/icon-blue.png Graphic file (type png)
+<use img/icon-blue.png>
+Package pdftex.def Info: img/icon-blue.png  used on input line 63.
+(pdftex.def)             Requested size: 83.59872pt x 91.47899pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+
+ []
+
+[1
+
+{/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./img/i
+con-blue.png>] [2]
+Package microtype Info: Character `029' is missing
+(microtype)             in font `T1/lmr/m/sc/14.4'.
+(microtype)             Ignoring protrusion settings for this character.
+
+
+LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
+(Font)              using `T1/lmr/bx/n' instead on input line 69.
+
+LaTeX Font Info:    Trying to load font information for T1+lmss on input line 6
+9.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmss.fd
+File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+LaTeX Font Warning: Font shape `T1/lmss/bx/sc' undefined
+(Font)              using `T1/lmss/bx/n' instead on input line 69.
+
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmss' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+(./developer-guide.toc
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 3
+.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
+.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+3.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+3.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 3.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 3.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 3.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 3.
+
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd
+File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+) [3
+
+]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 61.
+
+[4]
+Overfull \hbox (1.91618pt too wide) detected at line 174
+ [][]\T1/lmr/bx/n/10.95 100[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 191
+ [][]\T1/lmr/bx/n/10.95 104[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 196
+ [][]\T1/lmr/bx/n/10.95 107[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 226
+ [][]\T1/lmr/bx/n/10.95 118[][]
+ []
+
+[5]
+Overfull \hbox (1.91618pt too wide) detected at line 234
+ [][]\T1/lmr/bx/n/10.95 122[][]
+ []
+
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+38.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+Overfull \hbox (1.91618pt too wide) detected at line 256
+ [][]\T1/lmr/bx/n/10.95 129[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 261
+ [][]\T1/lmr/bx/n/10.95 132[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 262
+ [][]\T1/lmr/bx/n/10.95 133[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 263
+ [][]\T1/lmr/bx/n/10.95 134[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 274
+ [][]\T1/lmr/bx/n/10.95 143[][]
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6]
+Overfull \hbox (1.91618pt too wide) detected at line 275
+ [][]\T1/lmr/bx/n/10.95 148[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 277
+ [][]\T1/lmr/bx/n/10.95 150[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 279
+ [][]\T1/lmr/bx/n/10.95 152[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 288
+ [][]\T1/lmr/bx/n/10.95 155[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 289
+ [][]\T1/lmr/bx/n/10.95 157[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 299
+ [][]\T1/lmr/bx/n/10.95 163[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 300
+ [][]\T1/lmr/bx/n/10.95 165[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 313
+ [][]\T1/lmr/bx/n/10.95 179[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 316
+ [][]\T1/lmr/bx/n/10.95 181[][]
+ []
+
+)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
+(./developer-guide.toc [8] [9]
+Overfull \hbox (1.91618pt too wide) detected at line 174
+ [][]\T1/lmr/bx/n/10.95 100[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 191
+ [][]\T1/lmr/bx/n/10.95 104[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 196
+ [][]\T1/lmr/bx/n/10.95 107[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 226
+ [][]\T1/lmr/bx/n/10.95 118[][]
+ []
+
+[10]
+Overfull \hbox (1.91618pt too wide) detected at line 234
+ [][]\T1/lmr/bx/n/10.95 122[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 256
+ [][]\T1/lmr/bx/n/10.95 129[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 261
+ [][]\T1/lmr/bx/n/10.95 132[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 262
+ [][]\T1/lmr/bx/n/10.95 133[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 263
+ [][]\T1/lmr/bx/n/10.95 134[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 274
+ [][]\T1/lmr/bx/n/10.95 143[][]
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11]
+Overfull \hbox (1.91618pt too wide) detected at line 275
+ [][]\T1/lmr/bx/n/10.95 148[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 277
+ [][]\T1/lmr/bx/n/10.95 150[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 279
+ [][]\T1/lmr/bx/n/10.95 152[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 288
+ [][]\T1/lmr/bx/n/10.95 155[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 289
+ [][]\T1/lmr/bx/n/10.95 157[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 299
+ [][]\T1/lmr/bx/n/10.95 163[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 300
+ [][]\T1/lmr/bx/n/10.95 165[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 313
+ [][]\T1/lmr/bx/n/10.95 179[][]
+ []
+
+
+Overfull \hbox (1.91618pt too wide) detected at line 316
+ [][]\T1/lmr/bx/n/10.95 181[][]
+ []
+
+) (./preface/preface.tex [12]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [13
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [14]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 8
+2.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [15]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 105.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 105.
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--108
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 113--117
+
+ []
+
+) (./introduction/introduction.tex [16] [17
+
+] [18] [19] [20]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [21]
+<img/stdtolocal.pdf, id=1567, 1007.15427pt x 552.7821pt>
+File: img/stdtolocal.pdf Graphic file (type pdf)
+<use img/stdtolocal.pdf>
+Package pdftex.def Info: img/stdtolocal.pdf  used on input line 193.
+(pdftex.def)             Requested size: 289.07999pt x 158.66635pt.
+
+[22]
+<img/structure1.png, id=1583, 983.675pt x 655.44875pt>
+File: img/structure1.png Graphic file (type png)
+<use img/structure1.png>
+Package pdftex.def Info: img/structure1.png  used on input line 218.
+(pdftex.def)             Requested size: 289.07999pt x 192.6156pt.
+<img/structure2.png, id=1585, 994.71625pt x 689.57625pt>
+File: img/structure2.png Graphic file (type png)
+<use img/structure2.png>
+Package pdftex.def Info: img/structure2.png  used on input line 232.
+(pdftex.def)             Requested size: 289.07999pt x 200.40338pt.
+ [23 <./img/stdtolocal.pdf>] [24 <./img/structure1.png>] [25 <./img/structure2.
+png>] [26]) (./prelims/prelims.tex [27]
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+Underfull \vbox (badness 5652) has occurred while \output is active []
+
+ [28
+
+]
+[29]
+Overfull \hbox (1.7226pt too wide) in paragraph at lines 124--125
+\T1/lmr/m/n/10.95 (-20) An ex-am-ple [][][][][][][][][][][][] might there-fore 
+be: [][][][][][][][][][][][][]
+ []
+
+[30] [31] [32] [33]
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+) [34]
+[35] [36]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 431.
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 431.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\lstinline' on input line 431.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [37]
+[38]
+Underfull \vbox (badness 1377) has occurred while \output is active []
+
+ [39]
+[40] [41]
+Overfull \hbox (40.71396pt too wide) in paragraph at lines 640--643
+[]\T1/lmr/m/n/10.95 (-20) In our ex-am-ple we will have an im-ple-men-ta-tion c
+alled [][][][] de-fined in []
+ []
+
+[42] [43]
+Overfull \hbox (40.14993pt too wide) in paragraph at lines 742--743
+[][] 
+ []
+
+[44]) [45] [46
+
+] (./library/library-master.tex
+(./library/LibUtilities/basicconst.tex
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
+nput line 8.
+
+(./src/library/LibUtilities/BasicConst/NektarUnivConsts.hpp
+consecutive:
+)) (./library/LibUtilities/basicutils.tex
+Underfull \vbox (badness 1019) has occurred while \output is active []
+
+ [47
+
+])
+(./library/LibUtilities/communication.tex) (./library/LibUtilities/fft.tex
+[48]) (./library/LibUtilities/foundations.tex [49]
+<library/LibUtilities//img/pointsclass.pdf, id=2089, 811.8986pt x 547.17694pt>
+File: library/LibUtilities//img/pointsclass.pdf Graphic file (type pdf)
+<use library/LibUtilities//img/pointsclass.pdf>
+Package pdftex.def Info: library/LibUtilities//img/pointsclass.pdf  used on inp
+ut line 52.
+(pdftex.def)             Requested size: 289.07999pt x 194.82944pt.
+ [50]
+Overfull \hbox (4.5294pt too wide) in paragraph at lines 75--79
+\T1/lmr/m/n/10.95 (-20) where $\OML/lmm/m/it/10.95 z[]$ \T1/lmr/m/n/10.95 (-20)
+ and $\OML/lmm/m/it/10.95 z[]$ \T1/lmr/m/n/10.95 (-20) de-note the points as-so
+-ci-ated with [][]\T1/lmtt/m/n/10.95 m_points[0][i] []\T1/lmr/m/n/10.95 (-20) a
+nd [][]\T1/lmtt/m/n/10.95 m_points[1][i]
+ []
+
+
+Overfull \hbox (4.5294pt too wide) in paragraph at lines 86--93
+\T1/lmr/m/n/10.95 (-20) where $\OML/lmm/m/it/10.95 z[]$ \T1/lmr/m/n/10.95 (-20)
+ and $\OML/lmm/m/it/10.95 z[]$ \T1/lmr/m/n/10.95 (-20) de-note the points as-so
+-ci-ated with [][]\T1/lmtt/m/n/10.95 m_points[0][i] []\T1/lmr/m/n/10.95 (-20) a
+nd [][]\T1/lmtt/m/n/10.95 m_points[1][i]
+ []
+
+[51 <./library/LibUtilities//img/pointsclass.pdf>]
+<library/LibUtilities//img/nodeordering.pdf, id=2127, 938.9376pt x 484.71277pt>
+
+File: library/LibUtilities//img/nodeordering.pdf Graphic file (type pdf)
+<use library/LibUtilities//img/nodeordering.pdf>
+Package pdftex.def Info: library/LibUtilities//img/nodeordering.pdf  used on in
+put line 114.
+(pdftex.def)             Requested size: 289.07999pt x 149.23134pt.
+ [52] [53 <./library/LibUtilities//img/nodeordering.pdf>]
+<library/LibUtilities//img/basisclass.pdf, id=2161, 826.96716pt x 553.77863pt>
+File: library/LibUtilities//img/basisclass.pdf Graphic file (type pdf)
+<use library/LibUtilities//img/basisclass.pdf>
+Package pdftex.def Info: library/LibUtilities//img/basisclass.pdf  used on inpu
+t line 212.
+(pdftex.def)             Requested size: 289.07999pt x 193.58882pt.
+ [54]
+<library/LibUtilities/img/basismemory.pdf, id=2170, 463.13116pt x 415.7938pt>
+File: library/LibUtilities/img/basismemory.pdf Graphic file (type pdf)
+<use library/LibUtilities/img/basismemory.pdf>
+Package pdftex.def Info: library/LibUtilities/img/basismemory.pdf  used on inpu
+t line 231.
+(pdftex.def)             Requested size: 289.07999pt x 259.53421pt.
+) (./library/LibUtilities/nek-interpreter.tex) (./library/LibUtilities/kernel.t
+ex [55 <./library/LibUtilities//img/basisclass.pdf>]) (./library/LibUtilities/l
+inearalgebra.tex
+Overfull \hbox (20.85823pt too wide) in paragraph at lines 9--26
+ [] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [56 <./library/LibUtilities/img/basismemory.pdf>]) (./library/LibUtilities/mem
+ory.tex)
+(./library/LibUtilities/polylib.tex [57] [58])
+(./library/LibUtilities/simdlib.tex [59]
+(./src/library/LibUtilities/BasicUtils/VmathSIMD.hpp
+consecutive:
+[60]) [61]) (./library/LibUtilities/timeintegration.tex [62] [63] [64] [65]
+Overfull \hbox (1.00677pt too wide) in paragraph at lines 285--285
+[]|\T1/lmr/m/n/9 (-20) Variant| 
+ []
+
+
+Overfull \hbox (1.17897pt too wide) in paragraph at lines 329--329
+[]|\T1/lmr/m/n/9 (-20) Lawson| 
+ []
+
+
+Overfull \hbox (1.08064pt too wide) in paragraph at lines 332--332
+[]|\T1/lmr/m/n/9 (-20) Nørsett| 
+ []
+
+
+Overfull \hbox (2.11218pt too wide) in paragraph at lines 283--345
+ [] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [66]
+Underfull \hbox (badness 10000) in paragraph at lines 350--355
+
+ []
+
+[67] [68] [69] [70]
+Underfull \hbox (badness 10000) in paragraph at lines 610--617
+
+ []
+
+[71]
+Overfull \hbox (10.94528pt too wide) detected at line 640
+[]
+ []
+
+
+Overfull \hbox (42.23753pt too wide) in paragraph at lines 659--663
+\T1/lmr/m/n/10.95 (-20) fol-lowed by \T1/lmtt/m/n/10.95 TimeIntegrationScheme.h
+\T1/lmr/m/n/10.95 (-20) . Add the header file to the \T1/lmtt/m/n/10.95 SchemeI
+nitializor.cpp
+ []
+
+[72]
+File: bc-info.mps Graphic file (type mps)
+ [MP to PDF]
+(/usr/local/texlive/2022/texmf-dist/tex/latex/bclogo/bc-info.mps)
+Overfull \hbox (6.22229pt too wide) in paragraph at lines 789--789
+[] 
+ []
+
+
+Overfull \hbox (37.75896pt too wide) detected at line 814
+[]
+ []
+
+[73]
+File: bc-info.mps Graphic file (type mps)
+ [MP to PDF]
+(/usr/local/texlive/2022/texmf-dist/tex/latex/bclogo/bc-info.mps)
+Overfull \hbox (6.22229pt too wide) in paragraph at lines 851--851
+[] 
+ []
+
+File: bc-info.mps Graphic file (type mps)
+[MP to PDF] (/usr/local/texlive/2022/texmf-dist/tex/latex/bclogo/bc-info.mps)
+Overfull \hbox (6.22229pt too wide) in paragraph at lines 892--892
+[] 
+ []
+
+[74]
+Overfull \hbox (15.7059pt too wide) detected at line 984
+[]
+ []
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 1015.
+
+Overfull \hbox (48.32695pt too wide) detected at line 1051
+[]
+ []
+
+[75]
+File: bc-info.mps Graphic file (type mps)
+ [MP to PDF]
+(/usr/local/texlive/2022/texmf-dist/tex/latex/bclogo/bc-info.mps)
+Overfull \hbox (6.22229pt too wide) in paragraph at lines 1110--1110
+[] 
+ []
+
+) [76] (./library/StdRegions/stdreg-fundamentals.tex
+<library/StdRegions//img/refelement.pdf, id=2536, 739.54822pt x 393.21616pt>
+File: library/StdRegions//img/refelement.pdf Graphic file (type pdf)
+<use library/StdRegions//img/refelement.pdf>
+Package pdftex.def Info: library/StdRegions//img/refelement.pdf  used on input 
+line 17.
+(pdftex.def)             Requested size: 289.07999pt x 153.70168pt.
+<library/StdRegions//img/LocalCoords.pdf, id=2538, 1182.4175pt x 387.4475pt>
+File: library/StdRegions//img/LocalCoords.pdf Graphic file (type pdf)
+<use library/StdRegions//img/LocalCoords.pdf>
+Package pdftex.def Info: library/StdRegions//img/LocalCoords.pdf  used on input
+ line 33.
+(pdftex.def)             Requested size: 289.07999pt x 94.7215pt.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 34.
+ [77
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [78 <./library/StdRegions//img/refelement.pdf> <./library/StdRegions//img/Loca
+lCoords.pdf>] [79]
+<library/StdRegions/img/afg002.pdf, id=2698, 393.47pt x 145.54375pt>
+File: library/StdRegions/img/afg002.pdf Graphic file (type pdf)
+<use library/StdRegions/img/afg002.pdf>
+Package pdftex.def Info: library/StdRegions/img/afg002.pdf  used on input line 
+103.
+(pdftex.def)             Requested size: 289.07999pt x 106.93005pt.
+<library/StdRegions//img/3dcoords.pdf, id=2700, 614.295pt x 794.97pt>
+File: library/StdRegions//img/3dcoords.pdf Graphic file (type pdf)
+<use library/StdRegions//img/3dcoords.pdf>
+Package pdftex.def Info: library/StdRegions//img/3dcoords.pdf  used on input li
+ne 116.
+(pdftex.def)             Requested size: 289.07999pt x 374.10904pt.
+ [80 <./library/StdRegions/img/afg002.pdf>])
+(./library/StdRegions/stdreg-datastructures.tex
+Underfull \hbox (badness 4060) in paragraph at lines 9--9
+[][]\T1/lmr/m/n/9 (+20) These ta-bles are based upon in-for-ma-tion pro-vided a
+t http://www.programiz.com/cpp-
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [81 <./library/StdRegions//img/3dcoords.pdf>]
+Overfull \hbox (49.17276pt too wide) in paragraph at lines 16--24
+ [] 
+ []
+
+
+Overfull \hbox (64.95956pt too wide) in paragraph at lines 31--41
+ [] 
+ []
+
+
+Overfull \hbox (53.0971pt too wide) in paragraph at lines 48--58
+ [] 
+ []
+
+[82]
+<library/StdRegions/img/stdexpansiontree.pdf, id=3183, 1003.13pt x 455.93898pt>
+
+File: library/StdRegions/img/stdexpansiontree.pdf Graphic file (type pdf)
+<use library/StdRegions/img/stdexpansiontree.pdf>
+Package pdftex.def Info: library/StdRegions/img/stdexpansiontree.pdf  used on i
+nput line 66.
+(pdftex.def)             Requested size: 433.62pt x 197.08653pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 66--67
+ [][] 
+ []
+
+<library/StdRegions//img/StdExpansion.png, id=3186, 1028.04076pt x 771.1209pt>
+File: library/StdRegions//img/StdExpansion.png Graphic file (type png)
+<use library/StdRegions//img/StdExpansion.png>
+Package pdftex.def Info: library/StdRegions//img/StdExpansion.png  used on inpu
+t line 82.
+(pdftex.def)             Requested size: 433.62pt x 325.24522pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 82--83
+ [][] 
+ []
+
+[83 <./library/StdRegions/img/stdexpansiontree.pdf>]
+Overfull \hbox (18.36241pt too wide) in paragraph at lines 132--134
+[]\T1/lmr/m/n/10.95 (-20) 2D: Cur-rently does not have any data struc-ture. It 
+should prob-a-bly have [][]\T1/lmtt/m/n/10.95 m_edgeNormals 
+ []
+
+[84 <./library/StdRegions//img/StdExpansion.png>]
+Overfull \hbox (36.9661pt too wide) detected at line 186
+\OML/lmm/m/it/10.95 ^^^[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 z\OT1/lmr/m/n/
+10.95 ) = []
+ []
+
+[85] [86] [87] [88]) (./library/StdRegions/stdreg-algorithms.tex) [89] [90
+
+]
+(./library/SpatialDomains/spdomains-fundamentals.tex [91]
+<library/SpatialDomains//img/planarmap.pdf, id=3311, 934.75873pt x 576.81256pt>
+
+File: library/SpatialDomains//img/planarmap.pdf Graphic file (type pdf)
+<use library/SpatialDomains//img/planarmap.pdf>
+Package pdftex.def Info: library/SpatialDomains//img/planarmap.pdf  used on inp
+ut line 44.
+(pdftex.def)             Requested size: 433.62pt x 267.57256pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 44--45
+ [][] 
+ []
+
+[92 <./library/SpatialDomains//img/planarmap.pdf>]
+
+LaTeX Warning: Reference `KaSh05' on page 93 undefined on input line 60.
+
+<library/SpatialDomains//img/curvemap.pdf, id=3705, 916.13972pt x 571.2303pt>
+File: library/SpatialDomains//img/curvemap.pdf Graphic file (type pdf)
+<use library/SpatialDomains//img/curvemap.pdf>
+Package pdftex.def Info: library/SpatialDomains//img/curvemap.pdf  used on inpu
+t line 77.
+(pdftex.def)             Requested size: 433.62pt x 270.3697pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 77--78
+ [][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [93]
+Underfull \vbox (badness 6252) has occurred while \output is active []
+
+ [94 <./library/SpatialDomains//img/curvemap.pdf>] [95] [96])
+(./library/SpatialDomains/spdomains-datastructures.tex
+<library/SpatialDomains/img/geomtree.pdf, id=4154, 1010.09358pt x 453.1866pt>
+File: library/SpatialDomains/img/geomtree.pdf Graphic file (type pdf)
+<use library/SpatialDomains/img/geomtree.pdf>
+Package pdftex.def Info: library/SpatialDomains/img/geomtree.pdf  used on input
+ line 12.
+(pdftex.def)             Requested size: 433.62pt x 194.54834pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 12--13
+ [][] 
+ []
+
+[97 <./library/SpatialDomains/img/geomtree.pdf>])
+(./library/SpatialDomains/spdomains-algorithms.tex [98]) [99]
+(./library/LocalRegions/localreg-fundamentals.tex)
+(./library/LocalRegions/localreg-datastructures.tex
+<library/LocalRegions/img/expansiontree.pdf, id=4198, 1009.9803pt x 463.7869pt>
+
+File: library/LocalRegions/img/expansiontree.pdf Graphic file (type pdf)
+<use library/LocalRegions/img/expansiontree.pdf>
+Package pdftex.def Info: library/LocalRegions/img/expansiontree.pdf  used on in
+put line 11.
+(pdftex.def)             Requested size: 433.62pt x 199.12018pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 11--12
+ [][] 
+ []
+
+
+LaTeX Warning: Reference `stdregions:localclasstree' on page 100 undefined on i
+nput line 16.
+
+[100
+
+]
+<library/LocalRegions//img/LocalExpansion.png, id=4205, 686.92635pt x 335.3328p
+t>
+File: library/LocalRegions//img/LocalExpansion.png Graphic file (type png)
+<use library/LocalRegions//img/LocalExpansion.png>
+Package pdftex.def Info: library/LocalRegions//img/LocalExpansion.png  used on 
+input line 30.
+(pdftex.def)             Requested size: 433.62pt x 211.68034pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 30--31
+ [][] 
+ []
+
+[101 <./library/LocalRegions/img/expansiontree.pdf>])
+(./library/LocalRegions/localreg-algorithms.tex [102 <./library/LocalRegions//i
+mg/LocalExpansion.png>]) [103]
+(./library/Collections/collections-fundamentals.tex [104
+
+])
+(./library/Collections/collections-datastructures.tex)
+(./library/Collections/collections-algorithms.tex
+Underfull \vbox (badness 5592) has occurred while \output is active []
+
+ [105])
+[106] (./library/MultiRegions/multireg-fundamentals.tex [107
+
+]
+<library/MultiRegions//img/Assembly1.pdf, id=4278, 849.64717pt x 494.85797pt>
+File: library/MultiRegions//img/Assembly1.pdf Graphic file (type pdf)
+<use library/MultiRegions//img/Assembly1.pdf>
+Package pdftex.def Info: library/MultiRegions//img/Assembly1.pdf  used on input
+ line 41.
+(pdftex.def)             Requested size: 289.07999pt x 168.37029pt.
+<library/MultiRegions//img/Assembly2.pdf, id=4279, 810.95734pt x 746.62796pt>
+File: library/MultiRegions//img/Assembly2.pdf Graphic file (type pdf)
+<use library/MultiRegions//img/Assembly2.pdf>
+Package pdftex.def Info: library/MultiRegions//img/Assembly2.pdf  used on input
+ line 49.
+(pdftex.def)             Requested size: 289.07999pt x 266.15416pt.
+)
+(./library/MultiRegions/multireg-datastructures.tex [108 <./library/MultiRegion
+s//img/Assembly1.pdf>]
+<library/MultiRegions/img/multiregiontree.pdf, id=4308, 980.45264pt x 411.7484p
+t>
+File: library/MultiRegions/img/multiregiontree.pdf Graphic file (type pdf)
+<use library/MultiRegions/img/multiregiontree.pdf>
+Package pdftex.def Info: library/MultiRegions/img/multiregiontree.pdf  used on 
+input line 11.
+(pdftex.def)             Requested size: 433.62pt x 182.09969pt.
+
+Overfull \hbox (15.62pt too wide) in paragraph at lines 11--12
+ [][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [109 <./library/MultiRegions//img/Assembly2.pdf>] [110 <./library/MultiRegions
+/img/multiregiontree.pdf>]) (./library/MultiRegions/multireg-algorithms.tex)
+(./library/MultiRegions/multireg-preconditioners.tex [111] [112] [113] [114]
+[115]) [116] [117] (./library/GlobalMapping/globalmapping-fundamentals.tex
+[118
+
+] [119] [120]) (./library/GlobalMapping/globalmapping-datastructures.tex)
+(./library/GlobalMapping/globalmapping-algorithms.tex) [121]
+(./library/FieldUtils/fieldutils-fundamentals.tex
+
+Package caption Warning: \label without proper reference on input line 11.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:module_inheritance' on page 122 undefined on inpu
+t line 6.
+
+<library/FieldUtils/img/ModuleInheritance.pdf, id=4504, 1027.84pt x 770.88pt>
+File: library/FieldUtils/img/ModuleInheritance.pdf Graphic file (type pdf)
+<use library/FieldUtils/img/ModuleInheritance.pdf>
+Package pdftex.def Info: library/FieldUtils/img/ModuleInheritance.pdf  used on 
+input line 10.
+(pdftex.def)             Requested size: 418.0pt x 313.49858pt.
+) (./library/FieldUtils/fieldutils-datastructures.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [122
+
+]
+[123 <./library/FieldUtils/img/ModuleInheritance.pdf>]
+Overfull \hbox (36.16727pt too wide) in paragraph at lines 45--46
+[][]\T1/lmtt/m/n/10.95 m_config[]\T1/lmr/m/n/10.95 (-20) , and if it ex-ists, s
+ets the cor-re-spond-ing [][]\T1/lmtt/m/n/10.95 ConfigOption []\T1/lmr/m/n/10.9
+5 (-20) to have [][]\T1/lmtt/m/n/10.95 m_beenSet = true[]\T1/lmr/m/n/10.95 (-20
+) ,
+ []
+
+[124]
+Overfull \hbox (19.84512pt too wide) in paragraph at lines 71--72
+[][][]\T1/lmtt/m/n/10.95 AddFile(std::string fileType, std::string fileName) []
+\T1/lmr/m/n/10.95 (-20) checks to see if [][]\T1/lmtt/m/n/10.95 fileType
+ []
+
+[125]
+Overfull \hbox (25.21248pt too wide) in paragraph at lines 122--123
+[][][]\T1/lmtt/m/n/10.95 m_beenSet[]\T1/lmr/m/n/10.95 (-20) : a [][]\T1/lmtt/m/
+n/10.95 bool []\T1/lmr/m/n/10.95 (-20) that is true if the op-tion has been set
+ us-ing [][]\T1/lmtt/m/n/10.95 Module::RegisterConfig[]\T1/lmr/m/n/10.95 (-20) 
+.
+ []
+
+[126]
+Overfull \hbox (7.69426pt too wide) in paragraph at lines 194--195
+[][][]\T1/lmtt/m/n/10.95 SetUpFirstExpList(int NumHomogeneousDir, bool fldfileg
+iven = false) []\T1/lmr/m/n/10.95 (-20) re-
+ []
+
+
+Overfull \hbox (5.62537pt too wide) in paragraph at lines 197--198
+[][][]\T1/lmtt/m/n/10.95 FieldIOForFile(std::string filename) []\T1/lmr/m/n/10.
+95 (-20) con-structs a shared pointer to a [][]\T1/lmtt/m/n/10.95 FieldIO
+ []
+
+
+Overfull \hbox (131.36006pt too wide) in paragraph at lines 199--200
+[][][]\T1/lmtt/m/n/10.95 AppendExpList(int NumHomogeneousDir, std::string var =
+ "DefaultVar", bool NewField = false)
+ []
+
+[127]
+Overfull \hbox (7.49507pt too wide) in paragraph at lines 201--202
+[][][]\T1/lmtt/m/n/10.95 ClearField() []\T1/lmr/m/n/10.95 (-20) emp-ties [][]\T
+1/lmtt/m/n/10.95 m_session[]\T1/lmr/m/n/10.95 (-20) , [][]\T1/lmtt/m/n/10.95 m_
+graph[]\T1/lmr/m/n/10.95 (-20) , [][]\T1/lmtt/m/n/10.95 fieldPts[]\T1/lmr/m/n/1
+0.95 (-20) , [][]\T1/lmtt/m/n/10.95 m_exp[]\T1/lmr/m/n/10.95 (-20) , [][]\T1/lm
+tt/m/n/10.95 m_fielddef[]\T1/lmr/m/n/10.95 (-20) , [][]\T1/lmtt/m/n/10.95 m_dat
+a[]\T1/lmr/m/n/10.95 (-20) ,
+ []
+
+
+Overfull \hbox (4.81728pt too wide) in paragraph at lines 203--204
+[][][]\T1/lmtt/m/n/10.95 CreateExp(boost::program_options::variables_map &vm, b
+ool newExp) []\T1/lmr/m/n/10.95 (-20) pop-
+ []
+
+) (./library/FieldUtils/fieldutils-algorithms.tex) [128]
+(./library/SolverUtils/solverutils-fundamentals.tex)
+(./library/SolverUtils/solverutils-datastructures.tex)
+(./library/SolverUtils/solverutils-algorithms.tex)) [129
+
+] [130
+
+]
+(./solvers/solvers-master.tex (./solvers/adr-solver.tex [131])
+(./solvers/incompressible-solver.tex [132
+
+]) (./solvers/compressible-solver.tex
+[133
+
+] [134
+
+] [135]
+Overfull \hbox (0.53181pt too wide) in paragraph at lines 107--113
+\T1/lmr/m/n/10.95 (-20) and on the el-e-ment bound-aries. Then,  \T1/lmtt/m/n/1
+0.95 IProductWRTDerivBase \T1/lmr/m/n/10.95 (-20) and  \T1/lmtt/m/n/10.95 AddTr
+aceIntegral
+ []
+
+
+Overfull \hbox (12.7156pt too wide) in paragraph at lines 107--113
+\T1/lmr/m/n/10.95 (-20) dif-fu-sion term, spa-tial deriva-tives are needed and 
+cal-cu-lated us-ing  \T1/lmtt/m/n/10.95 DiffuseCalcDerivative\T1/lmr/m/n/10.95 
+(-20) .
+ []
+
+
+Class memoir Warning: The material used in the headers is too large
+(27.2pt) for the given head height (13.6pt), it is recommended to
+either increase the head height or redesign the header
+(in both cases you will find help in the memoir manual). on input line 113.
+
+
+Overfull \vbox (13.59999pt too high) has occurred while \output is active []
+
+
+[136]
+Overfull \hbox (5.93895pt too wide) in paragraph at lines 151--152
+ [] 
+ []
+
+(./solvers//DataStructure.tex)
+File: solvers//DataStructure.tex Graphic file (type tex)
+ [137]
+Overfull \vbox (13.59999pt too high) has occurred while \output is active []
+
+
+[138]
+<solvers//./img/DataStructureFinal.png, id=4630, 765.6103pt x 644.4075pt>
+File: solvers//./img/DataStructureFinal.png Graphic file (type png)
+<use solvers//./img/DataStructureFinal.png>
+Package pdftex.def Info: solvers//./img/DataStructureFinal.png  used on input l
+ine 169.
+(pdftex.def)             Requested size: 418.0pt x 351.82935pt.
+
+
+LaTeX Warning: Citation `Cantwell2015' on page 139 undefined on input line 181.
+
+
+
+Overfull \hbox (7.02116pt too wide) in paragraph at lines 175--205
+\T1/lmr/m/n/10.95 (-20) the NS equa-tions as an ex-am-ple. Be-sides the main so
+lver class ($[]$)
+ []
+
+[139
+
+ <./solvers//./img/DataStructureFinal.png>]))
+Overfull \vbox (13.59999pt too high) has occurred while \output is active []
+
+
+[140] [141
+
+] (./utilities/utilities-master.tex
+Overfull \vbox (13.59999pt too high) has occurred while \output is active []
+
+
+[142] (./utilities/fieldconvert.tex [143
+
+]
+
+Package caption Warning: \label without proper reference on input line 26.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:setupmodule' on page 144 undefined on input line 
+15.
+
+
+Package caption Warning: \label without proper reference on input line 33.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:fieldconvert' on page 144 undefined on input line
+ 20.
+
+
+Package caption Warning: \label without proper reference on input line 40.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:fieldconvertkey' on page 144 undefined on input l
+ine 20.
+
+<utilities/img/SetUpModule.pdf, id=4664, 1027.84pt x 770.88pt>
+File: utilities/img/SetUpModule.pdf Graphic file (type pdf)
+<use utilities/img/SetUpModule.pdf>
+Package pdftex.def Info: utilities/img/SetUpModule.pdf  used on input line 25.
+(pdftex.def)             Requested size: 418.0pt x 313.49858pt.
+<utilities/img/FieldConvertNew.pdf, id=4665, 1027.84pt x 770.88pt>
+File: utilities/img/FieldConvertNew.pdf Graphic file (type pdf)
+<use utilities/img/FieldConvertNew.pdf>
+Package pdftex.def Info: utilities/img/FieldConvertNew.pdf  used on input line 
+32.
+(pdftex.def)             Requested size: 418.0pt x 313.49858pt.
+<utilities/img/Key.pdf, id=4666, 1027.84pt x 770.88pt>
+File: utilities/img/Key.pdf Graphic file (type pdf)
+<use utilities/img/Key.pdf>
+Package pdftex.def Info: utilities/img/Key.pdf  used on input line 39.
+(pdftex.def)             Requested size: 418.0pt x 313.49858pt.
+) [144] [145 <./utilities/img/SetUpModule.pdf>] [146 <./utilities/img/FieldConv
+ertNew.pdf>] [147 <./utilities/img/Key.pdf>]) [148
+
+] [149
+
+]
+(./python/python-master.tex (./python/nekpy_introduction.tex
+<python//img/boost_python.png, id=4745, 468.5505pt x 221.628pt>
+File: python//img/boost_python.png Graphic file (type png)
+<use python//img/boost_python.png>
+Package pdftex.def Info: python//img/boost_python.png  used on input line 28.
+(pdftex.def)             Requested size: 376.19745pt x 177.94855pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+) [150
+
+])
+(./python/nekpy_installation.tex [151 <./python//img/boost_python.png>]
+[152
+
+]
+Overfull \hbox (1.66905pt too wide) in paragraph at lines 47--49
+\T1/lmr/m/n/10.95 (-20) Users of Mac-Ports should sure their in-stal-la-tion is
+ up-to-date with \T1/lmtt/m/n/10.95 sudo port selfupdate
+ []
+
+[153]) (./python/nekpy_structure.tex [154]
+Overfull \hbox (18.05515pt too wide) in paragraph at lines 21--28
+\T1/lmtt/m/n/10.95 BOOST_PYTHON_MODULE \T1/lmr/m/n/10.95 (-20) def-i-ni-tions w
+hich cre-ate pack-age mod-ules (e.g. \T1/lmtt/m/n/10.95 NekPy.LibUtilities\T1/l
+mr/m/n/10.95 (-20) ). 
+ []
+
+<python//img/package_str.png, id=4810, 491.436pt x 433.01775pt>
+File: python//img/package_str.png Graphic file (type png)
+<use python//img/package_str.png>
+Package pdftex.def Info: python//img/package_str.png  used on input line 31.
+(pdftex.def)             Requested size: 376.19745pt x 331.49535pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+) (./python/nekpy_wrapping.tex [155
+
+] [156 <./python//img/package_str.png>]
+[157
+
+]
+Underfull \vbox (badness 6047) has occurred while \output is active []
+
+ [158]
+[159]
+Overfull \hbox (19.40918pt too wide) in paragraph at lines 154--155
+[]\T1/lmr/m/n/10.95 (-20) In Python, we can then sim-ply call \T1/lmtt/m/n/10.9
+5 session = SessionReader.CreateInstance(sys.argv)\T1/lmr/m/n/10.95 (-20) . 
+ []
+
+[160] [161]) (./python/nekpy_documentation.tex [162] [163
+
+]
+Underfull \hbox (badness 1173) in paragraph at lines 52--52
+[]\T1/lmr/bx/n/10 (+20) Listing 22.2 |\T1/lmr/m/n/10 (+20) Code used to in-clud
+e dosct-ings in enu-meta-tion type classes - part of
+ []
+
+) (./python/nekpy_memory_management.tex [164] [165
+
+]
+<python//img/shared_ptr.png, id=4992, 332.442pt x 419.76825pt>
+File: python//img/shared_ptr.png Graphic file (type png)
+<use python//img/shared_ptr.png>
+Package pdftex.def Info: python//img/shared_ptr.png  used on input line 55.
+(pdftex.def)             Requested size: 250.80255pt x 316.68289pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<python//img/python_gc.png, id=4995, 318.59026pt x 531.78674pt>
+File: python//img/python_gc.png Graphic file (type png)
+<use python//img/python_gc.png>
+Package pdftex.def Info: python//img/python_gc.png  used on input line 76.
+(pdftex.def)             Requested size: 250.80255pt x 418.64633pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[166] [167 <./python//img/shared_ptr.png>] [168 <./python//img/python_gc.png>]
+Underfull \vbox (badness 1478) has occurred while \output is active []
+
+ [169]
+<python//img/c_to_python_a.png, id=5072, 375.20175pt x 115.02975pt>
+File: python//img/c_to_python_a.png Graphic file (type png)
+<use python//img/c_to_python_a.png>
+Package pdftex.def Info: python//img/c_to_python_a.png  used on input line 201.
+
+(pdftex.def)             Requested size: 248.2959pt x 76.12521pt.
+<python//img/c_to_python_b.png, id=5073, 375.20175pt x 117.43875pt>
+File: python//img/c_to_python_b.png Graphic file (type png)
+<use python//img/c_to_python_b.png>
+Package pdftex.def Info: python//img/c_to_python_b.png  used on input line 206.
+
+(pdftex.def)             Requested size: 248.2959pt x 77.71945pt.
+<python//img/c_to_python_c.png, id=5074, 373.395pt x 146.949pt>
+File: python//img/c_to_python_c.png Graphic file (type png)
+<use python//img/c_to_python_c.png>
+Package pdftex.def Info: python//img/c_to_python_c.png  used on input line 212.
+
+(pdftex.def)             Requested size: 248.2959pt x 97.71536pt.
+<python//img/c_to_python_d.png, id=5075, 373.395pt x 146.949pt>
+File: python//img/c_to_python_d.png Graphic file (type png)
+<use python//img/c_to_python_d.png>
+Package pdftex.def Info: python//img/c_to_python_d.png  used on input line 218.
+
+(pdftex.def)             Requested size: 248.2959pt x 97.71536pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Underfull \vbox (badness 7468) has occurred while \output is active []
+
+ [170]
+[171 <./python//img/c_to_python_a.png> <./python//img/c_to_python_b.png> <./pyt
+hon//img/c_to_python_c.png> <./python//img/c_to_python_d.png>] [172] [173]
+[174]
+<python//img/array_creation_deletion_a.png, id=5165, 528.7755pt x 79.497pt>
+File: python//img/array_creation_deletion_a.png Graphic file (type png)
+<use python//img/array_creation_deletion_a.png>
+Package pdftex.def Info: python//img/array_creation_deletion_a.png  used on inp
+ut line 469.
+(pdftex.def)             Requested size: 372.43753pt x 55.99443pt.
+<python//img/array_creation_deletion_b.png, id=5166, 528.7755pt x 163.20975pt>
+File: python//img/array_creation_deletion_b.png Graphic file (type png)
+<use python//img/array_creation_deletion_b.png>
+Package pdftex.def Info: python//img/array_creation_deletion_b.png  used on inp
+ut line 475.
+(pdftex.def)             Requested size: 372.43753pt x 114.95828pt.
+<python//img/array_creation_deletion_c.png, id=5167, 528.7755pt x 163.20975pt>
+File: python//img/array_creation_deletion_c.png Graphic file (type png)
+<use python//img/array_creation_deletion_c.png>
+Package pdftex.def Info: python//img/array_creation_deletion_c.png  used on inp
+ut line 482.
+(pdftex.def)             Requested size: 372.43753pt x 114.95828pt.
+<python//img/array_creation_deletion_d.png, id=5168, 528.7755pt x 163.20975pt>
+File: python//img/array_creation_deletion_d.png Graphic file (type png)
+<use python//img/array_creation_deletion_d.png>
+Package pdftex.def Info: python//img/array_creation_deletion_d.png  used on inp
+ut line 488.
+(pdftex.def)             Requested size: 372.43753pt x 114.95828pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[175] [176 <./python//img/array_creation_deletion_a.png> <./python//img/array_c
+reation_deletion_b.png> <./python//img/array_creation_deletion_c.png> <./python
+//img/array_creation_deletion_d.png>]
+<python//img/deletion_flowchart.png, id=5190, 388.45125pt x 464.33475pt>
+File: python//img/deletion_flowchart.png Graphic file (type png)
+<use python//img/deletion_flowchart.png>
+Package pdftex.def Info: python//img/deletion_flowchart.png  used on input line
+ 502.
+(pdftex.def)             Requested size: 388.45029pt x 464.3336pt.
+ [177
+
+ <./python//img/deletion_flowchart.png>]) (./python/nekpy_fieldconvert.tex [178
+] [179
+
+])) (./developer-guide.bbl
+[180]
+bibitemlist
+[181
+
+] [182] [183] [184])
+No file developer-guide.ind.
+
+Class memoir Warning: The material used in the headers is too large
+(27.2pt) for the given head height (13.6pt), it is recommended to
+either increase the head height or redesign the header
+(in both cases you will find help in the memoir manual). on input line 105.
+
+[185]
+\tf@toc=\write8
+\openout8 = `developer-guide.toc'.
+
+ (./developer-guide.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `developer-guide.out' has not changed.
+(rerunfilecheck)             Checksum: 66D54BDC55B966C02035796896434E58;35759.
+ ) 
+Here is how much of TeX's memory you used:
+ 40632 strings out of 478268
+ 759709 string characters out of 5846348
+ 1550044 words of memory out of 5000000
+ 56011 multiletter control sequences out of 15000+600000
+ 660585 words of font info for 402 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 104i,20n,137p,3531b,2108s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/
+texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/20
+22/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-d
+ist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/
+dvips/lm/lm-mathex.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/l
+m-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+bx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cme
+x10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5
+.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.p
+fb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></
+usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
+sr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr
+/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/tex
+live/2022/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2022/
+texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2022/texmf-dist/
+fonts/type1/public/lm/lmbxi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/typ
+e1/public/lm/lmcsc10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public
+/lm/lmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10
+.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/
+local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texli
+ve/2022/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2022/tex
+mf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2022/texmf-dist/f
+onts/type1/public/lm/lmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/
+public/lm/lmr5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lm
+r6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr
+/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texli
+ve/2022/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2022/texm
+f-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fon
+ts/type1/public/lm/lmss9.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
+blic/lm/lmssbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/
+lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy6.pfb>
+</usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local
+/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/20
+22/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texlive/2022/texmf-d
+ist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/
+type1/public/lm/lmtt9.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
+c/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfont
+s/symbols/msbm10.pfb>
+Output written on developer-guide.pdf (185 pages, 5283376 bytes).
+PDF statistics:
+ 5652 PDF objects out of 6186 (max. 8388607)
+ 4799 compressed objects within 48 object streams
+ 1282 named destinations out of 1440 (max. 500000)
+ 107173 words of extra memory for PDF output out of 128383 (max. 10000000)
+

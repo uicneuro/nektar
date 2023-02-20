@@ -188,7 +188,6 @@ void MMFSystem::MMFInitObject(
     // SmoothFactor
     m_session->LoadParameter("SFinit", m_SFinit, 0.0);
 
-    // boost::ignore_unused(AniStrength, AniDirection);
     int nq = m_fields[0]->GetNpoints();
 
     // if 1D, computed trajectory length from the left botom to right top.
@@ -1063,22 +1062,22 @@ void MMFSystem::SetUpMovingFrames(
     // if (m_MediumType == eAnisotropy || m_MediumType ==
     // eHeterogeneousAnisotropy )
 
-    if(m_ImportedFiberExist)
-    {
-        std::cout << "Moving frames are aligned along a specific direction "
-            "============"
-        << std::endl;
+    // if(m_ImportedFiberExist)
+    // {
+    //     std::cout << "Moving frames are aligned along a specific direction "
+    //         "============"
+    //     << std::endl;
 
-        Array<OneD, NekDouble> AniConstruction(nq, 1.0);
-        ConstructAnisotropicFrames(AniDirection, movingframes, AniConstruction);
+    //     Array<OneD, NekDouble> AniConstruction(nq, 1.0);
+    //     ConstructAnisotropicFrames(AniDirection, movingframes, AniConstruction);
 
-        std::cout << "AniConstruction = "
-                << 100 * RootMeanSquare(AniConstruction)
-                << "  activated, Anistrength[0]: max = "
-                << Vmath::Vmax(nq, Anistrength[0], 1)
-                << ", min = " << Vmath::Vmin(nq, Anistrength[0], 1)
-                << std::endl;
-    }
+    //     std::cout << "AniConstruction = "
+    //             << 100 * RootMeanSquare(AniConstruction)
+    //             << "  activated, Anistrength[0]: max = "
+    //             << Vmath::Vmax(nq, Anistrength[0], 1)
+    //             << ", min = " << Vmath::Vmin(nq, Anistrength[0], 1)
+    //             << std::endl;
+    // }
 
     // Multiply Anisotropic magnitude to moving frames
     for (int i = 0; i < nq; ++i)

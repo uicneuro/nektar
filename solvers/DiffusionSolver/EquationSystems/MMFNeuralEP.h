@@ -259,7 +259,8 @@ protected:
 
     void CheckNodeZoneMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        const Array<OneD, const Array<OneD, int>> &NodeZone);
+        const Array<OneD, const Array<OneD, int>> &NodeZone,
+        const Array<OneD, const NekDouble> &inarray);
 
     void OnlyValideinNode(const Array<OneD, const int> &NodeZone,
                           Array<OneD, NekDouble> &outarray);
@@ -331,6 +332,8 @@ protected:
     void DoOdeRhsNeuralEP2DEmbed(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+        
+    void Stimulus_On_Node(Array<OneD, NekDouble> &outarray);
 
     Array<OneD, NekDouble> Computephie(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
