@@ -36,9 +36,10 @@
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFDIFFUSION_H
 
 #include <SolverUtils/MMFSystem.h>
+#include <SolverUtils/Diffusion/Diffusion.h>
 #include <SolverUtils/UnsteadySystem.h>
 
-// using namespace Nektar::SolverUtils;
+using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
@@ -142,6 +143,13 @@ public:
     virtual ~MMFDiffusion();
 
 protected:
+    bool m_useSpecVanVisc;
+    NekDouble
+        m_sVVCutoffRatio; // cut off ratio from which to start decayhing modes
+    NekDouble m_sVVDiffCoeff; // Diffusion coefficient of SVV modes
+    SolverUtils::DiffusionSharedPtr m_diffusion;
+    SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
+
     int m_Convectiven;
     TimeMapType m_TimeMap;
 
@@ -199,6 +207,11 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &DivMF);
 
     Array<OneD, NekDouble> PlanePhiWave();
+
+    void GetFluxVector(
+    const Array<OneD, Array<OneD, NekDouble>> &inarray,
+    const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,

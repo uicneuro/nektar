@@ -38,6 +38,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/core/ignore_unused.hpp>
 
+#include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
@@ -327,16 +328,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
     m_ode.DefineImplicitSolve(&MMFDiffusion::DoImplicitSolve, this);
-
-    // if (!m_explicitDiffusion)
-    // {
-    // }
-
-    // else
-    // {
-    //     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
-    // }
-
 }
 
 /**
@@ -400,7 +391,6 @@ void MMFDiffusion::DoImplicitSolve(
 {
     int nvariables = inarray.size();
     int nq         = m_fields[0]->GetNpoints();
-    std::cout << "DoImplicitSolve " << std::endl;
 
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = 1.0;
@@ -440,6 +430,7 @@ void MMFDiffusion::DoOdeRhs(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
     int nq = GetTotPoints();
+    int nvar = m_fields.size();
 
     switch (m_TestType)
     {
@@ -531,6 +522,52 @@ void MMFDiffusion::DoOdeRhs(
         default:
             break;
     }
+
+    switch (m_projectionType)
+    {
+        case MultiRegions::eDiscontinuous:
+        {
+            std::string diffName;
+
+            // Do not forwards transform initial condition
+            m_homoInitialFwd = false;
+
+            m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
+            m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
+                diffName, diffName);
+            m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
+            m_diffusion->InitObject(m_session, m_fields);
+            break;
+        }
+
+        case MultiRegions::eGalerkin:
+        case MultiRegions::eMixed_CG_Discontinuous:
+        {
+            // In case of Galerkin explicit diffusion gives an error
+            if (m_explicitDiffusion)
+            {
+                ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
+            }
+            // In case of Galerkin implicit diffusion: do nothing
+        }
+    }
+
+    // if (m_explicitDiffusion)
+    // {
+    //     Array<OneD, Array<OneD, NekDouble>> outarrayDiff(nvar);
+    //     for (int i = 0; i < nvar; ++i)
+    //     {
+    //         outarrayDiff[i] = Array<OneD, NekDouble>(nq, 0.0);
+    //     }
+
+    //     m_diffusion->Diffuse(nvar, m_fields, inarray, outarrayDiff);
+
+    //     for (int i = 0; i < nvar; ++i)
+    //     {
+    //         Vmath::Vadd(nq, &outarrayDiff[i][0], 1, &outarray[i][0],
+    //                     1, &outarray[i][0], 1);
+    //     }
+    // }
 
     if (m_explicitDiffusion)
     {
@@ -1028,6 +1065,28 @@ void MMFDiffusion::ComputeVarCoeff2D(
     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
               << std::endl;
 }
+
+void MMFDiffusion::GetFluxVector(
+    const Array<OneD, Array<OneD, NekDouble>> &inarray,
+    const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor)
+{
+    boost::ignore_unused(inarray);
+
+    unsigned int nDim              = qfield.size();
+    unsigned int nConvectiveFields = qfield[0].size();
+    unsigned int nPts              = qfield[0][0].size();
+
+    for (unsigned int j = 0; j < nDim; ++j)
+    {
+        for (unsigned int i = 0; i < nConvectiveFields; ++i)
+        {
+            Vmath::Smul(nPts, m_epsilon[0], qfield[j][i], 1, viscousTensor[j][i],
+                        1);
+        }
+    }
+}
+
 
 void MMFDiffusion::ComputeEuclideanDivMF(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
