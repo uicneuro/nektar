@@ -223,9 +223,6 @@ private:
     std::vector<StimulusSharedPtr> m_stimulus;
     std::vector<StimulusSharedPtr> m_fiberstimulus;
 
-    Array<OneD, NekDouble> m_epsilon;
-    Array<OneD, NekDouble> m_epsu;
-
     /// Stimulus current
     NekDouble m_stimDuration;
 };

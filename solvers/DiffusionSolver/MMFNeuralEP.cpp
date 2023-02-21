@@ -138,8 +138,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_SolverSchemeType = (SolverSchemeType)0;
     }
 
-
-
     // TimeMap ?
     if (m_session->DefinesSolverInfo("TimeMapType"))
     {

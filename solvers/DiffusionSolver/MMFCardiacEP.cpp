@@ -75,75 +75,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     int nq   = GetTotPoints();
     int nvar = m_fields.size();
 
-    // // Moving frames generate for Curves in Plane mesh
-    // // Fiber is expressed as edges for id >= 1
-
-    // int bcRegions =m_fields[0]->GetBndCondExpansions().size();
-    // int nTracePts = m_fields[0]->GetTrace()->GetTotPoints();
-
-    // // LocalRegions::Expansion1DSharedPtr fibre;
-    // // fibre = m_fields[0]->GetBndCondExpansions()[bcRegion];
-
-    // Array<OneD, NekDouble> x0(nq);
-    // Array<OneD, NekDouble> x1(nq);
-    // Array<OneD, NekDouble> x2(nq);
-
-    // m_fields[0]->GetCoords(x0, x1, x2);
-
-    // Array<OneD, NekDouble> traceX(nTracePts);
-    // Array<OneD, NekDouble> traceY(nTracePts);
-    // Array<OneD, NekDouble> traceZ(nTracePts);
-
-    // m_fields[0]->ExtractTracePhys(x0, traceX);
-    // m_fields[0]->ExtractTracePhys(x1, traceY);
-    // m_fields[0]->ExtractTracePhys(x2, traceZ);
-
-    // int id2;
-    // int maxe, npts, Ntot;
-    // int cnt=0;
-
-    // for (int i=0; i<1; ++i)
-    // {
-    //     maxe = m_fields[0]->GetBndCondExpansions()[i]->GetExpSize();
-    //     for (int e=0; e<maxe; ++e)
-    //     {
-    //         cnt++;
-    //     }
-    // }
-
-    // Array<OneD, Array<OneD, NekDouble>> fiberPts(bcRegions-1);
-    // for (int fid = 1; fid<bcRegions; ++fid)
-    // {
-    //     npts =
-    //     m_fields[0]->GetBndCondExpansions()[fid]->GetExp(0)->GetNumPoints(0);
-
-    //     maxe = m_fields[0]->GetBndCondExpansions()[fid]->GetExpSize();
-
-    //     Ntot = npts*maxe;
-    //     fiberPts[fid] = Array<OneD, NekDouble>(m_spacedim*Ntot);
-
-    //     for (int e=0;e<maxe;++e)
-    //     {
-    //         // id1 =
-    //         m_fields[0]->GetBndCondExpansions()[fid]->GetPhys_Offset(e); id2
-    //         =
-    //         m_fields[0]->GetTrace()->GetPhys_Offset(m_fields[0]->GetTraceMap()->GetBndCondTraceToGlobalTraceMap(cnt++));
-
-    //         Vmath::Vcopy(npts, &traceX[id2], 1, &fiberPts[fid][e*npts], 1);
-    //         Vmath::Vcopy(npts, &traceY[id2], 1, &fiberPts[fid][e*npts+Ntot],
-    //         1); Vmath::Vcopy(npts, &traceZ[id2], 1,
-    //         &fiberPts[fid][e*npts+2*Ntot], 1);
-    //     }
-
-    //     for (int i=0; i<Ntot; ++i)
-    //     {
-    //         std::cout << "Trace: fid = " << fid << ", i = " << i << ", fiber
-    //         pts = ( " << fiberPts[fid][i] << " , " << fiberPts[fid][i+Ntot]
-    //         << " , " << fiberPts[fid][i+2*Ntot] << " ) " << std::endl;
-    //     }
-    //     std::cout << std::endl;
-    // }
-
     // Conductance parameters
     m_session->LoadParameter("Chi", m_chi, 28.0);
     m_session->LoadParameter("Cm", m_capMembrane, 0.125);
@@ -170,6 +101,25 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         m_SolverSchemeType = (SolverSchemeType)0;
     }
 
+    // TimeMap ?
+    if (m_session->DefinesSolverInfo("TimeMapType"))
+    {
+        std::string TIMEMAPTYPEStr;
+        TIMEMAPTYPEStr = m_session->GetSolverInfo("TimeMapType");
+        for (int i = 0; i < (int)SIZE_TimeMapType; ++i)
+        {
+            if (boost::iequals(TimeMapTypeMap[i], TIMEMAPTYPEStr))
+            {
+                m_TimeMap = (TimeMapType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_TimeMap = (TimeMapType)0;
+    }
+
     std::string vCellModel;
     m_session->LoadSolverInfo("CELLMODEL", vCellModel, "FitzHughNagumo");
 
@@ -184,11 +134,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     // m_Initx = m_stimulus[0]->ReturnStimuliLoc(0);
     // m_Inity = m_stimulus[0]->ReturnStimuliLoc(1);
     // m_Initz = m_stimulus[0]->ReturnStimuliLoc(2);
-
-    // Diffusivity coefficient for u^j
-    m_epsu = Array<OneD, NekDouble>(nvar + 1);
-    m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
-    m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
 
     m_session->LoadParameter("Diffbeta", m_Diffbeta, 0.5);
     m_session->LoadParameter("Diffeta", m_Diffeta, 100.0);
@@ -329,8 +274,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         // Create varcoeff for Helmsolver
         ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-        m_ode.DefineImplicitSolve(&MMFCardiacEP::DoImplicitSolveCardiacEP,
-                                  this);
+        m_ode.DefineImplicitSolve(&MMFCardiacEP::DoImplicitSolveCardiacEP, this);
     }
 
     m_ode.DefineOdeRhs(&MMFCardiacEP::DoOdeRhsCardiacEP, this);
@@ -1059,7 +1003,6 @@ void MMFCardiacEP::DoImplicitSolveCardiacEP(
     // back into physical space.
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
-
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 
@@ -1091,6 +1034,8 @@ void MMFCardiacEP::DoOdeRhsCardiacEP(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
+    int nq = m_fields[0]->GetNpoints();
+
     // Compute the reaction function
     // input: inarray
     // output: outarray
@@ -1104,8 +1049,6 @@ void MMFCardiacEP::DoOdeRhsCardiacEP(
 
     if (m_explicitDiffusion)
     {
-        int nq = m_fields[0]->GetNpoints();
-
         // Laplacian only to the first variable
         Array<OneD, NekDouble> Laplacian(nq);
         WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
@@ -1124,8 +1067,13 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
     m_cell->Initialise();
 
+    std::cout << "SetInitialCond 1" << std::endl;
+
     // Read initial condition from xml file
     EquationSystem::v_SetInitialConditions(initialtime, false);
+
+    std::cout << "SetInitialCond 2" << std::endl;
+
 
     Array<OneD, Array<OneD, NekDouble>> tmp(1);
     tmp[0] = Array<OneD, NekDouble>(nq);
@@ -1139,14 +1087,18 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
         m_fields[0]->SetPhys(tmp[0]);
     }
 
+    std::cout << "SetInitialCond 3" << std::endl;
+
+
     // Only the excited regions are considered for m_InitExcitation
     Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
-    m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
+    // m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
 
     if (m_TimeMap == eProcessing)
     {
         TimeMapProcess();
     }
+    std::cout << "SetInitialCond 4" << std::endl;
 
     // forward transform to fill the modal coeffs
     for (int i = 0; i < m_fields.size(); ++i)

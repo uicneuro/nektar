@@ -1554,7 +1554,7 @@ void MMFSystem::ConstructAnisotropicFrames(
 
     int Nondifferentiable = 0, indj = 0, indk = 0;
     int cnt = 0;
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         Nondifferentiable = 0;
         ejcdotekmin       = 1.0;
@@ -6165,7 +6165,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeJacobianAvg(
     int ind;
     NekDouble sum;
 
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         sum = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -6976,7 +6976,7 @@ Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
     int TMflag, index;
     int cnt             = 0;
     const NekDouble Tol = 0.1;
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         TMflag = 0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -7243,7 +7243,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeLambDiv(
     // Find a large LambDiv
     int index, Lambflag;
     NekDouble LambDivTol = 10.0;
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         Lambflag = 0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -7612,7 +7612,7 @@ void MMFSystem::VectorCutOff(const NekDouble Tol,
 
     int index, Velmagflag = 0;
     NekDouble vx, vy, vz, velmag;
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         Velmagflag = 0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -8986,7 +8986,7 @@ void MMFSystem::ActivateRegion(
     // Compare outarray and outarraynew one by one. If the difference is
     // more than tolerance, set ActNow = 0 again
     int indexj, indexk;
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
@@ -9456,7 +9456,7 @@ void MMFSystem::ValidateNewFrames(
     // Compare outarray and outarraynew one by one. If the difference is
     // more than tolerance, set ActNow = 0 again
     int indexj, indexk;
-    for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
@@ -12095,7 +12095,7 @@ void MMFSystem::GenerateHHDPlot(const int nstep)
 
         int indexj, Ncnt       = 0;
         NekDouble zpavg, zpTol = 5.0;
-        for (int i = 0; i < m_fields[0]->GetTotPoints(i); ++i)
+        for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
         {
             zpavg = 0.0;
             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -13524,6 +13524,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     return qfieldc;
 }
 
+
 Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     const int var, const Array<OneD, const NekDouble> &inarray,
     const NekDouble time)
@@ -13562,10 +13563,8 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
         Vmath::Neg(ncoeffs, qfieldc, 1);
 
         // Compute L = -L2 + \int_{\partial} u* n_x dx
-        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFFwd[j][0], 1, &fluxFwd[0],
-                    1);
-        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFBwd[j][0], 1, &fluxBwd[0],
-                    1);
+        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFFwd[j][0], 1, &fluxFwd[0], 1);
+        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFBwd[j][0], 1, &fluxBwd[0], 1);
 
         m_fields[var]->AddFwdBwdTraceIntegral(fluxFwd, fluxBwd, qfieldc);
 

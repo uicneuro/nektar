@@ -61,209 +61,15 @@ MMFDiffusion::MMFDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
 {
 }
 
-// void MMFDiffusion::v_InitObject(bool DeclareFields)
-// {
-//     UnsteadySystem::v_InitObject(DeclareFields);
-
-//     int nq = GetTotPoints();
-//     int nvar = m_fields.size();
-
-//     // Helmsolver parameter
-//     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
-
-//     // Define ProblemType
-//     if (m_session->DefinesSolverInfo("TESTTYPE"))
-//     {
-//         std::string TestTypeStr;
-//         TestTypeStr = m_session->GetSolverInfo("TESTTYPE");
-//         for (int i = 0; i < (int)SIZE_TestType; ++i)
-//         {
-//             if (boost::iequals(TestTypeMap[i], TestTypeStr))
-//             {
-//                 m_TestType = (TestType)i;
-//                 break;
-//             }
-//         }
-//     }
-//     else
-//     {
-//         m_TestType = (TestType)0;
-//     }
-
-//     // Define SovlerSchemeType
-//     if (m_session->DefinesSolverInfo("SolverSchemeType"))
-//     {
-//         std::string SolverSchemeTypeStr;
-//         SolverSchemeTypeStr = m_session->GetSolverInfo("SolverSchemeType");
-//         for (int i = 0; i < (int)SIZE_SolverSchemeType; ++i)
-//         {
-//             if (boost::iequals(SolverSchemeTypeMap[i], SolverSchemeTypeStr))
-//             {
-//                 m_SolverSchemeType = (SolverSchemeType)i;
-//                 break;
-//             }
-//         }
-//     }
-//     else
-//     {
-//         m_SolverSchemeType = (SolverSchemeType)0;
-//     }
-
-//     // TimeMap ?
-//     if (m_session->DefinesSolverInfo("TimeMapType"))
-//     {
-//         std::string TIMEMAPTYPEStr;
-//         TIMEMAPTYPEStr = m_session->GetSolverInfo("TimeMapType");
-//         for (int i = 0; i < (int)SIZE_TimeMapType; ++i)
-//         {
-//             if (boost::iequals(TimeMapTypeMap[i], TIMEMAPTYPEStr))
-//             {
-//                 m_TimeMap = (TimeMapType)i;
-//                 break;
-//             }
-//         }
-//     }
-//     else
-//     {
-//         m_TimeMap = (TimeMapType)0;
-//     }
-
-//     // Diffusivity coefficient for e^j
-//     m_epsilon = Array<OneD, NekDouble>(m_expdim);
-//     m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
-//     m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
-//     m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
-
-//     // Diffusivity coefficient for u^j
-//     m_epsu = Array<OneD, NekDouble>(nvar + 1);
-//     m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
-//     m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
-
-//     m_session->LoadParameter("Diffbeta", m_Diffbeta, 0.5);
-//     m_session->LoadParameter("Diffeta", m_Diffeta, 100.0);
-//     m_session->LoadParameter("Diffhe", m_Diffhe, 0.5);
-
-//     // Derive AnisotropyStrength.
-//     Array<OneD, Array<OneD, NekDouble>> AniStrength(m_expdim);
-//     for (int j = 0; j < m_expdim; ++j)
-//     {
-//         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-//     }
-
-//     MMFSystem::MMFInitObject(AniStrength);
-
-//     // if (m_explicitDiffusion)
-//     // {
-//     //     m_ode.DefineImplicitSolve(&MMFDiffusion::DoNullSolve, this);
-//     //     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
-//     // }
-
-//     // else
-//     // {
-//         // Create varcoeff for Helmsolver
-//         // m_varcoeff = ComputeVarCoeff2D(m_movingframes);
-
-//     // StdRegions::VarCoeffType MMFCoeffs[15] = {
-//     //     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-//     //     StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-//     //     StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-//     //     StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-//     //     StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-//     //     StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-//     //     StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-//     //     StdRegions::eVarCoeffMF3Mag};
-
-//     //   int indx;
-//     //     for (int k = 0; k < m_mfdim; ++k)
-//     //     {
-//     //         // For Moving Frames
-//     //         indx = 5 * k;
-
-//     //         std::cout << "indx = " << indx << std::endl;
-//     //                 std::cout << "MF = ( " <<
-//     RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 0]]) << " , "
-//     //         << RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 1]]) << " , "
-//     //         << RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 2]]) << " ) " <<
-//     std::endl;
-
-//     //         std::cout << "DivMF = " <<
-//     RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 3]]) << std::endl;
-
-//     //         std::cout << "emag = " <<
-//     RootMeanSquare(m_varcoeff[MMFCoeffs[indx + 4]]) << std::endl;
-//     //     }
-
-//     StdRegions::VarCoeffType MMFCoeffs[15] = {
-//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-//         StdRegions::eVarCoeffMF3Mag};
-
-//     int indx;
-//     Array<OneD, NekDouble> tmp(nq);
-//     for (int k = 0; k < m_expdim; ++k)
-//     {
-//         // For Moving Frames
-//         indx = 5 * k;
-
-//         // std::cout << "indx = " << indx << std::endl;
-
-//         for (int j = 0; j < m_spacedim; ++j)
-//         {
-//             m_varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq,
-//             0.0); Vmath::Vcopy(nq, &m_movingframes[k][j * nq], 1,
-//                          &m_varcoeff[MMFCoeffs[indx + j]][0], 1);
-//         }
-
-//         // std::cout << "MF = ( " <<
-//         RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 0]]) << " , "
-//         // << RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 1]]) << " , "
-//         // << RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 2]]) << " ) " <<
-//         std::endl;
-
-//         // m_DivMF
-//         m_varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-//         Vmath::Vcopy(nq, &m_DivMF[k][0], 1, &m_varcoeff[MMFCoeffs[indx +
-//         3]][0],
-//                      1);
-
-//         // std::cout << "DivMF = " <<
-//         RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 3]]) << std::endl;
-
-//         // \| e^k \|
-//         m_varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-//         tmp                             = Array<OneD, NekDouble>(nq, 0.0);
-//         for (int i = 0; i < m_spacedim; ++i)
-//         {
-//             Vmath::Vvtvp(nq, &m_movingframes[k][i * nq], 1,
-//                          &m_movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0],
-//                          1);
-//         }
-//         Vmath::Vcopy(nq, &tmp[0], 1, &m_varcoeff[MMFCoeffs[indx + 4]][0], 1);
-
-//         // std::cout << "emag = " <<
-//         RootMeanSquare(m_varDiffcoeff[MMFCoeffs[indx + 4]]) << std::endl <<
-//         std::endl;
-//     }
-
-//         m_ode.DefineImplicitSolve(&MMFDiffusion::DoImplicitSolve, this);
-//             m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
-//     }
-
 void MMFDiffusion::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
     int nq    = m_fields[0]->GetNpoints();
     int nvar  = m_fields.size();
-    int MFdim = 3;
 
     // Diffusivity coefficient for e^j
-    m_epsilon = Array<OneD, NekDouble>(MFdim);
+    m_epsilon = Array<OneD, NekDouble>(m_spacedim);
     m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
     m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
     m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
@@ -523,34 +329,32 @@ void MMFDiffusion::DoOdeRhs(
             break;
     }
 
-    switch (m_projectionType)
-    {
-        case MultiRegions::eDiscontinuous:
-        {
-            std::string diffName;
+    // switch (m_projectionType)
+    // {
+    //     case MultiRegions::eDiscontinuous:
+    //     {
+    //         std::string diffName;
 
-            // Do not forwards transform initial condition
-            m_homoInitialFwd = false;
+    //         // Do not forwards transform initial condition
+    //         m_homoInitialFwd = false;
 
-            m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
-            m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
-                diffName, diffName);
-            m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
-            m_diffusion->InitObject(m_session, m_fields);
-            break;
-        }
+    //         m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
+    //         m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
+    //             diffName, diffName);
+    //         m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
+    //         m_diffusion->InitObject(m_session, m_fields);
+    //         break;
+    //     }
 
-        case MultiRegions::eGalerkin:
-        case MultiRegions::eMixed_CG_Discontinuous:
-        {
-            // In case of Galerkin explicit diffusion gives an error
-            if (m_explicitDiffusion)
-            {
-                ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
-            }
-            // In case of Galerkin implicit diffusion: do nothing
-        }
-    }
+    //     case MultiRegions::eGalerkin:
+    //     case MultiRegions::eMixed_CG_Discontinuous:
+    //     {
+    //         if (m_explicitDiffusion)
+    //         {
+    //             ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
+    //         }
+    //     }
+    // }
 
     // if (m_explicitDiffusion)
     // {
@@ -575,9 +379,13 @@ void MMFDiffusion::DoOdeRhs(
 
         // Laplacian only to the first variable
         Array<OneD, NekDouble> Laplacian(nq);
-        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
 
-        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+        for (int i=0; i < nvar; ++i)
+        {
+            WeakDGMMFDiffusion(i, inarray[i], Laplacian, time);
+            Vmath::Smul(nq, m_epsu[i], &Laplacian[0], 1, &Laplacian[0], 1);
+            Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[i][0], 1, &outarray[i][0], 1);
+        }
     }
 }
 
@@ -608,13 +416,6 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
 
             TestCubeProblem(initialtime, u);
             m_fields[0]->SetPhys(u);
-            /*for (int k=0; k<nq; ++k)
-            {
-                //for (int j=0; j<m_spacedim; ++j)
-                //{
-                cout << "_varcoeff" << u[k] <<endl;
-                // }
-            }*/
         }
         break;
 
@@ -631,16 +432,6 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
             m_fields[1]->SetPhys(v);
         }
         break;
-
-            // case eFHNStandard:
-            // case eFHNRogers:
-            // case eFHNAlievPanf:
-            // {
-            //     Array<OneD, NekDouble> Zero(nq, 0.0);
-            //     m_fields[0]->SetPhys(PlanePhiWave());
-            //     m_fields[1]->SetPhys(Zero);
-            // }
-            // break;
 
         default:
         {
@@ -889,9 +680,6 @@ Array<OneD, NekDouble> MMFDiffusion::PlanePhiWave()
             {
                 NekDouble radiusofinit = 6.0;
                 NekDouble frontstiff   = 0.1;
-
-                // NekDouble xc = 0.5*(Vmath::Vmax(nq, x, 1) + Vmath::Vmin(nq,
-                // x, 1));
 
                 xp = x[i] - xmin;
                 outarray[i] =
