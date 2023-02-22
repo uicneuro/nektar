@@ -2207,8 +2207,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_Temperature);
 
-    std::cout << "TimeIntegrate DoOdeRhs =========" << std::endl;
-    CheckNodeZoneMF(m_movingframes, m_NodeZone, outarray[0]);
+    // std::cout << "TimeIntegrate DoOdeRhs =========" << std::endl;
+    // CheckNodeZoneMF(m_movingframes, m_NodeZone, outarray[0]);
 
     Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
     for (int i = 0; i < nvar; ++i)

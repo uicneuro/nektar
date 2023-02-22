@@ -169,6 +169,7 @@ protected:
 
     /// Neuron model solution variables
     Array<OneD, Array<OneD, NekDouble>> m_NeuronSol;
+    
     /// Neuron model integration workspace
     Array<OneD, Array<OneD, NekDouble>> m_wsp;
 

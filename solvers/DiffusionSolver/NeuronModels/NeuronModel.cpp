@@ -150,8 +150,6 @@ void NeuronModel::TimeIntegrate(
     // Transform Neuron model I_total from nodal to modal space
     Vmath::Vcopy(m_nq, m_wsp[0], 1, outarray, 1);
 
-    std::cout << "NeuronModel: inarray = " << Vmath::Vamax(m_nq, inarray,1 ) << ", outarray = " << Vmath::Vamax(m_nq, outarray,1 ) << std::endl << std::endl;
-
     // Ion concentrations
     for (unsigned int j = 0; j < m_concentrations.size(); ++j)
     {

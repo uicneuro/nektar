@@ -217,8 +217,10 @@ namespace Nektar
             outarray[4][i] = p_inf;
             m_gates_tau[3][i] = p_tau;
 
-            std::cout << "i = " << i << ", NodeZone = " << NodeZone[i] << ", du/dt = " << outarray[0][i] << ", m = " << outarray[1][i]
-            << ", n = " << outarray[2][i]  << ", h = " << outarray[3][i] << ", p = " << outarray[3][i] << std::endl;
+            // std::cout << "i = " << i << ", NodeZone = " << NodeZone[i] << ", du/dt = " << outarray[0][i] << ", m = " << outarray[1][i]
+            // << ", n = " << outarray[2][i]  << ", h = " << outarray[3][i] << ", p = " << outarray[3][i] << std::endl;
+            
+            // std::cout << "var_J_K = " << var_J_K  << ", var_J_Na = " << var_J_Na << ", var_J_p = " << var_J_p << ", var_J_l = " << var_J_l << std::endl;
         }
     }
 
