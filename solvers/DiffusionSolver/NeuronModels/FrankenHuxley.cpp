@@ -183,13 +183,13 @@ namespace Nektar
             NekDouble var_J_l = var_membrane__gL * ( var_membrane_V - var_membrane__VL);
 
             // Myelin node: - g_m V_k
-            if(NodeZone[i]>-1)
+            if(NodeZone[i]==-1)
             {
                 d_dt_membrane__V = var_membrane__gm * var_membrane_V / var_membrane__cml ;
             }
 
             // Ranvider node: -J_{ion}
-            else if(NodeZone[i]==-1)
+            else if(NodeZone[i]>=0)
             {
                 d_dt_membrane__V = ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
             }
@@ -216,6 +216,9 @@ namespace Nektar
 
             outarray[4][i] = p_inf;
             m_gates_tau[3][i] = p_tau;
+
+            std::cout << "i = " << i << ", NodeZone = " << NodeZone[i] << ", du/dt = " << outarray[0][i] << ", m = " << outarray[1][i]
+            << ", n = " << outarray[2][i]  << ", h = " << outarray[3][i] << ", p = " << outarray[3][i] << std::endl;
         }
     }
 

@@ -49,7 +49,6 @@ namespace Nektar
 
 enum NeuralEPType
 {
-    eNeuralTest,
     eNeuralEP1D,
     eNeuralEP2D,
     eNeuralEP2DEmbed,
@@ -57,7 +56,6 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
-    "NeuralTest",
     "NeuralEP1D",
     "NeuralEP2D",
     "NeuralEP2DEmbed",
@@ -429,9 +427,6 @@ private:
     Array<OneD, NekDouble> ComputeLaplacianDiff(
         const Array<OneD, const NekDouble> &Laplacian,
         const Array<OneD, const NekDouble> &LaplacianNew);
-
-    Array<OneD, NekDouble> m_epsilon;
-    Array<OneD, NekDouble> m_epsu;
 
     /// Stimulus current
     NekDouble m_stimDuration;

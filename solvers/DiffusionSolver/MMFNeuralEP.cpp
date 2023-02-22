@@ -78,16 +78,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Chi", m_chi, 28.0);
     m_session->LoadParameter("Cm", m_capMembrane, 0.125);
 
-    m_epsilon = Array<OneD, NekDouble>(m_spacedim);
-    m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
-    m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
-    m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
-
-    // Diffusivity coefficient for u^j
-    m_epsu = Array<OneD, NekDouble>(nvar + 1);
-    m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
-    m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
-
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
 
@@ -282,7 +272,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     else
                     {
                         m_NeuralCm[0][index] = 1.0 / Cm / m_ratio_re_ri;
-                        // m_NeuralCm[0][index] = 0.0 / Cm / m_ratio_re_ri;
                         cnte++;
                     }
                 }
@@ -492,13 +481,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
         switch (m_NeuralEPType)
         {
-            case eNeuralTest:
-            {
-                m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolve, this);
-                break;
-            }
-
             case eNeuralEP1D:
             {
                 m_ode.DefineImplicitSolve(
@@ -527,12 +509,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     switch (m_NeuralEPType)
     {
-        case eNeuralTest:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhs, this);
-            break;
-        }
-
         case eNeuralEP1D:
         {
             m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
@@ -577,7 +553,7 @@ void MMFNeuralEP::CheckNodeZoneMF(
     m_fields[0]->GetCoords(x0, x1, x2);
 
     int i, j, index, npts;;
-    NekDouble xp, yp, e1mag, e2mag;
+    NekDouble xp, yp, e1mag, e2mag, inarrayavg;
     for (i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         npts = m_fields[0]->GetTotPoints(i);
@@ -585,9 +561,11 @@ void MMFNeuralEP::CheckNodeZoneMF(
         yp = 0.0;
         e1mag = 0.0;
         e2mag = 0.0;
+        inarrayavg = 0.0;
         for (j = 0; j < npts; ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
+            inarrayavg += inarray[index];
             xp += x0[index];
             yp += x1[index];
             e1mag = e1mag +
@@ -601,14 +579,12 @@ void MMFNeuralEP::CheckNodeZoneMF(
         e2mag = sqrt(e2mag / npts);
         xp = sqrt(xp / npts);
         yp = sqrt(yp / npts);
+        inarrayavg = sqrt(inarrayavg/npts);
 
-        // if(NodeZone[0][index]>=0)
-        {
-            std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
-                    << ", x = " << xp << ", y = " << yp 
-                    << ", e1mag = " << e1mag << ", e2mag = " << e1mag
-                    << ", um = " << inarray[index] << std::endl;
-        }
+        std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
+                << ", x = " << xp << ", y = " << yp 
+                << ", e1mag = " << e1mag << ", e2mag = " << e1mag
+                << ", inarray = " << inarrayavg << std::endl;
     }
 }
 
@@ -958,7 +934,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             std::stringstream ss;
             ss << cpuTime / 60.0 << " min.";
             std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
-                      << std::endl;
+                      << std::endl << std::endl;
 
             // fulltext.append("\n");
             // fulltext.append("Steps: " + std::to_string((step+1)));
@@ -988,7 +964,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             // fulltext.append("\n");
 
             // Print phim and phie at each node
-            if( (m_expdim>1) && (m_NeuralEPType !=eNeuralTest) )
+            if( m_expdim>1 )
             {
                 DisplayatNode(fields[0]);
             }
@@ -1636,50 +1612,6 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeLaplacianDiff(
     return DivDiff;
 }
 
-/**OdeRhs
- * @param   inarray         Input array.
- * @param   outarray        Output array.
- * @param   time            Current simulation time.
- * @param   lambda          Timestep.
- */
-void MMFNeuralEP::DoImplicitSolve(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
-{
-    int nvariables = inarray.size();
-    int nq         = m_fields[0]->GetNpoints();
-
-    StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorTau] = 1.0;
-
-    Array<OneD, Array<OneD, NekDouble>> F(nvariables);
-    factors[StdRegions::eFactorLambda] = 1.0 / lambda;
-    F[0] = Array<OneD, NekDouble>(nq * nvariables);
-    for (int n = 1; n < nvariables; ++n)
-    {
-        F[n] = F[n - 1] + nq;
-    }
-
-    // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
-    // inarray = input: \hat{rhs} -> output: \hat{Y}
-    // outarray = output: nabla^2 \hat{Y}
-    // where \hat = modal coeffs
-    SetBoundaryConditions(time);
-
-    for (int i = 0; i < nvariables; ++i)
-    {
-        factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsu[i];
-
-        // Multiply 1.0/timestep
-        Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[i], 1,
-                    F[i], 1);
-        m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-                               m_varcoeff);
-        m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
-    }
-}
-
 // Implicit solve for NeuralEP solver
 void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -1696,17 +1628,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = m_Helmtau;
 
-    // // factors[StdRegions::eFactorLambda] = 1.0 / lambda;
-    // // Cm dVm/dt = (1/rf) \nabla^2 Vm
-    // // Vm^{n+1} = Vm^{n} + \Delta t/(rf*Cm) \nabla^2 Vn
-    // // m_beta = Relative extracellular resistance = r_ex / r_f = \sigma_f /
-    // \sigma_ex
-
-    // NekDouble Cv = C_n * R_f * ( (m_beta_e + 1.0)/m_beta_e );
-    // NekDouble Cv = C_n * R_f * (m_ratio_re_ri + 1.0);
-
-    NekDouble Cv                       = C_n * R_f * m_ratio_re_ri;
-    factors[StdRegions::eFactorLambda] = Cv / lambda;
+    factors[StdRegions::eFactorLambda] = C_n * R_f * m_ratio_re_ri / lambda;
 
     // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
     // inarray = input: \hat{rhs} -> output: \hat{Y}
@@ -1734,7 +1656,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
 {
     boost::ignore_unused(time);
 
-    int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
 
     // Set up factors for Helmsolve
@@ -1744,18 +1665,10 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = m_Helmtau;
 
-    // NekDouble Cv = C_n * R_f * (m_ratio_re_ri + 0.0);
-    // factors[StdRegions::eFactorLambda] = C_n * R_f / lambda ;
-    NekDouble Cv = C_n * R_f;
+    // m_ratio_re_ri determines the conductivity only when the variable is one
+    factors[StdRegions::eFactorLambda] = C_n * R_f / lambda * m_ratio_re_ri;
 
-    if (nvar == 1)
-    {
-        Cv = Cv * m_ratio_re_ri;
-    }
-
-    factors[StdRegions::eFactorLambda] = Cv / lambda;
-
-    // SetBoundaryConditions(time);
+    SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition(time);
 
     // Multiply 1.0/timestep
@@ -2216,65 +2129,6 @@ Array<OneD, NekDouble> MMFNeuralEP::ExtractFiberValue(
     return fiberoutarray;
 }
 
-/**OdeRhs
- * @param   inarray         Input array.
- * @param   outarray        Output array.
- * @param   time            Current simulation time.
- * @param   lambda          Timestep.
- */
-// void MMFNeuralEP::DoImplicitSolve(
-//     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-//     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-//     const NekDouble lambda)
-// {
-//     boost::ignore_unused(time);
-
-//     int nvariables = inarray.size();
-//     int nq         = m_fields[0]->GetNpoints();
-
-//     StdRegions::ConstFactorMap factors;
-//     factors[StdRegions::eFactorTau] = m_Helmtau;
-
-//     Array<OneD, Array<OneD, NekDouble>> F(nvariables);
-//     F[0] = Array<OneD, NekDouble>(nq * nvariables);
-
-//     for (int n = 1; n < nvariables; ++n)
-//     {
-//         F[n] = F[n - 1] + nq;
-//     }
-
-//     // Reconstruction of varcoeff
-//     // StdRegions::VarCoeffMap varcoeff;
-//     // ComputeVarCoeff(MF1st, varcoeff);
-
-//     // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
-//     // inarray = input: \hat{rhs} -> output: \hat{Y}
-//     // outarray = output: nabla^2 \hat{Y} where \hat = modal coeffs
-//     SetBoundaryConditions(time);
-
-//     for (int i = 0; i < nvariables; ++i)
-//     {
-//         factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsu[i];
-
-//         // Multiply 1.0/timestep
-//         Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[i], 1,
-//                     F[i], 1);
-
-//         // Solve a system of equations with Helmholtz solver and transform
-//         // back into physical space.
-//         // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(),
-//         // NullFlagList, factors, m_varcoeff);
-//         // m_contField->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(),
-//         // NullFlagList,
-//         //                       factors, m_varcoeff);
-
-//         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-//                                m_varcoeff);
-
-//         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
-//     }
-// }
-
 // We Return Y[i] = rhs [i] without no Helomsolver
 void MMFNeuralEP::DoNullSolve(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -2291,29 +2145,6 @@ void MMFNeuralEP::DoNullSolve(
         Vmath::Vcopy(nq, &inarray[i][0], 1, &outarray[i][0], 1);
     }
 }
-
-void MMFNeuralEP::DoOdeRhs(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
-{
-    boost::ignore_unused(inarray);
-
-    int nq = GetTotPoints();
-
-    Array<OneD, NekDouble> x(nq);
-    Array<OneD, NekDouble> y(nq);
-    Array<OneD, NekDouble> z(nq);
-
-    m_fields[0]->GetCoords(x, y, z);
-
-    for (int k = 0; k < nq; k++)
-    {
-        outarray[0][k] = (m_epsilon[0] + m_epsilon[1] - 1.0) * m_pi *
-                            m_pi * exp(-1.0 * m_pi * m_pi * time) *
-                            sin(m_pi * x[k]) * cos(m_pi * y[k]);
-    }
-}
-
 
 void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -2369,12 +2200,15 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
 {
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
+
     NekDouble Rf = m_neuron->GetRecistanceValue();
     NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time,
-                            m_Temperature);
+    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_Temperature);
+
+    std::cout << "TimeIntegrate DoOdeRhs =========" << std::endl;
+    CheckNodeZoneMF(m_movingframes, m_NodeZone, outarray[0]);
 
     Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -2393,41 +2227,34 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
-    // if (nvar == 2)
-    // {
-    //     // Compute phi_e to satisfy the following equation
-    //     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
-    //     // (\sigma_i \nabla \phi_m)
-    //     Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
+    if (nvar == 2)
+    {
+        // Compute phi_e to satisfy the following equation
+        // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
+        // (\sigma_i \nabla \phi_m)
+        Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
 
-    //     // Add the current changes by the external current
-    //     Array<OneD, NekDouble> extcurrent;
-    //     extcurrent = ComputeCovariantDiffusion(m_unitmovingframes,
-    //                                            m_fields[1]->GetPhys());
-    //     Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+        // Add the current changes by the external current
+        Array<OneD, NekDouble> extcurrent;
+        extcurrent = ComputeCovariantDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+        Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
-    //     // Let the extcurrent be zero at Myeline nodes (-1).
-    //     OnlyValideinNode(m_NodeZone[0], extcurrent);
+        // Let the extcurrent be zero at Myeline nodes (-1).
+        OnlyValideinNode(m_NodeZone[0], extcurrent);
 
-    //     // add divergence of phie to the current
-    //     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0],
-    //                 1);
-    // }
+        // add divergence of phie to the current
+        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0],
+                    1);
+    }
 
-    // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)
     {
-        int nq = m_fields[0]->GetNpoints();
-
         // Laplacian only to the first variable
         Array<OneD, NekDouble> Laplacian(nq);
         WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
-        // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
 
         Vmath::Smul(nq, 1.0 / (Cn * Rf), Laplacian, 1, Laplacian, 1);
-
-        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
-                    1);
+        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
     }
 }
 
@@ -2732,29 +2559,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
     switch (m_NeuralEPType)
     {
-        case eNeuralTest:
-        {
-            EquationSystem::v_SetInitialConditions(initialtime, false);
-            Array<OneD, NekDouble> outfield;
-
-            // TestPlaneProblem(initialtime, u);
-            Array<OneD, NekDouble> x(nq);
-            Array<OneD, NekDouble> y(nq);
-            Array<OneD, NekDouble> z(nq);
-
-            m_fields[0]->GetCoords(x, y, z);
-
-            outfield = Array<OneD, NekDouble>(nq);
-            for (int k = 0; k < nq; k++)
-            {
-                outfield[k] = exp(-1.0 * m_pi * m_pi * initialtime) * sin(m_pi * x[k]) *
-                            cos(m_pi * y[k]);
-            }
-
-            m_fields[0]->SetPhys(outfield);
-            break;
-        }
-
         case eNeuralEP1D:
         case eNeuralEP2D:
         {
@@ -3070,34 +2874,7 @@ void MMFNeuralEP::v_EvaluateExactSolution(unsigned int field,
                                           Array<OneD, NekDouble> &outfield,
                                           const NekDouble time)
 {
-
-    switch (m_NeuralEPType)
-    {
-        case eNeuralTest:
-        {
-            int nq = GetTotPoints();
-
-            Array<OneD, NekDouble> x(nq);
-            Array<OneD, NekDouble> y(nq);
-            Array<OneD, NekDouble> z(nq);
-
-            m_fields[0]->GetCoords(x, y, z);
-
-            outfield = Array<OneD, NekDouble>(nq);
-            for (int k = 0; k < nq; k++)
-            {
-                outfield[k] = exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * x[k]) *
-                            cos(m_pi * y[k]);
-            }
-            break;
-        }
-
-        default:
-        {
-            EquationSystem::v_EvaluateExactSolution(field, outfield, time);
-            break;
-        }
-    }
+    EquationSystem::v_EvaluateExactSolution(field, outfield, time);
 }
 
 // Compute \int \nabla u \cdot e^{dir}
