@@ -73,7 +73,8 @@ namespace Nektar
                 const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                       Array<OneD,        Array<OneD, NekDouble> >&outarray,
                 const NekDouble time, 
-                const NekDouble Tc);
+                const NekDouble var_membrane__d = 0.001,
+                const NekDouble var_membrane__Tc = 24.0);
 
         /// Prints a summary of the model parameters.
         virtual void v_GenerateSummary(SummaryList& s);

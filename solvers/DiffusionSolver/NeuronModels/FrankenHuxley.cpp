@@ -64,6 +64,7 @@ namespace Nektar
                      const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                            Array<OneD,        Array<OneD, NekDouble> >&outarray,
                                                            const NekDouble time,
+                                                           const NekDouble var_membrane__d,
                                                            const NekDouble var_membrane__Tc)
     {
         boost::ignore_unused(time);
@@ -194,7 +195,7 @@ namespace Nektar
             // Ranvider node: -J_{ion}
             else if(NodeZone[i]>=0)
             {
-                d_dt_membrane__V = ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
+                d_dt_membrane__V = m_pi * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
             }
 
             else

@@ -165,6 +165,7 @@ protected:
 
     // Temperature parameter
     NekDouble m_Temperature;
+    NekDouble m_diameter;
 
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;

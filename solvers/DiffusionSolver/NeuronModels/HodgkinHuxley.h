@@ -74,7 +74,7 @@ namespace Nektar
                 const Array<OneD, const int> &RvNodeZone,
                 const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                       Array<OneD,        Array<OneD, NekDouble> >&outarray,
-                const NekDouble time, const NekDouble Tc);
+                const NekDouble time, const NekDouble diameter, const NekDouble Tc);
 
         /// Prints a summary of the model parameters.
         virtual void v_GenerateSummary(SummaryList& s);

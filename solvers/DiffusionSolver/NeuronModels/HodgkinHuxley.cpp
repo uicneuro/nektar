@@ -42,10 +42,12 @@ namespace Nektar
                      const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                            Array<OneD,        Array<OneD, NekDouble> >&outarray,
                                                            const NekDouble time, 
+                                                           const NekDouble diameter,
                                                            const NekDouble Tc)
     {
         boost::ignore_unused(RvNodeZone,Tc);
         boost::ignore_unused(time);
+        boost::ignore_unused(diameter);
 
         const NekDouble Tol = 1.0e-10;
 

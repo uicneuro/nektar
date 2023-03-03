@@ -83,6 +83,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
+    m_session->LoadParameter("diameter", m_diameter, 24.0);
+
     m_session->LoadParameter("NumelemperNode", m_numelemperNode, 4);
 
     m_session->LoadParameter("TimeMapStart", m_TimeMapStart, 0.0);
@@ -2138,8 +2140,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time,
-                            m_Temperature);
+    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
     Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -2187,10 +2188,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
     NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_Temperature);
-
-    // std::cout << "TimeIntegrate DoOdeRhs =========" << std::endl;
-    // CheckNodeZoneMF(m_movingframes, m_NodeZone, outarray[0]);
+    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
     Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -2951,6 +2949,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "ElemMyelenEnd", m_ElemMyelenEnd);
 
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
+    SolverUtils::AddSummaryItem(s, "diameter", m_diameter);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
     if(nvar==1)
     {

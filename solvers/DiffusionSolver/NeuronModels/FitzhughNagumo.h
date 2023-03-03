@@ -67,6 +67,7 @@ protected:
             const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                     Array<OneD,        Array<OneD, NekDouble> >&outarray,
             const NekDouble time, 
+            const NekDouble diameter,
             const NekDouble Tc);
 
     // virtual void v_Update(
