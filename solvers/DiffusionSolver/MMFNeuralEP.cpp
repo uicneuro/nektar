@@ -1467,26 +1467,6 @@ void MMFNeuralEP::DoSolveMMFFirst()
                       << " at x = " << x0[Ivelmax] << ", y = " << x1[Ivelmax]
                       << std::endl;
 
-            // Array<OneD, Array<OneD, NekDouble>> stimulusstrength(nvariables);
-            // for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-            // {
-            //     for (int j=0; j<nvariables; ++j)
-            //     {
-            //         stimulusstrength[j] = Array<OneD, NekDouble>(nq, 0.0);
-            //     }
-
-            //     m_stimulus[0]->Update(stimulusstrength, m_time);
-
-            //     if(Vmath::Vmax(nq, stimulusstrength[0], 1)>0.01)
-            //     {
-            //         std::cout << " =================================== " <<
-            //         std::endl; std::cout << "i = " << i << ", Stimulus: = "
-            //         << Vmath::Vmax(nq, stimulusstrength[0], 1) << std::endl;
-            //     std::cout << " =================================== " <<
-            //     std::endl;
-            //     }
-            // }
-
             if (CountActivated(ActivatedHistory) > 0)
             {
                 ComputeRelacc(MF1stAligned, Relacc);
