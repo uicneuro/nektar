@@ -64,7 +64,7 @@ namespace Nektar
     protected:
 
         NekDouble ComputeexpM1(const NekDouble x, const NekDouble y);
-        NekDouble Computeghz(const NekDouble v, const NekDouble ci, const NekDouble co, const NekDouble Tc);
+        NekDouble ComputeIon(const NekDouble E, const NekDouble ci, const NekDouble co, const NekDouble Tc);
         NekDouble efun(const NekDouble z);
 
         /// Computes the reaction terms $f(u,v)$ and $g(u,v)$.

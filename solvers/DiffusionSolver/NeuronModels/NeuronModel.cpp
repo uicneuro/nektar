@@ -158,8 +158,9 @@ void NeuronModel::TimeIntegrate(
                      m_NeuronSol[m_concentrations[j]], 1);
     }
 
-    // Gating variables: Rush-Larsen scheme
-    // m_wsp = _inf,  m_NeuronSol = 
+    // Gating variables: Rush-Larsen scheme:
+    // y_i = y_i^{infty} - ( y_i^{\infty} - y_i (0) ) * exp (-dt / tau_i ) 
+    // m_wsp = _inf,  m_NeuronSol = y_i (0)
     for (unsigned int j = 0; j < m_gates.size(); ++j)
     {
         Vmath::Sdiv(m_nq, -delta_t, m_gates_tau[j], 1, m_gates_tau[j], 1);
