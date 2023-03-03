@@ -195,12 +195,14 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_NeuralCm[0] = Array<OneD, NekDouble>(nq);
             for (int i = 0; i < nq; ++i)
             {
-                if (m_NodeZone[0][i] == 0)
+                // Myelin
+                if (m_NodeZone[0][i] == -1)
                 {
                     m_NeuralCm[0][i] = 1.0 / Cm;
                 }
 
-                else if (m_NodeZone[0][i] == 1)
+                // Ranvier node zone
+                else if (m_NodeZone[0][i] >= 0)
                 {
                     m_NeuralCm[0][i] = 1.0 / Cn;
                 }
@@ -253,18 +255,18 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     index = m_fields[0]->GetPhys_Offset(i) + j;
 
-                    // Myelin zone
+                    // Ranvier node zone
                     if (m_NodeZone[0][index] >= 0)
 
                     {
-                        m_NeuralCm[0][index] = 1.0 / Cm;
+                        m_NeuralCm[0][index] = 1.0 / Cn;
                         cntm++;
                     }
 
-                    // Ranvier node zone
+                    // Myelin zone
                     else if (m_NodeZone[0][index] == -1)
                     {
-                        m_NeuralCm[0][index] = 1.0 / Cn;
+                        m_NeuralCm[0][index] = 1.0 / Cm;
                         cntn++;
                     }
 
