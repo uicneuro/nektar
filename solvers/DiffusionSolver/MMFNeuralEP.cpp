@@ -2203,7 +2203,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
 
     // ONLY simulation at node zone: No excitation at myelinated region
     StimulusAtNode(RHSstimulus[0]);
-
+    
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
@@ -2555,7 +2555,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, 0.01);
+                m_stimulus[i]->Update(tmp, initialtime);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
