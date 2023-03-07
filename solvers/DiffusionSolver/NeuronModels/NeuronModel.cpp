@@ -76,6 +76,7 @@ NeuronModel::NeuronModel(const LibUtilities::SessionReaderSharedPtr &pSession,
     m_pi       = 3.14159265358979323846;
 
     m_session->LoadParameter("Substeps", m_substeps, 1);
+    std::cout << "m_substeps = " << m_substeps << std::endl;
 
     // Number of points in nodal space is the number of coefficients
     // in modified basis

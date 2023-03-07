@@ -83,7 +83,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
-    m_session->LoadParameter("diameter", m_diameter, 24.0);
+    m_session->LoadParameter("diameter", m_diameter, 0.025);
 
     m_session->LoadParameter("NumelemperNode", m_numelemperNode, 4);
 
@@ -2555,7 +2555,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->Update(tmp, 0.01);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }

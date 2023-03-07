@@ -195,7 +195,7 @@ namespace Nektar
             // Ranvider node: -J_{ion}
             else if(NodeZone[i]>=0)
             {
-                d_dt_membrane__V = m_pi * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
+                d_dt_membrane__V = 2.0 * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
             }
 
             else
