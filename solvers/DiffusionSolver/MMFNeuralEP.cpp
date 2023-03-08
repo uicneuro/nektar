@@ -183,7 +183,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 m_NodeZone[i] = Array<OneD, int>(nq);
             }
 
-            m_NodeZone[0] = IndexNodeZone1D(m_fields[0], m_Rnodegap);
+            m_NodeZone[0] = IndexNodeZone1D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
 
             // Constrct m_NeuralCm: node: 1/Cn, Myelin: 1/Cm
             const NekDouble Rf = m_neuron->GetRecistanceValue();
@@ -192,23 +192,45 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             std::cout << "Cm = " << Cm << ", Cn = " << Cn << ", Rf = " << Rf
                       << ", Cm * Rf = " << Cn * Rf << std::endl;
+                      
+            int index;
+            int cntm = 0, cntn = 0, cnte = 0;
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             m_NeuralCm[0] = Array<OneD, NekDouble>(nq);
-            for (int i = 0; i < nq; ++i)
+            for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
             {
-                // Myelin
-                if (m_NodeZone[0][i] == -1)
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                 {
-                    m_NeuralCm[0][i] = 1.0 / Cm;
-                }
+                    index = m_fields[0]->GetPhys_Offset(i) + j;
 
-                // Ranvier node zone
-                else if (m_NodeZone[0][i] >= 0)
-                {
-                    m_NeuralCm[0][i] = 1.0 / Cn;
+                    // Ranvier node zone
+                    if (m_NodeZone[0][index] >= 0)
+
+                    {
+                        m_NeuralCm[0][index] = 1.0 / Cn;
+                        cntm++;
+                    }
+
+                    // Myelin zone
+                    else if (m_NodeZone[0][index] == -1)
+                    {
+                        m_NeuralCm[0][index] = 1.0 / Cm;
+                        cntn++;
+                    }
+
+                    // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
+                    else
+                    {
+                        m_NeuralCm[0][index] = 1.0 / Cm / m_ratio_re_ri;
+                        cnte++;
+                    }
                 }
             }
+
+            std::cout << "v_InitObject: Node = " << cntn
+            << ", Myelin = " << cntm << ", extracell = " << cnte
+            << std::endl;
 
             // Stimulus
             m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
@@ -339,6 +361,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     Vmath::Smul(nq, Cn, &m_NeuralCm[0][0], 1,
                                 &AniStrength[j][0], 1);
+
                     Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0],
                                  1);
                 }
@@ -578,6 +601,10 @@ void MMFNeuralEP::CheckNodeZoneMF(
             e2mag = e2mag +
                     (movingframes[1][index] * movingframes[1][index] +
                      movingframes[1][nq + index] * movingframes[1][nq + index]);
+                                 
+            // std::cout << "i = " << i << ", j = " << j << ", index = " << index 
+            // << ", y = " << x1[index] << ", yp = " << yp << std::endl;
+
         }
         e1mag = sqrt(e1mag / npts);
         e2mag = sqrt(e2mag / npts);
@@ -716,7 +743,8 @@ void MMFNeuralEP::CheckNodeZoneMF(
 
 // Constrcuct Cm vector: 1.0/Cn if node. 1.0/Cm if myeline.
 Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
-    const MultiRegions::ExpListSharedPtr &field, const int Nodegap)
+    const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
+        const int ElemMyelenEnd)
 {
     // int nq         = fields[0].size();
     int fnq = field->GetNpoints();
@@ -727,34 +755,32 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
 
     field->GetCoords(x0, x1, x2);
 
-    int index;
-    NekDouble dx, dy, dz;
+    int index, npts;
+    int Nelem = m_fields[0]->GetExpSize();
 
     Array<OneD, int> outarray(fnq, 0);
-    Array<OneD, NekDouble> dist(m_fields[0]->GetExpSize(), 0.0);
-
-    NekDouble npts,ioffset;
-    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    for (int i = 0; i < Nelem; ++i)
     {
         npts = m_fields[0]->GetTotPoints(i);
-        ioffset = m_fields[0]->GetPhys_Offset(i);
         for (int j = 0; j < npts; ++j)
         {
-            index = ioffset + j;
+            index = m_fields[0]->GetPhys_Offset(i) + j ;
 
-            // First and last element is all node for easier excitation
-            if (i == 0 || i == 1 || ((i - 1) % Nodegap == 0) ||
-                i == (m_fields[0]->GetExpSize() - 1) || i == (m_fields[0]->GetExpSize() - 2))
+            if (i <= ElemNodeEnd)
             {
-                outarray[index] = 1;
+                outarray[index] = i;
+            }
+
+            else if (i <= ElemMyelenEnd)
+            {
+                outarray[index] = -1;
+            }
+
+            else
+            {
+                outarray[index] = -2;
             }
         }
-
-        dx = x0[ioffset] - x0[ioffset+npts-1];
-        dy = x1[ioffset] - x1[ioffset+npts-1];
-        dz = x2[ioffset] - x2[ioffset+npts-1];
-
-        dist[i] = sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     return outarray;
@@ -769,7 +795,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     int fnq = field->GetNpoints();
 
     int index, npts;
-    int cntn = 0, cntm = 0, cnte = 0;
     int Nelem = m_fields[0]->GetExpSize();
 
     Array<OneD, int> outarray(fnq, 0);
@@ -784,19 +809,16 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
             if (i <= ElemNodeEnd)
             {
                 outarray[index] = i / m_numelemperNode;
-                cntn++;
             }
 
             else if (i <= ElemMyelenEnd)
             {
                 outarray[index] = -1;
-                cntm++;
             }
 
             else
             {
                 outarray[index] = -2;
-                cnte++;
             }
         }
     }
@@ -2555,7 +2577,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->Update(tmp, 0.01);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }

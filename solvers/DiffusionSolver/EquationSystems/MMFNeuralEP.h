@@ -392,7 +392,9 @@ protected:
     // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int
     // Rnodegap);
     Array<OneD, int> IndexNodeZone1D(
-        const MultiRegions::ExpListSharedPtr &field, const int Nodegap);
+        const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
+        const int ElemMyelenEnd);
+        
     Array<OneD, int> IndexNodeZone2D(
         const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
         const int ElemMyelenEnd);
