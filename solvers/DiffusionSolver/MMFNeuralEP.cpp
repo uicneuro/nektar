@@ -1217,14 +1217,14 @@ void MMFNeuralEP::DoSolvePoint()
     }
     std::cout << std::endl << std::endl;
 
-    std::cout << "fieldp: ===============================" << std::endl;
+    std::cout << "fieldh: ===============================" << std::endl;
     for (i=0;i<totsteps; ++i)
     {
         std::cout << fieldh[i] << " , ";
     }
     std::cout << std::endl << std::endl;
 
-    std::cout << "fieldu: ===============================" << std::endl;
+    std::cout << "fieldp: ===============================" << std::endl;
     for (i=0;i<totsteps; ++i)
     {
         std::cout << fieldp[i] << " , ";
