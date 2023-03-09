@@ -49,6 +49,7 @@ namespace Nektar
 
 enum NeuralEPType
 {
+    eNeuralEPPT,
     eNeuralEP1D,
     eNeuralEP2D,
     eNeuralEP2DEmbed,
@@ -56,6 +57,7 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
+    "NeuralEPPT",
     "NeuralEP1D",
     "NeuralEP2D",
     "NeuralEP2DEmbed",
@@ -64,6 +66,7 @@ const char *const NeuralEPTypeMap[] = {
 enum SolverSchemeType
 {
     eDefault,
+    ePointWise,
     eMMFFirst,
     eTimeMap,
     SIZE_SolverSchemeType,
@@ -71,6 +74,7 @@ enum SolverSchemeType
 
 const char *const SolverSchemeTypeMap[] = {
     "Default",
+    "PointWise",
     "MMFFirst",
     "TimeMap",
 };
@@ -190,7 +194,6 @@ protected:
     NekDouble m_beta; // Relative Extracellular resistance: 1 < \beta < 10
 
     // NeuralEP: Capacitance vectors for myeline or Ranvier node.
-    int m_Rnodelength, m_Rnodegap;
     StdRegions::VarCoeffMap m_varDiffcoeff;
 
     Array<OneD, int> m_ValidTimeMap;
@@ -241,6 +244,7 @@ protected:
 
     void DoSolveMMFFirst();
     void DoSolveMMFZero();
+    void DoSolvePoint();
 
     // void Plotphimphie(const Array<OneD, const NekDouble> &phim,
     //                             const Array<OneD, const NekDouble> &phie,
@@ -315,6 +319,10 @@ protected:
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
+
+    void DoOdeRhsNeuralEPPT(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     void DoOdeRhsNeuralEP1D(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
