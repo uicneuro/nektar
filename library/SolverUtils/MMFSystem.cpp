@@ -13386,9 +13386,14 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG1D(
     // Compute \vec{q} = \nabla u
     for (int j = 0; j < m_expdim; ++j)
     {
+        std::cout << "WeakDGMMFLDG1D 1" << std::endl;
         // Compute L2 = \int ( \partial phi / \partial x_j) u d x
-        m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j], inarray,
-                                                     qfieldc);
+        // m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j], inarray,
+        //                                             qfieldc);
+
+        m_fields[0]->IProductWRTDerivBase(j, inarray, qfieldc);
+
+        std::cout << "WeakDGMMFLDG1D 2" << std::endl;
 
         // Compute -L2
         Vmath::Neg(ncoeffs, qfieldc, 1);
@@ -13404,6 +13409,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG1D(
 
         m_fields[var]->AddFwdBwdTraceIntegral(fluxFwd, fluxBwd, qfieldc);
         // m_fields[0]->AddTraceIntegral(fluxFwd, qfieldc);
+        std::cout << "WeakDGMMFLDG1D 3" << std::endl;
 
         // Add -\int ( \nabla \cdot e^i ) u dx
         Vmath::Vmul(nq, &inarray[0], 1, &m_DivMF[j][0], 1, &tmp[0], 1);
@@ -13411,6 +13417,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG1D(
         m_fields[0]->IProductWRTBase(tmp, tmpc);
         Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
         m_fields[0]->SetPhysState(false);
+        std::cout << "WeakDGMMFLDG1D 4" << std::endl;
 
         // Compute M^{-1} ( -L2 + \int_{\partial} u* n_x dx )
         m_fields[0]->MultiplyByElmtInvMass(qfieldc, qfieldc);
@@ -13420,16 +13427,19 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG1D(
     // Compute u from q_{\eta} and q_{\xi} to obtain numerical fluxes
     fluxFwd =
         ComputeqfluxMMF(var, inarray, m_ncdotMFFwd, m_ncdotMFBwd, qfieldMMF);
+        std::cout << "WeakDGMMFLDG1D 5" << std::endl;
 
     // m_fields[var]->IProductWRTDerivBase(qfield, tmpc);
     qfieldc = Array<OneD, NekDouble>(ncoeffs, 0.0);
     for (int j = 0; j < m_expdim; ++j)
     {
-        m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j],
-                                                     qfieldMMF[j], tmpc);
+        // m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j],
+        //                                              qfieldMMF[j], tmpc);
+        m_fields[0]->IProductWRTDerivBase(j, qfieldMMF[j], tmpc);
         Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
     }
     Vmath::Neg(ncoeffs, qfieldc, 1);
+        std::cout << "WeakDGMMFLDG1D 6" << std::endl;
 
     // Evaulate  <\phi, \hat{F}\cdot n> - outarray[i]
     m_fields[var]->AddTraceIntegral(fluxFwd, qfieldc);

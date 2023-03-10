@@ -1066,7 +1066,6 @@ void MMFNeuralEP::DoSolvePoint()
 
     int i, nchk = 1;
     int nq               = GetTotPoints();
-    int ncoeffs          = GetNcoeffs();
     int nvariables       = 0;
     int nfields          = m_fields.size();
     std::string fulltext = ""; // initiate fulltext
@@ -2369,8 +2368,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
 {
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
-    NekDouble Rf = m_neuron->GetRecistanceValue();
-    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
@@ -2427,13 +2424,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
-
-    // std::cout << " DoOdeRhsNeuralEP1D: inarray: =============================================" << std::endl;
-    // CheckNodeZoneMF(m_movingframes, m_NodeZone, inarray[0]);
-
-    // std::cout << " DoOdeRhsNeuralEP1D: outarray: =============================================" << std::endl;
-    // CheckNodeZoneMF(m_movingframes, m_NodeZone, outarray[0]);
-    // std::cout << " ===========================================================" << std::endl << std::endl;
 
     // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)
@@ -2831,7 +2821,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->Update(tmp, 0.01);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
