@@ -13374,99 +13374,6 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG1D(
     Array<OneD, NekDouble> fluxFwd(nTracePts);
     Array<OneD, NekDouble> fluxBwd(nTracePts);
 
-    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_expdim);
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        qfieldMMF[j] = Array<OneD, NekDouble>(nq, 0.0);
-    }
-
-    // Compute the numerical flux for the scalar $u$ variable
-    flux = ComputeufluxMMF(var, inarray);
-
-    // Compute \vec{q} = \nabla u
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        std::cout << "WeakDGMMFLDG1D 1" << std::endl;
-        // Compute L2 = \int ( \partial phi / \partial x_j) u d x
-        // m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j], inarray,
-        //                                             qfieldc);
-
-        m_fields[0]->IProductWRTDerivBase(j, inarray, qfieldc);
-
-        std::cout << "WeakDGMMFLDG1D 2" << std::endl;
-
-        // Compute -L2
-        Vmath::Neg(ncoeffs, qfieldc, 1);
-
-        // Compute L = -L2 +
-        // \int_{\partial} u* n_x
-        // dx
-        // Vmath::Fill(nTracePts, 1.0, &m_ncdotMFFwd[j][0], 1);
-        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFFwd[j][0], 1, &fluxFwd[0],
-                    1);
-        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFBwd[j][0], 1, &fluxBwd[0],
-                    1);
-
-        m_fields[var]->AddFwdBwdTraceIntegral(fluxFwd, fluxBwd, qfieldc);
-        // m_fields[0]->AddTraceIntegral(fluxFwd, qfieldc);
-        std::cout << "WeakDGMMFLDG1D 3" << std::endl;
-
-        // Add -\int ( \nabla \cdot e^i ) u dx
-        Vmath::Vmul(nq, &inarray[0], 1, &m_DivMF[j][0], 1, &tmp[0], 1);
-        Vmath::Neg(nq, &tmp[0], 1);
-        m_fields[0]->IProductWRTBase(tmp, tmpc);
-        Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
-        m_fields[0]->SetPhysState(false);
-        std::cout << "WeakDGMMFLDG1D 4" << std::endl;
-
-        // Compute M^{-1} ( -L2 + \int_{\partial} u* n_x dx )
-        m_fields[0]->MultiplyByElmtInvMass(qfieldc, qfieldc);
-        m_fields[0]->BwdTrans(qfieldc, qfieldMMF[j]);
-    }
-
-    // Compute u from q_{\eta} and q_{\xi} to obtain numerical fluxes
-    fluxFwd =
-        ComputeqfluxMMF(var, inarray, m_ncdotMFFwd, m_ncdotMFBwd, qfieldMMF);
-        std::cout << "WeakDGMMFLDG1D 5" << std::endl;
-
-    // m_fields[var]->IProductWRTDerivBase(qfield, tmpc);
-    qfieldc = Array<OneD, NekDouble>(ncoeffs, 0.0);
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        // m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j],
-        //                                              qfieldMMF[j], tmpc);
-        m_fields[0]->IProductWRTDerivBase(j, qfieldMMF[j], tmpc);
-        Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
-    }
-    Vmath::Neg(ncoeffs, qfieldc, 1);
-        std::cout << "WeakDGMMFLDG1D 6" << std::endl;
-
-    // Evaulate  <\phi, \hat{F}\cdot n> - outarray[i]
-    m_fields[var]->AddTraceIntegral(fluxFwd, qfieldc);
-    m_fields[var]->SetPhysState(false);
-
-    return qfieldc;
-}
-
-Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
-    const int var, const Array<OneD, const NekDouble> &inarray,
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const NekDouble time)
-{
-    boost::ignore_unused(time);
-
-    int nq        = m_fields[var]->GetTotPoints();
-    int ncoeffs   = m_fields[var]->GetNcoeffs();
-    int nTracePts = m_fields[var]->GetTrace()->GetTotPoints();
-
-    Array<OneD, NekDouble> tmp(nq);
-    Array<OneD, NekDouble> tmpc(ncoeffs);
-    Array<OneD, NekDouble> qfieldc(ncoeffs);
-
-    Array<OneD, NekDouble> flux(nTracePts);
-    Array<OneD, NekDouble> fluxFwd(nTracePts);
-    Array<OneD, NekDouble> fluxBwd(nTracePts);
-
     Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_shapedim);
     for (int j = 0; j < m_expdim; ++j)
     {
@@ -13476,33 +13383,27 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     // Compute the numerical flux for the scalar $u$ variable
     flux = ComputeufluxMMF(var, inarray);
 
-    Array<OneD, Array<OneD, NekDouble>> ncdotMFFwd;
-    Array<OneD, Array<OneD, NekDouble>> ncdotMFBwd;
-    ComputencdotMF(movingframes, ncdotMFFwd, ncdotMFBwd, 0);
-
-    Array<OneD, Array<OneD, NekDouble>> DivMF;
-    ComputeDivMF(m_DerivType, movingframes, DivMF, 0);
-
     // Compute \vec{q} = \nabla u
     for (int j = 0; j < m_expdim; ++j)
     {
+        std::cout << "HERE 1" << std::endl;
         // Compute L2 = \int ( \partial phi / \partial x_j) u d x
-        m_fields[0]->IProductWRTDirectionalDerivBase(movingframes[j], inarray,
+        m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j], inarray,
                                                      qfieldc);
+
+        std::cout << "HERE 2" << std::endl;
 
         // Compute -L2
         Vmath::Neg(ncoeffs, qfieldc, 1);
 
         // Compute L = -L2 + \int_{\partial} u* n_x dx
-        Vmath::Vmul(nTracePts, &flux[0], 1, &ncdotMFFwd[j][0], 1, &fluxFwd[0],
-                    1);
-        Vmath::Vmul(nTracePts, &flux[0], 1, &ncdotMFBwd[j][0], 1, &fluxBwd[0],
-                    1);
+        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFFwd[j][0], 1, &fluxFwd[0], 1);
+        Vmath::Vmul(nTracePts, &flux[0], 1, &m_ncdotMFBwd[j][0], 1, &fluxBwd[0], 1);
 
         m_fields[var]->AddFwdBwdTraceIntegral(fluxFwd, fluxBwd, qfieldc);
 
         // Add -\int ( \nabla \cdot e^i ) u dx
-        Vmath::Vmul(nq, &inarray[0], 1, &DivMF[j][0], 1, &tmp[0], 1);
+        Vmath::Vmul(nq, &inarray[0], 1, &m_DivMF[j][0], 1, &tmp[0], 1);
         Vmath::Neg(nq, &tmp[0], 1);
 
         m_fields[0]->IProductWRTBase(tmp, tmpc);
@@ -13515,13 +13416,14 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     }
 
     // Compute u from q_{\eta} and q_{\xi} to obtain numerical fluxes
-    fluxFwd = ComputeqfluxMMF(var, inarray, ncdotMFFwd, ncdotMFBwd, qfieldMMF);
+    fluxFwd =
+        ComputeqfluxMMF(var, inarray, m_ncdotMFFwd, m_ncdotMFBwd, qfieldMMF);
 
     // m_fields[var]->IProductWRTDerivBase(qfiel
     qfieldc = Array<OneD, NekDouble>(ncoeffs, 0.0);
     for (int j = 0; j < m_expdim; ++j)
     {
-        m_fields[0]->IProductWRTDirectionalDerivBase(movingframes[j],
+        m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j],
                                                      qfieldMMF[j], tmpc);
         Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
     }
@@ -13533,6 +13435,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
 
     return qfieldc;
 }
+
 
 
 Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
@@ -13600,6 +13503,90 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     for (int j = 0; j < m_expdim; ++j)
     {
         m_fields[0]->IProductWRTDirectionalDerivBase(m_movingframes[j],
+                                                     qfieldMMF[j], tmpc);
+        Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
+    }
+    Vmath::Neg(ncoeffs, qfieldc, 1);
+
+    // Evaulate  <\phi, \hat{F}\cdot n> - outarray[i]
+    m_fields[var]->AddTraceIntegral(fluxFwd, qfieldc);
+    m_fields[var]->SetPhysState(false);
+
+    return qfieldc;
+}
+
+
+Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
+    const int var, const Array<OneD, const NekDouble> &inarray,
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const NekDouble time)
+{
+    boost::ignore_unused(time);
+
+    int nq        = m_fields[var]->GetTotPoints();
+    int ncoeffs   = m_fields[var]->GetNcoeffs();
+    int nTracePts = m_fields[var]->GetTrace()->GetTotPoints();
+
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> tmpc(ncoeffs);
+    Array<OneD, NekDouble> qfieldc(ncoeffs);
+
+    Array<OneD, NekDouble> flux(nTracePts);
+    Array<OneD, NekDouble> fluxFwd(nTracePts);
+    Array<OneD, NekDouble> fluxBwd(nTracePts);
+
+    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_shapedim);
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        qfieldMMF[j] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
+    // Compute the numerical flux for the scalar $u$ variable
+    flux = ComputeufluxMMF(var, inarray);
+
+    Array<OneD, Array<OneD, NekDouble>> ncdotMFFwd;
+    Array<OneD, Array<OneD, NekDouble>> ncdotMFBwd;
+    ComputencdotMF(movingframes, ncdotMFFwd, ncdotMFBwd, 0);
+
+    Array<OneD, Array<OneD, NekDouble>> DivMF;
+    ComputeDivMF(m_DerivType, movingframes, DivMF, 0);
+
+    // Compute \vec{q} = \nabla u
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        // Compute L2 = \int ( \partial phi / \partial x_j) u d x
+        m_fields[0]->IProductWRTDirectionalDerivBase(movingframes[j], inarray, qfieldc);
+
+        // Compute -L2
+        Vmath::Neg(ncoeffs, qfieldc, 1);
+
+        // Compute L = -L2 + \int_{\partial} u* n_x dx
+        Vmath::Vmul(nTracePts, &flux[0], 1, &ncdotMFFwd[j][0], 1, &fluxFwd[0], 1);
+        Vmath::Vmul(nTracePts, &flux[0], 1, &ncdotMFBwd[j][0], 1, &fluxBwd[0], 1);
+
+        m_fields[var]->AddFwdBwdTraceIntegral(fluxFwd, fluxBwd, qfieldc);
+
+        // Add -\int ( \nabla \cdot e^i ) u dx
+        Vmath::Vmul(nq, &inarray[0], 1, &DivMF[j][0], 1, &tmp[0], 1);
+        Vmath::Neg(nq, &tmp[0], 1);
+
+        m_fields[0]->IProductWRTBase(tmp, tmpc);
+        Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
+        m_fields[0]->SetPhysState(false);
+
+        // Compute M^{-1} ( -L2 + \int_{\partial} u* n_x dx )
+        m_fields[0]->MultiplyByElmtInvMass(qfieldc, qfieldc);
+        m_fields[0]->BwdTrans(qfieldc, qfieldMMF[j]);
+    }
+
+    // Compute u from q_{\eta} and q_{\xi} to obtain numerical fluxes
+    fluxFwd = ComputeqfluxMMF(var, inarray, ncdotMFFwd, ncdotMFBwd, qfieldMMF);
+
+    // m_fields[var]->IProductWRTDerivBase(qfiel
+    qfieldc = Array<OneD, NekDouble>(ncoeffs, 0.0);
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        m_fields[0]->IProductWRTDirectionalDerivBase(movingframes[j],
                                                      qfieldMMF[j], tmpc);
         Vmath::Vadd(ncoeffs, tmpc, 1, qfieldc, 1, qfieldc, 1);
     }

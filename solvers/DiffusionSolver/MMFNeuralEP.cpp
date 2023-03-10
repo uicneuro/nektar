@@ -917,6 +917,12 @@ void MMFNeuralEP::DoSolveMMFZero()
         nvariables = m_intVariables.size();
     }
 
+    std::cout << "m_traceNormal = ( " << RootMeanSquare(m_traceNormals[0]) << " , " 
+    << RootMeanSquare(m_traceNormals[1]) << " , " << RootMeanSquare(m_traceNormals[2]) << " ) " << std::endl;
+
+    std::cout << "m_ncdotMFFwd =  " << RootMeanSquare(m_ncdotMFFwd[0]) 
+    << ", m_ncdotMFBwd =  " << RootMeanSquare(m_ncdotMFBwd[0]) << std::endl;
+
     // Set up wrapper to fields data storage.
     Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
     Array<OneD, Array<OneD, NekDouble>> fields_old(nvariables);
