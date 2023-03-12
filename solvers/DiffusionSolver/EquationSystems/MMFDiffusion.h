@@ -47,7 +47,6 @@ namespace Nektar
 enum TestType
 {
     eTestLine,
-    eTestLineY,
     eTestPlane,
     eTestCube,
     eTestLinearSphere,
@@ -56,7 +55,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLine", "TestLineY",        "TestPlane",
+    "TestLine", "TestPlane",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -137,8 +136,6 @@ public:
     TestType m_TestType;
     SolverSchemeType m_SolverSchemeType;
 
-    StdRegions::VarCoeffMap m_varDiffcoeff;
-
     /// Desctructor
     virtual ~MMFDiffusion();
 
@@ -188,6 +185,10 @@ protected:
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
+                  
+                  
+    void TestLineProblem(const NekDouble time,
+                                    Array<OneD, NekDouble> &outfield);
 
     void TestPlaneProblem(const NekDouble time,
                           Array<OneD, NekDouble> &outfield);
@@ -197,10 +198,6 @@ protected:
 
     void Morphogenesis(const NekDouble time, unsigned int field,
                        Array<OneD, NekDouble> &outfield);
-
-    void ComputeVarCoeff2D(
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        StdRegions::VarCoeffMap &varcoeff);
 
     void ComputeEuclideanDivMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,

@@ -222,8 +222,8 @@ void MMFDiffusion::DoImplicitSolve(
         // Multiply 1.0/timestep
         Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[i], 1,
                     F[i], 1);
-        m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-                               m_varDiffcoeff);
+         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
+                                m_varcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
 }
@@ -240,6 +240,21 @@ void MMFDiffusion::DoOdeRhs(
 
     switch (m_TestType)
     {
+        case eTestLine:
+        {
+            Array<OneD, NekDouble> x(nq);
+            Array<OneD, NekDouble> y(nq);
+            Array<OneD, NekDouble> z(nq);
+
+            m_fields[0]->GetCoords(x, y, z);
+
+            for (int k = 0; k < nq; k++)
+            {
+                outarray[0][k] = 0 * (m_epsilon[0] * m_pi * m_pi - m_pi) * exp(-1.0 * m_pi * time) * sin(m_pi * y[k]);
+            }
+        }
+        break;
+
         case eTestPlane:
         {
             Array<OneD, NekDouble> x(nq);
@@ -250,8 +265,9 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] + m_epsilon[1] - 1.0) * m_pi *
-                                 m_pi * exp(-1.0 * m_pi * m_pi * time) *
+                outarray[0][k] = (m_epsilon[0] * m_pi *
+                                 m_pi + m_epsilon[1] * m_pi *
+                                 m_pi - m_pi) * exp(-1.0 * m_pi * time) *
                                  sin(m_pi * x[k]) * cos(m_pi * y[k]);
             }
         }
@@ -397,10 +413,19 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
 
     int nq = GetTotPoints();
 
-    EquationSystem::v_SetInitialConditions(initialtime, false);
+    // EquationSystem::v_SetInitialConditions(initialtime, false);
 
     switch (m_TestType)
     {
+        case eTestLine:
+        {
+            Array<OneD, NekDouble> u(nq);
+
+            TestLineProblem(initialtime, u);
+            m_fields[0]->SetPhys(u);
+        }
+        break;
+
         case eTestPlane:
         {
             Array<OneD, NekDouble> u(nq);
@@ -450,6 +475,28 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
+void MMFDiffusion::TestLineProblem(const NekDouble time,
+                                    Array<OneD, NekDouble> &outfield)
+
+{
+    int nq = GetTotPoints();
+
+    std::cout << "Test Line Problem " << std::endl;
+
+    Array<OneD, NekDouble> x(nq);
+    Array<OneD, NekDouble> y(nq);
+    Array<OneD, NekDouble> z(nq);
+
+    m_fields[0]->GetCoords(x, y, z);
+
+    outfield = Array<OneD, NekDouble>(nq);
+    for (int k = 0; k < nq; k++)
+    {
+        outfield[k] = exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * y[k]);
+    }
+}
+
+
 void MMFDiffusion::TestPlaneProblem(const NekDouble time,
                                     Array<OneD, NekDouble> &outfield)
 
@@ -465,8 +512,7 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * x[k]) *
-                      cos(m_pi * y[k]);
+        outfield[k] = exp(-1.0 * m_pi * time) * sin(m_pi * x[k]) * cos(m_pi * y[k]);
     }
 }
 
@@ -758,6 +804,12 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
 {
     switch (m_TestType)
     {
+        case eTestLine:
+        {
+            TestLineProblem(time, outfield);
+        }
+        break;
+
         case eTestPlane:
         {
             TestPlaneProblem(time, outfield);
@@ -793,66 +845,66 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
     }
 }
 
-void MMFDiffusion::ComputeVarCoeff2D(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    StdRegions::VarCoeffMap &varcoeff)
-{
-    int nq = GetTotPoints();
+// void MMFDiffusion::ComputeVarCoeff2D(
+//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+//     StdRegions::VarCoeffMap &varcoeff)
+// {
+//     int nq = GetTotPoints();
 
-    StdRegions::VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag};
+//     StdRegions::VarCoeffType MMFCoeffs[15] = {
+//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+//         StdRegions::eVarCoeffMF3Mag};
 
-    int indx;
-    Array<OneD, NekDouble> tmp(nq);
-    for (int k = 0; k < m_expdim; ++k)
-    {
-        // For Moving Frames
-        indx = 5 * k;
+//     int indx;
+//     Array<OneD, NekDouble> tmp(nq);
+//     for (int k = 0; k < m_expdim; ++k)
+//     {
+//         // For Moving Frames
+//         indx = 5 * k;
 
-        for (int j = 0; j < m_spacedim; ++j)
-        {
-            varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
-            Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
-                         &varcoeff[MMFCoeffs[indx + j]][0], 1);
-        }
+//         for (int j = 0; j < m_spacedim; ++j)
+//         {
+//             varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
+//             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
+//                          &varcoeff[MMFCoeffs[indx + j]][0], 1);
+//         }
 
-        // m_DivMF
-        varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
+//         // m_DivMF
+//         varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
 
-        Array<OneD, Array<OneD, NekDouble>> DivMF;
-        // ComputeDivMF(eCovariant, movingframes, DivMF);
+//         Array<OneD, Array<OneD, NekDouble>> DivMF;
+//         // ComputeDivMF(eCovariant, movingframes, DivMF);
 
-        ComputeEuclideanDivMF(movingframes, DivMF);
+//         ComputeEuclideanDivMF(movingframes, DivMF);
 
-        Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
-        // \| e^k \|
-        varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-        tmp                           = Array<OneD, NekDouble>(nq, 0.0);
-        for (int i = 0; i < m_spacedim; ++i)
-        {
-            Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
-                         &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-        }
+//         Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
+//         // \| e^k \|
+//         varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
+//         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
+//         for (int i = 0; i < m_spacedim; ++i)
+//         {
+//             Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
+//                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
+//         }
 
-        Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
-    }
+//         Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+//     }
 
-    std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
-              << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
+//     std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
+//               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
+//               << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
+//               << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
+//               << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
 
-    std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
-              << std::endl;
-}
+//     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
+//               << std::endl;
+// }
 
 void MMFDiffusion::GetFluxVector(
     const Array<OneD, Array<OneD, NekDouble>> &inarray,
