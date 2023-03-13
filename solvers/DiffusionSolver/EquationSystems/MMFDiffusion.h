@@ -46,7 +46,8 @@ namespace Nektar
 
 enum TestType
 {
-    eTestLine,
+    eTestLineX,
+    eTestLineY,
     eTestPlane,
     eTestCube,
     eTestLinearSphere,
@@ -55,7 +56,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLine", "TestPlane",
+    "TestLineX", "TestLineY", "TestPlane",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -186,8 +187,7 @@ protected:
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
                   
-                  
-    void TestLineProblem(const NekDouble time,
+    void TestLineProblem(const int direction, const NekDouble time,
                                     Array<OneD, NekDouble> &outfield);
 
     void TestPlaneProblem(const NekDouble time,

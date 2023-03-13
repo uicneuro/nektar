@@ -240,7 +240,7 @@ void MMFDiffusion::DoOdeRhs(
 
     switch (m_TestType)
     {
-        case eTestLine:
+        case eTestLineX:
         {
             Array<OneD, NekDouble> x(nq);
             Array<OneD, NekDouble> y(nq);
@@ -250,7 +250,22 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = 0 * (m_epsilon[0] * m_pi * m_pi - m_pi) * exp(-1.0 * m_pi * time) * sin(m_pi * y[k]);
+                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * sin(m_pi * x[k]);
+            }
+        }
+        break;
+
+        case eTestLineY:
+        {
+            Array<OneD, NekDouble> x(nq);
+            Array<OneD, NekDouble> y(nq);
+            Array<OneD, NekDouble> z(nq);
+
+            m_fields[0]->GetCoords(x, y, z);
+
+            for (int k = 0; k < nq; k++)
+            {
+                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * sin(m_pi * y[k]);
             }
         }
         break;
@@ -417,11 +432,20 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
 
     switch (m_TestType)
     {
-        case eTestLine:
+        case eTestLineX:
         {
             Array<OneD, NekDouble> u(nq);
 
-            TestLineProblem(initialtime, u);
+            TestLineProblem(0, initialtime, u);
+            m_fields[0]->SetPhys(u);
+        }
+        break;
+
+        case eTestLineY:
+        {
+            Array<OneD, NekDouble> u(nq);
+
+            TestLineProblem(1, initialtime, u);
             m_fields[0]->SetPhys(u);
         }
         break;
@@ -475,13 +499,11 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
-void MMFDiffusion::TestLineProblem(const NekDouble time,
+void MMFDiffusion::TestLineProblem(const int direction, const NekDouble time,
                                     Array<OneD, NekDouble> &outfield)
 
 {
     int nq = GetTotPoints();
-
-    std::cout << "Test Line Problem " << std::endl;
 
     Array<OneD, NekDouble> x(nq);
     Array<OneD, NekDouble> y(nq);
@@ -492,7 +514,15 @@ void MMFDiffusion::TestLineProblem(const NekDouble time,
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * y[k]);
+        if(direction==0)
+        {
+            outfield[k] = exp(-1.0 * time) * sin(m_pi * x[k]);
+        }
+
+        else if (direction==1)
+        {
+            outfield[k] = exp(-1.0 * time) * sin(m_pi * y[k]);
+        }
     }
 }
 
@@ -804,9 +834,15 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
 {
     switch (m_TestType)
     {
-        case eTestLine:
+        case eTestLineX:
         {
-            TestLineProblem(time, outfield);
+            TestLineProblem(0, time, outfield);
+        }
+        break;
+
+        case eTestLineY:
+        {
+            TestLineProblem(1, time, outfield);
         }
         break;
 
