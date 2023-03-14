@@ -70,6 +70,7 @@ public:
 
     void AddHDGHelmholtzTraceTerms(const NekDouble tau,
                                    const Array<OneD, const NekDouble> &inarray,
+                                    const StdRegions::VarCoeffMap &varcoeff,
                                    Array<OneD, NekDouble> &outarray);
 
     inline SpatialDomains::Geometry1DSharedPtr GetGeom1D() const;

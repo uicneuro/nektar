@@ -64,8 +64,7 @@ public:
 
     LOCAL_REGIONS_EXPORT virtual ~Expansion2D() override = default;
 
-    LOCAL_REGIONS_EXPORT DNekScalMatSharedPtr
-    CreateMatrix(const MatrixKey &mkey);
+    LOCAL_REGIONS_EXPORT DNekScalMatSharedPtr CreateMatrix(const MatrixKey &mkey);
 
     LOCAL_REGIONS_EXPORT void SetTraceToGeomOrientation(
         Array<OneD, ExpansionSharedPtr> &EdgeExp,

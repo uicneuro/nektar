@@ -222,8 +222,11 @@ void MMFDiffusion::DoImplicitSolve(
         // Multiply 1.0/timestep
         Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[i], 1,
                     F[i], 1);
-         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-                                m_varcoeff);
+        m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
+                                 m_varcoeff);
+
+        // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
+
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
 }

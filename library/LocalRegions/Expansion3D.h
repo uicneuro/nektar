@@ -112,8 +112,7 @@ public:
         Array<OneD, Array<OneD, unsigned int>> &emap,
         Array<OneD, Array<OneD, unsigned int>> &fmap);
 
-    LOCAL_REGIONS_EXPORT DNekScalMatSharedPtr
-    CreateMatrix(const MatrixKey &mkey);
+    LOCAL_REGIONS_EXPORT DNekScalMatSharedPtr CreateMatrix(const MatrixKey &mkey);
 
 protected:
     std::map<int, NormalVector> m_faceNormals;

@@ -267,6 +267,7 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
             }
             break;
         }
+        
         case StdRegions::eLaplacian:
         {
             if ((m_metricinfo->GetGtype() == SpatialDomains::eDeformed) ||
@@ -1129,11 +1130,9 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
             StdRegions::VarCoeffMap::const_iterator x;
 
-            for (i = 0; i < coordim; ++i)
-            {
                 if (mmf)
                 {
-                    if (i < shapedim)
+                    for (i = 0; i < coordim; ++i)
                     {
                         StdRegions::VarCoeffMap VarCoeffDirDeriv;
                         VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
@@ -1163,22 +1162,27 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 }
                 else if (mkey.HasVarCoeff(Coeffs[i]))
                 {
-                    MatrixKey DmatkeyL(DerivType[i], DetShapeType(), *this,
-                                       StdRegions::NullConstFactorMap,
-                                       mkey.GetVarCoeffAsMap(Coeffs[i]));
+                    for (i = 0; i < coordim; ++i)
+                    {
+                        MatrixKey DmatkeyL(DerivType[i], DetShapeType(), *this,
+                                        StdRegions::NullConstFactorMap,
+                                        mkey.GetVarCoeffAsMap(Coeffs[i]));
 
-                    MatrixKey DmatkeyR(DerivType[i], DetShapeType(), *this);
+                        MatrixKey DmatkeyR(DerivType[i], DetShapeType(), *this);
 
-                    DNekScalMat &DmatL = *GetLocMatrix(DmatkeyL);
-                    DNekScalMat &DmatR = *GetLocMatrix(DmatkeyR);
-                    Mat = Mat + DmatL * invMass * Transpose(DmatR);
+                        DNekScalMat &DmatL = *GetLocMatrix(DmatkeyL);
+                        DNekScalMat &DmatR = *GetLocMatrix(DmatkeyR);
+                        Mat = Mat + DmatL * invMass * Transpose(DmatR);
+                    }
                 }
                 else
                 {
-                    DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
-                    Mat               = Mat + Dmat * invMass * Transpose(Dmat);
+                    for (i = 0; i < coordim; ++i)
+                    {
+                        DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
+                        Mat               = Mat + Dmat * invMass * Transpose(Dmat);
+                    }
                 }
-            }
 
             // Add Mass Matrix Contribution for Helmholtz problem
             DNekScalMat &Mass = *GetLocMatrix(StdRegions::eMass);
@@ -1336,16 +1340,16 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             {
                 case StdRegions::eHybridDGLamToQ0:
                     dir  = 0;
-                    Dmat = GetLocMatrix(StdRegions::eWeakDeriv0);
                     break;
+
                 case StdRegions::eHybridDGLamToQ1:
                     dir  = 1;
-                    Dmat = GetLocMatrix(StdRegions::eWeakDeriv1);
                     break;
+
                 case StdRegions::eHybridDGLamToQ2:
                     dir  = 2;
-                    Dmat = GetLocMatrix(StdRegions::eWeakDeriv2);
                     break;
+
                 default:
                     ASSERTL0(false, "Direction not known");
                     break;
@@ -1428,7 +1432,6 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             int i, j, e, cnt;
             int order_e, nquad_e;
             int nbndry    = NumDGBndryCoeffs();
-            int coordim   = GetCoordim();
             int nedges    = GetNtraces();
             NekDouble tau = mkey.GetConstFactor(StdRegions::eFactorTau);
             StdRegions::VarCoeffMap::const_iterator x;
@@ -1471,13 +1474,13 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             LamToQ[1] = GetLocMatrix(LamToQ1key);
 
             // Matrix to map Lambda to Q2 for 3D coordinates
-            if (coordim == 3)
-            {
-                MatrixKey LamToQ2key(
-                    StdRegions::eHybridDGLamToQ2, DetShapeType(), *this,
-                    mkey.GetConstFactors(), mkey.GetVarCoeffs());
-                LamToQ[2] = GetLocMatrix(LamToQ2key);
-            }
+            // if (coordim == 3)
+            // {
+            //     MatrixKey LamToQ2key(
+            //         StdRegions::eHybridDGLamToQ2, DetShapeType(), *this,
+            //         mkey.GetConstFactors(), mkey.GetVarCoeffs());
+            //     LamToQ[2] = GetLocMatrix(LamToQ2key);
+            // }
 
             // Set up edge segment expansions from local geom info
             for (i = 0; i < nedges; ++i)
@@ -1573,27 +1576,27 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     }
 
                     // Q2 * n2 (BQ_2 terms)
-                    if (coordim == 3)
-                    {
-                        for (j = 0; j < order_e; ++j)
-                        {
-                            edgeCoeffs[j] = sign[j] * (*LamToQ[2])(emap[j], i);
-                        }
+                    // if (coordim == 3)
+                    // {
+                    //     for (j = 0; j < order_e; ++j)
+                    //     {
+                    //         edgeCoeffs[j] = sign[j] * (*LamToQ[2])(emap[j], i);
+                    //     }
 
-                        EdgeExp[e]->BwdTrans(edgeCoeffs, edgePhys);
-                        // @TODO var coeffs
-                        // Multiply by variable coefficients
-                        //                                if ((x =
-                        //                                varcoeffs.find(VarCoeff[2]))
-                        //                                != varcoeffs.end())
-                        //                                {
-                        //                                    GetPhysEdgeVarCoeffsFromElement(e,EdgeExp[e],x->second,varcoeff_work);
-                        //                                    Vmath::Vmul(nquad_e,varcoeff_work,1,EdgeExp[e]->GetPhys(),1,EdgeExp[e]->UpdatePhys(),1);
-                        //                                }
+                    //     EdgeExp[e]->BwdTrans(edgeCoeffs, edgePhys);
+                    //     // @TODO var coeffs
+                    //     // Multiply by variable coefficients
+                    //     //                                if ((x =
+                    //     //                                varcoeffs.find(VarCoeff[2]))
+                    //     //                                != varcoeffs.end())
+                    //     //                                {
+                    //     //                                    GetPhysEdgeVarCoeffsFromElement(e,EdgeExp[e],x->second,varcoeff_work);
+                    //     //                                    Vmath::Vmul(nquad_e,varcoeff_work,1,EdgeExp[e]->GetPhys(),1,EdgeExp[e]->UpdatePhys(),1);
+                    //     //                                }
 
-                        Vmath::Vvtvp(nquad_e, normals[2], 1, edgePhys, 1, work,
-                                     1, work, 1);
-                    }
+                    //     Vmath::Vvtvp(nquad_e, normals[2], 1, edgePhys, 1, work,
+                    //                  1, work, 1);
+                    // }
 
                     // - tau (ulam - lam)
                     // Corresponds to the G and BU terms.

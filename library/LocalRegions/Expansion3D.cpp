@@ -524,6 +524,7 @@ DNekScalMatSharedPtr Expansion3D::CreateMatrix(const MatrixKey &mkey)
             }
         }
         break;
+        
         case StdRegions::eLaplacian:
         {
             if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed ||

@@ -602,6 +602,7 @@ void Expansion::ComputeGmatcdotMF(const Array<TwoD, const NekDouble> &df,
     int coordim  = GetCoordim();
     int nqtot    = direction.size() / coordim;
 
+    std::cout << "ComputeGmatcdotMF, dim = " << shapedim << std::endl;
     for (int j = 0; j < shapedim; j++)
     {
         dfdir[j] = Array<OneD, NekDouble>(nqtot, 0.0);
@@ -633,6 +634,13 @@ Array<OneD, NekDouble> Expansion::GetMF(
     int nqtot = 1;
     switch (shapedim)
     {
+        case 1:
+        {
+            nquad0 = m_base[0]->GetNumPoints();
+            nqtot  = nquad0;
+            break;
+        }
+
         case 2:
         {
             nquad0 = m_base[0]->GetNumPoints();

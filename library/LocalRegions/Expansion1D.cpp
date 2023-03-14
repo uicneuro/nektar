@@ -60,8 +60,11 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 mkey.GetConstFactor(StdRegions::eFactorLambda);
             NekDouble tau = mkey.GetConstFactor(StdRegions::eFactorTau);
             int ncoeffs   = GetNcoeffs();
-
             int coordim = GetCoordim();
+
+            // int nedges    = GetNtraces();
+            const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
+            bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
 
             DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
             StdRegions::MatrixType DerivType[3] = {StdRegions::eWeakDeriv0,
@@ -75,11 +78,42 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
             Vmath::Zero(ncoeffs * ncoeffs, Mat.GetPtr(), 1);
 
-            for (i = 0; i < coordim; ++i)
+            StdRegions::VarCoeffMap::const_iterator x;
+
+            if (mmf)
             {
-                DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
+                StdRegions::VarCoeffMap VarCoeffDirDeriv;
+                VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
+                    GetMF(0, 1, varcoeffs);
+                VarCoeffDirDeriv[StdRegions::eVarCoeffMFDiv] =
+                    GetMFDiv(0, varcoeffs);
+
+                MatrixKey Dmatkey(StdRegions::eWeakDirectionalDeriv,
+                                    DetShapeType(), *this,
+                                    StdRegions::NullConstFactorMap,
+                                    VarCoeffDirDeriv);
+
+                DNekScalMat &Dmat = *GetLocMatrix(Dmatkey);
+
+                StdRegions::VarCoeffMap Weight;
+                Weight[StdRegions::eVarCoeffMass] =
+                    GetMFMag(0, mkey.GetVarCoeffs());
+
+                MatrixKey invMasskey(
+                    StdRegions::eInvMass, DetShapeType(), *this,
+                    StdRegions::NullConstFactorMap, Weight);
+
+                DNekScalMat &invMass = *GetLocMatrix(invMasskey);
 
                 Mat = Mat + Dmat * invMass * Transpose(Dmat);
+            }
+            else
+            {
+                for (i = 0; i < coordim; ++i)
+                {
+                    DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
+                    Mat               = Mat + Dmat * invMass * Transpose(Dmat);
+                }
             }
 
             // Add end Mass Matrix Contribution
@@ -120,8 +154,13 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             DNekMat &Umat = *returnval;
 
             // Helmholtz matrix
-            DNekScalMat &invHmat =
-                *GetLocMatrix(StdRegions::eInvHybridDGHelmholtz, factors);
+            // DNekScalMat &invHmat =
+            //     *GetLocMatrix(StdRegions::eInvHybridDGHelmholtz, factors);
+
+            MatrixKey newkey(StdRegions::eInvHybridDGHelmholtz, DetShapeType(),
+                             *this, mkey.GetConstFactors(),
+                             mkey.GetVarCoeffs());
+            DNekScalMat &invHmat = *GetLocMatrix(newkey);
 
             // for each degree of freedom of the lambda space
             // calculate Umat entry
@@ -133,7 +172,7 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 lambda[j] = 1.0;
 
                 AddHDGHelmholtzTraceTerms(factors[StdRegions::eFactorTau],
-                                          lambda, f);
+                                          lambda, mkey.GetVarCoeffs(), f);
 
                 Ulam = invHmat * F; // generate Ulam from lambda
 
@@ -155,6 +194,9 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             int nbndry  = NumDGBndryCoeffs();
             int ncoeffs = GetNcoeffs();
 
+            const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
+            bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
+
             Array<OneD, NekDouble> lambda(nbndry);
             DNekVec Lambda(nbndry, lambda, eWrapper);
 
@@ -174,8 +216,12 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             DNekMat &Qmat = *returnval;
 
             // Lambda to U matrix
-            DNekScalMat &lamToU =
-                *GetLocMatrix(StdRegions::eHybridDGLamToU, factors);
+            // DNekScalMat &lamToU =
+            //     *GetLocMatrix(StdRegions::eHybridDGLamToU, factors);
+            MatrixKey lamToUkey(StdRegions::eHybridDGLamToU, DetShapeType(),
+                                *this, mkey.GetConstFactors(),
+                                mkey.GetVarCoeffs());
+            DNekScalMat &lamToU = *GetLocMatrix(lamToUkey);
 
             // Inverse mass matrix
             DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
@@ -186,20 +232,54 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             {
                 case StdRegions::eHybridDGLamToQ0:
                     dir  = 0;
-                    Dmat = GetLocMatrix(StdRegions::eWeakDeriv0);
                     break;
                 case StdRegions::eHybridDGLamToQ1:
                     dir  = 1;
-                    Dmat = GetLocMatrix(StdRegions::eWeakDeriv1);
                     break;
                 case StdRegions::eHybridDGLamToQ2:
                     dir  = 2;
-                    Dmat = GetLocMatrix(StdRegions::eWeakDeriv2);
                     break;
                 default:
                     ASSERTL0(false, "Direction not known");
                     break;
             }
+
+            if (mmf)
+            {
+                StdRegions::VarCoeffMap VarCoeffDirDeriv;
+                VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
+                    GetMF(dir, 1, varcoeffs);
+                VarCoeffDirDeriv[StdRegions::eVarCoeffMFDiv] =
+                    GetMFDiv(dir, varcoeffs);
+
+                MatrixKey Dmatkey(
+                    StdRegions::eWeakDirectionalDeriv, DetShapeType(), *this,
+                    StdRegions::NullConstFactorMap, VarCoeffDirDeriv);
+
+                Dmat = GetLocMatrix(Dmatkey);
+
+                StdRegions::VarCoeffMap Weight;
+                Weight[StdRegions::eVarCoeffMass] = GetMFMag(dir, mkey.GetVarCoeffs());
+
+                MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
+                                     *this, StdRegions::NullConstFactorMap,
+                                     Weight);
+
+                invMass = *GetLocMatrix(invMasskey);
+            }
+            else
+            {
+                StdRegions::MatrixType DerivType[3] = {StdRegions::eWeakDeriv0,
+                                                       StdRegions::eWeakDeriv1,
+                                                       StdRegions::eWeakDeriv2};
+
+                Dmat = GetLocMatrix(DerivType[dir]);
+
+                MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
+                                     *this);
+                invMass = *GetLocMatrix(invMasskey);
+            }
+
 
             // for each degree of freedom of the lambda space
             // calculate Qmat entry
@@ -314,20 +394,40 @@ void Expansion1D::AddNormTraceInt(const int dir,
 
 void Expansion1D::AddHDGHelmholtzTraceTerms(
     const NekDouble tau, const Array<OneD, const NekDouble> &inarray,
+    const StdRegions::VarCoeffMap &varcoeffs,
     Array<OneD, NekDouble> &outarray)
 {
-    int i, n;
+    int i;
     int nbndry  = NumBndryCoeffs();
     int nquad   = GetNumPoints(0);
     int ncoeffs = GetNcoeffs();
     int coordim = GetCoordim();
     Array<OneD, unsigned int> vmap;
+    bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
 
     ASSERTL0(&inarray[0] != &outarray[0],
              "Input and output arrays use the same memory");
 
     const Array<OneD, const NekDouble> &Basis = GetBasis(0)->GetBdata();
-    DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+    
+    // DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+
+    DNekScalMatSharedPtr invMass;
+
+    if (mmf)
+    {
+        StdRegions::VarCoeffMap Weight;
+        Weight[StdRegions::eVarCoeffMass] = GetMFMag(0, varcoeffs);
+
+        MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(), *this,
+                                StdRegions::NullConstFactorMap, Weight);
+
+        invMass = GetLocMatrix(invMasskey);
+    }
+    // else
+    // {
+    //     invMass = GetLocMatrix(StdRegions::eInvMass);
+    // }
 
     GetBoundaryMap(vmap);
 
@@ -352,23 +452,53 @@ void Expansion1D::AddHDGHelmholtzTraceTerms(
     DNekVec Coeffs(ncoeffs, outarray, eWrapper);
     DNekVec Tmpcoeff(ncoeffs, tmpcoeff, eWrapper);
 
-    for (n = 0; n < coordim; ++n)
+    // evaluate M^{-1} G
+    for (i = 0; i < ncoeffs; ++i)
     {
-        // evaluate M^{-1} G
-        for (i = 0; i < ncoeffs; ++i)
+        // lower boundary (negative normal)
+        // tmpcoeff[i] -= invMass(i, vmap[0]) * Basis[vmap[0] * nquad] *
+        //                Basis[vmap[0] * nquad] * inarray[vmap[0]];
+
+        // // upper boundary (positive normal)
+        // tmpcoeff[i] += invMass(i, vmap[1]) *
+        //                Basis[(vmap[1] + 1) * nquad - 1] *
+        //                Basis[(vmap[1] + 1) * nquad - 1] * inarray[vmap[1]];
+
+        // lower boundary (negative normal)
+        tmpcoeff[i] -= (*invMass)(i, vmap[0]) * Basis[vmap[0] * nquad] *
+                        Basis[vmap[0] * nquad] * inarray[vmap[0]];
+
+        // upper boundary (positive normal)
+        tmpcoeff[i] += (*invMass)(i, vmap[1]) *
+                        Basis[(vmap[1] + 1) * nquad - 1] *
+                        Basis[(vmap[1] + 1) * nquad - 1] * inarray[vmap[1]];
+    }
+
+    // DNekScalMat &Dmat = *GetLocMatrix(DerivType[n]);
+    // Coeffs            = Coeffs + Dmat * Tmpcoeff;
+    if (mmf)
+    {
+        StdRegions::VarCoeffMap VarCoeffDirDeriv;
+        VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
+            GetMF(0, coordim, varcoeffs);
+        VarCoeffDirDeriv[StdRegions::eVarCoeffMFDiv] =
+            GetMFDiv(0, varcoeffs);
+
+        MatrixKey Dmatkey(StdRegions::eWeakDirectionalDeriv, DetShapeType(),
+                            *this, StdRegions::NullConstFactorMap,
+                            VarCoeffDirDeriv);
+
+        DNekScalMat &Dmat = *GetLocMatrix(Dmatkey);
+
+        Coeffs = Coeffs + Dmat * Tmpcoeff;
+    }
+    else
+    {
+        for (i = 0; i < coordim; ++i)
         {
-            // lower boundary (negative normal)
-            tmpcoeff[i] -= invMass(i, vmap[0]) * Basis[vmap[0] * nquad] *
-                           Basis[vmap[0] * nquad] * inarray[vmap[0]];
-
-            // upper boundary (positive normal)
-            tmpcoeff[i] += invMass(i, vmap[1]) *
-                           Basis[(vmap[1] + 1) * nquad - 1] *
-                           Basis[(vmap[1] + 1) * nquad - 1] * inarray[vmap[1]];
+            DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
+            Coeffs            = Coeffs + Dmat * Tmpcoeff;
         }
-
-        DNekScalMat &Dmat = *GetLocMatrix(DerivType[n]);
-        Coeffs            = Coeffs + Dmat * Tmpcoeff;
     }
 }
 
