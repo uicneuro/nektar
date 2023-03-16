@@ -60,7 +60,7 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 mkey.GetConstFactor(StdRegions::eFactorLambda);
             NekDouble tau = mkey.GetConstFactor(StdRegions::eFactorTau);
             int ncoeffs   = GetNcoeffs();
-            int coordim = GetCoordim();
+            int shapedim = 1;
 
             // int nedges    = GetNtraces();
             const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
@@ -109,7 +109,7 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             }
             else
             {
-                for (i = 0; i < coordim; ++i)
+                for (i = 0; i < shapedim; ++i)
                 {
                     DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
                     Mat               = Mat + Dmat * invMass * Transpose(Dmat);
@@ -332,12 +332,24 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             DNekMat &BndMat = *returnval;
 
             // Matrix to map Lambda to U
-            DNekScalMat &LamToU =
-                *GetLocMatrix(StdRegions::eHybridDGLamToU, factors);
+            MatrixKey LamToUkey(StdRegions::eHybridDGLamToU, DetShapeType(),
+                                *this, mkey.GetConstFactors(),
+                                mkey.GetVarCoeffs());
+            DNekScalMat &LamToU = *GetLocMatrix(LamToUkey);
 
-            // Matrix to map Lambda to Q
-            DNekScalMat &LamToQ =
-                *GetLocMatrix(StdRegions::eHybridDGLamToQ0, factors);
+            // Matrix to map Lambda to Q0
+            MatrixKey LamToQ0key(StdRegions::eHybridDGLamToQ0, DetShapeType(),
+                                 *this, mkey.GetConstFactors(),
+                                 mkey.GetVarCoeffs());
+            DNekScalMat &LamToQ = *GetLocMatrix(LamToQ0key);
+
+            // // Matrix to map Lambda to U
+            // DNekScalMat &LamToU =
+            //     *GetLocMatrix(StdRegions::eHybridDGLamToU, factors);
+
+            // // Matrix to map Lambda to Q
+            // DNekScalMat &LamToQ =
+            //     *GetLocMatrix(StdRegions::eHybridDGLamToQ0, factors);
 
             lam[0] = 1.0;
             lam[1] = 0.0;
@@ -401,7 +413,7 @@ void Expansion1D::AddHDGHelmholtzTraceTerms(
     int nbndry  = NumBndryCoeffs();
     int nquad   = GetNumPoints(0);
     int ncoeffs = GetNcoeffs();
-    int coordim = GetCoordim();
+    int shapedim = 1;
     Array<OneD, unsigned int> vmap;
     bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
 
@@ -413,7 +425,6 @@ void Expansion1D::AddHDGHelmholtzTraceTerms(
     // DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
 
     DNekScalMatSharedPtr invMass;
-
     if (mmf)
     {
         StdRegions::VarCoeffMap Weight;
@@ -424,10 +435,10 @@ void Expansion1D::AddHDGHelmholtzTraceTerms(
 
         invMass = GetLocMatrix(invMasskey);
     }
-    // else
-    // {
-    //     invMass = GetLocMatrix(StdRegions::eInvMass);
-    // }
+    else
+    {
+        invMass = GetLocMatrix(StdRegions::eInvMass);
+    }
 
     GetBoundaryMap(vmap);
 
@@ -480,7 +491,7 @@ void Expansion1D::AddHDGHelmholtzTraceTerms(
     {
         StdRegions::VarCoeffMap VarCoeffDirDeriv;
         VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
-            GetMF(0, coordim, varcoeffs);
+            GetMF(0, 1, varcoeffs);
         VarCoeffDirDeriv[StdRegions::eVarCoeffMFDiv] =
             GetMFDiv(0, varcoeffs);
 
@@ -494,7 +505,7 @@ void Expansion1D::AddHDGHelmholtzTraceTerms(
     }
     else
     {
-        for (i = 0; i < coordim; ++i)
+        for (i = 0; i < 3; ++i)
         {
             DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
             Coeffs            = Coeffs + Dmat * Tmpcoeff;

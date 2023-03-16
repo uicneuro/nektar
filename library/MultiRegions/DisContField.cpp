@@ -3518,6 +3518,7 @@ void DisContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     // Solve trace problem: \Lambda = K^{-1} F
     // K is the HybridDGHelmBndLam matrix.
     //----------------------------------
+
     if (GloBndDofs - NumDirBCs > 0)
     {
         GlobalLinSysKey key(StdRegions::eHybridDGHelmBndLam, m_traceMap,
@@ -3533,6 +3534,7 @@ void DisContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     //----------------------------------
     // Internal element solves
     //----------------------------------
+
     GlobalMatrixKey invHDGhelmkey(StdRegions::eInvHybridDGHelmholtz,
                                   NullAssemblyMapSharedPtr, factors, varcoeff);
 
