@@ -505,7 +505,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEPPT:
             case eNeuralEP1D:
             {
-                ComputeVarCoeff1D(m_movingframes, m_varcoeff);
+                // ComputeVarCoeff1D(m_movingframes, m_varcoeff);
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 break;
             }
 
@@ -786,25 +787,41 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
     for (int i = 0; i < Nelem; ++i)
     {
         npts = m_fields[0]->GetTotPoints(i);
+
         for (int j = 0; j < npts; ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j ;
 
-            if (i <= ElemNodeEnd)
+            if (i <= 2)
             {
                 outarray[index] = i;
             }
 
-            else if (i <= ElemMyelenEnd)
+            else 
             {
                 outarray[index] = -1;
             }
-
-            else
-            {
-                outarray[index] = -2;
-            }
         }
+
+        // for (int j = 0; j < npts; ++j)
+        // {
+        //     index = m_fields[0]->GetPhys_Offset(i) + j ;
+
+        //     if (i <= ElemNodeEnd)
+        //     {
+        //         outarray[index] = i;
+        //     }
+
+        //     else if (i <= ElemMyelenEnd)
+        //     {
+        //         outarray[index] = -1;
+        //     }
+
+        //     else
+        //     {
+        //         outarray[index] = -2;
+        //     }
+        // }
     }
 
     return outarray;
@@ -1024,6 +1041,8 @@ void MMFNeuralEP::DoSolveMMFZero()
             // fulltext.append(", x = " + std::to_string(x0[Iumax]));
             // fulltext.append(", y = " + std::to_string(x1[Iumax]));
             // fulltext.append("\n");
+
+            CheckNodeZoneMF(m_movingframes, m_NodeZone, fields[0]);
 
             // Print phim and phie at each node
             if( m_expdim>1 )
@@ -1863,6 +1882,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
 
     // Solve a system of equations with Helmholtz solver and transform
     // back into physical space.
+
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
@@ -2399,6 +2419,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
 
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+
+    std::cout << "inarray = " << RootMeanSquare(inarray[0]) << ", outarray = " << RootMeanSquare(outarray[0]) << std::endl;
 }
 
 
@@ -2430,6 +2452,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+
+    // std::cout << "inarray = " << RootMeanSquare(inarray[0]) << ", outarray = " << RootMeanSquare(outarray[0]) << std::endl;
 
     // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)
@@ -2827,7 +2851,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, 0.01);
+                m_stimulus[i]->Update(tmp, initialtime);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }

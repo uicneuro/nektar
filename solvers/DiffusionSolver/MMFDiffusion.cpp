@@ -226,8 +226,6 @@ void MMFDiffusion::DoImplicitSolve(
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
                                  m_varcoeff);
 
-        // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
-
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
 }
@@ -254,7 +252,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * sin(m_pi * x[k]);
+                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * x[k]);
             }
         }
         break;
@@ -269,7 +267,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * sin(m_pi * y[k]);
+                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * y[k]);
             }
         }
         break;
@@ -518,12 +516,12 @@ void MMFDiffusion::TestLineProblem(const int direction, const NekDouble time,
     {
         if(direction==0)
         {
-            outfield[k] = exp(-1.0 * time) * sin(m_pi * x[k]);
+            outfield[k] = exp(-1.0 * time) * cos(m_pi * x[k]);
         }
 
         else if (direction==1)
         {
-            outfield[k] = exp(-1.0 * time) * sin(m_pi * y[k]);
+            outfield[k] = exp(-1.0 * time) * cos(m_pi * y[k]);
         }
     }
 }
