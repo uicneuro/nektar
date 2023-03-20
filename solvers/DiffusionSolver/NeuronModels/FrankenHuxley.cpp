@@ -176,7 +176,6 @@ namespace Nektar
             NekDouble p_tau = 1.0/(alpha_p + beta_p);
 
             // Compute current_K
-
             E = var_membrane_V + var_membrane__Vrest;
             NekDouble ZK = ComputeIon(E, var_membrane__K_i, var_membrane__K_o,var_membrane__Tc);
             NekDouble ZNa = ComputeIon(E, var_membrane__Na_i, var_membrane__Na_o,var_membrane__Tc);

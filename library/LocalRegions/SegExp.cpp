@@ -199,27 +199,32 @@ void SegExp::v_PhysDirectionalDeriv(
     const Array<OneD, const NekDouble> &direction,
     Array<OneD, NekDouble> &out)
     {
-        boost::ignore_unused(direction);
-       // std::cout << "v_PhysDirectionalDeriv " << std::endl;
-       // v_PhysDeriv_s(inarray,out);
-       // v_PhysDeriv(inarray,out);
+       // boost::ignore_unused(direction);
 
         int nquad0  = m_base[0]->GetNumPoints();
         Array<OneD, NekDouble> diff(nquad0);
 
+        Array<OneD, NekDouble> dirmag(nquad0,0.0);
+        for (int k=0; k<3; ++k)
+        {
+            Vmath::Vvtvp(nquad0, &direction[k * nquad0], 1, &direction[k * nquad0], 1, &dirmag[0], 1, &dirmag[0], 1);
+        }
+        Vmath::Vsqrt(nquad0, dirmag, 1, dirmag, 1);
+
         Vmath::Zero(nquad0, out, 1);
-        
-    //   Array<TwoD, const NekDouble> gmat =
-    //     m_metricinfo->GetDerivFactors(GetPointsKeys());
-
         Array<OneD, NekDouble> Jac = m_metricinfo->GetJac(GetPointsKeys());
-
         PhysTensorDeriv(inarray, diff);
 
+        // for (int i=0; i<nquad0; ++i)
+        // {
+        //     std::cout << "i = " << i << ", dirmag = " << dirmag[i] 
+        //     << ", Jac = " << 1.0/Jac[i] << std::endl;
+        // }
+
         // get dS/de= (Jac)^-1
+        // calculate the derivative as (dU/de)*(Jac)^-1
         if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
         {
-            // calculate the derivative as (dU/de)*(Jac)^-1
             Vmath::Vdiv(nquad0, diff, 1, Jac, 1, out, 1);
         }
         else
@@ -228,13 +233,7 @@ void SegExp::v_PhysDirectionalDeriv(
             Vmath::Smul(nquad0, invJac, diff, 1, out, 1);
         }
 
-        // for (int i=0; i<nquad0; ++i)
-        // {
-        //     std::cout << "i = " << i << ", Jac = " << Jac[i] 
-        //     << ", gmat0 = " << gmat[0][i] << ", gmat1 = " << gmat[1][i] 
-        //     << ", diff = " << diff[i] << ", inarray = " << inarray[i] << ", out = " << out[i] << std::endl;
-        // }
-        // std::cout << std::endl;
+        Vmath::Vdiv(nquad0, out, 1, dirmag, 1, out, 1);
     }
 
 /**
