@@ -482,19 +482,19 @@ void GeomFactors::Compute1DMovingFrames(
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmp(m_coordDim);
 
     // Compute g_{ij} as t_i \cdot t_j and store in tmp
-    for (i = 0; i < m_coordDim; ++i)
+    for (i = 0; i < 3; ++i)
     {
-        MFtmp[i] = Array<OneD, Array<OneD, NekDouble>>(m_coordDim);
-        for (k = 0; k < m_coordDim; ++k)
+        MFtmp[i] = Array<OneD, Array<OneD, NekDouble>>(3);
+        for (k = 0; k < 3; ++k)
         {
             MFtmp[i][k] = Array<OneD, NekDouble>(nq,0.0);
         }
     }
 
     // Compute g_{ij} as t_i \cdot t_j and store in tmp
-    for (i = 0; i < m_expDim; ++i)
+    for (i = 0; i < 1; ++i)
     {
-        for (k = 0; k < m_coordDim; ++k)
+        for (k = 0; k < 3; ++k)
         {
             if (m_type == eDeformed)
             {
@@ -507,8 +507,12 @@ void GeomFactors::Compute1DMovingFrames(
         }
     }
 
+    VectorNormalise(MFtmp[0]);
+
     // Construction of Connection
     Array<OneD, NekDouble> one(nq, 1.0);
+
+    std::cout << "MMFdir = " << MMFdir << std::endl;
     switch (MMFdir)
     {
         // projection to x-axis
@@ -528,6 +532,17 @@ void GeomFactors::Compute1DMovingFrames(
         }
         break;
 
+        case eLOCAL:
+        {
+            std::cout << "HERE 1" << std::endl;
+            Vmath::Vcopy(nq, &one[0], 1, &MFtmp[2][2][0], 1);
+            VectorCrossProd(MFtmp[2], MFtmp[0], MFtmp[1]);
+
+            // Normalizing MF2
+            VectorNormalise(MFtmp[1]);
+        }
+        break;
+        
         default:
         break;
     }

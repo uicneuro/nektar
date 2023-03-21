@@ -433,7 +433,7 @@ namespace Nektar
         const NekDouble var_membrane__F = 96484.6; // Faraday constant: (C / mol)
 
         NekDouble var_membrane__T = Tc + 273.15; // kelvin
-        NekDouble z, eco, eci, outval;
+        NekDouble z, outval;
 
         z = 0.001 * var_membrane__F * E / ( var_membrane__R *  var_membrane__T ) ;
 

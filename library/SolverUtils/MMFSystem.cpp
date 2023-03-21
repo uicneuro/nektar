@@ -904,49 +904,49 @@ void MMFSystem::ComputeCurl(
     }
 }
 
-void MMFSystem::SetUpMovingFrames(
-    const Array<OneD, const Array<OneD, NekDouble>> &Anisotropy)
-{
-    int nq = m_fields[0]->GetNpoints();
+// void MMFSystem::SetUpMovingFrames(
+//     const Array<OneD, const Array<OneD, NekDouble>> &Anisotropy)
+// {
+//     int nq = m_fields[0]->GetNpoints();
 
-    // Construct The Moving Frames
-    m_movingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
-    for (int j = 0; j < m_spacedim; ++j)
-    {
-        m_movingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
-    }
+//     // Construct The Moving Frames
+//     m_movingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+//     for (int j = 0; j < m_spacedim; ++j)
+//     {
+//         m_movingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
+//     }
 
-    // Read MMF Geom Info
-    std::string MMFdirStr = "LOCAL";
-    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
-    m_MMFdir = FindMMFdir(MMFdirStr);
+//     // Read MMF Geom Info
+//     std::string MMFdirStr = "LOCAL";
+//     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
+//     m_MMFdir = FindMMFdir(MMFdirStr);
 
-    // (x-x_0)^2/a^2 + (y-y_0)^2/b^2 = 1
-    // factors[0] = a
-    // factors[1] = b
-    // factors[2] = x_0
-    // factors[3] = y_0
-    m_MMFfactors = Array<OneD, NekDouble>(4);
-    m_session->LoadParameter("MMFCircAxisX", m_MMFfactors[0], 1.0);
-    m_session->LoadParameter("MMFCircAxisY", m_MMFfactors[1], 1.0);
-    m_session->LoadParameter("MMFCircCentreX", m_MMFfactors[2], 0.0);
-    m_session->LoadParameter("MMFCircCentreY", m_MMFfactors[3], 0.0);
+//     // (x-x_0)^2/a^2 + (y-y_0)^2/b^2 = 1
+//     // factors[0] = a
+//     // factors[1] = b
+//     // factors[2] = x_0
+//     // factors[3] = y_0
+//     m_MMFfactors = Array<OneD, NekDouble>(4);
+//     m_session->LoadParameter("MMFCircAxisX", m_MMFfactors[0], 1.0);
+//     m_session->LoadParameter("MMFCircAxisY", m_MMFfactors[1], 1.0);
+//     m_session->LoadParameter("MMFCircCentreX", m_MMFfactors[2], 0.0);
+//     m_session->LoadParameter("MMFCircCentreY", m_MMFfactors[3], 0.0);
 
-    // Get Tangetn vectors from GeomFactors2D, Orthonormalized = true
-    m_fields[0]->GetMovingFrames(m_MMFdir, m_MMFfactors, m_movingframes);
+//     // Get Tangetn vectors from GeomFactors2D, Orthonormalized = true
+//     m_fields[0]->GetMovingFrames(m_MMFdir, m_MMFfactors, m_movingframes);
 
-    // Multiply Anisotropy to movingframes
-    for (int j = 0; j < m_shapedim; ++j)
-    {
-        for (int k = 0; k < m_spacedim; ++k)
-        {
-            Vmath::Vmul(nq, &Anisotropy[j][0], 1, &m_movingframes[j][k * nq], 1,
-                        &m_movingframes[j][k * nq], 1);
-        }
-    }
-    // Test the moving frames
-    CheckMovingFrames(m_movingframes);
-}
+//     // Multiply Anisotropy to movingframes
+//     for (int j = 0; j < m_shapedim; ++j)
+//     {
+//         for (int k = 0; k < m_spacedim; ++k)
+//         {
+//             Vmath::Vmul(nq, &Anisotropy[j][0], 1, &m_movingframes[j][k * nq], 1,
+//                         &m_movingframes[j][k * nq], 1);
+//         }
+//     }
+//     // Test the moving frames
+//     CheckMovingFrames(m_movingframes);
+// }
 
 void MMFSystem::SetUpMovingFrames(
     const SpatialDomains::GeomMMF MMFdir,
@@ -1239,8 +1239,7 @@ void MMFSystem::GetLOCALMovingframes1D(
         movingframes[i] = Array<OneD, NekDouble>(m_spacedim * nq);
     }
 
-    m_fields[0]->GetMovingFrames(SpatialDomains::eLOCAL1, m_MMFfactors,
-                                 movingframes);
+    m_fields[0]->GetMovingFrames(SpatialDomains::eLOCAL, m_MMFfactors, movingframes);
     // Simple orientation check if e^3 is away from zero
     // CheckMFOrientation(movingframes);
 
@@ -1764,6 +1763,13 @@ void MMFSystem::CheckMovingFrames(
         std::cout << "*** MF " << i << " = ( " << RootMeanSquare(tmpx) << " , "
                   << RootMeanSquare(tmpy) << " , " << RootMeanSquare(tmpz)
                   << " ) " << std::endl;
+    }
+
+    for (int i=0; i<nq; ++i)
+    {
+        std::cout << "i = " << i << ", MF1 = ( " << movingframes[0][i] << " , " << movingframes[0][i+nq] << " , " << movingframes[0][i+2*nq] 
+        << " ) , MF2 = ( " << movingframes[1][i] << " , " << movingframes[1][i+nq] << " , " << movingframes[1][i+2*nq]  
+        << " ) , MF3 = ( " << movingframes[2][i] << " , " << movingframes[2][i+nq] << " , " << movingframes[2][i+2*nq] << " ) " << std::endl; 
     }
 }
 
@@ -11910,13 +11916,14 @@ void MMFSystem::ComputeVarCoeff2D(
         }
 
         Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
-    }
 
-    std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
-              << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
+    std::cout << "k = " << k << ", m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[indx]])
+              << " , " << RootMeanSquare(varcoeff[MMFCoeffs[indx+1]]) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[indx+2]]) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[indx+3]]) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[indx+4]]) << " ) " << std::endl;
+
+    }
 
     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
               << std::endl;

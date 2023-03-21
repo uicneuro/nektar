@@ -299,6 +299,7 @@ inline void GeomFactors::GetMovingFrames(
     const Array<OneD, const NekDouble> &CircCentre,
     Array<OneD, Array<OneD, NekDouble>> &outarray)
 {
+    std::cout << "GetMovingFrames, MMFdir = " << MMFdir << std::endl;
     switch(m_expDim)
     {
         case 1:
