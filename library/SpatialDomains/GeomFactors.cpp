@@ -512,7 +512,6 @@ void GeomFactors::Compute1DMovingFrames(
     // Construction of Connection
     Array<OneD, NekDouble> one(nq, 1.0);
 
-    std::cout << "MMFdir = " << MMFdir << std::endl;
     switch (MMFdir)
     {
         // projection to x-axis
@@ -534,7 +533,6 @@ void GeomFactors::Compute1DMovingFrames(
 
         case eLOCAL:
         {
-            std::cout << "HERE 1" << std::endl;
             Vmath::Vcopy(nq, &one[0], 1, &MFtmp[2][2][0], 1);
             VectorCrossProd(MFtmp[2], MFtmp[0], MFtmp[1]);
 

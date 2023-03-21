@@ -72,8 +72,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    std::cout << "HERE 1" << std::endl;
-
     int nq   = GetTotPoints();
     int nvar = m_fields.size();
 
@@ -102,7 +100,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_SolverSchemeType = (SolverSchemeType)0;
     }
-    std::cout << "HERE 2" << std::endl;
 
     // TimeMap ?
     if (m_session->DefinesSolverInfo("TimeMapType"))
@@ -122,7 +119,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_TimeMap = (TimeMapType)0;
     }
-    std::cout << "HERE 3" << std::endl;
 
     std::string vCellModel;
     m_session->LoadSolverInfo("CELLMODEL", vCellModel, "FitzHughNagumo");
@@ -232,7 +228,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         }
         break;
     }
-    std::cout << "HERE 4" << std::endl;
 
     // plot Conductivity map
     int ncoeffs = m_fields[0]->GetNcoeffs();
@@ -272,7 +267,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     //         GenerateHHDPlot(nstep);
     //     }
     // }
-    std::cout << "HERE 5" << std::endl;
 
     if (m_explicitDiffusion)
     {
@@ -952,10 +946,16 @@ void MMFCardiacEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            int Iumax = Vmath::Iamax(nq, fields[0], 1);
-            std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
+            int Iumax = Vmath::Imax(nq, fields[0], 1);
+            std::cout << "u_max = " << Vmath::Vmax(nq, fields[0], 1)
                       << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
                       << std::endl;
+
+            int Iumin = Vmath::Imin(nq, fields[0], 1);
+            std::cout << "u_min = " << Vmath::Vmin(nq, fields[0], 1)
+                      << " at x = " << x0[Iumin] << ", y = " << x1[Iumin] << ", z = " << x2[Iumin]
+                      << std::endl;
+
 
             Checkpoint_Output(nchk++);
             doCheckTime = false;
@@ -1088,7 +1088,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(tmp, initialtime);
+        m_stimulus[i]->Update(tmp, 0.1);
         m_fields[0]->SetPhys(tmp[0]);
     }
 

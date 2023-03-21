@@ -262,7 +262,27 @@ void MMFSystem::MMFInitObject(
 
     // Check Movingframes and surfraceNormal
     // Get: m_ncdotMFFwd,m_ncdotMFBwd,m_nperpcdotMFFwd,m_nperpcdotMFBwd
-    ComputencdotMF(m_movingframes, m_ncdotMFFwd, m_ncdotMFBwd, 1);
+    if(m_expdim>1)
+    {
+        ComputencdotMF(m_movingframes, m_ncdotMFFwd, m_ncdotMFBwd, 1);
+    }
+
+    else
+    {
+        int nTracePointsTot = GetTraceNpoints();
+
+        m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+        m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);            
+        
+        m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, 1.0);
+        m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, 1.0);
+        for (int j = 1; j < m_mfdim; ++j)
+        {
+            m_ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
+            m_ncdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
+        }
+    }
+
     ComputenperpcdotMF(m_movingframes, m_nperpcdotMFFwd, m_nperpcdotMFBwd);
 
     int Verbose = 1; // Display the difference between Euclidean and Covariant
@@ -954,6 +974,8 @@ void MMFSystem::SetUpMovingFrames(
     Array<OneD, Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &AniDirection)
 {
+    boost::ignore_unused(AniDirection);
+
     int nq = m_fields[0]->GetNpoints();
 
     // Construct The Moving Frames
@@ -1765,12 +1787,12 @@ void MMFSystem::CheckMovingFrames(
                   << " ) " << std::endl;
     }
 
-    for (int i=0; i<nq; ++i)
-    {
-        std::cout << "i = " << i << ", MF1 = ( " << movingframes[0][i] << " , " << movingframes[0][i+nq] << " , " << movingframes[0][i+2*nq] 
-        << " ) , MF2 = ( " << movingframes[1][i] << " , " << movingframes[1][i+nq] << " , " << movingframes[1][i+2*nq]  
-        << " ) , MF3 = ( " << movingframes[2][i] << " , " << movingframes[2][i+nq] << " , " << movingframes[2][i+2*nq] << " ) " << std::endl; 
-    }
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     std::cout << "i = " << i << ", MF1 = ( " << movingframes[0][i] << " , " << movingframes[0][i+nq] << " , " << movingframes[0][i+2*nq] 
+    //     << " ) , MF2 = ( " << movingframes[1][i] << " , " << movingframes[1][i+nq] << " , " << movingframes[1][i+2*nq]  
+    //     << " ) , MF3 = ( " << movingframes[2][i] << " , " << movingframes[2][i+nq] << " , " << movingframes[2][i+2*nq] << " ) " << std::endl; 
+    // }
 }
 
 // 	RebuildMovingFrames(m_K1, m_K2, m_K3, m_distance);
@@ -1934,7 +1956,6 @@ void MMFSystem::ComputencdotMF(
 
     if (Verbose)
     {
-
         Array<OneD, NekDouble> x0(nq);
         Array<OneD, NekDouble> x1(nq);
         Array<OneD, NekDouble> x2(nq);

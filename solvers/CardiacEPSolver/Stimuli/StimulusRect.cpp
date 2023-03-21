@@ -122,7 +122,17 @@ void StimulusRect::v_Update(Array<OneD, Array<OneD, NekDouble>> &outarray,
         return;
     }
 
-    int dim = m_field->GetShapeDimension();
+    // int dim = m_field->GetShapeDimension();
+    int dim;
+    NekDouble Tol=1.0e-7;
+    if(fabs(m_pz1-m_pz2)<Tol)
+    {
+        dim = 2;
+        if(fabs(m_py1-m_py2)<Tol)
+        {
+            dim = 1;
+        }
+    }
 
     // Retrieve coordinates of quadrature points
     int nq = m_field->GetNpoints();
