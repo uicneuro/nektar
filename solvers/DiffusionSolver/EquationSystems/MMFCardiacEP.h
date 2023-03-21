@@ -47,13 +47,14 @@ namespace Nektar
 
 enum CardiacEPType
 {
-    eCardiacEP,
+    eCardiacEP1D,
+    eCardiacEP2D,
     eCardiacEPSpiral,
     SIZE_CardiacEPType ///< Length of enum list
 };
 
 const char *const CardiacEPTypeMap[] = {
-    "CardiacEP", "CardiacEPSpiral",
+    "CardiacEP1D", "CardiacEP2D", "CardiacEPSpiral",
 };
 
 enum SolverSchemeType

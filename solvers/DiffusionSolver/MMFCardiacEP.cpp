@@ -72,6 +72,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
+    std::cout << "HERE 1" << std::endl;
+
     int nq   = GetTotPoints();
     int nvar = m_fields.size();
 
@@ -100,6 +102,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_SolverSchemeType = (SolverSchemeType)0;
     }
+    std::cout << "HERE 2" << std::endl;
 
     // TimeMap ?
     if (m_session->DefinesSolverInfo("TimeMapType"))
@@ -119,6 +122,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_TimeMap = (TimeMapType)0;
     }
+    std::cout << "HERE 3" << std::endl;
 
     std::string vCellModel;
     m_session->LoadSolverInfo("CELLMODEL", vCellModel, "FitzHughNagumo");
@@ -219,13 +223,16 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
                 Vmath::Vcopy(nq, PVAnitmp, 1, Anitmp, 1);
             }
 
-            Vmath::Vcopy(nq, &Anitmp[0], 1, &AniStrength[0][0], 1);
-            Vmath::Vcopy(nq, &Anitmp[0], 1, &AniStrength[1][0], 1);
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                Vmath::Vcopy(nq, &Anitmp[0], 1, &AniStrength[j][0], 1);
+            }
 
             MMFSystem::MMFInitObject(AniStrength);
         }
         break;
     }
+    std::cout << "HERE 4" << std::endl;
 
     // plot Conductivity map
     int ncoeffs = m_fields[0]->GetNcoeffs();
@@ -233,8 +240,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     std::string outname1;
     outname1 = m_sessionName + "_sigmaMap.chk";
 
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(2);
-    for (int i = 0; i < 2; ++i)
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(m_expdim);
+    for (int i = 0; i < m_expdim; ++i)
     {
         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
@@ -243,8 +250,10 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     variables[0] = "Condx";
     variables[1] = "Condy";
 
-    m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(AniStrength[1], fieldcoeffs[1]);
+    for (int i = 0; i < m_expdim; ++i)
+    {
+        m_fields[0]->FwdTrans(AniStrength[i], fieldcoeffs[i]);
+    }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 
@@ -263,6 +272,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     //         GenerateHHDPlot(nstep);
     //     }
     // }
+    std::cout << "HERE 5" << std::endl;
 
     if (m_explicitDiffusion)
     {
@@ -1067,13 +1077,8 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
     m_cell->Initialise();
 
-    std::cout << "SetInitialCond 1" << std::endl;
-
     // Read initial condition from xml file
     EquationSystem::v_SetInitialConditions(initialtime, false);
-
-    std::cout << "SetInitialCond 2" << std::endl;
-
 
     Array<OneD, Array<OneD, NekDouble>> tmp(1);
     tmp[0] = Array<OneD, NekDouble>(nq);
@@ -1087,9 +1092,6 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
         m_fields[0]->SetPhys(tmp[0]);
     }
 
-    std::cout << "SetInitialCond 3" << std::endl;
-
-
     // Only the excited regions are considered for m_InitExcitation
     Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
     // m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
@@ -1098,7 +1100,6 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     {
         TimeMapProcess();
     }
-    std::cout << "SetInitialCond 4" << std::endl;
 
     // forward transform to fill the modal coeffs
     for (int i = 0; i < m_fields.size(); ++i)
