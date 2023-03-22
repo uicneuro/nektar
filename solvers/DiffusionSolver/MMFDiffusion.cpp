@@ -362,64 +362,64 @@ void MMFDiffusion::DoOdeRhs(
             break;
     }
 
-    // switch (m_projectionType)
-    // {
-    //     case MultiRegions::eDiscontinuous:
-    //     {
-    //         std::string diffName;
+    switch (m_projectionType)
+    {
+        case MultiRegions::eDiscontinuous:
+        {
+            std::string diffName;
 
-    //         // Do not forwards transform initial condition
-    //         m_homoInitialFwd = false;
+            // Do not forwards transform initial condition
+            m_homoInitialFwd = false;
 
-    //         m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
-    //         m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
-    //             diffName, diffName);
-    //         m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
-    //         m_diffusion->InitObject(m_session, m_fields);
-    //         break;
-    //     }
+            m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
+            m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
+                diffName, diffName);
+            m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
+            m_diffusion->InitObject(m_session, m_fields);
+            break;
+        }
 
-    //     case MultiRegions::eGalerkin:
-    //     case MultiRegions::eMixed_CG_Discontinuous:
-    //     {
-    //         if (m_explicitDiffusion)
-    //         {
-    //             ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
-    //         }
-    //     }
-    // }
-
-    // if (m_explicitDiffusion)
-    // {
-    //     Array<OneD, Array<OneD, NekDouble>> outarrayDiff(nvar);
-    //     for (int i = 0; i < nvar; ++i)
-    //     {
-    //         outarrayDiff[i] = Array<OneD, NekDouble>(nq, 0.0);
-    //     }
-
-    //     m_diffusion->Diffuse(nvar, m_fields, inarray, outarrayDiff);
-
-    //     for (int i = 0; i < nvar; ++i)
-    //     {
-    //         Vmath::Vadd(nq, &outarrayDiff[i][0], 1, &outarray[i][0],
-    //                     1, &outarray[i][0], 1);
-    //     }
-    // }
+        case MultiRegions::eGalerkin:
+        case MultiRegions::eMixed_CG_Discontinuous:
+        {
+            if (m_explicitDiffusion)
+            {
+                ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
+            }
+        }
+    }
 
     if (m_explicitDiffusion)
     {
-        int nq = m_fields[0]->GetNpoints();
-
-        // Laplacian only to the first variable
-        Array<OneD, NekDouble> Laplacian(nq);
-
-        for (int i=0; i < nvar; ++i)
+        Array<OneD, Array<OneD, NekDouble>> outarrayDiff(nvar);
+        for (int i = 0; i < nvar; ++i)
         {
-            WeakDGMMFDiffusion(i, inarray[i], Laplacian, time);
-            Vmath::Smul(nq, m_epsu[i], &Laplacian[0], 1, &Laplacian[0], 1);
-            Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[i][0], 1, &outarray[i][0], 1);
+            outarrayDiff[i] = Array<OneD, NekDouble>(nq, 0.0);
+        }
+
+        m_diffusion->Diffuse(nvar, m_fields, inarray, outarrayDiff);
+
+        for (int i = 0; i < nvar; ++i)
+        {
+            Vmath::Vadd(nq, &outarrayDiff[i][0], 1, &outarray[i][0],
+                        1, &outarray[i][0], 1);
         }
     }
+
+    // if (m_explicitDiffusion)
+    // {
+    //     int nq = m_fields[0]->GetNpoints();
+
+    //     // Laplacian only to the first variable
+    //     Array<OneD, NekDouble> Laplacian(nq);
+
+    //     for (int i=0; i < nvar; ++i)
+    //     {
+    //         WeakDGMMFDiffusion(i, inarray[i], Laplacian, time);
+    //         Vmath::Smul(nq, m_epsu[i], &Laplacian[0], 1, &Laplacian[0], 1);
+    //         Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[i][0], 1, &outarray[i][0], 1);
+    //     }
+    // }
 }
 
 void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
