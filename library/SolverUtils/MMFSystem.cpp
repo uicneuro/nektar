@@ -274,14 +274,21 @@ void MMFSystem::MMFInitObject(
         m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
         m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);            
         
-        m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, 1.0);
-        m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, 1.0);
+        m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
+        m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
         for (int j = 1; j < m_mfdim; ++j)
         {
             m_ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
             m_ncdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
         }
     }
+
+        std::cout << "ncdotMFFwd = ( " << RootMeanSquare(m_ncdotMFFwd[0]) << " , "
+                << RootMeanSquare(m_ncdotMFFwd[1]) << " , "
+                << RootMeanSquare(m_ncdotMFFwd[2]) << " ) " << std::endl;
+    std::cout << "ncdotMFBwd = ( " << RootMeanSquare(m_ncdotMFBwd[0]) << " , "
+                << RootMeanSquare(m_ncdotMFBwd[1]) << " , "
+                << RootMeanSquare(m_ncdotMFBwd[2]) << " ) " << std::endl;
 
     ComputenperpcdotMF(m_movingframes, m_nperpcdotMFFwd, m_nperpcdotMFBwd);
 
@@ -1966,13 +1973,6 @@ void MMFSystem::ComputencdotMF(
         Array<OneD, NekDouble> pBwd(nTracePointsTot);
 
         m_fields[0]->GetFwdBwdTracePhys(x0, pFwd, pBwd);
-
-        std::cout << "ncdotMFFwd = ( " << RootMeanSquare(ncdotMFFwd[0]) << " , "
-                  << RootMeanSquare(ncdotMFFwd[1]) << " , "
-                  << RootMeanSquare(ncdotMFFwd[2]) << " ) " << std::endl;
-        std::cout << "ncdotMFBwd = ( " << RootMeanSquare(ncdotMFBwd[0]) << " , "
-                  << RootMeanSquare(ncdotMFBwd[1]) << " , "
-                  << RootMeanSquare(ncdotMFBwd[2]) << " ) " << std::endl;
     }
 }
 
@@ -11979,7 +11979,7 @@ void MMFSystem::ComputeVarCoeff2D(
 
         Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
 
-        // \| e^k \|
+        // \| e^k \|^2
         varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
         for (int i = 0; i < m_spacedim; ++i)

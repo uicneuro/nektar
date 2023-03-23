@@ -199,8 +199,6 @@ void SegExp::v_PhysDirectionalDeriv(
     const Array<OneD, const NekDouble> &direction,
     Array<OneD, NekDouble> &out)
     {
-       // boost::ignore_unused(direction);
-
         int nquad0  = m_base[0]->GetNumPoints();
         Array<OneD, NekDouble> diff(nquad0);
 
@@ -215,12 +213,6 @@ void SegExp::v_PhysDirectionalDeriv(
         Array<OneD, NekDouble> Jac = m_metricinfo->GetJac(GetPointsKeys());
         PhysTensorDeriv(inarray, diff);
 
-        // for (int i=0; i<nquad0; ++i)
-        // {
-        //     std::cout << "i = " << i << ", dirmag = " << dirmag[i] 
-        //     << ", Jac = " << 1.0/Jac[i] << std::endl;
-        // }
-
         // get dS/de= (Jac)^-1
         // calculate the derivative as (dU/de)*(Jac)^-1
         if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
@@ -233,7 +225,8 @@ void SegExp::v_PhysDirectionalDeriv(
             Vmath::Smul(nquad0, invJac, diff, 1, out, 1);
         }
 
-        Vmath::Vdiv(nquad0, out, 1, dirmag, 1, out, 1);
+        Vmath::Vmul(nquad0, dirmag, 1, out, 1, out, 1);
+        // Vmath::Vdiv(nquad0, out, 1, dirmag, 1, out, 1);
     }
 
 /**

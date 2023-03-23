@@ -343,14 +343,6 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                                  mkey.GetVarCoeffs());
             DNekScalMat &LamToQ = *GetLocMatrix(LamToQ0key);
 
-            // // Matrix to map Lambda to U
-            // DNekScalMat &LamToU =
-            //     *GetLocMatrix(StdRegions::eHybridDGLamToU, factors);
-
-            // // Matrix to map Lambda to Q
-            // DNekScalMat &LamToQ =
-            //     *GetLocMatrix(StdRegions::eHybridDGLamToQ0, factors);
-
             lam[0] = 1.0;
             lam[1] = 0.0;
             for (j = 0; j < nbndry; ++j)

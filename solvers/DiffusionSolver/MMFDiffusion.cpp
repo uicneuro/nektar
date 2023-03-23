@@ -88,7 +88,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     for (int j = 0; j < shapedim; ++j)
     {
         Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
-        Vmath::Fill(nq, sqrt(m_epsilon[j]), &Anisotropy[j][0], 1);
+        Vmath::Fill(nq, (m_epsilon[j]), &Anisotropy[j][0], 1);
     }
 
     MMFSystem::MMFInitObject(Anisotropy);
@@ -252,7 +252,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * x[k]);
+                outarray[0][k] = (m_epsilon[0] * m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * x[k]);
             }
         }
         break;
@@ -267,7 +267,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * y[k]);
+                outarray[0][k] = (m_epsilon[0] * m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * y[k]);
             }
         }
         break;
