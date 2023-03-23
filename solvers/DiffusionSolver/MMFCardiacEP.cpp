@@ -102,6 +102,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     }
 
     // TimeMap ?
+    m_session->LoadParameter("TimeMapStart", m_TimeMapStart, 0.0);
+    m_session->LoadParameter("TimeMapEnd", m_TimeMapEnd, 10000.0);
     if (m_session->DefinesSolverInfo("TimeMapType"))
     {
         std::string TIMEMAPTYPEStr;
@@ -230,27 +232,27 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     }
 
     // plot Conductivity map
-    int ncoeffs = m_fields[0]->GetNcoeffs();
+    // int ncoeffs = m_fields[0]->GetNcoeffs();
 
-    std::string outname1;
-    outname1 = m_sessionName + "_sigmaMap.chk";
+    // std::string outname1;
+    // outname1 = m_sessionName + "_sigmaMap.chk";
 
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(m_expdim);
-    for (int i = 0; i < m_expdim; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
+    // std::vector<Array<OneD, NekDouble>> fieldcoeffs(m_expdim);
+    // for (int i = 0; i < m_expdim; ++i)
+    // {
+    //     fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    // }
 
-    std::vector<std::string> variables(nvar);
-    variables[0] = "Condx";
-    variables[1] = "Condy";
+    // std::vector<std::string> variables(nvar);
+    // variables[0] = "Condx";
+    // variables[1] = "Condy";
 
-    for (int i = 0; i < m_expdim; ++i)
-    {
-        m_fields[0]->FwdTrans(AniStrength[i], fieldcoeffs[i]);
-    }
+    // for (int i = 0; i < m_expdim; ++i)
+    // {
+    //     m_fields[0]->FwdTrans(AniStrength[i], fieldcoeffs[i]);
+    // }
 
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+    // WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 
     // Plot HHD
     // if (m_session->DefinesSolverInfo("GenerateHHDPlot"))
@@ -801,25 +803,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
             if (m_TimeMap == eActivated)
             {
-                // Compute velocity field
-                // VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
-                ComputeMFTimeMap(m_ValidTimeMap, TimeMap, NewValidTimeMap,
-                                 TimeMapMF);
-
-                // Compute2DConnectionCurvature(TimeMapMF, TMMFConnection,
-                // TMMFCurvature);
-
-                Compute2DConnection1form(TimeMapMF, TMMFConnection);
-
-                // Compute Relative Acceleration
-                ComputeRelacc(TimeMapMF, TMRelacc);
-
-                PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned,
-                              TMMFConnection, TMRelacc, nchk);
-
-                std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
-                          << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
-                          << std::endl;
+                PlotTimeMap(m_ValidTimeMap, TimeMap, nchk);
             }
 
             Checkpoint_Output(nchk++);
@@ -899,6 +883,12 @@ void MMFCardiacEP::DoSolveMMF()
     Array<OneD, NekDouble> velmag(nq, 0.0);
     Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
+    Array<OneD, NekDouble> TimeMap(nq, 0.0);
+    Array<OneD, NekDouble> IappMap(nq, 0.0);
+
+    Array<OneD, NekDouble> dudtval(nq);
+    Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
+
     // Aligh Moving Frames along the velocit vector
     Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
     for (int i = 0; i < m_spacedim; ++i)
@@ -926,6 +916,12 @@ void MMFCardiacEP::DoSolveMMF()
         elapsed = timer.TimePerTest(1);
         intTime += elapsed;
         cpuTime += elapsed;
+
+        if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
+        {
+            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+                           dudtvalHistory, IappMap, TimeMap);
+        }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
@@ -956,6 +952,10 @@ void MMFCardiacEP::DoSolveMMF()
                       << " at x = " << x0[Iumin] << ", y = " << x1[Iumin] << ", z = " << x2[Iumin]
                       << std::endl;
 
+            if (m_TimeMap == eActivated)
+            {
+                PlotTimeMap(m_ValidTimeMap, TimeMap, nchk);
+            }
 
             Checkpoint_Output(nchk++);
             doCheckTime = false;
@@ -1093,8 +1093,11 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     }
 
     // Only the excited regions are considered for m_InitExcitation
-    Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
-    // m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
+    // Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
+    if (m_TimeMap == eActivated)
+    {
+        m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
+    }
 
     if (m_TimeMap == eProcessing)
     {
@@ -1341,6 +1344,9 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFSystem::v_GenerateSummary(s);
     AddSummaryItem(s, "SolverSchemeType", SolverSchemeTypeMap[m_SolverSchemeType]);
+    SolverUtils::AddSummaryItem(s, "TimeMap", TimeMapTypeMap[m_TimeMap]);
+    SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
+    SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
     m_cell->GenerateSummary(s);
     

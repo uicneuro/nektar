@@ -98,15 +98,15 @@ const char *const FluxTypeMap[] = {
 
 enum TimeMapType
 {
-    eActivated,
     eDeActivated,
+    eActivated,
     eProcessing,
     SIZE_TimeMapType ///< Length of enum list
 };
 
 const char *const TimeMapTypeMap[] = {
-    "Activated",
     "DeActivated",
+    "Activated",
     "Processing",
 };
 

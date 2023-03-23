@@ -87,9 +87,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_session->LoadParameter("NumelemperNode", m_numelemperNode, 4);
 
-    m_session->LoadParameter("TimeMapStart", m_TimeMapStart, 0.0);
-    m_session->LoadParameter("TimeMapEnd", m_TimeMapEnd, 10000.0);
-
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
     // Define ProblemType
@@ -130,7 +127,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_SolverSchemeType = (SolverSchemeType)0;
     }
 
-    // TimeMap ?
+    // TimeMap: Parameters
+    m_session->LoadParameter("TimeMapStart", m_TimeMapStart, 0.0);
+    m_session->LoadParameter("TimeMapEnd", m_TimeMapEnd, 10000.0);
     if (m_session->DefinesSolverInfo("TimeMapType"))
     {
         std::string TIMEMAPTYPEStr;
@@ -2691,11 +2690,10 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             //         m_fields[0]->SetPhys(tmp[0]);
             //     }
 
-            //     // Only the excited regions are considered for
-            //     m_InitExcitation Vmath::Vsub(nq, tmp[0], 1, initialcondition,
-            //     1, initialcondition, 1); m_ValidTimeMap =
-            //     ComputeTimeMapInitialZone(initialcondition);
-
+            //     // Only the excited regions are considered for m_InitExcitation
+            //     Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1); 
+            //     m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
+            //
             //     Array<OneD, NekDouble> x0(nq);
             //     Array<OneD, NekDouble> x1(nq);
             //     Array<OneD, NekDouble> x2(nq);

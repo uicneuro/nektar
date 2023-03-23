@@ -6924,6 +6924,7 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
     // TimeMapforInitZone(ValidTimeMap, dudtHistory, TimeMap);
 }
 
+
 void MMFSystem::TimeMapforInitZone(
     const Array<OneD, const int> &ValidTimeMap,
     const Array<OneD, const NekDouble> &dudtHistory,
@@ -7031,6 +7032,57 @@ Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
 
     return outarray;
 }
+
+void MMFSystem::PlotTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const int nstep)
+{
+    int nvar    = 9;
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_TimeMap_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "TimeMap";
+    variables[1] = "TMex1";
+    variables[2] = "TMey1";
+    variables[3] = "TMez1";
+
+    // index:0 -> u
+    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
+
+    Array<OneD, int> NewValidTimeMap(nq, 0);
+    Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        TimeMapMF[k] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
+    ComputeMFTimeMap(ValidTimeMap, TimeMap, NewValidTimeMap, TimeMapMF);
+
+    Array<OneD, NekDouble> tmp(nq);
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        Vmath::Vcopy(nq, &TimeMapMF[k][0], 1, &tmp[0], 1);
+        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+1]);
+    }
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+
+    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+                << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
+                << std::endl;
+}
+
 
 void MMFSystem::PlotTimeMapMF(
     const Array<OneD, const NekDouble> &NoboundaryZone,
@@ -12403,9 +12455,7 @@ void MMFSystem::ComputeMFTimeMap(const Array<OneD, const int> &ValidTimeMap,
     }
 
     // Check TimeMap Moving frames
-    std::cout << "============= Check Moving frames from TimeMap ============="
-              << std::endl;
-    // CheckMovingFrames(TMMF);
+    std::cout << "============= Check Moving frames from TimeMap =============" << std::endl;
 }
 
 void MMFSystem::WeakDGMMFDiff1D(

@@ -1141,6 +1141,11 @@ protected:
     SOLVER_UTILS_EXPORT Array<OneD, int> ComputeTimeMapInitialZone(
         const Array<OneD, const NekDouble> &inarray);
 
+    SOLVER_UTILS_EXPORT void PlotTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const int nstep);
+
     SOLVER_UTILS_EXPORT void PlotTimeMapMF(
         const Array<OneD, const NekDouble> &NoboundaryZone,
         const Array<OneD, const NekDouble> &TimeMap,
