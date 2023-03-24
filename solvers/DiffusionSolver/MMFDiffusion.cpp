@@ -129,7 +129,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_InitWaveType = (InitWaveType)0;
     }
 
-    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+    // ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+    ComputeVarCoeff2DDxDyDz(m_movingframes, m_epsilon, m_varcoeff);
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
@@ -957,7 +958,7 @@ void MMFDiffusion::GetFluxVector(
     {
         for (unsigned int i = 0; i < nConvectiveFields; ++i)
         {
-            Vmath::Smul(nPts, m_epsilon[0], qfield[j][i], 1, viscousTensor[j][i],
+            Vmath::Smul(nPts, m_epsilon[j], qfield[j][i], 1, viscousTensor[j][i],
                         1);
         }
     }
@@ -990,6 +991,109 @@ void MMFDiffusion::ComputeEuclideanDivMF(
         }
     }
 }
+
+void MMFDiffusion::v_DoSolve()
+{
+    ASSERTL0(m_intScheme != 0, "No time integration scheme.");
+
+    int i, nchk = 1;
+    int nq               = GetTotPoints();
+    int nvariables       = 0;
+    int nfields          = m_fields.size();
+    std::string fulltext = ""; // initiate fulltext
+
+    if (m_intVariables.empty())
+    {
+        for (i = 0; i < nfields; ++i)
+        {
+            m_intVariables.push_back(i);
+        }
+        nvariables = nfields;
+    }
+    else
+    {
+        nvariables = m_intVariables.size();
+    }
+
+    // Set up wrapper to fields data storage.
+    Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
+
+    // Order storage to list time-integrated fields first.
+    for (i = 0; i < nvariables; ++i)
+    {
+        fields[i] = m_fields[m_intVariables[i]]->GetPhys();
+        m_fields[m_intVariables[i]]->SetPhysState(false);
+    }
+
+    // Initialise time integration scheme
+    m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
+
+    // Check uniqueness of checkpoint output
+    ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
+                 (m_checktime > 0.0 && m_checksteps == 0) ||
+                 (m_checktime == 0.0 && m_checksteps > 0),
+             "Only one of IO_CheckTime and IO_CheckSteps "
+             "should be set!");
+
+    LibUtilities::Timer timer;
+    bool doCheckTime  = false;
+    int step          = 0;
+    NekDouble intTime = 0.0;
+    NekDouble cpuTime = 0.0;
+    NekDouble elapsed = 0.0;
+
+    while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
+    {
+        timer.Start();
+        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        timer.Stop();
+
+        m_time += m_timestep;
+        elapsed = timer.TimePerTest(1);
+        intTime += elapsed;
+        cpuTime += elapsed;
+
+        if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
+        {
+            // Print out at every info step
+            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
+                      << " "
+                      << "Time: " << std::setw(12) << std::left << m_time
+                      << std::endl;
+
+            std::stringstream ss;
+            ss << cpuTime / 60.0 << " min.";
+            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+                      << std::endl << std::endl;
+
+            cpuTime = 0.0;
+        }
+
+        // Write out checkpoint files
+        if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
+            doCheckTime)
+        {
+            Checkpoint_Output(nchk++);
+            doCheckTime = false;
+        }
+
+        ++step;
+    } // namespace Nektar
+
+    // Print out summary statistics
+    if (m_session->GetComm()->GetRank() == 0)
+    {
+        std::cout << "Time-integration  : " << intTime << "s" << std::endl;
+    }
+
+    for (i = 0; i < 1; ++i)
+    {
+        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+        m_fields[m_intVariables[i]]->SetPhysState(true);
+    }
+} // namespace Nektar
+
+
 
 void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
 {

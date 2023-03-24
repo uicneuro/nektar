@@ -1428,8 +1428,10 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         StdRegions::VarCoeffMap &varcoeff);
 
-    SOLVER_UTILS_EXPORT StdRegions::VarCoeffMap ComputeVarCoeff2D(
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
+    SOLVER_UTILS_EXPORT void ComputeVarCoeff2DDxDyDz(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const NekDouble> &epsilon,
+    StdRegions::VarCoeffMap &varcoeff);
 
     SOLVER_UTILS_EXPORT int CountActivated(
         const Array<OneD, const int> &ActivatedHistory);

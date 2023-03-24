@@ -12002,68 +12002,98 @@ void MMFSystem::ComputeVarCoeff2D(
               << std::endl;
 }
 
-StdRegions::VarCoeffMap MMFSystem::ComputeVarCoeff2D(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+void MMFSystem::ComputeVarCoeff2DDxDyDz(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const NekDouble> &epsilon,
+    StdRegions::VarCoeffMap &varcoeff)
 {
     int nq = GetTotPoints();
 
-    StdRegions::VarCoeffMap varcoeff;
+    // StdRegions::VarCoeffType MMFCoeffs[3] = {
+    //     StdRegions::eWeakDeriv0, 
+    //     StdRegions::eWeakDeriv1, 
+    //     StdRegions::eWeakDeriv2};
+        StdRegions::VarCoeffType MMFCoeffs[3] = {StdRegions::eVarCoeffD00,
+                                             StdRegions::eVarCoeffD11,
+                                             StdRegions::eVarCoeffD22};
 
-    StdRegions::VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag};
-
-    int indx;
-    Array<OneD, NekDouble> tmp(nq);
-    for (int k = 0; k < m_mfdim; ++k)
+    for (int j = 0; j < m_spacedim; ++j)
     {
-        // For Moving Frames
-        indx = 5 * k;
-
-        for (int j = 0; j < m_spacedim; ++j)
-        {
-            varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
-            Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
-                         &varcoeff[MMFCoeffs[indx + j]][0], 1);
-        }
-
-        // m_DivMF
-        varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-
-        Array<OneD, Array<OneD, NekDouble>> DivMF;
-        ComputeDivMF(m_DerivType, movingframes, DivMF);
-
-        Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
-
-        // \| e^k \|
-        varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-        tmp                           = Array<OneD, NekDouble>(nq, 0.0);
-        for (int i = 0; i < m_spacedim; ++i)
-        {
-            Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
-                         &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-        }
-
-        Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+        varcoeff[MMFCoeffs[j]] = Array<OneD, NekDouble>(nq, epsilon[j]);
     }
 
-    std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
+    std::cout << "m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
+              << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " ) " << std::endl;
 
-    return varcoeff;
-
-    std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
+    std::cout << " ::::: 2D [Dx Dy Dz] Varcoeff is Successfully Created ::::: "
               << std::endl;
 }
+
+
+
+// StdRegions::VarCoeffMap MMFSystem::ComputeVarCoeff2D(
+//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+// {
+//     int nq = GetTotPoints();
+
+//     StdRegions::VarCoeffMap varcoeff;
+
+//     StdRegions::VarCoeffType MMFCoeffs[15] = {
+//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+//         StdRegions::eVarCoeffMF3Mag};
+
+//     int indx;
+//     Array<OneD, NekDouble> tmp(nq);
+//     for (int k = 0; k < m_mfdim; ++k)
+//     {
+//         // For Moving Frames
+//         indx = 5 * k;
+
+//         for (int j = 0; j < m_spacedim; ++j)
+//         {
+//             varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
+//             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
+//                          &varcoeff[MMFCoeffs[indx + j]][0], 1);
+//         }
+
+//         // m_DivMF
+//         varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
+
+//         Array<OneD, Array<OneD, NekDouble>> DivMF;
+//         ComputeDivMF(m_DerivType, movingframes, DivMF);
+
+//         Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
+
+//         // \| e^k \|
+//         varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
+//         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
+//         for (int i = 0; i < m_spacedim; ++i)
+//         {
+//             Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
+//                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
+//         }
+
+//         Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+//     }
+
+//     std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
+//               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
+//               << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
+//               << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
+//               << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
+
+//     return varcoeff;
+
+//     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
+//               << std::endl;
+// }
 
 int MMFSystem::CountActivated(const Array<OneD, const int> &ActivatedHistory)
 {

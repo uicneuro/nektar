@@ -137,6 +137,8 @@ public:
     TestType m_TestType;
     SolverSchemeType m_SolverSchemeType;
 
+    virtual void v_DoSolve() override;
+
     /// Desctructor
     virtual ~MMFDiffusion();
 
