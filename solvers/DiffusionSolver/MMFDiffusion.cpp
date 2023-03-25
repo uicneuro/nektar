@@ -65,6 +65,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
+    std::cout << "After UnsteadySystem::v_InitObject" << std::endl;
+
     int nq    = m_fields[0]->GetNpoints();
     int nvar  = m_fields.size();
 
@@ -88,10 +90,14 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     for (int j = 0; j < shapedim; ++j)
     {
         Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
-        Vmath::Fill(nq, (m_epsilon[j]), &Anisotropy[j][0], 1);
+        Vmath::Fill(nq, sqrt(m_epsilon[j]), &Anisotropy[j][0], 1);
     }
 
+    std::cout << "Before  MMFSystem::MMFInitObject" << std::endl;
+
     MMFSystem::MMFInitObject(Anisotropy);
+
+    std::cout << "After  MMFSystem::MMFInitObject" << std::endl;
 
     // Define ProblemType
     if (m_session->DefinesSolverInfo("TESTTYPE"))
@@ -129,8 +135,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_InitWaveType = (InitWaveType)0;
     }
 
-    // ComputeVarCoeff2D(m_movingframes,m_varcoeff);
-    ComputeVarCoeff2DDxDyDz(m_movingframes, m_epsilon, m_varcoeff);
+    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+    // ComputeVarCoeff2DDxDyDz(m_movingframes, m_epsilon, m_varcoeff);
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);

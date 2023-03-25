@@ -977,6 +977,7 @@ void Expansion2D::AddHDGHelmholtzEdgeTerms(
             MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(), *this,
                                  StdRegions::NullConstFactorMap, Weight);
 
+            // std::cout << "invMass: AddHDGHelmholtzEdgeTerms" << std::endl;
             invMass = GetLocMatrix(invMasskey);
 
             Array<OneD, NekDouble> ncdotMF_e =
@@ -1148,12 +1149,13 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                         DNekScalMat &Dmat = *GetLocMatrix(Dmatkey);
 
                         StdRegions::VarCoeffMap Weight;
-                        Weight[StdRegions::eVarCoeffMass] =
-                            GetMFMag(i, mkey.GetVarCoeffs());
+                        Weight[StdRegions::eVarCoeffMass] = GetMFMag(i, mkey.GetVarCoeffs());
 
                         MatrixKey invMasskey(
                             StdRegions::eInvMass, DetShapeType(), *this,
                             StdRegions::NullConstFactorMap, Weight);
+
+            std::cout << "invMass: eHybridDGHelmholtz" << std::endl;
 
                         DNekScalMat &invMass = *GetLocMatrix(invMasskey);
 
@@ -1387,6 +1389,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                                                        StdRegions::eWeakDeriv2};
 
                 Dmat = GetLocMatrix(DerivType[dir]);
+            std::cout << "invMass: eHybridDGLamToQ, dir = " << dir << std::endl;
 
                 MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
                                      *this);

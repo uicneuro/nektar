@@ -259,10 +259,13 @@ DNekMatSharedPtr StdExpansion::CreateGeneralMatrix(const StdMatrixKey &mkey)
     {
         case eInvMass:
         {
+            std::cout << "HERE TO LOOK AT:::::: StdExpansion::CreateGeneralMatrix " << std::endl;
             StdMatrixKey masskey(eMass, mkey.GetShapeType(), *this,
                                  NullConstFactorMap, NullVarCoeffMap,
                                  mkey.GetNodalPointsType());
             DNekMatSharedPtr mmat = GetStdMatrix(masskey);
+
+            std::cout << "CreateGeneralMatrix: InvMass: mkey.HasVarCoeff(eVarCoeffMass) = " << masskey.HasVarCoeff(eVarCoeffMass) << std::endl;
 
             returnval = MemoryManager<DNekMat>::AllocateSharedPtr(
                 *mmat); // Populate standard mass matrix.
@@ -674,7 +677,13 @@ void StdExpansion::MassMatrixOp_MatFree(
 
     if (mkey.HasVarCoeff(eVarCoeffMass))
     {
+        std::cout << "MassMatrixOp_MatFree, weight = " << mkey.GetVarCoeff(eVarCoeffMass)[0] << std::endl;
         Vmath::Vmul(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, tmp, 1, tmp, 1);
+    }
+    
+    else
+    {
+        std::cout << "MassMatrixOp_MatFree: No weight" << std::endl;
     }
 
     v_IProductWRTBase(tmp, outarray);
