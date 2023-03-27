@@ -79,6 +79,7 @@ UnsteadySystem::UnsteadySystem(
 void UnsteadySystem::v_InitObject(bool DeclareField)
 {
     EquationSystem::v_InitObject(DeclareField);
+        std::cout << "UnsteadySystem::v_InitObject: 1" << std::endl;
 
     m_initialStep = 0;
 
@@ -98,6 +99,7 @@ void UnsteadySystem::v_InitObject(bool DeclareField)
     m_session->LoadParameter("SteadyStateTol", m_steadyStateTol, 0.0);
     // Frequency for checking steady state
     m_session->LoadParameter("SteadyStateSteps", m_steadyStateSteps, 1);
+        std::cout << "UnsteadySystem::v_InitObject: 2" << std::endl;
 
     // For steady problems, we do not initialise the time integration
     if (m_session->DefinesSolverInfo("TimeIntegrationMethod") ||
@@ -157,6 +159,7 @@ void UnsteadySystem::v_InitObject(bool DeclareField)
         // Set up time to be dumped in field information
         m_fieldMetaDataMap["Time"] = boost::lexical_cast<std::string>(m_time);
     }
+        std::cout << "UnsteadySystem::v_InitObject: 3" << std::endl;
 
     // By default attempt to forward transform initial condition.
     m_homoInitialFwd = true;
@@ -168,6 +171,8 @@ void UnsteadySystem::v_InitObject(bool DeclareField)
             x.first, GetFilterFactory().CreateInstance(
                          x.first, m_session, shared_from_this(), x.second)));
     }
+            std::cout << "UnsteadySystem::v_InitObject: 4" << std::endl;
+
 }
 
 /**

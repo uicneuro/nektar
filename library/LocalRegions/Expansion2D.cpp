@@ -115,11 +115,18 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
         break;
         case StdRegions::eInvMass:
         {
-            if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
+            if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed ||
+                (mkey.GetNVarCoeff()))
             {
+                std::cout << "Expansion2D: StdRegions::eInvMass" << std::endl;
                 NekDouble one = 1.0;
+
+                        //     MatrixKey hkey(StdRegions::eHybridDGHelmholtz, DetShapeType(),
+                        //    *this, mkey.GetConstFactors(), mkey.GetVarCoeffs());
+                // StdRegions::StdMatrixKey masskey(StdRegions::eMass,
+                //                                  DetShapeType(), *this);
                 StdRegions::StdMatrixKey masskey(StdRegions::eMass,
-                                                 DetShapeType(), *this);
+                                                 DetShapeType(), *this, mkey.GetConstFactors(), mkey.GetVarCoeffs());                                                
                 DNekMatSharedPtr mat = GenMatrix(masskey);
                 mat->Invert();
 
@@ -977,7 +984,6 @@ void Expansion2D::AddHDGHelmholtzEdgeTerms(
             MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(), *this,
                                  StdRegions::NullConstFactorMap, Weight);
 
-            // std::cout << "invMass: AddHDGHelmholtzEdgeTerms" << std::endl;
             invMass = GetLocMatrix(invMasskey);
 
             Array<OneD, NekDouble> ncdotMF_e =
