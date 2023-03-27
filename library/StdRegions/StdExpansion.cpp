@@ -259,13 +259,19 @@ DNekMatSharedPtr StdExpansion::CreateGeneralMatrix(const StdMatrixKey &mkey)
     {
         case eInvMass:
         {
-            std::cout << "HERE TO LOOK AT:::::: StdExpansion::CreateGeneralMatrix " << std::endl;
+            // StdMatrixKey masskey(eMass, mkey.GetShapeType(), *this,
+            //                      NullConstFactorMap, NullVarCoeffMap,
+            //                      mkey.GetNodalPointsType());
+
+
             StdMatrixKey masskey(eMass, mkey.GetShapeType(), *this,
-                                 NullConstFactorMap, NullVarCoeffMap,
+                                 mkey.GetConstFactors(), mkey.GetVarCoeffs(),
                                  mkey.GetNodalPointsType());
+            std::cout << "CreateGeneralMatrix: InvMass: mkey.HasVarCoeff(eVarCoeffMass) = " << masskey.HasVarCoeff(eVarCoeffMass) << std::endl;
+
             DNekMatSharedPtr mmat = GetStdMatrix(masskey);
 
-            std::cout << "CreateGeneralMatrix: InvMass: mkey.HasVarCoeff(eVarCoeffMass) = " << masskey.HasVarCoeff(eVarCoeffMass) << std::endl;
+            std::cout << std::endl;
 
             returnval = MemoryManager<DNekMat>::AllocateSharedPtr(
                 *mmat); // Populate standard mass matrix.

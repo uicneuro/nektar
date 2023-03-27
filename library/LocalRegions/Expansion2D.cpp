@@ -121,8 +121,6 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
                 std::cout << "Expansion2D: StdRegions::eInvMass" << std::endl;
                 NekDouble one = 1.0;
 
-                        //     MatrixKey hkey(StdRegions::eHybridDGHelmholtz, DetShapeType(),
-                        //    *this, mkey.GetConstFactors(), mkey.GetVarCoeffs());
                 // StdRegions::StdMatrixKey masskey(StdRegions::eMass,
                 //                                  DetShapeType(), *this);
                 StdRegions::StdMatrixKey masskey(StdRegions::eMass,
@@ -450,6 +448,7 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
             MatrixKey hkey(StdRegions::eHybridDGHelmholtz, DetShapeType(),
                            *this, mkey.GetConstFactors(), mkey.GetVarCoeffs());
 
+            std::cout << "Expansion2D: eInvHybridDGHelmholtz" << std::endl;
             DNekMatSharedPtr mat = GenMatrix(hkey);
 
             mat->Invert();
@@ -1103,6 +1102,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                      "HybridDGHelmholtz matrix not set up "
                      "for non boundary-interior expansions");
 
+
             int i, j, k;
             NekDouble lambdaval =
                 mkey.GetConstFactor(StdRegions::eFactorLambda);
@@ -1114,13 +1114,16 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             bool mmf =
                 (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
 
+                     std::cout << " StdRegions::eHybridDGHelmholtz: mmf = " << mmf << std::endl;
+
             Array<OneD, unsigned int> emap;
             Array<OneD, int> sign;
             StdRegions::Orientation edgedir = StdRegions::eForwards;
             ExpansionSharedPtr EdgeExp;
 
             int order_e, coordim = GetCoordim();
-            DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+            // DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+            DNekScalMatSharedPtr invMass;
             StdRegions::MatrixType DerivType[3] = {StdRegions::eWeakDeriv0,
                                                    StdRegions::eWeakDeriv1,
                                                    StdRegions::eWeakDeriv2};
@@ -1154,22 +1157,27 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
                         DNekScalMat &Dmat = *GetLocMatrix(Dmatkey);
 
+
                         StdRegions::VarCoeffMap Weight;
                         Weight[StdRegions::eVarCoeffMass] = GetMFMag(i, mkey.GetVarCoeffs());
+
+                        std::cout << "Expansion2D: invMass: eHybridDGHelmholtz, Weight = " << Weight[StdRegions::eVarCoeffMass][0] << std::endl;
 
                         MatrixKey invMasskey(
                             StdRegions::eInvMass, DetShapeType(), *this,
                             StdRegions::NullConstFactorMap, Weight);
 
-            std::cout << "invMass: eHybridDGHelmholtz" << std::endl;
-
                         DNekScalMat &invMass = *GetLocMatrix(invMasskey);
+
+                        std::cout << "End of Expansion2D: invMass" << std::endl << std::endl;
 
                         Mat = Mat + Dmat * invMass * Transpose(Dmat);
                     }
                 }
                 else if (mkey.HasVarCoeff(Coeffs[i]))
                 {
+                    DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+
                     for (i = 0; i < coordim; ++i)
                     {
                         MatrixKey DmatkeyL(DerivType[i], DetShapeType(), *this,
@@ -1185,6 +1193,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 }
                 else
                 {
+                    DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
                     for (i = 0; i < coordim; ++i)
                     {
                         DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
@@ -1193,6 +1202,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 }
 
             // Add Mass Matrix Contribution for Helmholtz problem
+           std::cout << "Add Mass Matrix Contribution for Helmholtz problem " << std::endl;
             DNekScalMat &Mass = *GetLocMatrix(StdRegions::eMass);
             Mat               = Mat + lambdaval * Mass;
 
@@ -1256,6 +1266,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             DNekMat &Umat = *returnval;
 
             // Z^e matrix
+            std::cout << " Expansion2D::eInvHybridDGHelmholtz " << std::endl;
             MatrixKey newkey(StdRegions::eInvHybridDGHelmholtz, DetShapeType(),
                              *this, mkey.GetConstFactors(),
                              mkey.GetVarCoeffs());
@@ -1282,6 +1293,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 SetTraceToGeomOrientation(EdgeExp, lambda);
 
                 // Compute F = [I   D_1 M^{-1}   D_2 M^{-1}] C e_j
+                std::cout << " Expansion2D::AddHDGHelmholtzTraceTerms " << std::endl;
                 AddHDGHelmholtzTraceTerms(tau, lambda, EdgeExp,
                                           mkey.GetVarCoeffs(), f);
 

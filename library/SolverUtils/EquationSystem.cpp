@@ -119,7 +119,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
 {
     // Save the basename of input file name for output details
     m_sessionName = m_session->GetSessionName();
-        std::cout << "EquationSystem::v_InitObject: 1" << std::endl;
 
     // Instantiate a field reader/writer
     m_fld = LibUtilities::FieldIO::CreateDefault(m_session);
@@ -128,7 +127,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
     m_boundaryConditions =
         MemoryManager<SpatialDomains::BoundaryConditions>::AllocateSharedPtr(
             m_session, m_graph);
-        std::cout << "EquationSystem::v_InitObject: 2" << std::endl;
 
     // Set space dimension for use in class
     m_spacedim = m_graph->GetSpaceDimension();
@@ -141,7 +139,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
     m_halfMode           = false;
     m_multipleModes      = false;
     m_HomogeneousType    = eNotHomogeneous;
-        std::cout << "EquationSystem::v_InitObject: 3" << std::endl;
 
     m_verbose = m_session->DefinesCmdLineArgument("verbose");
     m_root    = false;
@@ -231,7 +228,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
         // (homogeneous) expansions
         m_npointsZ = 1;
     }
-        std::cout << "EquationSystem::v_InitObject: 4" << std::endl;
 
     m_session->MatchSolverInfo("SPECTRALHPDEALIASING", "True",
                                m_specHP_dealiasing, false);
@@ -240,7 +236,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
         m_session->MatchSolverInfo("SPECTRALHPDEALIASING", "On",
                                    m_specHP_dealiasing, false);
     }
-        std::cout << "EquationSystem::v_InitObject: 5" << std::endl;
 
     // Options to determine type of projection from file or directly
     // from constructor
@@ -274,11 +269,9 @@ void EquationSystem::v_InitObject(bool DeclareFields)
              << endl;
         m_projectionType = MultiRegions::eGalerkin;
     }
-        std::cout << "EquationSystem::v_InitObject: 6" << std::endl;
 
     // Enforce singularity check for some problems
     m_checkIfSystemSingular = v_GetSystemSingularChecks();
-        std::cout << "EquationSystem::v_InitObject: 7" << std::endl;
 
     int i;
     int nvariables              = m_session->GetVariables().size();
@@ -287,7 +280,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
     m_fields   = Array<OneD, MultiRegions::ExpListSharedPtr>(nvariables);
     m_spacedim = m_graph->GetSpaceDimension() + m_HomoDirec;
     m_expdim   = m_graph->GetMeshDimension();
-        std::cout << "EquationSystem::v_InitObject: 8" << std::endl;
 
     if (DeclareFields) // declare field if required
     {
@@ -603,8 +595,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
                     }
                     else
                     {
-                                std::cout << "EquationSystem::v_InitObject: 9a" << std::endl;
-
                         for (i = 0; i < m_fields.size(); i++)
                         {
                             m_fields[i] =
@@ -613,8 +603,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
                                         m_session, m_graph,
                                         m_session->GetVariable(i));
                         }
-                                                        std::cout << "EquationSystem::v_InitObject: 9b" << std::endl;
-
                     }
 
                     break;
@@ -659,7 +647,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
         // Zero all physical fields initially
         ZeroPhysFields();
     }
-        std::cout << "EquationSystem::v_InitObject: 10" << std::endl;
 
     // Set Default Parameter
     m_session->LoadParameter("Time", m_time, 0.0);
@@ -677,7 +664,6 @@ void EquationSystem::v_InitObject(bool DeclareFields)
              "Only one of IO_CheckTime and IO_CheckSteps "
              "should be set!");
     m_session->LoadParameter("TimeIncrementFactor", m_TimeIncrementFactor, 1.0);
-        std::cout << "EquationSystem::v_InitObject: 7" << std::endl;
 
     m_nchk         = 0;
     m_pararealIter = 0;
