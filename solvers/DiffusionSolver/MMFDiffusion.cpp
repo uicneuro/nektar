@@ -70,6 +70,10 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     int nq    = m_fields[0]->GetNpoints();
     int nvar  = m_fields.size();
 
+    // AniStrength for e^1 and e^2
+
+    m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
+
     // Diffusivity coefficient for e^j
     m_epsilon = Array<OneD, NekDouble>(m_spacedim);
     m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
@@ -90,14 +94,10 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     for (int j = 0; j < shapedim; ++j)
     {
         Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
-        Vmath::Fill(nq, sqrt(m_epsilon[j]), &Anisotropy[j][0], 1);
+        Vmath::Fill(nq, m_AniStrength, &Anisotropy[j][0], 1);
     }
 
-    std::cout << "Before  MMFSystem::MMFInitObject" << std::endl;
-
     MMFSystem::MMFInitObject(Anisotropy);
-
-    std::cout << "After  MMFSystem::MMFInitObject" << std::endl;
 
     // Define ProblemType
     if (m_session->DefinesSolverInfo("TESTTYPE"))
@@ -1105,6 +1105,7 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFSystem::v_GenerateSummary(s);
     SolverUtils::AddSummaryItem(s, "TestType", TestTypeMap[m_TestType]);
+    SolverUtils::AddSummaryItem(s, "AniStrength", m_AniStrength);
     SolverUtils::AddSummaryItem(s, "epsilon0", m_epsilon[0]);
     SolverUtils::AddSummaryItem(s, "epsilon1", m_epsilon[1]);
     SolverUtils::AddSummaryItem(s, "epsilon2", m_epsilon[2]);

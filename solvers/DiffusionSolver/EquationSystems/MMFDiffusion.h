@@ -153,6 +153,8 @@ protected:
     int m_Convectiven;
     TimeMapType m_TimeMap;
 
+    NekDouble m_AniStrength;
+
     // Temperature parameter
 
     NekDouble m_TimeMapStart;
@@ -172,7 +174,6 @@ protected:
     InitWaveType m_InitWaveType;
 
     virtual void v_InitObject(bool DeclareField = true) override;
-    
     
     void DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
