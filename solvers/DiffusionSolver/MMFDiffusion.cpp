@@ -297,6 +297,25 @@ void MMFDiffusion::DoOdeRhs(
         }
         break;
 
+        case eTestPlaneNeumann:
+        {
+            Array<OneD, NekDouble> x(nq);
+            Array<OneD, NekDouble> y(nq);
+            Array<OneD, NekDouble> z(nq);
+
+            m_fields[0]->GetCoords(x, y, z);
+
+            for (int k = 0; k < nq; k++)
+            {
+                outarray[0][k] = (m_epsilon[0] * m_pi *
+                                 m_pi + m_epsilon[1] * m_pi *
+                                 m_pi - m_pi) * exp(-1.0 * m_pi * time) *
+                                 cos(m_pi * x[k]) * cos(m_pi * y[k]);
+            }
+        }
+        break;
+
+
         case eTestCube:
         {
 
@@ -466,6 +485,16 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         }
         break;
 
+        case eTestPlaneNeumann:
+        {
+            Array<OneD, NekDouble> u(nq);
+
+            TestPlaneNeumannProblem(initialtime, u);
+            m_fields[0]->SetPhys(u);
+        }
+        break;
+
+
         case eTestCube:
         {
             Array<OneD, NekDouble> u(nq);
@@ -550,6 +579,25 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
     for (int k = 0; k < nq; k++)
     {
         outfield[k] = exp(-1.0 * m_pi * time) * sin(m_pi * x[k]) * cos(m_pi * y[k]);
+    }
+}
+
+void MMFDiffusion::TestPlaneNeumannProblem(const NekDouble time,
+                                    Array<OneD, NekDouble> &outfield)
+
+{
+    int nq = GetTotPoints();
+
+    Array<OneD, NekDouble> x(nq);
+    Array<OneD, NekDouble> y(nq);
+    Array<OneD, NekDouble> z(nq);
+
+    m_fields[0]->GetCoords(x, y, z);
+
+    outfield = Array<OneD, NekDouble>(nq);
+    for (int k = 0; k < nq; k++)
+    {
+        outfield[k] = exp(-1.0 * m_pi * time) * cos(m_pi * x[k]) * cos(m_pi * y[k]);
     }
 }
 
@@ -856,6 +904,12 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
         case eTestPlane:
         {
             TestPlaneProblem(time, outfield);
+        }
+        break;
+
+        case eTestPlaneNeumann:
+        {
+            TestPlaneNeumannProblem(time, outfield);
         }
         break;
 

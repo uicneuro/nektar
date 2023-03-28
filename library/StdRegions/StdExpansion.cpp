@@ -687,6 +687,11 @@ void StdExpansion::MassMatrixOp_MatFree(
         Vmath::Vmul(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, tmp, 1, tmp, 1);
     }
 
+    else
+    {
+        // std::cout << "MassMatrixOp_MatFree, No weight " << std::endl;
+    }
+
     v_IProductWRTBase(tmp, outarray);
 }
 

@@ -66,7 +66,8 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
             bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
 
-            DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+            // DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
+            DNekScalMatSharedPtr invMass;
             StdRegions::MatrixType DerivType[3] = {StdRegions::eWeakDeriv0,
                                                    StdRegions::eWeakDeriv1,
                                                    StdRegions::eWeakDeriv2};
@@ -109,6 +110,7 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             }
             else
             {
+                DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
                 for (i = 0; i < shapedim; ++i)
                 {
                     DNekScalMat &Dmat = *GetLocMatrix(DerivType[i]);
@@ -264,7 +266,6 @@ DNekMatSharedPtr Expansion1D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
                                      *this, StdRegions::NullConstFactorMap,
                                      Weight);
-
                 invMass = *GetLocMatrix(invMasskey);
             }
             else

@@ -1135,8 +1135,15 @@ DNekScalMatSharedPtr SegExp::CreateMatrix(const MatrixKey &mkey)
                 (mkey.GetNVarCoeff()))
             {
                 NekDouble one = 1.0;
+
+                // StdRegions::StdMatrixKey masskey(StdRegions::eMass,
+                //                                  DetShapeType(), *this);
+
                 StdRegions::StdMatrixKey masskey(StdRegions::eMass,
-                                                 DetShapeType(), *this);
+                                                 DetShapeType(), *this, 
+                                                 mkey.GetConstFactors(), 
+                                                 mkey.GetVarCoeffs());  
+
                 DNekMatSharedPtr mat = GenMatrix(masskey);
                 mat->Invert();
 

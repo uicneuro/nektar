@@ -118,9 +118,9 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
             if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed ||
                 (mkey.GetNVarCoeff()))
             {
-                const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
+                // const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
 
-                bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMass) != varcoeffs.end());
+                // bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMass) != varcoeffs.end());
 
                 // std::cout << "Expansion2D: StdRegions::eInvMass, mmf =  " << mmf << std::endl;
                 
@@ -129,7 +129,10 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
                 // StdRegions::StdMatrixKey masskey(StdRegions::eMass,
                 //                                  DetShapeType(), *this);
                 StdRegions::StdMatrixKey masskey(StdRegions::eMass,
-                                                 DetShapeType(), *this, mkey.GetConstFactors(), mkey.GetVarCoeffs());                                                
+                                                 DetShapeType(), *this, 
+                                                 mkey.GetConstFactors(), 
+                                                 mkey.GetVarCoeffs());                                                
+                                                 
                 DNekMatSharedPtr mat = GenMatrix(masskey);
                 mat->Invert();
 
@@ -1398,8 +1401,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                 Dmat = GetLocMatrix(Dmatkey);
 
                 StdRegions::VarCoeffMap Weight;
-                Weight[StdRegions::eVarCoeffMass] =
-                    GetMFMag(dir, mkey.GetVarCoeffs());
+                Weight[StdRegions::eVarCoeffMass] = GetMFMag(dir, mkey.GetVarCoeffs());
 
                 MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
                                      *this, StdRegions::NullConstFactorMap,

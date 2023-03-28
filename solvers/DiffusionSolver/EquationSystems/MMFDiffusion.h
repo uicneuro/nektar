@@ -49,6 +49,7 @@ enum TestType
     eTestLineX,
     eTestLineY,
     eTestPlane,
+    eTestPlaneNeumann,
     eTestCube,
     eTestLinearSphere,
     eTestNonlinearSphere,
@@ -56,7 +57,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLineX", "TestLineY", "TestPlane",
+    "TestLineX", "TestLineY", "TestPlane", "TestPlaneNeumann",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -194,6 +195,9 @@ protected:
                                     Array<OneD, NekDouble> &outfield);
 
     void TestPlaneProblem(const NekDouble time,
+                          Array<OneD, NekDouble> &outfield);
+
+    void TestPlaneNeumannProblem(const NekDouble time,
                           Array<OneD, NekDouble> &outfield);
 
     void TestCubeProblem(const NekDouble time,
