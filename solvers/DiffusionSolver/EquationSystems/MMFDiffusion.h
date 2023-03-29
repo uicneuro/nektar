@@ -48,6 +48,7 @@ enum TestType
 {
     eTestLineX,
     eTestLineY,
+    eTestPlaneHelmholtz,
     eTestPlane,
     eTestPlaneNeumann,
     eTestCube,
@@ -57,7 +58,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLineX", "TestLineY", "TestPlane", "TestPlaneNeumann",
+    "TestLineX", "TestLineY", "TestPlaneHelmholtz", "TestPlane", "TestPlaneNeumann",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -145,9 +146,8 @@ public:
 
 protected:
     bool m_useSpecVanVisc;
-    NekDouble
-        m_sVVCutoffRatio; // cut off ratio from which to start decayhing modes
-    NekDouble m_sVVDiffCoeff; // Diffusion coefficient of SVV modes
+    NekDouble m_frequency;
+    
     SolverUtils::DiffusionSharedPtr m_diffusion;
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
@@ -187,11 +187,19 @@ protected:
         NekDouble lambda);
 
     /// Computes the reaction terms \f$f(u,v)\f$ and \f$g(u,v)\f$.
+    void DoSolveGeneral();
+
+    void DoSolveHelmholtz();
+
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
                   
     void TestLineProblem(const int direction, const NekDouble time,
+                                    Array<OneD, NekDouble> &outfield);
+                                    
+                                    
+    void TestPlaneHelmholtzProblem(const NekDouble time,
                                     Array<OneD, NekDouble> &outfield);
 
     void TestPlaneProblem(const NekDouble time,

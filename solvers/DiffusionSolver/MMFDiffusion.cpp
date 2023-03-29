@@ -85,6 +85,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
     m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
 
+    m_session->LoadParameter("frequency", m_frequency, m_pi);
+
     m_session->LoadParameter("InitPtx", m_InitPtx, 0.0);
     m_session->LoadParameter("InitPty", m_InitPty, 0.0);
     m_session->LoadParameter("InitPtz", m_InitPtz, 0.0);
@@ -476,6 +478,15 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         }
         break;
 
+        case eTestPlaneHelmholtz:
+        {
+            Array<OneD, NekDouble> u(nq);
+
+            TestPlaneProblem(initialtime, u);
+            m_fields[0]->SetPhys(u);
+        }
+        break;
+
         case eTestPlane:
         {
             Array<OneD, NekDouble> u(nq);
@@ -562,6 +573,26 @@ void MMFDiffusion::TestLineProblem(const int direction, const NekDouble time,
     }
 }
 
+void MMFDiffusion::TestPlaneHelmholtzProblem(const NekDouble time,
+                                    Array<OneD, NekDouble> &outfield)
+
+{
+    boost::ignore_unused(time);
+
+    int nq = GetTotPoints();
+
+    Array<OneD, NekDouble> x(nq);
+    Array<OneD, NekDouble> y(nq);
+    Array<OneD, NekDouble> z(nq);
+
+    m_fields[0]->GetCoords(x, y, z);
+
+    outfield = Array<OneD, NekDouble>(nq);
+    for (int k = 0; k < nq; k++)
+    {
+        outfield[k] = sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+    }
+}
 
 void MMFDiffusion::TestPlaneProblem(const NekDouble time,
                                     Array<OneD, NekDouble> &outfield)
@@ -1054,6 +1085,40 @@ void MMFDiffusion::ComputeEuclideanDivMF(
 
 void MMFDiffusion::v_DoSolve()
 {
+    switch (m_TestType)
+    {
+        case eTestPlaneHelmholtz:
+        {
+            DoSolveHelmholtz();
+        }
+        break;
+
+        default:
+        {
+            DoSolveGeneral();
+        }
+        break;
+    }
+}
+
+void MMFDiffusion::DoSolveHelmholtz()
+{
+    StdRegions::ConstFactorMap factors;
+    factors[StdRegions::eFactorTau] = 1.0;
+    factors[StdRegions::eFactorLambda] = 0.0;
+
+    for (int i = 0; i < m_fields.size(); ++i)
+    {
+        // Zero field so initial conditions are zero
+        Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
+        m_fields[i]->HelmSolve(m_fields[i]->GetPhys(), m_fields[i]->UpdateCoeffs(), factors,
+                                 m_varcoeff);
+        m_fields[i]->SetPhysState(false);
+    }
+}
+
+void MMFDiffusion::DoSolveGeneral()
+{
     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
 
     int i, nchk = 1;
@@ -1153,12 +1218,11 @@ void MMFDiffusion::v_DoSolve()
     }
 } // namespace Nektar
 
-
-
 void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFSystem::v_GenerateSummary(s);
     SolverUtils::AddSummaryItem(s, "TestType", TestTypeMap[m_TestType]);
+    SolverUtils::AddSummaryItem(s, "frequency", m_frequency);
     SolverUtils::AddSummaryItem(s, "AniStrength", m_AniStrength);
     SolverUtils::AddSummaryItem(s, "epsilon0", m_epsilon[0]);
     SolverUtils::AddSummaryItem(s, "epsilon1", m_epsilon[1]);
@@ -1170,6 +1234,7 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
     }
 }
 } // namespace Nektar
+
 int main(int argc, char *argv[])
 {
     LibUtilities::SessionReaderSharedPtr session;
