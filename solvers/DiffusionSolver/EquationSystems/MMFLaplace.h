@@ -36,12 +36,14 @@
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFLAPLACE_H
 
 #include <SolverUtils/EquationSystem.h>
+#include <SolverUtils/MMFSystem.h>
+
 
 using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-class MMFLaplace : public EquationSystem
+class MMFLaplace : public SolverUtils::MMFSystem
 {
 public:
     /// Class may only be instantiated through the MemoryManager.
@@ -67,6 +69,9 @@ protected:
     MMFLaplace(const LibUtilities::SessionReaderSharedPtr &pSession,
             const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
+    NekDouble m_AniStrength;
+
+
     virtual ~MMFLaplace();
 
     virtual void v_InitObject(bool DeclareFields = true) override;
@@ -75,6 +80,10 @@ protected:
 
 private:
     virtual Array<OneD, bool> v_GetSystemSingularChecks() override;
+
+    Array<OneD, NekDouble> m_epsilon;
+    Array<OneD, NekDouble> m_epsu;
+
 };
 } // namespace Nektar
 

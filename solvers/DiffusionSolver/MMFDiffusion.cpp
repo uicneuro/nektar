@@ -139,32 +139,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
     // ComputeVarCoeff2DDxDyDz(m_movingframes, m_epsilon, m_varcoeff);
- 
-    StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorTau] = 1.0;
-    factors[StdRegions::eFactorLambda] = 0.0;
-    
-    Array<OneD, NekDouble> ExactSoln(nq);
-    Array<OneD, NekDouble> Error(nq);
-
-    TestPlaneHelmholtzSolution(0.0, ExactSoln);
-    SetBoundaryConditions(0.0);
-
-    Array<OneD, Array<OneD, NekDouble>> outarray(m_fields.size());
-    for (int i = 0; i < m_fields.size(); ++i)
-    {
-        outarray[i] = Array<OneD, NekDouble>(nq);
-
-        // Zero field so initial conditions are zero
-        Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
-        m_fields[i]->HelmSolve(m_fields[i]->GetPhys(), m_fields[i]->UpdateCoeffs(), factors,
-                                 m_varcoeff);
-        m_fields[i]->SetPhysState(false);
-        m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
-    }
-
-    Vmath::Vsub(nq, ExactSoln, 1, outarray[0], 1, Error, 1);
-    std::cout << "Helmsolve 2D error = " << RootMeanSquare(Error) << ", ExactSoln = " << RootMeanSquare(ExactSoln) << std::endl;
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);

@@ -32,9 +32,22 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <iomanip>
+#include <iostream>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/core/ignore_unused.hpp>
+
+#include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
+#include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
+#include <LibUtilities/BasicUtils/SessionReader.h>
+#include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
+#include <SolverUtils/Driver.h>
 #include <DiffusionSolver/EquationSystems/MMFLaplace.h>
 
 using namespace std;
+using namespace Nektar::SolverUtils;
+using namespace Nektar;
 
 namespace Nektar
 {
@@ -43,7 +56,7 @@ string MMFLaplace::className = GetEquationSystemFactory().RegisterCreatorFunctio
 
 MMFLaplace::MMFLaplace(const LibUtilities::SessionReaderSharedPtr &pSession,
                  const SpatialDomains::MeshGraphSharedPtr &pGraph)
-    : EquationSystem(pSession, pGraph), m_factors()
+    : UnsteadySystem(pSession, pGraph), MMFSystem(pSession, pGraph)
 {
     m_factors[StdRegions::eFactorLambda] = 0.0;
     m_factors[StdRegions::eFactorTau]    = 1.0;
@@ -52,6 +65,37 @@ MMFLaplace::MMFLaplace(const LibUtilities::SessionReaderSharedPtr &pSession,
 void MMFLaplace::v_InitObject(bool DeclareFields)
 {
     EquationSystem::v_InitObject(DeclareFields);
+
+    int nq    = m_fields[0]->GetNpoints();
+    int nvar  = m_fields.size();
+
+    // AniStrength for e^1 and e^2
+
+    m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
+
+    // Diffusivity coefficient for e^j
+    m_epsilon = Array<OneD, NekDouble>(m_spacedim);
+    m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
+    m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
+    m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
+
+    // Diffusivity coefficient for u^j
+    m_epsu = Array<OneD, NekDouble>(nvar + 1);
+    m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
+    m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
+
+    int shapedim = m_fields[0]->GetShapeDimension();
+    Array<OneD, Array<OneD, NekDouble>> Anisotropy(shapedim);
+    for (int j = 0; j < shapedim; ++j)
+    {
+        Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
+        Vmath::Fill(nq, m_AniStrength, &Anisotropy[j][0], 1);
+    }
+
+    MMFSystem::MMFInitObject(Anisotropy);
+
+    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+
 }
 
 MMFLaplace::~MMFLaplace()
@@ -71,8 +115,10 @@ void MMFLaplace::v_DoSolve()
     {
         // Zero field so initial conditions are zero
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
-        m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                               m_fields[i]->UpdateCoeffs(), m_factors);
+        // m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+        //                        m_fields[i]->UpdateCoeffs(), m_factors);
+                m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+                               m_fields[i]->UpdateCoeffs(), m_factors, m_varcoeff);
         m_fields[i]->SetPhysState(false);
     }
 }
