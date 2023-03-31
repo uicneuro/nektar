@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: Helmholtz.cpp
+// File: MMFHelmholtz.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,26 +28,26 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Helmholtz solve routines
+// Description: MMFHelmholtz solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ADRSolver/EquationSystems/Helmholtz.h>
+#include <DiffusionSolver/EquationSystems/MMFHelmholtz.h>
 
 using namespace std;
 
 namespace Nektar
 {
-string Helmholtz::className1 =
-    GetEquationSystemFactory().RegisterCreatorFunction("Helmholtz",
-                                                       Helmholtz::create);
-string Helmholtz::className2 =
+string MMFHelmholtz::className1 =
+    GetEquationSystemFactory().RegisterCreatorFunction("MMFHelmholtz",
+                                                       MMFHelmholtz::create);
+string MMFHelmholtz::className2 =
     GetEquationSystemFactory().RegisterCreatorFunction(
-        "SteadyDiffusionReaction", Helmholtz::create);
+        "SteadyDiffusionReaction", MMFHelmholtz::create);
 
-Helmholtz::Helmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
+MMFHelmholtz::MMFHelmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
                      const SpatialDomains::MeshGraphSharedPtr &pGraph)
-    : Poisson(pSession, pGraph)
+    : MMFPoisson(pSession, pGraph)
 {
     if (pSession->DefinesParameter("Lambda"))
     {
@@ -56,22 +56,21 @@ Helmholtz::Helmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
     }
 }
 
-void Helmholtz::v_InitObject(bool DeclareFields)
+void MMFHelmholtz::v_InitObject(bool DeclareFields)
 {
-    Poisson::v_InitObject(DeclareFields);
-    std::cout << "Helmholtz " << std::endl;
+    MMFPoisson::v_InitObject(DeclareFields);
 }
 
-Helmholtz::~Helmholtz()
+MMFHelmholtz::~MMFHelmholtz()
 {
 }
 
-void Helmholtz::v_GenerateSummary(SolverUtils::SummaryList &s)
+void MMFHelmholtz::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
-    Poisson::v_GenerateSummary(s);
+    MMFPoisson::v_GenerateSummary(s);
 }
 
-Array<OneD, bool> Helmholtz::v_GetSystemSingularChecks()
+Array<OneD, bool> MMFHelmholtz::v_GetSystemSingularChecks()
 {
     if (m_factors[StdRegions::eFactorLambda] == 0)
     {

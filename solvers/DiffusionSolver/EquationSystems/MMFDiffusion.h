@@ -198,7 +198,9 @@ protected:
     void TestLineProblem(const int direction, const NekDouble time,
                                     Array<OneD, NekDouble> &outfield);
                                     
-                                    
+    void TestPlaneHelmholtzSolution(const NekDouble time,
+                                    Array<OneD, NekDouble> &outfield);
+
     void TestPlaneHelmholtzProblem(const NekDouble time,
                                     Array<OneD, NekDouble> &outfield);
 

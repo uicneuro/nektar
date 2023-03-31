@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: Helmholtz.cpp
+// File: MMFLaplace.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,58 +28,57 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Helmholtz solve routines
+// Description: MMFLaplace solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ADRSolver/EquationSystems/Helmholtz.h>
+#include <DiffusionSolver/EquationSystems/MMFLaplace.h>
 
 using namespace std;
 
 namespace Nektar
 {
-string Helmholtz::className1 =
-    GetEquationSystemFactory().RegisterCreatorFunction("Helmholtz",
-                                                       Helmholtz::create);
-string Helmholtz::className2 =
-    GetEquationSystemFactory().RegisterCreatorFunction(
-        "SteadyDiffusionReaction", Helmholtz::create);
+string MMFLaplace::className = GetEquationSystemFactory().RegisterCreatorFunction(
+    "MMFLaplace", MMFLaplace::create);
 
-Helmholtz::Helmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
-                     const SpatialDomains::MeshGraphSharedPtr &pGraph)
-    : Poisson(pSession, pGraph)
+MMFLaplace::MMFLaplace(const LibUtilities::SessionReaderSharedPtr &pSession,
+                 const SpatialDomains::MeshGraphSharedPtr &pGraph)
+    : EquationSystem(pSession, pGraph), m_factors()
 {
-    if (pSession->DefinesParameter("Lambda"))
+    m_factors[StdRegions::eFactorLambda] = 0.0;
+    m_factors[StdRegions::eFactorTau]    = 1.0;
+}
+
+void MMFLaplace::v_InitObject(bool DeclareFields)
+{
+    EquationSystem::v_InitObject(DeclareFields);
+}
+
+MMFLaplace::~MMFLaplace()
+{
+}
+
+void MMFLaplace::v_GenerateSummary(SolverUtils::SummaryList &s)
+{
+    EquationSystem::SessionSummary(s);
+    SolverUtils::AddSummaryItem(s, "Lambda",
+                                m_factors[StdRegions::eFactorLambda]);
+}
+
+void MMFLaplace::v_DoSolve()
+{
+    for (int i = 0; i < m_fields.size(); ++i)
     {
-        m_factors[StdRegions::eFactorLambda] =
-            m_session->GetParameter("Lambda");
+        // Zero field so initial conditions are zero
+        Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
+        m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+                               m_fields[i]->UpdateCoeffs(), m_factors);
+        m_fields[i]->SetPhysState(false);
     }
 }
 
-void Helmholtz::v_InitObject(bool DeclareFields)
+Array<OneD, bool> MMFLaplace::v_GetSystemSingularChecks()
 {
-    Poisson::v_InitObject(DeclareFields);
-    std::cout << "Helmholtz " << std::endl;
-}
-
-Helmholtz::~Helmholtz()
-{
-}
-
-void Helmholtz::v_GenerateSummary(SolverUtils::SummaryList &s)
-{
-    Poisson::v_GenerateSummary(s);
-}
-
-Array<OneD, bool> Helmholtz::v_GetSystemSingularChecks()
-{
-    if (m_factors[StdRegions::eFactorLambda] == 0)
-    {
-        return Array<OneD, bool>(m_session->GetVariables().size(), true);
-    }
-    else
-    {
-        return Array<OneD, bool>(m_session->GetVariables().size(), false);
-    }
+    return Array<OneD, bool>(m_session->GetVariables().size(), true);
 }
 } // namespace Nektar

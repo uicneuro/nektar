@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: Helmholtz.cpp
+// File: MMFPoisson.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,58 +28,49 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Helmholtz solve routines
+// Description: MMFPoisson solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <ADRSolver/EquationSystems/Helmholtz.h>
+#ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFPOISSON_H
+#define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFPOISSON_H
 
-using namespace std;
+#include <DiffusionSolver/EquationSystems/MMFLaplace.h>
 
 namespace Nektar
 {
-string Helmholtz::className1 =
-    GetEquationSystemFactory().RegisterCreatorFunction("Helmholtz",
-                                                       Helmholtz::create);
-string Helmholtz::className2 =
-    GetEquationSystemFactory().RegisterCreatorFunction(
-        "SteadyDiffusionReaction", Helmholtz::create);
-
-Helmholtz::Helmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
-                     const SpatialDomains::MeshGraphSharedPtr &pGraph)
-    : Poisson(pSession, pGraph)
+class MMFPoisson : public MMFLaplace
 {
-    if (pSession->DefinesParameter("Lambda"))
+public:
+    friend class MemoryManager<MMFPoisson>;
+
+    /// Creates an instance of this class
+    static EquationSystemSharedPtr create(
+        const LibUtilities::SessionReaderSharedPtr &pSession,
+        const SpatialDomains::MeshGraphSharedPtr &pGraph)
     {
-        m_factors[StdRegions::eFactorLambda] =
-            m_session->GetParameter("Lambda");
+        EquationSystemSharedPtr p =
+            MemoryManager<MMFPoisson>::AllocateSharedPtr(pSession, pGraph);
+        p->InitObject();
+        return p;
     }
-}
+    /// Name of class
+    static std::string className1;
+    static std::string className2;
 
-void Helmholtz::v_InitObject(bool DeclareFields)
-{
-    Poisson::v_InitObject(DeclareFields);
-    std::cout << "Helmholtz " << std::endl;
-}
+    virtual ~MMFPoisson();
 
-Helmholtz::~Helmholtz()
-{
-}
+protected:
+    MMFPoisson(const LibUtilities::SessionReaderSharedPtr &pSession,
+            const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-void Helmholtz::v_GenerateSummary(SolverUtils::SummaryList &s)
-{
-    Poisson::v_GenerateSummary(s);
-}
+    virtual void v_InitObject(bool DeclareFields = true) override;
 
-Array<OneD, bool> Helmholtz::v_GetSystemSingularChecks()
-{
-    if (m_factors[StdRegions::eFactorLambda] == 0)
-    {
-        return Array<OneD, bool>(m_session->GetVariables().size(), true);
-    }
-    else
-    {
-        return Array<OneD, bool>(m_session->GetVariables().size(), false);
-    }
-}
+    virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
+
+private:
+    virtual Array<OneD, bool> v_GetSystemSingularChecks() override;
+};
 } // namespace Nektar
+
+#endif
