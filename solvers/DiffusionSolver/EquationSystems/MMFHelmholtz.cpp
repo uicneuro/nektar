@@ -47,7 +47,7 @@ string MMFHelmholtz::className2 =
 
 MMFHelmholtz::MMFHelmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
                      const SpatialDomains::MeshGraphSharedPtr &pGraph)
-    : MMFPoisson(pSession, pGraph)
+    : UnsteadySystem(pSession, pGraph), MMFPoisson(pSession, pGraph)
 {
     if (pSession->DefinesParameter("Lambda"))
     {

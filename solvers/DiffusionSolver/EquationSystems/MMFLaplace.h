@@ -38,7 +38,6 @@
 #include <SolverUtils/EquationSystem.h>
 #include <SolverUtils/MMFSystem.h>
 
-
 using namespace Nektar::SolverUtils;
 
 namespace Nektar

@@ -45,7 +45,7 @@ string MMFPoisson::className2 = GetEquationSystemFactory().RegisterCreatorFuncti
 
 MMFPoisson::MMFPoisson(const LibUtilities::SessionReaderSharedPtr &pSession,
                  const SpatialDomains::MeshGraphSharedPtr &pGraph)
-    : MMFLaplace(pSession, pGraph)
+    : UnsteadySystem(pSession, pGraph), MMFLaplace(pSession, pGraph)
 {
 }
 
