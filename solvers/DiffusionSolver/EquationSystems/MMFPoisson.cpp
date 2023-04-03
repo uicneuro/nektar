@@ -47,13 +47,18 @@ MMFPoisson::MMFPoisson(const LibUtilities::SessionReaderSharedPtr &pSession,
                  const SpatialDomains::MeshGraphSharedPtr &pGraph)
     : UnsteadySystem(pSession, pGraph), MMFLaplace(pSession, pGraph)
 {
+    m_factors[StdRegions::eFactorLambda] = 0.0;
+    m_factors[StdRegions::eFactorTau]    = 1.0;
 }
 
 void MMFPoisson::v_InitObject(bool DeclareFields)
 {
+
     MMFLaplace::v_InitObject(DeclareFields);
 
     GetFunction("Forcing")->Evaluate(m_session->GetVariables(), m_fields);
+    std::cout << "v_InitObject: i = " << 0 << ", phys = " << RootMeanSquare(m_fields[0]->GetPhys()) << std::endl;
+
 }
 
 MMFPoisson::~MMFPoisson()
@@ -63,6 +68,7 @@ MMFPoisson::~MMFPoisson()
 void MMFPoisson::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     MMFLaplace::v_GenerateSummary(s);
+    
     for (int i = 0; i < m_fields.size(); ++i)
     {
         stringstream name;

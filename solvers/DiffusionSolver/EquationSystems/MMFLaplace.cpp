@@ -70,8 +70,8 @@ void MMFLaplace::v_InitObject(bool DeclareFields)
     int nvar  = m_fields.size();
 
     // AniStrength for e^1 and e^2
-
     m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
+    m_session->LoadParameter("HelmMMF", m_HelmMMF, 0);
 
     // Diffusivity coefficient for e^j
     m_epsilon = Array<OneD, NekDouble>(m_spacedim);
@@ -107,18 +107,37 @@ void MMFLaplace::v_GenerateSummary(SolverUtils::SummaryList &s)
     EquationSystem::SessionSummary(s);
     SolverUtils::AddSummaryItem(s, "Lambda",
                                 m_factors[StdRegions::eFactorLambda]);
+
+    SolverUtils::AddSummaryItem(s, "Lambda",
+                                m_factors[StdRegions::eFactorLambda]);
+
 }
+
 
 void MMFLaplace::v_DoSolve()
 {
+
+        GetFunction("Forcing")->Evaluate(m_session->GetVariables(), m_fields);
+
     for (int i = 0; i < m_fields.size(); ++i)
     {
+        std::cout << "v_DoSolve: i = " << i << ", phys = " << RootMeanSquare(m_fields[i]->GetPhys()) << std::endl;
         // Zero field so initial conditions are zero
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
-        // m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-        //                        m_fields[i]->UpdateCoeffs(), m_factors);
-                m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                               m_fields[i]->UpdateCoeffs(), m_factors, m_varcoeff);
+        if(m_HelmMMF)
+        {
+            std::cout << "Helmsolver with MMF" << std::endl;            
+            m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+                            m_fields[i]->UpdateCoeffs(), m_factors, m_varcoeff);
+        }
+
+        else
+        {
+            std::cout << "Regular Helmsolver" << std::endl;            
+            m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+                                m_fields[i]->UpdateCoeffs(), m_factors);
+        }
+
         m_fields[i]->SetPhysState(false);
     }
 }

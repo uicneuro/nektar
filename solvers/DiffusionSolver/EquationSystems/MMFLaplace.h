@@ -80,6 +80,8 @@ protected:
 private:
     virtual Array<OneD, bool> v_GetSystemSingularChecks() override;
 
+    int m_HelmMMF;
+
     Array<OneD, NekDouble> m_epsilon;
     Array<OneD, NekDouble> m_epsu;
 
