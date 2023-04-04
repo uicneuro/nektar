@@ -176,6 +176,8 @@ protected:
 
     virtual void v_InitObject(bool DeclareField = true) override;
     
+    void TestHelmholtzSolver();
+
     void DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -187,9 +189,6 @@ protected:
         NekDouble lambda);
 
     /// Computes the reaction terms \f$f(u,v)\f$ and \f$g(u,v)\f$.
-    void DoSolveGeneral();
-
-    void DoSolveHelmholtz();
 
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
