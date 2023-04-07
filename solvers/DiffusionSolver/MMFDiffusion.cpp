@@ -297,7 +297,7 @@ void MMFDiffusion::DoOdeRhs(
                 outarray[0][k] = (m_epsilon[0] * m_pi *
                                  m_pi + m_epsilon[1] * m_pi *
                                  m_pi - m_pi) * exp(-1.0 * m_pi * time) *
-                                 sin(m_pi * x[k]) * cos(m_pi * y[k]);
+                                 sin(m_pi * x[k]) * sin(m_pi * y[k]);
             }
         }
         break;
@@ -635,7 +635,7 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * m_pi * time) * sin(m_pi * x[k]) * cos(m_pi * y[k]);
+        outfield[k] = exp(-1.0 * m_pi * time) * sin(m_pi * x[k]) * sin(m_pi * y[k]);
     }
 }
 
@@ -1154,16 +1154,16 @@ void MMFDiffusion::TestHelmholtzSolver()
 
     std::cout << "HelmXYZSolve " << RootMeanSquare(XYZError) << std::endl;
 
-    Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
-                    tmpc, factors, m_varcoeff);
-    m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(tmpc, HelmMMFSolve);
-    Array<OneD, NekDouble> MMFError(nq);
+    // Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
+    //                 tmpc, factors, m_varcoeff);
+    // m_fields[0]->SetPhysState(false);
+    // m_fields[0]->BwdTrans(tmpc, HelmMMFSolve);
+    // Array<OneD, NekDouble> MMFError(nq);
 
-    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmMMFSolve[0], 1, &MMFError[0], 1);
+    // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmMMFSolve[0], 1, &MMFError[0], 1);
 
-    std::cout << "HelmMMFSolve, error " << RootMeanSquare(MMFError) << std::endl;
+    // std::cout << "HelmMMFSolve, error " << RootMeanSquare(MMFError) << std::endl;
 
 
 

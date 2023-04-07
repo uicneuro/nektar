@@ -43,6 +43,7 @@
 #include <SpatialDomains/Geometry2D.h>
 #include <StdRegions/StdExpansion2D.h>
 
+
 namespace Nektar
 {
 namespace LocalRegions
@@ -161,6 +162,11 @@ private:
         const int edge, ExpansionSharedPtr &EdgeExp,
         const Array<OneD, const NekDouble> &varcoeff,
         Array<OneD, NekDouble> &outarray);
+
+    Array<OneD, NekDouble> GetnEdgecdotMF(
+        const int edge, ExpansionSharedPtr &EdgeExp_e,
+        const Array<OneD, const Array<OneD, NekDouble>> &normals,
+        const Array<OneD, const NekDouble> &movingframes);
 
     Array<OneD, NekDouble> GetnEdgecdotMF(
         const int dir, const int edge, ExpansionSharedPtr &EdgeExp_e,
