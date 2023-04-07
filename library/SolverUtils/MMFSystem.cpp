@@ -11999,23 +11999,18 @@ void MMFSystem::ComputeVarCoeff2D(
     }
 
     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
-              << std::endl;
+              << std::endl << std::endl;
 }
 
 void MMFSystem::ComputeVarCoeff2DDxDyDz(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &epsilon,
     StdRegions::VarCoeffMap &varcoeff)
 {
     int nq = GetTotPoints();
 
-    // StdRegions::VarCoeffType MMFCoeffs[3] = {
-    //     StdRegions::eWeakDeriv0, 
-    //     StdRegions::eWeakDeriv1, 
-    //     StdRegions::eWeakDeriv2};
-        StdRegions::VarCoeffType MMFCoeffs[3] = {StdRegions::eVarCoeffD00,
-                                             StdRegions::eVarCoeffD11,
-                                             StdRegions::eVarCoeffD22};
+    StdRegions::VarCoeffType MMFCoeffs[3] = {StdRegions::eVarCoeffD00,
+                                            StdRegions::eVarCoeffD11,
+                                            StdRegions::eVarCoeffD22};
 
     for (int j = 0; j < m_spacedim; ++j)
     {
@@ -12027,7 +12022,7 @@ void MMFSystem::ComputeVarCoeff2DDxDyDz(
               << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " ) " << std::endl;
 
     std::cout << " ::::: 2D [Dx Dy Dz] Varcoeff is Successfully Created ::::: "
-              << std::endl;
+              << std::endl << std::endl;
 }
 
 

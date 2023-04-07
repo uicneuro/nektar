@@ -163,9 +163,14 @@ private:
         Array<OneD, NekDouble> &outarray);
 
     Array<OneD, NekDouble> GetnEdgecdotMF(
-        const int dir, const int edge, ExpansionSharedPtr &EdgeExp_e,
+        const int edge, ExpansionSharedPtr &EdgeExp_e,
         const Array<OneD, const Array<OneD, NekDouble>> &normals,
-        const StdRegions::VarCoeffMap &varcoeffs);
+        const Array<OneD, const NekDouble> &movingframes);
+
+    // Array<OneD, NekDouble> GetnEdgecdotMF(
+    //     const int dir, const int edge, ExpansionSharedPtr &EdgeExp_e,
+    //     const Array<OneD, const Array<OneD, NekDouble>> &normals,
+    //     const StdRegions::VarCoeffMap &varcoeffs);
 };
 
 inline SpatialDomains::Geometry2DSharedPtr Expansion2D::GetGeom2D() const

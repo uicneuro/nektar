@@ -147,7 +147,9 @@ public:
 protected:
     bool m_useSpecVanVisc;
     NekDouble m_frequency;
-    
+
+    StdRegions::VarCoeffMap m_varcoeffXYZ;
+
     SolverUtils::DiffusionSharedPtr m_diffusion;
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 

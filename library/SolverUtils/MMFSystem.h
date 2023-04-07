@@ -1429,7 +1429,6 @@ protected:
         StdRegions::VarCoeffMap &varcoeff);
 
     SOLVER_UTILS_EXPORT void ComputeVarCoeff2DDxDyDz(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &epsilon,
     StdRegions::VarCoeffMap &varcoeff);
 

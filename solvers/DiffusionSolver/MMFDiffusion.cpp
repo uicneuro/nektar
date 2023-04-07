@@ -71,7 +71,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     int nvar  = m_fields.size();
 
     // AniStrength for e^1 and e^2
-
     m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
 
     // Diffusivity coefficient for e^j
@@ -138,6 +137,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     }
 
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+    ComputeVarCoeff2DDxDyDz(m_epsilon,m_varcoeffXYZ);
 
     TestHelmholtzSolver();
 
@@ -1119,41 +1119,55 @@ void MMFDiffusion::TestHelmholtzSolver()
     Array<OneD, NekDouble> tmpc(ncoeffs);
     Array<OneD, NekDouble> HelmSolve(nq);
     Array<OneD, NekDouble> HelmMMFSolve(nq);
+    Array<OneD, NekDouble> HelmXYZSolve(nq);
 
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = 1.0;
     factors[StdRegions::eFactorLambda] = 0.0;
 
-    std::cout << "Test HelmholtzSolver " << std::endl;
+    std::cout << "Test HelmholtzSolver ==================================================" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
     GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
 
     GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), m_fields);
-    std::cout << "Inarray = " << RootMeanSquare(m_fields[0]->GetPhys()) << std::endl;
 
     // Zero field so initial conditions are zero
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    std::cout << "Regular Helmsolver" << std::endl;            
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
                         tmpc, factors);
     m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(tmpc, HelmMMFSolve);
+    m_fields[0]->BwdTrans(tmpc, HelmSolve);
+        Array<OneD, NekDouble> Error(nq);
+
+    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
+
+    std::cout << "HelmSolve " << RootMeanSquare(Error) << std::endl;
 
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    std::cout << "Helmsolver with MMF" << std::endl;            
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
+                    tmpc, factors, m_varcoeffXYZ);
+    m_fields[0]->SetPhysState(false);
+    m_fields[0]->BwdTrans(tmpc, HelmXYZSolve);
+    Array<OneD, NekDouble> XYZError(nq);
+    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &XYZError[0], 1);
+
+    std::cout << "HelmXYZSolve " << RootMeanSquare(XYZError) << std::endl;
+
+    Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
                     tmpc, factors, m_varcoeff);
     m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(tmpc, HelmSolve);
-
-    Array<OneD, NekDouble> Error(nq);
+    m_fields[0]->BwdTrans(tmpc, HelmMMFSolve);
     Array<OneD, NekDouble> MMFError(nq);
 
     Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmMMFSolve[0], 1, &MMFError[0], 1);
-    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
 
-    std::cout << "Helmsolve 2D error = " << RootMeanSquare(Error) << ", MMF error = " << RootMeanSquare(MMFError) << std::endl;
+    std::cout << "HelmMMFSolve, error " << RootMeanSquare(MMFError) << std::endl;
+
+
+
+    std::cout << "==================================================" << std::endl;
 }
 
 void MMFDiffusion::v_DoSolve()

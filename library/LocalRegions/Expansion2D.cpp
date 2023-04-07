@@ -118,12 +118,6 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
             if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed ||
                 (mkey.GetNVarCoeff()))
             {
-                // const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
-
-                // bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMass) != varcoeffs.end());
-
-                // std::cout << "Expansion2D: StdRegions::eInvMass, mmf =  " << mmf << std::endl;
-                
                 NekDouble one = 1.0;
 
                 // StdRegions::StdMatrixKey masskey(StdRegions::eMass,
@@ -453,14 +447,9 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
         {
             NekDouble one = 1.0;
 
-            const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
-            bool mmf =
-                (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
-
             MatrixKey hkey(StdRegions::eHybridDGHelmholtz, DetShapeType(),
                            *this, mkey.GetConstFactors(), mkey.GetVarCoeffs());
 
-            // std::cout << "Expansion2D: eInvHybridDGHelmholtz, mmf = " << mmf << std::endl;
             DNekMatSharedPtr mat = GenMatrix(hkey);
 
             mat->Invert();
@@ -780,8 +769,7 @@ void Expansion2D::AddNormTraceInt(const int dir,
         order_e = EdgeExp[e]->GetNcoeffs();
         nquad_e = EdgeExp[e]->GetNumPoints(0);
 
-        const Array<OneD, const Array<OneD, NekDouble>> &normals =
-            GetTraceNormal(e);
+        const Array<OneD, const Array<OneD, NekDouble>> &normals = GetTraceNormal(e);
         Array<OneD, NekDouble> edgeCoeffs(order_e);
         Array<OneD, NekDouble> edgePhys(nquad_e);
 
@@ -810,8 +798,9 @@ void Expansion2D::AddNormTraceInt(const int dir,
         if (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end())
         {
             // MMF case
-            Array<OneD, NekDouble> ncdotMF_e =
-                GetnEdgecdotMF(dir, e, EdgeExp[e], normals, varcoeffs);
+            // Array<OneD, NekDouble> ncdotMF_e = GetnEdgecdotMF(dir, e, EdgeExp[e], normals, varcoeffs);
+            Array<OneD, NekDouble> MF = GetMF(dir, 2, varcoeffs);
+            Array<OneD, NekDouble> ncdotMF_e = GetnEdgecdotMF(e, EdgeExp[e], normals, MF);
 
             Vmath::Vmul(nquad_e, ncdotMF_e, 1, edgePhys, 1, edgePhys, 1);
         }
@@ -992,13 +981,17 @@ void Expansion2D::AddHDGHelmholtzEdgeTerms(
             StdRegions::VarCoeffMap Weight;
             Weight[StdRegions::eVarCoeffMass] = GetMFMag(n, varcoeffs);
 
+            // std::cout << "n = " << n << ", Weight = " << Weight[StdRegions::eVarCoeffMass][0] << std::endl;
+
             MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(), *this,
                                  StdRegions::NullConstFactorMap, Weight);
 
             invMass = GetLocMatrix(invMasskey);
 
-            Array<OneD, NekDouble> ncdotMF_e =
-                GetnEdgecdotMF(n, edge, EdgeExp[edge], normals, varcoeffs);
+            // Array<OneD, NekDouble> ncdotMF_e =
+            //     GetnEdgecdotMF(n, edge, EdgeExp[edge], normals, varcoeffs);
+            Array<OneD, NekDouble> MF = GetMF(n, 2, varcoeffs);
+            Array<OneD, NekDouble> ncdotMF_e = GetnEdgecdotMF(edge, EdgeExp[edge], normals, MF);    
 
             Vmath::Vmul(nquad_e, ncdotMF_e, 1, edgePhys, 1, inval, 1);
         }
@@ -1114,7 +1107,6 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                      "HybridDGHelmholtz matrix not set up "
                      "for non boundary-interior expansions");
 
-
             int i, j, k;
             NekDouble lambdaval =
                 mkey.GetConstFactor(StdRegions::eFactorLambda);
@@ -1125,8 +1117,6 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
             bool mmf =
                 (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
-
-            //         std::cout << " StdRegions::eHybridDGHelmholtz: mmf = " << mmf << std::endl;
 
             Array<OneD, unsigned int> emap;
             Array<OneD, int> sign;
@@ -1171,12 +1161,9 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
                         DNekScalMat &Dmat = *GetLocMatrix(Dmatkey);
 
-
                         StdRegions::VarCoeffMap Weight;
                         Weight[StdRegions::eVarCoeffMass] = GetMFMag(i, mkey.GetVarCoeffs());
-
-                        // std::cout << "i = " << i << ", Expansion2D: invMass: eHybridDGHelmholtz, Weight = " << Weight[StdRegions::eVarCoeffMass][0] << std::endl;
-
+                        
                         MatrixKey invMasskey(
                             StdRegions::eInvMass, DetShapeType(), *this,
                             StdRegions::NullConstFactorMap, Weight);
@@ -1186,7 +1173,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                         Mat = Mat + Dmat * invMass * Transpose(Dmat);
                     }
                 }
-                else if (mkey.HasVarCoeff(Coeffs[i]))
+                else if (mkey.HasVarCoeff(Coeffs[0]))
                 {
                     DNekScalMat &invMass = *GetLocMatrix(StdRegions::eInvMass);
 
@@ -1217,7 +1204,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             DNekScalMat &Mass = *GetLocMatrix(StdRegions::eMass);
             Mat               = Mat + lambdaval * Mass;
 
-            // Add tau*E_l using elemental mass matrices on each edge
+            // Add tau*E_l using e lemental mass matrices on each edge
             for (i = 0; i < nedges; ++i)
             {
                 EdgeExp = GetTraceExp(i);
@@ -1236,11 +1223,10 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                         mu);
                     edgeVarCoeffs[StdRegions::eVarCoeffMass] = mu;
                 }
+
                 DNekScalMat &eMass = *EdgeExp->GetLocMatrix(
                     StdRegions::eMass, StdRegions::NullConstFactorMap,
                     edgeVarCoeffs);
-                // DNekScalMat &eMass =
-                // *EdgeExp->GetLocMatrix(StdRegions::eMass);
 
                 for (j = 0; j < order_e; ++j)
                 {
@@ -1272,12 +1258,10 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
             Array<OneD, ExpansionSharedPtr> EdgeExp(nedges);
             // declare matrix space
-            returnval =
-                MemoryManager<DNekMat>::AllocateSharedPtr(ncoeffs, nbndry);
+            returnval = MemoryManager<DNekMat>::AllocateSharedPtr(ncoeffs, nbndry);
             DNekMat &Umat = *returnval;
 
             // Z^e matrix
-            // std::cout << " Expansion2D::eInvHybridDGHelmholtz " << std::endl;
             MatrixKey newkey(StdRegions::eInvHybridDGHelmholtz, DetShapeType(),
                              *this, mkey.GetConstFactors(),
                              mkey.GetVarCoeffs());
@@ -1336,6 +1320,10 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             int nedges   = GetNtraces();
             int shapedim = 2;
 
+            const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
+            bool mmf =
+                (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
+
             Array<OneD, NekDouble> lambda(nbndry);
             DNekVec Lambda(nbndry, lambda, eWrapper);
             Array<OneD, ExpansionSharedPtr> EdgeExp(nedges);
@@ -1344,10 +1332,10 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             DNekVec Ulam(ncoeffs, ulam, eWrapper);
             Array<OneD, NekDouble> f(ncoeffs);
             DNekVec F(ncoeffs, f, eWrapper);
+  std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ0 1 " << std::endl << std::endl;
 
             // declare matrix space
-            returnval =
-                MemoryManager<DNekMat>::AllocateSharedPtr(ncoeffs, nbndry);
+            returnval = MemoryManager<DNekMat>::AllocateSharedPtr(ncoeffs, nbndry);
             DNekMat &Qmat = *returnval;
 
             // Lambda to U matrix
@@ -1363,6 +1351,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             {
                 EdgeExp[i] = GetTraceExp(i);
             }
+  std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ0 2 " << std::endl << std::endl;
 
             // Weak Derivative matrix
             DNekScalMatSharedPtr Dmat;
@@ -1385,10 +1374,9 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     break;
             }
 
-            const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
+            StdRegions::VarCoeffMap VarCoeffDirDeriv;
             if (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end())
             {
-                StdRegions::VarCoeffMap VarCoeffDirDeriv;
                 VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
                     GetMF(dir, shapedim, varcoeffs);
                 VarCoeffDirDeriv[StdRegions::eVarCoeffMFDiv] =
@@ -1402,7 +1390,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
                 StdRegions::VarCoeffMap Weight;
                 Weight[StdRegions::eVarCoeffMass] = GetMFMag(dir, mkey.GetVarCoeffs());
-
+                
                 MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
                                      *this, StdRegions::NullConstFactorMap,
                                      Weight);
@@ -1444,7 +1432,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
                 // Add the C terms resulting from the I's on the
                 // diagonals of Eqn 32
-                AddNormTraceInt(dir, lambda, EdgeExp, f, mkey.GetVarCoeffs());
+                AddNormTraceInt(dir, lambda, EdgeExp, f, VarCoeffDirDeriv);
 
                 // finally multiply by inverse mass matrix
                 Ulam = invMass * F;
@@ -1463,6 +1451,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             int nbndry    = NumDGBndryCoeffs();
             int nedges    = GetNtraces();
             NekDouble tau = mkey.GetConstFactor(StdRegions::eFactorTau);
+
             StdRegions::VarCoeffMap::const_iterator x;
             const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
             bool mmf =
@@ -1477,30 +1466,48 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
             Array<OneD, int> sign;
             StdRegions::Orientation edgedir;
 
+            if (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end())
+            {
+                StdRegions::VarCoeffMap VarCoeffDirDeriv;
+                VarCoeffDirDeriv[StdRegions::eVarCoeffMF] =
+                    GetMF(0, 2, varcoeffs);
+                VarCoeffDirDeriv[StdRegions::eVarCoeffMFDiv] =
+                    GetMFDiv(0, varcoeffs);
+
+                    std::cout << "eHybridDGHelmBndLam :: MFx = " << VarCoeffDirDeriv[StdRegions::eVarCoeffMF][0] << std::endl << std::endl;
+            }
+
             // declare matrix space
             returnval =
                 MemoryManager<DNekMat>::AllocateSharedPtr(nbndry, nbndry);
             DNekMat &BndMat = *returnval;
 
             DNekScalMatSharedPtr LamToQ[3];
+ 
+
+ std::cout << "eHybridDGHelmBndLam: eHybridDGLamToU " << std::endl << std::endl;
+
 
             // Matrix to map Lambda to U
             MatrixKey LamToUkey(StdRegions::eHybridDGLamToU, DetShapeType(),
                                 *this, mkey.GetConstFactors(),
                                 mkey.GetVarCoeffs());
             DNekScalMat &LamToU = *GetLocMatrix(LamToUkey);
+  std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ0 " << std::endl << std::endl;
 
             // Matrix to map Lambda to Q0
             MatrixKey LamToQ0key(StdRegions::eHybridDGLamToQ0, DetShapeType(),
                                  *this, mkey.GetConstFactors(),
                                  mkey.GetVarCoeffs());
             LamToQ[0] = GetLocMatrix(LamToQ0key);
+   std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ1 " << std::endl << std::endl;
 
             // Matrix to map Lambda to Q1
             MatrixKey LamToQ1key(StdRegions::eHybridDGLamToQ1, DetShapeType(),
                                  *this, mkey.GetConstFactors(),
                                  mkey.GetVarCoeffs());
             LamToQ[1] = GetLocMatrix(LamToQ1key);
+    std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ1 DONE " << std::endl << std::endl;
 
             // Matrix to map Lambda to Q2 for 3D coordinates
             // if (coordim == 3)
@@ -1540,7 +1547,8 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     GetTraceToElementMap(e, emap, sign, edgedir);
 
                     StdRegions::VarCoeffType VarCoeff[3] = {
-                        StdRegions::eVarCoeffD00, StdRegions::eVarCoeffD11,
+                        StdRegions::eVarCoeffD00, 
+                        StdRegions::eVarCoeffD11,
                         StdRegions::eVarCoeffD22};
 
                     // Q0 * n0 (BQ_0 terms)
@@ -1550,8 +1558,11 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     {
                         edgeCoeffs[j] = sign[j] * (*LamToQ[0])(emap[j], i);
                     }
-
+ 
                     EdgeExp[e]->BwdTrans(edgeCoeffs, edgePhys);
+
+                        std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ1 LOOP 1 " << std::endl << std::endl;
+
                     // @TODO Var coeffs
                     // Multiply by variable coefficient
                     //                            if ((x =
@@ -1563,8 +1574,12 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     //                            }
                     if (mmf)
                     {
-                        Array<OneD, NekDouble> ncdotMF = GetnEdgecdotMF(
-                            0, e, EdgeExp[e], normals, varcoeffs);
+                        // Array<OneD, NekDouble> ncdotMF = GetnEdgecdotMF(
+                        //     0, e, EdgeExp[e], normals, varcoeffs);
+                        Array<OneD, NekDouble> MF = GetMF(0, 2, varcoeffs);
+
+                        Array<OneD, NekDouble> ncdotMF = GetnEdgecdotMF(e, EdgeExp[e], normals, MF);   
+
                         Vmath::Vmul(nquad_e, ncdotMF, 1, edgePhys, 1, work, 1);
                     }
                     else
@@ -1572,6 +1587,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                         Vmath::Vmul(nquad_e, normals[0], 1, edgePhys, 1, work,
                                     1);
                     }
+                         std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ1 LOOP 2 " << std::endl << std::endl;
 
                     // Q1 * n1 (BQ_1 terms)
                     for (j = 0; j < order_e; ++j)
@@ -1580,6 +1596,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     }
 
                     EdgeExp[e]->BwdTrans(edgeCoeffs, edgePhys);
+                         std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ1 LOOP 3 " << std::endl << std::endl;
 
                     // @TODO var coeffs
                     // Multiply by variable coefficients
@@ -1593,8 +1610,12 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
 
                     if (mmf)
                     {
-                        Array<OneD, NekDouble> ncdotMF = GetnEdgecdotMF(
-                            1, e, EdgeExp[e], normals, varcoeffs);
+                        // Array<OneD, NekDouble> ncdotMF = GetnEdgecdotMF(
+                        //     1, e, EdgeExp[e], normals, varcoeffs);
+                        Array<OneD, NekDouble> MF = GetMF(1, 2, varcoeffs);
+
+                        Array<OneD, NekDouble> ncdotMF = GetnEdgecdotMF(e, EdgeExp[e], normals, MF);   
+
                         Vmath::Vvtvp(nquad_e, ncdotMF, 1, edgePhys, 1, work, 1,
                                      work, 1);
                     }
@@ -1603,6 +1624,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                         Vmath::Vvtvp(nquad_e, normals[1], 1, edgePhys, 1, work,
                                      1, work, 1);
                     }
+                         std::cout << "eHybridDGHelmBndLam: eHybridDGLamToQ1 LOOP 4 " << std::endl << std::endl;
 
                     // Q2 * n2 (BQ_2 terms)
                     // if (coordim == 3)
@@ -1636,7 +1658,7 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     }
 
                     EdgeExp[e]->BwdTrans(edgeCoeffs, edgePhys);
-
+ 
                     // Multiply by variable coefficients
                     if ((x = varcoeffs.find(VarCoeff[0])) != varcoeffs.end())
                     {
@@ -1645,19 +1667,19 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                         Vmath::Vmul(nquad_e, varcoeff_work, 1, edgePhys, 1,
                                     edgePhys, 1);
                     }
-
+ 
                     Vmath::Svtvp(nquad_e, -tau, edgePhys, 1, work, 1, work, 1);
                     /// TODO: Add variable coeffs
                     EdgeExp[e]->IProductWRTBase(work, edgeCoeffs);
 
                     EdgeExp[e]->SetCoeffsToOrientation(edgedir, edgeCoeffs,
                                                        edgeCoeffs);
-
+ 
                     for (j = 0; j < order_e; ++j)
                     {
                         BndMat(cnt + j, i) = edgeCoeffs[j];
                     }
-
+ 
                     cnt += order_e;
                 }
             }
@@ -2127,9 +2149,9 @@ void Expansion2D::v_ReOrientTracePhysMap(const StdRegions::Orientation orient,
 
 // Compute edgenormal \cdot vector
 Array<OneD, NekDouble> Expansion2D::GetnEdgecdotMF(
-    const int dir, const int edge, ExpansionSharedPtr &EdgeExp_e,
+    const int edge, ExpansionSharedPtr &EdgeExp_e,
     const Array<OneD, const Array<OneD, NekDouble>> &normals,
-    const StdRegions::VarCoeffMap &varcoeffs)
+    const Array<OneD, const NekDouble> &movingframes)
 {
     int nquad_e = EdgeExp_e->GetNumPoints(0);
     int coordim = GetCoordim();
@@ -2137,33 +2159,87 @@ Array<OneD, NekDouble> Expansion2D::GetnEdgecdotMF(
     int nquad1  = m_base[1]->GetNumPoints();
     int nqtot   = nquad0 * nquad1;
 
-    StdRegions::VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag};
-
-    StdRegions::VarCoeffMap::const_iterator MFdir;
-
     Array<OneD, NekDouble> ncdotMF(nqtot, 0.0);
-    Array<OneD, NekDouble> tmp(nqtot);
+    Array<OneD, NekDouble> tmp(nqtot);    
+    Array<OneD, NekDouble> MFmag(nquad_e,0.0);
+                        for(int i=0; i<nqtot; ++i)
+                        {
+                            std::cout << "OUTSIDE: MF : k =  " << movingframes[i]<< std::endl;
+                        }
+
     Array<OneD, NekDouble> tmp_e(nquad_e);
     for (int k = 0; k < coordim; k++)
     {
-        MFdir = varcoeffs.find(MMFCoeffs[dir * 5 + k]);
-        tmp   = MFdir->second;
+        Vmath::Vcopy(nqtot, &movingframes[k*nqtot], 1, &tmp[0], 1);
 
         GetPhysEdgeVarCoeffsFromElement(edge, EdgeExp_e, tmp, tmp_e);
 
+                        for(int i=0; i<nquad_e; ++i)
+                        {
+                            std::cout << "INSIDE: MF : k =  " << tmp_e[i]<< std::endl;
+                        }
+
+
         Vmath::Vvtvp(nquad_e, &tmp_e[0], 1, &normals[k][0], 1, &ncdotMF[0], 1,
                      &ncdotMF[0], 1);
+
+        Vmath::Vvtvp(nquad_e, &tmp_e[0], 1, &tmp_e[0], 1, &MFmag[0], 1,
+                &MFmag[0], 1);             
     }
+
+    std::cout << "MFmag = " << MFmag[0] << std::endl;
     return ncdotMF;
 }
+
+// Compute edgenormal \cdot vector
+// Array<OneD, NekDouble> Expansion2D::GetnEdgecdotMF(
+//     const int dir, const int edge, ExpansionSharedPtr &EdgeExp_e,
+//     const Array<OneD, const Array<OneD, NekDouble>> &normals,
+//     const StdRegions::VarCoeffMap &varcoeffs)
+// {
+//     int nquad_e = EdgeExp_e->GetNumPoints(0);
+//     int coordim = GetCoordim();
+//     int nquad0  = m_base[0]->GetNumPoints();
+//     int nquad1  = m_base[1]->GetNumPoints();
+//     int nqtot   = nquad0 * nquad1;
+
+//     StdRegions::VarCoeffType MMFCoeffs[15] = {
+//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+//         StdRegions::eVarCoeffMF3Mag};
+
+//     StdRegions::VarCoeffMap::const_iterator MFdir;
+
+//     Array<OneD, NekDouble> ncdotMF(nqtot, 0.0);
+//     Array<OneD, NekDouble> tmp(nqtot);    
+//     Array<OneD, NekDouble> MFmag(nqtot,0.0);
+
+//     Array<OneD, NekDouble> tmp_e(nquad_e);
+//     for (int k = 0; k < coordim; k++)
+//     {
+//         MFdir = varcoeffs.find(MMFCoeffs[dir * 5 + k]);
+//         tmp   = MFdir->second;
+
+//         GetPhysEdgeVarCoeffsFromElement(edge, EdgeExp_e, tmp, tmp_e);
+
+//         Vmath::Vvtvp(nquad_e, &tmp_e[0], 1, &normals[k][0], 1, &ncdotMF[0], 1,
+//                      &ncdotMF[0], 1);
+
+//                 Vmath::Vvtvp(nquad_e, &tmp_e[0], 1, &tmp_e[0], 1, &MFmag[0], 1,
+//                      &MFmag[0], 1);             
+//     }
+
+//             MFdir = varcoeffs.find(MMFCoeffs[dir * 5 + 4]);
+//         tmp   = MFdir->second;
+
+//     std::cout << "dir = " << dir << ", MFmag = " << MFmag[0] << ", original MFmag = " << tmp[0] << std::endl;
+//     return ncdotMF;
+//}
 
 NekDouble Expansion2D::v_VectorFlux(
     const Array<OneD, Array<OneD, NekDouble>> &vec)

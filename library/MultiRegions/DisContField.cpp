@@ -3444,9 +3444,14 @@ void DisContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     int NumDirBCs  = m_traceMap->GetNumLocalDirBndCoeffs();
     int e_ncoeffs;
 
+    std::cout << "DisCont: eHybridDGLamToU Starts " << std::endl;
+
     GlobalMatrixKey HDGLamToUKey(StdRegions::eHybridDGLamToU,
                                  NullAssemblyMapSharedPtr, factors, varcoeff);
     const DNekScalBlkMatSharedPtr &HDGLamToU = GetBlockMatrix(HDGLamToUKey);
+
+    std::cout << "DisCont: eHybridDGLamToU Ends " << std::endl;
+
 
     // Retrieve number of local trace space coefficients N_{\lambda},
     // and set up local elemental trace solution \lambda^e.
@@ -3518,29 +3523,43 @@ void DisContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     // Solve trace problem: \Lambda = K^{-1} F
     // K is the HybridDGHelmBndLam matrix.
     //----------------------------------
+    std::cout << "DisCont: eHybridDGHelmBndLam Starts " << std::endl;
 
     if (GloBndDofs - NumDirBCs > 0)
     {
         GlobalLinSysKey key(StdRegions::eHybridDGHelmBndLam, m_traceMap,
                             factors, varcoeff);
+            std::cout << "DisCont: eHybridDGHelmBndLam key Generated " << std::endl;
+
+                            
         GlobalLinSysSharedPtr LinSys = GetGlobalBndLinSys(key);
+            std::cout << "DisCont: eHybridDGHelmBndLam Generated " << std::endl;
+
         LinSys->Solve(bndrhs, loclambda, m_traceMap);
+            std::cout << "DisCont: eHybridDGHelmBndLam Solved " << std::endl;
 
         // For consistency with previous version put global
         // solution into m_trace->m_coeffs
         m_traceMap->LocalToGlobal(loclambda, m_trace->UpdateCoeffs());
     }
+    std::cout << "DisCont: eHybridDGHelmBndLam Ends " << std::endl;
 
     //----------------------------------
     // Internal element solves
     //----------------------------------
+    std::cout << "DisCont: eInvHybridDGHelmholtz Starts " << std::endl;
 
     GlobalMatrixKey invHDGhelmkey(StdRegions::eInvHybridDGHelmholtz,
                                   NullAssemblyMapSharedPtr, factors, varcoeff);
+    std::cout << "DisCont: eInvHybridDGHelmholtz Ends " << std::endl;
+
+
+    std::cout << "DisCont: invHDGhelmkey Starts " << std::endl;
 
     const DNekScalBlkMatSharedPtr &InvHDGHelm = GetBlockMatrix(invHDGhelmkey);
     DNekVec out(m_ncoeffs, outarray, eWrapper);
     Vmath::Zero(m_ncoeffs, outarray, 1);
+    std::cout << "DisCont: invHDGhelmkey END " << std::endl;
 
     //  out =  u_f + u_lam = (*InvHDGHelm)*f + (LamtoU)*Lam
     out = (*InvHDGHelm) * F + (*HDGLamToU) * LocLambda;
