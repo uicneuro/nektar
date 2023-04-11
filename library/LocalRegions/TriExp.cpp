@@ -1147,6 +1147,8 @@ void TriExp::v_LaplacianMatrixOp_MatFree_Kernel(
         ComputeLaplacianMetric();
     }
 
+    std::cout << "v_LaplacianMatrixOp_MatFree_Kernel " << std::endl;
+
     int nquad0  = m_base[0]->GetNumPoints();
     int nquad1  = m_base[1]->GetNumPoints();
     int nqtot   = nquad0 * nquad1;

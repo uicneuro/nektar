@@ -811,7 +811,6 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
                             const MultiRegions::VarFactorsMap &varfactors,
                             const Array<OneD, const NekDouble> &dirForcing,
                             const bool PhysSpaceForcing)
-
 {
     int i, j;
 

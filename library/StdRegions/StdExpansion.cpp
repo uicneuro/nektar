@@ -259,10 +259,6 @@ DNekMatSharedPtr StdExpansion::CreateGeneralMatrix(const StdMatrixKey &mkey)
     {
         case eInvMass:
         {
-            // StdMatrixKey masskey(eMass, mkey.GetShapeType(), *this,
-            //                      mkey.GetConstFactors(), mkey.GetVarCoeffs(),
-            //                      mkey.GetNodalPointsType());
-
             StdMatrixKey masskey(eMass, mkey.GetShapeType(), *this,
                                  mkey.GetConstFactors(), NullVarCoeffMap,
                                  mkey.GetNodalPointsType());
@@ -679,17 +675,113 @@ void StdExpansion::MassMatrixOp_MatFree(
 
     if (mkey.HasVarCoeff(eVarCoeffMass))
     {
-        // std::cout << "MassMatrixOp_MatFree, weight = " << mkey.GetVarCoeff(eVarCoeffMass)[0] << std::endl;
         Vmath::Vmul(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, tmp, 1, tmp, 1);
-    }
-
-    else
-    {
-        // std::cout << "MassMatrixOp_MatFree, No weight " << std::endl;
     }
 
     v_IProductWRTBase(tmp, outarray);
 }
+
+void StdExpansion::LaplacianMatrixMMFOp_MatFree(
+    const int k1, const Array<OneD, const NekDouble> &inarray,
+    Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
+{
+    ASSERTL1(k1 >= 0 && k1 < GetCoordim(), "invalid first  argument");
+    ASSERTL1(k2 >= 0 && k2 < GetCoordim(), "invalid second argument");
+
+    std::cout << "StdExpansion: LaplacianMatrixOp_MatFree, k1= " << k1 << std::endl;
+
+    int nq = GetTotPoints();
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> dtmp(nq);
+
+    // VarCoeffType varcoefftypes[3][3] = {
+    //     {eVarCoeffD00, eVarCoeffD01, eVarCoeffD02},
+    //     {eVarCoeffD01, eVarCoeffD11, eVarCoeffD12},
+    //     {eVarCoeffD02, eVarCoeffD12, eVarCoeffD22}};
+
+       VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag};
+
+    v_BwdTrans(inarray, tmp);
+    v_PhysDeriv(k1, tmp, dtmp);
+    Vmath::Vmul(nq, mkey.GetVarCoeff(MMFCoeffs[5*k1+4]), 1, dtmp, 1, dtmp, 1);
+
+    v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
+    // if (mkey.GetNVarCoeff() && (!mkey.ConstFactorExists(eFactorSVVDiffCoeff)))
+    // {
+    //     if (k1 == k2)
+    //     {
+    //         // By default, k1 == k2 has \sigma = 1 (diagonal entries)
+    //         if (mkey.HasVarCoeff(varcoefftypes[k1][k1]))
+    //         {
+    //             Vmath::Vmul(nq, mkey.GetVarCoeff(varcoefftypes[k1][k1]), 1,
+    //                         dtmp, 1, dtmp, 1);
+    //         }
+    //         v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
+    //     }
+    //     else
+    //     {
+    //         // By default, k1 != k2 has \sigma = 0 (off-diagonal entries)
+    //         if (mkey.HasVarCoeff(varcoefftypes[k1][k2]))
+    //         {
+    //             Vmath::Vmul(nq, mkey.GetVarCoeff(varcoefftypes[k1][k2]), 1,
+    //                         dtmp, 1, dtmp, 1);
+    //             v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
+    //         }
+    //         else
+    //         {
+    //             Vmath::Zero(GetNcoeffs(), outarray, 1);
+    //         }
+    //     }
+    // }
+    // else if (mkey.ConstFactorExists(eFactorCoeffD00) &&
+    //          (!mkey.ConstFactorExists(eFactorSVVDiffCoeff)))
+    // {
+    //     if (k1 == k2)
+    //     {
+    //         // By default, k1 == k2 has \sigma = 1 (diagonal entries)
+    //         if (mkey.ConstFactorExists(constcoefftypes[k1][k1]))
+    //         {
+    //             Vmath::Smul(nq, mkey.GetConstFactor(constcoefftypes[k1][k1]),
+    //                         dtmp, 1, dtmp, 1);
+    //         }
+    //         v_IProductWRTDerivBase(k1, dtmp, outarray);
+    //     }
+    //     else
+    //     {
+    //         // By default, k1 != k2 has \sigma = 0 (off-diagonal entries)
+    //         if (mkey.ConstFactorExists(constcoefftypes[k1][k2]))
+    //         {
+    //             Vmath::Smul(nq, mkey.GetConstFactor(constcoefftypes[k1][k2]),
+    //                         dtmp, 1, dtmp, 1);
+    //             v_IProductWRTDerivBase(k1, dtmp, outarray);
+    //         }
+    //         else
+    //         {
+    //             Vmath::Zero(GetNcoeffs(), outarray, 1);
+    //         }
+    //     }
+    // }
+    // else
+    // {
+    //     // Multiply by svv tensor
+    //     if (mkey.ConstFactorExists(eFactorSVVDiffCoeff))
+    //     {
+    //         Vmath::Vcopy(nq, dtmp, 1, tmp, 1);
+    //         SVVLaplacianFilter(dtmp, mkey);
+    //         Vmath::Vadd(nq, tmp, 1, dtmp, 1, dtmp, 1);
+    //     }
+    //     v_IProductWRTDerivBase(k1, dtmp, outarray);
+    // }
+}
+
 
 void StdExpansion::LaplacianMatrixOp_MatFree(
     const int k1, const int k2, const Array<OneD, const NekDouble> &inarray,
@@ -697,6 +789,8 @@ void StdExpansion::LaplacianMatrixOp_MatFree(
 {
     ASSERTL1(k1 >= 0 && k1 < GetCoordim(), "invalid first  argument");
     ASSERTL1(k2 >= 0 && k2 < GetCoordim(), "invalid second argument");
+
+    std::cout << "StdExpansion: LaplacianMatrixOp_MatFree, k1= " << k1 << ", k2 =" << k2 << std::endl;
 
     int nq = GetTotPoints();
     Array<OneD, NekDouble> tmp(nq);
@@ -786,13 +880,27 @@ void StdExpansion::LaplacianMatrixOp_MatFree_GenericImpl(
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
     const int dim = GetCoordim();
+    std::cout << "Expansion2D: LaplacianMatrixOp_MatFree_GenericImpl" << std::endl;
+
+    const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
+    bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
 
     int i, j;
 
     Array<OneD, NekDouble> store(m_ncoeffs);
     Array<OneD, NekDouble> store2(m_ncoeffs, 0.0);
 
-    if ((mkey.GetNVarCoeff() == 0 &&
+    if(mmf)
+    {
+        for (i = 0; i < dim; i++)
+        {
+            // WORKING HERE 
+            LaplacianMatrixMMFOp(i, inarray, store, mkey);
+            Vmath::Vadd(m_ncoeffs, store, 1, store2, 1, store2, 1);
+        }
+    }
+
+    else if ((mkey.GetNVarCoeff() == 0 &&
          !mkey.ConstFactorExists(eFactorCoeffD00)) ||
         mkey.ConstFactorExists(eFactorSVVDiffCoeff))
     {
@@ -839,7 +947,6 @@ void StdExpansion::WeakDerivMatrixOp_MatFree(
     VarCoeffType keys[] = {eVarCoeffD00, eVarCoeffD11, eVarCoeffD22};
     if (mkey.HasVarCoeff(keys[k1]))
     {
-        // std::cout << "VarCoeffType, k1 = " << k1 << std::endl;
         Vmath::Vmul(nq, &(mkey.GetVarCoeff(keys[k1]))[0], 1, &tmp[0], 1,
                     &tmp[0], 1);
     }
@@ -1462,6 +1569,15 @@ void StdExpansion::v_LaplacianMatrixOp(
     // If this function is not reimplemented on shape level, the function
     // below will be called
     LaplacianMatrixOp_MatFree(k1, k2, inarray, outarray, mkey);
+}
+
+void StdExpansion::v_LaplacianMatrixMMFOp(
+    const int k1, const Array<OneD, const NekDouble> &inarray,
+    Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
+{
+    // If this function is not reimplemented on shape level, the function
+    // below will be called
+    LaplacianMatrixMMFOp_MatFree(k1, inarray, outarray, mkey);
 }
 
 void StdExpansion::v_WeakDerivMatrixOp(

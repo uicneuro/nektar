@@ -796,6 +796,14 @@ public:
         v_LaplacianMatrixOp(k1, k2, inarray, outarray, mkey);
     }
 
+    void LaplacianMatrixMMFOp(const int k1,
+                           const Array<OneD, const NekDouble> &inarray,
+                           Array<OneD, NekDouble> &outarray,
+                           const StdMatrixKey &mkey)
+    {
+        v_LaplacianMatrixMMFOp(k1, inarray, outarray, mkey);
+    }
+
     void WeakDerivMatrixOp(const int i,
                            const Array<OneD, const NekDouble> &inarray,
                            Array<OneD, NekDouble> &outarray,
@@ -1230,6 +1238,10 @@ protected:
         const int k1, const int k2, const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
 
+    STD_REGIONS_EXPORT void LaplacianMatrixMMFOp_MatFree(
+        const int k1, const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
+
     STD_REGIONS_EXPORT void WeakDerivMatrixOp_MatFree(
         const int i, const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
@@ -1581,6 +1593,10 @@ private:
 
     STD_REGIONS_EXPORT virtual void v_LaplacianMatrixOp(
         const int k1, const int k2, const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
+
+    STD_REGIONS_EXPORT virtual void v_LaplacianMatrixMMFOp(
+        const int k1, const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
 
     STD_REGIONS_EXPORT virtual void v_WeakDerivMatrixOp(
