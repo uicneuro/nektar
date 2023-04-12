@@ -186,8 +186,9 @@ void TriExp::v_PhysDeriv(const int dir,
 }
 
 void TriExp::v_PhysDirectionalDeriv(
+    const Array<OneD, const NekDouble> &dirvec, 
     const Array<OneD, const NekDouble> &inarray,
-    const Array<OneD, const NekDouble> &direction, Array<OneD, NekDouble> &out)
+    Array<OneD, NekDouble> &out)
 {
     if (!out.size())
     {
@@ -218,7 +219,7 @@ void TriExp::v_PhysDirectionalDeriv(
             tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
             for (int k = 0; k < (m_geom->GetCoordim()); ++k)
             {
-                Vmath::Vvtvp(nqtot, &df[2 * k + i][0], 1, &direction[k * nqtot],
+                Vmath::Vvtvp(nqtot, &df[2 * k + i][0], 1, &dirvec[k * nqtot],
                              1, &tangmat[i][0], 1, &tangmat[i][0], 1);
             }
         }
@@ -237,14 +238,13 @@ void TriExp::v_PhysDirectionalDeriv(
             tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
             for (int k = 0; k < (m_geom->GetCoordim()); ++k)
             {
-                Vmath::Svtvp(nqtot, df[2 * k + i][0], &direction[k * nqtot], 1,
+                Vmath::Svtvp(nqtot, df[2 * k + i][0], &dirvec[k * nqtot], 1,
                              &tangmat[i][0], 1, &tangmat[i][0], 1);
             }
         }
 
         /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
         Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
-
         Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
                      &out[0], 1);
     }
@@ -1146,8 +1146,6 @@ void TriExp::v_LaplacianMatrixOp_MatFree_Kernel(
     {
         ComputeLaplacianMetric();
     }
-
-    std::cout << "v_LaplacianMatrixOp_MatFree_Kernel " << std::endl;
 
     int nquad0  = m_base[0]->GetNumPoints();
     int nquad1  = m_base[1]->GetNumPoints();

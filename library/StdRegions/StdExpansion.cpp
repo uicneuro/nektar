@@ -685,6 +685,8 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
     const int k1, const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
+    int coordim = v_GetCoordim();
+
     ASSERTL1(k1 >= 0 && k1 < GetCoordim(), "invalid first  argument");
     ASSERTL1(k2 >= 0 && k2 < GetCoordim(), "invalid second argument");
 
@@ -710,7 +712,15 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
         StdRegions::eVarCoeffMF3Mag};
 
     v_BwdTrans(inarray, tmp);
-    v_PhysDeriv(k1, tmp, dtmp);
+    // v_PhysDeriv(k1, tmp, dtmp); 
+    Array<OneD, NekDouble> dirvec(coordim * nq);
+
+    for (int k=0; k<coordim; ++k)
+    {
+        Vmath::Vcopy(nq, &(mkey.GetVarCoeff(MMFCoeffs[5*k1+k]))[0], 1, &dirvec[k*nq], 1);
+    }
+
+    v_PhysDirectionalDeriv(dirvec, tmp, dtmp);
     Vmath::Vmul(nq, mkey.GetVarCoeff(MMFCoeffs[5*k1+4]), 1, dtmp, 1, dtmp, 1);
 
     v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
@@ -964,7 +974,7 @@ void StdExpansion::WeakDirectionalDerivMatrixOp_MatFree(
     Array<OneD, NekDouble> Mtmp(nq), Mout(m_ncoeffs);
 
     v_BwdTrans(inarray, tmp);
-    v_PhysDirectionalDeriv(tmp, mkey.GetVarCoeff(eVarCoeffMF), Dtmp);
+    v_PhysDirectionalDeriv(mkey.GetVarCoeff(eVarCoeffMF), tmp, Dtmp);
 
     v_IProductWRTBase(Dtmp, outarray);
 
@@ -1302,11 +1312,11 @@ void StdExpansion::v_PhysDeriv(const int dir,
  * @see StdRegions#StdExpansion#PhysDirectionalDeriv
  */
 void StdExpansion::v_PhysDirectionalDeriv(
+    const Array<OneD, const NekDouble> &dirvec,
     const Array<OneD, const NekDouble> &inarray,
-    const Array<OneD, const NekDouble> &direction,
     Array<OneD, NekDouble> &outarray)
 {
-    boost::ignore_unused(inarray, direction, outarray);
+    boost::ignore_unused(inarray, dirvec, outarray);
     NEKERROR(ErrorUtil::efatal, "This function is only valid for "
                                 "specific element types");
 }
