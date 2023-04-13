@@ -530,11 +530,11 @@ void TriExp::v_AlignVectorToCollapsedDir(
 }
 
 void TriExp::v_IProductWRTDirectionalDerivBase(
-    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &dirvec,
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)
 {
-    IProductWRTDirectionalDerivBase_SumFac(direction, inarray, outarray);
+    IProductWRTDirectionalDerivBase_SumFac(dirvec, inarray, outarray);
 }
 
 /**
@@ -542,7 +542,7 @@ void TriExp::v_IProductWRTDirectionalDerivBase(
  * direction of varcoeffs.
  */
 void TriExp::v_IProductWRTDirectionalDerivBase_SumFac(
-    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &dirvec,
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)
 {
@@ -589,7 +589,7 @@ void TriExp::v_IProductWRTDirectionalDerivBase_SumFac(
 
     // Compute gmat \cdot e^j
     Array<OneD, Array<OneD, NekDouble>> dfdir(shapedim);
-    Expansion::ComputeGmatcdotMF(df, direction, dfdir);
+    Expansion::ComputeGmatcdotMF(dirvec, df, dfdir);
 
     Vmath::Vmul(nqtot, &dfdir[0][0], 1, &tmp0[0], 1, &tmp0[0], 1);
     Vmath::Vmul(nqtot, &dfdir[1][0], 1, &tmp1[0], 1, &tmp1[0], 1);

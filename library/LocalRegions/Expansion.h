@@ -286,9 +286,10 @@ protected:
 
     void ComputeLaplacianMetric();
     void ComputeQuadratureMetric();
-    void ComputeGmatcdotMF(const Array<TwoD, const NekDouble> &df,
-                           const Array<OneD, const NekDouble> &direction,
-                           Array<OneD, Array<OneD, NekDouble>> &dfdir);
+    void ComputeGmatcdotMF(
+        const Array<OneD, const NekDouble> &dirvec,
+        const Array<TwoD, const NekDouble> &df, 
+        Array<OneD, Array<OneD, NekDouble>> &dfdir);
 
     Array<OneD, NekDouble> GetMF(const int dir, const int shapedim,
                                  const StdRegions::VarCoeffMap &varcoeffs);

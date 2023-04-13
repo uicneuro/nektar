@@ -594,13 +594,14 @@ void Expansion::v_GetCoords(Array<OneD, NekDouble> &coords_0,
     }
 }
 
-void Expansion::ComputeGmatcdotMF(const Array<TwoD, const NekDouble> &df,
-                                  const Array<OneD, const NekDouble> &direction,
-                                  Array<OneD, Array<OneD, NekDouble>> &dfdir)
+void Expansion::ComputeGmatcdotMF(
+    const Array<OneD, const NekDouble> &dirvec,
+    const Array<TwoD, const NekDouble> &df,
+    Array<OneD, Array<OneD, NekDouble>> &dfdir)
 {
     int shapedim = dfdir.size();
     int coordim  = GetCoordim();
-    int nqtot    = direction.size() / coordim;
+    int nqtot    = dirvec.size() / coordim;
 
     for (int j = 0; j < shapedim; j++)
     {
@@ -610,13 +611,13 @@ void Expansion::ComputeGmatcdotMF(const Array<TwoD, const NekDouble> &df,
             if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
             {
                 Vmath::Vvtvp(nqtot, &df[shapedim * k + j][0], 1,
-                             &direction[k * nqtot], 1, &dfdir[j][0], 1,
+                             &dirvec[k * nqtot], 1, &dfdir[j][0], 1,
                              &dfdir[j][0], 1);
             }
             else
             {
                 Vmath::Svtvp(nqtot, df[shapedim * k + j][0],
-                             &direction[k * nqtot], 1, &dfdir[j][0], 1,
+                             &dirvec[k * nqtot], 1, &dfdir[j][0], 1,
                              &dfdir[j][0], 1);
             }
         }

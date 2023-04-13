@@ -217,7 +217,7 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
                 Array<TwoD, const NekDouble> df =
                     m_metricinfo->GetDerivFactors(ptsKeys);
 
-                Array<OneD, NekDouble> direction =
+                Array<OneD, NekDouble> dirvec =
                     mkey.GetVarCoeff(StdRegions::eVarCoeffMF);
 
                 // d / dx = df[0]*deriv0 + df[1]*deriv1
@@ -233,7 +233,7 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
                 //            + e^1 * df[2 * 1 + dir]
                 //            + e^2 * df [ 2 * 2 + dir]
                 Array<OneD, Array<OneD, NekDouble>> dfdir(shapedim);
-                Expansion::ComputeGmatcdotMF(df, direction, dfdir);
+                Expansion::ComputeGmatcdotMF(dirvec, df, dfdir);
 
                 StdRegions::VarCoeffMap dfdirxi;
                 StdRegions::VarCoeffMap dfdireta;
@@ -244,6 +244,7 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
                 MatrixKey derivxikey(StdRegions::eWeakDeriv0,
                                      mkey.GetShapeType(), *this,
                                      StdRegions::NullConstFactorMap, dfdirxi);
+
                 MatrixKey derivetakey(StdRegions::eWeakDeriv1,
                                       mkey.GetShapeType(), *this,
                                       StdRegions::NullConstFactorMap, dfdireta);

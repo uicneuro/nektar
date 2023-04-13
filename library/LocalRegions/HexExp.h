@@ -90,8 +90,8 @@ protected:
         Array<OneD, NekDouble> &outarray) override;
 
     LOCAL_REGIONS_EXPORT void v_PhysDirectionalDeriv(
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
-        const Array<OneD, const NekDouble> &direction,
         Array<OneD, NekDouble> &out) override;
 
     //---------------------------------------
@@ -126,15 +126,15 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray) override;
 
     LOCAL_REGIONS_EXPORT void v_IProductWRTDirectionalDerivBase(
-        const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray) override
     {
-        IProductWRTDirectionalDerivBase_SumFac(direction, inarray, outarray);
+        IProductWRTDirectionalDerivBase_SumFac(dirvec, inarray, outarray);
     }
 
     LOCAL_REGIONS_EXPORT void IProductWRTDirectionalDerivBase_SumFac(
-        const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray);
 

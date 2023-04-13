@@ -256,7 +256,7 @@ void HexExp::v_PhysDeriv(const int dir,
 
 void HexExp::v_PhysDirectionalDeriv(
     const Array<OneD, const NekDouble> &inarray,
-    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &dirvec,
     Array<OneD, NekDouble> &outarray)
 {
 
@@ -275,7 +275,7 @@ void HexExp::v_PhysDirectionalDeriv(
     StdHexExp::v_PhysDeriv(inarray, Diff0, Diff1, Diff2);
 
     Array<OneD, Array<OneD, NekDouble>> dfdir(shapedim);
-    Expansion::ComputeGmatcdotMF(df, direction, dfdir);
+    Expansion::ComputeGmatcdotMF(dirvec, df, dfdir);
 
     Vmath::Vmul(ntot, &dfdir[0][0], 1, &Diff0[0], 1, &outarray[0], 1);
     Vmath::Vvtvp(ntot, &dfdir[1][0], 1, &Diff1[0], 1, &outarray[0], 1,
@@ -514,7 +514,7 @@ void HexExp::v_AlignVectorToCollapsedDir(
  * @param outarray  Value of the inner product.
  */
 void HexExp::IProductWRTDirectionalDerivBase_SumFac(
-    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &dirvec,
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)
 {
@@ -540,7 +540,7 @@ void HexExp::IProductWRTDirectionalDerivBase_SumFac(
     MultiplyByQuadratureMetric(inarray, tmp1);
 
     Array<OneD, Array<OneD, NekDouble>> dfdir(shapedim);
-    Expansion::ComputeGmatcdotMF(df, direction, dfdir);
+    Expansion::ComputeGmatcdotMF(dirvec, df, dfdir);
 
     Vmath::Vmul(nq, &dfdir[0][0], 1, tmp1.get(), 1, tmp2.get(), 1);
     Vmath::Vmul(nq, &dfdir[1][0], 1, tmp1.get(), 1, tmp3.get(), 1);

@@ -258,44 +258,47 @@ void MMFSystem::MMFInitObject(
 
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
 
-    ComputeMFtrace(m_movingframes, m_MFtraceFwd, m_MFtraceBwd);
-
-    // Check Movingframes and surfraceNormal
-    // Get: m_ncdotMFFwd,m_ncdotMFBwd,m_nperpcdotMFFwd,m_nperpcdotMFBwd
-    if(m_expdim>1)
+    switch (m_projectionType)
     {
-        ComputencdotMF(m_movingframes, m_ncdotMFFwd, m_ncdotMFBwd, 1);
-    }
-
-    else
-    {
-        int nTracePointsTot = GetTraceNpoints();
-
-        m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);            
-        
-        m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
-        m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
-        for (int j = 1; j < m_mfdim; ++j)
+        case MultiRegions::eDiscontinuous:
         {
-            m_ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
-            m_ncdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
+            ComputeMFtrace(m_movingframes, m_MFtraceFwd, m_MFtraceBwd);
+
+            // Check Movingframes and surfraceNormal
+            // Get: m_ncdotMFFwd,m_ncdotMFBwd,m_nperpcdotMFFwd,m_nperpcdotMFBwd
+            if(m_expdim>1)
+            {
+                ComputencdotMF(m_movingframes, m_ncdotMFFwd, m_ncdotMFBwd, 1);
+            }
+
+            else
+            {
+                int nTracePointsTot = GetTraceNpoints();
+
+                m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+                m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);            
+                
+                m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
+                m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
+                for (int j = 1; j < m_mfdim; ++j)
+                {
+                    m_ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
+                    m_ncdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
+                }
+            }
+
+            ComputenperpcdotMF(m_movingframes, m_nperpcdotMFFwd, m_nperpcdotMFBwd);
+            break;
         }
+
+        case MultiRegions::eGalerkin:
+        case MultiRegions::eMixed_CG_Discontinuous:
+        default:
+        break;
     }
 
-        std::cout << "ncdotMFFwd = ( " << RootMeanSquare(m_ncdotMFFwd[0]) << " , "
-                << RootMeanSquare(m_ncdotMFFwd[1]) << " , "
-                << RootMeanSquare(m_ncdotMFFwd[2]) << " ) " << std::endl;
-    std::cout << "ncdotMFBwd = ( " << RootMeanSquare(m_ncdotMFBwd[0]) << " , "
-                << RootMeanSquare(m_ncdotMFBwd[1]) << " , "
-                << RootMeanSquare(m_ncdotMFBwd[2]) << " ) " << std::endl;
-
-    ComputenperpcdotMF(m_movingframes, m_nperpcdotMFFwd, m_nperpcdotMFBwd);
-
-    int Verbose = 1; // Display the difference between Euclidean and Covariant
-
-    ComputeDivMF(m_DerivType, m_movingframes, m_DivMF, Verbose);
-    ComputeCurlMF(m_DerivType, m_movingframes, m_CurlMF, Verbose);
+    ComputeDivMF(m_DerivType, m_movingframes, m_DivMF);
+    ComputeCurlMF(m_DerivType, m_movingframes, m_CurlMF);
 
     // Connection 2-form
     if(m_expdim>1)
@@ -11988,7 +11991,7 @@ void MMFSystem::ComputeVarCoeff2D(
                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
         }
 
-        Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+        Vmath::Vsqrt(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
 
     std::cout << "k = " << k << ", m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[indx]])
               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[indx+1]]) << " , "

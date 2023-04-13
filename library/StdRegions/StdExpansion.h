@@ -552,11 +552,11 @@ public:
     }
 
     void IProductWRTDirectionalDerivBase(
-        const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray)
     {
-        v_IProductWRTDirectionalDerivBase(direction, inarray, outarray);
+        v_IProductWRTDirectionalDerivBase(dirvec, inarray, outarray);
     }
 
     /// \brief Get the element id of this expansion when used
@@ -796,12 +796,12 @@ public:
         v_LaplacianMatrixOp(k1, k2, inarray, outarray, mkey);
     }
 
-    void LaplacianMatrixMMFOp(const int k1,
+    void LaplacianMatrixMMFOp(const int dir,
                            const Array<OneD, const NekDouble> &inarray,
                            Array<OneD, NekDouble> &outarray,
                            const StdMatrixKey &mkey)
     {
-        v_LaplacianMatrixMMFOp(k1, inarray, outarray, mkey);
+        v_LaplacianMatrixMMFOp(dir, inarray, outarray, mkey);
     }
 
     void WeakDerivMatrixOp(const int i,
@@ -1192,11 +1192,11 @@ protected:
     }
 
     void IProductWRTDirectionalDerivBase_SumFac(
-        const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray)
     {
-        v_IProductWRTDirectionalDerivBase_SumFac(direction, inarray, outarray);
+        v_IProductWRTDirectionalDerivBase_SumFac(dirvec, inarray, outarray);
     }
 
     // The term _MatFree denotes that the action of the
@@ -1239,7 +1239,7 @@ protected:
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
 
     STD_REGIONS_EXPORT void LaplacianMatrixMMFOp_MatFree(
-        const int k1, const Array<OneD, const NekDouble> &inarray,
+        const int dir, const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
 
     STD_REGIONS_EXPORT void WeakDerivMatrixOp_MatFree(
@@ -1439,7 +1439,7 @@ private:
         Array<OneD, NekDouble> &outarray);
 
     STD_REGIONS_EXPORT virtual void v_IProductWRTDirectionalDerivBase(
-        const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray);
 
@@ -1568,7 +1568,7 @@ private:
         Array<OneD, NekDouble> &outarray);
 
     STD_REGIONS_EXPORT virtual void v_IProductWRTDirectionalDerivBase_SumFac(
-        const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &dirvec,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray);
 
@@ -1596,7 +1596,7 @@ private:
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
 
     STD_REGIONS_EXPORT virtual void v_LaplacianMatrixMMFOp(
-        const int k1, const Array<OneD, const NekDouble> &inarray,
+        const int dir, const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey);
 
     STD_REGIONS_EXPORT virtual void v_WeakDerivMatrixOp(

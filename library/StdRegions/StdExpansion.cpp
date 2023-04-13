@@ -682,7 +682,7 @@ void StdExpansion::MassMatrixOp_MatFree(
 }
 
 void StdExpansion::LaplacianMatrixMMFOp_MatFree(
-    const int k1, const Array<OneD, const NekDouble> &inarray,
+    const int dir, const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
     int coordim = v_GetCoordim();
@@ -690,40 +690,38 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
     ASSERTL1(k1 >= 0 && k1 < GetCoordim(), "invalid first  argument");
     ASSERTL1(k2 >= 0 && k2 < GetCoordim(), "invalid second argument");
 
-    std::cout << "StdExpansion: LaplacianMatrixOp_MatFree, k1= " << k1 << std::endl;
+    std::cout << "StdExpansion: LaplacianMatrixOp_MatFree, dir= " << dir << std::endl;
 
     int nq = GetTotPoints();
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> dtmp(nq);
 
-    // VarCoeffType varcoefftypes[3][3] = {
-    //     {eVarCoeffD00, eVarCoeffD01, eVarCoeffD02},
-    //     {eVarCoeffD01, eVarCoeffD11, eVarCoeffD12},
-    //     {eVarCoeffD02, eVarCoeffD12, eVarCoeffD22}};
-
-       VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag};
+    VarCoeffType MMFCoeffs[15] = {
+    StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+    StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+    StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+    StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+    StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+    StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+    StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+    StdRegions::eVarCoeffMF3Mag};
 
     v_BwdTrans(inarray, tmp);
-    // v_PhysDeriv(k1, tmp, dtmp); 
+
+    // Create a frame vector
     Array<OneD, NekDouble> dirvec(coordim * nq);
 
     for (int k=0; k<coordim; ++k)
     {
-        Vmath::Vcopy(nq, &(mkey.GetVarCoeff(MMFCoeffs[5*k1+k]))[0], 1, &dirvec[k*nq], 1);
+        Vmath::Vcopy(nq, &(mkey.GetVarCoeff(MMFCoeffs[5*dir+k]))[0], 1, &dirvec[k*nq], 1);
     }
 
     v_PhysDirectionalDeriv(dirvec, tmp, dtmp);
-    Vmath::Vmul(nq, mkey.GetVarCoeff(MMFCoeffs[5*k1+4]), 1, dtmp, 1, dtmp, 1);
+    // Vmath::Vmul(nq, mkey.GetVarCoeff(MMFCoeffs[5*dir+4]), 1, dtmp, 1, dtmp, 1);
 
-    v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
+    // v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
+    v_IProductWRTDirectionalDerivBase_SumFac(dirvec, dtmp, outarray);
+
     // if (mkey.GetNVarCoeff() && (!mkey.ConstFactorExists(eFactorSVVDiffCoeff)))
     // {
     //     if (k1 == k2)
@@ -889,11 +887,12 @@ void StdExpansion::LaplacianMatrixOp_MatFree_GenericImpl(
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
-    const int dim = GetCoordim();
+    // const int dim = GetCoordim();
     std::cout << "Expansion2D: LaplacianMatrixOp_MatFree_GenericImpl" << std::endl;
 
     const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
     bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
+    int dim = mmf ? 2 : GetCoordim();
 
     int i, j;
 
@@ -1232,11 +1231,11 @@ void StdExpansion::v_IProductWRTDerivBase(
  *
  */
 void StdExpansion::v_IProductWRTDirectionalDerivBase(
-    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &dirvec,
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)
 {
-    boost::ignore_unused(direction, inarray, outarray);
+    boost::ignore_unused(dirvec, inarray, outarray);
     NEKERROR(ErrorUtil::efatal, "This method has not been defined");
 }
 
@@ -1514,11 +1513,11 @@ void StdExpansion::v_IProductWRTBase_SumFac(
  *
  */
 void StdExpansion::v_IProductWRTDirectionalDerivBase_SumFac(
-    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &dirvec,
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)
 {
-    boost::ignore_unused(direction, inarray, outarray);
+    boost::ignore_unused(dirvec, inarray, outarray);
     NEKERROR(ErrorUtil::efatal, "Method does not exist for this shape");
 }
 
@@ -1582,12 +1581,12 @@ void StdExpansion::v_LaplacianMatrixOp(
 }
 
 void StdExpansion::v_LaplacianMatrixMMFOp(
-    const int k1, const Array<OneD, const NekDouble> &inarray,
+    const int dir, const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
     // If this function is not reimplemented on shape level, the function
     // below will be called
-    LaplacianMatrixMMFOp_MatFree(k1, inarray, outarray, mkey);
+    LaplacianMatrixMMFOp_MatFree(dir, inarray, outarray, mkey);
 }
 
 void StdExpansion::v_WeakDerivMatrixOp(

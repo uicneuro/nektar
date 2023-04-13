@@ -65,8 +65,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    std::cout << "After UnsteadySystem::v_InitObject" << std::endl;
-
     int nq    = m_fields[0]->GetNpoints();
     int nvar  = m_fields.size();
 
@@ -78,6 +76,10 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
     m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
     m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
+
+    m_session->LoadParameter("d00", m_d00, 1.0);
+    m_session->LoadParameter("d11", m_d11, 1.0);
+    m_session->LoadParameter("d22", m_d22, 1.0);
 
     // Diffusivity coefficient for u^j
     m_epsu = Array<OneD, NekDouble>(nvar + 1);
@@ -95,7 +97,19 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     for (int j = 0; j < shapedim; ++j)
     {
         Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
-        Vmath::Fill(nq, m_AniStrength, &Anisotropy[j][0], 1);
+    }
+
+    if (m_session->DefinesParameter("d00"))
+    {
+        Vmath::Fill(nq, sqrt(m_d00), &Anisotropy[0][0], 1);
+    }
+    if (m_session->DefinesParameter("d11"))
+    {
+        Vmath::Fill(nq, sqrt(m_d11), &Anisotropy[1][0], 1);
+    }
+    if (m_session->DefinesParameter("d22"))
+    {
+        Vmath::Fill(nq, sqrt(m_d22), &Anisotropy[2][0], 1);
     }
 
     MMFSystem::MMFInitObject(Anisotropy);
@@ -137,11 +151,11 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     }
 
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
-    ComputeVarCoeff2DDxDyDz(m_epsilon,m_varcoeffXYZ);
+    // ComputeVarCoeff2DDxDyDz(m_epsilon,m_varcoeffXYZ);
 
-    TestHelmholtzSolver();
+    // TestHelmholtzSolver();
 
-    wait_on_enter();
+    // wait_on_enter();
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
@@ -264,7 +278,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] * m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * x[k]);
+                outarray[0][k] = (m_epsilon[0] * m_frequency * m_frequency - 1.0) * exp(-1.0 * time) * cos(m_frequency * x[k]);
             }
         }
         break;
@@ -279,7 +293,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] * m_pi * m_pi - 1.0) * exp(-1.0 * time) * cos(m_pi * y[k]);
+                outarray[0][k] = (m_epsilon[0] * m_frequency * m_frequency - 1.0) * exp(-1.0 * time) * cos(m_frequency * y[k]);
             }
         }
         break;
@@ -294,10 +308,25 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] * m_pi *
-                                 m_pi + m_epsilon[1] * m_pi *
-                                 m_pi - m_pi) * exp(-1.0 * m_pi * time) *
-                                 sin(m_pi * x[k]) * sin(m_pi * y[k]);
+                outarray[0][k] = (m_epsilon[0] * m_frequency *
+                                 m_frequency + m_epsilon[1] * m_frequency *
+                                 m_frequency - m_frequency) * exp(-1.0 * m_frequency * time) *
+                                 sin(m_frequency * x[k]) * sin(m_frequency * y[k]);
+            }
+        }
+        break;
+
+        case eTestPlaneAni:
+        {
+            Array<OneD, NekDouble> x(nq);
+            Array<OneD, NekDouble> y(nq);
+            Array<OneD, NekDouble> z(nq);
+
+            m_fields[0]->GetCoords(x, y, z);
+
+            for (int k = 0; k < nq; k++)
+            {
+                outarray[0][k] = 0.0;
             }
         }
         break;
@@ -312,10 +341,10 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] * m_pi *
-                                 m_pi + m_epsilon[1] * m_pi *
-                                 m_pi - m_pi) * exp(-1.0 * m_pi * time) *
-                                 cos(m_pi * x[k]) * cos(m_pi * y[k]);
+                outarray[0][k] = (m_epsilon[0] * m_frequency *
+                                 m_frequency + m_epsilon[1] * m_frequency *
+                                 m_frequency - m_frequency) * exp(-1.0 * m_frequency * time) *
+                                 cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
             }
         }
         break;
@@ -333,9 +362,9 @@ void MMFDiffusion::DoOdeRhs(
             for (int k = 0; k < nq; k++)
             {
                 outarray[0][k] =
-                    (m_epsilon[0] + m_epsilon[1] + m_epsilon[2] - 1.0) * m_pi *
-                    m_pi * exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * x[k]) *
-                    sin(m_pi * y[k]) * sin(m_pi * z[k]);
+                    (m_epsilon[0] + m_epsilon[1] + m_epsilon[2] - 1.0) * m_frequency *
+                    m_frequency * exp(-1.0 * m_frequency * m_frequency * time) * sin(m_frequency * x[k]) *
+                    sin(m_frequency * y[k]) * sin(m_frequency * z[k]);
             }
         }
         break;
@@ -481,22 +510,20 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         }
         break;
 
-        case eTestPlaneHelmholtz:
-        {
-            Array<OneD, NekDouble> u(nq);
-
-            std::cout << "Initial eTestPlaneHelmholtz" << std::endl;
-
-            TestPlaneHelmholtzProblem(initialtime, u);
-            m_fields[0]->SetPhys(u);
-        }
-        break;
-
         case eTestPlane:
         {
             Array<OneD, NekDouble> u(nq);
 
-            TestPlaneProblem(initialtime, u);
+            TestPlaneProblem(initialtime, m_varcoeff, u);
+            m_fields[0]->SetPhys(u);
+        }
+        break;
+
+        case eTestPlaneAni:
+        {
+            Array<OneD, NekDouble> u(nq);
+
+            TestPlaneAniProblem(initialtime, m_varcoeff, u);
             m_fields[0]->SetPhys(u);
         }
         break;
@@ -568,63 +595,31 @@ void MMFDiffusion::TestLineProblem(const int direction, const NekDouble time,
     {
         if(direction==0)
         {
-            outfield[k] = exp(-1.0 * time) * cos(m_pi * x[k]);
+            outfield[k] = exp(-1.0 * time) * cos(m_frequency * x[k]);
         }
 
         else if (direction==1)
         {
-            outfield[k] = exp(-1.0 * time) * cos(m_pi * y[k]);
+            outfield[k] = exp(-1.0 * time) * cos(m_frequency * y[k]);
         }
     }
 }
 
-void MMFDiffusion::TestPlaneHelmholtzSolution(const NekDouble time,
-                                    Array<OneD, NekDouble> &outfield)
-
-{
-    boost::ignore_unused(time);
-
-    int nq = GetTotPoints();
-
-    Array<OneD, NekDouble> x(nq);
-    Array<OneD, NekDouble> y(nq);
-    Array<OneD, NekDouble> z(nq);
-
-    m_fields[0]->GetCoords(x, y, z);
-
-    outfield = Array<OneD, NekDouble>(nq);
-    for (int k = 0; k < nq; k++)
-    {
-        outfield[k] = sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
-    }
-}
-
-void MMFDiffusion::TestPlaneHelmholtzProblem(const NekDouble time,
-                                    Array<OneD, NekDouble> &outfield)
-
-{
-    boost::ignore_unused(time);
-
-    int nq = GetTotPoints();
-
-    Array<OneD, NekDouble> x(nq);
-    Array<OneD, NekDouble> y(nq);
-    Array<OneD, NekDouble> z(nq);
-
-    m_fields[0]->GetCoords(x, y, z);
-
-    outfield = Array<OneD, NekDouble>(nq);
-    for (int k = 0; k < nq; k++)
-    {
-        outfield[k] = -2.0 * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
-    }
-}
-
 void MMFDiffusion::TestPlaneProblem(const NekDouble time,
+                                    StdRegions::VarCoeffMap &varcoeff,
                                     Array<OneD, NekDouble> &outfield)
-
 {
     int nq = GetTotPoints();
+
+    StdRegions::VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag}; 
 
     Array<OneD, NekDouble> x(nq);
     Array<OneD, NekDouble> y(nq);
@@ -632,10 +627,16 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
 
     m_fields[0]->GetCoords(x, y, z);
 
+    Array<OneD, NekDouble> d00(nq);
+    Array<OneD, NekDouble> d11(nq);
+
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * m_pi * time) * sin(m_pi * x[k]) * sin(m_pi * y[k]);
+        outfield[k] = exp(-1.0 * d00[k] * d11[k] * m_frequency * time) * sin(m_frequency * x[k]) * sin(m_frequency * y[k]);
     }
 }
 
@@ -654,7 +655,42 @@ void MMFDiffusion::TestPlaneNeumannProblem(const NekDouble time,
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * m_pi * time) * cos(m_pi * x[k]) * cos(m_pi * y[k]);
+        outfield[k] = exp(-1.0 * m_frequency * time) * cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
+    }
+}
+
+void MMFDiffusion::TestPlaneAniProblem(const NekDouble time,
+                                    StdRegions::VarCoeffMap &varcoeff,
+                                    Array<OneD, NekDouble> &outfield)
+{
+    int nq = GetTotPoints();
+
+    StdRegions::VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag}; 
+
+    Array<OneD, NekDouble> x(nq);
+    Array<OneD, NekDouble> y(nq);
+    Array<OneD, NekDouble> z(nq);
+
+    m_fields[0]->GetCoords(x, y, z);
+
+    Array<OneD, NekDouble> d00(nq);
+    Array<OneD, NekDouble> d11(nq);
+
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+
+    outfield = Array<OneD, NekDouble>(nq);
+    for (int k = 0; k < nq; k++)
+    {
+        outfield[k] = exp(-1.0 * d00[k] * d11[k] * m_frequency * m_frequency * time) * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
     }
 }
 
@@ -673,8 +709,8 @@ void MMFDiffusion::TestCubeProblem(const NekDouble time,
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * m_pi * m_pi * time) * sin(m_pi * x[k]) *
-                      sin(m_pi * y[k]) * sin(m_pi * z[k]);
+        outfield[k] = exp(-1.0 * m_frequency * m_frequency * time) * sin(m_frequency * x[k]) *
+                      sin(m_frequency * y[k]) * sin(m_frequency * z[k]);
     }
 }
 
@@ -960,13 +996,19 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
 
         case eTestPlane:
         {
-            TestPlaneProblem(time, outfield);
+            TestPlaneProblem(time, m_varcoeff, outfield);
         }
         break;
 
         case eTestPlaneNeumann:
         {
             TestPlaneNeumannProblem(time, outfield);
+        }
+        break;
+
+        case eTestPlaneAni:
+        {
+            TestPlaneAniProblem(time, m_varcoeff, outfield);
         }
         break;
 
@@ -1279,6 +1321,9 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "epsilon0", m_epsilon[0]);
     SolverUtils::AddSummaryItem(s, "epsilon1", m_epsilon[1]);
     SolverUtils::AddSummaryItem(s, "epsilon2", m_epsilon[2]);
+    SolverUtils::AddSummaryItem(s, "d00", m_d00);
+    SolverUtils::AddSummaryItem(s, "d11", m_d11);
+    SolverUtils::AddSummaryItem(s, "d22", m_d22);
     if (m_TestType == eTestLinearSphere)
     {
         SolverUtils::AddSummaryItem(s, "epsilon for u", m_epsu[0]);

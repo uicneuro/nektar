@@ -48,7 +48,7 @@ enum TestType
 {
     eTestLineX,
     eTestLineY,
-    eTestPlaneHelmholtz,
+    eTestPlaneAni,
     eTestPlane,
     eTestPlaneNeumann,
     eTestCube,
@@ -58,7 +58,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLineX", "TestLineY", "TestPlaneHelmholtz", "TestPlane", "TestPlaneNeumann",
+    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneNeumann",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -147,6 +147,7 @@ public:
 protected:
     bool m_useSpecVanVisc;
     NekDouble m_frequency;
+    NekDouble m_d00, m_d11, m_d22;
 
     StdRegions::VarCoeffMap m_varcoeffXYZ;
 
@@ -199,17 +200,16 @@ protected:
     void TestLineProblem(const int direction, const NekDouble time,
                                     Array<OneD, NekDouble> &outfield);
                                     
-    void TestPlaneHelmholtzSolution(const NekDouble time,
-                                    Array<OneD, NekDouble> &outfield);
-
-    void TestPlaneHelmholtzProblem(const NekDouble time,
-                                    Array<OneD, NekDouble> &outfield);
-
     void TestPlaneProblem(const NekDouble time,
+                          StdRegions::VarCoeffMap &varcoeff,
                           Array<OneD, NekDouble> &outfield);
 
     void TestPlaneNeumannProblem(const NekDouble time,
                           Array<OneD, NekDouble> &outfield);
+
+    void TestPlaneAniProblem(const NekDouble time,
+                        StdRegions::VarCoeffMap &varcoeff,
+                        Array<OneD, NekDouble> &outfield);                          
 
     void TestCubeProblem(const NekDouble time,
                          Array<OneD, NekDouble> &outfield);
