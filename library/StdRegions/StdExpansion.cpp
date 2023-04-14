@@ -690,8 +690,6 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
     ASSERTL1(k1 >= 0 && k1 < GetCoordim(), "invalid first  argument");
     ASSERTL1(k2 >= 0 && k2 < GetCoordim(), "invalid second argument");
 
-    std::cout << "StdExpansion: LaplacianMatrixOp_MatFree, dir= " << dir << std::endl;
-
     int nq = GetTotPoints();
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> dtmp(nq);
@@ -798,8 +796,6 @@ void StdExpansion::LaplacianMatrixOp_MatFree(
     ASSERTL1(k1 >= 0 && k1 < GetCoordim(), "invalid first  argument");
     ASSERTL1(k2 >= 0 && k2 < GetCoordim(), "invalid second argument");
 
-    std::cout << "StdExpansion: LaplacianMatrixOp_MatFree, k1= " << k1 << ", k2 =" << k2 << std::endl;
-
     int nq = GetTotPoints();
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> dtmp(nq);
@@ -887,9 +883,6 @@ void StdExpansion::LaplacianMatrixOp_MatFree_GenericImpl(
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
-    // const int dim = GetCoordim();
-    std::cout << "Expansion2D: LaplacianMatrixOp_MatFree_GenericImpl" << std::endl;
-
     const StdRegions::VarCoeffMap &varcoeffs = mkey.GetVarCoeffs();
     bool mmf = (varcoeffs.find(StdRegions::eVarCoeffMF1x) != varcoeffs.end());
     int dim = mmf ? 2 : GetCoordim();

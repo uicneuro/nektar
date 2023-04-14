@@ -356,7 +356,6 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
         {
             MatrixKey helmkey(mkey, StdRegions::eHelmholtz);
             DNekScalMat &HelmMat = *GetLocMatrix(helmkey);
-                std::cout << "Expansion2D: eHelmholtzGJP" << std::endl;
 
             // Generate a local copy of traceMat
             MatrixKey key(mkey, StdRegions::eNormDerivOnTrace);

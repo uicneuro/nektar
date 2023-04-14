@@ -917,10 +917,13 @@ void MMFCardiacEP::DoSolveMMF()
         intTime += elapsed;
         cpuTime += elapsed;
 
-        if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
+        if (m_TimeMap == eActivated)
         {
-            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
-                           dudtvalHistory, IappMap, TimeMap);
+            if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
+            {
+                ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+                            dudtvalHistory, IappMap, TimeMap);
+            }
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))

@@ -377,11 +377,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 for (int j = 0; j < m_expdim; ++j)
                 {
-                    Vmath::Smul(nq, Cn, &m_NeuralCm[0][0], 1,
-                                &AniStrength[j][0], 1);
-
-                    Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0],
-                                 1);
+                    Vmath::Smul(nq, Cn, &m_NeuralCm[0][0], 1, &AniStrength[j][0], 1);
+                    Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0], 1);
                 }
             }
 
@@ -414,8 +411,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 for (int j = 0; j < m_expdim; ++j)
                 {
-                    Vmath::Smul(nq, Cn, &m_NeuralCm[0][0], 1,
-                                &AniStrength[j][0], 1);
+                    Vmath::Smul(nq, Cn, &m_NeuralCm[0][0], 1, &AniStrength[j][0], 1);
                     Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0],
                                  1);
                 }
@@ -775,7 +771,8 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
         const int ElemMyelenEnd)
 {
-    // int nq         = fields[0].size();
+    boost::ignore_unused(ElemNodeEnd,ElemMyelenEnd);
+
     int fnq = field->GetNpoints();
 
     Array<OneD, NekDouble> x0(fnq);
@@ -784,7 +781,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
 
     field->GetCoords(x0, x1, x2);
 
-    int index, npts, nodeid=0;
+    int index, npts;
     int Nelem = m_fields[0]->GetExpSize();
 
     Array<OneD, int> outarray(fnq, 0);
@@ -822,7 +819,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
     const int ElemMyelenEnd)
 {
-    // int nq         = fields[0].size();
     int fnq = field->GetNpoints();
 
     int index, npts;
@@ -923,12 +919,6 @@ void MMFNeuralEP::DoSolveMMFZero()
     {
         nvariables = m_intVariables.size();
     }
-
-    std::cout << "m_traceNormal = ( " << RootMeanSquare(m_traceNormals[0]) << " , " 
-    << RootMeanSquare(m_traceNormals[1]) << " , " << RootMeanSquare(m_traceNormals[2]) << " ) " << std::endl;
-
-    std::cout << "m_ncdotMFFwd =  " << RootMeanSquare(m_ncdotMFFwd[0]) 
-    << ", m_ncdotMFBwd =  " << RootMeanSquare(m_ncdotMFBwd[0]) << std::endl;
 
     // Set up wrapper to fields data storage.
     Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
@@ -2304,7 +2294,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
 
     // ONLY simulation at node zone: No excitation at myelinated region
     StimulusAtNode(RHSstimulus[0]);
-    
+
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
@@ -2472,7 +2462,7 @@ void MMFNeuralEP::Updatephie(
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
     // Compute phie distribution
-    SetMembraneBoundaryCondition();
+    // SetMembraneBoundaryCondition();
 
     Array<OneD, NekDouble> tmpcoeff(ncoeffs);
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), tmpcoeff, phiefactors,
