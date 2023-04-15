@@ -82,6 +82,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
 
+    m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
+    m_session->LoadParameter("AnisotropyRegion", m_AnisotropyRegion, 1000000);
+
     // Define SovlerSchemeType
     if (m_session->DefinesSolverInfo("SolverSchemeType"))
     {
@@ -160,6 +163,24 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     for (int j = 0; j < m_expdim; ++j)
     {
         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+    }
+
+    if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
+    {
+        std::string MediumTypeStr;
+        MediumTypeStr = m_session->GetSolverInfo("MEDIUMTYPE");
+        for (int i = 0; i < (int)SIZE_MediumType; ++i)
+        {
+            if (boost::iequals(MediumTypeMap[i], MediumTypeStr))
+            {
+                m_MediumType = (MediumType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_MediumType = (MediumType)0;
     }
 
     // Ratio between along the fiber and orthogonal to the fiber
@@ -331,21 +352,26 @@ void MMFCardiacEP::LoadCardiacFiber(
 
         case eRegionalHeterogeneous:
         {
-            int index;
-            for (int i = 0; i < m_AnisotropyRegion; ++i)
+            for (int i=0; i<nq; ++i)
             {
-                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                {
-                    index                 = m_fields[0]->GetPhys_Offset(i) + j;
-                    AniStrength[0][index] = AnisotropyStrength;
-                }
-            }
+                AniStrength[0][i] = sqrt(AnisotropyStrength);            }
+            // int index;
+            // for (int i = 0; i < m_AnisotropyRegion; ++i)
+            // {
+            //     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            //     {
+            //         index                 = m_fields[0]->GetPhys_Offset(i) + j;
+            //         AniStrength[0][index] = sqrt(AnisotropyStrength);
+            //     }
+            // }
         }
         break;
 
         default:
             break;
     }
+
+    std::cout << "AniStrength = " << RootMeanSquare(AniStrength[0]) << std::endl;
 
     // Plot Cardiac fibre projection map
     // PlotProcessedCardiacFibre(movingframes[0], fcdotk, AniConstruction);
@@ -1349,6 +1375,9 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     AddSummaryItem(s, "SolverSchemeType", SolverSchemeTypeMap[m_SolverSchemeType]);
     SolverUtils::AddSummaryItem(s, "TimeMap", TimeMapTypeMap[m_TimeMap]);
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
+    SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
+    SolverUtils::AddSummaryItem(s, "AnisotropyRegion", m_AnisotropyRegion);
+    SolverUtils::AddSummaryItem(s, "AnisotropyStrength", m_AnisotropyStrength);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
     m_cell->GenerateSummary(s);
