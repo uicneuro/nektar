@@ -859,16 +859,40 @@ void MMFNeuralEP::DoOdeProjection(
 {
     // Counter variable
     int i;
-    int npoints    = GetNpoints();
-    int nVariables = inarray.size();
+    int nq    = GetNpoints();
+    int nvar = inarray.size();
 
     // Set the boundary conditions
     SetBoundaryConditions(time);
 
-    // Switch on the projection type (Discontinuous or Continuous)
-    for (i = 0; i < nVariables; ++i)
+    switch (m_projectionType)
     {
-        Vmath::Vcopy(npoints, inarray[i], 1, outarray[i], 1);
+        case MultiRegions::eDiscontinuous:
+        {
+            // Just copy over array
+            for (i = 0; i < nvar; ++i)
+            {
+                Vmath::Vcopy(nq, inarray[i], 1, outarray[i], 1);
+            }
+            break;
+        }
+        case MultiRegions::eGalerkin:
+        case MultiRegions::eMixed_CG_Discontinuous:
+        {
+            Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
+
+            for (i = 0; i < nvar; ++i)
+            {
+                m_fields[i]->FwdTrans(inarray[i], coeffs);
+                m_fields[i]->BwdTrans(coeffs, outarray[i]);
+            }
+            break;
+        }
+        default:
+        {
+            ASSERTL0(false, "Unknown projection scheme");
+            break;
+        }
     }
 }
 
@@ -2303,7 +2327,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         // Compute phi_e to satisfy the following equation
         // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
         // (\sigma_i \nabla \phi_m)
-        Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
+        Array<OneD, NekDouble> phie(nq);
+        Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
 
         // Add the current changes by the external current
         Array<OneD, NekDouble> extcurrent;
@@ -2369,12 +2394,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0]);
+    Array<OneD, NekDouble> phie(nq);
+    Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent;
     extcurrent =
-        ComputeCovariantDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+        ComputeCovariantDiffusion(m_unitmovingframes, phie);
     Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
     // Let the extcurrent be zero at Myeline nodes (-1).
@@ -2436,7 +2462,8 @@ void MMFNeuralEP::OnlyValideinNode(const Array<OneD, const int> &NodeZone,
 void MMFNeuralEP::Updatephie(
     const Array<OneD, const int> &NodeZone,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const NekDouble> &phim)
+    const Array<OneD, const NekDouble> &phim,
+    Array<OneD, NekDouble> &outarray)
 {
     boost::ignore_unused(movingframes);
 
@@ -2464,10 +2491,21 @@ void MMFNeuralEP::Updatephie(
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
 
+                // m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+                //                        m_fields[i]->UpdateCoeffs(), factors,
+                //                        m_vardiffi);
+                // m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
+                //                       m_fields[i]->UpdatePhys());
+                // m_fields[i]->SetPhysState(true);
+                // // Copy the solution vector (required as m_fields must be set).
+                // outarray[i] = m_fields[i]->GetPhys();
+
     Array<OneD, NekDouble> tmpcoeff(ncoeffs);
-    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), tmpcoeff, phiefactors,
+    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors,
                            m_phievarcoeff);
-    m_fields[1]->BwdTrans(tmpcoeff, m_fields[1]->UpdatePhys());
+    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    m_fields[1]->SetPhysState(true);
+    outarray = m_fields[1]->GetPhys();
 }
 
 // Array<OneD, NekDouble> MMFNeuralEP::Computephie(

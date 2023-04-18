@@ -349,7 +349,9 @@ protected:
     void Updatephie(
         const Array<OneD, const int> &NodeZone,
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        const Array<OneD, const NekDouble> &phim);
+        const Array<OneD, const NekDouble> &phim,
+        Array<OneD, NekDouble> &outarray);
+
 
     void MembraneBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,
