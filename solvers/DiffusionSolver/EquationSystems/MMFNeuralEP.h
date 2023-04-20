@@ -49,6 +49,7 @@ namespace Nektar
 
 enum NeuralEPType
 {
+    eNeuralHelmTest,
     eNeuralEPPT,
     eNeuralEP1D,
     eNeuralEP2D,
@@ -57,6 +58,7 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
+    "NeuralHelmTest",
     "NeuralEPPT",
     "NeuralEP1D",
     "NeuralEP2D",
@@ -346,7 +348,7 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim);
 
-    void Updatephie(
+    void SolveHelmholtzatDiffusion(
         const Array<OneD, const int> &NodeZone,
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim,

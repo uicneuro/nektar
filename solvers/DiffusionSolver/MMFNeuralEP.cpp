@@ -254,6 +254,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
 
+        case eNeuralHelmTest:
         case eNeuralEP2D:
         case eNeuralEP2DEmbed:
         {
@@ -391,6 +392,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
 
+        case eNeuralHelmTest:
         case eNeuralEP2D:
         case eNeuralEP2DEmbed:
         {
@@ -428,7 +430,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Create MMF init object
             MMFSystem::MMFInitObject(AniStrength);
-
+            
             // Set up for phie Poisson solver
             std::string phieMMFdirStr = "LOCAL";
             m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
@@ -487,6 +489,38 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
     }
 
+    // Test Helm 2D Solver 
+    if(m_NeuralEPType==eNeuralHelmTest)
+    {
+        int nvar = m_fields.size();
+
+        std::cout << std::endl;
+
+        std::cout << "Initiating eNeuralHelmTest "
+                    "================================================"
+                << std::endl;
+
+        Array<OneD, int> Oneindex(nq, 1);
+        Array<OneD, NekDouble> outputarray(nq);
+
+        Array<OneD, Array<OneD, NekDouble>> inputarray(nvar);
+        GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), inputarray);
+
+        std::cout << "inarray = " << RootMeanSquare(inputarray[0]) << std::endl;
+
+        Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
+        GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
+
+        std::cout << "ExactSoln = " << RootMeanSquare(ExactSoln[0]) << std::endl;
+
+        SolveHelmholtzatDiffusion(Oneindex, m_phiemovingframes, inputarray[0], outputarray);
+
+        Vmath::Vsub(nq, ExactSoln[0], 1, outputarray, 1, outputarray, 1);
+        std::cout << "Error = " << RootMeanSquare(outputarray) << std::endl;
+
+        wait_on_enter();
+    }
+
     if (m_explicitDiffusion)
     {
         m_ode.DefineImplicitSolve(&MMFNeuralEP::DoNullSolve, this);
@@ -504,7 +538,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 break;
             }
-
+            
+            case eNeuralHelmTest:
             case eNeuralEP2D:
             case eNeuralEP2DEmbed:
             {
@@ -532,6 +567,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 break;
             }
 
+            case eNeuralHelmTest:
             case eNeuralEP2D:
             {
                 m_ode.DefineImplicitSolve(
@@ -565,6 +601,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
 
+        case eNeuralHelmTest:
         case eNeuralEP2D:
         {
             m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2D, this);
@@ -2328,7 +2365,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
         // (\sigma_i \nabla \phi_m)
         Array<OneD, NekDouble> phie(nq);
-        Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
+        SolveHelmholtzatDiffusion(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
 
         // Add the current changes by the external current
         Array<OneD, NekDouble> extcurrent;
@@ -2395,7 +2432,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq);
-    Updatephie(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
+    SolveHelmholtzatDiffusion(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent;
@@ -2459,7 +2496,7 @@ void MMFNeuralEP::OnlyValideinNode(const Array<OneD, const int> &NodeZone,
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-void MMFNeuralEP::Updatephie(
+void MMFNeuralEP::SolveHelmholtzatDiffusion(
     const Array<OneD, const int> &NodeZone,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &phim,
@@ -2475,6 +2512,7 @@ void MMFNeuralEP::Updatephie(
     StdRegions::ConstFactorMap phiefactors;
     phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
     phiefactors[StdRegions::eFactorLambda] = 0.0;
+    std::cout << "Starting ComputeCovariantDiffusion" << std::endl;
 
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e.
@@ -2482,25 +2520,21 @@ void MMFNeuralEP::Updatephie(
     // myelinnated fiber region.
     Array<OneD, NekDouble> phimLaplacian(nq);
     phimLaplacian = ComputeCovariantDiffusion(m_unitmovingframes, phim);
+    // phimLaplacian = ComputeEuclideanDiffusion(phim);
+
+    // WeakDGMMFLaplacian(0, phim, phimLaplacian);
+
+    std::cout << "phimLaplacian = " << RootMeanSquare(phimLaplacian) << std::endl;
 
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
+    std::cout << "phimLaplacian after NodeZone = " << RootMeanSquare(phimLaplacian) << std::endl;
 
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
 
-                // m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                //                        m_fields[i]->UpdateCoeffs(), factors,
-                //                        m_vardiffi);
-                // m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
-                //                       m_fields[i]->UpdatePhys());
-                // m_fields[i]->SetPhysState(true);
-                // // Copy the solution vector (required as m_fields must be set).
-                // outarray[i] = m_fields[i]->GetPhys();
-
-    Array<OneD, NekDouble> tmpcoeff(ncoeffs);
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors,
                            m_phievarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
