@@ -252,6 +252,9 @@ void MMFDiffusion::DoImplicitSolve(
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
                                  m_varcoeff);
 
+        // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
+
+
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
 }
@@ -326,7 +329,10 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = 0.0;
+                outarray[0][k] = (m_d00 * m_frequency *
+                                 m_frequency + m_d11 * m_frequency *
+                                 m_frequency - m_frequency) * exp(-1.0 * m_frequency * time) *
+                                 sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
             }
         }
         break;
@@ -568,8 +574,8 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         break;
     }
 
-    std::cout << "Initial: max um = "
-              << Vmath::Vmax(nq, m_fields[0]->GetPhys(), 1) << std::endl;
+    std::cout << "Initial: max u = "
+              << Vmath::Vmax(nq, m_fields[0]->GetPhys(), 1) << ", u_L2 = " << RootMeanSquare(m_fields[0]->GetPhys()) << std::endl;
 
     if (dumpInitialConditions)
     {
@@ -690,7 +696,7 @@ void MMFDiffusion::TestPlaneAniProblem(const NekDouble time,
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
-        outfield[k] = exp(-1.0 * d00[k] * d11[k] * m_frequency * m_frequency * time) * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+        outfield[k] = exp(-1.0 * m_frequency * time) * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
     }
 }
 
@@ -1310,6 +1316,8 @@ void MMFDiffusion::v_DoSolve()
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
         m_fields[m_intVariables[i]]->SetPhysState(true);
     }
+
+    std::cout << "Final field = " << RootMeanSquare(fields[0]) << std::endl;
 } // namespace Nektar
 
 void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
