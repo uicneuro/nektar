@@ -101,7 +101,60 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     if (m_session->DefinesParameter("d00"))
     {
-        Vmath::Fill(nq, sqrt(m_d00), &Anisotropy[0][0], 1);
+        // Vmath::Fill(nq, sqrt(m_d00), &Anisotropy[0][0], 1);
+
+        Array<OneD, NekDouble> x0(nq);
+        Array<OneD, NekDouble> x1(nq);
+        Array<OneD, NekDouble> x2(nq);
+
+        m_fields[0]->GetCoords(x0, x1, x2);
+
+        // for (int i=0; i<nq; ++i)
+        // {
+        //     Anisotropy[0][i] = sqrt(m_d00) * ( 2.0 + sin(m_pi * x0[i]) );
+        // }
+
+        // Array<OneD, Array<OneD, int>> EWIndex;
+        // m_fields[0]->GridIndexElementWise(EWIndex);
+
+        // NekDouble xavg;
+        // int Nelemtj = EWIndex.size();
+        // int nptsj   = EWIndex[0].size();
+        // int index, Actflag=0;
+    // for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    // {
+    //     TMflag = 0;
+    //     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+    //     {
+    //         index = m_fields[0]->GetPhys_Offset(i) + j;
+
+    NekDouble xavg;
+    int index;
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+        {
+            xavg=0.0;
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                {
+                    index = m_fields[0]->GetPhys_Offset(i) + j;
+                    xavg = xavg + x0[index];
+                }
+
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                {
+                    index = m_fields[0]->GetPhys_Offset(i) + j;
+                    if(xavg>0)
+                    {
+                        Anisotropy[0][index] = sqrt(m_d00);
+                    }
+
+                    else
+                    {
+                        Anisotropy[0][index] = 1.0/sqrt(m_d00);
+                    }
+
+                    std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << Anisotropy[0][index] << std::endl;
+                }
+        }
     }
     if (m_session->DefinesParameter("d11"))
     {
@@ -252,9 +305,6 @@ void MMFDiffusion::DoImplicitSolve(
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
                                  m_varcoeff);
 
-        // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
-
-
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
 }
@@ -321,16 +371,32 @@ void MMFDiffusion::DoOdeRhs(
 
         case eTestPlaneAni:
         {
+            StdRegions::VarCoeffType MMFCoeffs[15] = {
+                StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+                StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+                StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+                StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+                StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+                StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+                StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+                StdRegions::eVarCoeffMF3Mag}; 
+
             Array<OneD, NekDouble> x(nq);
             Array<OneD, NekDouble> y(nq);
             Array<OneD, NekDouble> z(nq);
 
             m_fields[0]->GetCoords(x, y, z);
 
+            Array<OneD, NekDouble> d00(nq);
+            Array<OneD, NekDouble> d11(nq);
+
+            Vmath::Vcopy(nq, &m_varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+            Vmath::Vcopy(nq, &m_varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_d00 * m_frequency *
-                                 m_frequency + m_d11 * m_frequency *
+                outarray[0][k] = (d00[k] * d00[k] * m_frequency *
+                                 m_frequency + d11[k] * d11[k] * m_frequency *
                                  m_frequency - m_frequency) * exp(-1.0 * m_frequency * time) *
                                  sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
             }
@@ -669,17 +735,19 @@ void MMFDiffusion::TestPlaneAniProblem(const NekDouble time,
                                     StdRegions::VarCoeffMap &varcoeff,
                                     Array<OneD, NekDouble> &outfield)
 {
+    boost::ignore_unused(varcoeff);
+
     int nq = GetTotPoints();
 
-    StdRegions::VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag}; 
+    // StdRegions::VarCoeffType MMFCoeffs[15] = {
+    //     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+    //     StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+    //     StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+    //     StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+    //     StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+    //     StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+    //     StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+    //     StdRegions::eVarCoeffMF3Mag}; 
 
     Array<OneD, NekDouble> x(nq);
     Array<OneD, NekDouble> y(nq);
@@ -687,11 +755,11 @@ void MMFDiffusion::TestPlaneAniProblem(const NekDouble time,
 
     m_fields[0]->GetCoords(x, y, z);
 
-    Array<OneD, NekDouble> d00(nq);
-    Array<OneD, NekDouble> d11(nq);
+    // Array<OneD, NekDouble> d00(nq);
+    // Array<OneD, NekDouble> d11(nq);
 
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
 
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
