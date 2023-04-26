@@ -111,6 +111,8 @@ void TriExp::v_PhysDeriv(const Array<OneD, const NekDouble> &inarray,
 
     StdTriExp::v_PhysDeriv(inarray, diff0, diff1);
 
+    std::cout << "TriExp::v_PhysDeriv : out_d0 =========================================" << std::endl;
+
     if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
     {
         if (out_d0.size())
@@ -157,6 +159,9 @@ void TriExp::v_PhysDeriv(const int dir,
                          const Array<OneD, const NekDouble> &inarray,
                          Array<OneD, NekDouble> &outarray)
 {
+
+        std::cout << "TriExp::v_PhysDeriv: dir =========================================" << std::endl;
+
     switch (dir)
     {
         case 0:
@@ -211,6 +216,9 @@ void TriExp::v_PhysDirectionalDeriv(
     // diff0 = du/d_xi, diff1 = du/d_eta
     StdTriExp::v_PhysDeriv(inarray, diff0, diff1);
 
+    std::cout << "TriExp::v_PhysDirectionalDeriv " << std::endl;
+
+
     // if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
     // {
         Array<OneD, Array<OneD, NekDouble>> tangmat(2);
@@ -227,17 +235,9 @@ void TriExp::v_PhysDirectionalDeriv(
             }
         }
 
-            for (int j = 0; j<nqtot; ++j)
-            {
-                std::cout << "df =  ( " << df[0][j] << " , " << df[1][j] << " ), "
-                << ", dirvec =  ( " << dirvec[j] << " , " << dirvec[nqtot + j] << " , " << " ), "
-                << " tangmat[0] = " << tangmat[0][j] << " , tangmat[1] = " << tangmat[1][j] << std::endl;
-            }
-
         /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
         Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
-        Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
-                     &out[0], 1);
+        Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1, &out[0], 1);
     // }
     // else
     // {

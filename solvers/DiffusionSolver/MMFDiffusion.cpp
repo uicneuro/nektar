@@ -228,10 +228,13 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     // ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
     // Test PhysDirectionalDeriv
-std::cout << " Test PhysDirectionalDeriv  " << std::endl;
+std::cout << " Test PhysDirectionalDeriv, nq = " << nq << std::endl;
 
     Array<OneD, NekDouble> tmp(nq);
+    
     Array<OneD, NekDouble> Dxtmp(nq);
+        Array<OneD, NekDouble> Dx2tmp(nq);
+
     Array<OneD, NekDouble> Dytmp(nq);
 
     Array<OneD, NekDouble> ExtDxtmp(nq);
@@ -240,15 +243,21 @@ std::cout << " Test PhysDirectionalDeriv  " << std::endl;
     TestPlaneAniProblem(0.0, m_varcoeff, tmp);
 
     m_fields[0]->PhysDirectionalDeriv(m_movingframes[0], tmp, Dxtmp);
-    wait_on_enter();
 
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[1], tmp, Dytmp);
+            std::cout << "TriExp::v_PhysDeriv =========================================" << std::endl;
+
+    m_fields[0]->PhysDeriv(MultiRegions::DirCartesianMap[0], tmp, Dx2tmp);
+
+    // m_fields[0]->PhysDirectionalDeriv(m_movingframes[1], tmp, Dytmp);
 
     TestPlaneAniDerivProblem(0.0, m_varcoeff, ExtDxtmp, ExtDytmp);
 
-    Vmath::Vsub(nq, Dxtmp, 1, ExtDxtmp, 1, ExtDxtmp, 1);
-    Vmath::Vsub(nq, Dytmp, 1, ExtDytmp, 1, ExtDytmp, 1);
-    std::cout << "Dx error = " << RootMeanSquare(ExtDxtmp) << ", Dy error =" << RootMeanSquare(ExtDytmp) << std::endl;
+    Vmath::Vsub(nq, Dxtmp, 1, ExtDxtmp, 1, Dxtmp, 1);
+    Vmath::Vsub(nq, Dx2tmp, 1, ExtDxtmp, 1, Dx2tmp, 1);
+
+
+    // Vmath::Vsub(nq, Dytmp, 1, ExtDytmp, 1, ExtDytmp, 1);
+    std::cout << "Dx error = " << RootMeanSquare(Dxtmp) << ", Dir Dx error =" << RootMeanSquare(Dx2tmp) << std::endl;
     wait_on_enter();
 
 

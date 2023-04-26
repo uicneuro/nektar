@@ -1627,11 +1627,28 @@ void ExpList::v_PhysDeriv(const int dir,
     v_PhysDeriv(edir, inarray, out_d);
 }
 
+
+
+void ExpList::v_PhysDirectionalDeriv(
+    const Array<OneD, const NekDouble> &direction,
+    const Array<OneD, const NekDouble> &inarray,
+    Array<OneD, NekDouble> &outarray)
+
+    {
+        // PhysDeriv(0, inarray, out_d);
+        // PhysDeriv(1, inarray, out_d);
+        // PhysDeriv(2, inarray, out_d);
+    }
+
+
 void ExpList::v_PhysDeriv(Direction edir,
                           const Array<OneD, const NekDouble> &inarray,
                           Array<OneD, NekDouble> &out_d)
 {
     int i;
+
+                std::cout << "ExpList::v_PhysDeriv 3 =========================================" << std::endl;
+
     if (edir == MultiRegions::eS)
     {
         Array<OneD, NekDouble> e_out_ds;
@@ -1652,7 +1669,6 @@ void ExpList::v_PhysDeriv(Direction edir,
     }
     else
     {
-
         // initialise if required
         if (m_collectionsDoInit[Collections::ePhysDeriv])
         {
@@ -1674,6 +1690,9 @@ void ExpList::v_PhysDeriv(Direction edir,
 
             m_collections[i].ApplyOperator(Collections::ePhysDeriv, intdir,
                                            inarray + offset, e_out_d);
+
+                      std::cout << "e_out_d = " << e_out_d.size() << std::endl;
+                                 
         }
     }
 }
@@ -1746,36 +1765,36 @@ void ExpList::v_CurlCurl(Array<OneD, Array<OneD, NekDouble>> &Vel,
     }
 }
 
-void ExpList::v_PhysDirectionalDeriv(
-    const Array<OneD, const NekDouble> &direction,
-    const Array<OneD, const NekDouble> &inarray,
-    Array<OneD, NekDouble> &outarray)
-{
-    int npts_e;
-    int coordim = (*m_exp)[0]->GetGeom()->GetCoordim();
-    int nq      = direction.size() / coordim;
+// void ExpList::v_PhysDirectionalDeriv(
+//     const Array<OneD, const NekDouble> &direction,
+//     const Array<OneD, const NekDouble> &inarray,
+//     Array<OneD, NekDouble> &outarray)
+// {
+//     int npts_e;
+//     int coordim = (*m_exp)[0]->GetGeom()->GetCoordim();
+//     int nq      = direction.size() / coordim;
 
-    Array<OneD, NekDouble> e_outarray;
-    Array<OneD, NekDouble> e_MFdiv;
-    Array<OneD, NekDouble> locdir;
+//     Array<OneD, NekDouble> e_outarray;
+//     Array<OneD, NekDouble> e_MFdiv;
+//     Array<OneD, NekDouble> locdir;
 
-    for (int i = 0; i < (*m_exp).size(); ++i)
-    {
-        npts_e = (*m_exp)[i]->GetTotPoints();
-        locdir = Array<OneD, NekDouble>(npts_e * coordim);
+//     for (int i = 0; i < (*m_exp).size(); ++i)
+//     {
+//         npts_e = (*m_exp)[i]->GetTotPoints();
+//         locdir = Array<OneD, NekDouble>(npts_e * coordim);
 
-        for (int k = 0; k < coordim; ++k)
-        {
-            Vmath::Vcopy(npts_e, &direction[k * nq + m_phys_offset[i]], 1,
-                         &locdir[k * npts_e], 1);
-        }
+//         for (int k = 0; k < coordim; ++k)
+//         {
+//             Vmath::Vcopy(npts_e, &direction[k * nq + m_phys_offset[i]], 1,
+//                          &locdir[k * npts_e], 1);
+//         }
 
-        (*m_exp)[i]->PhysDirectionalDeriv(locdir,
-                                          inarray + m_phys_offset[i], 
-                                          e_outarray =
-                                              outarray + m_phys_offset[i]);
-    }
-}
+//         (*m_exp)[i]->PhysDirectionalDeriv(locdir,
+//                                           inarray + m_phys_offset[i], 
+//                                           e_outarray =
+//                                               outarray + m_phys_offset[i]);
+//     }
+// }
 
 void ExpList::ExponentialFilter(Array<OneD, NekDouble> &array,
                                 const NekDouble alpha, const NekDouble exponent,
