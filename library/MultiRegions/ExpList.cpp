@@ -1770,7 +1770,8 @@ void ExpList::v_PhysDirectionalDeriv(
                          &locdir[k * npts_e], 1);
         }
 
-        (*m_exp)[i]->PhysDirectionalDeriv(inarray + m_phys_offset[i], locdir,
+        (*m_exp)[i]->PhysDirectionalDeriv(locdir,
+                                          inarray + m_phys_offset[i], 
                                           e_outarray =
                                               outarray + m_phys_offset[i]);
     }

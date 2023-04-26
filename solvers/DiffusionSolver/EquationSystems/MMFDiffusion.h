@@ -149,6 +149,11 @@ protected:
     NekDouble m_frequency;
     NekDouble m_d00, m_d11, m_d22;
 
+    Array<OneD, NekDouble> m_d00vec;
+    Array<OneD, NekDouble> m_d11vec;
+    Array<OneD, NekDouble> m_d22vec;
+
+
     StdRegions::VarCoeffMap m_varcoeffXYZ;
 
     SolverUtils::DiffusionSharedPtr m_diffusion;
@@ -209,7 +214,12 @@ protected:
 
     void TestPlaneAniProblem(const NekDouble time,
                         StdRegions::VarCoeffMap &varcoeff,
-                        Array<OneD, NekDouble> &outfield);                          
+                        Array<OneD, NekDouble> &outfield);
+
+   void TestPlaneAniDerivProblem(const NekDouble time,
+                                    StdRegions::VarCoeffMap &varcoeff,
+                                    Array<OneD, NekDouble> &Dxoutfield,
+                                    Array<OneD, NekDouble> &Dyoutfield);                     
 
     void TestCubeProblem(const NekDouble time,
                          Array<OneD, NekDouble> &outfield);

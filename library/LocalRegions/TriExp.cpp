@@ -199,6 +199,9 @@ void TriExp::v_PhysDirectionalDeriv(
     int nquad1 = m_base[1]->GetNumPoints();
     int nqtot  = nquad0 * nquad1;
 
+    int shapedim = 2;
+    int coordim = m_geom->GetCoordim();
+
     const Array<TwoD, const NekDouble> &df =
         m_metricinfo->GetDerivFactors(GetPointsKeys());
 
@@ -208,46 +211,53 @@ void TriExp::v_PhysDirectionalDeriv(
     // diff0 = du/d_xi, diff1 = du/d_eta
     StdTriExp::v_PhysDeriv(inarray, diff0, diff1);
 
-    if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
-    {
+    // if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
+    // {
         Array<OneD, Array<OneD, NekDouble>> tangmat(2);
 
         // D^v_xi = v_x*d_xi/dx + v_y*d_xi/dy + v_z*d_xi/dz
         // D^v_eta = v_x*d_eta/dx + v_y*d_eta/dy + v_z*d_eta/dz
-        for (int i = 0; i < 2; ++i)
+        for (int i = 0; i < shapedim; ++i)
         {
             tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
-            for (int k = 0; k < (m_geom->GetCoordim()); ++k)
+            for (int k = 0; k < coordim; ++k)
             {
                 Vmath::Vvtvp(nqtot, &df[2 * k + i][0], 1, &dirvec[k * nqtot],
                              1, &tangmat[i][0], 1, &tangmat[i][0], 1);
             }
         }
 
-        /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
-        Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
-        Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
-                     &out[0], 1);
-    }
-    else
-    {
-        Array<OneD, Array<OneD, NekDouble>> tangmat(2);
-
-        for (int i = 0; i < 2; ++i)
-        {
-            tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
-            for (int k = 0; k < (m_geom->GetCoordim()); ++k)
+            for (int j = 0; j<nqtot; ++j)
             {
-                Vmath::Svtvp(nqtot, df[2 * k + i][0], &dirvec[k * nqtot], 1,
-                             &tangmat[i][0], 1, &tangmat[i][0], 1);
+                std::cout << "df =  ( " << df[0][j] << " , " << df[1][j] << " ), "
+                << ", dirvec =  ( " << dirvec[j] << " , " << dirvec[nqtot + j] << " , " << " ), "
+                << " tangmat[0] = " << tangmat[0][j] << " , tangmat[1] = " << tangmat[1][j] << std::endl;
             }
-        }
 
         /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
         Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
         Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
                      &out[0], 1);
-    }
+    // }
+    // else
+    // {
+    //     Array<OneD, Array<OneD, NekDouble>> tangmat(2);
+
+    //     for (int i = 0; i < 2; ++i)
+    //     {
+    //         tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
+    //         for (int k = 0; k < (m_geom->GetCoordim()); ++k)
+    //         {
+    //             Vmath::Svtvp(nqtot, df[2 * k + i][0], &dirvec[k * nqtot], 1,
+    //                          &tangmat[i][0], 1, &tangmat[i][0], 1);
+    //         }
+    //     }
+
+    //     /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
+    //     Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
+    //     Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
+    //                  &out[0], 1);
+    // }
 }
 
 void TriExp::v_FwdTrans(const Array<OneD, const NekDouble> &inarray,

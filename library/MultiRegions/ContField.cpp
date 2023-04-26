@@ -836,6 +836,7 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsSign();
     const Array<OneD, const int> map =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
+        
     // Add weak boundary conditions to forcing
     for (i = 0; i < m_bndCondExpansions.size(); ++i)
     {

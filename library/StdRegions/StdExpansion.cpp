@@ -708,7 +708,6 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
 
     // Create a frame vector
     Array<OneD, NekDouble> dirvec(coordim * nq);
-
     for (int k=0; k<coordim; ++k)
     {
         Vmath::Vcopy(nq, &(mkey.GetVarCoeff(MMFCoeffs[5*dir+k]))[0], 1, &dirvec[k*nq], 1);
@@ -719,73 +718,6 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
 
     // v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
     v_IProductWRTDirectionalDerivBase_SumFac(dirvec, dtmp, outarray);
-
-    // if (mkey.GetNVarCoeff() && (!mkey.ConstFactorExists(eFactorSVVDiffCoeff)))
-    // {
-    //     if (k1 == k2)
-    //     {
-    //         // By default, k1 == k2 has \sigma = 1 (diagonal entries)
-    //         if (mkey.HasVarCoeff(varcoefftypes[k1][k1]))
-    //         {
-    //             Vmath::Vmul(nq, mkey.GetVarCoeff(varcoefftypes[k1][k1]), 1,
-    //                         dtmp, 1, dtmp, 1);
-    //         }
-    //         v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
-    //     }
-    //     else
-    //     {
-    //         // By default, k1 != k2 has \sigma = 0 (off-diagonal entries)
-    //         if (mkey.HasVarCoeff(varcoefftypes[k1][k2]))
-    //         {
-    //             Vmath::Vmul(nq, mkey.GetVarCoeff(varcoefftypes[k1][k2]), 1,
-    //                         dtmp, 1, dtmp, 1);
-    //             v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
-    //         }
-    //         else
-    //         {
-    //             Vmath::Zero(GetNcoeffs(), outarray, 1);
-    //         }
-    //     }
-    // }
-    // else if (mkey.ConstFactorExists(eFactorCoeffD00) &&
-    //          (!mkey.ConstFactorExists(eFactorSVVDiffCoeff)))
-    // {
-    //     if (k1 == k2)
-    //     {
-    //         // By default, k1 == k2 has \sigma = 1 (diagonal entries)
-    //         if (mkey.ConstFactorExists(constcoefftypes[k1][k1]))
-    //         {
-    //             Vmath::Smul(nq, mkey.GetConstFactor(constcoefftypes[k1][k1]),
-    //                         dtmp, 1, dtmp, 1);
-    //         }
-    //         v_IProductWRTDerivBase(k1, dtmp, outarray);
-    //     }
-    //     else
-    //     {
-    //         // By default, k1 != k2 has \sigma = 0 (off-diagonal entries)
-    //         if (mkey.ConstFactorExists(constcoefftypes[k1][k2]))
-    //         {
-    //             Vmath::Smul(nq, mkey.GetConstFactor(constcoefftypes[k1][k2]),
-    //                         dtmp, 1, dtmp, 1);
-    //             v_IProductWRTDerivBase(k1, dtmp, outarray);
-    //         }
-    //         else
-    //         {
-    //             Vmath::Zero(GetNcoeffs(), outarray, 1);
-    //         }
-    //     }
-    // }
-    // else
-    // {
-    //     // Multiply by svv tensor
-    //     if (mkey.ConstFactorExists(eFactorSVVDiffCoeff))
-    //     {
-    //         Vmath::Vcopy(nq, dtmp, 1, tmp, 1);
-    //         SVVLaplacianFilter(dtmp, mkey);
-    //         Vmath::Vadd(nq, tmp, 1, dtmp, 1, dtmp, 1);
-    //     }
-    //     v_IProductWRTDerivBase(k1, dtmp, outarray);
-    // }
 }
 
 
@@ -799,6 +731,7 @@ void StdExpansion::LaplacianMatrixOp_MatFree(
     int nq = GetTotPoints();
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> dtmp(nq);
+
     VarCoeffType varcoefftypes[3][3] = {
         {eVarCoeffD00, eVarCoeffD01, eVarCoeffD02},
         {eVarCoeffD01, eVarCoeffD11, eVarCoeffD12},
@@ -815,7 +748,6 @@ void StdExpansion::LaplacianMatrixOp_MatFree(
     {
         if (k1 == k2)
         {
-            // By default, k1 == k2 has \sigma = 1 (diagonal entries)
             if (mkey.HasVarCoeff(varcoefftypes[k1][k1]))
             {
                 Vmath::Vmul(nq, mkey.GetVarCoeff(varcoefftypes[k1][k1]), 1,
