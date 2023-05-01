@@ -202,6 +202,8 @@ protected:
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
                   
+    void TestPhysDirectionalDeriv(const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
+
     void TestLineProblem(const int direction, const NekDouble time,
                                     Array<OneD, NekDouble> &outfield);
                                     

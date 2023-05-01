@@ -1133,6 +1133,8 @@ protected:
     /// Exapnsion type
     ExpansionType m_expType;
 
+NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
+
     std::shared_ptr<DNekMat> GenGlobalMatrixFull(
         const GlobalLinSysKey &mkey,
         const std::shared_ptr<AssemblyMapCG> &locToGloMap);

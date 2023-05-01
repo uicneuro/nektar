@@ -157,9 +157,6 @@ void TriExp::v_PhysDeriv(const int dir,
                          const Array<OneD, const NekDouble> &inarray,
                          Array<OneD, NekDouble> &outarray)
 {
-
-        std::cout << "TriExp::v_PhysDeriv: dir =========================================" << std::endl;
-
     switch (dir)
     {
         case 0:
@@ -193,6 +190,8 @@ void TriExp::v_PhysDirectionalDeriv(
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &out)
 {
+    std::cout << "TriExp::v_PhysDirectionalDeriv " << std::endl;
+
     if (!out.size())
     {
         return;

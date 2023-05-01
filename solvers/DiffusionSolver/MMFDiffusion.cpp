@@ -101,30 +101,26 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     if (m_session->DefinesParameter("d00"))
     {
-        // Vmath::Fill(nq, sqrt(m_d00), &Anisotropy[0][0], 1);
-
         Array<OneD, NekDouble> x0(nq);
         Array<OneD, NekDouble> x1(nq);
         Array<OneD, NekDouble> x2(nq);
 
         m_fields[0]->GetCoords(x0, x1, x2);
 
-        m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
+        // m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
         m_d00vec = Array<OneD, NekDouble>(nq);
 
         for (int i=0; i<nq; ++i)
         {
-             m_d00vec[i] = m_d00;
+            m_d00vec[i] = m_d00;
             // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
 
             Anisotropy[0][i] = sqrt(m_d00vec[i]);
-            // Anisotropy[0][i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
-            m_varcoeff[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
-            // std::cout << "i = " << i << ", x0i = " << x0[i] << ", m_d00vec = " << m_d00vec[i] << std::endl;
+           // m_varcoeff[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
         }
 
         // NekDouble xavg;
-        int index;
+         int index;
         // for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
         //     {
         //         xavg=0.0;
@@ -172,18 +168,17 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     }
     if (m_session->DefinesParameter("d11"))
     {
-        m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq);
+        // m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq);
         m_d11vec = Array<OneD, NekDouble>(nq);
 
         Vmath::Fill(nq, m_d11, &m_d11vec[0], 1);
 
         Vmath::Vsqrt(nq, m_d11vec, 1, Anisotropy[1], 1);
-        m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, m_d11);
+        // m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, m_d11);
     }
     if (m_session->DefinesParameter("d22"))
     {
-        m_varcoeff[StdRegions::eVarCoeffD22] = Array<OneD, NekDouble>(nq);
-
+        // m_varcoeff[StdRegions::eVarCoeffD22] = Array<OneD, NekDouble>(nq);
         Vmath::Fill(nq, sqrt(m_d22), &Anisotropy[2][0], 1);
     }
 
@@ -225,41 +220,13 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_InitWaveType = (InitWaveType)0;
     }
 
-    // ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
     // Test PhysDirectionalDeriv
-    std::cout << " Test PhysDirectionalDeriv, nq = " << nq << std::endl;
+    TestPhysDirectionalDeriv(m_movingframes);
 
-    Array<OneD, NekDouble> tmp(nq);
-    
-    Array<OneD, NekDouble> Dxtmp(nq);
-        Array<OneD, NekDouble> Dx2tmp(nq);
-
-    Array<OneD, NekDouble> Dytmp(nq);
-
-    Array<OneD, NekDouble> ExtDxtmp(nq);
-    Array<OneD, NekDouble> ExtDytmp(nq);
-
-    TestPlaneAniProblem(0.0, m_varcoeff, tmp);
-
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[0], tmp, Dxtmp);
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[1], tmp, Dytmp);
-
-    TestPlaneAniDerivProblem(0.0, m_varcoeff, ExtDxtmp, ExtDytmp);
-
-    Vmath::Vsub(nq, Dxtmp, 1, ExtDxtmp, 1, Dxtmp, 1);
-    Vmath::Vsub(nq, Dytmp, 1, ExtDytmp, 1, Dytmp, 1);
-
-    std::cout << "Dx error = " << RootMeanSquare(Dxtmp) << ", Dy error =" << RootMeanSquare(Dytmp) << std::endl;
+    TestHelmholtzSolver();
     wait_on_enter();
-
-
-
-    // ComputeVarCoeff2DDxDyDz(m_epsilon,m_varcoeffXYZ);
-
-    // TestHelmholtzSolver();
-
-    // wait_on_enter();
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
@@ -356,7 +323,7 @@ void MMFDiffusion::DoImplicitSolve(
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
                                  m_varcoeff);
 
-                // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
+        // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
 
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
@@ -424,15 +391,15 @@ void MMFDiffusion::DoOdeRhs(
 
         case eTestPlaneAni:
         {
-            StdRegions::VarCoeffType MMFCoeffs[15] = {
-                StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-                StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-                StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-                StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-                StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-                StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-                StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-                StdRegions::eVarCoeffMF3Mag}; 
+            // StdRegions::VarCoeffType MMFCoeffs[15] = {
+            //     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+            //     StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+            //     StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+            //     StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+            //     StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+            //     StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+            //     StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+            //     StdRegions::eVarCoeffMF3Mag}; 
 
             Array<OneD, NekDouble> x(nq);
             Array<OneD, NekDouble> y(nq);
@@ -703,6 +670,33 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
+void MMFDiffusion::TestPhysDirectionalDeriv(const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+
+{
+    int nq = GetTotPoints();
+
+    std::cout << "Test PhysDirectionalDeriv, ===================================== " << std::endl;
+
+    Array<OneD, NekDouble> tmp(nq);
+    
+    Array<OneD, NekDouble> Dxtmp(nq);
+    Array<OneD, NekDouble> Dytmp(nq);
+
+    Array<OneD, NekDouble> ExtDxtmp(nq);
+    Array<OneD, NekDouble> ExtDytmp(nq);
+
+    TestPlaneAniProblem(0.0, m_varcoeff, tmp);
+
+    m_fields[0]->PhysDirectionalDeriv(movingframes[0], tmp, Dxtmp);
+    m_fields[0]->PhysDirectionalDeriv(movingframes[1], tmp, Dytmp);
+
+    TestPlaneAniDerivProblem(0.0, m_varcoeff, ExtDxtmp, ExtDytmp);
+
+    Vmath::Vsub(nq, Dxtmp, 1, ExtDxtmp, 1, Dxtmp, 1);
+    Vmath::Vsub(nq, Dytmp, 1, ExtDytmp, 1, Dytmp, 1);
+    std::cout << "Dx error = " << RootMeanSquare(Dxtmp) << ", Dy error = " << RootMeanSquare(Dytmp) << std::endl;
+}
+
 void MMFDiffusion::TestLineProblem(const int direction, const NekDouble time,
                                     Array<OneD, NekDouble> &outfield)
 
@@ -792,27 +786,11 @@ void MMFDiffusion::TestPlaneAniProblem(const NekDouble time,
 
     int nq = GetTotPoints();
 
-    // StdRegions::VarCoeffType MMFCoeffs[15] = {
-    //     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-    //     StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-    //     StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-    //     StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-    //     StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-    //     StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-    //     StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-    //     StdRegions::eVarCoeffMF3Mag}; 
-
     Array<OneD, NekDouble> x(nq);
     Array<OneD, NekDouble> y(nq);
     Array<OneD, NekDouble> z(nq);
 
     m_fields[0]->GetCoords(x, y, z);
-
-    // Array<OneD, NekDouble> d00(nq);
-    // Array<OneD, NekDouble> d11(nq);
-
-    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
-    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
 
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
@@ -830,15 +808,21 @@ void MMFDiffusion::TestPlaneAniDerivProblem(const NekDouble time,
 
     int nq = GetTotPoints();
 
-    // StdRegions::VarCoeffType MMFCoeffs[15] = {
-    //     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-    //     StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-    //     StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-    //     StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-    //     StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-    //     StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-    //     StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-    //     StdRegions::eVarCoeffMF3Mag}; 
+    // StdRegions::VarCoeffType MMFCoeffs[3] = {
+    //     StdRegions::eVarCoeffD00, StdRegions::eVarCoeffD11, StdRegions::eVarCoeffD22}; 
+
+    //     Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[0]][0], 1, &d00[0], 1);
+    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[1]][0], 1, &d11[0], 1);
+
+    StdRegions::VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag}; 
 
     Array<OneD, NekDouble> x(nq);
     Array<OneD, NekDouble> y(nq);
@@ -846,19 +830,19 @@ void MMFDiffusion::TestPlaneAniDerivProblem(const NekDouble time,
 
     m_fields[0]->GetCoords(x, y, z);
 
-    // Array<OneD, NekDouble> d00(nq);
-    // Array<OneD, NekDouble> d11(nq);
+    Array<OneD, NekDouble> d00(nq);
+    Array<OneD, NekDouble> d11(nq);
 
-    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
-    // Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
 
     Dxoutfield = Array<OneD, NekDouble>(nq);
     Dyoutfield = Array<OneD, NekDouble>(nq);
 
     for (int k = 0; k < nq; k++)
     {
-        Dxoutfield[k] = m_frequency * exp(-1.0 * m_frequency * time) * cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
-        Dyoutfield[k] = -m_frequency * exp(-1.0 * m_frequency * time) * sin(m_frequency * x[k]) * sin(m_frequency * y[k]);
+        Dxoutfield[k] = m_frequency * d00[k] * exp(-1.0 * m_frequency * time) * cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
+        Dyoutfield[k] = -m_frequency * d11[k] * exp(-1.0 * m_frequency * time) * sin(m_frequency * x[k]) * sin(m_frequency * y[k]);
     }
 }
 
@@ -1344,25 +1328,25 @@ void MMFDiffusion::TestHelmholtzSolver()
 
     // Zero field so initial conditions are zero
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
-                        tmpc, factors);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors);
     m_fields[0]->SetPhysState(false);
     m_fields[0]->BwdTrans(tmpc, HelmSolve);
-        Array<OneD, NekDouble> Error(nq);
+    
+    Array<OneD, NekDouble> Error(nq);
 
     Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
 
     std::cout << "HelmSolve " << RootMeanSquare(Error) << std::endl;
 
-    Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
-                    tmpc, factors, m_varcoeffXYZ);
-    m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(tmpc, HelmXYZSolve);
-    Array<OneD, NekDouble> XYZError(nq);
-    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &XYZError[0], 1);
+    // Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
+    //                 tmpc, factors, m_varcoeffXYZ);
+    // m_fields[0]->SetPhysState(false);
+    // m_fields[0]->BwdTrans(tmpc, HelmXYZSolve);
+    // Array<OneD, NekDouble> XYZError(nq);
+    // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &XYZError[0], 1);
 
-    std::cout << "HelmXYZSolve " << RootMeanSquare(XYZError) << std::endl;
+    // std::cout << "HelmXYZSolve " << RootMeanSquare(XYZError) << std::endl;
 
     // Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
     // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),

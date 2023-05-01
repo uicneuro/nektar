@@ -1684,6 +1684,8 @@ void ExpList::v_PhysDirectionalDeriv(
         Array<OneD, NekDouble> keout(nq);
         Array<OneD, NekDouble> e_out_d(nq, 0.0);
         int offset;
+
+        out_d = Array<OneD, NekDouble>(nq, 0.0);
         for (int i = 0; i < m_collections.size(); ++i)
         {
             offset  = m_coll_phys_offset[i];
@@ -6070,6 +6072,21 @@ void ExpList::AddRightIPTBaseMatrix(
                         nelmtcoef, &MatC_data[0] + np, nelmtcoef);
         }
     }
+}
+
+NekDouble ExpList::RootMeanSquare(const Array<OneD, const NekDouble> &inarray)
+{
+    int nq = inarray.size();
+    int cn = 0;
+
+    NekDouble reval = 0.0;
+    for (int i = 0; i < nq; ++i)
+    {
+        reval += inarray[i] * inarray[i];
+        cn++;
+    }
+    reval = sqrt(reval / cn);
+    return reval;
 }
 
 void ExpList::v_PhysGalerkinProjection1DScaled(
