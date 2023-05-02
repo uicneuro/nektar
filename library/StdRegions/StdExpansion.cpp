@@ -845,6 +845,7 @@ void StdExpansion::LaplacianMatrixOp_MatFree_GenericImpl(
             Vmath::Vadd(m_ncoeffs, store, 1, store2, 1, store2, 1);
         }
     }
+
     else
     {
         const MatrixType mtype[3][3] = {

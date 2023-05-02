@@ -112,6 +112,26 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
         NekDouble xavg;
         int index;
+
+            for (int i=0; i<nq; ++i)
+            {
+                // m_d00vec[i] = m_d00;
+                m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
+
+                Anisotropy[0][i] = sqrt(m_d00vec[i]);
+                m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
+            }
+
+        for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+            {
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                    {
+                        index = m_fields[0]->GetPhys_Offset(i) + j;
+                    }
+                    std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
+            }
+
+
         // for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
         //     {
         //         xavg=0.0;
@@ -138,14 +158,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         //             std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
         //     }
 
-            for (int i=0; i<nq; ++i)
-            {
-                m_d00vec[i] = m_d00;
-                // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
 
-                Anisotropy[0][i] = sqrt(m_d00vec[i]);
-                m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
-            }
 
 
         // Projection
@@ -812,15 +825,16 @@ void MMFDiffusion::TestHelmholtzProblem(const int type,
     Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
     Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
 
-
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
     {
+        // Helmholtz forcing
         if(type==0)
         {
             outfield[k] = -1.0 * (d00[k]*d00[k] + d11[k]*d11[k]) * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
         }
 
+        // Helmholtz solution
         else if(type==1)
         {
             outfield[k] = sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
