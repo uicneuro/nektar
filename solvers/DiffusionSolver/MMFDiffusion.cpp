@@ -107,20 +107,11 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
         m_fields[0]->GetCoords(x0, x1, x2);
 
-        // m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
+        m_varcoeffXYZ[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
         m_d00vec = Array<OneD, NekDouble>(nq);
 
-        for (int i=0; i<nq; ++i)
-        {
-            m_d00vec[i] = m_d00;
-            // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
-
-            Anisotropy[0][i] = sqrt(m_d00vec[i]);
-           // m_varcoeff[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
-        }
-
-        // NekDouble xavg;
-         int index;
+        NekDouble xavg;
+        int index;
         // for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
         //     {
         //         xavg=0.0;
@@ -135,17 +126,27 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         //                 index = m_fields[0]->GetPhys_Offset(i) + j;
         //                 if(xavg>0)
         //                 {
-        //                     Anisotropy[0][index] = sqrt(m_d00);
+        //                     m_d00vec[index] = sqrt(m_d00);
         //                 }
 
         //                 else
         //                 {
-        //                     Anisotropy[0][index] = 1.0/sqrt(m_d00);
+        //                     m_d00vec[index] = 1.0/sqrt(m_d00);
         //                 }
 
-        //                 std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << Anisotropy[0][index] << std::endl;
         //             }
+        //             std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
         //     }
+
+            for (int i=0; i<nq; ++i)
+            {
+                m_d00vec[i] = m_d00;
+                // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
+
+                Anisotropy[0][i] = sqrt(m_d00vec[i]);
+                m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
+            }
+
 
         // Projection
         // Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
@@ -168,17 +169,17 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     }
     if (m_session->DefinesParameter("d11"))
     {
-        // m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq);
+        m_varcoeffXYZ[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq);
         m_d11vec = Array<OneD, NekDouble>(nq);
 
         Vmath::Fill(nq, m_d11, &m_d11vec[0], 1);
 
         Vmath::Vsqrt(nq, m_d11vec, 1, Anisotropy[1], 1);
-        // m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, m_d11);
+        m_varcoeffXYZ[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, m_d11);
     }
     if (m_session->DefinesParameter("d22"))
     {
-        // m_varcoeff[StdRegions::eVarCoeffD22] = Array<OneD, NekDouble>(nq);
+        m_varcoeffXYZ[StdRegions::eVarCoeffD22] = Array<OneD, NekDouble>(nq);
         Vmath::Fill(nq, sqrt(m_d22), &Anisotropy[2][0], 1);
     }
 
@@ -778,6 +779,58 @@ void MMFDiffusion::TestPlaneNeumannProblem(const NekDouble time,
     }
 }
 
+// \nabla \cdot D \nabla u = f 
+// type = 0 (f):  Helmholtz forcing
+// type = 1 (u): Exact solution of $u$.
+void MMFDiffusion::TestHelmholtzProblem(const int type,
+                                    StdRegions::VarCoeffMap &varcoeff,
+                                    Array<OneD, NekDouble> &outfield)
+{
+    boost::ignore_unused(varcoeff);
+
+    int nq = GetTotPoints();
+
+    StdRegions::VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag}; 
+
+    Array<OneD, NekDouble> x(nq);
+    Array<OneD, NekDouble> y(nq);
+    Array<OneD, NekDouble> z(nq);
+
+    m_fields[0]->GetCoords(x, y, z);
+
+    Array<OneD, NekDouble> d00(nq);
+    Array<OneD, NekDouble> d11(nq);
+
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+
+
+    outfield = Array<OneD, NekDouble>(nq);
+    for (int k = 0; k < nq; k++)
+    {
+        if(type==0)
+        {
+            outfield[k] = -1.0 * (d00[k]*d00[k] + d11[k]*d11[k]) * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+        }
+
+        else if(type==1)
+        {
+            outfield[k] = sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+        }
+    }
+}
+
+
+
+
 void MMFDiffusion::TestPlaneAniProblem(const NekDouble time,
                                     StdRegions::VarCoeffMap &varcoeff,
                                     Array<OneD, NekDouble> &outfield)
@@ -1310,6 +1363,7 @@ void MMFDiffusion::TestHelmholtzSolver()
 
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
+    Array<OneD, NekDouble> tmpcXYZ(ncoeffs);
     Array<OneD, NekDouble> tmpc(ncoeffs);
     Array<OneD, NekDouble> HelmSolve(nq);
     Array<OneD, NekDouble> HelmMMFSolve(nq);
@@ -1323,20 +1377,56 @@ void MMFDiffusion::TestHelmholtzSolver()
 
     Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
     GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
-
     GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), m_fields);
+
+    // void MMFDiffusion::TestHelmholtzProblem(const int type,
+    //                                 StdRegions::VarCoeffMap &varcoeff,
+    //                                 Array<OneD, NekDouble> &outfield)
+
+    // TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
+    // TestHelmholtzProblem(1,m_varcoeff,ExactSoln[0]);                           
 
     // Zero field so initial conditions are zero
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors);
-    m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(tmpc, HelmSolve);
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpcXYZ, factors);
+    // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors, m_varcoeff);
     
-    Array<OneD, NekDouble> Error(nq);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpcXYZ, factors, m_varcoeffXYZ);
+   // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors, m_varcoeff);
 
-    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
+    m_fields[0]->SetPhysState(false);
+    m_fields[0]->BwdTrans(tmpcXYZ, HelmXYZSolve);
+   // m_fields[0]->BwdTrans(tmpc, HelmSolve);
 
-    std::cout << "HelmSolve " << RootMeanSquare(Error) << std::endl;
+    Array<OneD, NekDouble> ErrorXYZ(nq,0.0);
+    Array<OneD, NekDouble> Error(nq,0.0);
+
+    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &ErrorXYZ[0], 1);
+
+    //     Array<OneD, NekDouble> x0(nq);
+    //     Array<OneD, NekDouble> x1(nq);
+    //     Array<OneD, NekDouble> x2(nq);
+
+    //     m_fields[0]->GetCoords(x0, x1, x2);
+
+    // NekDouble xavg;
+    //     int index;
+    //     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    //         {
+    //             xavg=0.0;
+    //             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+    //                 {
+    //                     index = m_fields[0]->GetPhys_Offset(i) + j;
+    //                     xavg = xavg + x0[index];
+    //                 }
+
+    //             std::cout << "elemid = " << i << ", x = " << xavg << ", Error = " << ErrorXYZ[index] << std::endl;
+    //         }
+
+    // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
+
+    std::cout << "Error: HelmSolveXYZ = " << RootMeanSquare(ErrorXYZ) 
+    << ", HelmSolve = " << RootMeanSquare(Error) <<  std::endl;
 
     // Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
     // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),

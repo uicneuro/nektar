@@ -153,7 +153,6 @@ protected:
     Array<OneD, NekDouble> m_d11vec;
     Array<OneD, NekDouble> m_d22vec;
 
-
     StdRegions::VarCoeffMap m_varcoeffXYZ;
 
     SolverUtils::DiffusionSharedPtr m_diffusion;
@@ -165,7 +164,6 @@ protected:
     NekDouble m_AniStrength;
 
     // Temperature parameter
-
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
 
@@ -222,6 +220,11 @@ protected:
                                     StdRegions::VarCoeffMap &varcoeff,
                                     Array<OneD, NekDouble> &Dxoutfield,
                                     Array<OneD, NekDouble> &Dyoutfield);                     
+                                    
+                                    
+    void TestHelmholtzProblem(const int type,
+                            StdRegions::VarCoeffMap &varcoeff,
+                            Array<OneD, NekDouble> &outfield);
 
     void TestCubeProblem(const NekDouble time,
                          Array<OneD, NekDouble> &outfield);
