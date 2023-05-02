@@ -1376,27 +1376,24 @@ void MMFDiffusion::TestHelmholtzSolver()
     std::cout << "Test HelmholtzSolver ==================================================" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
-    GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
-    GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), m_fields);
+    // GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
+    // GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), m_fields);
 
     // void MMFDiffusion::TestHelmholtzProblem(const int type,
     //                                 StdRegions::VarCoeffMap &varcoeff,
     //                                 Array<OneD, NekDouble> &outfield)
 
-    // TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
-    // TestHelmholtzProblem(1,m_varcoeff,ExactSoln[0]);                           
+    TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
+    TestHelmholtzProblem(1,m_varcoeff,ExactSoln[0]);                           
 
     // Zero field so initial conditions are zero
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpcXYZ, factors);
-    // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors, m_varcoeff);
-    
-    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpcXYZ, factors, m_varcoeffXYZ);
-   // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors, m_varcoeff);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpcXYZ, factors, m_varcoeffXYZ);
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors, m_varcoeff);
 
     m_fields[0]->SetPhysState(false);
     m_fields[0]->BwdTrans(tmpcXYZ, HelmXYZSolve);
-   // m_fields[0]->BwdTrans(tmpc, HelmSolve);
+    // m_fields[0]->BwdTrans(tmpc, HelmSolve);
 
     Array<OneD, NekDouble> ErrorXYZ(nq,0.0);
     Array<OneD, NekDouble> Error(nq,0.0);
@@ -1448,8 +1445,6 @@ void MMFDiffusion::TestHelmholtzSolver()
     // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmMMFSolve[0], 1, &MMFError[0], 1);
 
     // std::cout << "HelmMMFSolve, error " << RootMeanSquare(MMFError) << std::endl;
-
-
 
     std::cout << "==================================================" << std::endl;
 }
