@@ -1390,11 +1390,14 @@ void MMFDiffusion::TestHelmholtzSolver()
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
 
     SetBoundaryConditions(0.0);
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpcXYZ, factors, m_varcoeffXYZ);
+
+            // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
+            //                       m_varcoeffXYZ);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeffXYZ);
     // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors, m_varcoeff);
 
     m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(tmpcXYZ, HelmXYZSolve);
+    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmXYZSolve);
     // m_fields[0]->BwdTrans(tmpc, HelmSolve);
 
     Array<OneD, NekDouble> ErrorXYZ(nq,0.0);
