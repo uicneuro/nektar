@@ -6074,21 +6074,6 @@ void ExpList::AddRightIPTBaseMatrix(
     }
 }
 
-NekDouble ExpList::RootMeanSquare(const Array<OneD, const NekDouble> &inarray)
-{
-    int nq = inarray.size();
-    int cn = 0;
-
-    NekDouble reval = 0.0;
-    for (int i = 0; i < nq; ++i)
-    {
-        reval += inarray[i] * inarray[i];
-        cn++;
-    }
-    reval = sqrt(reval / cn);
-    return reval;
-}
-
 void ExpList::v_PhysGalerkinProjection1DScaled(
     const NekDouble scale, const Array<OneD, NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)

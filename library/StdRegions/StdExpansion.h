@@ -1157,6 +1157,8 @@ protected:
     LibUtilities::NekManager<StdMatrixKey, DNekBlkMat, StdMatrixKey::opLess>
         m_stdStaticCondMatrixManager;
 
+    NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
+
     DNekMatSharedPtr CreateStdMatrix(const StdMatrixKey &mkey)
     {
         return v_CreateStdMatrix(mkey);

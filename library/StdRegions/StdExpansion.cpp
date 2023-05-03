@@ -692,7 +692,8 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
 
     int nq = GetTotPoints();
     Array<OneD, NekDouble> tmp(nq);
-    Array<OneD, NekDouble> dtmp(nq);
+    Array<OneD, NekDouble> dtmp(nq,0.0);
+    Array<OneD, NekDouble> Derivtmp(nq);
 
     VarCoeffType MMFCoeffs[15] = {
     StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
@@ -706,20 +707,33 @@ void StdExpansion::LaplacianMatrixMMFOp_MatFree(
 
     v_BwdTrans(inarray, tmp);
 
-    // Create a frame vector
-    Array<OneD, NekDouble> dirvec(coordim * nq);
+    // PhysDirectionalDeriv = dirx * Dx + diry * Dy + dirz * Dz
+    Array<OneD, NekDouble> dirvec(coordim*nq);
     for (int k=0; k<coordim; ++k)
     {
         Vmath::Vcopy(nq, &(mkey.GetVarCoeff(MMFCoeffs[5*dir+k]))[0], 1, &dirvec[k*nq], 1);
+        v_PhysDeriv(k, tmp, Derivtmp);
+        Vmath::Vvtvp(nq, &dirvec[k*nq], 1, &Derivtmp[0], 1, &dtmp[0], 1, &dtmp[0], 1);
     }
 
-    v_PhysDirectionalDeriv(dirvec, tmp, dtmp);
-    // Vmath::Vmul(nq, mkey.GetVarCoeff(MMFCoeffs[5*dir+4]), 1, dtmp, 1, dtmp, 1);
-
-    // v_IProductWRTDerivBase_SumFac(k1, dtmp, outarray);
     v_IProductWRTDirectionalDerivBase_SumFac(dirvec, dtmp, outarray);
 }
 
+
+NekDouble StdExpansion::RootMeanSquare(const Array<OneD, const NekDouble> &inarray)
+{
+    int nq = inarray.size();
+    int cn = 0;
+
+    NekDouble reval = 0.0;
+    for (int i = 0; i < nq; ++i)
+    {
+        reval += inarray[i] * inarray[i];
+        cn++;
+    }
+    reval = sqrt(reval / cn);
+    return reval;
+}
 
 void StdExpansion::LaplacianMatrixOp_MatFree(
     const int k1, const int k2, const Array<OneD, const NekDouble> &inarray,

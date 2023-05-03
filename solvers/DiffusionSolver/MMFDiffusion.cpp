@@ -1402,22 +1402,22 @@ void MMFDiffusion::TestHelmholtzSolver()
 
     // Zero field so initial conditions are zero
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-
     SetBoundaryConditions(0.0);
-
-            // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-            //                       m_varcoeffXYZ);
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeffXYZ);
-    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), tmpc, factors, m_varcoeff);
-
     m_fields[0]->SetPhysState(false);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmXYZSolve);
-    // m_fields[0]->BwdTrans(tmpc, HelmSolve);
+
+    Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
+    SetBoundaryConditions(0.0);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
+    m_fields[0]->SetPhysState(false);
+    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmSolve);
 
     Array<OneD, NekDouble> ErrorXYZ(nq,0.0);
     Array<OneD, NekDouble> Error(nq,0.0);
 
     Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &ErrorXYZ[0], 1);
+    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
 
     //     Array<OneD, NekDouble> x0(nq);
     //     Array<OneD, NekDouble> x1(nq);
@@ -1439,7 +1439,6 @@ void MMFDiffusion::TestHelmholtzSolver()
     //             std::cout << "elemid = " << i << ", x = " << xavg << ", Error = " << ErrorXYZ[index] << std::endl;
     //         }
 
-    // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
 
     std::cout << "Error: HelmSolveXYZ = " << RootMeanSquare(ErrorXYZ) 
     << ", HelmSolve = " << RootMeanSquare(Error) <<  std::endl;
