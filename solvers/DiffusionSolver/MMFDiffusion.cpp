@@ -115,8 +115,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
             for (int i=0; i<nq; ++i)
             {
-                // m_d00vec[i] = m_d00;
-                m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
+                m_d00vec[i] = m_d00;
+                // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
 
                 Anisotropy[0][i] = sqrt(m_d00vec[i]);
                 m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
