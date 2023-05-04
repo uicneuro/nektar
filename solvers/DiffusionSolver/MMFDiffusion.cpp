@@ -110,7 +110,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_varcoeffXYZ[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
         m_d00vec = Array<OneD, NekDouble>(nq);
 
-        NekDouble xavg;
         int index;
 
             for (int i=0; i<nq; ++i)
@@ -157,17 +156,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         //             }
         //             std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
         //     }
-
-
-
-
-        // Projection
-        // Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
-        // m_fields[0]->FwdTrans(Anisotropy[0], coeffs);
-        // m_fields[0]->BwdTrans(coeffs, Anisotropy[0]);
- 
-        // m_fields[0]->FwdTrans(m_d00vec, coeffs);
-        // m_fields[0]->BwdTrans(coeffs, m_d00vec);
 
         for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
             {
@@ -708,7 +696,7 @@ void MMFDiffusion::TestPhysDirectionalDeriv(const Array<OneD, const Array<OneD, 
 
     Vmath::Vsub(nq, Dxtmp, 1, ExtDxtmp, 1, Dxtmp, 1);
     Vmath::Vsub(nq, Dytmp, 1, ExtDytmp, 1, Dytmp, 1);
-    std::cout << "Dx error = " << RootMeanSquare(Dxtmp) << ", Dy error = " << RootMeanSquare(Dytmp) << std::endl;
+    std::cout << "Dx error = " << RootMeanSquare(Dxtmp) << ", Dy error = " << RootMeanSquare(Dytmp) << std::endl << std::endl;
 }
 
 void MMFDiffusion::TestLineProblem(const int direction, const NekDouble time,
@@ -1387,27 +1375,25 @@ void MMFDiffusion::TestHelmholtzSolver()
     factors[StdRegions::eFactorTau] = 1.0;
     factors[StdRegions::eFactorLambda] = 0.0;
 
-    std::cout << "Test HelmholtzSolver ==================================================" << std::endl;
+    std::cout << "Test HelmholtzSolver ===============================================" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
-    // GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
-    // GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), m_fields);
-
-    // void MMFDiffusion::TestHelmholtzProblem(const int type,
-    //                                 StdRegions::VarCoeffMap &varcoeff,
-    //                                 Array<OneD, NekDouble> &outfield)
 
     TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
     TestHelmholtzProblem(1,m_varcoeff,ExactSoln[0]);                           
 
     // Zero field so initial conditions are zero
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    SetBoundaryConditions(0.0);
+    TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());     
+
+    SetBoundaryConditions(0.0);                      
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeffXYZ);
     m_fields[0]->SetPhysState(false);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmXYZSolve);
 
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
+    TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
+
     SetBoundaryConditions(0.0);
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
     m_fields[0]->SetPhysState(false);
@@ -1419,52 +1405,20 @@ void MMFDiffusion::TestHelmholtzSolver()
     Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &ErrorXYZ[0], 1);
     Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
 
-    //     Array<OneD, NekDouble> x0(nq);
-    //     Array<OneD, NekDouble> x1(nq);
-    //     Array<OneD, NekDouble> x2(nq);
-
-    //     m_fields[0]->GetCoords(x0, x1, x2);
-
-    // NekDouble xavg;
-    //     int index;
-    //     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
-    //         {
-    //             xavg=0.0;
-    //             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-    //                 {
-    //                     index = m_fields[0]->GetPhys_Offset(i) + j;
-    //                     xavg = xavg + x0[index];
-    //                 }
-
-    //             std::cout << "elemid = " << i << ", x = " << xavg << ", Error = " << ErrorXYZ[index] << std::endl;
-    //         }
-
-
     std::cout << "Error: HelmSolveXYZ = " << RootMeanSquare(ErrorXYZ) 
-    << ", HelmSolve = " << RootMeanSquare(Error) <<  std::endl;
+    << ", HelmSolve = " << RootMeanSquare(Error) << std::endl;
 
-    // Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
-    //                 tmpc, factors, m_varcoeffXYZ);
-    // m_fields[0]->SetPhysState(false);
-    // m_fields[0]->BwdTrans(tmpc, HelmXYZSolve);
-    // Array<OneD, NekDouble> XYZError(nq);
-    // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &XYZError[0], 1);
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> D2tmp(nq);
 
-    // std::cout << "HelmXYZSolve " << RootMeanSquare(XYZError) << std::endl;
+    TestHelmholtzProblem(0, m_varcoeff, ExactSoln[0]);   
+    TestHelmholtzProblem(1, m_varcoeff, m_fields[0]->UpdatePhys());   
+    D2tmp = ComputeCovariantDiffusion(m_movingframes, m_fields[0]->GetPhys());
 
-    // Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
-    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
-    //                 tmpc, factors, m_varcoeff);
-    // m_fields[0]->SetPhysState(false);
-    // m_fields[0]->BwdTrans(tmpc, HelmMMFSolve);
-    // Array<OneD, NekDouble> MMFError(nq);
+    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &D2tmp[0], 1, &Error[0], 1);
 
-    // Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmMMFSolve[0], 1, &MMFError[0], 1);
-
-    // std::cout << "HelmMMFSolve, error " << RootMeanSquare(MMFError) << std::endl;
-
-    std::cout << "==================================================" << std::endl;
+    std::cout << "Error: CovariantDiffusion = " << RootMeanSquare(Error) << " for Lap_mag = " 
+    << RootMeanSquare(D2tmp) << std::endl << std::endl;
 }
 
 void MMFDiffusion::v_DoSolve()

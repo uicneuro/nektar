@@ -4610,7 +4610,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovariantDiffusion(
     Array<OneD, NekDouble> D2tmp(nq);
 
     Array<OneD, Array<OneD, NekDouble>> DivMFCov;
-    ComputeDivMF(m_DerivType, movingframes, DivMFCov);
+    ComputeDivMF(eCovariant, movingframes, DivMFCov);
 
     // SetBoundaryConditions(0.0);
     Array<OneD, NekDouble> outarray(nq, 0.0);
@@ -4618,11 +4618,10 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovariantDiffusion(
     {
         // Dtmp = \nabla u \cdot e^i
         // D2tmp = \nabla Dtmp \cdot e^i
-        m_fields[1]->PhysDirectionalDeriv(movingframes[i], inarray, Dtmp);
-        m_fields[1]->PhysDirectionalDeriv(movingframes[i], Dtmp, D2tmp);
+        m_fields[0]->PhysDirectionalDeriv(movingframes[i], inarray, Dtmp);
+        m_fields[0]->PhysDirectionalDeriv(movingframes[i], Dtmp, D2tmp);
 
-        std::cout << "inarray = " << RootMeanSquare(inarray) << ", i = " << i << ", Dtmp = " << RootMeanSquare(Dtmp) << ", D2tmp = " << RootMeanSquare(Dtmp) << std::endl;
-        // Vmath::Vvtvp(nq, Dtmp, 1, DivMFCov[i], 1, D2tmp, 1, D2tmp, 1);
+        Vmath::Vvtvp(nq, Dtmp, 1, DivMFCov[i], 1, D2tmp, 1, D2tmp, 1);
         Vmath::Vadd(nq, D2tmp, 1, outarray, 1, outarray, 1);
     }
 
