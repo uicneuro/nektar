@@ -259,7 +259,7 @@ protected:
 
 private:
     /// Variable diffusivity
-
+    Array<OneD, NekDouble> m_epsvec;
     Array<OneD, NekDouble> m_epsilon;
     Array<OneD, NekDouble> m_epsu;
 };

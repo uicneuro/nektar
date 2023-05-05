@@ -33,16 +33,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFNeuralEP_H
-#define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFNeuralEP_H
+#ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFNEURALEP_H
+#define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_MMFNEURALEP_H
 
 #include <SolverUtils/MMFSystem.h>
 #include <SolverUtils/UnsteadySystem.h>
+#include <SolverUtils/Diffusion/Diffusion.h>
 
 #include <CardiacEPSolver/CellModels/CellModel.h>
 #include <CardiacEPSolver/Stimuli/Stimulus.h>
 
 #include <DiffusionSolver/NeuronModels/NeuronModel.h>
+
+using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
@@ -152,6 +155,9 @@ public:
     /// Desctructor
     virtual ~MMFNeuralEP();
 protected:
+
+    SolverUtils::DiffusionSharedPtr m_diffusion;
+    SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
 
@@ -269,6 +275,11 @@ protected:
 
     void OnlyValideinNode(const Array<OneD, const int> &NodeZone,
                           Array<OneD, NekDouble> &outarray);
+
+    void GetFluxVector(
+        const Array<OneD, Array<OneD, NekDouble>> &inarray,
+        const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
+        Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor);
 
     // void ImportFiberXml(
     //     const int nfibers,

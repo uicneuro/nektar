@@ -93,7 +93,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     if (m_session->DefinesSolverInfo("NeuralEPType"))
     {
         std::string NeuralEPTypeStr;
-        NeuralEPTypeStr = m_session->GetSolverInfo("NEURALEPTYPE");
+        NeuralEPTypeStr = m_session->GetSolverInfo("NeuralEPType");
         for (int i = 0; i < (int)SIZE_NeuralEPType; ++i)
         {
             if (boost::iequals(NeuralEPTypeMap[i], NeuralEPTypeStr))
@@ -353,6 +353,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     // Derive AnisotropyStrength.
+    std::cout << "m_NeuralEPType = " << NeuralEPTypeMap[m_NeuralEPType] << std::endl;
+
     switch (m_NeuralEPType)
     {
         case eNeuralEPPT:
@@ -822,6 +824,8 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
     int Nelem = m_fields[0]->GetExpSize();
 
     Array<OneD, int> outarray(fnq, 0);
+    int cnn=0;
+    int cnm=0;
     for (int i = 0; i < Nelem; ++i)
     {
         npts = m_fields[0]->GetTotPoints(i);
@@ -833,20 +837,24 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
             if(i <=1)
             {
                 outarray[index] = i;
+                cnn++;
             }
 
             else if (i % 2 == 1)
             {
                 outarray[index] = i/2+1;
+                cnn++;
             }
 
             else 
             {
                 outarray[index] = -1;
+                cnm++;
             }
         }
-
     }
+
+    std::cout << "No.: Node = " << cnn << ", Myelin = " << cnm << std::endl;
 
     return outarray;
 }
@@ -2312,22 +2320,91 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
+        switch (m_projectionType)
+        {
+            case MultiRegions::eDiscontinuous:
+            {
+                std::string diffName;
+
+                // Do not forwards transform initial condition
+                m_homoInitialFwd = false;
+
+                m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
+                m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
+                    diffName, diffName);
+                m_diffusion->SetFluxVector(&MMFNeuralEP::GetFluxVector, this);
+                m_diffusion->InitObject(m_session, m_fields);
+                break;
+            }
+
+            case MultiRegions::eGalerkin:
+            case MultiRegions::eMixed_CG_Discontinuous:
+            {
+                if (m_explicitDiffusion)
+                {
+                    ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
+                }
+            }
+        }
+
     // Multiply by 1/Cm for myeline or 1/Cm for node
     if (m_explicitDiffusion)
     {
-        int nq = m_fields[0]->GetNpoints();
+        Array<OneD, Array<OneD, NekDouble>> outarrayDiff(nvar);
+        for (int i = 0; i < nvar; ++i)
+        {
+            outarrayDiff[i] = Array<OneD, NekDouble>(nq, 0.0);
+        }
 
-        // Laplacian only to the first variable
-        Array<OneD, NekDouble> Laplacian(nq);
-        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
-        // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
+        m_diffusion->Diffuse(nvar, m_fields, inarray, outarrayDiff);                         
 
-        Vmath::Smul(nq, 1.0 / (Cn * Rf), Laplacian, 1, Laplacian, 1);
+        for (int i = 0; i < nvar; ++i)
+        {
+            Vmath::Smul(nq, 1.0/Rf, &outarrayDiff[i][0], 1, &outarrayDiff[i][0], 1);
+            Vmath::Vmul(nq, &m_NeuralCm[0][0], 1, &outarrayDiff[i][0], 1, &outarrayDiff[i][0], 1);
 
-        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
-                    1);
+            Vmath::Vadd(nq, &outarrayDiff[i][0], 1, &outarray[i][0], 1, &outarray[i][0], 1);
+        }
+    }
+
+    // if (m_explicitDiffusion)
+    // {
+    //     int nq = m_fields[0]->GetNpoints();
+
+    //     // Laplacian only to the first variable
+    //     Array<OneD, NekDouble> Laplacian(nq);
+    //     WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
+    //     // WeakDGMMFNeuralEP(0, inarray[0], Laplacian, time);
+
+    //     Vmath::Smul(nq, 1.0 / (Cn * Rf), Laplacian, 1, Laplacian, 1);
+
+    //     Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0],
+    //                 1);
+    // }
+}
+
+void MMFNeuralEP::GetFluxVector(
+    const Array<OneD, Array<OneD, NekDouble>> &inarray,
+    const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor)
+{
+    boost::ignore_unused(inarray);
+
+    unsigned int nDim              = qfield.size();
+    unsigned int nConvectiveFields = qfield[0].size();
+    unsigned int nPts              = qfield[0][0].size();
+
+    for (unsigned int j = 0; j < nDim; ++j)
+    {
+        for (unsigned int i = 0; i < nConvectiveFields; ++i)
+        {
+            // Vmath::Smul(nPts, m_epsilon[j], qfield[j][i], 1, viscousTensor[j][i],
+            //             1);
+            Vmath::Vcopy(nPts, qfield[j][i], 1, viscousTensor[j][i], 1);
+        }
     }
 }
+
 
 void MMFNeuralEP::DoOdeRhsNeuralEP2D(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,

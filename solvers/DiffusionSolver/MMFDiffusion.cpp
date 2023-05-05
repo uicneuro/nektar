@@ -77,6 +77,28 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
     m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
 
+        Array<OneD, NekDouble> x0(nq);
+        Array<OneD, NekDouble> x1(nq);
+        Array<OneD, NekDouble> x2(nq);
+
+        m_fields[0]->GetCoords(x0, x1, x2);
+
+    m_epsvec = Array<OneD, NekDouble>(nq);
+    for (int i=0; i<nq; ++i)
+    {
+        if(x1[i]<0)
+        {
+            m_epsvec[i] = 1.0;
+        }
+
+        else
+        {
+            m_epsvec[i] = 4.0;
+        }
+    }
+
+    std::cout << "m_epsvec = " << RootMeanSquare(m_epsvec) << std::endl;
+
     m_session->LoadParameter("d00", m_d00, 1.0);
     m_session->LoadParameter("d11", m_d11, 1.0);
     m_session->LoadParameter("d22", m_d22, 1.0);
@@ -157,16 +179,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         //             std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
         //     }
 
-        for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
-            {
-                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                    {
-                        index = m_fields[0]->GetPhys_Offset(i) + j;
-                        // std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << Anisotropy[0][index] << std::endl;
-                    }
-            }
-
-
     }
     if (m_session->DefinesParameter("d11"))
     {
@@ -225,10 +237,12 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
     // Test PhysDirectionalDeriv
-    TestPhysDirectionalDeriv(m_movingframes);
-
-    TestHelmholtzSolver();
-    wait_on_enter();
+    
+    if(m_TestType==eTestPlaneAni)
+    {
+        TestPhysDirectionalDeriv(m_movingframes);
+        TestHelmholtzSolver();
+    }
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
     m_ode.DefineProjection(&MMFDiffusion::DoOdeProjection, this);
@@ -353,7 +367,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] * m_frequency * m_frequency - 1.0) * exp(-1.0 * time) * cos(m_frequency * x[k]);
+                outarray[0][k] = (m_epsvec[k] * m_frequency * m_frequency - 1.0) * exp(-1.0 * time) * cos(m_frequency * x[k]);
             }
         }
         break;
@@ -368,7 +382,7 @@ void MMFDiffusion::DoOdeRhs(
 
             for (int k = 0; k < nq; k++)
             {
-                outarray[0][k] = (m_epsilon[0] * m_frequency * m_frequency - 1.0) * exp(-1.0 * time) * cos(m_frequency * y[k]);
+                outarray[0][k] = (m_epsvec[k] * m_frequency * m_frequency - 1.0) * exp(-1.0 * time) * cos(m_frequency * y[k]);
             }
         }
         break;
@@ -551,12 +565,11 @@ void MMFDiffusion::DoOdeRhs(
             outarrayDiff[i] = Array<OneD, NekDouble>(nq, 0.0);
         }
 
-        m_diffusion->Diffuse(nvar, m_fields, inarray, outarrayDiff);
+        m_diffusion->Diffuse(nvar, m_fields, inarray, outarrayDiff);                         
 
         for (int i = 0; i < nvar; ++i)
         {
-            Vmath::Vadd(nq, &outarrayDiff[i][0], 1, &outarray[i][0],
-                        1, &outarray[i][0], 1);
+            Vmath::Vvtvp(nq, &m_epsvec[0], 1, &outarrayDiff[i][0], 1, &outarray[i][0], 1, &outarray[i][0], 1);
         }
     }
 
