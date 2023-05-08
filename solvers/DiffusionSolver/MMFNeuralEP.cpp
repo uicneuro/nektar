@@ -93,7 +93,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     if (m_session->DefinesSolverInfo("NeuralEPType"))
     {
         std::string NeuralEPTypeStr;
-        NeuralEPTypeStr = m_session->GetSolverInfo("NeuralEPType");
+        NeuralEPTypeStr = m_session->GetSolverInfo("NEURALEPTYPE");
         for (int i = 0; i < (int)SIZE_NeuralEPType; ++i)
         {
             if (boost::iequals(NeuralEPTypeMap[i], NeuralEPTypeStr))
@@ -353,6 +353,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     // Derive AnisotropyStrength.
+    std::cout << "m_NeuralEPType = " << NeuralEPTypeMap[m_NeuralEPType] << std::endl;
     switch (m_NeuralEPType)
     {
         case eNeuralEPPT:
@@ -2587,7 +2588,6 @@ void MMFNeuralEP::SolveHelmholtzatDiffusion(
     StdRegions::ConstFactorMap phiefactors;
     phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
     phiefactors[StdRegions::eFactorLambda] = 0.0;
-    std::cout << "Starting ComputeCovariantDiffusion" << std::endl;
 
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e.
@@ -2596,15 +2596,10 @@ void MMFNeuralEP::SolveHelmholtzatDiffusion(
     Array<OneD, NekDouble> phimLaplacian(nq);
     phimLaplacian = ComputeCovariantDiffusion(m_unitmovingframes, phim);
     // phimLaplacian = ComputeEuclideanDiffusion(phim);
-
     // WeakDGMMFLaplacian(0, phim, phimLaplacian);
-
-    std::cout << "phimLaplacian = " << RootMeanSquare(phimLaplacian) << std::endl;
 
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
-    std::cout << "phimLaplacian after NodeZone = " << RootMeanSquare(phimLaplacian) << std::endl;
-
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
     // Compute phie distribution
