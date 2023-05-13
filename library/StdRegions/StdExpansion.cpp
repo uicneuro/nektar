@@ -675,6 +675,10 @@ void StdExpansion::MassMatrixOp_MatFree(
 
     if (mkey.HasVarCoeff(eVarCoeffMass))
     {
+        Array<OneD, NekDouble> Weighttmp(nq);
+        Vmath::Vcopy(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, Weighttmp, 1);
+        std::cout << "StdExpansion::MassMatrixOp_MatFree: Weight = " << RootMeanSquare(Weighttmp) << std::endl;
+
         Vmath::Vmul(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, tmp, 1, tmp, 1);
     }
 
@@ -914,7 +918,6 @@ void StdExpansion::WeakDirectionalDerivMatrixOp_MatFree(
 
     v_BwdTrans(inarray, tmp);
     v_PhysDirectionalDeriv(mkey.GetVarCoeff(eVarCoeffMF), tmp, Dtmp);
-
     v_IProductWRTBase(Dtmp, outarray);
 
     // Compte M_{div tv}

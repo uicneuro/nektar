@@ -315,7 +315,6 @@ void MMFDiffusion::DoImplicitSolve(
     factors[StdRegions::eFactorTau] = 1.0;
 
     Array<OneD, Array<OneD, NekDouble>> F(nvariables);
-    factors[StdRegions::eFactorLambda] = 1.0 / lambda;
     F[0] = Array<OneD, NekDouble>(nq * nvariables);
     for (int n = 1; n < nvariables; ++n)
     {
@@ -327,7 +326,6 @@ void MMFDiffusion::DoImplicitSolve(
     // outarray = output: nabla^2 \hat{Y}
     // where \hat = modal coeffs
     SetBoundaryConditions(time);
-
     for (int i = 0; i < nvariables; ++i)
     {
         factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsu[i];
@@ -337,9 +335,7 @@ void MMFDiffusion::DoImplicitSolve(
                     F[i], 1);
 
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-                                  m_varcoeffXYZ);
-
-        // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors);
+                                  m_varcoeff);
 
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
@@ -530,35 +526,35 @@ void MMFDiffusion::DoOdeRhs(
             break;
     }
 
-    switch (m_projectionType)
-    {
-        case MultiRegions::eDiscontinuous:
-        {
-            std::string diffName;
-
-            // Do not forwards transform initial condition
-            m_homoInitialFwd = false;
-
-            m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
-            m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
-                diffName, diffName);
-            m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
-            m_diffusion->InitObject(m_session, m_fields);
-            break;
-        }
-
-        case MultiRegions::eGalerkin:
-        case MultiRegions::eMixed_CG_Discontinuous:
-        {
-            if (m_explicitDiffusion)
-            {
-                ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
-            }
-        }
-    }
-
     if (m_explicitDiffusion)
     {
+        switch (m_projectionType)
+        {
+            case MultiRegions::eDiscontinuous:
+            {
+                std::string diffName;
+
+                // Do not forwards transform initial condition
+                m_homoInitialFwd = false;
+
+                m_session->LoadSolverInfo("DiffusionType", diffName, "LDG");
+                m_diffusion = SolverUtils::GetDiffusionFactory().CreateInstance(
+                    diffName, diffName);
+                m_diffusion->SetFluxVector(&MMFDiffusion::GetFluxVector, this);
+                m_diffusion->InitObject(m_session, m_fields);
+                break;
+            }
+
+            case MultiRegions::eGalerkin:
+            case MultiRegions::eMixed_CG_Discontinuous:
+            {
+                if (m_explicitDiffusion)
+                {
+                    ASSERTL0(false, "Explicit Galerkin diffusion not set up.");
+                }
+            }
+        }
+
         Array<OneD, Array<OneD, NekDouble>> outarrayDiff(nvar);
         for (int i = 0; i < nvar; ++i)
         {
@@ -901,8 +897,8 @@ void MMFDiffusion::TestPlaneAniDerivProblem(const NekDouble time,
     Array<OneD, NekDouble> d00(nq);
     Array<OneD, NekDouble> d11(nq);
 
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+    Vmath::Vsqrt(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    Vmath::Vsqrt(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
 
     Dxoutfield = Array<OneD, NekDouble>(nq);
     Dyoutfield = Array<OneD, NekDouble>(nq);
@@ -1400,9 +1396,10 @@ void MMFDiffusion::TestHelmholtzSolver()
     TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());     
 
     SetBoundaryConditions(0.0);                      
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeffXYZ);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors);
     m_fields[0]->SetPhysState(false);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmXYZSolve);
+    std::cout << "HelmsolveXYZ done ..................." << std::endl;
 
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
     TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
@@ -1411,6 +1408,7 @@ void MMFDiffusion::TestHelmholtzSolver()
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
     m_fields[0]->SetPhysState(false);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmSolve);
+    std::cout << "HelmsolveMMF done ..................." << std::endl;
 
     Array<OneD, NekDouble> ErrorXYZ(nq,0.0);
     Array<OneD, NekDouble> Error(nq,0.0);
@@ -1420,6 +1418,8 @@ void MMFDiffusion::TestHelmholtzSolver()
 
     std::cout << "Error: HelmSolveXYZ = " << RootMeanSquare(ErrorXYZ) 
     << ", HelmSolve = " << RootMeanSquare(Error) << std::endl;
+
+    wait_on_enter();
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> D2tmp(nq);

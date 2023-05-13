@@ -202,31 +202,55 @@ void TriExp::v_PhysDirectionalDeriv(
 
     StdTriExp::v_PhysDeriv(inarray, diff0, diff1);
 
-    Array<OneD, NekDouble> out_d0(nqtot);
-    Array<OneD, NekDouble> out_d1(nqtot);
-    Array<OneD, NekDouble> out_d2(nqtot);
+    Array<OneD, NekDouble> out_d0(nqtot,0.0);
+    Array<OneD, NekDouble> out_d1(nqtot,0.0);
+    Array<OneD, NekDouble> out_d2(nqtot,0.0);
 
-    Vmath::Vmul(nqtot, df[0], 1, diff0, 1, out_d0, 1);
-    Vmath::Vvtvp(nqtot, df[1], 1, diff1, 1, out_d0, 1, out_d0, 1);
-
-    Vmath::Vmul(nqtot, df[2], 1, diff0, 1, out_d1, 1);
-    Vmath::Vvtvp(nqtot, df[3], 1, diff1, 1, out_d1, 1, out_d1, 1);
-
-    Vmath::Vmul(nqtot, df[4], 1, diff0, 1, out_d2, 1);
-    Vmath::Vvtvp(nqtot, df[5], 1, diff1, 1, out_d2, 1, out_d2, 1);
-
-    Array<OneD, NekDouble> tmp(nqtot);
-       for (int k=0; k<2; ++k)
+    if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
     {
-        Vmath::Vcopy(nqtot, &dirvec[k*nqtot], 1, &tmp[0], 1);
-        std::cout << "k = " << k << ", dir = " << RootMeanSquare(tmp) << std::endl;
+        if (out_d0.size())
+        {
+            Vmath::Vmul(nqtot, df[0], 1, diff0, 1, out_d0, 1);
+            Vmath::Vvtvp(nqtot, df[1], 1, diff1, 1, out_d0, 1, out_d0, 1);
+        }
+
+        if (out_d1.size())
+        {
+            Vmath::Vmul(nqtot, df[2], 1, diff0, 1, out_d1, 1);
+            Vmath::Vvtvp(nqtot, df[3], 1, diff1, 1, out_d1, 1, out_d1, 1);
+        }
+
+        if (out_d2.size())
+        {
+            Vmath::Vmul(nqtot, df[4], 1, diff0, 1, out_d2, 1);
+            Vmath::Vvtvp(nqtot, df[5], 1, diff1, 1, out_d2, 1, out_d2, 1);
+        }
+    }
+    else // regular geometry
+    {
+        if (out_d0.size())
+        {
+            Vmath::Smul(nqtot, df[0][0], diff0, 1, out_d0, 1);
+            Blas::Daxpy(nqtot, df[1][0], diff1, 1, out_d0, 1);
+        }
+
+        if (out_d1.size())
+        {
+            Vmath::Smul(nqtot, df[2][0], diff0, 1, out_d1, 1);
+            Blas::Daxpy(nqtot, df[3][0], diff1, 1, out_d1, 1);
+        }
+
+        if (out_d2.size())
+        {
+            Vmath::Smul(nqtot, df[4][0], diff0, 1, out_d2, 1);
+            Blas::Daxpy(nqtot, df[5][0], diff1, 1, out_d2, 1);
+        }
     }
 
+    out = Array<OneD, NekDouble>(nqtot, 0.0);
     Vmath::Vmul(nqtot, &dirvec[0], 1, &out_d0[0], 1, &out[0], 1);
     Vmath::Vvtvp(nqtot, &dirvec[nqtot], 1, &out_d1[0], 1, &out[0], 1, &out[0], 1);
     Vmath::Vvtvp(nqtot, &dirvec[2*nqtot], 1, &out_d2[0], 1, &out[0], 1, &out[0], 1);
-
-    std::cout << "out_d0 = " << RootMeanSquare(out_d0) << ", out_d1 = " << RootMeanSquare(out_d1) << ", out = " << RootMeanSquare(out) << std::endl;
 }
 
 NekDouble TriExp::RootMeanSquare(const Array<OneD, const NekDouble> &inarray)

@@ -11991,7 +11991,8 @@ void MMFSystem::ComputeVarCoeff2D(
                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
         }
 
-        Vmath::Vsqrt(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+        // Vmath::Vsqrt(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
+        Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
 
     std::cout << "k = " << k << ", m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[indx]])
               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[indx+1]]) << " , "
