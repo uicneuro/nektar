@@ -352,17 +352,19 @@ void MMFCardiacEP::LoadCardiacFiber(
 
         case eRegionalHeterogeneous:
         {
-            for (int i=0; i<nq; ++i)
-            {
-                AniStrength[0][i] = sqrt(AnisotropyStrength);            }
-            // int index;
-            // for (int i = 0; i < m_AnisotropyRegion; ++i)
+            int index;
+            for (int i = 0; i < (m_AnisotropyRegion+1); ++i)
+                {
+                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                        {
+                            index = m_fields[0]->GetPhys_Offset(i) + j;
+                            AniStrength[0][index] = sqrt(AnisotropyStrength);            
+                        }
+                }
+
+            // for (int i=0; i<nq; ++i)
             // {
-            //     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-            //     {
-            //         index                 = m_fields[0]->GetPhys_Offset(i) + j;
-            //         AniStrength[0][index] = sqrt(AnisotropyStrength);
-            //     }
+            //     AniStrength[0][i] = sqrt(AnisotropyStrength);            
             // }
         }
         break;

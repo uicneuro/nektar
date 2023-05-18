@@ -1,0 +1,433 @@
+Nelemtj = 108, ElemNodeEnd = 27, ElemMyelenEnd = 107
+IndexNodeZone2D: cntn = 560, cntm =1600, cnte = 0
+Elemid = 0, Nodeid = 0, y = 4.6875e-05
+Elemid = 1, Nodeid = 0, y = 0.000125
+Elemid = 2, Nodeid = 0, y = 0.000125
+Elemid = 3, Nodeid = 0, y = 0.000203125
+Elemid = 4, Nodeid = 1, y = 0.000296875
+Elemid = 5, Nodeid = 1, y = 0.000375
+Elemid = 6, Nodeid = 1, y = 0.000375
+Elemid = 7, Nodeid = 1, y = 0.000453125
+Elemid = 8, Nodeid = 2, y = 0.002625
+Elemid = 9, Nodeid = 2, y = 0.00254688
+Elemid = 10, Nodeid = 2, y = 0.00270312
+Elemid = 11, Nodeid = 2, y = 0.002625
+Elemid = 12, Nodeid = 3, y = 0.004875
+Elemid = 13, Nodeid = 3, y = 0.004875
+Elemid = 14, Nodeid = 3, y = 0.00479687
+Elemid = 15, Nodeid = 3, y = 0.00495313
+Elemid = 16, Nodeid = 4, y = 0.007125
+Elemid = 17, Nodeid = 4, y = 0.007125
+Elemid = 18, Nodeid = 4, y = 0.00704687
+Elemid = 19, Nodeid = 4, y = 0.00720313
+Elemid = 20, Nodeid = 5, y = 0.009375
+Elemid = 21, Nodeid = 5, y = 0.009375
+Elemid = 22, Nodeid = 5, y = 0.00929688
+Elemid = 23, Nodeid = 5, y = 0.00945313
+Elemid = 24, Nodeid = 6, y = 0.011625
+Elemid = 25, Nodeid = 6, y = 0.011625
+Elemid = 26, Nodeid = 6, y = 0.0117031
+Elemid = 27, Nodeid = 6, y = 0.0115469
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+ 
+v_InitObject: Node = 1600, Myelin = 560, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 108 elements, adapated from MF1 = 59, MF2 = 49, MF3 = 0
+AniConstruction = 100 % activated, Anistrength[0]: max = 12.9582, min = 1
+
+cnt1 = 2160 / 2160
+======================================================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 6.65388 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 6.65388 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 6.65388 , 0 ) 
+*** MF 1 = ( 6.65388 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+ncdotMFFwd = ( 4.9015 , 5.02918 , 0 ) 
+ncdotMFBwd = ( 3.90381 , 5.02918 , 0 ) 
+Div: Euc - Cov = ( 1.10967e-10 , 1.11452e-10 , 0 ) 
+Curl: Euc - Cov = ( 1.11452e-10 , 1.10967e-10 , 9.27037e-11 , 9.21202e-11 ) 
+============ End of MMFInitObect ============
+============ Moving frmaes for unitMF ============
+cnt1 = 2160 / 2160
+======================================================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 1 , 0 ) 
+*** MF 1 = ( 1 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: ThinLine2DTestAni
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 4
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	           Advection: explicit
+	           Diffusion: implicit
+	           Time Step: 1e-08
+	        No. of Steps: 100000000
+	 Checkpoints (steps): 1000000
+	    Integration Type: IMEXdirk_3_4_3
+	            MMFOrder: MMFZero
+	             Surface: Plane
+	           DerivType: Euclidean
+	          MediumType: Anisotropy
+	     Max Edge Length: 0.0005
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2D
+	    SolverSchemeType: Default
+	             TimeMap: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         ElemNodeEnd: 27
+	       ElemMyelenEnd: 107
+	         Temperature: 24
+	             Helmtau: 1
+	         ratio_re_ri: 1
+=======================================================================
+Initial Conditions:
+  - Field um: 0
+Initial: max um = 0
+Writing: "ThinLine2DTestAni_initial.chk" (0s, XML)
+Steps: 1000000  Time: 0.01        
+ CPU Time: 71.5578 min.
+(Nodeid,phi):  (0,230.239),  (1,229.525),  (2,8.70512),  (3,0.172657),  (4,0.00239664),  (5,-0.00100397),  (6,-0.00107053), 
+frontloc = 0.001, frontloc_old = 0, cond. vel. = 0.1 m/s
+
+Writing: "ThinLine2DTestAni_1.chk" (0s, XML)
+Steps: 2000000  Time: 0.02        
+ CPU Time: 71.55 min.
+(Nodeid,phi):  (0,115.987),  (1,115.987),  (2,17.1614),  (3,0.341421),  (4,0.00574779),  (5,-0.000956841),  (6,-0.00108807), 
+frontloc = 0.00129317, frontloc_old = 0.001, cond. vel. = 0.0293168 m/s
+
+Writing: "ThinLine2DTestAni_2.chk" (0s, XML)
+Steps: 3000000  Time: 0.03        
+ CPU Time: 71.5138 min.
+(Nodeid,phi):  (0,116.778),  (1,116.778),  (2,33.8049),  (3,0.675537),  (4,0.0124051),  (5,-0.000840196),  (6,-0.00109946), 
+frontloc = 0.00166817, frontloc_old = 0.00129317, cond. vel. = 0.0375 m/s
+
+Writing: "ThinLine2DTestAni_3.chk" (0s, XML)
+Steps: 4000000  Time: 0.04        
+ CPU Time: 71.6149 min.
+(Nodeid,phi):  (0,116.771),  (1,116.771),  (2,62.8306),  (3,1.3332),  (4,0.0255278),  (5,-0.000591484),  (6,-0.00110275), 
+frontloc = 0.00179317, frontloc_old = 0.00166817, cond. vel. = 0.0125 m/s
+
+Writing: "ThinLine2DTestAni_4.chk" (0s, XML)
+Steps: 5000000  Time: 0.05        
+ CPU Time: 71.6109 min.
+(Nodeid,phi):  (0,116.393),  (1,116.393),  (2,93.4583),  (3,2.63059),  (4,0.0514304),  (5,-8.49983e-05),  (6,-0.00109338), 
+frontloc = 0.00229317, frontloc_old = 0.00179317, cond. vel. = 0.05 m/s
+
+Writing: "ThinLine2DTestAni_5.chk" (0s, XML)
+Steps: 6000000  Time: 0.06        
+ CPU Time: 72.0197 min.
+(Nodeid,phi):  (0,115.786),  (1,115.786),  (2,109.251),  (3,5.18991),  (4,0.10254),  (5,0.000927182),  (6,-0.00106183), 
+frontloc = 0.00297174, frontloc_old = 0.00229317, cond. vel. = 0.0678571 m/s
+
+Writing: "ThinLine2DTestAni_6.chk" (0s, XML)
+Steps: 7000000  Time: 0.07        
+ CPU Time: 71.6291 min.
+(Nodeid,phi):  (0,115.015),  (1,115.015),  (2,114.294),  (3,10.2369),  (4,0.20334),  (5,0.00293395),  (6,-0.000988879), 
+frontloc = 0.00329317, frontloc_old = 0.00297174, cond. vel. = 0.0321429 m/s
+
+Writing: "ThinLine2DTestAni_7.chk" (0s, XML)
+Steps: 8000000  Time: 0.08        
+ CPU Time: 71.6313 min.
+(Nodeid,phi):  (0,114.11),  (1,114.11),  (2,115.678),  (3,20.1918),  (4,0.402254),  (5,0.00690264),  (6,-0.000836131), 
+frontloc = 0.00354317, frontloc_old = 0.00329317, cond. vel. = 0.025 m/s
+
+Writing: "ThinLine2DTestAni_8.chk" (0s, XML)
+Steps: 9000000  Time: 0.09        
+ CPU Time: 71.5723 min.
+(Nodeid,phi):  (0,113.092),  (1,113.092),  (2,115.894),  (3,39.5681),  (4,0.794705),  (5,0.0147397),  (6,-0.000527615), 
+frontloc = 0.00402826, frontloc_old = 0.00354317, cond. vel. = 0.0485092 m/s
+
+Writing: "ThinLine2DTestAni_9.chk" (0s, XML)
+Steps: 10000000 Time: 0.1         
+ CPU Time: 71.6147 min.
+(Nodeid,phi):  (0,111.972),  (1,111.972),  (2,115.604),  (3,70.8075),  (4,1.56765),  (5,0.0301807),  (6,8.57868e-05), 
+frontloc = 0.00404317, frontloc_old = 0.00402826, cond. vel. = 0.0014908 m/s
+
+Writing: "ThinLine2DTestAni_10.chk" (0s, XML)
+Steps: 11000000 Time: 0.11        
+ CPU Time: 71.6188 min.
+(Nodeid,phi):  (0,110.759),  (1,110.759),  (2,115.022),  (3,98.6534),  (4,3.0926),  (5,0.0606486),  (6,0.00130059), 
+frontloc = 0.005, frontloc_old = 0.00404317, cond. vel. = 0.0956832 m/s
+
+Writing: "ThinLine2DTestAni_11.chk" (0s, XML)
+Steps: 12000000 Time: 0.12        
+ CPU Time: 71.6016 min.
+(Nodeid,phi):  (0,109.462),  (1,109.462),  (2,114.239),  (3,111.051),  (4,6.10105),  (5,0.12076),  (6,0.00370085), 
+frontloc = 0.00529317, frontloc_old = 0.005, cond. vel. = 0.0293168 m/s
+
+Writing: "ThinLine2DTestAni_12.chk" (0s, XML)
+Steps: 13000000 Time: 0.13        
+ CPU Time: 71.7926 min.
+(Nodeid,phi):  (0,108.085),  (1,108.085),  (2,113.301),  (3,114.794),  (4,12.0331),  (5,0.239293),  (6,0.00843668), 
+frontloc = 0.00566817, frontloc_old = 0.00529317, cond. vel. = 0.0375 m/s
+
+Writing: "ThinLine2DTestAni_13.chk" (0s, XML)
+Steps: 14000000 Time: 0.14        
+ CPU Time: 71.6003 min.
+(Nodeid,phi):  (0,106.635),  (1,106.635),  (2,112.234),  (3,115.786),  (4,23.7264),  (5,0.47316),  (6,0.0177826), 
+frontloc = 0.006, frontloc_old = 0.00566817, cond. vel. = 0.0331832 m/s
+
+Writing: "ThinLine2DTestAni_14.chk" (0s, XML)
+Steps: 15000000 Time: 0.15        
+ CPU Time: 71.6065 min.
+(Nodeid,phi):  (0,105.118),  (1,105.118),  (2,111.055),  (3,115.849),  (4,46.1263),  (5,0.934533),  (6,0.0362218), 
+frontloc = 0.00629317, frontloc_old = 0.006, cond. vel. = 0.0293168 m/s
+
+Writing: "ThinLine2DTestAni_15.chk" (0s, XML)
+Steps: 16000000 Time: 0.16        
+ CPU Time: 71.6126 min.
+(Nodeid,phi):  (0,103.538),  (1,103.538),  (2,109.777),  (3,115.477),  (4,78.5959),  (5,1.84328),  (6,0.0725414), 
+frontloc = 0.006375, frontloc_old = 0.00629317, cond. vel. = 0.00818317 m/s
+
+Writing: "ThinLine2DTestAni_16.chk" (0s, XML)
+Steps: 17000000 Time: 0.17        
+ CPU Time: 71.6256 min.
+(Nodeid,phi):  (0,101.902),  (1,101.902),  (2,108.409),  (3,114.841),  (4,102.892),  (5,3.63606),  (6,0.144193), 
+frontloc = 0.00729317, frontloc_old = 0.006375, cond. vel. = 0.0918168 m/s
+
+Writing: "ThinLine2DTestAni_17.chk" (0s, XML)
+Steps: 18000000 Time: 0.18        
+ CPU Time: 71.6514 min.
+(Nodeid,phi):  (0,100.213),  (1,100.213),  (2,106.96),  (3,114.017),  (4,112.407),  (5,7.17302),  (6,0.285554), 
+frontloc = 0.00754317, frontloc_old = 0.00729317, cond. vel. = 0.025 m/s
+
+Writing: "ThinLine2DTestAni_18.chk" (0s, XML)
+Steps: 19000000 Time: 0.19        
+ CPU Time: 71.6225 min.
+(Nodeid,phi):  (0,98.4767),  (1,98.4767),  (2,105.436),  (3,113.045),  (4,115.17),  (5,14.1486),  (6,0.564367), 
+frontloc = 0.008, frontloc_old = 0.00754317, cond. vel. = 0.0456832 m/s
+
+Writing: "ThinLine2DTestAni_19.chk" (0s, XML)
+Steps: 20000000 Time: 0.2         
+ CPU Time: 71.6315 min.
+(Nodeid,phi):  (0,96.6981),  (1,96.6981),  (2,103.844),  (3,111.949),  (4,115.857),  (5,27.8828),  (6,1.11447), 
+frontloc = 0.00829317, frontloc_old = 0.008, cond. vel. = 0.0293168 m/s
+
+Writing: "ThinLine2DTestAni_20.chk" (0s, XML)
+Steps: 21000000 Time: 0.21        
+ CPU Time: 71.6481 min.
+(Nodeid,phi):  (0,94.8815),  (1,94.8815),  (2,102.19),  (3,110.745),  (4,115.79),  (5,53.4262),  (6,2.19996), 
+frontloc = 0.00854317, frontloc_old = 0.00829317, cond. vel. = 0.025 m/s
+
+Writing: "ThinLine2DTestAni_21.chk" (0s, XML)
+Steps: 22000000 Time: 0.22        
+ CPU Time: 71.6235 min.
+(Nodeid,phi):  (0,93.031),  (1,93.031),  (2,100.48),  (3,109.444),  (4,115.345),  (5,85.8889),  (6,4.34488), 
+frontloc = 0.00870683, frontloc_old = 0.00854317, cond. vel. = 0.0163663 m/s
+
+Writing: "ThinLine2DTestAni_22.chk" (0s, XML)
+Steps: 23000000 Time: 0.23        
+ CPU Time: 71.6512 min.
+(Nodeid,phi):  (0,91.1506),  (1,91.1506),  (2,98.7204),  (3,108.055),  (4,114.66),  (5,106.281),  (6,8.62129), 
+frontloc = 0.009625, frontloc_old = 0.00870683, cond. vel. = 0.0918168 m/s
+
+Writing: "ThinLine2DTestAni_23.chk" (0s, XML)
+Steps: 24000000 Time: 0.24        
+ CPU Time: 71.666 min.
+(Nodeid,phi):  (0,89.2441),  (1,89.2441),  (2,96.9154),  (3,106.586),  (4,113.798),  (5,113.438),  (6,17.465), 
+frontloc = 0.01, frontloc_old = 0.009625, cond. vel. = 0.0375 m/s
+
+Writing: "ThinLine2DTestAni_24.chk" (0s, XML)
+Steps: 25000000 Time: 0.25        
+ CPU Time: 71.74 min.
+(Nodeid,phi):  (0,87.3149),  (1,87.3149),  (2,95.0703),  (3,105.045),  (4,112.795),  (5,115.453),  (6,40.1758), 
+frontloc = 0.0102932, frontloc_old = 0.01, cond. vel. = 0.0293168 m/s
+
+Writing: "ThinLine2DTestAni_25.chk" (0s, XML)
+Steps: 26000000 Time: 0.26        
+ CPU Time: 71.6633 min.
+(Nodeid,phi):  (0,85.3663),  (1,85.3663),  (2,93.19),  (3,103.437),  (4,111.672),  (5,115.891),  (6,88.0152), 
+frontloc = 0.0107932, frontloc_old = 0.0102932, cond. vel. = 0.05 m/s
+
+Writing: "ThinLine2DTestAni_26.chk" (0s, XML)
+Steps: 27000000 Time: 0.27        
+ CPU Time: 71.6293 min.
+(Nodeid,phi):  (0,83.4014),  (1,83.4014),  (2,91.2786),  (3,101.768),  (4,110.443),  (5,115.712),  (6,108.619), 
+frontloc = 0.0109568, frontloc_old = 0.0107932, cond. vel. = 0.0163663 m/s
+
+Writing: "ThinLine2DTestAni_27.chk" (0s, XML)
+Steps: 28000000 Time: 0.28        
+ CPU Time: 71.6102 min.
+(Nodeid,phi):  (0,81.423),  (1,81.423),  (2,89.3403),  (3,100.045),  (4,109.121),  (5,115.2),  (6,114.017), 
+
+Writing: "ThinLine2DTestAni_28.chk" (0s, XML)
+Steps: 29000000 Time: 0.29        
+ CPU Time: 71.5767 min.
+(Nodeid,phi):  (0,79.434),  (1,79.434),  (2,87.3788),  (3,98.2736),  (4,107.712),  (5,114.468),  (6,115.67), 
+
+Writing: "ThinLine2DTestAni_29.chk" (0s, XML)
+Steps: 30000000 Time: 0.3         
+ CPU Time: 71.6834 min.
+(Nodeid,phi):  (0,77.4372),  (1,77.4372),  (2,85.3977),  (3,96.4581),  (4,106.226),  (5,113.569),  (6,116.073), 
+
+Writing: "ThinLine2DTestAni_30.chk" (0s, XML)
+Steps: 31000000 Time: 0.31        
+ CPU Time: 71.6787 min.
+(Nodeid,phi):  (0,75.4353),  (1,75.4353),  (2,83.4002),  (3,94.6037),  (4,104.668),  (5,112.536),  (6,115.905), 
+
+Writing: "ThinLine2DTestAni_31.chk" (0s, XML)
+Steps: 32000000 Time: 0.32        
+ CPU Time: 71.6314 min.
+(Nodeid,phi):  (0,73.4311),  (1,73.4311),  (2,81.3894),  (3,92.715),  (4,103.045),  (5,111.386),  (6,115.411), 
+
+Writing: "ThinLine2DTestAni_32.chk" (0s, XML)
+Steps: 33000000 Time: 0.33        
+ CPU Time: 71.7091 min.
+(Nodeid,phi):  (0,71.4277),  (1,71.4277),  (2,79.3684),  (3,90.7964),  (4,101.363),  (5,110.134),  (6,114.698), 
+
+Writing: "ThinLine2DTestAni_33.chk" (0s, XML)
+Steps: 34000000 Time: 0.34        
+ CPU Time: 71.6052 min.
+(Nodeid,phi):  (0,69.428),  (1,69.428),  (2,77.34),  (3,88.8518),  (4,99.6279),  (5,108.79),  (6,113.818), 
+
+Writing: "ThinLine2DTestAni_34.chk" (0s, XML)
+Steps: 35000000 Time: 0.35        
+ CPU Time: 71.5889 min.
+(Nodeid,phi):  (0,67.4354),  (1,67.4354),  (2,75.3072),  (3,86.8849),  (4,97.8452),  (5,107.362),  (6,112.802), 
+
+Writing: "ThinLine2DTestAni_35.chk" (0s, XML)
+Steps: 36000000 Time: 0.36        
+ CPU Time: 71.6767 min.
+(Nodeid,phi):  (0,65.4533),  (1,65.4533),  (2,73.2729),  (3,84.8992),  (4,96.0199),  (5,105.858),  (6,111.67), 
+
+Writing: "ThinLine2DTestAni_36.chk" (0s, XML)
+Steps: 37000000 Time: 0.37        
+ CPU Time: 71.5821 min.
+(Nodeid,phi):  (0,63.4852),  (1,63.4852),  (2,71.2403),  (3,82.8979),  (4,94.157),  (5,104.284),  (6,110.436), 
+
+Writing: "ThinLine2DTestAni_37.chk" (0s, XML)
+Steps: 38000000 Time: 0.38        
+ CPU Time: 71.5738 min.
+(Nodeid,phi):  (0,61.535),  (1,61.535),  (2,69.2125),  (3,80.8841),  (4,92.2608),  (5,102.646),  (6,109.108), 
+
+Writing: "ThinLine2DTestAni_38.chk" (0s, XML)
+Steps: 39000000 Time: 0.39        
+ CPU Time: 71.588 min.
+(Nodeid,phi):  (0,59.6062),  (1,59.6062),  (2,67.193),  (3,78.8608),  (4,90.3357),  (5,100.951),  (6,107.695), 
+
+Writing: "ThinLine2DTestAni_39.chk" (0s, XML)
+Steps: 40000000 Time: 0.4         
+ CPU Time: 71.6195 min.
+(Nodeid,phi):  (0,57.7023),  (1,57.7023),  (2,65.1854),  (3,76.8308),  (4,88.3854),  (5,99.2041),  (6,106.205), 
+
+Writing: "ThinLine2DTestAni_40.chk" (0s, XML)
+Steps: 41000000 Time: 0.41        
+ CPU Time: 71.6201 min.
+(Nodeid,phi):  (0,55.8265),  (1,55.8265),  (2,63.1934),  (3,74.7971),  (4,86.4138),  (5,97.4107),  (6,104.644), 
+
+Writing: "ThinLine2DTestAni_41.chk" (0s, XML)
+Steps: 42000000 Time: 0.42        
+ CPU Time: 71.6338 min.
+(Nodeid,phi):  (0,53.981),  (1,53.981),  (2,61.2208),  (3,72.7627),  (4,84.4241),  (5,95.5759),  (6,103.019), 
+
+Writing: "ThinLine2DTestAni_42.chk" (0s, XML)
+Steps: 43000000 Time: 0.43        
+ CPU Time: 71.6043 min.
+(Nodeid,phi):  (0,52.1676),  (1,52.1676),  (2,59.2712),  (3,70.7307),  (4,82.4195),  (5,93.7046),  (6,101.335), 
+
+Writing: "ThinLine2DTestAni_43.chk" (0s, XML)
+Steps: 44000000 Time: 0.44        
+ CPU Time: 71.6235 min.
+(Nodeid,phi):  (0,50.3868),  (1,50.3868),  (2,57.348),  (3,68.7045),  (4,80.4032),  (5,91.801),  (6,99.5985), 
+
+Writing: "ThinLine2DTestAni_44.chk" (0s, XML)
+Steps: 45000000 Time: 0.45        
+ CPU Time: 71.5707 min.
+(Nodeid,phi):  (0,48.6378),  (1,48.6378),  (2,55.4541),  (3,66.6874),  (4,78.3779),  (5,89.8695),  (6,97.8143), 
+
+Writing: "ThinLine2DTestAni_45.chk" (0s, XML)
+Steps: 46000000 Time: 0.46        
+ CPU Time: 66.3667 min.
+(Nodeid,phi):  (0,46.9185),  (1,46.9185),  (2,53.5917),  (3,64.683),  (4,76.3468),  (5,87.9137),  (6,95.9877), 
+
+Writing: "ThinLine2DTestAni_46.chk" (0s, XML)
+Steps: 47000000 Time: 0.47        
+ CPU Time: 58.1573 min.
+(Nodeid,phi):  (0,45.2253),  (1,45.2253),  (2,51.7619),  (3,62.6953),  (4,74.3127),  (5,85.9374),  (6,94.1234), 
+
+Writing: "ThinLine2DTestAni_47.chk" (0s, XML)
+Steps: 48000000 Time: 0.48        
+ CPU Time: 58.1327 min.
+(Nodeid,phi):  (0,43.5531),  (1,43.5531),  (2,49.9647),  (3,60.7278),  (4,72.2786),  (5,83.9437),  (6,92.226), 
+
+Writing: "ThinLine2DTestAni_48.chk" (0s, XML)
+Steps: 49000000 Time: 0.49        
+ CPU Time: 58.1409 min.
+(Nodeid,phi):  (0,41.8953),  (1,41.8953),  (2,48.1986),  (3,58.7842),  (4,70.2477),  (5,81.936),  (6,90.2994), 
+
+Writing: "ThinLine2DTestAni_49.chk" (0s, XML)
+Steps: 50000000 Time: 0.5         
+ CPU Time: 58.1447 min.
+(Nodeid,phi):  (0,40.2434),  (1,40.2434),  (2,46.4608),  (3,56.8679),  (4,68.2232),  (5,79.9172),  (6,88.3477), 
+
+Writing: "ThinLine2DTestAni_50.chk" (0s, XML)
+Steps: 51000000 Time: 0.51        
+ CPU Time: 58.0888 min.
+(Nodeid,phi):  (0,38.5873),  (1,38.5873),  (2,44.7467),  (3,54.9814),  (4,66.2089),  (5,77.8902),  (6,86.3744), 
+
+Writing: "ThinLine2DTestAni_51.chk" (0s, XML)
+Steps: 52000000 Time: 0.52        
+ CPU Time: 58.0791 min.
+(Nodeid,phi):  (0,36.9152),  (1,36.9152),  (2,43.0502),  (3,53.1267),  (4,64.2081),  (5,75.858),  (6,84.3828), 
+
+Writing: "ThinLine2DTestAni_52.chk" (0s, XML)
+Steps: 53000000 Time: 0.53        
+ CPU Time: 59.3523 min.
+(Nodeid,phi):  (0,35.213),  (1,35.213),  (2,41.3632),  (3,51.3047),  (4,62.2249),  (5,73.8235),  (6,82.3762), 
+
+Writing: "ThinLine2DTestAni_53.chk" (0s, XML)
+Steps: 54000000 Time: 0.54        
+ CPU Time: 58.9563 min.
+(Nodeid,phi):  (0,33.4648),  (1,33.4648),  (2,39.6758),  (3,49.5149),  (4,60.2628),  (5,71.7898),  (6,80.3574), 
+
+Writing: "ThinLine2DTestAni_54.chk" (0s, XML)
+Steps: 55000000 Time: 0.55        
+ CPU Time: 59.077 min.
+(Nodeid,phi):  (0,31.653),  (1,31.653),  (2,37.9761),  (3,47.7556),  (4,58.3254),  (5,69.76),  (6,78.3295), 
+
+Writing: "ThinLine2DTestAni_55.chk" (0s, XML)
+Steps: 56000000 Time: 0.56        
+ CPU Time: 58.7848 min.
+(Nodeid,phi):  (0,29.7589),  (1,29.7589),  (2,36.25),  (3,46.0235),  (4,56.4159),  (5,67.7376),  (6,76.2954), 
+
+Writing: "ThinLine2DTestAni_56.chk" (0s, XML)
+Steps: 57000000 Time: 0.57        
+ CPU Time: 59.0461 min.
+(Nodeid,phi):  (0,27.7649),  (1,27.7649),  (2,34.481),  (3,44.3134),  (4,54.5368),  (5,65.726),  (6,74.2579), 
+
+Writing: "ThinLine2DTestAni_57.chk" (0s, XML)
+Steps: 58000000 Time: 0.58        
+ CPU Time: 58.8896 min.
+(Nodeid,phi):  (0,25.6587),  (1,25.6587),  (2,32.6507),  (3,42.6186),  (4,52.6899),  (5,63.729),  (6,72.2201), 
+
+Writing: "ThinLine2DTestAni_58.chk" (0s, XML)
+Steps: 59000000 Time: 0.59        
+ CPU Time: 58.4563 min.
+(Nodeid,phi):  (0,23.4394),  (1,23.4394),  (2,30.7394),  (3,40.9306),  (4,50.8757),  (5,61.7504),  (6,70.1852), 
+
+Writing: "ThinLine2DTestAni_59.chk" (0s, XML)
+Steps: 60000000 Time: 0.6         
+ CPU Time: 58.0806 min.
+(Nodeid,phi):  (0,21.1254),  (1,21.1254),  (2,28.7285),  (3,39.2387),  (4,49.0934),  (5,59.7938),  (6,68.1565), 
+
+Writing: "ThinLine2DTestAni_60.chk" (0s, XML)
+Steps: 61000000 Time: 0.61        
+ CPU Time: 58.0869 min.
+(Nodeid,phi):  (0,18.7593),  (1,18.7593),  (2,26.6044),  (3,37.5301),  (4,47.3409),  (5,57.8627),  (6,66.1377), 
+
+Writing: "ThinLine2DTestAni_61.chk" (0s, XML)
+Steps: 62000000 Time: 0.62        
+ CPU Time: 58.0839 min.
+(Nodeid,phi):  (0,16.4049),  (1,16.4049),  (2,24.3653),  (3,35.79),  (4,45.6145),  (5,55.9601),  (6,64.1324), 
+
+Writing: "ThinLine2DTestAni_62.chk" (0s, XML)

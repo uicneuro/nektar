@@ -264,7 +264,6 @@ DNekMatSharedPtr StdExpansion::CreateGeneralMatrix(const StdMatrixKey &mkey)
                                  mkey.GetNodalPointsType());
 
             DNekMatSharedPtr mmat = GetStdMatrix(masskey);
-
             returnval = MemoryManager<DNekMat>::AllocateSharedPtr(
                 *mmat); // Populate standard mass matrix.
             returnval->Invert();
@@ -677,8 +676,7 @@ void StdExpansion::MassMatrixOp_MatFree(
     {
         Array<OneD, NekDouble> Weighttmp(nq);
         Vmath::Vcopy(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, Weighttmp, 1);
-        std::cout << "StdExpansion::MassMatrixOp_MatFree: Weight = " << RootMeanSquare(Weighttmp) << std::endl;
-
+        // std::cout << "StdExpansion::MassMatrixOp_MatFree: Weight = " << RootMeanSquare(Weighttmp) << std::endl;
         Vmath::Vmul(nq, mkey.GetVarCoeff(eVarCoeffMass), 1, tmp, 1, tmp, 1);
     }
 
@@ -900,6 +898,7 @@ void StdExpansion::WeakDerivMatrixOp_MatFree(
     VarCoeffType keys[] = {eVarCoeffD00, eVarCoeffD11, eVarCoeffD22};
     if (mkey.HasVarCoeff(keys[k1]))
     {
+        // std::cout << "k1 = " << k1 << ", WeakDerivMatrixOp = " << RootMeanSquare(mkey.GetVarCoeff(keys[k1])) << std::endl;
         Vmath::Vmul(nq, &(mkey.GetVarCoeff(keys[k1]))[0], 1, &tmp[0], 1,
                     &tmp[0], 1);
     }

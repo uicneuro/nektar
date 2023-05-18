@@ -3523,7 +3523,7 @@ void DisContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     {
         GlobalLinSysKey key(StdRegions::eHybridDGHelmBndLam, m_traceMap,
                             factors, varcoeff);
-                            
+
         GlobalLinSysSharedPtr LinSys = GetGlobalBndLinSys(key);
 
         LinSys->Solve(bndrhs, loclambda, m_traceMap);

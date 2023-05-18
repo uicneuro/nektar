@@ -71,6 +71,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     // AniStrength for e^1 and e^2
     m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
 
+    m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
+
     // Diffusivity coefficient for e^j
     m_epsilon = Array<OneD, NekDouble>(m_spacedim);
     m_session->LoadParameter("epsilon0", m_epsilon[0], 1.0);
@@ -312,7 +314,7 @@ void MMFDiffusion::DoImplicitSolve(
     int nq         = m_fields[0]->GetNpoints();
 
     StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorTau] = 1.0;
+    factors[StdRegions::eFactorTau] = m_Helmtau;
 
     Array<OneD, Array<OneD, NekDouble>> F(nvariables);
     F[0] = Array<OneD, NekDouble>(nq * nvariables);
@@ -336,6 +338,9 @@ void MMFDiffusion::DoImplicitSolve(
 
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
                                   m_varcoeff);
+
+                // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
+                //                   m_varcoeffXYZ);
 
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
@@ -828,7 +833,7 @@ void MMFDiffusion::TestHelmholtzProblem(const int type,
         // Helmholtz forcing
         if(type==0)
         {
-            outfield[k] = -1.0 * (d00[k]*d00[k] + d11[k]*d11[k]) * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+            outfield[k] = -1.0 * (d00[k] + d11[k]) * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
         }
 
         // Helmholtz solution
@@ -1381,7 +1386,7 @@ void MMFDiffusion::TestHelmholtzSolver()
     Array<OneD, NekDouble> HelmXYZSolve(nq);
 
     StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorTau] = 1.0;
+    factors[StdRegions::eFactorTau] = m_Helmtau;
     factors[StdRegions::eFactorLambda] = 0.0;
 
     std::cout << "Test HelmholtzSolver ===============================================" << std::endl;
@@ -1395,11 +1400,11 @@ void MMFDiffusion::TestHelmholtzSolver()
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
     TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());     
 
-    SetBoundaryConditions(0.0);                      
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors);
-    m_fields[0]->SetPhysState(false);
-    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmXYZSolve);
-    std::cout << "HelmsolveXYZ done ..................." << std::endl;
+    // SetBoundaryConditions(0.0);                      
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeffXYZ);
+    // m_fields[0]->SetPhysState(false);
+    // m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmXYZSolve);
+    // std::cout << "HelmsolveXYZ done ..................." << std::endl;
 
     Vmath::Zero(m_fields[0]->GetNcoeffs(), m_fields[0]->UpdateCoeffs(), 1);
     TestHelmholtzProblem(0,m_varcoeff,m_fields[0]->UpdatePhys());                           
@@ -1542,6 +1547,8 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TestType", TestTypeMap[m_TestType]);
     SolverUtils::AddSummaryItem(s, "frequency", m_frequency);
     SolverUtils::AddSummaryItem(s, "AniStrength", m_AniStrength);
+    SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
+
     SolverUtils::AddSummaryItem(s, "epsilon0", m_epsilon[0]);
     SolverUtils::AddSummaryItem(s, "epsilon1", m_epsilon[1]);
     SolverUtils::AddSummaryItem(s, "epsilon2", m_epsilon[2]);

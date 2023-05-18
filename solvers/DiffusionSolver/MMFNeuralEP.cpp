@@ -353,7 +353,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     // Derive AnisotropyStrength.
-    std::cout << "m_NeuralEPType = " << NeuralEPTypeMap[m_NeuralEPType] << std::endl;
     switch (m_NeuralEPType)
     {
         case eNeuralEPPT:
