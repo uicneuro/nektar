@@ -674,10 +674,10 @@ void MMFNeuralEP::CheckNodeZoneMF(
         yp = (yp / npts);
         inarrayavg = inarrayavg/npts;
 
-        std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
-                << ", x = " << xp << ", y = " << yp << ", dist = " << dist
-                << ", e1mag = " << e1mag << ", e2mag = " << e1mag
-                << ", inarray = " << inarrayavg << std::endl;
+        // std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
+        //         << ", x = " << xp << ", y = " << yp << ", dist = " << dist
+        //         << ", e1mag = " << e1mag << ", e2mag = " << e1mag
+        //         << ", inarray = " << inarrayavg << std::endl;
     }
 }
 
@@ -1337,15 +1337,18 @@ void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const NekDouble> &field)
     {
         Rnodeid = i / m_numelemperNode;
 
-        locphimsum = 0.0;
-        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        if( (i-Rnodeid*m_numelemperNode)==0 )
         {
-            index =  m_fields[0]->GetPhys_Offset(i) + j;
+            locphimsum = 0.0;
 
-            locphimsum = locphimsum + field[index];
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            {
+                index =  m_fields[0]->GetPhys_Offset(i) + j;
+                locphimsum = locphimsum + field[index];
+            }
+
+            phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
         }
-
-        phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
     }
 
     std::cout << " " << std::endl;
@@ -2413,6 +2416,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
 
     NekDouble Rf = m_neuron->GetRecistanceValue();
     NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+
+    for (int i=0; i<nvar; ++i)
+    {
+        outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
+    }
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
