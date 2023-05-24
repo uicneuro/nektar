@@ -7070,7 +7070,7 @@ void MMFSystem::PlotTimeMap(
         TimeMapMF[k] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    ComputeMFTimeMap(ValidTimeMap, TimeMap, NewValidTimeMap, TimeMapMF);
+    // ComputeMFTimeMap(ValidTimeMap, TimeMap, NewValidTimeMap, TimeMapMF);
 
     Array<OneD, NekDouble> tmp(nq);
     for (int k=0; k<m_spacedim; ++k)
