@@ -177,6 +177,44 @@ protected:
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);
 
+    void TimeMapProcess();
+
+    Array<OneD, NekDouble> ComputeVelocityTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &inarray, const int DividebyVelmag = 1);
+
+    Array<OneD, NekDouble> ComputeLambDiv(
+        const Array<OneD, const int> &ValidTimeMap,
+        const Array<OneD, const NekDouble> &inarray, const int PlotIndex = 0);
+
+    Array<OneD, NekDouble> HelmsolvePotentialE(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &inarray, const int PlotIndex = 0);
+
+    void HelmSolveSmoothing(const NekDouble TimeMapSmoothL,
+                                   Array<OneD, NekDouble> &outarray);
+
+    void PlotEnergyMap(const Array<OneD, const NekDouble> &TimeMap,
+                                const Array<OneD, const NekDouble> &VelVector,
+                                const Array<OneD, const NekDouble> &LambDiv,
+                                const Array<OneD, const NekDouble> &IonE,
+                                const int nstep);
+
+    void PlotTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const int nstep);
+
+    void PlotTimeMapMF(
+        const Array<OneD, const NekDouble> &NoboundaryZone,
+        const Array<OneD, const NekDouble> &TimeMap,
+        const Array<OneD, const Array<OneD, NekDouble>> &MF,
+        const Array<OneD, const Array<OneD, NekDouble>> &MFFirst,
+        const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>>
+            &MF1stConnection,
+        const Array<OneD, const Array<OneD, NekDouble>> &Relacc,
+        const int nstep);
+
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
     NekDouble m_AnisotropyStrength;

@@ -1804,8 +1804,8 @@ void MMFNeuralEP::DoSolveMMFFirst()
 
                 // PlotTimeMap(TimeMap, IappMap, TimeMapMF, nchk);
 
-                PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned,
-                              TMMFConnection, TMRelacc, nchk);
+                // PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned,
+                //               TMMFConnection, TMRelacc, nchk);
 
                 std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
                           << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)

@@ -1141,32 +1141,9 @@ protected:
     SOLVER_UTILS_EXPORT Array<OneD, int> ComputeTimeMapInitialZone(
         const Array<OneD, const NekDouble> &inarray);
 
-    SOLVER_UTILS_EXPORT void PlotTimeMap(
-    const Array<OneD, const int> &ValidTimeMap,
-    const Array<OneD, const NekDouble> &TimeMap,
-    const int nstep);
-
-    SOLVER_UTILS_EXPORT void PlotTimeMapMF(
-        const Array<OneD, const NekDouble> &NoboundaryZone,
-        const Array<OneD, const NekDouble> &TimeMap,
-        const Array<OneD, const Array<OneD, NekDouble>> &MF,
-        const Array<OneD, const Array<OneD, NekDouble>> &MFFirst,
-        const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>>
-            &MF1stConnection,
-        const Array<OneD, const Array<OneD, NekDouble>> &Relacc,
-        const int nstep);
-
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeLaplacianDiff(
         const Array<OneD, const NekDouble> &Laplacian,
         const Array<OneD, const NekDouble> &LaplacianNew);
-
-    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> HelmsolvePotentialE(
-        const Array<OneD, const int> &ValidTimeMap,
-        const Array<OneD, const NekDouble> &inarray, const int PlotIndex = 0);
-
-    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeLambDiv(
-        const Array<OneD, const int> &ValidTimeMap,
-        const Array<OneD, const NekDouble> &inarray, const int PlotIndex = 0);
 
     SOLVER_UTILS_EXPORT void TimeMapProcess();
 
@@ -1175,17 +1152,6 @@ protected:
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, int> &NewValidTimeMap,
         Array<OneD, Array<OneD, NekDouble>> &TMMF);
-
-    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeVelocityField(
-        const Array<OneD, const int> &ValidTimeMap,
-        const Array<OneD, const NekDouble> &inarray,
-        const int DividebyVelmag = 1);
-
-    SOLVER_UTILS_EXPORT void PlotEnergyMap(
-        const Array<OneD, const NekDouble> &TimeMap,
-        const Array<OneD, const NekDouble> &VelVector,
-        const Array<OneD, const NekDouble> &LambDiv,
-        const Array<OneD, const NekDouble> &IonE, const int nstep);
 
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeSpaceTime(
         const Array<OneD, const NekDouble> &TimeMap);

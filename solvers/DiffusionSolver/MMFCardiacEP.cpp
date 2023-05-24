@@ -1155,6 +1155,557 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
+void MMFCardiacEP::TimeMapProcess()
+{
+    std::cout << "MMFCardiacEP: Time Map processing starts =============" << std::endl;
+
+    int nq     = m_fields[0]->GetNpoints();
+    int ncoeff = m_fields[0]->GetNcoeffs();
+    int nvar   = 6;
+
+    int TimeMapNo;
+    m_session->LoadParameter("TimeMapNo", TimeMapNo, 10);
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "TimeMap";
+    variables[1] = "IappMap";
+    variables[2] = "nabla^2T";
+    variables[3] = "Velocity_x";
+    variables[4] = "Velocity_y";
+    variables[5] = "Velocity_z";
+
+    std::string processfile = m_sessionName + "_Tmap_" +
+                              boost::lexical_cast<std::string>(TimeMapNo) +
+                              ".chk";
+
+    Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
+    Array<OneD, Array<OneD, NekDouble>> tmp(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        tmpc[i] = Array<OneD, NekDouble>(ncoeff);
+        tmp[i]  = Array<OneD, NekDouble>(nq);
+    }
+
+    EquationSystem::ImportFld(processfile, variables, tmpc);
+
+    for (int i = 0; i < nvar; ++i)
+    {
+        m_fields[0]->BwdTrans(tmpc[i], tmp[i]);
+    }
+
+    Array<OneD, NekDouble> TimeMap(nq);
+    Vmath::Vcopy(nq, &tmp[0][0], 1, &TimeMap[0], 1);
+    std::cout << "Time Map is loaded: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+              << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
+
+    Array<OneD, NekDouble> VelVector = ComputeVelocityTimeMap(m_ValidTimeMap, TimeMap);
+
+    // Processing for Energy map
+
+    // \nabla \cdot \ell = - \nabla^2 U_Lamb
+    Array<OneD, NekDouble> LambDiv = ComputeLambDiv(m_ValidTimeMap, VelVector);
+
+    // Ion Potential
+    Array<OneD, NekDouble> IonE = HelmsolvePotentialE(m_ValidTimeMap, LambDiv);
+
+    // Plot Energy map
+    PlotEnergyMap(TimeMap, VelVector, LambDiv, IonE, TimeMapNo);
+
+    ASSERTL0(0, "Time Map processing finishes =============");
+}
+
+// Compute Velocity field from Time Map
+// flag = 1: Use \vec{v} = \nabla T / \| \nabla T \|^2
+// flag = 0:
+Array<OneD, NekDouble> MMFCardiacEP::ComputeVelocityTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &inarray, const int DividebyVelmag)
+{
+    int nq = m_fields[0]->GetTotPoints();
+
+    Array<OneD, NekDouble> outarray(m_spacedim * nq, 0.0);
+
+    Array<OneD, NekDouble> physarray(nq);
+    Vmath::Vcopy(nq, inarray, 1, physarray, 1);
+
+    // Low pass filter smoothing
+
+    // TmapGrad = \nabla Tmap
+    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
+    TmapGrad = ComputeCovGrad(physarray, m_movingframes);
+
+    Array<OneD, NekDouble> TmapGradMag(nq);
+    TmapGradMag = ComputeVelocityMag(TmapGrad);
+
+    // Compute VelField \vec{v} = \sum_{i=1}^3 1/(\nabla T \cdot \hat{x}_i)
+    // \hat{x}_i
+    if (DividebyVelmag)
+    {
+        NekDouble tmp, TmapGradTol = 0.1;
+        for (int i = 0; i < nq; i++)
+        {
+            tmp = TmapGradMag[i];
+            if (tmp > TmapGradTol)
+            {
+                for (int k = 0; k < m_spacedim; ++k)
+                {
+                    outarray[i + k * nq] = TmapGrad[i + k * nq] / (tmp * tmp);
+                }
+            }
+        }
+    }
+
+    else
+    {
+        Vmath::Vcopy(m_spacedim * nq, TmapGrad, 1, outarray, 1);
+    }
+
+    for (int i = 0; i < nq; ++i)
+    {
+        if (ValidTimeMap[i] == 0)
+        {
+            outarray[i]          = 0.0;
+            outarray[i + nq]     = 0.0;
+            outarray[i + 2 * nq] = 0.0;
+        }
+    }
+
+    return outarray;
+}
+
+// Compute the Lamb vector from the velocity vector
+// \boldsymbol{\ell} = ( \nabla \times \mathbf{u} ) \times u
+Array<OneD, NekDouble> MMFCardiacEP::ComputeLambDiv(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &inarray, const int PlotIndex)
+{
+    int nq = m_fields[0]->GetTotPoints();
+
+    // Compute acceleration along the velocity vector:
+    // AccMap[0] = (1/2) \nabla || \vec{v} ||^2 \cdot \vec{v}
+
+    // Compute \nabla \times \vec{u} = V_c \vec{k}
+    Array<OneD, NekDouble> CovCurl = ComputeCovCurl(inarray, m_movingframes);
+
+    // Filtering
+    for (int i = 0; i < nq; ++i)
+    {
+        if (ValidTimeMap[i] == 0)
+        {
+            CovCurl[i] = 0.0;
+        }
+    }
+
+    std::cout << "CovCurl = " << RootMeanSquare(CovCurl);
+
+    //  \boldsymbol{\ell} = V_c \vec{k} \times \mathbf{u}
+    Array<OneD, NekDouble> LambVector(m_spacedim * nq);
+    LambVector = VectorCrossProdMF(m_movingframes[2], inarray);
+
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        Vmath::Vmul(nq, &CovCurl[0], 1, &LambVector[k * nq], 1,
+                    &LambVector[k * nq], 1);
+    }
+
+    Array<OneD, NekDouble> LambDiv = ComputeCovDiv(LambVector, m_movingframes);
+
+    // Filtering
+    for (int i = 0; i < nq; ++i)
+    {
+        if (ValidTimeMap[i] == 0)
+        {
+            LambDiv[i] = 0.0;
+        }
+    }
+
+    // HelmSolveSmoothing(m_LambDivSmoothL, LambDiv);
+
+    // Find a large LambDiv
+    int index, Lambflag;
+    NekDouble LambDivTol = 10.0;
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    {
+        Lambflag = 0;
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            if (fabs(LambDiv[index]) > LambDivTol)
+            {
+                Lambflag = 1;
+            }
+        }
+
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            if (Lambflag == 1)
+            {
+                LambDiv[index] = LambDivTol;
+            }
+        }
+    }
+
+    std::cout << ", Lamb Div vector err: Avg = " << RootMeanSquare(LambDiv)
+              << ", max = " << Vmath::Vamax(nq, LambDiv, 1) << std::endl;
+
+    if (PlotIndex > 0)
+    {
+        // PlotLambDiv(CovCurl, LambDiv, PlotIndex);
+        int nvar    = 2;
+        int ncoeffs = m_fields[0]->GetNcoeffs();
+
+        std::string outname1 = m_sessionName + "_LambDiv_" +
+                               boost::lexical_cast<std::string>(PlotIndex) +
+                               ".chk";
+        std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+        for (int i = 0; i < nvar; ++i)
+        {
+            fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+        }
+
+        std::vector<std::string> variables(nvar);
+        variables[0] = "CovCurl";
+        variables[1] = "LambDiv";
+
+        // Normalized Time Vector
+        m_fields[0]->FwdTrans(CovCurl, fieldcoeffs[0]);
+        m_fields[0]->FwdTrans(LambDiv, fieldcoeffs[1]);
+
+        WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+    }
+
+    return LambDiv;
+}
+
+Array<OneD, NekDouble> MMFCardiacEP::HelmsolvePotentialE(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &inarray, const int PlotIndex)
+{
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    Array<OneD, NekDouble> physarray(nq);
+    Vmath::Vcopy(nq, inarray, 1, physarray, 1);
+
+    HelmSolveSmoothing(m_LambDivSmoothL, physarray);
+
+    NekDouble DivAvg = -1.0 * AvgInt(physarray);
+    Vmath::Sadd(nq, DivAvg, physarray, 1, physarray, 1);
+
+    Array<OneD, NekDouble> outarray(nq, 0.0);
+
+    StdRegions::ConstFactorMap factors;
+    factors[StdRegions::eFactorTau]    = m_Helmtau;
+    factors[StdRegions::eFactorLambda] = 0.0;
+
+    Array<OneD, NekDouble> tmpc(ncoeffs);
+
+    std::cout << "HelmPotentialE starts =============" << std::endl;
+    m_fields[0]->HelmSolve(physarray, tmpc, factors, m_varcoeff);
+    // m_contField->HelmSolve(physarray, tmpc, factors, m_varcoeff);
+    m_fields[0]->BwdTrans(tmpc, outarray);
+    std::cout << "HelmPotentialE ends =============" << std::endl;
+
+    for (int i = 0; i < nq; ++i)
+    {
+        if (ValidTimeMap[i] == 0)
+        {
+            outarray[i] = 0.0;
+        }
+    }
+
+    // Averaging out
+    // DivAvg = -1.0 * AvgInt(outarray);
+    // Vmath::Sadd(nq, DivAvg, outarray, 1, outarray, 1);
+
+    if (PlotIndex > 0)
+    {
+        // PlotLambDiv(CovCurl, LambDiv, PlotIndex);
+        int nvar    = 1;
+        int ncoeffs = m_fields[0]->GetNcoeffs();
+
+        std::string outname1 = m_sessionName + "_IonU_" +
+                               boost::lexical_cast<std::string>(PlotIndex) +
+                               ".chk";
+        std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+        for (int i = 0; i < nvar; ++i)
+        {
+            fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+        }
+
+        std::vector<std::string> variables(nvar);
+        variables[0] = "IonU";
+
+        // Normalized Time Vector
+        m_fields[0]->FwdTrans(outarray, fieldcoeffs[0]);
+
+        WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+    }
+
+    return outarray;
+}
+
+void MMFCardiacEP::HelmSolveSmoothing(const NekDouble TimeMapSmoothL,
+                                   Array<OneD, NekDouble> &outarray)
+{
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+    int nq      = m_fields[0]->GetTotPoints();
+
+    Array<OneD, NekDouble> tmpc(ncoeffs);
+
+    StdRegions::ConstFactorMap factors;
+    factors[StdRegions::eFactorTau] = m_Helmtau;
+
+    // 	factors[StdRegions::eFactorLambda] = 1.0 / lambda * m_chi *
+    // m_capMembrane;
+    NekDouble pi2L                     = 2.0 * m_pi / TimeMapSmoothL;
+    factors[StdRegions::eFactorLambda] = pi2L * pi2L;
+
+    Vmath::Smul(nq, -pi2L * pi2L, outarray, 1, outarray, 1);
+    // NekDouble DivAvg = -1.0 * AvgInt(outarray);
+    // Vmath::Sadd(nq, DivAvg, outarray, 1, outarray, 1);
+
+    m_fields[0]->HelmSolve(outarray, tmpc, factors, m_varcoeff);
+    m_fields[0]->BwdTrans(tmpc, outarray);
+
+    // m_contField->HelmSolve(outarray, tmpc, factors, m_varcoeff);
+    // m_contField->BwdTrans(tmpc, outarray);
+}
+
+void MMFCardiacEP::PlotEnergyMap(const Array<OneD, const NekDouble> &TimeMap,
+                              const Array<OneD, const NekDouble> &VelVector,
+                              const Array<OneD, const NekDouble> &LambDiv,
+                              const Array<OneD, const NekDouble> &IonE,
+                              const int nstep)
+{
+    int nvar    = 8;
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+    int nq      = m_fields[0]->GetTotPoints();
+
+    std::string outname1 = m_sessionName + "_Energymap_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "TimeMap";
+    variables[1] = "Velocity_x";
+    variables[2] = "Velocity_y";
+    variables[3] = "Velocity_z";
+    variables[4] = "Kinetic E";
+    variables[5] = "Lamb Div";
+    variables[6] = "Ion U";
+    variables[7] = "Total U";
+
+    // U_kin = 0.5 \| \vec{v} \|^2
+    Array<OneD, NekDouble> KineticE(nq, 0.0);
+    KineticE = ComputeVelocityMag(VelVector);
+    Vmath::Vmul(nq, KineticE, 1, KineticE, 1, KineticE, 1);
+    Vmath::Smul(nq, 0.5, KineticE, 1, KineticE, 1);
+
+    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
+
+    Array<OneD, NekDouble> tmp(nq);
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        // Compute the magnitude of the velocity map
+        Vmath::Vcopy(nq, &VelVector[k * nq], 1, &tmp[0], 1);
+        m_fields[0]->FwdTrans(tmp, fieldcoeffs[1 + k]);
+    }
+
+    m_fields[0]->FwdTrans(KineticE, fieldcoeffs[4]);
+    m_fields[0]->FwdTrans(LambDiv, fieldcoeffs[5]);
+    m_fields[0]->FwdTrans(IonE, fieldcoeffs[6]);
+
+    // Totla U = U_Lamb + U_kin
+    Array<OneD, NekDouble> TotalE(nq);
+    Vmath::Vadd(nq, KineticE, 1, IonE, 1, TotalE, 1);
+    m_fields[0]->FwdTrans(TotalE, fieldcoeffs[7]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
+
+void MMFCardiacEP::PlotTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const int nstep)
+{
+    int nvar    = 4;
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_TimeMap_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "TimeMap";
+    variables[1] = "TMex1";
+    variables[2] = "TMey1";
+    variables[3] = "TMez1";
+
+    // index:0 -> u
+    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
+
+    Array<OneD, int> NewValidTimeMap(nq, 0);
+    Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        TimeMapMF[k] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
+    // ComputeMFTimeMap(ValidTimeMap, TimeMap, NewValidTimeMap, TimeMapMF);
+
+    Array<OneD, NekDouble> tmp(nq);
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        Vmath::Vcopy(nq, &TimeMapMF[k][0], 1, &tmp[0], 1);
+        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+1]);
+    }
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+
+    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+                << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
+                << std::endl;
+}
+
+
+void MMFCardiacEP::PlotTimeMapMF(
+    const Array<OneD, const NekDouble> &NoboundaryZone,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMapMF,
+    const Array<OneD, const Array<OneD, NekDouble>> &MFFirst,
+    const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>>
+        &MF1stConnection,
+    const Array<OneD, const Array<OneD, NekDouble>> &Relacc, const int nstep)
+{
+    int nvar    = 9;
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_MFTM_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "TimeMap";
+    variables[1] = "ex1";
+    variables[2] = "ey1";
+    variables[3] = "ez1";
+    variables[4] = "AngleDiff";
+    variables[5] = "w211";
+    variables[6] = "w212";
+    variables[7] = "RelAcc";
+    variables[8] = "CondBlock";
+
+    // index:0 -> u
+    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
+
+    // index:[1, 2, 3] -> ex1, ey1, ez1
+    Array<OneD, NekDouble> tmp(nq);
+    for (int j = 0; j < m_spacedim; ++j)
+    {
+        Vmath::Vcopy(nq, &TimeMapMF[0][j * nq], 1, &tmp[0], 1);
+        m_fields[0]->FwdTrans(tmp, fieldcoeffs[j + 1]);
+    }
+
+    // Compute AngleMF: Compute the angle bewteen the original MF and
+    // aligned MF
+    Array<OneD, NekDouble> AngleDiff(nq, 0.0);
+    Array<OneD, NekDouble> MFerr(nq, 0.0);
+
+    NekDouble e1x, e1y, e1z, e1xnew, e1ynew, e1znew;
+    NekDouble diffx, diffy, diffz;
+    // NekDouble erx, ery, erz, differx, differy, differz;
+    for (int i = 0; i < nq; i++)
+    {
+        // erx = m_polarMF[0][i];
+        // ery = m_polarMF[0][i + nq];
+        // erz = m_polarMF[0][i + 2 * nq];
+
+        e1x = MFFirst[0][i];
+        e1y = MFFirst[0][i + nq];
+        e1z = MFFirst[0][i + 2 * nq];
+
+        e1xnew = TimeMapMF[0][i];
+        e1ynew = TimeMapMF[0][i + nq];
+        e1znew = TimeMapMF[0][i + 2 * nq];
+
+        diffx = e1x - e1xnew;
+        diffy = e1y - e1ynew;
+        diffz = e1z - e1znew;
+
+        if (NoboundaryZone[i] == 1)
+        {
+            MFerr[i] = sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
+        }
+    }
+
+    std::cout << "MFFirst vs. TimeMapMF: MFerr = " << RootMeanSquare(MFerr)
+              << std::endl;
+
+    // Angle between MF and fibre
+    m_fields[0]->FwdTrans(MFerr, fieldcoeffs[4]);
+
+    Array<OneD, NekDouble> w211(nq);
+    Array<OneD, NekDouble> w212(nq);
+
+    Vmath::Vcopy(nq, &MF1stConnection[0][0][0], 1, &w211[0], 1);
+    Vmath::Vcopy(nq, &MF1stConnection[0][1][0], 1, &w212[0], 1);
+
+    // Ignore the region where w211 is too big.
+    Vmath::Vmul(nq, NoboundaryZone, 1, w211, 1, w211, 1);
+    Vmath::Vmul(nq, NoboundaryZone, 1, w212, 1, w212, 1);
+
+    std::cout << "TimeMap: w211 max = " << Vmath::Vamax(nq, w211, 1)
+              << std::endl;
+
+    // Connection form w211
+    m_fields[0]->FwdTrans(w211, fieldcoeffs[5]);
+
+    // Connection form w212
+    m_fields[0]->FwdTrans(w212, fieldcoeffs[6]);
+
+    // Relative Acceleration (I)
+    Array<OneD, NekDouble> RelAccetmp(nq);
+
+    Vmath::Vcopy(nq, &Relacc[1][0], 1, &RelAccetmp[0], 1);
+    Vmath::Vmul(nq, &NoboundaryZone[0], 1, &RelAccetmp[0], 1, &RelAccetmp[0],
+                1);
+
+    m_fields[0]->FwdTrans(RelAccetmp, fieldcoeffs[7]);
+
+    // Compute Conduction block
+    Array<OneD, NekDouble> CBlock(nq, 0.0);
+    for (int i = 0; i < nq; ++i)
+    {
+        if ((w212[i] > 0) && (RelAccetmp[i] < 0))
+        {
+            CBlock[i] = w212[i] - 10.0 * RelAccetmp[i];
+        }
+    }
+
+    m_fields[0]->FwdTrans(CBlock, fieldcoeffs[8]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
 // Array<OneD, NekDouble> MMFCardiacEP::PlanePhiWave()
 // {
 //     int nq = GetTotPoints();
