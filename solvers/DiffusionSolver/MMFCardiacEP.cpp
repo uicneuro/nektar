@@ -882,11 +882,15 @@ void MMFCardiacEP::DoSolveMMF()
 
     // Set up wrapper to fields data storage.
     Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
+    Array<OneD, Array<OneD, NekDouble>> fieldsold(nvariables);
 
+    // Order storage to list time-integrated fields first.
     for (i = 0; i < nvariables; ++i)
     {
         fields[i] = m_fields[m_intVariables[i]]->GetPhys();
         m_fields[m_intVariables[i]]->SetPhysState(false);
+
+        fieldsold[i] = Array<OneD, NekDouble>(nq);
     }
 
     // Initialise time integration scheme
@@ -935,6 +939,12 @@ void MMFCardiacEP::DoSolveMMF()
 
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
+        // Save fields into fieldsold
+        for (i = 0; i < nvariables; ++i)
+        {
+            Vmath::Vcopy(nq, &fields[i][0], 1, &fieldsold[i][0], 1);
+        }
+
         // field time integration
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
@@ -944,6 +954,12 @@ void MMFCardiacEP::DoSolveMMF()
         elapsed = timer.TimePerTest(1);
         intTime += elapsed;
         cpuTime += elapsed;
+
+        // Compute TimeMap
+        // dudtsign: wavefront = -1.0, waveback = 1.0
+        //  dudt = Computedudt(m_uTol, fields[0], fieldsold[0]);
+        Vmath::Vsub(nq, fields[0], 1, fieldsold[0], 1, dudtval, 1);
+        Vmath::Smul(nq, 1.0 / m_timestep, dudtval, 1, dudtval, 1);
 
         if (m_TimeMap == eActivated)
         {
