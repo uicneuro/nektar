@@ -1424,8 +1424,6 @@ void MMFDiffusion::TestHelmholtzSolver()
     std::cout << "Error: HelmSolveXYZ = " << RootMeanSquare(ErrorXYZ) 
     << ", HelmSolve = " << RootMeanSquare(Error) << std::endl;
 
-    wait_on_enter();
-
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> D2tmp(nq);
 

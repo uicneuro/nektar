@@ -6888,7 +6888,8 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
 
     // Compute WeakDGLaplacian
     Array<OneD, NekDouble> Lapu(nq);
-    WeakDGMMFLaplacian(0, field, Lapu);
+    // WeakDGMMFLaplacian(0, field, Lapu);
+    Lapu = ComputeCovariantDiffusion(m_movingframes, field);
 
     for (int i = 0; i < nq; ++i)
     {

@@ -96,20 +96,6 @@ const char *const FluxTypeMap[] = {
     "uflux",
 };
 
-enum TimeMapType
-{
-    eDeActivated,
-    eActivated,
-    eProcessing,
-    SIZE_TimeMapType ///< Length of enum list
-};
-
-const char *const TimeMapTypeMap[] = {
-    "DeActivated",
-    "Activated",
-    "Processing",
-};
-
 
 /// A model for cardiac conduction.
 class MMFCardiacEP : public SolverUtils::MMFSystem
@@ -143,9 +129,14 @@ public:
 protected:
     int m_Convectiven;
 
-    TimeMapType m_TimeMap;
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
+    NekDouble m_TimeMapIapp;
+    NekDouble m_TimeMapT0;
+
+    std::string m_TimeMapfile;
+    std::string m_PDEsolfile;
+    Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
 
@@ -167,6 +158,9 @@ protected:
 
     void DoSolveMMF();
     void DoSolveMMFFirst();
+    void DoSolveTimeMap();
+    
+    void ComputeTimeMapError(const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     Array<OneD, NekDouble> ReadFibermap(const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre);
     Array<OneD, NekDouble> ReadConductivityMap();
@@ -230,6 +224,10 @@ protected:
         const NekDouble lambda);
 
     void DoOdeRhsCardiacEP(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    void DoOdeRhsCardiacEPTimeMap(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 

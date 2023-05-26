@@ -123,7 +123,12 @@ DNekScalMatSharedPtr Expansion2D::CreateMatrix(const MatrixKey &mkey)
                 NekDouble one = 1.0;
 
                 StdRegions::StdMatrixKey masskey(StdRegions::eMass,
-                                                 DetShapeType(), *this);                                                 
+                                                 DetShapeType(), *this);     
+
+                // StdRegions::StdMatrixKey masskey(StdRegions::eMass,
+                //                     DetShapeType(), *this, 
+                //                     mkey.GetConstFactors(), 
+                //                     mkey.GetVarCoeffs());                                                
                                                  
                 DNekMatSharedPtr mat = GenMatrix(masskey);
                 mat->Invert();
@@ -976,6 +981,14 @@ void Expansion2D::AddHDGHelmholtzEdgeTerms(
     {
         if (mmf)
         {
+            // StdRegions::VarCoeffMap Weight;
+            // Weight[StdRegions::eVarCoeffMass] = GetMFMag(n, varcoeffs);
+
+            // MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(), *this,
+            //                      StdRegions::NullConstFactorMap, Weight);
+
+            // invMass = GetLocMatrix(invMasskey);
+
             Array<OneD, NekDouble> ncdotMF_e =
                 GetnEdgecdotMF(n, edge, EdgeExp[edge], normals, varcoeffs);
 
@@ -984,6 +997,7 @@ void Expansion2D::AddHDGHelmholtzEdgeTerms(
         else
         {
             Vmath::Vmul(nquad_e, normals[n], 1, edgePhys, 1, inval, 1);
+            // invMass = GetLocMatrix(StdRegions::eInvMass);
         }
 
         // Multiply by variable coefficient
@@ -1145,6 +1159,16 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                                           VarCoeffDirDeriv);
 
                         DNekScalMat &Dmat = *GetLocMatrix(Dmatkey);
+
+                        // StdRegions::VarCoeffMap Weight;
+                        // Weight[StdRegions::eVarCoeffMass] = GetMFMag(i, mkey.GetVarCoeffs());
+
+                        // MatrixKey invMasskey(
+                        //     StdRegions::eInvMass, DetShapeType(), *this,
+                        //     StdRegions::NullConstFactorMap, Weight);
+
+                        // DNekScalMat &invMass = *GetLocMatrix(invMasskey);
+
                         Mat = Mat + Dmat * invMass * Transpose(Dmat);
                     }
                 }
@@ -1352,6 +1376,15 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                     StdRegions::NullConstFactorMap, VarCoeffDirDeriv);
 
                 Dmat = GetLocMatrix(Dmatkey);
+
+                // StdRegions::VarCoeffMap Weight;
+                // Weight[StdRegions::eVarCoeffMass] = GetMFMag(dir, mkey.GetVarCoeffs());
+
+                // MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(),
+                //                      *this, StdRegions::NullConstFactorMap,
+                //                      Weight);
+
+                // invMass = *GetLocMatrix(invMasskey);
             }
             else
             {
@@ -1360,6 +1393,9 @@ DNekMatSharedPtr Expansion2D::v_GenMatrix(const StdRegions::StdMatrixKey &mkey)
                                                        StdRegions::eWeakDeriv2};
 
                 Dmat = GetLocMatrix(DerivType[dir]);
+
+                // MatrixKey invMasskey(StdRegions::eInvMass, DetShapeType(), *this);
+                // invMass = *GetLocMatrix(invMasskey);
             }
 
             // for each degree of freedom of the lambda space
