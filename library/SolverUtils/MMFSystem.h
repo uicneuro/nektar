@@ -746,6 +746,10 @@ protected:
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeEuclideanDiffusion(
         const Array<OneD, const NekDouble> &inarray);
 
+    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeMMFDiffusion(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const NekDouble> &inarray);
+
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovariantDiffusion(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &inarray,

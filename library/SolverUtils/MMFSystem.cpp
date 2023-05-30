@@ -4598,6 +4598,30 @@ Array<OneD, NekDouble> MMFSystem::ComputeEuclideanDiffusion(
 }
 
 // \nabla^2 u = \nabla u^i \cdot e^i + u^i (\nabla \cdot e^i)
+Array<OneD, NekDouble> MMFSystem::ComputeMMFDiffusion(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const NekDouble> &inarray)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> Dtmp(nq);
+
+    Array<OneD, NekDouble> outarray(nq, 0.0);
+    for (int i = 0; i < m_expdim; ++i)
+    {
+        // Dtmp = \nabla u \cdot e^i
+        // D2tmp = \nabla Dtmp \cdot e^i
+        m_fields[0]->PhysDirectionalDeriv(movingframes[i], inarray, tmp);
+        m_fields[0]->PhysDirectionalDeriv(movingframes[i], tmp, Dtmp);
+
+        Vmath::Vadd(nq, Dtmp, 1, outarray, 1, outarray, 1);
+    }
+
+    return outarray;
+}
+
+// \nabla^2 u = \nabla u^i \cdot e^i + u^i (\nabla \cdot e^i)
 Array<OneD, NekDouble> MMFSystem::ComputeCovariantDiffusion(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &inarray, const DerivType DType)

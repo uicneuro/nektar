@@ -359,10 +359,11 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim);
 
-    void SolveHelmholtzatDiffusion(
+    void SolveHelmholtzDiffusion(
         const Array<OneD, const int> &NodeZone,
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim,
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        StdRegions::VarCoeffMap &Helmvarcoeff,
         Array<OneD, NekDouble> &outarray);
 
 

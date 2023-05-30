@@ -489,38 +489,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
     }
 
-    // Test Helm 2D Solver 
-    if(m_NeuralEPType==eNeuralHelmTest)
-    {
-        int nvar = m_fields.size();
-
-        std::cout << std::endl;
-
-        std::cout << "Initiating eNeuralHelmTest "
-                    "================================================"
-                << std::endl;
-
-        Array<OneD, int> Oneindex(nq, 1);
-        Array<OneD, NekDouble> outputarray(nq);
-
-        Array<OneD, Array<OneD, NekDouble>> inputarray(nvar);
-        GetFunction("HelmForcing")->Evaluate(m_session->GetVariables(), inputarray);
-
-        std::cout << "inarray = " << RootMeanSquare(inputarray[0]) << std::endl;
-
-        Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
-        GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
-
-        std::cout << "ExactSoln = " << RootMeanSquare(ExactSoln[0]) << std::endl;
-
-        SolveHelmholtzatDiffusion(Oneindex, m_phiemovingframes, inputarray[0], outputarray);
-
-        Vmath::Vsub(nq, ExactSoln[0], 1, outputarray, 1, outputarray, 1);
-        std::cout << "Error = " << RootMeanSquare(outputarray) << std::endl;
-
-        wait_on_enter();
-    }
-
     if (m_explicitDiffusion)
     {
         m_ode.DefineImplicitSolve(&MMFNeuralEP::DoNullSolve, this);
@@ -617,6 +585,37 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
+
+       // Test Helm 2D Solver 
+    if(m_NeuralEPType==eNeuralHelmTest)
+    {
+        int nvar = m_fields.size();
+
+        std::cout << std::endl;
+
+        std::cout << "Initiating eNeuralHelmTest =========================================, nvar = " << nvar << std::endl;
+
+        Array<OneD, int> Oneindex(nq, 1);
+        Array<OneD, NekDouble> outputarray(nq);
+
+        Array<OneD, Array<OneD, NekDouble>> inputarray(nvar);
+        GetFunction("HelmForcingFunction")->Evaluate(m_session->GetVariables(), inputarray);
+
+        std::cout << "inarray = " << RootMeanSquare(inputarray[0]) << std::endl;
+
+        Array<OneD, Array<OneD, NekDouble>> ExactSoln(nvar);
+        GetFunction("HelmExactSolution")->Evaluate(m_session->GetVariables(), ExactSoln);
+
+        std::cout << "ExactSoln = " << RootMeanSquare(ExactSoln[1]) << std::endl;
+
+        SolveHelmholtzDiffusion(Oneindex, inputarray[0], m_unitmovingframes, m_phievarcoeff, outputarray);
+
+        Vmath::Vsub(nq, ExactSoln[1], 1, outputarray, 1, outputarray, 1);
+        std::cout << "SolveHelmholtzDiffusion Error = " << RootMeanSquare(outputarray) << std::endl;
+
+        wait_on_enter();
+    }
+
 }
 
 /**
@@ -674,10 +673,10 @@ void MMFNeuralEP::CheckNodeZoneMF(
         yp = (yp / npts);
         inarrayavg = inarrayavg/npts;
 
-        // std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
-        //         << ", x = " << xp << ", y = " << yp << ", dist = " << dist
-        //         << ", e1mag = " << e1mag << ", e2mag = " << e1mag
-        //         << ", inarray = " << inarrayavg << std::endl;
+        std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
+                << ", x = " << xp << ", y = " << yp << ", dist = " << dist
+                << ", e1mag = " << e1mag << ", e2mag = " << e1mag
+                << ", inarray = " << inarrayavg << std::endl;
     }
 }
 
@@ -1078,10 +1077,18 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            int Iumax = Vmath::Iamax(nq, fields[0], 1);
-            std::cout << "u_max = " << Vmath::Vamax(nq, fields[0], 1)
-                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
+            int Iummax = Vmath::Iamax(nq, fields[0], 1);
+            std::cout << "um_max = " << Vmath::Vamax(nq, fields[0], 1)
+                      << " at x = " << x0[Iummax] << ", y = " << x1[Iummax] << ", z = " << x2[Iummax]
                       << std::endl;
+
+            if(nvariables==2)
+            {
+            int Iuemax = Vmath::Iamax(nq, m_fields[1]->GetPhys(), 1);
+            std::cout << "ue_max = " << Vmath::Vamax(nq, m_fields[1]->GetPhys(), 1)
+                      << " at x = " << x0[Iuemax] << ", y = " << x1[Iuemax] << ", z = " << x2[Iuemax]
+                      << std::endl;
+            }
 
             // NekDouble umax = Vmath::Vamax(nq, fields[0], 1);
             // fulltext.append("u_max = " + std::to_string(umax));
@@ -1089,7 +1096,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             // fulltext.append(", y = " + std::to_string(x1[Iumax]));
             // fulltext.append("\n");
 
-            CheckNodeZoneMF(m_movingframes, m_NodeZone, fields[0]);
+            // CheckNodeZoneMF(m_movingframes, m_NodeZone, fields[0]);
 
             // Print phim and phie at each node
             if( m_expdim>1 )
@@ -1097,18 +1104,10 @@ void MMFNeuralEP::DoSolveMMFZero()
                 DisplayatNode(fields[0]);
             }
             
-            // std::cout << fulltext << "\n";
-
             Checkpoint_Output(nchk++);
             doCheckTime = false;
         }
 
-        // for (i = 0; i < 1; ++i)
-        // {
-        //     Vmath::Vcopy(nq, &fields[i][0], 1, &fields_old[i][0], 1);
-        // }
-
-        // Step advance
         ++step;
     } // namespace Nektar
 
@@ -2299,7 +2298,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
     NekDouble Rf = m_neuron->GetRecistanceValue();
-    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+    // NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
@@ -2447,12 +2446,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         // Compute phi_e to satisfy the following equation
         // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
         // (\sigma_i \nabla \phi_m)
-        Array<OneD, NekDouble> phie(nq);
-        SolveHelmholtzatDiffusion(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
+        Array<OneD, NekDouble> phie(nq,0.0);
+        SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
 
         // Add the current changes by the external current
-        Array<OneD, NekDouble> extcurrent;
-        extcurrent = ComputeCovariantDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+        Array<OneD, NekDouble> extcurrent(nq,0.0);
+        extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
         Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
         // Let the extcurrent be zero at Myeline nodes (-1).
@@ -2515,7 +2514,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq);
-    SolveHelmholtzatDiffusion(m_NodeZone[0], m_phiemovingframes, inarray[0], phie);
+    SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent;
@@ -2579,16 +2578,17 @@ void MMFNeuralEP::OnlyValideinNode(const Array<OneD, const int> &NodeZone,
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-void MMFNeuralEP::SolveHelmholtzatDiffusion(
+void MMFNeuralEP::SolveHelmholtzDiffusion(
     const Array<OneD, const int> &NodeZone,
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &phim,
+    const Array<OneD, const Array<OneD, NekDouble>> &DiffusionMF,
+    StdRegions::VarCoeffMap &Helmvarcoeff,
     Array<OneD, NekDouble> &outarray)
 {
-    boost::ignore_unused(movingframes);
+    boost::ignore_unused(DiffusionMF);
 
     int nq      = m_fields[0]->GetNpoints();
-    int ncoeffs = GetNcoeffs();
+    int nvar = m_fields.size();
 
     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
     // \sigma_i \nabla phi_m
@@ -2600,22 +2600,25 @@ void MMFNeuralEP::SolveHelmholtzatDiffusion(
     // phi_e.
     // // This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phimLaplacian(nq);
-    phimLaplacian = ComputeCovariantDiffusion(m_unitmovingframes, phim);
-    // phimLaplacian = ComputeEuclideanDiffusion(phim);
-    // WeakDGMMFLaplacian(0, phim, phimLaplacian);
+    Array<OneD, NekDouble> phimLaplacian(nq,0.0);
+    phimLaplacian = ComputeEuclideanDiffusion(phim);
+    // phimLaplacian = ComputeMMFDiffusion(DiffusionMF, phim);
 
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
+    // Vmath::Vsub(nq, m_fields[1]->GetPhys(), 1, phimLaplacianExact[0], 1, phimLaplacianExact[0], 1);
+    // std::cout << "MMFDiffusion Error = " << RootMeanSquare(phimLaplacianExact[0]) << std::endl;
+
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
+    // SetBoundaryConditions(0.0);
 
-    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors,
-                           m_phievarcoeff);
+    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
+
     outarray = m_fields[1]->GetPhys();
 }
 
