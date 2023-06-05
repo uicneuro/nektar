@@ -1131,7 +1131,9 @@ protected:
     //     const int nstep);
 
     SOLVER_UTILS_EXPORT void ComputeTimeMap(
-        const NekDouble time, const Array<OneD, const NekDouble> &field,
+        const NekDouble time, 
+        const NekDouble urest, 
+        const Array<OneD, const NekDouble> &field,
         const Array<OneD, const NekDouble> &dudt,
         const Array<OneD, const int> &ValidTimeMap,
         Array<OneD, NekDouble> &dudtHistory, Array<OneD, NekDouble> &IappMap,

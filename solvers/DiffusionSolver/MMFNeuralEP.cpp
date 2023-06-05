@@ -80,6 +80,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
+    
+    // Resting potential
+    m_session->LoadParameter("urest", m_urest, 0.0);
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
@@ -1650,7 +1653,7 @@ void MMFNeuralEP::DoSolveMMFFirst()
 
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+            ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
                            dudtvalHistory, IappMap, TimeMap);
         }
 

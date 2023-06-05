@@ -139,6 +139,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
+    NekDouble m_urest;
 
     // Scar tisseu related variables
     NekDouble m_PVcond;

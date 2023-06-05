@@ -78,6 +78,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Chi", m_chi, 28.0);
     m_session->LoadParameter("Cm", m_capMembrane, 0.125);
 
+    // Resting potential
+    m_session->LoadParameter("urest", m_urest, 0.0);
+
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
 
@@ -848,7 +851,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+            ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
                            dudtvalHistory, IappMap, TimeMap);
         }
 
@@ -1138,7 +1141,7 @@ void MMFCardiacEP::DoSolveMMF()
 
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap,
+            ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
                         dudtvalHistory, IappMap, TimeMap);
         }
 
@@ -2192,6 +2195,7 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "AnisotropyRegion", m_AnisotropyRegion);
     SolverUtils::AddSummaryItem(s, "AnisotropyStrength", m_AnisotropyStrength);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
+    SolverUtils::AddSummaryItem(s, "urest", m_urest);
 
     m_cell->GenerateSummary(s);
     

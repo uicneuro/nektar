@@ -6898,6 +6898,7 @@ void MMFSystem::PlotTrajectoryMF(
 // }
 
 void MMFSystem::ComputeTimeMap(const NekDouble time,
+                               const NekDouble urest,
                                const Array<OneD, const NekDouble> &field,
                                const Array<OneD, const NekDouble> &dudt,
                                const Array<OneD, const int> &ValidTimeMap,
@@ -6915,10 +6916,12 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
     // WeakDGMMFLaplacian(0, field, Lapu);
     Lapu = ComputeCovariantDiffusion(m_movingframes, field);
 
+    NekDouble udiff;
     for (int i = 0; i < nq; ++i)
     {
+        udiff = field[i] - urest;
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((field[i] > uTol) && (dudt[i] > 0))
+        if ((udiff > uTol) && (dudt[i] > 0))
         {
             // Gradient as the main weight
             fnow = dudt[i];

@@ -163,6 +163,7 @@ protected:
 
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd;
     int m_Convectiven, m_numelemperNode;
+    NekDouble m_urest;
 
     TimeMapType m_TimeMap;
 
