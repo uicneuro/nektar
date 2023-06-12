@@ -107,10 +107,11 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     }
 
     // If the scheme is to solve ODE with a TimeMap.
-    if(m_SolverSchemeType==eTimeMap)
+    if(m_SolverSchemeType==eTimeMapMarching)
     {
         m_session->LoadParameter("Iapp", m_TimeMapIapp, 5.0);
         m_session->LoadParameter("TimeMapT0", m_TimeMapT0, 5.0);
+        m_session->LoadParameter("TimeMapnstep", m_TMnstep, 1);
 
         // Import TimeMap
         std::cout << "======= Start loading TimeMap  =======" << std::endl;
@@ -121,9 +122,11 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         std::vector<std::string> variables(nvar);
         variables[0] = "TimeMap";
 
-        m_session->LoadSolverInfo("TimeMapfile", m_TimeMapfile,
-                                m_sessionName + "_Tmap");
-        m_TimeMapfile = m_TimeMapfile + ".chk";
+        std::string outname1 = m_sessionName + "_TimeMap_" +
+                           boost::lexical_cast<std::string>(m_TMnstep) + ".chk";
+
+        // m_session->LoadSolverInfo(outname1);
+        // m_TimeMapfile = m_TimeMapfile + ".chk";
 
         Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
         m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvar);
@@ -133,7 +136,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
             m_TimeMap[i] = Array<OneD, NekDouble>(nq);
         }
 
-        EquationSystem::ImportFld(m_TimeMapfile, variables, tmpc);
+        EquationSystem::ImportFld(outname1, variables, tmpc);
+
+        wait_on_enter();
 
         for (int i = 0; i < nvar; ++i)
         {
@@ -337,7 +342,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         m_ode.DefineImplicitSolve(&MMFCardiacEP::DoImplicitSolveCardiacEP, this);
     }
 
-    if(m_SolverSchemeType==eTimeMap)
+    if(m_SolverSchemeType==eTimeMapMarching)
     {
         m_ode.DefineOdeRhs(&MMFCardiacEP::DoOdeRhsCardiacEPTimeMap, this);
     }
@@ -527,7 +532,7 @@ void MMFCardiacEP::v_DoSolve()
         }
         break;
 
-        case eTimeMap:
+        case eTimeMapMarching:
         {
             DoSolveTimeMap();
         }
@@ -1327,9 +1332,9 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
     // Only the excited regions are considered for m_InitExcitation
     // Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
-    m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
+    m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition);
 
-    if (m_SolverSchemeType == eTimeMap)
+    if (m_SolverSchemeType == eTimeMapMarching)
     {
         TimeMapProcess();
     }
@@ -2184,7 +2189,7 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     MMFSystem::v_GenerateSummary(s);
     AddSummaryItem(s, "SolverSchemeType", SolverSchemeTypeMap[m_SolverSchemeType]);
 
-    if(m_SolverSchemeType==eTimeMap)
+    if(m_SolverSchemeType==eTimeMapMarching)
     {
         SolverUtils::AddSummaryItem(s, "TimeMapIapp", m_TimeMapIapp);
         SolverUtils::AddSummaryItem(s, "TimeMapT0", m_TimeMapT0);

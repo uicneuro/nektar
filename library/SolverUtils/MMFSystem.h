@@ -1145,6 +1145,7 @@ protected:
         Array<OneD, NekDouble> &TimeMap);
 
     SOLVER_UTILS_EXPORT Array<OneD, int> ComputeTimeMapInitialZone(
+        const NekDouble urest,
         const Array<OneD, const NekDouble> &inarray);
 
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeLaplacianDiff(

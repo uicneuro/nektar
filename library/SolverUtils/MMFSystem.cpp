@@ -6917,6 +6917,7 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
     Lapu = ComputeCovariantDiffusion(m_movingframes, field);
 
     NekDouble udiff;
+    int cnt=0;
     for (int i = 0; i < nq; ++i)
     {
         udiff = field[i] - urest;
@@ -6938,6 +6939,8 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
                     (fnow * Lapu[i] + fsum * IappMap[i]) / (fnow + fsum);
             }
             dudtHistory[i] += fnow;
+
+            cnt++;
         }
     }
 
@@ -6949,6 +6952,8 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
             TimeMap[i] = TimeMapMin;
         }
     }
+
+    // std::cout << "Time Map updated = " << cnt << " / " << nq << ", TimeMap = " << RootMeanSquare(TimeMap) << std::endl;
     // TimeMapforInitZone(ValidTimeMap, dudtHistory, TimeMap);
 }
 
@@ -7023,6 +7028,7 @@ void MMFSystem::TimeMapforInitZone(
 }
 
 Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
+    const NekDouble urest,
     const Array<OneD, const NekDouble> &inarray)
 {
     int nq = GetTotPoints();
@@ -7032,13 +7038,15 @@ Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
     int TMflag, index;
     int cnt             = 0;
     const NekDouble Tol = 0.1;
+    NekDouble diff;
     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         TMflag = 0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
-            if ((fabs(inarray[index]) > Tol) || (m_MMFActivation[index] == 0))
+            diff = inarray[index] - urest;
+            if ((fabs(diff) > Tol) || (m_MMFActivation[index] == 0))
             {
                 TMflag = 1;
             }
@@ -7055,7 +7063,7 @@ Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
         }
     }
 
-    std::cout << "total " << cnt << " / " << nq << " is init-Acitvated"
+    std::cout << "Total " << cnt << " / " << nq << " is init-Acitvated"
               << std::endl;
 
     return outarray;

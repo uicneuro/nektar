@@ -61,7 +61,7 @@ enum SolverSchemeType
 {
     eDefault,
     eMMFFirst,
-    eTimeMap,
+    eTimeMapMarching,
     SIZE_SolverSchemeType,
 };
 
@@ -128,6 +128,7 @@ public:
 
 protected:
     int m_Convectiven;
+    int m_TMnstep;
 
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
