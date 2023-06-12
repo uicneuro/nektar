@@ -467,6 +467,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
                 NekDouble Helmfactor =
                     sqrt((1.0 + m_ratio_re_ri) / m_ratio_re_ri);
+
                 for (int j = 0; j < m_expdim; ++j)
                 {
                     Vmath::Smul(nq, Helmfactor, &phieAniStrength[j][0], 1,
@@ -1912,6 +1913,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
 {
     boost::ignore_unused(time);
 
+    int nvar = m_fields.size();
     int nq = m_fields[0]->GetNpoints();
 
     const NekDouble R_f = m_neuron->GetRecistanceValue();
@@ -1920,7 +1922,12 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = m_Helmtau;
 
-    factors[StdRegions::eFactorLambda] = C_n * R_f * m_ratio_re_ri / lambda;
+    factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
+    if(nvar==1)
+    {
+        NekDouble betaratio = (m_ratio_re_ri + 1.0) / m_ratio_re_ri;
+        factors[StdRegions::eFactorLambda] = C_n * R_f * betaratio / lambda;
+    }
 
     // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
     // inarray = input: \hat{rhs} -> output: \hat{Y}
@@ -1949,6 +1956,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
 {
     boost::ignore_unused(time);
 
+    int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
 
     // Set up factors for Helmsolve
@@ -1959,7 +1967,12 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
     factors[StdRegions::eFactorTau] = m_Helmtau;
 
     // m_ratio_re_ri determines the conductivity only when the variable is one
-    factors[StdRegions::eFactorLambda] = C_n * R_f / lambda * m_ratio_re_ri;
+    factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
+    if(nvar==1)
+    {
+        NekDouble betaratio = (m_ratio_re_ri + 1.0) / m_ratio_re_ri;
+        factors[StdRegions::eFactorLambda] = C_n * R_f * betaratio / lambda;
+    }
 
     SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition(time);
@@ -2258,7 +2271,6 @@ void MMFNeuralEP::DoNullSolve(
         Vmath::Vcopy(nq, &inarray[i][0], 1, &outarray[i][0], 1);
     }
 }
-
 
 void MMFNeuralEP::DoOdeRhsNeuralEPPT(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -2591,7 +2603,6 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     boost::ignore_unused(DiffusionMF);
 
     int nq      = m_fields[0]->GetNpoints();
-    int nvar = m_fields.size();
 
     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
     // \sigma_i \nabla phi_m
@@ -2609,14 +2620,13 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
 
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
+    NekDouble phimavg = AvgInt(phimLaplacian);
+    Vmath::Sadd(nq, -phimavg, phimLaplacian, 1, phimLaplacian, 1);
+
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-
-    // Vmath::Vsub(nq, m_fields[1]->GetPhys(), 1, phimLaplacianExact[0], 1, phimLaplacianExact[0], 1);
-    // std::cout << "MMFDiffusion Error = " << RootMeanSquare(phimLaplacianExact[0]) << std::endl;
-
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
-    // SetBoundaryConditions(0.0);
+    SetBoundaryConditions(0.0);
 
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
