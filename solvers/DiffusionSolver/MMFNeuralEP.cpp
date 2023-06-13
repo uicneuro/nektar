@@ -2473,8 +2473,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
         OnlyValideinNode(m_NodeZone[0], extcurrent);
 
         // add divergence of phie to the current
-        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0],
-                    1);
+        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
     }
 
     if (m_explicitDiffusion)
@@ -2602,7 +2601,7 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
 {
     boost::ignore_unused(DiffusionMF);
 
-    int nq      = m_fields[0]->GetNpoints();
+    int nq = m_fields[0]->GetNpoints();
 
     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
     // \sigma_i \nabla phi_m
@@ -2628,9 +2627,13 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     // SetMembraneBoundaryCondition();
     SetBoundaryConditions(0.0);
 
+    Array<OneD, NekDouble> output(nq);
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), output);
     m_fields[1]->SetPhysState(true);
+
+    NekDouble phieavg = AvgInt(output);
+    Vmath::Sadd(nq, -1.0*phieavg, output, 1, m_fields[1]->UpdatePhys(), 1);
 
     outarray = m_fields[1]->GetPhys();
 }

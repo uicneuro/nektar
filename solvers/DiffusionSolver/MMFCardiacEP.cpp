@@ -109,8 +109,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     // If the scheme is to solve ODE with a TimeMap.
     if(m_SolverSchemeType==eTimeMapMarching)
     {
-        m_session->LoadParameter("Iapp", m_TimeMapIapp, 5.0);
-        m_session->LoadParameter("TimeMapT0", m_TimeMapT0, 5.0);
+        m_session->LoadParameter("Iapp", m_TimeMapIapp, 0.2);
+        m_session->LoadParameter("TimeMapDelay", m_TimeMapDelay, 5.0);
         m_session->LoadParameter("TimeMapnstep", m_TMnstep, 1);
 
         // Import TimeMap
@@ -122,12 +122,11 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         std::vector<std::string> variables(nvar);
         variables[0] = "TimeMap";
 
-        std::string outname1 = m_sessionName + "_TimeMap_" +
+        m_session->LoadSolverInfo("TMsessionName", m_TMsessionName, "m_sessionName");
+
+        std::string loadname = m_TMsessionName + "_TimeMap_" +
                            boost::lexical_cast<std::string>(m_TMnstep) + ".chk";
-
-        // m_session->LoadSolverInfo(outname1);
-        // m_TimeMapfile = m_TimeMapfile + ".chk";
-
+        
         Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
         m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvar);
         for (int i = 0; i < nvar; ++i)
@@ -136,11 +135,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
             m_TimeMap[i] = Array<OneD, NekDouble>(nq);
         }
 
-        EquationSystem::ImportFld(outname1, variables, tmpc);
+        EquationSystem::ImportFld(loadname, variables, tmpc);
 
-        wait_on_enter();
-
-        for (int i = 0; i < nvar; ++i)
+        for (int i = 0; i < 1; ++i)
         {
             m_fields[0]->BwdTrans(tmpc[i], m_TimeMap[i]);
         }
@@ -148,14 +145,13 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         // Realign Time Map by T0
         for (int i = 0; i < nq; ++i)
         {
-            if (m_TimeMap[0][i] > m_TimeMapT0)
+            if (m_TimeMap[0][i] > m_TimeMapDelay)
             {
-                m_TimeMap[0][i] = m_TimeMap[0][i] - m_TimeMapT0;
+                m_TimeMap[0][i] = m_TimeMap[0][i] - m_TimeMapDelay;
             }
         }
 
-        std::cout
-            << "======= Finish loading: TSM is successfully loaded with ======="
+        std::cout << "======= Loading is successful, TimeMap = "
             << RootMeanSquare(m_TimeMap[0]) << std::endl;
     }
 
@@ -594,10 +590,15 @@ void MMFCardiacEP::DoSolveTimeMap()
     NekDouble cpuTime = 0.0;
     NekDouble elapsed = 0.0;
 
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
     Array<OneD, int> TMcount(nq, 0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
-        timer.Start();
         // fields = m_intScheme->TimeIntegrateMMF(step, m_timestep, m_intSoln,
         //                                        m_TimeMap, m_ode);
         timer.Start();
@@ -607,14 +608,12 @@ void MMFCardiacEP::DoSolveTimeMap()
         // Excitation according to TimeMap
         for (int i = 0; i < nq; ++i)
         {
-            if ((m_TimeMap[0][i] <= m_time) &&
-                (m_TimeMap[0][i] > m_time - m_timestep))
+            if ((m_TimeMap[0][i] <= m_time) && (m_TimeMap[0][i] > m_time - m_timestep))
             {
                 fields[0][i] += m_TimeMapIapp;
                 TMcount[i] += 1;
             }
         }
-        timer.Stop();
 
         m_time += m_timestep;
         elapsed = timer.TimePerTest(1);
@@ -630,8 +629,17 @@ void MMFCardiacEP::DoSolveTimeMap()
 
             std::cout << "TMcount = " << Vmath::Vsum(nq, TMcount, 1) << " / "
                       << nq << std::endl;
-            std::cout << "u_max= " << Vmath::Vmax(nq, fields[0], 1)
+
+            int Iumax = Vmath::Imax(nq, fields[0], 1);
+            std::cout << "u_max = " << Vmath::Vmax(nq, fields[0], 1)
+                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax] << ", z = " << x2[Iumax]
                       << std::endl;
+
+            int Iumin = Vmath::Imin(nq, fields[0], 1);
+            std::cout << "u_min = " << Vmath::Vmin(nq, fields[0], 1)
+                      << " at x = " << x0[Iumin] << ", y = " << x1[Iumin] << ", z = " << x2[Iumin]
+                      << std::endl;
+
             std::stringstream ss;
             ss << cpuTime / 60.0 << " min.";
             std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
@@ -1336,7 +1344,20 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
     if (m_SolverSchemeType == eTimeMapMarching)
     {
-        TimeMapProcess();
+        // std::cout << "PlotTimeEnergyMap starts ==========================" << std::endl;
+
+        // Array<OneD, NekDouble> VelVector = ComputeVelocityTimeMap(m_ValidTimeMap, m_TimeMap[0]);
+ 
+        // // \nabla \cdot \ell = - \nabla^2 U_Lamb
+        // Array<OneD, NekDouble> LambDiv = ComputeLambDiv(m_ValidTimeMap, VelVector);
+ 
+        // // Ion Potential
+        // Array<OneD, NekDouble> IonE = HelmsolvePotentialE(m_ValidTimeMap, LambDiv);
+ 
+        // // Plot Energy map
+        // PlotTimeEnergyMap(m_TimeMap[0], VelVector, LambDiv, IonE);
+
+        // std::cout << "PlotTimeEnergyMap ends ==========================" << std::endl;
     }
 
     // forward transform to fill the modal coeffs
@@ -1359,67 +1380,8 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
-void MMFCardiacEP::TimeMapProcess()
-{
-    std::cout << "MMFCardiacEP: Time Map processing starts =============" << std::endl;
-
-    int nq     = m_fields[0]->GetNpoints();
-    int ncoeff = m_fields[0]->GetNcoeffs();
-    int nvar   = 6;
-
-    int TimeMapNo;
-    m_session->LoadParameter("TimeMapNo", TimeMapNo, 10);
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "TimeMap";
-    variables[1] = "IappMap";
-    variables[2] = "nabla^2T";
-    variables[3] = "Velocity_x";
-    variables[4] = "Velocity_y";
-    variables[5] = "Velocity_z";
-
-    std::string processfile = m_sessionName + "_TimeMap_" +
-                              boost::lexical_cast<std::string>(TimeMapNo) +
-                              ".chk";
-
-    Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
-    Array<OneD, Array<OneD, NekDouble>> tmp(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        tmpc[i] = Array<OneD, NekDouble>(ncoeff);
-        tmp[i]  = Array<OneD, NekDouble>(nq);
-    }
-
-    EquationSystem::ImportFld(processfile, variables, tmpc);
-
-    for (int i = 0; i < nvar; ++i)
-    {
-        m_fields[0]->BwdTrans(tmpc[i], tmp[i]);
-    }
-
-    Array<OneD, NekDouble> TimeMap(nq);
-    Vmath::Vcopy(nq, &tmp[0][0], 1, &TimeMap[0], 1);
-    std::cout << "Time Map is loaded: Max = " << Vmath::Vmax(nq, TimeMap, 1)
-              << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
-
-    Array<OneD, NekDouble> VelVector = ComputeVelocityTimeMap(m_ValidTimeMap, TimeMap);
-
-    // Processing for Energy map
-
-    // \nabla \cdot \ell = - \nabla^2 U_Lamb
-    Array<OneD, NekDouble> LambDiv = ComputeLambDiv(m_ValidTimeMap, VelVector);
-
-    // Ion Potential
-    Array<OneD, NekDouble> IonE = HelmsolvePotentialE(m_ValidTimeMap, LambDiv);
-
-    // Plot Energy map
-    PlotEnergyMap(TimeMap, VelVector, LambDiv, IonE, TimeMapNo);
-
-    ASSERTL0(0, "Time Map processing finishes =============");
-}
-
-void MMFCardiacEP::ComputeTimeMapError(
-    const Array<OneD, const Array<OneD, NekDouble>> &fields)
+void MMFCardiacEP::ComputeTimeMapError(unsigned int field,
+    const Array<OneD, const NekDouble> &outfield)
 {
     int nvar    = 2;
     int nq      = m_fields[0]->GetNpoints();
@@ -1451,7 +1413,7 @@ void MMFCardiacEP::ComputeTimeMapError(
     }
 
     Array<OneD, NekDouble> udiff(nq, 0.0);
-    Vmath::Vsub(nq, fields[0], 1, uexact[0], 1, udiff, 1);
+    Vmath::Vsub(nq, outfield, 1, uexact[0], 1, udiff, 1);
 
     Array<OneD, NekDouble> vdiff(nq, 0.0);
     Array<OneD, NekDouble> tmp = m_cell->GetCellSolution(1);
@@ -1471,7 +1433,7 @@ void MMFCardiacEP::ComputeTimeMapError(
     std::cout << "v_Error: L2 = " << L2verr << ", Linf = " << Linfverr
               << std::endl;
 
-    PlotTSMerror(fields[0], uexact[0], udiff);
+    PlotTSMerror(outfield, uexact[0], udiff);
 }
 
 // Compute Velocity field from Time Map
@@ -1487,8 +1449,6 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeVelocityTimeMap(
 
     Array<OneD, NekDouble> physarray(nq);
     Vmath::Vcopy(nq, inarray, 1, physarray, 1);
-
-    // Low pass filter smoothing
 
     // TmapGrad = \nabla Tmap
     Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
@@ -1539,6 +1499,9 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeLambDiv(
     const Array<OneD, const int> &ValidTimeMap,
     const Array<OneD, const NekDouble> &inarray, const int PlotIndex)
 {
+
+        boost::ignore_unused(PlotIndex);
+
     int nq = m_fields[0]->GetTotPoints();
 
     // Compute acceleration along the velocity vector:
@@ -1609,31 +1572,31 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeLambDiv(
     std::cout << ", Lamb Div vector err: Avg = " << RootMeanSquare(LambDiv)
               << ", max = " << Vmath::Vamax(nq, LambDiv, 1) << std::endl;
 
-    if (PlotIndex > 0)
-    {
-        // PlotLambDiv(CovCurl, LambDiv, PlotIndex);
-        int nvar    = 2;
-        int ncoeffs = m_fields[0]->GetNcoeffs();
+    // if (PlotIndex > 0)
+    // {
+    //     // PlotLambDiv(CovCurl, LambDiv, PlotIndex);
+    //     int nvar    = 2;
+    //     int ncoeffs = m_fields[0]->GetNcoeffs();
 
-        std::string outname1 = m_sessionName + "_LambDiv_" +
-                               boost::lexical_cast<std::string>(PlotIndex) +
-                               ".chk";
-        std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-        for (int i = 0; i < nvar; ++i)
-        {
-            fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-        }
+    //     std::string outname1 = m_sessionName + "_LambDiv_" +
+    //                            boost::lexical_cast<std::string>(PlotIndex) +
+    //                            ".chk";
+    //     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    //     for (int i = 0; i < nvar; ++i)
+    //     {
+    //         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    //     }
 
-        std::vector<std::string> variables(nvar);
-        variables[0] = "CovCurl";
-        variables[1] = "LambDiv";
+    //     std::vector<std::string> variables(nvar);
+    //     variables[0] = "CovCurl";
+    //     variables[1] = "LambDiv";
 
-        // Normalized Time Vector
-        m_fields[0]->FwdTrans(CovCurl, fieldcoeffs[0]);
-        m_fields[0]->FwdTrans(LambDiv, fieldcoeffs[1]);
+    //     // Normalized Time Vector
+    //     m_fields[0]->FwdTrans(CovCurl, fieldcoeffs[0]);
+    //     m_fields[0]->FwdTrans(LambDiv, fieldcoeffs[1]);
 
-        WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-    }
+    //     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+    // }
 
     return LambDiv;
 }
@@ -1642,13 +1605,15 @@ Array<OneD, NekDouble> MMFCardiacEP::HelmsolvePotentialE(
     const Array<OneD, const int> &ValidTimeMap,
     const Array<OneD, const NekDouble> &inarray, const int PlotIndex)
 {
+        boost::ignore_unused(PlotIndex);
+
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
     Array<OneD, NekDouble> physarray(nq);
     Vmath::Vcopy(nq, inarray, 1, physarray, 1);
 
-    HelmSolveSmoothing(m_LambDivSmoothL, physarray);
+    // HelmSolveSmoothing(m_LambDivSmoothL, physarray);
 
     NekDouble DivAvg = -1.0 * AvgInt(physarray);
     Vmath::Sadd(nq, DivAvg, physarray, 1, physarray, 1);
@@ -1660,13 +1625,9 @@ Array<OneD, NekDouble> MMFCardiacEP::HelmsolvePotentialE(
     factors[StdRegions::eFactorLambda] = 0.0;
 
     Array<OneD, NekDouble> tmpc(ncoeffs);
-
-    std::cout << "HelmPotentialE starts =============" << std::endl;
     m_fields[0]->HelmSolve(physarray, tmpc, factors, m_varcoeff);
-    // m_contField->HelmSolve(physarray, tmpc, factors, m_varcoeff);
     m_fields[0]->BwdTrans(tmpc, outarray);
-    std::cout << "HelmPotentialE ends =============" << std::endl;
-
+ 
     for (int i = 0; i < nq; ++i)
     {
         if (ValidTimeMap[i] == 0)
@@ -1679,29 +1640,29 @@ Array<OneD, NekDouble> MMFCardiacEP::HelmsolvePotentialE(
     // DivAvg = -1.0 * AvgInt(outarray);
     // Vmath::Sadd(nq, DivAvg, outarray, 1, outarray, 1);
 
-    if (PlotIndex > 0)
-    {
-        // PlotLambDiv(CovCurl, LambDiv, PlotIndex);
-        int nvar    = 1;
-        int ncoeffs = m_fields[0]->GetNcoeffs();
+    // if (PlotIndex > 0)
+    // {
+    //     // PlotLambDiv(CovCurl, LambDiv, PlotIndex);
+    //     int nvar    = 1;
+    //     int ncoeffs = m_fields[0]->GetNcoeffs();
 
-        std::string outname1 = m_sessionName + "_IonU_" +
-                               boost::lexical_cast<std::string>(PlotIndex) +
-                               ".chk";
-        std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-        for (int i = 0; i < nvar; ++i)
-        {
-            fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-        }
+    //     std::string outname1 = m_sessionName + "_IonU_" +
+    //                            boost::lexical_cast<std::string>(PlotIndex) +
+    //                            ".chk";
+    //     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    //     for (int i = 0; i < nvar; ++i)
+    //     {
+    //         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    //     }
 
-        std::vector<std::string> variables(nvar);
-        variables[0] = "IonU";
+    //     std::vector<std::string> variables(nvar);
+    //     variables[0] = "IonU";
 
-        // Normalized Time Vector
-        m_fields[0]->FwdTrans(outarray, fieldcoeffs[0]);
+    //     // Normalized Time Vector
+    //     m_fields[0]->FwdTrans(outarray, fieldcoeffs[0]);
 
-        WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-    }
+    //     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+    // }
 
     return outarray;
 }
@@ -1733,23 +1694,23 @@ void MMFCardiacEP::HelmSolveSmoothing(const NekDouble TimeMapSmoothL,
     // m_contField->BwdTrans(tmpc, outarray);
 }
 
-void MMFCardiacEP::PlotEnergyMap(const Array<OneD, const NekDouble> &TimeMap,
+void MMFCardiacEP::PlotTimeEnergyMap(
+                              const Array<OneD, const NekDouble> &TimeMap,
                               const Array<OneD, const NekDouble> &VelVector,
                               const Array<OneD, const NekDouble> &LambDiv,
-                              const Array<OneD, const NekDouble> &IonE,
-                              const int nstep)
+                              const Array<OneD, const NekDouble> &IonE)
 {
     int nvar    = 8;
     int ncoeffs = m_fields[0]->GetNcoeffs();
     int nq      = m_fields[0]->GetTotPoints();
 
-    std::string outname1 = m_sessionName + "_Energymap_" +
-                           boost::lexical_cast<std::string>(nstep) + ".chk";
     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
     for (int i = 0; i < nvar; ++i)
     {
         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
+
+    std::string outname1 = m_TMsessionName + "_TimeEnergyMap.chk";
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMap";
@@ -2106,7 +2067,15 @@ void MMFCardiacEP::v_EvaluateExactSolution(unsigned int field,
                                            Array<OneD, NekDouble> &outfield,
                                            const NekDouble time)
 {
-    EquationSystem::v_EvaluateExactSolution(field, outfield, time);
+    if(m_SolverSchemeType==eTimeMapMarching)
+    {
+        ComputeTimeMapError(field, outfield);
+    }
+
+    else
+    {
+        EquationSystem::v_EvaluateExactSolution(field, outfield, time);
+    }
 }
 
 // Compute \int \nabla u \cdot e^{dir}
@@ -2192,7 +2161,7 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     if(m_SolverSchemeType==eTimeMapMarching)
     {
         SolverUtils::AddSummaryItem(s, "TimeMapIapp", m_TimeMapIapp);
-        SolverUtils::AddSummaryItem(s, "TimeMapT0", m_TimeMapT0);
+        SolverUtils::AddSummaryItem(s, "m_TimeMapDelay", m_TimeMapDelay);
         SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
         SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
     }

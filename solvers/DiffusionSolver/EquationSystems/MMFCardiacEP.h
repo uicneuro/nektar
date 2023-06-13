@@ -133,7 +133,8 @@ protected:
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
     NekDouble m_TimeMapIapp;
-    NekDouble m_TimeMapT0;
+    NekDouble m_TimeMapDelay;
+    std::string m_TMsessionName;
 
     std::string m_TimeMapfile;
     std::string m_PDEsolfile;
@@ -162,7 +163,7 @@ protected:
     void DoSolveMMFFirst();
     void DoSolveTimeMap();
     
-    void ComputeTimeMapError(const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void ComputeTimeMapError(unsigned int field, const Array<OneD, const NekDouble> &outfield);
 
     Array<OneD, NekDouble> ReadFibermap(const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre);
     Array<OneD, NekDouble> ReadConductivityMap();
@@ -172,8 +173,6 @@ protected:
                 const NekDouble AnisotropyStrength, 
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);
-
-    void TimeMapProcess();
 
     Array<OneD, NekDouble> ComputeVelocityTimeMap(
     const Array<OneD, const int> &ValidTimeMap,
@@ -190,11 +189,10 @@ protected:
     void HelmSolveSmoothing(const NekDouble TimeMapSmoothL,
                                    Array<OneD, NekDouble> &outarray);
 
-    void PlotEnergyMap(const Array<OneD, const NekDouble> &TimeMap,
+    void PlotTimeEnergyMap(const Array<OneD, const NekDouble> &TimeMap,
                                 const Array<OneD, const NekDouble> &VelVector,
                                 const Array<OneD, const NekDouble> &LambDiv,
-                                const Array<OneD, const NekDouble> &IonE,
-                                const int nstep);
+                                const Array<OneD, const NekDouble> &IonE);
 
     void PlotTimeMap(
     const Array<OneD, const int> &ValidTimeMap,
