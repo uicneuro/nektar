@@ -111,7 +111,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_session->LoadParameter("Iapp", m_TimeMapIapp, 0.2);
         m_session->LoadParameter("TimeMapDelay", m_TimeMapDelay, 5.0);
-        m_session->LoadParameter("TimeMapnstep", m_TMnstep, 1);
+        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 1);
 
         // Import TimeMap
         std::cout << "======= Start loading TimeMap  =======" << std::endl;
@@ -125,7 +125,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         m_session->LoadSolverInfo("TMsessionName", m_TMsessionName, "m_sessionName");
 
         std::string loadname = m_TMsessionName + "_TimeMap_" +
-                           boost::lexical_cast<std::string>(m_TMnstep) + ".chk";
+                           boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
         
         Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
         m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvar);
@@ -532,6 +532,7 @@ void MMFCardiacEP::v_DoSolve()
         {
             DoSolveTimeMap();
         }
+        break;
 
         default:
         {
@@ -572,6 +573,7 @@ void MMFCardiacEP::DoSolveTimeMap()
         fields[i] = m_fields[m_intVariables[i]]->GetPhys();
         m_fields[m_intVariables[i]]->SetPhysState(false);
     }
+        std::cout << "init field = " << RootMeanSquare(fields[0]) << std::endl;
 
     // Initialise time integration scheme
     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
@@ -604,6 +606,10 @@ void MMFCardiacEP::DoSolveTimeMap()
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
+                
+        std::cout << "time = " << m_time << ", field = " << RootMeanSquare(fields[0]) << std::endl;
+
+        wait_on_enter();
 
         // Excitation according to TimeMap
         for (int i = 0; i < nq; ++i)
@@ -628,7 +634,7 @@ void MMFCardiacEP::DoSolveTimeMap()
                       << std::endl;
 
             std::cout << "TMcount = " << Vmath::Vsum(nq, TMcount, 1) << " / "
-                      << nq << std::endl;
+                      << nq << ", field = " << RootMeanSquare(fields[0]) << std::endl;
 
             int Iumax = Vmath::Imax(nq, fields[0], 1);
             std::cout << "u_max = " << Vmath::Vmax(nq, fields[0], 1)
@@ -657,7 +663,6 @@ void MMFCardiacEP::DoSolveTimeMap()
         //     m_fields[m_intVariables[i]]->SetPhysState(false);
         // }
 
-        // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
@@ -665,17 +670,18 @@ void MMFCardiacEP::DoSolveTimeMap()
             doCheckTime = false;
         }
 
-        // Step advance
         ++step;
     } // namespace Nektar
 
-    // Print out summary statistics
     if (m_session->GetComm()->GetRank() == 0)
     {
         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
     }
 
-    // ComputeTSMError(m_time, fields);
+    if(m_SolverSchemeType==eTimeMapMarching)
+    {
+        ComputeTimeMapError(fields);
+    }
 
     for (i = 0; i < nvariables; ++i)
     {
@@ -1284,6 +1290,8 @@ void MMFCardiacEP::DoOdeRhsCardiacEPTimeMap(
     {
         m_stimulus[i]->Update(outarray, time);
     }
+ 
+    std::cout << "outarray = " << RootMeanSquare(outarray[0]) << std::endl;
 }
 
 void MMFCardiacEP::DoOdeRhsCardiacEP(
@@ -1380,22 +1388,19 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
-void MMFCardiacEP::ComputeTimeMapError(unsigned int field,
-    const Array<OneD, const NekDouble> &outfield)
+void MMFCardiacEP::ComputeTimeMapError(const Array<OneD, const Array<OneD, NekDouble>> &outfield)
 {
-    int nvar    = 2;
+    int nvar    = 1;
     int nq      = m_fields[0]->GetNpoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
     std::vector<std::string> variables(nvar);
     variables[0] = "u";
-    variables[1] = "v";
 
-    m_session->LoadSolverInfo("PDEsolfile", m_PDEsolfile,
-                              m_sessionName + "_T20");
-    m_PDEsolfile = m_PDEsolfile + ".chk";
+    m_session->LoadParameter("TimeMapExactnstep", m_TimeMapExactnstep, 1);
 
-    std::cout << "m_PDEsolfile = " << m_PDEsolfile << std::endl;
+    std::string loadname = m_TMsessionName + "_" + 
+                        boost::lexical_cast<std::string>(m_TimeMapExactnstep) + ".chk";
 
     Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
     Array<OneD, Array<OneD, NekDouble>> uexact(nvar);
@@ -1405,35 +1410,37 @@ void MMFCardiacEP::ComputeTimeMapError(unsigned int field,
         uexact[i] = Array<OneD, NekDouble>(nq);
     }
 
-    EquationSystem::ImportFld(m_PDEsolfile, variables, tmpc);
-
+    EquationSystem::ImportFld(loadname, variables, tmpc);
+ 
     for (int i = 0; i < nvar; ++i)
     {
         m_fields[0]->BwdTrans(tmpc[i], uexact[i]);
     }
 
+    std::cout << "uexact = " << RootMeanSquare(uexact[0]) << ", outfield = " << RootMeanSquare(outfield[0]) << std::endl;
+ 
     Array<OneD, NekDouble> udiff(nq, 0.0);
-    Vmath::Vsub(nq, outfield, 1, uexact[0], 1, udiff, 1);
+    Vmath::Vsub(nq, outfield[0], 1, uexact[0], 1, udiff, 1);
 
-    Array<OneD, NekDouble> vdiff(nq, 0.0);
-    Array<OneD, NekDouble> tmp = m_cell->GetCellSolution(1);
-    Vmath::Vsub(nq, tmp, 1, uexact[1], 1, vdiff, 1);
+    // Array<OneD, NekDouble> vdiff(nq, 0.0);
+    // Array<OneD, NekDouble> tmp = m_cell->GetCellSolution(1);
+    // Vmath::Vsub(nq, tmp, 1, uexact[1], 1, vdiff, 1);
 
     NekDouble L2uerr, L2verr;
     L2uerr = RootMeanSquare(udiff) / Vmath::Vamax(nq, uexact[0], 1);
-    L2verr = RootMeanSquare(vdiff) / Vmath::Vamax(nq, uexact[1], 1);
+   // L2verr = RootMeanSquare(vdiff) / Vmath::Vamax(nq, uexact[1], 1);
 
     NekDouble Linfuerr, Linfverr;
     Linfuerr = Vmath::Vamax(nq, udiff, 1) / Vmath::Vamax(nq, uexact[0], 1);
-    Linfverr = Vmath::Vamax(nq, vdiff, 1) / Vmath::Vamax(nq, uexact[1], 1);
+    // Linfverr = Vmath::Vamax(nq, vdiff, 1) / Vmath::Vamax(nq, uexact[1], 1);
 
     std::cout << " ============================================== " << std::endl;
-    std::cout << "u_Error: L2 = " << L2uerr << ", Linf = " << Linfuerr
-              << std::endl;
-    std::cout << "v_Error: L2 = " << L2verr << ", Linf = " << Linfverr
-              << std::endl;
+    std::cout << " TimeMap: u_Error: L2 = " << L2uerr << ", Linf = " << Linfuerr << std::endl;
+    std::cout << " ============================================== " << std::endl;
+    // std::cout << "TimeMap: v_Error: L2 = " << L2verr << ", Linf = " << Linfverr
+    //           << std::endl;
 
-    PlotTSMerror(outfield, uexact[0], udiff);
+    PlotTimeMaperror(outfield[0], uexact[0], udiff);
 }
 
 // Compute Velocity field from Time Map
@@ -2067,15 +2074,7 @@ void MMFCardiacEP::v_EvaluateExactSolution(unsigned int field,
                                            Array<OneD, NekDouble> &outfield,
                                            const NekDouble time)
 {
-    if(m_SolverSchemeType==eTimeMapMarching)
-    {
-        ComputeTimeMapError(field, outfield);
-    }
-
-    else
-    {
-        EquationSystem::v_EvaluateExactSolution(field, outfield, time);
-    }
+    EquationSystem::v_EvaluateExactSolution(field, outfield, time);
 }
 
 // Compute \int \nabla u \cdot e^{dir}

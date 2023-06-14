@@ -128,7 +128,8 @@ public:
 
 protected:
     int m_Convectiven;
-    int m_TMnstep;
+    int m_TimeMapnstep;
+    int m_TimeMapExactnstep;
 
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
@@ -163,7 +164,7 @@ protected:
     void DoSolveMMFFirst();
     void DoSolveTimeMap();
     
-    void ComputeTimeMapError(unsigned int field, const Array<OneD, const NekDouble> &outfield);
+    void ComputeTimeMapError(const Array<OneD, const Array<OneD, NekDouble>> &outfield);
 
     Array<OneD, NekDouble> ReadFibermap(const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre);
     Array<OneD, NekDouble> ReadConductivityMap();

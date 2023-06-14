@@ -7234,7 +7234,7 @@ void MMFSystem::VectorCutOff(const NekDouble Tol,
     }
 }
 
-void MMFSystem::PlotTSMerror(const Array<OneD, const NekDouble> &field,
+void MMFSystem::PlotTimeMaperror(const Array<OneD, const NekDouble> &field,
                              const Array<OneD, const NekDouble> &uexact,
                              const Array<OneD, const NekDouble> &udiff,
                              const int nstep)
@@ -7242,7 +7242,7 @@ void MMFSystem::PlotTSMerror(const Array<OneD, const NekDouble> &field,
     int nvar    = 3;
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
-    std::string outname1 = m_sessionName + "_Error_" +
+    std::string outname1 = m_sessionName + "_TimeMapErr_" +
                            boost::lexical_cast<std::string>(nstep) + ".chk";
 
     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
@@ -7252,7 +7252,7 @@ void MMFSystem::PlotTSMerror(const Array<OneD, const NekDouble> &field,
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "u_TSM";
+    variables[0] = "u_TimeMap";
     variables[1] = "u_PDE";
     variables[2] = "u_err";
 
