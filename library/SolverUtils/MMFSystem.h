@@ -1040,6 +1040,8 @@ protected:
     FindAbsMaximumVector(const Array<OneD, const NekDouble> &inarray,
                          const Array<OneD, const int> &Activated);
 
+    SOLVER_UTILS_EXPORT NekDouble Average(const Array<OneD, const NekDouble> &inarray);
+
     SOLVER_UTILS_EXPORT NekDouble
     RootMeanSquare(const Array<OneD, const NekDouble> &inarray,
                    const Array<OneD, const int> &Activated);

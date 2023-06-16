@@ -6411,6 +6411,21 @@ NekDouble MMFSystem::RootMeanSquareVector(
     return reval;
 }
 
+NekDouble MMFSystem::Average(const Array<OneD, const NekDouble> &inarray)
+{
+    int nq = inarray.size();
+
+    NekDouble reval = 0.0;
+    for (int i = 0; i < nq; ++i)
+    {
+        reval += inarray[i];
+    }
+
+    reval = reval / nq;
+
+    return reval;
+}
+
 NekDouble MMFSystem::RootMeanSquare(const Array<OneD, const NekDouble> &inarray,
                                     const int Ntot)
 {

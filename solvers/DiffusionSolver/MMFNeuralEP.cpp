@@ -2621,7 +2621,7 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     OnlyValideinNode(NodeZone, phimLaplacian);
     NekDouble phimavg = AvgInt(phimLaplacian);
     Vmath::Sadd(nq, -phimavg, phimLaplacian, 1, phimLaplacian, 1);
-
+    
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
@@ -2632,7 +2632,7 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), output);
     m_fields[1]->SetPhysState(true);
 
-    NekDouble phieavg = AvgInt(output);
+    NekDouble phieavg = Average(output);
     Vmath::Sadd(nq, -1.0*phieavg, output, 1, m_fields[1]->UpdatePhys(), 1);
 
     outarray = m_fields[1]->GetPhys();
