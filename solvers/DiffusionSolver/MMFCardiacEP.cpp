@@ -87,6 +87,13 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
     m_session->LoadParameter("AnisotropyRegion", m_AnisotropyRegion, 1000000);
 
+    //Aliev-Panfilov Parameter
+    m_session->LoadParameter("k", m_k, 0.0);
+    m_session->LoadParameter("a", m_a, 0.0);
+    m_session->LoadParameter("mu1", m_mu1, 0.0);
+    m_session->LoadParameter("mu2", m_mu2, 0.0);
+    m_session->LoadParameter("eps", m_eps, 0.0);
+
     // Define SovlerSchemeType
     if (m_session->DefinesSolverInfo("SolverSchemeType"))
     {
@@ -520,6 +527,7 @@ void MMFCardiacEP::DoOdeProjection(
 
 void MMFCardiacEP::v_DoSolve()
 {
+    std::cout << "v_DoSolve: m_SolverSchemeType = " << SolverSchemeTypeMap[m_SolverSchemeType] << std::endl;
     switch (m_SolverSchemeType)
     {
         case eMMFFirst:
@@ -573,7 +581,6 @@ void MMFCardiacEP::DoSolveTimeMap()
         fields[i] = m_fields[m_intVariables[i]]->GetPhys();
         m_fields[m_intVariables[i]]->SetPhysState(false);
     }
-        std::cout << "init field = " << RootMeanSquare(fields[0]) << std::endl;
 
     // Initialise time integration scheme
     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
@@ -606,10 +613,6 @@ void MMFCardiacEP::DoSolveTimeMap()
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
-                
-        std::cout << "time = " << m_time << ", field = " << RootMeanSquare(fields[0]) << std::endl;
-
-        wait_on_enter();
 
         // Excitation according to TimeMap
         for (int i = 0; i < nq; ++i)
@@ -1222,6 +1225,8 @@ void MMFCardiacEP::DoImplicitSolveCardiacEP(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
+
+    std::cout << "DoImplicitSolveCardiacEP ========================================" << std::endl;
     boost::ignore_unused(time);
 
     int nvar = inarray.size();
@@ -1285,14 +1290,17 @@ void MMFCardiacEP::DoOdeRhsCardiacEPTimeMap(
     // output: outarray
     m_cell->TimeIntegrate(inarray, outarray, time);
 
+    // AlievPanfilovReaction(inarray, outarray, time);
+
+    // std::cout << "inarray0 = " << RootMeanSquare(inarray[0]) << ", outarray = " << RootMeanSquare(outarray[0]) << std::endl;
+    // std::cout << "inarray1 = " << RootMeanSquare(inarray[1]) << ", outarray = " << RootMeanSquare(outarray[1]) << std::endl << std::endl;
+
     // Compute I_stim
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
         m_stimulus[i]->Update(outarray, time);
     }
- 
-    std::cout << "outarray = " << RootMeanSquare(outarray[0]) << std::endl;
-}
+ }
 
 void MMFCardiacEP::DoOdeRhsCardiacEP(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -1340,18 +1348,13 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     Array<OneD, NekDouble> initialcondition(nq);
     Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
     Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
-    for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-    {
-        m_stimulus[i]->Update(tmp, 0.1);
-        m_fields[0]->SetPhys(tmp[0]);
-    }
 
     // Only the excited regions are considered for m_InitExcitation
     // Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
-    m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition);
-
     if (m_SolverSchemeType == eTimeMapMarching)
     {
+        m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition);
+
         // std::cout << "PlotTimeEnergyMap starts ==========================" << std::endl;
 
         // Array<OneD, NekDouble> VelVector = ComputeVelocityTimeMap(m_ValidTimeMap, m_TimeMap[0]);
@@ -1366,6 +1369,15 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
         // PlotTimeEnergyMap(m_TimeMap[0], VelVector, LambDiv, IonE);
 
         // std::cout << "PlotTimeEnergyMap ends ==========================" << std::endl;
+    }
+
+    else
+    {
+        for (unsigned int i = 0; i < m_stimulus.size(); ++i)
+        {
+            m_stimulus[i]->Update(tmp, 0.1);
+            m_fields[0]->SetPhys(tmp[0]);
+        }
     }
 
     // forward transform to fill the modal coeffs
@@ -1426,11 +1438,11 @@ void MMFCardiacEP::ComputeTimeMapError(const Array<OneD, const Array<OneD, NekDo
     // Array<OneD, NekDouble> tmp = m_cell->GetCellSolution(1);
     // Vmath::Vsub(nq, tmp, 1, uexact[1], 1, vdiff, 1);
 
-    NekDouble L2uerr, L2verr;
+    NekDouble L2uerr;
     L2uerr = RootMeanSquare(udiff) / Vmath::Vamax(nq, uexact[0], 1);
    // L2verr = RootMeanSquare(vdiff) / Vmath::Vamax(nq, uexact[1], 1);
 
-    NekDouble Linfuerr, Linfverr;
+    NekDouble Linfuerr;
     Linfuerr = Vmath::Vamax(nq, udiff, 1) / Vmath::Vamax(nq, uexact[0], 1);
     // Linfverr = Vmath::Vamax(nq, vdiff, 1) / Vmath::Vamax(nq, uexact[1], 1);
 
@@ -2075,6 +2087,76 @@ void MMFCardiacEP::v_EvaluateExactSolution(unsigned int field,
                                            const NekDouble time)
 {
     EquationSystem::v_EvaluateExactSolution(field, outfield, time);
+}
+
+void MMFCardiacEP::AlievPanfilovReaction(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+{
+    boost::ignore_unused(time);
+    int nq      = m_fields[0]->GetTotPoints();
+
+    // inarray[0] holds initial physical u values throughout
+    // inarray[1] holds initial physical v values throughout
+
+    Array<OneD, NekDouble> m_tmp1(nq);
+    Array<OneD, NekDouble> m_tmp2(nq);
+    Array<OneD, NekDouble> m_uu(nq);
+    Array<OneD, NekDouble> m_uuu(nq);
+
+    // compute u^2: m_u = u*u
+    Vmath::Vmul(nq, &inarray[0][0], 1, &inarray[0][0], 1, &m_uu[0], 1);
+
+    // compute u^3: m_u = u*u*u
+    Vmath::Vmul(nq, &inarray[0][0], 1, &m_uu[0], 1, &m_uuu[0], 1);
+ 
+    // Ru = au
+    Vmath::Smul(nq, m_a, &inarray[0][0], 1, &m_tmp1[0], 1);
+    // Ru = (-1-a)u*u + au
+    Vmath::Svtvp(nq, (-1.0 - m_a), &m_uu[0], 1, &m_tmp1[0], 1, &m_tmp1[0], 1);
+    //        }
+    // Ru = u*u*u - (1+a)u*u + au
+    Vmath::Vadd(nq, &m_uuu[0], 1, &m_tmp1[0], 1, &m_tmp1[0], 1);
+ 
+    Vmath::Smul(nq, m_k, &m_tmp1[0], 1, &m_tmp1[0], 1);
+ 
+    // Ru = k(u*u*u - (1+a)u*u + au) + I_stim
+    Vmath::Vadd(nq, &outarray[0][0], 1, &m_tmp1[0], 1, &outarray[0][0], 1);
+
+    // Ru = k(u*u*u - (1+a)u*u + au) + uv + I_stim
+    Vmath::Vvtvp(nq, &inarray[0][0], 1, &inarray[1][0], 1, &m_tmp1[0], 1,
+                 &outarray[0][0], 1);
+    // Ru = -k(u*u*u - (1+a)u*u + au) - uv - I_stim
+    Vmath::Neg(nq, &outarray[0][0], 1);
+
+    // --------------------------------------
+    // Compute reaction term g(u,v)
+    // --------------------------------------
+    // tmp2 = mu2 + u
+    Vmath::Sadd(nq, m_mu2, &inarray[0][0], 1, &m_tmp2[0], 1);
+
+    // tmp2 = v/(mu2 + u)
+    Vmath::Vdiv(nq, &inarray[1][0], 1, &m_tmp2[0], 1, &m_tmp2[0], 1);
+
+    // tmp2 = mu1*v/(mu2 + u)
+    Vmath::Smul(nq, m_mu1, &m_tmp2[0], 1, &m_tmp2[0], 1);
+
+    // tmp1 = Eps + mu1*v/(mu2+u)
+    Vmath::Sadd(nq, m_eps, &m_tmp2[0], 1, &m_tmp2[0], 1);
+
+    Vmath::Sadd(nq, (-m_a - 1), &inarray[0][0], 1, &m_tmp1[0], 1);
+ 
+    Vmath::Smul(nq, m_k, &m_tmp1[0], 1, &m_tmp1[0], 1);
+ 
+    // tmp1 = ku(u-a-1) + v
+    Vmath::Vvtvp(nq, &inarray[0][0], 1, &m_tmp1[0], 1, &inarray[1][0], 1,
+                 &m_tmp1[0], 1);
+
+    // tmp1 = -ku(u-a-1)-v
+    Vmath::Neg(nq, &m_tmp1[0], 1);
+
+    // outarray = [Eps + mu1*v/(mu2+u)] * [-ku(u-a-1)-v]
+    Vmath::Vmul(nq, &m_tmp1[0], 1, &m_tmp2[0], 1, &outarray[1][0], 1);
 }
 
 // Compute \int \nabla u \cdot e^{dir}

@@ -66,7 +66,7 @@ enum SolverSchemeType
 };
 
 const char *const SolverSchemeTypeMap[] = {
-    "Default", "MMFFirst", "TimeMap",
+    "Default", "MMFFirst", "TimeMapMarching",
 };
 
 enum InitWaveType
@@ -130,6 +130,9 @@ protected:
     int m_Convectiven;
     int m_TimeMapnstep;
     int m_TimeMapExactnstep;
+
+    // Aliev_Panfilov model parameters
+    NekDouble m_k, m_a, m_mu1, m_mu2, m_eps;
 
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
@@ -237,6 +240,10 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     Array<OneD, NekDouble> PlanePhiWave();
+
+    void AlievPanfilovReaction(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
