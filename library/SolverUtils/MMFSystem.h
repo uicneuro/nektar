@@ -1171,11 +1171,6 @@ protected:
     SOLVER_UTILS_EXPORT void HelmSolveSmoothing(
         const NekDouble TimeMapSmoothL, Array<OneD, NekDouble> &outarray);
 
-    SOLVER_UTILS_EXPORT void PlotTimeMaperror(
-        const Array<OneD, const NekDouble> &field,
-        const Array<OneD, const NekDouble> &uexact,
-        const Array<OneD, const NekDouble> &udiff, const int nstep = 0);
-
     SOLVER_UTILS_EXPORT void PlotHHD(
         const Array<OneD, const NekDouble> &MFvec,
         const Array<OneD, const NekDouble> &irrotational,

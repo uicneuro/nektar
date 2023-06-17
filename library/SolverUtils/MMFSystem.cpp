@@ -7249,35 +7249,6 @@ void MMFSystem::VectorCutOff(const NekDouble Tol,
     }
 }
 
-void MMFSystem::PlotTimeMaperror(const Array<OneD, const NekDouble> &field,
-                             const Array<OneD, const NekDouble> &uexact,
-                             const Array<OneD, const NekDouble> &udiff,
-                             const int nstep)
-{
-    int nvar    = 3;
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname1 = m_sessionName + "_TimeMapErr_" +
-                           boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "u_TimeMap";
-    variables[1] = "u_PDE";
-    variables[2] = "u_err";
-
-    m_fields[0]->FwdTrans(field, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(uexact, fieldcoeffs[1]);
-    m_fields[0]->FwdTrans(udiff, fieldcoeffs[2]);
-
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
-
 Array<OneD, int> MMFSystem::ComputeZoneActivation(
     const NekDouble uTol, const Array<OneD, const NekDouble> &fieldu,
     const NekDouble NoAlignInitRadius)

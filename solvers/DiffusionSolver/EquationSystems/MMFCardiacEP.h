@@ -167,7 +167,14 @@ protected:
     void DoSolveMMFFirst();
     void DoSolveTimeMap();
     
-    void ComputeTimeMapError(const Array<OneD, const Array<OneD, NekDouble>> &outfield);
+    void ComputeTimeMapError(
+        const int TMnstep, 
+        const Array<OneD, const Array<OneD, NekDouble>> &outfield);
+    
+    void PlotTimeMapErr(const Array<OneD, const NekDouble> &field,
+                             const Array<OneD, const NekDouble> &uexact,
+                             const Array<OneD, const NekDouble> &udiff,
+                             const int nstep);
 
     Array<OneD, NekDouble> ReadFibermap(const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre);
     Array<OneD, NekDouble> ReadConductivityMap();
