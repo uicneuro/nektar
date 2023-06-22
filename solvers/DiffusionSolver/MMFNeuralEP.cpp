@@ -72,7 +72,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     UnsteadySystem::v_InitObject(DeclareFields);
 
     int nq   = GetTotPoints();
-    int nvar = m_fields.size();
 
     // Conductance parameters
     m_session->LoadParameter("Chi", m_chi, 28.0);
@@ -258,7 +257,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
 
         case eNeuralHelmTest:
-        case eNeuralEP2D:
+        case eNeuralEP2Dmono:
+        case eNeuralEP2Dbi:
         case eNeuralEP2DEmbed:
         {
             std::string vNeuronModel;
@@ -396,7 +396,57 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
 
         case eNeuralHelmTest:
-        case eNeuralEP2D:
+        case eNeuralEP2Dmono:
+        {
+            // Ratio between myelinated fiber and nodal fiber.
+            const NekDouble Cm = m_neuron->GetCapacitanceValue(0);
+            const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+
+            Array<OneD, Array<OneD, NekDouble>> AniStrength(m_expdim);
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            }
+
+            // AniStrength: Node = Cn/Cm, Myelined = 1.0
+            m_AnisotropyStrength = Cn / Cm;
+
+            if (m_MediumType == eAnisotropy)
+            {
+                for (int j = 0; j < m_expdim; ++j)
+                {
+                    Vmath::Smul(nq, Cn, &m_NeuralCm[0][0], 1, &AniStrength[j][0], 1);
+                    Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0],
+                                 1);
+                }
+            }
+
+            std::cout << "Max Anistrength_1  = "
+                      << Vmath::Vmax(nq, AniStrength[0], 1)
+                      << ", Anistrength_2 = "
+                      << Vmath::Vmax(nq, AniStrength[1], 1)
+                      << ", Min Anistrength 1 = "
+                      << Vmath::Vmin(nq, AniStrength[0], 1)
+                      << ", Anistrength 2 = "
+                      << Vmath::Vmin(nq, AniStrength[1], 1) << std::endl;
+
+            // Create MMF init object
+            MMFSystem::MMFInitObject(AniStrength);
+            
+            // Set up for phie Poisson solver
+            std::string phieMMFdirStr = "LOCAL";
+            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+
+            Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+            m_phieNeuralCm = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            }
+            break;
+        }
+
+        case eNeuralEP2Dbi:
         case eNeuralEP2DEmbed:
         {
             // Ratio between myelinated fiber and nodal fiber.
@@ -445,40 +495,38 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
 
-            if (nvar == 2)
+            // Create UnitMovingFrames
+            std::cout << std::endl;
+            std::cout << "Constructing phieunitMF "
+                        "================================================"
+                    << std::endl;
+            m_phieMMFdir = FindMMFdir(phieMMFdirStr);
+            SetUpMovingFrames(m_phieMMFdir, phieAniStrength,
+                            m_unitmovingframes);
+            CheckMovingFrames(m_unitmovingframes);
+
+            // Create Phiemovingframes
+            std::cout << std::endl;
+            std::cout << "Constructing phieMF "
+                        "================================================"
+                    << std::endl;
+
+            m_phiemovingframes =
+                Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+            NekDouble Helmfactor =
+                sqrt((1.0 + m_ratio_re_ri) / m_ratio_re_ri);
+
+            for (int j = 0; j < m_expdim; ++j)
             {
-                // Create UnitMovingFrames
-                std::cout << std::endl;
-                std::cout << "Constructing phieunitMF "
-                            "================================================"
-                        << std::endl;
-                m_phieMMFdir = FindMMFdir(phieMMFdirStr);
-                SetUpMovingFrames(m_phieMMFdir, phieAniStrength,
-                                m_unitmovingframes);
-                CheckMovingFrames(m_unitmovingframes);
-
-                // Create Phiemovingframes
-                std::cout << std::endl;
-                std::cout << "Constructing phieMF "
-                            "================================================"
-                        << std::endl;
-
-                m_phiemovingframes =
-                    Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-                NekDouble Helmfactor =
-                    sqrt((1.0 + m_ratio_re_ri) / m_ratio_re_ri);
-
-                for (int j = 0; j < m_expdim; ++j)
-                {
-                    Vmath::Smul(nq, Helmfactor, &phieAniStrength[j][0], 1,
-                                &phieAniStrength[j][0], 1);
-                }
-
-                SetUpMovingFrames(m_phieMMFdir, phieAniStrength,
-                                  m_phiemovingframes);
-                CheckMovingFrames(m_phiemovingframes);
+                Vmath::Smul(nq, Helmfactor, &phieAniStrength[j][0], 1,
+                            &phieAniStrength[j][0], 1);
             }
-                    break;
+
+            SetUpMovingFrames(m_phieMMFdir, phieAniStrength,
+                                m_phiemovingframes);
+            CheckMovingFrames(m_phiemovingframes);
+
+            break;
         }
 
         default:
@@ -489,7 +537,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
             MMFSystem::MMFInitObject(AniStrength);
-                    break;
+            break;
         }
     }
 
@@ -512,16 +560,22 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
             
             case eNeuralHelmTest:
-            case eNeuralEP2D:
+            case eNeuralEP2Dmono:
+            {
+                std::cout << "Compute Varcoeff for phim ====================== " << std::endl;
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
+                break;
+            }
+
+            case eNeuralEP2Dbi:
             case eNeuralEP2DEmbed:
             {
                 std::cout << "Compute Varcoeff for phim ====================== " << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-                if (nvar == 2)
-                {
-                    std::cout << "Compute Varcoeff for phie ====================== " << std::endl;
-                    ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-                }
+
+                std::cout << "Compute Varcoeff for phie ====================== " << std::endl;
+                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
                 break;
             }
 
@@ -540,10 +594,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             case eNeuralHelmTest:
-            case eNeuralEP2D:
+            case eNeuralEP2Dmono:
             {
                 m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolveNeuralEP2D, this);
+                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
+                break;
+            }
+
+            case eNeuralEP2Dbi:
+            {
+                m_ode.DefineImplicitSolve(
+                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this);
                 break;
             }
 
@@ -574,9 +635,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
 
         case eNeuralHelmTest:
-        case eNeuralEP2D:
+        case eNeuralEP2Dmono:
         {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2D, this);
+            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
+            break;
+        }
+
+        case eNeuralEP2Dbi:
+        {
+            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
             break;
         }
 
@@ -1086,12 +1153,12 @@ void MMFNeuralEP::DoSolveMMFZero()
                       << " at x = " << x0[Iummax] << ", y = " << x1[Iummax] << ", z = " << x2[Iummax]
                       << std::endl;
 
-            if(nvariables==2)
+            if( (m_NeuralEPType==eNeuralEP2Dbi) || (m_NeuralEPType==eNeuralEP2DEmbed))
             {
-            int Iuemax = Vmath::Iamax(nq, m_fields[1]->GetPhys(), 1);
-            std::cout << "ue_max = " << Vmath::Vamax(nq, m_fields[1]->GetPhys(), 1)
-                      << " at x = " << x0[Iuemax] << ", y = " << x1[Iuemax] << ", z = " << x2[Iuemax]
-                      << std::endl;
+                int Iuemax = Vmath::Iamax(nq, m_fields[1]->GetPhys(), 1);
+                std::cout << "ue_max = " << Vmath::Vamax(nq, m_fields[1]->GetPhys(), 1)
+                        << " at x = " << x0[Iuemax] << ", y = " << x1[Iuemax] << ", z = " << x2[Iuemax]
+                        << std::endl;
             }
 
             // NekDouble umax = Vmath::Vamax(nq, fields[0], 1);
@@ -1949,14 +2016,45 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP1D(
 }
 
 // Implicit solve for NeuralEP 2D solver
-void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
+void MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
     boost::ignore_unused(time);
 
-    int nvar = m_fields.size();
+    int nq   = m_fields[0]->GetNpoints();
+
+    // Set up factors for Helmsolve
+    const NekDouble R_f = m_neuron->GetRecistanceValue();
+    const NekDouble C_n = m_neuron->GetCapacitanceValue(1);
+
+    StdRegions::ConstFactorMap factors;
+    factors[StdRegions::eFactorTau] = m_Helmtau;
+
+    // m_ratio_re_ri determines the conductivity only when the variable is one
+    NekDouble betaratio = (m_ratio_re_ri + 1.0) / m_ratio_re_ri;
+    factors[StdRegions::eFactorLambda] = C_n * R_f * betaratio / lambda;
+
+    SetBoundaryConditions(time);
+
+    // Multiply 1.0/timestep
+    Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
+                m_fields[0]->UpdatePhys(), 1);
+
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                           factors, m_varcoeff);
+    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
+    m_fields[0]->SetPhysState(true);
+}
+
+// Implicit solve for NeuralEP 2D solver
+void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+    const NekDouble lambda)
+{
+    boost::ignore_unused(time);
     int nq   = m_fields[0]->GetNpoints();
 
     // Set up factors for Helmsolve
@@ -1968,11 +2066,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
 
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
-    if(nvar==1)
-    {
-        NekDouble betaratio = (m_ratio_re_ri + 1.0) / m_ratio_re_ri;
-        factors[StdRegions::eFactorLambda] = C_n * R_f * betaratio / lambda;
-    }
 
     SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition(time);
@@ -1986,6 +2079,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2D(
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
+
 
 // Implicit solve for NeuralEP 2D solver
 void MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbed(
@@ -2421,7 +2515,7 @@ void MMFNeuralEP::GetFluxVector(
 }
 
 
-void MMFNeuralEP::DoOdeRhsNeuralEP2D(
+void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
@@ -2456,25 +2550,69 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2D(
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
-    if (nvar == 2)
+    if (m_explicitDiffusion)
     {
-        // Compute phi_e to satisfy the following equation
-        // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
-        // (\sigma_i \nabla \phi_m)
-        Array<OneD, NekDouble> phie(nq,0.0);
-        SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+        // Laplacian only to the first variable
+        Array<OneD, NekDouble> Laplacian(nq);
+        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
 
-        // Add the current changes by the external current
-        Array<OneD, NekDouble> extcurrent(nq,0.0);
-        extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
-        Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
-
-        // Let the extcurrent be zero at Myeline nodes (-1).
-        OnlyValideinNode(m_NodeZone[0], extcurrent);
-
-        // add divergence of phie to the current
-        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+        Vmath::Smul(nq, 1.0 / (Cn * Rf), Laplacian, 1, Laplacian, 1);
+        Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
     }
+}
+
+
+void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+{
+    int nvar = m_fields.size();
+    int nq   = m_fields[0]->GetNpoints();
+
+    NekDouble Rf = m_neuron->GetRecistanceValue();
+    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+
+    for (int i=0; i<nvar; ++i)
+    {
+        outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
+    // Compute the reaction function divided by Cm or Cn.
+    m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
+
+    Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
+    for (unsigned int j = 0; j < m_stimulus.size(); ++j)
+    {
+        m_stimulus[j]->Update(RHSstimulus, time);
+    }
+
+    // ONLY simulation at node zone: No excitation at myelinated region
+    StimulusAtNode(RHSstimulus[0]);
+
+    // Add it to the RHS
+    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+
+    // Compute phi_e to satisfy the following equation
+    // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
+    // (\sigma_i \nabla \phi_m)
+    Array<OneD, NekDouble> phie(nq,0.0);
+    SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+
+    // Add the current changes by the external current
+    Array<OneD, NekDouble> extcurrent(nq,0.0);
+    extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+    Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+
+    // Let the extcurrent be zero at Myeline nodes (-1).
+    OnlyValideinNode(m_NodeZone[0], extcurrent);
+
+    // add divergence of phie to the current
+    Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     if (m_explicitDiffusion)
     {
@@ -2800,7 +2938,8 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
     {
         case eNeuralEPPT:
         case eNeuralEP1D:
-        case eNeuralEP2D:
+        case eNeuralEP2Dmono:
+        case eNeuralEP2Dbi:
         {
             m_neuron->Initialise();
 

@@ -1426,6 +1426,7 @@ void MMFCardiacEP::ComputeTimeMapError(const int TMnstep, const Array<OneD, cons
  
     Array<OneD, NekDouble> udiff(nq, 0.0);
     Vmath::Vsub(nq, outfield[0], 1, uexact[0], 1, udiff, 1);
+    Vmath::Vabs(nq,  udiff, 1,  udiff, 1);
 
     // Array<OneD, NekDouble> vdiff(nq, 0.0);
     // Array<OneD, NekDouble> tmp = m_cell->GetCellSolution(1);
