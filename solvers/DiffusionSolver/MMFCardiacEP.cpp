@@ -527,7 +527,6 @@ void MMFCardiacEP::DoOdeProjection(
 
 void MMFCardiacEP::v_DoSolve()
 {
-    std::cout << "v_DoSolve: m_SolverSchemeType = " << SolverSchemeTypeMap[m_SolverSchemeType] << std::endl;
     switch (m_SolverSchemeType)
     {
         case eMMFFirst:
@@ -1330,6 +1329,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 {
     boost::ignore_unused(domain, dumpInitialConditions);
 
+    int nvar = m_fields.size();
     int nq = GetTotPoints();
 
     m_cell->Initialise();
@@ -1340,15 +1340,25 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     Array<OneD, Array<OneD, NekDouble>> tmp(1);
     tmp[0] = Array<OneD, NekDouble>(nq);
 
-    Array<OneD, NekDouble> initialcondition(nq);
+    Array<OneD, Array<OneD, NekDouble>> initialcondition(nvar);
+    for (int i=0; i<nvar; ++i)
+    {
+        initialcondition[i] = Array<OneD, NekDouble>(nq);
+    }
+
+    for (unsigned int i = 0; i < m_stimulus.size(); ++i)
+    {
+        m_stimulus[i]->Update(initialcondition, 0.1);
+    }
+
     Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
-    Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
+    Vmath::Vadd(nq, tmp[0], 1, initialcondition[0], 1, initialcondition[0], 1);
 
     // Only the excited regions are considered for m_InitExcitation
     // Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
     if (m_SolverSchemeType == eTimeMapMarching)
     {
-        m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition);
+        m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition[0]);
 
         // std::cout << "PlotTimeEnergyMap starts ==========================" << std::endl;
 
@@ -1383,7 +1393,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
                               m_fields[i]->UpdateCoeffs());
     }
 
-    std::cout << "Initial: max u = "
+    std::cout << "Initial: u = " << RootMeanSquare(m_fields[0]->GetPhys()) << ", max u = "
               << Vmath::Vmax(nq, m_fields[0]->GetPhys(), 1) << std::endl;
 
     if (dumpInitialConditions)
@@ -1395,6 +1405,48 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     }
 }
 
+Array<OneD, int> MMFCardiacEP::ComputeTimeMapInitialZone(
+    const NekDouble urest,
+    const Array<OneD, const NekDouble> &inarray)
+{
+    int nq = GetTotPoints();
+
+    Array<OneD, int> outarray(nq, 1);
+
+    int TMflag, index;
+    int cnt             = 0;
+    const NekDouble Tol = 0.1;
+    NekDouble diff;
+    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    {
+        TMflag = 0;
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            diff = inarray[index] - urest;
+            if ((fabs(diff) > Tol) || (m_MMFActivation[index] == 0))
+            {
+                TMflag = 1;
+            }
+        }
+
+        if (TMflag == 1)
+        {
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            {
+                index           = m_fields[0]->GetPhys_Offset(i) + j;
+                outarray[index] = 0;
+                cnt++;
+            }
+        }
+    }
+
+    std::cout << "ValidTimeMap = " << cnt << " / " << nq << " ( " << (1.0*cnt/nq)*100.0 << " % ) is De-Acitvated"
+              << std::endl;
+
+    return outarray;
+}
+
 void MMFCardiacEP::ComputeTimeMapError(const int TMnstep, const Array<OneD, const Array<OneD, NekDouble>> &outfield)
 {
     int nvar    = 1;
@@ -1403,8 +1455,6 @@ void MMFCardiacEP::ComputeTimeMapError(const int TMnstep, const Array<OneD, cons
 
     std::vector<std::string> variables(nvar);
     variables[0] = "u";
-
-    m_session->LoadParameter("TimeMapExactnstep", m_TimeMapExactnstep, 1);
 
     std::string loadname = m_TMsessionName + "_" + 
                         boost::lexical_cast<std::string>(TMnstep) + ".chk";
@@ -1428,16 +1478,22 @@ void MMFCardiacEP::ComputeTimeMapError(const int TMnstep, const Array<OneD, cons
     Vmath::Vsub(nq, outfield[0], 1, uexact[0], 1, udiff, 1);
     Vmath::Vabs(nq,  udiff, 1,  udiff, 1);
 
+    for (int i=0;i<nq;++i)
+    {
+        if(m_ValidTimeMap[i]==0)
+        {
+            udiff[i] = 0.0;
+        }
+    }
+
     // Array<OneD, NekDouble> vdiff(nq, 0.0);
     // Array<OneD, NekDouble> tmp = m_cell->GetCellSolution(1);
     // Vmath::Vsub(nq, tmp, 1, uexact[1], 1, vdiff, 1);
 
-    NekDouble L2uerr;
-    L2uerr = RootMeanSquare(udiff) / Vmath::Vamax(nq, uexact[0], 1);
+    NekDouble L2uerr = RootMeanSquare(udiff) / Vmath::Vamax(nq, uexact[0], 1);
    // L2verr = RootMeanSquare(vdiff) / Vmath::Vamax(nq, uexact[1], 1);
 
-    NekDouble Linfuerr;
-    Linfuerr = Vmath::Vamax(nq, udiff, 1) / Vmath::Vamax(nq, uexact[0], 1);
+    NekDouble Linfuerr = Vmath::Vamax(nq, udiff, 1) / Vmath::Vamax(nq, uexact[0], 1);
     // Linfverr = Vmath::Vamax(nq, vdiff, 1) / Vmath::Vamax(nq, uexact[1], 1);
 
     std::cout << " TimeMap: u_Error: L2 = " << L2uerr << ", Linf = " << Linfuerr << std::endl;

@@ -247,6 +247,11 @@ void MMFSystem::MMFInitObject(
         default:
         {
             m_MMFActivation = Array<OneD, int>(nq, 1);
+
+            int cnt = Vmath::Vsum(nq, m_MMFActivation, 1);
+            std::cout << "MMFActivation = " << cnt
+                    << " /  " << nq << " ( " << cnt/nq*100.0 << " % ) " << std::endl;
+
         }
         break;
     }
@@ -308,8 +313,6 @@ void MMFSystem::MMFInitObject(
         // Check the Curvature 2-form of the aligned moving frames
         Compute2DCurvatureForm(m_movingframes, m_MFConnection, m_MFCurvature);
     }
-
-    std::cout << "============ End of MMFInitObect ============" << std::endl;
 }
 
 // Check Connection and Curvature for Spherical coordinate system
@@ -541,8 +544,9 @@ void MMFSystem::ConstructSphericalMF(
         }
     }
 
-    std::cout << "MMFActivation = " << Vmath::Vsum(nq, SphereMFActivate, 1)
-              << " / " << nq << std::endl;
+    int cnt = Vmath::Vsum(nq, SphereMFActivate, 1);
+    std::cout << "MMFActivation = " << cnt
+              << " /  " << nq << " ( " << cnt/nq*100.0 << " % ) " << std::endl;
 }
 
 void MMFSystem::ConstructPseudosphericalMF(
@@ -5649,20 +5653,20 @@ void MMFSystem::Compute2DConnection1form(
         }
     }
 
-    int Ntot = 0;
-    NekDouble MFmag;
-    for (int i = 0; i < nq; ++i)
-    {
-        MFmag = movingframes[0][i] * movingframes[0][i] +
-                movingframes[0][i + nq] * movingframes[0][i + nq] +
-                movingframes[0][i + 2 * nq] * movingframes[0][i + 2 * nq];
+    // int Ntot = 0;
+    // NekDouble MFmag;
+    // for (int i = 0; i < nq; ++i)
+    // {
+    //     MFmag = movingframes[0][i] * movingframes[0][i] +
+    //             movingframes[0][i + nq] * movingframes[0][i + nq] +
+    //             movingframes[0][i + 2 * nq] * movingframes[0][i + 2 * nq];
 
-        MFmag = sqrt(MFmag);
-        if (MFmag > 0.1)
-        {
-            Ntot++;
-        }
-    }
+    //     MFmag = sqrt(MFmag);
+    //     if (MFmag > 0.1)
+    //     {
+    //         Ntot++;
+    //     }
+    // }
 
     // std::cout << " Compute Connection 1form " << std::endl;
     // CheckMovingFrames(movingframes);
@@ -5807,7 +5811,7 @@ void MMFSystem::GetCurvatureForm(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    int Ntot = 0;
+   int Ntot = 0;
     NekDouble MFmag;
     for (int i = 0; i < nq; ++i)
     {
@@ -6065,19 +6069,19 @@ void MMFSystem::Compute2DCurvatureForm(
         Curvatureform[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    NekDouble MFmag;
-    int Ntot = 0;
-    for (int i = 0; i < nq; ++i)
-    {
-        MFmag = movingframes[0][i] * movingframes[0][i] +
-                movingframes[0][i + nq] * movingframes[0][i + nq] +
-                movingframes[0][i + 2 * nq] * movingframes[0][i + 2 * nq];
-        MFmag = sqrt(MFmag);
-        if (MFmag > 0.1)
-        {
-            Ntot++;
-        }
-    }
+    // NekDouble MFmag;
+    // int Ntot = 0;
+    // for (int i = 0; i < nq; ++i)
+    // {
+    //     MFmag = movingframes[0][i] * movingframes[0][i] +
+    //             movingframes[0][i + nq] * movingframes[0][i + nq] +
+    //             movingframes[0][i + 2 * nq] * movingframes[0][i + 2 * nq];
+    //     MFmag = sqrt(MFmag);
+    //     if (MFmag > 0.1)
+    //     {
+    //         Ntot++;
+    //     }
+    // }
 
     // w^2_1 <e^1> = Connectionform[0][0];
     // w^2_1 <e^2> = Connectionform[0][1];
@@ -6932,7 +6936,7 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
     Lapu = ComputeCovariantDiffusion(m_movingframes, field);
 
     NekDouble udiff;
-    int cnt=0;
+    // int cnt=0;
     for (int i = 0; i < nq; ++i)
     {
         udiff = field[i] - urest;
@@ -6955,7 +6959,7 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
             }
             dudtHistory[i] += fnow;
 
-            cnt++;
+     //       cnt++;
         }
     }
 
@@ -7040,48 +7044,6 @@ void MMFSystem::TimeMapforInitZone(
             }
         }
     }
-}
-
-Array<OneD, int> MMFSystem::ComputeTimeMapInitialZone(
-    const NekDouble urest,
-    const Array<OneD, const NekDouble> &inarray)
-{
-    int nq = GetTotPoints();
-
-    Array<OneD, int> outarray(nq, 1);
-
-    int TMflag, index;
-    int cnt             = 0;
-    const NekDouble Tol = 0.1;
-    NekDouble diff;
-    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
-    {
-        TMflag = 0;
-        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-        {
-            index = m_fields[0]->GetPhys_Offset(i) + j;
-            diff = inarray[index] - urest;
-            if ((fabs(diff) > Tol) || (m_MMFActivation[index] == 0))
-            {
-                TMflag = 1;
-            }
-        }
-
-        if (TMflag == 1)
-        {
-            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-            {
-                index           = m_fields[0]->GetPhys_Offset(i) + j;
-                outarray[index] = 0;
-                cnt++;
-            }
-        }
-    }
-
-    std::cout << "Total " << cnt << " / " << nq << " is init-Acitvated"
-              << std::endl;
-
-    return outarray;
 }
 
 

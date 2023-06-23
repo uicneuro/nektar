@@ -166,6 +166,10 @@ protected:
     void DoSolveMMF();
     void DoSolveMMFFirst();
     void DoSolveTimeMap();
+
+    Array<OneD, int> ComputeTimeMapInitialZone(
+    const NekDouble urest,
+    const Array<OneD, const NekDouble> &inarray);
     
     void ComputeTimeMapError(
         const int TMnstep, 
