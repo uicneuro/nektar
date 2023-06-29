@@ -70,8 +70,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     // AniStrength for e^1 and e^2
     m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
-
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
+    m_session->LoadParameter("EmbededPlane", m_EmbededPlane, 0);
 
     // Diffusivity coefficient for e^j
     m_epsilon = Array<OneD, NekDouble>(m_spacedim);
@@ -236,10 +236,31 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_InitWaveType = (InitWaveType)0;
     }
 
+    if(m_TestType==eTestPlaneEmbed)
+    {
+        // Let the moving frames outside the domain be of magnitude zero.
+        int index;
+        int cnt = 0;
+        for (int i = m_EmbededPlane; i < m_fields[0]->GetExpSize(); ++i)
+        {
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            {
+                index = m_fields[0]->GetPhys_Offset(i) + j;
+                for (int k=0; k<m_mfdim; ++k)
+                {
+                    m_movingframes[k][index] = 0.0;
+                    m_movingframes[k][index+nq] = 0.0;
+                    m_movingframes[k][index+2*nq] = 0.0;
+                }
+                cnt++;
+            }
+        }
+        std::cout << "Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
+    }
+
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
     // Test PhysDirectionalDeriv
-    
     if(m_TestType==eTestPlaneAni)
     {
         TestPhysDirectionalDeriv(m_movingframes);
@@ -440,6 +461,30 @@ void MMFDiffusion::DoOdeRhs(
         }
         break;
 
+        case eTestPlaneEmbed:
+        {
+            Array<OneD, NekDouble> x(nq);
+            Array<OneD, NekDouble> y(nq);
+            Array<OneD, NekDouble> z(nq);
+
+            m_fields[0]->GetCoords(x, y, z);
+
+            outarray[0] = Array<OneD, NekDouble>(nq, 0.0);
+            int index;
+            for (int i = 0; i < m_EmbededPlane; ++i)
+            {
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                {
+                    index = m_fields[0]->GetPhys_Offset(i) + j;
+                    outarray[0][index] = (m_epsilon[0] * m_frequency *
+                                        m_frequency + m_epsilon[1] * m_frequency *
+                                        m_frequency - m_frequency) * exp(-1.0 * m_frequency * time) *
+                                        sin(m_frequency * x[index]) * sin(m_frequency * y[index]);        
+                }
+            }
+        }
+        break;
+
         case eTestPlaneNeumann:
         {
             Array<OneD, NekDouble> x(nq);
@@ -636,6 +681,16 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
         }
         break;
 
+        case eTestPlaneEmbed:
+        {
+            Array<OneD, NekDouble> u(nq);
+
+            TestPlaneEmbedProblem(initialtime, m_varcoeff, u);
+            m_fields[0]->SetPhys(u);
+        }
+        break;
+
+
         case eTestPlaneNeumann:
         {
             Array<OneD, NekDouble> u(nq);
@@ -683,6 +738,8 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
     {
         std::string outname = m_sessionName + "_initial.chk";
         WriteFld(outname);
+
+        Checkpoint_Output_Error(0,m_fields[0]->GetPhys(),m_fields[0]->GetPhys());
     }
 }
 
@@ -774,6 +831,47 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
         outfield[k] = exp(-1.0 * d00[k] * d11[k] * m_frequency * time) * sin(m_frequency * x[k]) * sin(m_frequency * y[k]);
     }
 }
+
+void MMFDiffusion::TestPlaneEmbedProblem(const NekDouble time,
+                                    StdRegions::VarCoeffMap &varcoeff,
+                                    Array<OneD, NekDouble> &outfield)
+{
+    int nq = GetTotPoints();
+
+    StdRegions::VarCoeffType MMFCoeffs[15] = {
+        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+        StdRegions::eVarCoeffMF3Mag}; 
+
+    Array<OneD, NekDouble> x(nq);
+    Array<OneD, NekDouble> y(nq);
+    Array<OneD, NekDouble> z(nq);
+
+    m_fields[0]->GetCoords(x, y, z);
+
+    Array<OneD, NekDouble> d00(nq);
+    Array<OneD, NekDouble> d11(nq);
+
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
+    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+
+    int index;
+    outfield = Array<OneD, NekDouble>(nq,0.0);
+    for (int i = 0; i < m_EmbededPlane; ++i)
+    {
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            outfield[index] = exp(-1.0 * d00[index] * d11[index] * m_frequency * time) * sin(m_frequency * x[index]) * sin(m_frequency * y[index]);
+        }
+    }
+}
+
 
 void MMFDiffusion::TestPlaneNeumannProblem(const NekDouble time,
                                     Array<OneD, NekDouble> &outfield)
@@ -1221,6 +1319,12 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
         }
         break;
 
+        case eTestPlaneEmbed:
+        {
+            TestPlaneEmbedProblem(time, m_varcoeff, outfield);
+        }
+        break;
+
         case eTestPlaneNeumann:
         {
             TestPlaneNeumannProblem(time, outfield);
@@ -1445,6 +1549,7 @@ void MMFDiffusion::v_DoSolve()
     int nvariables       = 0;
     int nfields          = m_fields.size();
     std::string fulltext = ""; // initiate fulltext
+    int nq = m_fields[0]->GetNpoints();
 
     if (m_intVariables.empty())
     {
@@ -1536,7 +1641,9 @@ void MMFDiffusion::v_DoSolve()
         m_fields[m_intVariables[i]]->SetPhysState(true);
     }
 
-    std::cout << "Final field = " << RootMeanSquare(fields[0]) << std::endl;
+    Array<OneD, NekDouble> uexact(nq);
+    TestPlaneEmbedProblem(m_time, m_varcoeff, uexact);
+    Checkpoint_Output_Error(nchk, m_fields[0]->GetPhys(), uexact);
 } // namespace Nektar
 
 void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
@@ -1546,6 +1653,7 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "frequency", m_frequency);
     SolverUtils::AddSummaryItem(s, "AniStrength", m_AniStrength);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
+    SolverUtils::AddSummaryItem(s, "EmbededPlane", m_EmbededPlane);
 
     SolverUtils::AddSummaryItem(s, "epsilon0", m_epsilon[0]);
     SolverUtils::AddSummaryItem(s, "epsilon1", m_epsilon[1]);

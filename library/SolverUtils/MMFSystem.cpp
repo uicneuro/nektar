@@ -13563,15 +13563,17 @@ void MMFSystem::Checkpoint_Output_1D(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-void MMFSystem::Checkpoint_Output_WSol(
+void MMFSystem::Checkpoint_Output_Error(
     const int n, const Array<OneD, const NekDouble> &field,
     const Array<OneD, const NekDouble> &exactsoln)
 {
-    int nvar    = 2;
+    int nvar    = 3;
     int ncoeffs = m_fields[0]->GetNcoeffs();
+    int nq = m_fields[0]->GetNpoints();
 
     std::string outname1 =
-        m_sessionName + "_" + boost::lexical_cast<std::string>(n) + "_WSol.chk";
+        m_sessionName + "_" + boost::lexical_cast<std::string>(n) + "_Error.chk";
+
     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
     for (int i = 0; i < nvar; ++i)
     {
@@ -13579,12 +13581,17 @@ void MMFSystem::Checkpoint_Output_WSol(
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "field";
-    variables[1] = "exactsoln";
+    variables[0] = "Field";
+    variables[1] = "Exactsoln";
+    variables[2] = "Error";
 
     // Normalized Time Vector
     m_fields[0]->FwdTrans(field, fieldcoeffs[0]);
     m_fields[0]->FwdTrans(exactsoln, fieldcoeffs[1]);
+
+    Array<OneD, NekDouble> Error(nq);
+    Vmath::Vsub(nq, field, 1, exactsoln, 1, Error, 1);
+    m_fields[0]->FwdTrans(Error, fieldcoeffs[2]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }

@@ -118,7 +118,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_session->LoadParameter("TimeMapIapp", m_TimeMapIapp, 0.2);
         m_session->LoadParameter("TimeMapDelay", m_TimeMapDelay, 5.0);
-        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 1);
+        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
 
         // Import TimeMap
         std::cout << "======= Start loading TimeMap  =======" << std::endl;
@@ -158,8 +158,11 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
             }
         }
 
-        std::cout << "======= Loading is successful, TimeMap = "
-            << RootMeanSquare(m_TimeMap[0]) << std::endl;
+        std::cout << " Loading is successful, TimeMapName = " 
+           << loadname << ", TimeMap Mag = "
+            << RootMeanSquare(m_TimeMap[0]) << std::endl ;
+            
+         std::cout << "======= End loading TimeMap  =======" << std::endl << std::endl;
     }
 
     // TimeMap ?
@@ -1331,6 +1334,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
     int nvar = m_fields.size();
     int nq = GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
 
     m_cell->Initialise();
 
@@ -1343,7 +1347,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
     Array<OneD, Array<OneD, NekDouble>> initialcondition(nvar);
     for (int i=0; i<nvar; ++i)
     {
-        initialcondition[i] = Array<OneD, NekDouble>(nq);
+        initialcondition[i] = Array<OneD, NekDouble>(nq,0.0);
     }
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
@@ -1353,6 +1357,22 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
     Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
     Vmath::Vadd(nq, tmp[0], 1, initialcondition[0], 1, initialcondition[0], 1);
+
+        std::string outname;
+        outname = m_sessionName + "_initialcondition.chk";
+
+        std::vector<Array<OneD, NekDouble>> fieldcoeffs(1);
+        for (int i = 0; i < 1; ++i)
+        {
+            fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+        }
+
+        std::vector<std::string> variables(1);
+        variables[0] = "initialcondition";
+        
+        m_fields[0]->FwdTrans(initialcondition[0], fieldcoeffs[0]);
+
+        WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 
     // Only the excited regions are considered for m_InitExcitation
     // Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
@@ -1495,21 +1515,24 @@ void MMFCardiacEP::ComputeTimeMapError(const int TMnstep, const Array<OneD, cons
 
     NekDouble Linfuerr = Vmath::Vamax(nq, udiff, 1) / Vmath::Vamax(nq, uexact[0], 1);
     // Linfverr = Vmath::Vamax(nq, vdiff, 1) / Vmath::Vamax(nq, uexact[1], 1);
-
-    std::cout << " TimeMap: u_Error: L2 = " << L2uerr << ", Linf = " << Linfuerr << std::endl;
+    std::cout << " TimeMap: uExact = " << RootMeanSquare(uexact[0]) << ", u_Error: L2 = " << L2uerr << ", Linf = " << Linfuerr << std::endl;
     // std::cout << "TimeMap: v_Error: L2 = " << L2verr << ", Linf = " << Linfverr
     //           << std::endl;
 
-    PlotTimeMapErr(outfield[0], uexact[0], udiff, TMnstep);
+    PlotTimeMapErr(m_TimeMap, m_ValidTimeMap, outfield[0], uexact[0], udiff, TMnstep);
 }
 
-void MMFCardiacEP::PlotTimeMapErr(const Array<OneD, const NekDouble> &field,
-                             const Array<OneD, const NekDouble> &uexact,
-                             const Array<OneD, const NekDouble> &udiff,
-                             const int nstep)
+void MMFCardiacEP::PlotTimeMapErr(
+                                 const Array<OneD, const Array<OneD, NekDouble>> TimeMap,
+                                 const Array<OneD, const int> ValidTimeMap,
+                                const Array<OneD, const NekDouble> &field,
+                                const Array<OneD, const NekDouble> &uexact,
+                                const Array<OneD, const NekDouble> &udiff,
+                                const int nstep)
 {
-    int nvar    = 3;
+    int nvar    = 5;
     int ncoeffs = m_fields[0]->GetNcoeffs();
+    int nq = m_fields[0]->GetTotPoints();
 
     std::string outname1 = m_sessionName + "_TimeMapErr_" +
                            boost::lexical_cast<std::string>(nstep) + ".chk";
@@ -1521,13 +1544,23 @@ void MMFCardiacEP::PlotTimeMapErr(const Array<OneD, const NekDouble> &field,
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "u_TimeMap";
-    variables[1] = "u_PDE";
-    variables[2] = "u_err";
+    variables[0] = "TimeMap";
+    variables[1] = "ValidTimeMap";
+    variables[2] = "u_TimeMap";
+    variables[3] = "u_PDE";
+    variables[4] = "u_err";
 
-    m_fields[0]->FwdTrans(field, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(uexact, fieldcoeffs[1]);
-    m_fields[0]->FwdTrans(udiff, fieldcoeffs[2]);
+    Array<OneD, NekDouble> ValidTM(nq);
+    for( int i=0;i<nq; i++)
+    {
+        ValidTM[i] = 1.0*ValidTimeMap[i];
+    }
+
+    m_fields[0]->FwdTrans(TimeMap[0], fieldcoeffs[0]);
+    m_fields[0]->FwdTrans(ValidTM, fieldcoeffs[1]);
+    m_fields[0]->FwdTrans(field, fieldcoeffs[2]);
+    m_fields[0]->FwdTrans(uexact, fieldcoeffs[3]);
+    m_fields[0]->FwdTrans(udiff, fieldcoeffs[4]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }

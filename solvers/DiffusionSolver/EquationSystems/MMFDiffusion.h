@@ -50,6 +50,7 @@ enum TestType
     eTestLineY,
     eTestPlaneAni,
     eTestPlane,
+    eTestPlaneEmbed,
     eTestPlaneNeumann,
     eTestCube,
     eTestLinearSphere,
@@ -58,7 +59,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneNeumann",
+    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneEmbed", "TestPlaneNeumann",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -149,6 +150,8 @@ protected:
     NekDouble m_frequency;
     NekDouble m_d00, m_d11, m_d22;
 
+    int m_EmbededPlane;
+
     Array<OneD, NekDouble> m_d00vec;
     Array<OneD, NekDouble> m_d11vec;
     Array<OneD, NekDouble> m_d22vec;
@@ -208,6 +211,10 @@ protected:
     void TestPlaneProblem(const NekDouble time,
                           StdRegions::VarCoeffMap &varcoeff,
                           Array<OneD, NekDouble> &outfield);
+
+    void TestPlaneEmbedProblem(const NekDouble time,
+                                    StdRegions::VarCoeffMap &varcoeff,
+                                    Array<OneD, NekDouble> &outfield);                   
 
     void TestPlaneNeumannProblem(const NekDouble time,
                           Array<OneD, NekDouble> &outfield);

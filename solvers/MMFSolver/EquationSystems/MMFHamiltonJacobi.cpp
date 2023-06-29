@@ -229,7 +229,7 @@ namespace Nektar
             {
                 Array<OneD, NekDouble> exactsoln;
                 v_EvaluateExactSolution(0, exactsoln, m_time);                   
-                Checkpoint_Output_WSol(nchk++, fields[0], exactsoln);
+                Checkpoint_Output_Error(nchk++, fields[0], exactsoln);
                 doCheckTime = false;
             }
 

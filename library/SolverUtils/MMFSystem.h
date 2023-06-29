@@ -94,6 +94,7 @@ enum SurfaceType
     ePlane,
     ePlaneLeft,
     ePlanePoint,
+    ePlaneEmbed,
     ePolar,
     eSphere,
     eTRSphere,
@@ -108,7 +109,7 @@ enum SurfaceType
 };
 
 const char *const SurfaceTypeMap[] = {
-    "Line",      "Plane",     "PlaneLeft",    "PlanePoint", "Polar",
+    "Line",      "Plane",     "PlaneLeft",    "PlanePoint", "PlaneEmbed", "Polar",
     "Sphere",    "TRSphere",  "Pseudosphere", "Ellipsoid",  "Torus",
     "Irregular", "Nonconvex", "Atrium",       "Cube",
 };
@@ -1567,9 +1568,9 @@ protected:
         const NekDouble &v_amp, const NekDouble &m_pis, const NekDouble &m_px,
         const NekDouble &m_pr);
 
-    void Checkpoint_Output_WSol(const int n,
-                                const Array<OneD, const NekDouble> &field,
-                                const Array<OneD, const NekDouble> &exactsoln);
+    SOLVER_UTILS_EXPORT void Checkpoint_Output_Error(
+        const int n, const Array<OneD, const NekDouble> &field,
+        const Array<OneD, const NekDouble> &exactsoln);
 
     SOLVER_UTILS_EXPORT void GetFwdBwdMFTrace(
         const Array<OneD, const NekDouble> &inarray,

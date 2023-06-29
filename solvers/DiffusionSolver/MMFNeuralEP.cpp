@@ -1172,7 +1172,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             // Print phim and phie at each node
             if( m_expdim>1 )
             {
-                DisplayatNode(fields[0]);
+                DisplayatNode();
             }
             
             Checkpoint_Output(nchk++);
@@ -1381,22 +1381,22 @@ void MMFNeuralEP::DoSolvePoint()
 
 
 
-void MMFNeuralEP::DisplayatNode(const Array<OneD, const NekDouble> &field)
+void MMFNeuralEP::DisplayatNode()
 {
     int nvar = m_fields.size();
 
-    if(nvar ==1 )
+    if(nvar==1)
     {
-        DisplayatNodevar1(field);
+        DisplayatNodevar1();
     }
 
     else if(nvar==2)
     {
-        DisplayatNodevar2(field);
+        DisplayatNodevar2();
     }
 }
 
-void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const NekDouble> &field)
+void MMFNeuralEP::DisplayatNodevar1()
 {
     // Print phim and phie at each node
     int index, Rnodeid = 0;
@@ -1414,7 +1414,7 @@ void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const NekDouble> &field)
             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
                 index =  m_fields[0]->GetPhys_Offset(i) + j;
-                locphimsum = locphimsum + field[index];
+                locphimsum = locphimsum + m_fields[0]->GetPhys()[index];
             }
 
             phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
@@ -1430,14 +1430,11 @@ void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const NekDouble> &field)
     std::cout << " " << std::endl << std::endl;
 }
 
-void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const NekDouble> &field)
+void MMFNeuralEP::DisplayatNodevar2()
 {
     int nq = GetTotPoints();
 
     // Print phim and phie at each node
-    Array<OneD, NekDouble> phie(nq);
-    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
-
     int index, Rnodeid = 0;
     NekDouble locphimsum, locphiesum;
 
@@ -1453,12 +1450,12 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const NekDouble> &field)
         {
             index =  m_fields[0]->GetPhys_Offset(i) + j;
 
-            locphimsum = locphimsum + field[index];
-            locphiesum = locphiesum + phie[index];
+            locphimsum = locphimsum + m_fields[0]->GetPhys()[index];
+            locphiesum = locphiesum + m_fields[1]->GetPhys()[index];
         }
 
         phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
-        phieavg[Rnodeid] = locphiesum / m_fields[0]->GetTotPoints(i);
+        phieavg[Rnodeid] = locphiesum / m_fields[1]->GetTotPoints(i);
     }
 
     std::cout << " " << std::endl;
@@ -1469,6 +1466,7 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const NekDouble> &field)
     }
     std::cout << " " << std::endl << std::endl;
 }
+
 
 // void MMFNeuralEP::DisplayConductionVelocity(
 //     const Array<OneD, const NekDouble> &field,
@@ -2757,21 +2755,20 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
 
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
-    NekDouble phimavg = AvgInt(phimLaplacian);
-    Vmath::Sadd(nq, -phimavg, phimLaplacian, 1, phimLaplacian, 1);
+    NekDouble phimavg = -1.0 * AvgInt(phimLaplacian);
+    Vmath::Sadd(nq, phimavg, phimLaplacian, 1, phimLaplacian, 1);
     
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
     SetBoundaryConditions(0.0);
 
-    Array<OneD, NekDouble> output(nq);
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), output);
+    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 
-    NekDouble phieavg = Average(output);
-    Vmath::Sadd(nq, -1.0*phieavg, output, 1, m_fields[1]->UpdatePhys(), 1);
+    NekDouble phieavg = -1.0 * Average(m_fields[1]->GetPhys());
+    Vmath::Sadd(nq, phieavg, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
 
     outarray = m_fields[1]->GetPhys();
 }
