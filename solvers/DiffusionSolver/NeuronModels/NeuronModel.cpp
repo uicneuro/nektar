@@ -139,24 +139,15 @@ void NeuronModel::TimeIntegrate(
     // int phys_offset = 0;
     // int coef_offset = 0;
     Array<OneD, NekDouble> tmp;
-    std::cout << "TimeIntegrate: Here 0" << std::endl;
 
     NekDouble delta_t = (time - m_lastTime) / m_substeps;
-    std::cout << "nvar = " << m_nvar << ", m_nq = " << m_nq << std::endl;
-
-    std::cout << "Inarray = " << inarray.size() << ", NeuronSol = " << m_NeuronSol[0].size() << std::endl;
 
     // Copy new transmembrane potential into Neuron model
     Vmath::Vcopy(m_nq, inarray, 1, m_NeuronSol[0], 1);
 
-    std::cout << "TimeIntegrate: Here 1" << std::endl;
-
     // Perform final Neuron model step : m_wsp is the Reaction function from
     // m_NeuronSol[0] of membrane potential.
     Update(NodeZone, m_NeuronSol, m_wsp, time, diameter, Tc);
-
-    std::cout << "TimeIntegrate: Here 2" << std::endl;
-
 
     // Output dV/dt from last step but integrate remaining Neuron model vars
     // Transform Neuron model I_total from nodal to modal space
@@ -169,7 +160,6 @@ void NeuronModel::TimeIntegrate(
                      m_NeuronSol[m_concentrations[j]], 1,
                      m_NeuronSol[m_concentrations[j]], 1);
     }
-    std::cout << "TimeIntegrate: Here 3" << std::endl;
 
     // Gating variables: Rush-Larsen scheme:
     // y_i = y_i^{infty} - ( y_i^{\infty} - y_i (0) ) * exp (-dt / tau_i ) 
