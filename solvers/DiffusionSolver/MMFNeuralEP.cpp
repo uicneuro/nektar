@@ -2630,9 +2630,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
     int nvar = m_fields.size();
     int nq   = m_fields[0]->GetNpoints();
 
+    std::cout << "OdeRhs: Here 1" << std::endl;
+
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time,
                             m_Temperature);
+
+    std::cout << "OdeRhs: Here 2" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -2644,6 +2648,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
     {
         m_stimulus[j]->Update(RHSstimulus, time);
     }
+    std::cout << "Here 3" << std::endl;
 
     // ONLY simulation at node zone:
     // No excitation at myelinated region
@@ -2659,12 +2664,15 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
             outarray[0][k] = outarray[0][k] + RHSstimulus[0][k] / Cn;
         }
     }
+    std::cout << "Here 4" << std::endl;
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq);
     SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+
+    std::cout << "Here 5" << std::endl;
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent;
@@ -2674,6 +2682,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
 
     // Let the extcurrent be zero at Myeline nodes (-1).
     OnlyValideinNode(m_NodeZone[0], extcurrent);
+    std::cout << "Here 6" << std::endl;
 
     // add divergence of phie to the current
     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
@@ -2764,13 +2773,11 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     SetBoundaryConditions(0.0);
 
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), outarray);
     m_fields[1]->SetPhysState(true);
 
-    NekDouble phieavg = -1.0 * Average(m_fields[1]->GetPhys());
-    Vmath::Sadd(nq, phieavg, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
-
-    outarray = m_fields[1]->GetPhys();
+    NekDouble phieavg = -1.0 * AvgInt(outarray);
+    Vmath::Sadd(nq, phieavg, outarray, 1, outarray, 1);
 }
 
 // Array<OneD, NekDouble> MMFNeuralEP::Computephie(
@@ -2937,6 +2944,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         case eNeuralEP1D:
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
+        case eNeuralEP2DEmbed:
         {
             m_neuron->Initialise();
 

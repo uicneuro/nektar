@@ -64,7 +64,7 @@ MMFDiffusion::MMFDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
 void MMFDiffusion::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
-
+    
     int nq    = m_fields[0]->GetNpoints();
     int nvar  = m_fields.size();
 
@@ -79,27 +79,27 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("epsilon1", m_epsilon[1], 1.0);
     m_session->LoadParameter("epsilon2", m_epsilon[2], 1.0);
 
-        Array<OneD, NekDouble> x0(nq);
-        Array<OneD, NekDouble> x1(nq);
-        Array<OneD, NekDouble> x2(nq);
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
 
-        m_fields[0]->GetCoords(x0, x1, x2);
+    m_fields[0]->GetCoords(x0, x1, x2);
 
-    m_epsvec = Array<OneD, NekDouble>(nq);
-    for (int i=0; i<nq; ++i)
-    {
-        if(x1[i]<0)
-        {
-            m_epsvec[i] = 1.0;
-        }
+    // m_epsvec = Array<OneD, NekDouble>(nq);
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     if(x1[i]<0)
+    //     {
+    //         m_epsvec[i] = 1.0;
+    //     }
 
-        else
-        {
-            m_epsvec[i] = 4.0;
-        }
-    }
+    //     else
+    //     {
+    //         m_epsvec[i] = 4.0;
+    //     }
+    // }
 
-    std::cout << "m_epsvec = " << RootMeanSquare(m_epsvec) << std::endl;
+    // std::cout << "m_epsvec = " << RootMeanSquare(m_epsvec) << std::endl;
 
     m_session->LoadParameter("d00", m_d00, 1.0);
     m_session->LoadParameter("d11", m_d11, 1.0);
@@ -239,8 +239,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     if(m_TestType==eTestPlaneEmbed)
     {
         // Let the moving frames outside the domain be of magnitude zero.
-        int index;
-        int cnt = 0;
+        int index, cnt = 0;
         for (int i = m_EmbededPlane; i < m_fields[0]->GetExpSize(); ++i)
         {
             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -255,10 +254,59 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
                 cnt++;
             }
         }
+
         std::cout << "Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
     }
 
     ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+
+    if(m_TestType==eTestPlaneEmbed)
+    {
+        std::cout << "Compute Varcoeff for phie ====================== " << std::endl;
+        m_phiemovingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+        m_phieMMFdir = FindMMFdir("LOCAL");
+        Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+        }
+
+        SetUpMovingFrames(m_phieMMFdir, phieAniStrength, m_phiemovingframes);
+                            
+        StdRegions::VarCoeffMap m_phievarcoeff;
+
+        ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+
+        Array<OneD, NekDouble> ExactSoln(nq);
+
+        TestHelmholtzProblem(0, m_phievarcoeff, m_fields[1]->UpdatePhys());                           
+        TestHelmholtzProblem(1, m_phievarcoeff, ExactSoln);                           
+
+        StdRegions::ConstFactorMap phiefactors;
+        phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
+        phiefactors[StdRegions::eFactorLambda] = 0.0;
+
+        // Compute phie distribution
+        SetBoundaryConditions(0.0);
+
+        m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+        m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+        m_fields[1]->SetPhysState(true);
+
+        Array<OneD, NekDouble> outarray(nq);
+        Vmath::Vcopy(nq, m_fields[1]->UpdatePhys(), 1, outarray, 1);
+
+        NekDouble phieavg = -1.0 * AvgInt(outarray);
+        Vmath::Sadd(nq, phieavg, outarray, 1, outarray, 1);
+
+        Array<OneD, NekDouble> tmp(nq);
+        Vmath::Vsub(nq, outarray, 1, ExactSoln, 1, tmp, 1);
+        std::cout << "SolveHelmholtzDiffusion Error = " << RootMeanSquare(tmp) << std::endl;
+
+        Checkpoint_Output_Error(100, m_fields[1]->GetPhys(), ExactSoln);
+
+        wait_on_enter();
+    }
 
     // Test PhysDirectionalDeriv
     if(m_TestType==eTestPlaneAni)
@@ -331,6 +379,8 @@ void MMFDiffusion::DoImplicitSolve(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
+    boost::ignore_unused(time);
+
     int nvariables = inarray.size();
     int nq         = m_fields[0]->GetNpoints();
 
@@ -348,7 +398,7 @@ void MMFDiffusion::DoImplicitSolve(
     // inarray = input: \hat{rhs} -> output: \hat{Y}
     // outarray = output: nabla^2 \hat{Y}
     // where \hat = modal coeffs
-    SetBoundaryConditions(time);
+    // SetBoundaryConditions(time);
     for (int i = 0; i < nvariables; ++i)
     {
         factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsu[i];
@@ -469,8 +519,8 @@ void MMFDiffusion::DoOdeRhs(
 
             m_fields[0]->GetCoords(x, y, z);
 
-            outarray[0] = Array<OneD, NekDouble>(nq, 0.0);
             int index;
+            outarray[0] = Array<OneD, NekDouble>(nq, 0.0);
             for (int i = 0; i < m_EmbededPlane; ++i)
             {
                 for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -479,7 +529,7 @@ void MMFDiffusion::DoOdeRhs(
                     outarray[0][index] = (m_epsilon[0] * m_frequency *
                                         m_frequency + m_epsilon[1] * m_frequency *
                                         m_frequency - m_frequency) * exp(-1.0 * m_frequency * time) *
-                                        sin(m_frequency * x[index]) * sin(m_frequency * y[index]);        
+                                        cos(m_frequency * x[index]) * cos(m_frequency * y[index]);        
                 }
             }
         }
@@ -867,7 +917,7 @@ void MMFDiffusion::TestPlaneEmbedProblem(const NekDouble time,
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
-            outfield[index] = exp(-1.0 * d00[index] * d11[index] * m_frequency * time) * sin(m_frequency * x[index]) * sin(m_frequency * y[index]);
+            outfield[index] = exp(-1.0 * m_frequency * time) * cos(m_frequency * x[index]) * cos(m_frequency * y[index]);
         }
     }
 }
@@ -931,13 +981,13 @@ void MMFDiffusion::TestHelmholtzProblem(const int type,
         // Helmholtz forcing
         if(type==0)
         {
-            outfield[k] = -1.0 * (d00[k] + d11[k]) * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+            outfield[k] = -1.0 * (d00[k] + d11[k]) * m_frequency * m_frequency * cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
         }
 
         // Helmholtz solution
         else if(type==1)
         {
-            outfield[k] = sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
+            outfield[k] = cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
         }
     }
 }
@@ -1635,6 +1685,21 @@ void MMFDiffusion::v_DoSolve()
         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
     }
 
+    if(m_TestType==eTestPlaneEmbed)
+    {
+        // Let the moving frames outside the domain be of magnitude zero.
+        int index;
+        for (int i = m_EmbededPlane; i < m_fields[0]->GetExpSize(); ++i)
+        {
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            {
+                index = m_fields[0]->GetPhys_Offset(i) + j;
+                fields[0][index] = 0.0; 
+            }
+        }
+    }
+
+
     for (i = 0; i < 1; ++i)
     {
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
@@ -1643,7 +1708,7 @@ void MMFDiffusion::v_DoSolve()
 
     Array<OneD, NekDouble> uexact(nq);
     TestPlaneEmbedProblem(m_time, m_varcoeff, uexact);
-    Checkpoint_Output_Error(nchk, m_fields[0]->GetPhys(), uexact);
+    Checkpoint_Output_Error(nchk-1, m_fields[0]->GetPhys(), uexact);
 } // namespace Nektar
 
 void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)

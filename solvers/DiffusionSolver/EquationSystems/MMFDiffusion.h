@@ -150,6 +150,9 @@ protected:
     NekDouble m_frequency;
     NekDouble m_d00, m_d11, m_d22;
 
+    Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
+    SpatialDomains::GeomMMF m_phieMMFdir;
+
     int m_EmbededPlane;
 
     Array<OneD, NekDouble> m_d00vec;
