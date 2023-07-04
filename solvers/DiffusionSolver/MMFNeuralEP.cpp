@@ -484,7 +484,28 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Create MMF init object
             MMFSystem::MMFInitObject(AniStrength);
-            
+
+            // Only moving frames for intercellular space
+
+            // Let the moving frames outside the domain be of magnitude zero.
+            int index, cnt = 0;
+            for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize(); ++i)
+            {
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                {
+                    index = m_fields[0]->GetPhys_Offset(i) + j;
+                    for (int k=0; k<m_mfdim; ++k)
+                    {
+                        m_movingframes[k][index] = 0.0;
+                        m_movingframes[k][index+nq] = 0.0;
+                        m_movingframes[k][index+2*nq] = 0.0;
+                    }
+                    cnt++;
+                }
+            }
+
+            std::cout << "Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
+                
             // Set up for phie Poisson solver
             std::string phieMMFdirStr = "TangentX";
             m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
@@ -498,8 +519,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Create UnitMovingFrames
             std::cout << std::endl;
-            std::cout << "Constructing phieunitMF "
-                        "================================================"
+            std::cout << "Constructing phieunitMF ================================================"
                     << std::endl;
             m_phieMMFdir = FindMMFdir(phieMMFdirStr);
             SetUpMovingFrames(m_phieMMFdir, phieAniStrength,
@@ -508,8 +528,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Create Phiemovingframes
             std::cout << std::endl;
-            std::cout << "Constructing phieMF "
-                        "================================================"
+            std::cout << "Constructing phieMF ================================================"
                     << std::endl;
 
             m_phiemovingframes =
@@ -1113,6 +1132,18 @@ void MMFNeuralEP::DoSolveMMFZero()
     {
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+
+        // Let the moving frames outside the domain be of magnitude zero.
+        int index;
+        for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize(); ++i)
+        {
+            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            {
+                index = m_fields[0]->GetPhys_Offset(i) + j;
+                fields[0][index] = 0.0; 
+            }
+        }
+
         timer.Stop();
 
         m_time += m_timestep;
@@ -1156,6 +1187,8 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             if( (m_NeuralEPType==eNeuralEP2Dbi) || (m_NeuralEPType==eNeuralEP2DEmbed))
             {
+                Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, fields[1], 1);
+
                 int Iuemax = Vmath::Iamax(nq, m_fields[1]->GetPhys(), 1);
                 std::cout << "ue_max = " << Vmath::Vamax(nq, m_fields[1]->GetPhys(), 1)
                         << " at x = " << x0[Iuemax] << ", y = " << x1[Iuemax] << ", z = " << x2[Iuemax]
@@ -1171,9 +1204,10 @@ void MMFNeuralEP::DoSolveMMFZero()
             // CheckNodeZoneMF(m_movingframes, m_NodeZone, fields[0]);
 
             // Print phim and phie at each node
+
             if( m_expdim>1 )
             {
-                DisplayatNode();
+                DisplayatNode(fields);
             }
             
             Checkpoint_Output(nchk++);
@@ -1382,28 +1416,28 @@ void MMFNeuralEP::DoSolvePoint()
 
 
 
-void MMFNeuralEP::DisplayatNode()
+void MMFNeuralEP::DisplayatNode(const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
     int nvar = m_fields.size();
 
     if(nvar==1)
     {
-        DisplayatNodevar1();
+        DisplayatNodevar1(fields);
     }
 
     else if(nvar==2)
     {
-        DisplayatNodevar2();
+        DisplayatNodevar2(fields);
     }
 }
 
-void MMFNeuralEP::DisplayatNodevar1()
+void MMFNeuralEP::DisplayatNodevar1(const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
     // Print phim and phie at each node
     int index, Rnodeid = 0;
     NekDouble locphimsum;
 
-    Array<OneD, NekDouble> phimavg(m_ElemNodeEnd);
+    Array<OneD, NekDouble> phimavg(m_ElemNodeEnd,0.0);
     for (int i = 0; i < m_ElemNodeEnd; ++i)
     {
         Rnodeid = i / m_numelemperNode;
@@ -1415,10 +1449,10 @@ void MMFNeuralEP::DisplayatNodevar1()
             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
                 index =  m_fields[0]->GetPhys_Offset(i) + j;
-                locphimsum = locphimsum + m_fields[0]->GetPhys()[index];
+                locphimsum = locphimsum + fields[0][index];
             }
 
-            phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
+            phimavg[Rnodeid] += locphimsum / m_fields[0]->GetTotPoints(i);
         }
     }
 
@@ -1431,16 +1465,14 @@ void MMFNeuralEP::DisplayatNodevar1()
     std::cout << " " << std::endl << std::endl;
 }
 
-void MMFNeuralEP::DisplayatNodevar2()
+void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
-    // int nq = GetTotPoints();
-
     // Print phim and phie at each node
     int index, Rnodeid = 0;
     NekDouble locphimsum, locphiesum;
 
-    Array<OneD, NekDouble> phimavg(m_ElemNodeEnd);
-    Array<OneD, NekDouble> phieavg(m_ElemNodeEnd);
+    Array<OneD, NekDouble> phimavg(m_ElemNodeEnd,0.0);
+    Array<OneD, NekDouble> phieavg(m_ElemNodeEnd,0.0);
     for (int i = 0; i < m_ElemNodeEnd; ++i)
     {
         Rnodeid = i / m_numelemperNode;
@@ -1451,12 +1483,12 @@ void MMFNeuralEP::DisplayatNodevar2()
         {
             index =  m_fields[0]->GetPhys_Offset(i) + j;
 
-            locphimsum = locphimsum + m_fields[0]->GetPhys()[index];
-            locphiesum = locphiesum + m_fields[1]->GetPhys()[index];
+            locphimsum = locphimsum + fields[0][index];
+            locphiesum = locphiesum + fields[1][index];
         }
 
-        phimavg[Rnodeid] = locphimsum / m_fields[0]->GetTotPoints(i);
-        phieavg[Rnodeid] = locphiesum / m_fields[1]->GetTotPoints(i);
+        phimavg[Rnodeid] += locphimsum / m_fields[0]->GetTotPoints(i) / m_numelemperNode;
+        phieavg[Rnodeid] += locphiesum / m_fields[1]->GetTotPoints(i) / m_numelemperNode;
     }
 
     std::cout << " " << std::endl;
@@ -2087,7 +2119,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbed(
     const NekDouble lambda)
 {
     boost::ignore_unused(time);
-
     int nq = m_fields[0]->GetNpoints();
 
     // Set up factors for Helmsolve
@@ -2099,7 +2130,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbed(
 
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
-    // SetBoundaryConditions(time);
+    SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition();
 
     // Multiply 1.0/timestep
@@ -2108,7 +2139,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbed(
 
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
-
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
@@ -2548,8 +2578,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     // Add it to the RHS
     Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
-        std::cout << "inarray = " << RootMeanSquare(inarray[0]) << ", outarray[0] = " << RootMeanSquare(outarray[0]) << std::endl;
-
     if (m_explicitDiffusion)
     {
         // Laplacian only to the first variable
@@ -2609,7 +2637,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
     // Let the extcurrent be zero at Myeline nodes (-1).
-    OnlyValideinNode(m_NodeZone[0], extcurrent);
+    // OnlyValideinNode(m_NodeZone[0], extcurrent);
 
         std::cout << "inarray = " << RootMeanSquare(inarray[0]) << ", phie = " << RootMeanSquare(phie) 
         << ", extcurrent = " << RootMeanSquare(extcurrent) << ", outarray[0] = " << RootMeanSquare(outarray[0]) << std::endl;
@@ -2674,16 +2702,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbed(
         extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
         Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
-        // Let the extcurrent be zero at Myeline nodes (-1).
-        OnlyValideinNode(m_NodeZone[0], extcurrent);
-
-        std::cout << "inarray = " << RootMeanSquare(inarray[0]) << ", phie = " << RootMeanSquare(phie) 
-        << ", extcurrent = " << RootMeanSquare(extcurrent) << std::endl;
+        // Extcurrent be zero at Myeline nodes (-1).
+        // OnlyValideinNode(m_NodeZone[0], extcurrent);
 
         // add divergence of phie to the current
         Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
-
-        wait_on_enter();
 
         if (m_explicitDiffusion)
         {
@@ -2828,6 +2851,7 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
 
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
+
     NekDouble phimavg = -1.0 * AvgInt(phimLaplacian);
     Vmath::Sadd(nq, phimavg, phimLaplacian, 1, phimLaplacian, 1);
     
