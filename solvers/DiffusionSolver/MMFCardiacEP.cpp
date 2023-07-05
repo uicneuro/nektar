@@ -405,7 +405,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         case eRegionalHeterogeneous:
         {
             int index;
-            for (int i = 0; i < (m_AnisotropyRegion+1); ++i)
+            for (int i = 0; i < m_AnisotropyRegion; ++i)
                 {
                     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                         {
@@ -413,11 +413,6 @@ void MMFCardiacEP::LoadCardiacFiber(
                             AniStrength[0][index] = sqrt(AnisotropyStrength);            
                         }
                 }
-
-            // for (int i=0; i<nq; ++i)
-            // {
-            //     AniStrength[0][i] = sqrt(AnisotropyStrength);            
-            // }
         }
         break;
 
@@ -1222,8 +1217,6 @@ void MMFCardiacEP::DoImplicitSolveCardiacEP(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
-
-    std::cout << "DoImplicitSolveCardiacEP ========================================" << std::endl;
     boost::ignore_unused(time);
 
     int nvar = inarray.size();
