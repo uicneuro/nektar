@@ -188,21 +188,20 @@ namespace Nektar
             // Myelin node: - g_m V_k
             if(NodeZone[i]==-1)
             {
-                d_dt_membrane__V = var_membrane__gm * var_membrane_V / var_membrane__cml ;
+                outarray[0][i] = -1.0 * var_membrane__gm * var_membrane_V / var_membrane__cml ;
             }
 
             // Ranvider node: -J_{ion}
             else if(NodeZone[i]>=0)
             {
-                d_dt_membrane__V = 2.0 * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
+                // d_dt_membrane__V = 2.0 * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
+                outarray[0][i] = -1.0 * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
             }
 
             else
             {
-                d_dt_membrane__V = 0.0;
+                outarray[0][i] = 0.0;
             }
-
-            outarray[0][i] = -1.0 * d_dt_membrane__V;
 
             // gate variable 1: m 
             // gate variable 2: n
