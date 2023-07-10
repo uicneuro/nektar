@@ -185,20 +185,20 @@ namespace Nektar
             NekDouble var_J_p = var_membrane__Pp * var_current_p * var_current_p * ZNa;
             NekDouble var_J_l = var_membrane__gL * ( var_membrane_V - var_membrane__VL);
 
+            // Ranvider node: -J_{ion}
+            if(NodeZone[i]>=0)
+            {
+                outarray[0][i] = -1.0 * m_pi * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
+                // outarray[0][i] = -1.0 * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
+            }
+
             // Myelin node: - g_m V_k
-            if(NodeZone[i]==-1)
+            else if(NodeZone[i]==-1)
             {
                 outarray[0][i] = -1.0 * var_membrane__gm * var_membrane_V / var_membrane__cml ;
             }
 
-            // Ranvider node: -J_{ion}
-            else if(NodeZone[i]>=0)
-            {
-                // d_dt_membrane__V = 2.0 * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
-                outarray[0][i] = -1.0 * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
-            }
-
-            else
+            else 
             {
                 outarray[0][i] = 0.0;
             }

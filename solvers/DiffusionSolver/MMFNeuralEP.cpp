@@ -86,7 +86,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
-    m_session->LoadParameter("diameter", m_diameter, 0.025);
+    m_session->LoadParameter("diameter", m_diameter, 0.001);
 
     m_session->LoadParameter("NumelemperNode", m_numelemperNode, 4);
 
@@ -110,6 +110,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     {
         m_NeuralEPType = (NeuralEPType)0;
     }
+       std::cout << "m_NeuralEPType = " << m_NeuralEPType << std::endl;
 
     // Define SovlerSchemeType
     if (m_session->DefinesSolverInfo("SolverSchemeType"))
