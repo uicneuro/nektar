@@ -189,7 +189,6 @@ namespace Nektar
             if(NodeZone[i]>=0)
             {
                 outarray[0][i] = -1.0 * m_pi * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
-                // outarray[0][i] = -1.0 * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
             }
 
             // Myelin node: - g_m V_k
