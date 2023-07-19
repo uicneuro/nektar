@@ -57,7 +57,8 @@ enum NeuralEPType
     eNeuralEP1D,
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
-    eNeuralEP2DEmbed,
+    eNeuralEP2DEmbmono,
+    eNeuralEP2DEmbbi,
     SIZE_NeuralEPType ///< Length of enum list
 };
 
@@ -67,7 +68,8 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP1D",
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
-    "NeuralEP2DEmbed",
+    "NeuralEP2DEmbmono",
+    "NeuralEP2DEmbbi",
 };
 
 enum SolverSchemeType
@@ -163,8 +165,10 @@ protected:
 
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
 
-    int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd;
-    int m_Convectiven, m_numelemperNode;
+    int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
+    
+    int m_Convectiven;
+    int m_NumelemNode, m_NumelemMyel;
     NekDouble m_urest;
 
     TimeMapType m_TimeMap;
@@ -317,7 +321,7 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoImplicitSolveNeuralEP2DEmbed(
+    void DoImplicitSolveNeuralEP2DEmbbi(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
@@ -361,7 +365,7 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void DoOdeRhsNeuralEP2DEmbed(
+    void DoOdeRhsNeuralEP2DEmbbi(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
         
