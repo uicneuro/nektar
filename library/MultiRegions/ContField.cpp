@@ -848,6 +848,11 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
             const Array<OneD, NekDouble> bndcoeff =
                 (m_bndCondExpansions[i])->GetCoeffs();
 
+                for (j=0; j<(m_bndCondExpansions[i])->GetNcoeffs();++j)
+                {
+                    std::cout << "i = " << i << ", j = " << j << ", bndcoeff = " << bndcoeff[j] << std::endl;
+                }
+
             if (m_locToGloMap->GetSignChange())
             {
                 for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
