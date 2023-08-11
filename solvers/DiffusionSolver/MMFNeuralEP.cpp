@@ -1192,30 +1192,10 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
+        std::cout << "HERE 1" << std::endl;
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
-
-        // if(m_ElemExtEnd != 0)
-        // {
-        //     for (int i=0; i<nq; ++i)
-        //     {
-        //         if(m_NodeZone[0][i] == -2)
-        //         {
-        //             fields[0][i] = 0.0; 
-        //         }
-        //     }
-        //     // // Let the moving frames outside the domain be of magnitude zero.
-        //     // int index;
-        //     // for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize(); ++i)
-        //     // {
-        //     //     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-        //     //     {
-        //     //         index = m_fields[0]->GetPhys_Offset(i) + j;
-        //     //         fields[0][index] = 0.0; 
-        //     //     }
-        //     // }
-        // }
 
         m_time += m_timestep;
         elapsed = timer.TimePerTest(1);
@@ -2324,9 +2304,10 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
+    std::cout << " ============================================================" << std::endl;
     // SetBoundaryConditions(time);
     SetMembraneBoundaryCondition();
-    wait_on_enter();
+    std::cout << " ============================================================"<< std::endl;
 
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
@@ -2336,40 +2317,42 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
                            factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
+
+    wait_on_enter();
 }
 
 
 // Implicit solve for NeuralEP 2D solver
-void MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbbi(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
-{
-    boost::ignore_unused(time);
-    int nq = m_fields[0]->GetNpoints();
+// void MMFNeuralEP::DoImplicitSolveNeuralEP2DEmbbi(
+//     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+//     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+//     const NekDouble lambda)
+// {
+//     boost::ignore_unused(time);
+//     int nq = m_fields[0]->GetNpoints();
 
-    // Set up factors for Helmsolve
-    const NekDouble R_f = m_neuron->GetRecistanceValue();
-    const NekDouble C_n = m_neuron->GetCapacitanceValue(1);
+//     // Set up factors for Helmsolve
+//     const NekDouble R_f = m_neuron->GetRecistanceValue();
+//     const NekDouble C_n = m_neuron->GetCapacitanceValue(1);
 
-    StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorTau] = m_Helmtau;
+//     StdRegions::ConstFactorMap factors;
+//     factors[StdRegions::eFactorTau] = m_Helmtau;
 
-    factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
+//     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
-    /// SetBoundaryConditions(time);
-    SetMembraneBoundaryCondition();
-    wait_on_enter();
+//     /// SetBoundaryConditions(time);
+//     SetMembraneBoundaryCondition();
+//     wait_on_enter();
 
-    // Multiply 1.0/timestep
-    Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
-                m_fields[0]->UpdatePhys(), 1);
+//     // Multiply 1.0/timestep
+//     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
+//                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                           factors, m_varcoeff);
-    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
-    m_fields[0]->SetPhysState(true);
-}
+//     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+//                            factors, m_varcoeff);
+//     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
+//     m_fields[0]->SetPhysState(true);
+// }
 
 
 //   void MMFNeuralEP::SetAxonWallBoundaryConditions(Array<OneD, Array<OneD,
@@ -2857,7 +2840,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq,0.0);
+    
+    std::cout << "SolveHelmholtzDiffusion: starts ======================================" << std::endl;
     SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+    std::cout << "SolveHelmholtzDiffusion: ends ======================================" << std::endl;
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent(nq,0.0);
@@ -3370,10 +3356,8 @@ void MMFNeuralEP::SetMembraneBoundaryCondition(const NekDouble time)
     for (int n = 0; n < m_fields[0]->GetBndConditions().size(); ++n)
     {
         // Wall Boundary Condition
-        if (boost::iequals(m_fields[0]->GetBndConditions()[n]->GetUserDefined(),
-                           "Membrane"))
+        if (boost::iequals(m_fields[0]->GetBndConditions()[n]->GetUserDefined(), "Membrane"))
         {
-            std::cout << "MembraneBoundary2D, cnt = " << cnt << std::endl;
             MembraneBoundary2D(n, cnt, Fwd, inarray);
         }
 
@@ -3432,9 +3416,9 @@ void MMFNeuralEP::MembraneBoundary2D(
                          ->GetExp(e)
                          ->GetTotPoints();
         id1 = m_fields[0]->GetBndCondExpansions()[bcRegion]->GetPhys_Offset(e);
-        // id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
-        id2 = m_fields[0]->GetTrace()->GetPhys_Offset(
-        m_fields[0]->GetTraceMap()->GetBndCondIDToGlobalTraceID(cnt++));
+        id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
+        // id2 = m_fields[0]->GetTrace()->GetPhys_Offset(
+        // m_fields[0]->GetTraceMap()->GetBndCondIDToGlobalTraceID(cnt++));
 
         for (int i=0;i<npts;++i)
         {

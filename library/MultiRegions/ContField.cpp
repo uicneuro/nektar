@@ -583,6 +583,12 @@ void ContField::v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
             const Array<OneD, NekDouble> bndcoeff =
                 (m_bndCondExpansions[i])->GetCoeffs();
 
+                for (j=0; j<(m_bndCondExpansions[i])->GetNcoeffs();++j)
+                {
+                    std::cout << "v_ImposeDirichletConditions: Dirichlet: i = " << i << ", j = " << j << ", bndcoeff = " << bndcoeff[j] << std::endl;
+                }
+
+
             if (m_locToGloMap->GetSignChange())
             {
                 for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
@@ -837,6 +843,8 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     const Array<OneD, const int> map =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
         
+    std::cout << "bdry size = " << m_bndCondExpansions.size() << " ===================" << std::endl;
+
     // Add weak boundary conditions to forcing
     for (i = 0; i < m_bndCondExpansions.size(); ++i)
     {
@@ -850,7 +858,8 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
 
                 for (j=0; j<(m_bndCondExpansions[i])->GetNcoeffs();++j)
                 {
-                    std::cout << "i = " << i << ", j = " << j << ", bndcoeff = " << bndcoeff[j] << std::endl;
+                    std::cout << "v_HelmSolve: Neumann: i = " << i << ", j = " << j << ", bndcoeff = " << bndcoeff[j] 
+                    << ", wsp = " << wsp[map[bndcnt + j]] << std::endl;
                 }
 
             if (m_locToGloMap->GetSignChange())
