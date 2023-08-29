@@ -1192,7 +1192,6 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
-        std::cout << "HERE 1" << std::endl;
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
@@ -2304,16 +2303,16 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
-    std::cout << " ============================================================" << std::endl;
+    // std::cout << " ============================================================" << std::endl;
     // SetBoundaryConditions(time);
-    SetMembraneBoundaryCondition();
-    std::cout << " ============================================================"<< std::endl;
+    // SetMembraneBoundaryCondition();
+    // std::cout << " ============================================================"<< std::endl;
 
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    m_fields[0]->HelmSolveEmbed(1, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
@@ -2839,11 +2838,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    Array<OneD, NekDouble> phie(nq,0.0);
-    
-    std::cout << "SolveHelmholtzDiffusion: starts ======================================" << std::endl;
+    Array<OneD, NekDouble> phie(nq,0.0);    
     SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
-    std::cout << "SolveHelmholtzDiffusion: ends ======================================" << std::endl;
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent(nq,0.0);
@@ -3071,7 +3067,9 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     // SetMembraneBoundaryCondition();
     SetBoundaryConditions(0.0);
 
-    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+
+    m_fields[1]->HelmSolveEmbed(0, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 

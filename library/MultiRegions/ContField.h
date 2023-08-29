@@ -252,6 +252,16 @@ protected:
         const Array<OneD, const NekDouble> &dirForcing,
         const bool PhysSpaceForcing) override;
 
+    MULTI_REGIONS_EXPORT virtual void v_HelmSolveEmbed(
+        const int bdryExpansion,
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray,
+        const StdRegions::ConstFactorMap &factors,
+        const StdRegions::VarCoeffMap &varcoeff,
+        const MultiRegions::VarFactorsMap &varfactors,
+        const Array<OneD, const NekDouble> &dirForcing,
+        const bool PhysSpaceForcing) override;
+
     // Solve the linear advection problem assuming that m_coeffs
     // vector contains an intial estimate for solution
     MULTI_REGIONS_EXPORT virtual void v_LinearAdvectionDiffusionReactionSolve(

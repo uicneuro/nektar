@@ -583,12 +583,6 @@ void ContField::v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
             const Array<OneD, NekDouble> bndcoeff =
                 (m_bndCondExpansions[i])->GetCoeffs();
 
-                for (j=0; j<(m_bndCondExpansions[i])->GetNcoeffs();++j)
-                {
-                    std::cout << "v_ImposeDirichletConditions: Dirichlet: i = " << i << ", j = " << j << ", bndcoeff = " << bndcoeff[j] << std::endl;
-                }
-
-
             if (m_locToGloMap->GetSignChange())
             {
                 for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
@@ -843,8 +837,6 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     const Array<OneD, const int> map =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
         
-    std::cout << "bdry size = " << m_bndCondExpansions.size() << " ===================" << std::endl;
-
     // Add weak boundary conditions to forcing
     for (i = 0; i < m_bndCondExpansions.size(); ++i)
     {
@@ -855,12 +847,6 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
         {
             const Array<OneD, NekDouble> bndcoeff =
                 (m_bndCondExpansions[i])->GetCoeffs();
-
-                for (j=0; j<(m_bndCondExpansions[i])->GetNcoeffs();++j)
-                {
-                    std::cout << "v_HelmSolve: Neumann: i = " << i << ", j = " << j << ", bndcoeff = " << bndcoeff[j] 
-                    << ", wsp = " << wsp[map[bndcnt + j]] << std::endl;
-                }
 
             if (m_locToGloMap->GetSignChange())
             {
@@ -916,6 +902,117 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
 
     GlobalSolve(key, wsp, outarray, dirForcing);
 }
+
+
+void ContField::v_HelmSolveEmbed(const int bdryExpansion,
+                            const Array<OneD, const NekDouble> &inarray,
+                            Array<OneD, NekDouble> &outarray,
+                            const StdRegions::ConstFactorMap &factors,
+                            const StdRegions::VarCoeffMap &pvarcoeff,
+                            const MultiRegions::VarFactorsMap &varfactors,
+                            const Array<OneD, const NekDouble> &dirForcing,
+                            const bool PhysSpaceForcing)
+{
+    int j;
+
+    //----------------------------------
+    //  Setup RHS Inner product
+    //----------------------------------
+    // Inner product of forcing
+    Array<OneD, NekDouble> wsp(m_ncoeffs);
+    if (PhysSpaceForcing)
+    {
+        IProductWRTBase(inarray, wsp);
+        // Note -1.0 term necessary to invert forcing function to
+        // be consistent with matrix definition
+        Vmath::Neg(m_ncoeffs, wsp, 1);
+    }
+    else
+    {
+        Vmath::Smul(m_ncoeffs, -1.0, inarray, 1, wsp, 1);
+    }
+
+    int bndcnt = 0;
+    Array<OneD, NekDouble> sign =
+        m_locToGloMap->GetBndCondCoeffsToLocalCoeffsSign();
+    const Array<OneD, const int> map =
+        m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
+        
+    int i = bdryExpansion;
+
+    // std::cout << "v_HelmSolveEmbed: bdryExpansion = " << bdryExpansion << ", bdry ConditionType = " 
+    // << m_bndConditions[i]->GetBoundaryConditionType() << std::endl;
+
+    if (m_bndConditions[i]->GetBoundaryConditionType() ==
+            SpatialDomains::eNeumann ||
+        m_bndConditions[i]->GetBoundaryConditionType() ==
+            SpatialDomains::eRobin)
+    {
+        const Array<OneD, NekDouble> bndcoeff =
+            (m_bndCondExpansions[i])->GetCoeffs();
+
+            // for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+            // {
+            //     std::cout << "j = " << j << ", bndcoeff = " << (m_bndCondExpansions[i])->GetCoeffs()[j] << std::endl;
+            // }
+
+        if (m_locToGloMap->GetSignChange())
+        {
+            for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+            {
+                wsp[map[bndcnt + j]] += sign[bndcnt + j] * bndcoeff[j];
+            }
+        }
+        else
+        {
+            for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+            {
+                wsp[map[bndcnt + j]] += bndcoeff[j];
+            }
+        }
+    }
+    bndcnt += m_bndCondExpansions[i]->GetNcoeffs();
+
+    StdRegions::MatrixType mtype = StdRegions::eHelmholtz;
+
+    StdRegions::VarCoeffMap varcoeff(pvarcoeff);
+    if (factors.count(StdRegions::eFactorGJP))
+    {
+        // initialize if required
+        if (!m_GJPData)
+        {
+            m_GJPData = MemoryManager<GJPStabilisation>::AllocateSharedPtr(
+                GetSharedThisPtr());
+        }
+
+        if (m_GJPData->IsSemiImplicit())
+        {
+            mtype = StdRegions::eHelmholtzGJP;
+        }
+
+        // to set up forcing need initial guess in physical space
+        Array<OneD, NekDouble> phys(m_npoints), tmp;
+        BwdTrans(outarray, phys);
+        NekDouble scale = -1.0 * factors.find(StdRegions::eFactorGJP)->second;
+
+        m_GJPData->Apply(
+            phys, wsp,
+            pvarcoeff.count(StdRegions::eVarCoeffGJPNormVel)
+                ? pvarcoeff.find(StdRegions::eVarCoeffGJPNormVel)->second
+                : NullNekDouble1DArray,
+            scale);
+
+        varcoeff.erase(StdRegions::eVarCoeffGJPNormVel);
+    }
+
+    GlobalLinSysKey key(mtype, m_locToGloMap, factors, varcoeff, varfactors);
+
+    GlobalSolve(key, wsp, outarray, dirForcing);
+}
+
+
+
+
 
 /**
  * First compute the inner product of forcing function with respect to
