@@ -1657,7 +1657,7 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
             index =  m_fields[0]->GetPhys_Offset(i) + j;
 
             locphimsum = locphimsum + fields[0][index];
-            locphiesum = locphiesum + fields[1][index];
+            locphiesum = locphiesum + (m_fields[1]->GetPhys())[index];
         }
 
         phimavg[Rnodeid] += locphimsum / m_fields[0]->GetTotPoints(i) / m_NumelemNode;
@@ -1689,7 +1689,7 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
             index =  m_fields[0]->GetPhys_Offset(i) + j;
 
             locphimsum = locphimsum + fields[0][index];
-            locphiesum = locphiesum + fields[1][index];
+            locphiesum = locphiesum + (m_fields[1]->GetPhys())[index];
         }
 
         phimMyel[Rnodeid] += locphimsum / m_fields[0]->GetTotPoints(i) / m_NumelemMyel;
@@ -2312,12 +2312,10 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolveEmbed(1, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    m_fields[0]->HelmSolveEmbed(0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
-
-    wait_on_enter();
 }
 
 
@@ -3068,8 +3066,7 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     SetBoundaryConditions(0.0);
 
     // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-
-    m_fields[1]->HelmSolveEmbed(0, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    m_fields[1]->HelmSolveEmbed(1, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 
