@@ -2303,10 +2303,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
-    // std::cout << " ============================================================" << std::endl;
-    // SetBoundaryConditions(time);
-    // SetMembraneBoundaryCondition();
-    // std::cout << " ============================================================"<< std::endl;
+    SetBoundaryConditions(time);
 
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
@@ -2837,7 +2834,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq,0.0);    
-    SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+    // SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent(nq,0.0);
