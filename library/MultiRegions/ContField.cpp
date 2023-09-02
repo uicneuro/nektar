@@ -904,7 +904,7 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
 }
 
 
-void ContField::v_HelmSolveEmbed(const int bdryExpansion,
+void ContField::v_HelmSolveEmbed(const int bdryExpn,
                             const Array<OneD, const NekDouble> &inarray,
                             Array<OneD, NekDouble> &outarray,
                             const StdRegions::ConstFactorMap &factors,
@@ -938,40 +938,30 @@ void ContField::v_HelmSolveEmbed(const int bdryExpansion,
     const Array<OneD, const int> map =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
         
-    int i = bdryExpansion;
-
-    // std::cout << "v_HelmSolveEmbed: bdryExpansion = " << bdryExpansion << ", bdry ConditionType = " 
-    // << m_bndConditions[i]->GetBoundaryConditionType() << std::endl;
-
-    if (m_bndConditions[i]->GetBoundaryConditionType() ==
+    if (m_bndConditions[bdryExpn]->GetBoundaryConditionType() ==
             SpatialDomains::eNeumann ||
-        m_bndConditions[i]->GetBoundaryConditionType() ==
+        m_bndConditions[bdryExpn]->GetBoundaryConditionType() ==
             SpatialDomains::eRobin)
     {
         const Array<OneD, NekDouble> bndcoeff =
-            (m_bndCondExpansions[i])->GetCoeffs();
-
-            // for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
-            // {
-            //     std::cout << "j = " << j << ", bndcoeff = " << (m_bndCondExpansions[i])->GetCoeffs()[j] << std::endl;
-            // }
+            (m_bndCondExpansions[bdryExpn])->GetCoeffs();
 
         if (m_locToGloMap->GetSignChange())
         {
-            for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+            for (j = 0; j < (m_bndCondExpansions[bdryExpn])->GetNcoeffs(); j++)
             {
                 wsp[map[bndcnt + j]] += sign[bndcnt + j] * bndcoeff[j];
             }
         }
         else
         {
-            for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+            for (j = 0; j < (m_bndCondExpansions[bdryExpn])->GetNcoeffs(); j++)
             {
                 wsp[map[bndcnt + j]] += bndcoeff[j];
             }
         }
     }
-    bndcnt += m_bndCondExpansions[i]->GetNcoeffs();
+    bndcnt += m_bndCondExpansions[bdryExpn]->GetNcoeffs();
 
     StdRegions::MatrixType mtype = StdRegions::eHelmholtz;
 

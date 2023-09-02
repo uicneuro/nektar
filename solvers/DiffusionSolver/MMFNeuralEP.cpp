@@ -492,15 +492,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             if(m_ElemExtEnd != 0)
             {
                 int cnt = 0;
-                // for (int i=0; i<nq; ++i)
-                // {
-                //     if(m_NodeZone[0][i] == -2)
-                //     {
-                //        AniStrength[0][i] = 0.0;
-                //        AniStrength[1][i] = 0.0; 
-                //         cnt++;
-                //     }
-                // }
+                for (int i=0; i<nq; ++i)
+                {
+                    if(m_NodeZone[0][i] == -2)
+                    {
+                       AniStrength[0][i] = 0.00000001;
+                       AniStrength[1][i] = 0.00000001; 
+                        cnt++;
+                    }
+                }
 
                 std::cout << " =======================================================================" << std::endl;
                 std::cout << " Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
@@ -3266,7 +3266,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, 0.001);
+                m_stimulus[i]->Update(tmp, initialtime);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
