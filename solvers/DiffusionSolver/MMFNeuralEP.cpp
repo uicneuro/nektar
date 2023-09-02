@@ -425,12 +425,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 int cnt = 0;
                 for (int i=0; i<nq; ++i)
                 {
-                    if(m_NodeZone[0][i] == -2)
-                    {
-                        AniStrength[0][i] = 0.0;
-                        AniStrength[1][i] = 0.0; 
-                        cnt++;
-                    }
+                    // if(m_NodeZone[0][i] == -2)
+                    // {
+                    //     AniStrength[0][i] = 0.0;
+                    //     AniStrength[1][i] = 0.0; 
+                    //     cnt++;
+                    // }
                 }
 
                 std::cout << " =======================================================================" << std::endl;
@@ -494,12 +494,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 int cnt = 0;
                 for (int i=0; i<nq; ++i)
                 {
-                    if(m_NodeZone[0][i] == -2)
-                    {
-                       AniStrength[0][i] = 0.00000001;
-                       AniStrength[1][i] = 0.00000001; 
-                        cnt++;
-                    }
+                    // if(m_NodeZone[0][i] == -2)
+                    // {
+                    //    AniStrength[0][i] = 0.00000001;
+                    //    AniStrength[1][i] = 0.00000001; 
+                    //     cnt++;
+                    // }
                 }
 
                 std::cout << " =======================================================================" << std::endl;
@@ -2322,8 +2322,11 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolveEmbed(0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
+
+    // m_fields[0]->HelmSolveEmbed(0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    //                        factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
@@ -3075,8 +3078,8 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     // SetMembraneBoundaryCondition();
     SetBoundaryConditions(0.0);
 
-    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->HelmSolveEmbed(1, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    // m_fields[1]->HelmSolveEmbed(1, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 

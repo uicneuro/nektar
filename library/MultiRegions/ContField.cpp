@@ -1000,10 +1000,6 @@ void ContField::v_HelmSolveEmbed(const int bdryExpn,
     GlobalSolve(key, wsp, outarray, dirForcing);
 }
 
-
-
-
-
 /**
  * First compute the inner product of forcing function with respect to
  * base, and then solve the system with the linear advection operator.
