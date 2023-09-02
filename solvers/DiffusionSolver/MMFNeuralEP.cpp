@@ -1232,98 +1232,7 @@ void MMFNeuralEP::DoSolveMMFZero()
         {
             if( (m_NeuralEPType==eNeuralEP2Dbi) || (m_NeuralEPType==eNeuralEP2DEmbbi))
             {
-                int index, Nodeindexm, Myelindexm, Extindexm;
-                int Nodeindexe, Myelindexe, Extindexe;
-
-                NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
-                NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
-
-                NekDouble ue, um;
-
-                // Max um and ue at Node
-                NodeMaxm = 0.0;
-                NodeMaxe = 0.0;
-                for (int i = 0; i < m_ElemNodeEnd; ++i)
-                {
-                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                    {
-                        index = m_fields[0]->GetPhys_Offset(i) + j;
-                        um = fields[0][index];
-                        ue = (m_fields[1]->GetPhys())[index];
-
-                        if(um>NodeMaxm)
-                        {
-                            NodeMaxm = um;
-                            Nodeindexm = index;
-                        }
-
-                        if(ue<NodeMaxe)
-                        {
-                            NodeMaxe = ue;
-                            Nodeindexe = index;
-                        }
-                    }
-                }
-
-                std::cout << "Node: um_max = " << NodeMaxm << " (ue = " << (m_fields[1]->GetPhys())[Nodeindexm]
-                << " ) , ue_max = " << NodeMaxe << " (um = " << fields[0][Nodeindexe] << " ) " << std::endl;
-
-                // Max um and ue at Myelin
-                MyelineMaxm = 0.0;
-                MyelineMaxe = 0.0;
-                for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
-                {
-                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                    {
-                        index = m_fields[0]->GetPhys_Offset(i) + j;
-                        um = fields[0][index];
-                        ue = (m_fields[1]->GetPhys())[index];
-
-                        if(um>MyelineMaxm)
-                        {
-                            MyelineMaxm = um;
-                            Myelindexm = index;
-                        }
-
-                        if(ue<MyelineMaxe)
-                        {
-                            MyelineMaxe = ue;
-                            Myelindexe = index;
-                        }
-                    }
-                }
-
-                std::cout << "Myelin: um_max = " << MyelineMaxm << " (ue = " << (m_fields[1]->GetPhys())[Myelindexm]
-                << " ) , ue_max = " << MyelineMaxe << " (um = " << fields[0][Myelindexe] << " ) " << std::endl;
-
-                // Max um and ue at Exterial space
-                ExtMaxm = 0.0;
-                ExtMaxe = 0.0;
-                for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
-                {
-                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                    {
-                        index = m_fields[0]->GetPhys_Offset(i) + j;
-                        um = fields[0][index];
-                        ue = (m_fields[1]->GetPhys())[index];
-
-                        if(um>ExtMaxm)
-                        {
-                            ExtMaxm = um;
-                            Extindexm = index;
-                        }
-
-                        if(ue<ExtMaxe)
-                        {
-                            ExtMaxe = ue;
-                            Extindexe = index;
-                        }
-                    }
-                }
-
-                // std::cout << "Exterial: um_max = " << ExtMaxm << ", ue_max = " << ExtMaxe << std::endl;
-                std::cout << "Exterial: um_max = " << ExtMaxm << " (ue = " << (m_fields[1]->GetPhys())[Extindexm]
-                << " ) , ue_max = " << ExtMaxe << " (um = " << fields[0][Extindexe] << " ) " << std::endl;
+                PrintRegionalMax(fields[0]);
             }
 
             else
@@ -1386,7 +1295,111 @@ void MMFNeuralEP::DoSolveMMFZero()
 } 
 // namespace Nektar
 
+void MMFNeuralEP::PrintRegionalMax(const Array<OneD, const NekDouble> &field0)
+{
+    int index, Nodeindexm, Myelindexm, Extindexm;
+    int Nodeindexe, Myelindexe, Extindexe;
 
+    NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
+    NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
+
+    NekDouble ue, um;
+    
+    std::cout << " ================================================ " << std::endl;
+
+    // Max um and ue at Node
+    NodeMaxm = 0.0;
+    NodeMaxe = 0.0;
+    Nodeindexm = 0;
+    Nodeindexe = 0;
+    for (int i = 0; i < m_ElemNodeEnd; ++i)
+    {
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            um = field0[index];
+            ue = (m_fields[1]->GetPhys())[index];
+
+            if(um>NodeMaxm)
+            {
+                NodeMaxm = um;
+                Nodeindexm = index;
+            }
+
+            if(ue<NodeMaxe)
+            {
+                NodeMaxe = ue;
+                Nodeindexe = index;
+            }
+        }
+    }
+
+    std::cout << "Node: um_max = " << NodeMaxm << " (ue = " << (m_fields[1]->GetPhys())[Nodeindexm]
+    << " ) , ue_max = " << NodeMaxe << " (um = " << field0[Nodeindexe] << " ) " << std::endl;
+
+    // Max um and ue at Myelin
+    MyelineMaxm = 0.0;
+    MyelineMaxe = 0.0;
+    Myelindexm = 0;
+    Myelindexe = 0;
+    for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
+    {
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            um = field0[index];
+            ue = (m_fields[1]->GetPhys())[index];
+
+            if(um>MyelineMaxm)
+            {
+                MyelineMaxm = um;
+                Myelindexm = index;
+            }
+
+            if(ue<MyelineMaxe)
+            {
+                MyelineMaxe = ue;
+                Myelindexe = index;
+            }
+        }
+    }
+
+    std::cout << "Myelin: um_max = " << MyelineMaxm << " (ue = " << (m_fields[1]->GetPhys())[Myelindexm]
+    << " ) , ue_max = " << MyelineMaxe << " (um = " << field0[Myelindexe] << " ) " << std::endl;
+
+    // Max um and ue at Exterial space
+    ExtMaxm = 0.0;
+    ExtMaxe = 0.0;
+    Extindexm = 0;
+    Extindexe = 0;
+    for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
+    {
+        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+        {
+            index = m_fields[0]->GetPhys_Offset(i) + j;
+            um = field0[index];
+            ue = (m_fields[1]->GetPhys())[index];
+
+            if(um>ExtMaxm)
+            {
+                ExtMaxm = um;
+                Extindexm = index;
+            }
+
+            if(ue<ExtMaxe)
+            {
+                ExtMaxe = ue;
+                Extindexe = index;
+            }
+        }
+    }
+
+    // std::cout << "Exterial: um_max = " << ExtMaxm << ", ue_max = " << ExtMaxe << std::endl;
+    std::cout << "Exterial: um_max = " << ExtMaxm << " (ue = " << (m_fields[1]->GetPhys())[Extindexm]
+    << " ) , ue_max = " << ExtMaxe << " (um = " << field0[Extindexe] << " ) " << std::endl;
+
+    std::cout << " ================================================ " << std::endl;
+}
 
 void MMFNeuralEP::DoSolvePoint()
 {
@@ -3253,13 +3266,15 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->Update(tmp, 0.001);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
             
             // Check NodeZone and moving frames
             CheckNodeZoneMF(m_movingframes, m_NodeZone, tmp[0]);
+
+            PrintRegionalMax(m_fields[0]->GetPhys());
 
             break;
         }
@@ -3375,8 +3390,10 @@ void MMFNeuralEP::MembraneBoundary2D(
     int bcRegion, int cnt, Array<OneD, Array<OneD, NekDouble>> &Fwd,
     Array<OneD, Array<OneD, NekDouble>> &physarray)
 {
+    boost::ignore_unused(physarray);
+
     int nq = GetTotPoints();
-    int nvariables = physarray.size();
+    //  int nvariables = physarray.size();
     int nTracePts = GetTraceNpoints();
 
     int id1, id2, npts;

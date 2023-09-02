@@ -425,7 +425,9 @@ protected:
     void ComputeEuclideanDivMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         Array<OneD, Array<OneD, NekDouble>> &DivMF);
-
+        
+        
+    void PrintRegionalMax(const Array<OneD, const NekDouble> &field0);
 
     Array<OneD, NekDouble> PlanePhiWave();
 
