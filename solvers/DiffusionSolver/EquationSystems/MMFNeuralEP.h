@@ -169,6 +169,8 @@ protected:
     
     int m_Convectiven;
     int m_NumelemNode, m_NumelemMyel;
+    NekDouble m_ExtElemMFLength;
+
     NekDouble m_urest;
 
     TimeMapType m_TimeMap;
@@ -427,7 +429,7 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &DivMF);
         
         
-    void PrintRegionalMax(const Array<OneD, const NekDouble> &field0);
+    void PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0);
 
     Array<OneD, NekDouble> PlanePhiWave();
 
