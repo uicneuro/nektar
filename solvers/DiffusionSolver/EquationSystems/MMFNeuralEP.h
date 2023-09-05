@@ -262,11 +262,8 @@ protected:
     void DoSolveMMFFirst();
     void DoSolveMMFZero();
     void DoSolvePoint();
-
-    // void Plotphimphie(const Array<OneD, const NekDouble> &phim,
-    //                             const Array<OneD, const NekDouble> &phie,
-    //                             const Array<OneD, const NekDouble>
-    //                             &Exactphie, const int nstep);
+    
+    void Plotphimphie(const int nstep, const Array<OneD, const NekDouble> &field0);
 
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;

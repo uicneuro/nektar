@@ -1251,8 +1251,10 @@ void MMFNeuralEP::DoSolveMMFZero()
             {
                 DisplayatNode(fields);
             }
-            
+
+            std::cout << "phim = " << RootMeanSquare(fields[0]) << ", phie = " << RootMeanSquare(m_fields[1]->GetPhys()) << std::endl;
             Checkpoint_Output(nchk++);
+            
             doCheckTime = false;
         }
 
@@ -1281,8 +1283,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
 void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0)
 {
-    int index, Nodeindexm, Myelindexm, Extindexm;
-    int Nodeindexe, Myelindexe, Extindexe;
+    int index;
     int Nodeid, Myelid, Extid;
 
     NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
@@ -1295,8 +1296,6 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
     // Max um and ue at Node
     NodeMaxm = 0.0;
     NodeMaxe = 0.0;
-    Nodeindexm = 0;
-    Nodeindexe = 0;
 
     Nodeid = 0;
     for (int i = 0; i < m_ElemNodeEnd; ++i)
@@ -1332,8 +1331,6 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
     // Max um and ue at Myelin
     MyelineMaxm = 0.0;
     MyelineMaxe = 0.0;
-    Myelindexm = 0;
-    Myelindexe = 0;
     
     Myelid = m_ElemNodeEnd;
     for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
@@ -1369,8 +1366,6 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
     // Max um and ue at Exterial space
     ExtMaxm = 0.0;
     ExtMaxe = 0.0;
-    Extindexm = 0;
-    Extindexe = 0;
 
     Extid = m_ElemMyelenEnd;
     for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
@@ -1723,78 +1718,29 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
     std::cout << " " << std::endl << std::endl;
 }
 
+void MMFNeuralEP::Plotphimphie(const int nstep, const Array<OneD, const NekDouble> &field0)
+{
+    int nvar    = 2;
+    int ncoeffs = m_fields[0]->GetNcoeffs();
 
-// void MMFNeuralEP::DisplayConductionVelocity(
-//     const Array<OneD, const NekDouble> &field,
-//     const Array<OneD, const NekDouble> &dudt)
-// {
-//     int nq         = GetTotPoints();
+    std::string outname1 = m_sessionName + "_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
 
-//     NekDouble phim_th = 100.0;
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
 
-//     Array<OneD, NekDouble> x0(nq);
-//     Array<OneD, NekDouble> x1(nq);
-//     Array<OneD, NekDouble> x2(nq);
+    std::vector<std::string> variables(nvar);
+    variables[0] = "um";
+    variables[1] = "ue";
 
-//     m_fields[0]->GetCoords(x0, x1, x2);
+    m_fields[0]->FwdTrans(field0, fieldcoeffs[0]);
+    m_fields[0]->FwdTrans(m_fields[1]->GetPhys(), fieldcoeffs[1]);
 
-//     for (int i=0;i<nq; ++i)
-//     {
-//         if( (dudt[i]>0) && (field[i]>phim_th) )
-//         {
-//             if (phimhistory[i]==0)
-//             {
-//                 frontloc = x1[i];
-//             }
-
-//             phimhistory[i] = 1;
-//         }
-//     }
-
-//     // Compute conduction velocity
-//     condvel = 1000.0 * (frontloc - frontloc_old)/(m_time - time_old);
-
-//     if(condvel >0.00001)
-//     {
-//     std::cout << "frontloc = " << frontloc << ", cond. vel. = " << condvel <<
-//     " m/s" << std::endl;
-//     }
-// }
-
-// void MMFNeuralEP::Plotphimphie(const Array<OneD, const NekDouble> &phim,
-//                              const Array<OneD, const NekDouble> &phie,
-//                             const Array<OneD, const NekDouble> &Exactphie,
-//                              const int nstep)
-// {
-//     int nvar    = 4;
-//     int ncoeffs = m_fields[0]->GetNcoeffs();
-//     int nq         = GetTotPoints();
-
-//     std::string outname1 = m_sessionName + "_" +
-//                            boost::lexical_cast<std::string>(nstep) + ".chk";
-
-//     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-//     for (int i = 0; i < nvar; ++i)
-//     {
-//         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-//     }
-
-//     std::vector<std::string> variables(nvar);
-//     variables[0] = "um";
-//     variables[1] = "ue";
-//     variables[2] = "Exactue";
-//     variables[3] = "ue_err";
-
-//     Array<OneD, NekDouble> err(nq);
-//     Vmath::Vsub(nq, &phie[0], 1, &Exactphie[0], 1, &err[0], 1);
-
-//     m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
-//     m_fields[0]->FwdTrans(phie, fieldcoeffs[1]);
-//     m_fields[0]->FwdTrans(Exactphie, fieldcoeffs[2]);
-//     m_fields[0]->FwdTrans(err, fieldcoeffs[3]);
-
-//     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-// }
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
 
 void MMFNeuralEP::DoSolveMMFFirst()
 {
@@ -2855,7 +2801,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq,0.0);    
-    // SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+    SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent(nq,0.0);
