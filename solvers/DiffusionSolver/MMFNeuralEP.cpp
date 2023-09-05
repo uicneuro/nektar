@@ -2801,7 +2801,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq,0.0);    
-    SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+    // SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent(nq,0.0);
