@@ -184,6 +184,8 @@ protected:
     
     int m_Convectiven;
     int m_NumelemNode, m_NumelemMyel;
+    NekDouble m_ExtElemMFLength;
+
     NekDouble m_urest;
 
     TimeMapType m_TimeMap;
@@ -275,7 +277,7 @@ protected:
     void DoSolveMMFFirst();
     void DoSolveMMFZero();
     void DoSolvePoint();
-
+    
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
     NekDouble m_AnisotropyStrength;
@@ -437,7 +439,7 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &DivMF);
         
         
-    void PrintRegionalMax(const Array<OneD, const NekDouble> &field0);
+    void PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0);
 
     Array<OneD, NekDouble> PlanePhiWave();
 

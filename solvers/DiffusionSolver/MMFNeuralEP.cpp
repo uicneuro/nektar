@@ -95,6 +95,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
     // Node and Myelen elements range
+
+    m_session->LoadParameter("ExtElemMFLength", m_ExtElemMFLength, 1.0);
     m_session->LoadParameter("ElemNodeEnd", m_ElemNodeEnd, 0);
     m_session->LoadParameter("ElemMyelenEnd", m_ElemMyelenEnd, 0);
     m_session->LoadParameter("ElemExtEnd", m_ElemExtEnd, 0);
@@ -439,17 +441,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            if(m_ElemExtEnd != 0)
+            if(m_ExtElemMFLength<1.0)
             {
                 int cnt = 0;
                 for (int i=0; i<nq; ++i)
                 {
-                    // if(m_NodeZone[0][i] == -2)
-                    // {
-                    //     AniStrength[0][i] = 0.0;
-                    //     AniStrength[1][i] = 0.0; 
-                    //     cnt++;
-                    // }
+                    if(m_NodeZone[0][i] == -2)
+                    {
+                        AniStrength[0][i] = m_ExtElemMFLength;
+                        AniStrength[1][i] = m_ExtElemMFLength; 
+                        cnt++;
+                    }
                 }
 
                 std::cout << " =======================================================================" << std::endl;
@@ -508,41 +510,23 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            if(m_ElemExtEnd != 0)
+            if(m_ExtElemMFLength<1.0)
             {
                 int cnt = 0;
                 for (int i=0; i<nq; ++i)
                 {
-                    // if(m_NodeZone[0][i] == -2)
-                    // {
-                    //    AniStrength[0][i] = 0.00000001;
-                    //    AniStrength[1][i] = 0.00000001; 
-                    //     cnt++;
-                    // }
+                    if(m_NodeZone[0][i] == -2)
+                    {
+                       AniStrength[0][i] = m_ExtElemMFLength;
+                       AniStrength[1][i] = m_ExtElemMFLength; 
+                        cnt++;
+                    }
                 }
 
                 std::cout << " =======================================================================" << std::endl;
                 std::cout << " Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
                 std::cout << " =======================================================================" << std::endl;
             }
-
-            // if(m_ElemExtEnd != 0)
-            // {
-            //     int index, cnt = 0;
-            //     for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize(); ++i)
-            //     {
-            //         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-            //         {
-            //             index = m_fields[0]->GetPhys_Offset(i) + j;
-            //             AniStrength[0][index] = 0.0;
-            //             AniStrength[1][index] = 0.0;
-            //             cnt++;
-            //         }
-            //     }
-            //     std::cout << " =======================================================================" << std::endl;
-            //     std::cout << " Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
-            //     std::cout << " =======================================================================" << std::endl;
-            // }
 
             std::cout << "Max Anistrength_1  = "
                       << Vmath::Vmax(nq, AniStrength[0], 1)
@@ -1251,7 +1235,7 @@ void MMFNeuralEP::DoSolveMMFZero()
         {
             if( (m_NeuralEPType==eNeuralEP2Dbi) || (m_NeuralEPType==eNeuralEP2DEmbbi))
             {
-                PrintRegionalMax(fields[0]);
+                PrintRegionalAvgMax(fields[0]);
             }
 
             else
@@ -1286,8 +1270,10 @@ void MMFNeuralEP::DoSolveMMFZero()
             {
                 DisplayatNode(fields);
             }
-            
+
+            std::cout << "phim = " << RootMeanSquare(fields[0]) << ", phie = " << RootMeanSquare(m_fields[1]->GetPhys()) << std::endl;
             Checkpoint_Output(nchk++);
+            
             doCheckTime = false;
         }
 
@@ -1314,108 +1300,122 @@ void MMFNeuralEP::DoSolveMMFZero()
 } 
 // namespace Nektar
 
-void MMFNeuralEP::PrintRegionalMax(const Array<OneD, const NekDouble> &field0)
+void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0)
 {
-    int index, Nodeindexm, Myelindexm, Extindexm;
-    int Nodeindexe, Myelindexe, Extindexe;
+    int index;
+    int Nodeid, Myelid, Extid;
 
     NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
     NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
 
-    NekDouble ue, um;
+    NekDouble ue, um, elemavgm, elemavge;
     
     std::cout << " ================================================ " << std::endl;
 
     // Max um and ue at Node
     NodeMaxm = 0.0;
     NodeMaxe = 0.0;
-    Nodeindexm = 0;
-    Nodeindexe = 0;
+
+    Nodeid = 0;
     for (int i = 0; i < m_ElemNodeEnd; ++i)
     {
+        elemavgm = 0.0;
+        elemavge = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
             um = field0[index];
             ue = (m_fields[1]->GetPhys())[index];
 
-            if(um>NodeMaxm)
-            {
-                NodeMaxm = um;
-                Nodeindexm = index;
-            }
+            elemavgm += um;
+            elemavge += ue;
+        }
+        elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
+        elemavge = elemavge/m_fields[0]->GetTotPoints(i);
 
-            if(ue<NodeMaxe)
-            {
-                NodeMaxe = ue;
-                Nodeindexe = index;
-            }
+        if(elemavgm>NodeMaxm)
+        {
+            NodeMaxm = elemavgm;
+            Nodeid = i;
+        }
+
+        if(elemavge>NodeMaxe)
+        {
+            NodeMaxe = elemavge;
         }
     }
 
-    std::cout << "Node: um_max = " << NodeMaxm << " (ue = " << (m_fields[1]->GetPhys())[Nodeindexm]
-    << " ) , ue_max = " << NodeMaxe << " (um = " << field0[Nodeindexe] << " ) " << std::endl;
+    std::cout << "Node id = " << Nodeid << ", : um_max = " << NodeMaxm << ", ue_max = " << NodeMaxe << std::endl;
 
     // Max um and ue at Myelin
     MyelineMaxm = 0.0;
     MyelineMaxe = 0.0;
-    Myelindexm = 0;
-    Myelindexe = 0;
+    
+    Myelid = m_ElemNodeEnd;
     for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
     {
+        elemavgm = 0.0;
+        elemavge = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
             um = field0[index];
             ue = (m_fields[1]->GetPhys())[index];
 
-            if(um>MyelineMaxm)
-            {
-                MyelineMaxm = um;
-                Myelindexm = index;
-            }
+            elemavgm += um;
+            elemavge += ue;
+        }
+        elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
+        elemavge = elemavge/m_fields[0]->GetTotPoints(i);
 
-            if(ue<MyelineMaxe)
-            {
-                MyelineMaxe = ue;
-                Myelindexe = index;
-            }
+        if(elemavgm>MyelineMaxm)
+        {
+            MyelineMaxm = elemavgm;
+            Myelid = i;
+        }
+
+        if(elemavge>MyelineMaxe)
+        {
+            MyelineMaxe = elemavge;
         }
     }
 
-    std::cout << "Myelin: um_max = " << MyelineMaxm << " (ue = " << (m_fields[1]->GetPhys())[Myelindexm]
-    << " ) , ue_max = " << MyelineMaxe << " (um = " << field0[Myelindexe] << " ) " << std::endl;
+    std::cout << "Myelid id = " << Myelid << ", : um_max = " << MyelineMaxm << ", ue_max = " << MyelineMaxe << std::endl;
 
     // Max um and ue at Exterial space
     ExtMaxm = 0.0;
     ExtMaxe = 0.0;
-    Extindexm = 0;
-    Extindexe = 0;
+
+    Extid = m_ElemMyelenEnd;
     for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
     {
+        elemavgm = 0.0;
+        elemavge = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
             um = field0[index];
             ue = (m_fields[1]->GetPhys())[index];
 
-            if(um>ExtMaxm)
-            {
-                ExtMaxm = um;
-                Extindexm = index;
-            }
+            elemavgm += um;
+            elemavge += ue;
+        }
+        elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
+        elemavge = elemavge/m_fields[0]->GetTotPoints(i);
 
-            if(ue<ExtMaxe)
-            {
-                ExtMaxe = ue;
-                Extindexe = index;
-            }
+        if(elemavgm>ExtMaxm)
+        {
+            ExtMaxm = elemavgm;
+            Extid = i;
+        }
+
+        if(elemavge>ExtMaxe)
+        {
+            ExtMaxe = elemavge;
         }
     }
 
-    // std::cout << "Exterial: um_max = " << ExtMaxm << ", ue_max = " << ExtMaxe << std::endl;
-    std::cout << "Exterial: um_max = " << ExtMaxm << " (ue = " << (m_fields[1]->GetPhys())[Extindexm]
-    << " ) , ue_max = " << ExtMaxe << " (um = " << field0[Extindexe] << " ) " << std::endl;
+    std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << ", ue_max = " << ExtMaxe << std::endl;
 
     std::cout << " ================================================ " << std::endl;
 }
@@ -1736,44 +1736,6 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
     }
     std::cout << " " << std::endl << std::endl;
 }
-
-
-// void MMFNeuralEP::DisplayConductionVelocity(
-//     const Array<OneD, const NekDouble> &field,
-//     const Array<OneD, const NekDouble> &dudt)
-// {
-//     int nq         = GetTotPoints();
-
-//     NekDouble phim_th = 100.0;
-
-//     Array<OneD, NekDouble> x0(nq);
-//     Array<OneD, NekDouble> x1(nq);
-//     Array<OneD, NekDouble> x2(nq);
-
-//     m_fields[0]->GetCoords(x0, x1, x2);
-
-//     for (int i=0;i<nq; ++i)
-//     {
-//         if( (dudt[i]>0) && (field[i]>phim_th) )
-//         {
-//             if (phimhistory[i]==0)
-//             {
-//                 frontloc = x1[i];
-//             }
-
-//             phimhistory[i] = 1;
-//         }
-//     }
-
-//     // Compute conduction velocity
-//     condvel = 1000.0 * (frontloc - frontloc_old)/(m_time - time_old);
-
-//     if(condvel >0.00001)
-//     {
-//     std::cout << "frontloc = " << frontloc << ", cond. vel. = " << condvel <<
-//     " m/s" << std::endl;
-//     }
-// }
 
 void MMFNeuralEP::DoSolveMMFFirst()
 {
@@ -3264,7 +3226,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             // Check NodeZone and moving frames
             CheckNodeZoneMF(m_movingframes, m_NodeZone, tmp[0]);
 
-            PrintRegionalMax(m_fields[0]->GetPhys());
+            PrintRegionalAvgMax(m_fields[0]->GetPhys());
 
             break;
         }
@@ -3664,6 +3626,8 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMap", TimeMapTypeMap[m_TimeMap]);
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
+
+    SolverUtils::AddSummaryItem(s, "ExtElemMFLength", m_ExtElemMFLength);
     SolverUtils::AddSummaryItem(s, "ElemNodeEnd", m_ElemNodeEnd);
     SolverUtils::AddSummaryItem(s, "ElemMyelenEnd", m_ElemMyelenEnd);
 
