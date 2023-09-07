@@ -161,6 +161,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_TimeMap = (TimeMapType)0;
     }
 
+    // Either incorporating external current effect or not.
+    if (m_session->DefinesSolverInfo("ExtCondType"))
+    {
+        std::string ExtCondTypeStr;
+        ExtCondTypeStr = m_session->GetSolverInfo("ExtCondType");
+        for (int i = 0; i < (int)SIZE_ExtCondType; ++i)
+        {
+            if (boost::iequals(ExtCondTypeMap[i], ExtCondTypeStr))
+            {
+                m_ExtCondType = (ExtCondType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_ExtCondType = (ExtCondType)0;
+    }
+
     switch (m_NeuralEPType)
     {
         case eNeuralEPPT:
@@ -1756,41 +1775,6 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
 //     }
 // }
 
-// void MMFNeuralEP::Plotphimphie(const Array<OneD, const NekDouble> &phim,
-//                              const Array<OneD, const NekDouble> &phie,
-//                             const Array<OneD, const NekDouble> &Exactphie,
-//                              const int nstep)
-// {
-//     int nvar    = 4;
-//     int ncoeffs = m_fields[0]->GetNcoeffs();
-//     int nq         = GetTotPoints();
-
-//     std::string outname1 = m_sessionName + "_" +
-//                            boost::lexical_cast<std::string>(nstep) + ".chk";
-
-//     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-//     for (int i = 0; i < nvar; ++i)
-//     {
-//         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-//     }
-
-//     std::vector<std::string> variables(nvar);
-//     variables[0] = "um";
-//     variables[1] = "ue";
-//     variables[2] = "Exactue";
-//     variables[3] = "ue_err";
-
-//     Array<OneD, NekDouble> err(nq);
-//     Vmath::Vsub(nq, &phie[0], 1, &Exactphie[0], 1, &err[0], 1);
-
-//     m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
-//     m_fields[0]->FwdTrans(phie, fieldcoeffs[1]);
-//     m_fields[0]->FwdTrans(Exactphie, fieldcoeffs[2]);
-//     m_fields[0]->FwdTrans(err, fieldcoeffs[3]);
-
-//     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-// }
-
 void MMFNeuralEP::DoSolveMMFFirst()
 {
     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
@@ -2850,7 +2834,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> phie(nq,0.0);    
-    // SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+    if(m_ExtCondType==eExtActivated)
+    {
+        SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+    }
 
     // Add the current changes by the external current
     Array<OneD, NekDouble> extcurrent(nq,0.0);
@@ -3671,6 +3658,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 
     SolverUtils::AddSummaryItem(s, "NeuralEPType",
                                 NeuralEPTypeMap[m_NeuralEPType]);
+    SolverUtils::AddSummaryItem(s, "ExtCondType", ExtCondTypeMap[m_ExtCondType]);
     SolverUtils::AddSummaryItem(s, "SolverSchemeType",
                                 SolverSchemeTypeMap[m_SolverSchemeType]);
     SolverUtils::AddSummaryItem(s, "TimeMap", TimeMapTypeMap[m_TimeMap]);

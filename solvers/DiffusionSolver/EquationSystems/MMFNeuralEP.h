@@ -128,6 +128,19 @@ const char *const TimeMapTypeMap[] = {
     "Processing",
 };
 
+enum ExtCondType
+{
+    eExtActivated,
+    eExtDeActivated,
+    SIZE_ExtCondType ///< Length of enum list
+};
+
+const char *const ExtCondTypeMap[] = {
+    "ExtActivated",
+    "ExtDeActivated",
+};
+
+
 /// A model for cardiac conduction.
 class MMFNeuralEP : public SolverUtils::MMFSystem
 {
@@ -150,6 +163,8 @@ public:
 
     NeuralEPType m_NeuralEPType;
     SolverSchemeType m_SolverSchemeType;
+
+    ExtCondType m_ExtCondType;
 
     NekDouble d_max, d_min;
 
@@ -260,11 +275,6 @@ protected:
     void DoSolveMMFFirst();
     void DoSolveMMFZero();
     void DoSolvePoint();
-
-    // void Plotphimphie(const Array<OneD, const NekDouble> &phim,
-    //                             const Array<OneD, const NekDouble> &phie,
-    //                             const Array<OneD, const NekDouble>
-    //                             &Exactphie, const int nstep);
 
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
