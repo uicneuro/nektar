@@ -2262,7 +2262,9 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
-    SetBoundaryConditions(time);
+    // SetBoundaryConditions(time);
+    SetMembraneBoundaryCondition();
+    wait_on_enter();
 
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
@@ -3311,13 +3313,44 @@ void MMFNeuralEP::SetMembraneBoundaryCondition(const NekDouble time)
         m_fields[i]->ExtractTracePhys(inarray[i], Fwd[i]);
     }
 
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
     // loop over Boundary Regions
     for (int n = 0; n < m_fields[0]->GetBndConditions().size(); ++n)
     {
         // Wall Boundary Condition
         if (boost::iequals(m_fields[0]->GetBndConditions()[n]->GetUserDefined(), "Membrane"))
         {
-            MembraneBoundary2D(n, cnt, Fwd, inarray);
+            int id1, id2, index, npts;
+
+            const Array<OneD, const int> &traceBndMap = m_fields[0]->GetTraceBndMap();
+
+            for (int e = 0; e < m_fields[0]->GetBndCondExpansions()[n]->GetExpSize(); ++e)
+            {
+                npts = m_fields[0]
+                                ->GetBndCondExpansions()[n]
+                                ->GetExp(e)
+                                ->GetTotPoints();
+                id1 = m_fields[0]->GetBndCondExpansions()[n]->GetPhys_Offset(e);
+                id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
+
+                for (int i=0;i<npts;++i)
+                {
+                    index = id1+i;
+                    std::cout << "e = " << e << ", id1 = " << index << ", Zone = " << m_NodeZone[0][index] 
+                    << " at y = " << x1[index] << std::endl;
+                }
+
+                // Pure Neumann boundary condtiion
+                Vmath::Vcopy(npts, &Fwd[0][id2], 1,
+                            &(m_fields[0]
+                                ->GetBndCondExpansions()[n]
+                                ->UpdatePhys())[id1], 1);
+            }
         }
 
         else
@@ -3358,7 +3391,6 @@ void MMFNeuralEP::MembraneBoundary2D(
     Array<OneD, NekDouble> x2(nq);
 
     m_fields[0]->GetCoords(x0, x1, x2);
-
 
     Array<OneD, NekDouble> x0tmp(nTracePts);
     Array<OneD, NekDouble> x1tmp(nTracePts);
