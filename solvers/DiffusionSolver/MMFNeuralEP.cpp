@@ -3319,6 +3319,25 @@ void MMFNeuralEP::SetMembraneBoundaryCondition(const NekDouble time)
 
     m_fields[0]->GetCoords(x0, x1, x2);
 
+    Array<OneD, NekDouble> x0Fwd(nTracePts);
+    Array<OneD, NekDouble> x1Fwd(nTracePts);
+    Array<OneD, NekDouble> x2Fwd(nTracePts);
+
+    m_fields[0]->ExtractTracePhys(x0, x0Fwd);
+    m_fields[0]->ExtractTracePhys(x1, x1Fwd);
+    m_fields[0]->ExtractTracePhys(x2, x2Fwd);
+
+    Array<OneD, NekDouble> NodeZoneFwd(nTracePts);
+
+    Array<OneD, NekDouble> NodeZoneDouble(nq);
+
+    for (int i=0; i<nq; ++i)
+    {
+        NodeZoneDouble[i] = 1.0 * m_NodeZone[0][i];
+    }
+
+    m_fields[0]->ExtractTracePhys(NodeZoneDouble, NodeZoneFwd);
+
     // loop over Boundary Regions
     for (int n = 0; n < m_fields[0]->GetBndConditions().size(); ++n)
     {
@@ -3340,9 +3359,9 @@ void MMFNeuralEP::SetMembraneBoundaryCondition(const NekDouble time)
 
                 for (int i=0;i<npts;++i)
                 {
-                    index = id1+i;
-                    std::cout << "e = " << e << ", id1 = " << index << ", Zone = " << m_NodeZone[0][index] 
-                    << " at y = " << x1[index] << std::endl;
+                    index = id2+i;
+                    std::cout << "n = " << n << ", e = " << e << ", id2 = " << index << ", Zone = " << NodeZoneFwd[index] 
+                    << " at x = " << x0Fwd[index] << ", y = " << x1Fwd[index] << std::endl;
                 }
 
                 // Pure Neumann boundary condtiion
