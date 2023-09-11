@@ -624,6 +624,70 @@ void ContField::v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
     }
 }
 
+void ContField::v_ImposeZeroDirichletConditionsEmbed(
+        const int bdryExpansion, 
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray)
+{
+    int j;
+    int bndcnt = 0;
+    outarray = inarray;
+
+    Vmath::Vcopy(m_ncoeffs, &inarray[0], 1, &outarray[0], 1);
+
+    Array<OneD, NekDouble> sign =
+        m_locToGloMap->GetBndCondCoeffsToLocalCoeffsSign();
+    const Array<OneD, const int> map =
+        m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
+
+            const Array<OneD, NekDouble> bndcoeff =
+                (m_bndCondExpansions[bdryExpansion])->GetCoeffs();
+
+            if (m_locToGloMap->GetSignChange())
+            {
+                for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+                {
+                    outarray[map[bndcnt + j]] = sign[bndcnt + j] * bndcoeff[j];
+                }
+            }
+            else
+            {
+                for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+                {
+                    outarray[map[bndcnt + j]] = bndcoeff[bndcnt + j];
+                }
+            }
+
+    // for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+    // {
+    //     outarray[map[bndcnt + j]] = 0.0;
+    // }
+
+    // bndcnt = m_bndCondExpansions[bdryExpansion]->GetNcoeffs();
+
+    // communicate local Dirichlet coeffs that are just
+    // touching a dirichlet boundary on another partition
+    // set<int> &ParallelDirBndSign = m_locToGloMap->GetParallelDirBndSign();
+
+    // for (auto &it : ParallelDirBndSign)
+    // {
+    //     outarray[it] *= -1;
+    // }
+
+    // m_locToGloMap->UniversalAbsMaxBnd(outarray);
+
+    // for (auto &it : ParallelDirBndSign)
+    // {
+    //     outarray[it] *= -1;
+    // }
+
+    // set<ExtraDirDof> &copyLocalDirDofs = m_locToGloMap->GetCopyLocalDirDofs();
+    // for (auto &it : copyLocalDirDofs)
+    // {
+    //     outarray[std::get<0>(it)] = outarray[std::get<1>(it)] * std::get<2>(it);
+    // }
+}
+
 void ContField::v_FillBndCondFromField(void)
 {
     int bndcnt = 0;

@@ -4794,6 +4794,17 @@ void ExpList::v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
              "This method is not defined or valid for this class type");
 }
 
+void ExpList::v_ImposeZeroDirichletConditionsEmbed(
+        const int bdryExpansion, 
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray)
+{
+    boost::ignore_unused(bdryExpansion, inarray, outarray);
+    NEKERROR(ErrorUtil::efatal,
+             "This method is not defined or valid for this class type");
+}
+
+
 /**
  */
 void ExpList::v_FillBndCondFromField()

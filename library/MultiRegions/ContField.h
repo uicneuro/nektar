@@ -200,6 +200,11 @@ protected:
     MULTI_REGIONS_EXPORT virtual void v_ImposeDirichletConditions(
         Array<OneD, NekDouble> &outarray) override;
 
+    MULTI_REGIONS_EXPORT virtual void v_ImposeZeroDirichletConditionsEmbed(
+        const int bdryExpansion, 
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray) override;
+
     MULTI_REGIONS_EXPORT virtual void v_FillBndCondFromField() override;
 
     MULTI_REGIONS_EXPORT virtual void v_FillBndCondFromField(

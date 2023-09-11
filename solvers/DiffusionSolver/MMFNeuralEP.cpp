@@ -1304,23 +1304,34 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
 {
     int index;
     int Nodeid, Myelid, Extid;
+    int nq               = GetTotPoints();
 
     NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
     NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
 
     NekDouble ue, um, elemavgm, elemavge;
+
+    NekDouble yavgindex, yavg;
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
     
-    std::cout << " ================================================ " << std::endl;
+    std::cout << " ========================================================================================== " << std::endl;
 
     // Max um and ue at Node
     NodeMaxm = 0.0;
     NodeMaxe = 0.0;
 
     Nodeid = 0;
+    yavg = 0.0;
     for (int i = 0; i < m_ElemNodeEnd; ++i)
     {
         elemavgm = 0.0;
         elemavge = 0.0;
+        yavg = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
@@ -1329,13 +1340,16 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
 
             elemavgm += um;
             elemavge += ue;
+            yavg += x1[index];
         }
         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
+        yavg = yavg/m_fields[0]->GetTotPoints(i);
 
         if(elemavgm>NodeMaxm)
         {
             NodeMaxm = elemavgm;
+            yavgindex = yavg;
             Nodeid = i;
         }
 
@@ -1345,17 +1359,19 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
         }
     }
 
-    std::cout << "Node id = " << Nodeid << ", : um_max = " << NodeMaxm << ", ue_max = " << NodeMaxe << std::endl;
+    std::cout << "Node id = " << Nodeid << ", : um_max = " << NodeMaxm << " at y = " << yavgindex << ", ue_max = " << NodeMaxe << std::endl;
 
     // Max um and ue at Myelin
     MyelineMaxm = 0.0;
     MyelineMaxe = 0.0;
     
     Myelid = m_ElemNodeEnd;
+    yavg = 0.0;
     for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
     {
         elemavgm = 0.0;
         elemavge = 0.0;
+        yavg = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
@@ -1364,13 +1380,16 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
 
             elemavgm += um;
             elemavge += ue;
+            yavg += x1[index];
         }
         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
+        yavg = yavg/m_fields[0]->GetTotPoints(i);
 
         if(elemavgm>MyelineMaxm)
         {
             MyelineMaxm = elemavgm;
+            yavgindex = yavg;
             Myelid = i;
         }
 
@@ -1380,17 +1399,19 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
         }
     }
 
-    std::cout << "Myelid id = " << Myelid << ", : um_max = " << MyelineMaxm << ", ue_max = " << MyelineMaxe << std::endl;
+    std::cout << "Myelid id = " << Myelid << ", : um_max = " << MyelineMaxm << " at y = " << yavgindex << ", ue_max = " << MyelineMaxe << std::endl;
 
     // Max um and ue at Exterial space
     ExtMaxm = 0.0;
     ExtMaxe = 0.0;
 
     Extid = m_ElemMyelenEnd;
+    yavg = 0.0;
     for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
     {
         elemavgm = 0.0;
         elemavge = 0.0;
+        yavg = 0.0;
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
@@ -1399,13 +1420,16 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
 
             elemavgm += um;
             elemavge += ue;
+            yavg += x1[index];
         }
         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
+        yavg = yavg/m_fields[0]->GetTotPoints(i);
 
         if(elemavgm>ExtMaxm)
         {
             ExtMaxm = elemavgm;
+            yavgindex = yavg;
             Extid = i;
         }
 
@@ -1415,9 +1439,15 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
         }
     }
 
-    std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << ", ue_max = " << ExtMaxe << std::endl;
+    std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << " at y = " << yavgindex << ", ue_max = " << ExtMaxe << std::endl;
+    for (int j = 0; j < m_fields[0]->GetTotPoints(Extid); ++j)
+    {
+        index = m_fields[0]->GetPhys_Offset(Extid) + j; 
+        std::cout << "index = " << index << ", type = " << m_NodeZone[0][index] << ", um = " << field0[index] 
+        << " at x = " << x0[index] << ", y = " << x1[index] << std::endl;
+    }
 
-    std::cout << " ================================================ " << std::endl;
+    std::cout << " ========================================================================================== " << std::endl;
 }
 
 void MMFNeuralEP::DoSolvePoint()
@@ -2263,18 +2293,21 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     factors[StdRegions::eFactorLambda] = C_n * R_f / lambda;
 
     // SetBoundaryConditions(time);
-    SetMembraneBoundaryCondition();
-    wait_on_enter();
+    // SetMembraneBoundaryCondition();
+    // wait_on_enter();
 
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    //                        factors, m_varcoeff);
+
+    m_fields[0]->HelmSolveEmbed(0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
 
-    // m_fields[0]->HelmSolveEmbed(0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-    //                        factors, m_varcoeff);
+    // Impose Zero boundary condtions to the membrane. 
+    m_fields[0]->ImposeZeroDirichletConditionsEmbed(0,m_fields[0]->GetCoeffs(),m_fields[0]->UpdateCoeffs());
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
@@ -3027,10 +3060,10 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
-    SetBoundaryConditions(0.0);
+    // SetBoundaryConditions(0.0);
 
-    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    // m_fields[1]->HelmSolveEmbed(1, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    m_fields[1]->HelmSolveEmbed(1, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 

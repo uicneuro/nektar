@@ -494,6 +494,11 @@ public:
     /// Impose Dirichlet Boundary Conditions onto Array
     inline void ImposeDirichletConditions(Array<OneD, NekDouble> &outarray);
 
+    inline void ImposeZeroDirichletConditionsEmbed(
+        const int bdryExpansion, 
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray);
+
     /// Fill Bnd Condition expansion from the values stored in expansion
     inline void FillBndCondFromField(void);
 
@@ -1415,6 +1420,11 @@ NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
     // wrapper functions about virtual functions
     virtual void v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray);
 
+    virtual void v_ImposeZeroDirichletConditionsEmbed(        
+        const int bdryExpansion, 
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray);
+
     virtual void v_FillBndCondFromField();
 
     virtual void v_FillBndCondFromField(const int nreg);
@@ -2165,6 +2175,14 @@ inline const Array<OneD, const NekDouble> &ExpList::GetCoeffs() const
 inline void ExpList::ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
 {
     v_ImposeDirichletConditions(outarray);
+}
+
+inline void ExpList::ImposeZeroDirichletConditionsEmbed(       
+        const int bdryExpansion, 
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray)
+{
+    v_ImposeZeroDirichletConditionsEmbed(bdryExpansion, inarray, outarray);
 }
 
 inline void ExpList::FillBndCondFromField(void)
