@@ -146,6 +146,13 @@ public:
         Array<OneD, NekDouble> &inout,
         const Array<OneD, const NekDouble> &dirForcing = NullNekDouble1DArray);
 
+    MULTI_REGIONS_EXPORT void GlobalSolveEmbed(const int bdryStart,
+                            const int bdryEnd,
+                            const GlobalLinSysKey &key,
+                            const Array<OneD, const NekDouble> &locrhs,
+                            Array<OneD, NekDouble> &inout,
+                            const Array<OneD, const NekDouble> &dirForcing = NullNekDouble1DArray);
+
     MULTI_REGIONS_EXPORT const GJPStabilisationSharedPtr GetGJPForcing()
     {
         // initialize if required
@@ -200,10 +207,15 @@ protected:
     MULTI_REGIONS_EXPORT virtual void v_ImposeDirichletConditions(
         Array<OneD, NekDouble> &outarray) override;
 
-    MULTI_REGIONS_EXPORT virtual void v_ImposeZeroDirichletConditionsEmbed(
-        const int bdryExpansion, 
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray) override;
+    MULTI_REGIONS_EXPORT virtual void v_ImposeDirichletConditionsEmbed(
+    const int bdryStart,
+    const int bdryEnd,
+    Array<OneD, NekDouble> &outarray) override;
+
+    // MULTI_REGIONS_EXPORT virtual void v_ImposeZeroDirichletConditionsEmbed(
+    //     const int bdryExpansion, 
+    //     const Array<OneD, const NekDouble> &inarray,
+    //     Array<OneD, NekDouble> &outarray) override;
 
     MULTI_REGIONS_EXPORT virtual void v_FillBndCondFromField() override;
 
@@ -258,7 +270,8 @@ protected:
         const bool PhysSpaceForcing) override;
 
     MULTI_REGIONS_EXPORT virtual void v_HelmSolveEmbed(
-        const int bdryExpansion,
+        const int bdryStart,
+        const int bdryEnd,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray,
         const StdRegions::ConstFactorMap &factors,

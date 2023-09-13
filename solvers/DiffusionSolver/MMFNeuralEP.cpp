@@ -2300,16 +2300,15 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-    //                        factors, m_varcoeff);
-
-    m_fields[0]->HelmSolveEmbed(0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
-
-    // Impose Zero boundary condtions to the membrane. 
-    m_fields[0]->ImposeZeroDirichletConditionsEmbed(0,m_fields[0]->GetCoeffs(),m_fields[0]->UpdateCoeffs());
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
+
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    //                        factors, m_varcoeff);
+    // Impose Zero boundary condtions to the membrane. 
+    // m_fields[0]->ImposeZeroDirichletConditionsEmbed(0,m_fields[0]->GetCoeffs(),m_fields[0]->UpdateCoeffs());
 }
 
 
@@ -3063,7 +3062,7 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     // SetBoundaryConditions(0.0);
 
     // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->HelmSolveEmbed(1, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    m_fields[1]->HelmSolveEmbed(1, 2, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 

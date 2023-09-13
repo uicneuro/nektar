@@ -299,6 +299,17 @@ protected:
                              const Array<OneD, const NekDouble> &dirForcing,
                              const bool PhysSpaceForcing) override;
 
+    virtual void v_HelmSolveEmbed(
+                             const int bdryStart,
+                             const int bdryEnd,
+                             const Array<OneD, const NekDouble> &inarray,
+                             Array<OneD, NekDouble> &outarray,
+                             const StdRegions::ConstFactorMap &factors,
+                             const StdRegions::VarCoeffMap &varcoeff,
+                             const MultiRegions::VarFactorsMap &varfactors,
+                             const Array<OneD, const NekDouble> &dirForcing,
+                             const bool PhysSpaceForcing) override;
+
     virtual void v_PeriodicBwdCopy(const Array<OneD, const NekDouble> &Fwd,
                                    Array<OneD, NekDouble> &Bwd) override;
 

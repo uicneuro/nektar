@@ -4653,7 +4653,8 @@ void ExpList::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     NEKERROR(ErrorUtil::efatal, "HelmSolve not implemented.");
 }
 
-void ExpList::v_HelmSolveEmbed(const int bdryExpansion,
+void ExpList::v_HelmSolveEmbed(const int bdryStart,
+                          const int bdryEnd,
                           const Array<OneD, const NekDouble> &inarray,
                           Array<OneD, NekDouble> &outarray,
                           const StdRegions::ConstFactorMap &factors,
@@ -4662,7 +4663,7 @@ void ExpList::v_HelmSolveEmbed(const int bdryExpansion,
                           const Array<OneD, const NekDouble> &dirForcing,
                           const bool PhysSpaceForcing)
 {
-    boost::ignore_unused(bdryExpansion, inarray, outarray, factors, varcoeff, varfactors,
+    boost::ignore_unused(bdryStart, bdryEnd, inarray, outarray, factors, varcoeff, varfactors,
                          dirForcing, PhysSpaceForcing);
     NEKERROR(ErrorUtil::efatal, "HelmSolve not implemented.");
 }
@@ -4794,15 +4795,25 @@ void ExpList::v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
              "This method is not defined or valid for this class type");
 }
 
-void ExpList::v_ImposeZeroDirichletConditionsEmbed(
-        const int bdryExpansion, 
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray)
+void ExpList::v_ImposeDirichletConditionsEmbed(
+    const int bdryStart,
+    const int bdryEnd,
+    Array<OneD, NekDouble> &outarray)
 {
-    boost::ignore_unused(bdryExpansion, inarray, outarray);
+    boost::ignore_unused(bdryStart, bdryEnd, outarray);
     NEKERROR(ErrorUtil::efatal,
              "This method is not defined or valid for this class type");
 }
+
+// void ExpList::v_ImposeZeroDirichletConditionsEmbed(
+//         const int bdryExpansion, 
+//         const Array<OneD, const NekDouble> &inarray,
+//         Array<OneD, NekDouble> &outarray)
+// {
+//     boost::ignore_unused(bdryExpansion, inarray, outarray);
+//     NEKERROR(ErrorUtil::efatal,
+//              "This method is not defined or valid for this class type");
+// }
 
 
 /**

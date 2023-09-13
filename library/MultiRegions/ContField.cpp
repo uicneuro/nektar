@@ -506,6 +506,28 @@ void ContField::GlobalSolve(const GlobalLinSysKey &key,
     }
 }
 
+void ContField::GlobalSolveEmbed(const int bdryStart,
+                            const int bdryEnd,
+                            const GlobalLinSysKey &key,
+                            const Array<OneD, const NekDouble> &locrhs,
+                            Array<OneD, NekDouble> &inout,
+                            const Array<OneD, const NekDouble> &dirForcing)
+{
+    int NumDirBcs   = m_locToGloMap->GetNumGlobalDirBndCoeffs();
+    int contNcoeffs = m_locToGloMap->GetNumGlobalCoeffs();
+
+    // STEP 1: SET THE DIRICHLET DOFS TO THE RIGHT VALUE
+    //         IN THE SOLUTION ARRAY
+    v_ImposeDirichletConditionsEmbed(bdryStart, bdryEnd, inout);
+
+    // STEP 2: CALCULATE THE HOMOGENEOUS COEFFICIENTS
+    if (contNcoeffs - NumDirBcs > 0)
+    {
+        GlobalLinSysSharedPtr LinSys = GetGlobalLinSys(key);
+        LinSys->Solve(locrhs, inout, m_locToGloMap, dirForcing);
+    }
+}
+
 /**
  * Returns the global matrix associated with the given GlobalMatrixKey.
  * If the global matrix has not yet been constructed on this field,
@@ -624,69 +646,134 @@ void ContField::v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
     }
 }
 
-void ContField::v_ImposeZeroDirichletConditionsEmbed(
-        const int bdryExpansion, 
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray)
+void ContField::v_ImposeDirichletConditionsEmbed(
+    const int bdryStart,
+    const int bdryEnd,
+    Array<OneD, NekDouble> &outarray)
 {
-    int j;
+    int i, j;
     int bndcnt = 0;
-    outarray = inarray;
-
-    Vmath::Vcopy(m_ncoeffs, &inarray[0], 1, &outarray[0], 1);
 
     Array<OneD, NekDouble> sign =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsSign();
     const Array<OneD, const int> map =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
 
+    for (i = 0; i < m_bndCondExpansions.size(); ++i)
+    {
+        if (m_bndConditions[i]->GetBoundaryConditionType() ==
+            SpatialDomains::eDirichlet)
+        {
             const Array<OneD, NekDouble> bndcoeff =
-                (m_bndCondExpansions[bdryExpansion])->GetCoeffs();
+                (m_bndCondExpansions[i])->GetCoeffs();
 
-            if (m_locToGloMap->GetSignChange())
+            if( (i>=bdryStart) && (i<=bdryEnd) )
             {
-                for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+                if (m_locToGloMap->GetSignChange())
                 {
-                    outarray[map[bndcnt + j]] = sign[bndcnt + j] * bndcoeff[j];
+                    for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+                    {
+                        outarray[map[bndcnt + j]] = sign[bndcnt + j] * bndcoeff[j];
+                    }
+                }
+                else
+                {
+                    for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+                    {
+                        outarray[map[bndcnt + j]] = bndcoeff[j];
+                    }
                 }
             }
-            else
-            {
-                for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
-                {
-                    outarray[map[bndcnt + j]] = bndcoeff[bndcnt + j];
-                }
-            }
-
-    // for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
-    // {
-    //     outarray[map[bndcnt + j]] = 0.0;
-    // }
-
-    // bndcnt = m_bndCondExpansions[bdryExpansion]->GetNcoeffs();
+        }
+        bndcnt += m_bndCondExpansions[i]->GetNcoeffs();
+    }
 
     // communicate local Dirichlet coeffs that are just
     // touching a dirichlet boundary on another partition
-    // set<int> &ParallelDirBndSign = m_locToGloMap->GetParallelDirBndSign();
+    set<int> &ParallelDirBndSign = m_locToGloMap->GetParallelDirBndSign();
 
-    // for (auto &it : ParallelDirBndSign)
-    // {
-    //     outarray[it] *= -1;
-    // }
+    for (auto &it : ParallelDirBndSign)
+    {
+        outarray[it] *= -1;
+    }
 
-    // m_locToGloMap->UniversalAbsMaxBnd(outarray);
+    m_locToGloMap->UniversalAbsMaxBnd(outarray);
 
-    // for (auto &it : ParallelDirBndSign)
-    // {
-    //     outarray[it] *= -1;
-    // }
+    for (auto &it : ParallelDirBndSign)
+    {
+        outarray[it] *= -1;
+    }
 
-    // set<ExtraDirDof> &copyLocalDirDofs = m_locToGloMap->GetCopyLocalDirDofs();
-    // for (auto &it : copyLocalDirDofs)
-    // {
-    //     outarray[std::get<0>(it)] = outarray[std::get<1>(it)] * std::get<2>(it);
-    // }
+    set<ExtraDirDof> &copyLocalDirDofs = m_locToGloMap->GetCopyLocalDirDofs();
+    for (auto &it : copyLocalDirDofs)
+    {
+        outarray[std::get<0>(it)] = outarray[std::get<1>(it)] * std::get<2>(it);
+    }
 }
+
+// void ContField::v_ImposeZeroDirichletConditionsEmbed(
+//         const int bdryExpansion, 
+//         const Array<OneD, const NekDouble> &inarray,
+//         Array<OneD, NekDouble> &outarray)
+// {
+//     int j;
+//     int bndcnt = 0;
+//     outarray = inarray;
+
+//     Vmath::Vcopy(m_ncoeffs, &inarray[0], 1, &outarray[0], 1);
+
+//     Array<OneD, NekDouble> sign =
+//         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsSign();
+//     const Array<OneD, const int> map =
+//         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
+
+//             const Array<OneD, NekDouble> bndcoeff =
+//                 (m_bndCondExpansions[bdryExpansion])->GetCoeffs();
+
+//             if (m_locToGloMap->GetSignChange())
+//             {
+//                 for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+//                 {
+//                     outarray[map[bndcnt + j]] = sign[bndcnt + j] * bndcoeff[j];
+//                 }
+//             }
+//             else
+//             {
+//                 for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+//                 {
+//                     outarray[map[bndcnt + j]] = bndcoeff[bndcnt + j];
+//                 }
+//             }
+
+//     // for (j = 0; j < (m_bndCondExpansions[bdryExpansion])->GetNcoeffs(); j++)
+//     // {
+//     //     outarray[map[bndcnt + j]] = 0.0;
+//     // }
+
+//     // bndcnt = m_bndCondExpansions[bdryExpansion]->GetNcoeffs();
+
+//     // communicate local Dirichlet coeffs that are just
+//     // touching a dirichlet boundary on another partition
+//     // set<int> &ParallelDirBndSign = m_locToGloMap->GetParallelDirBndSign();
+
+//     // for (auto &it : ParallelDirBndSign)
+//     // {
+//     //     outarray[it] *= -1;
+//     // }
+
+//     // m_locToGloMap->UniversalAbsMaxBnd(outarray);
+
+//     // for (auto &it : ParallelDirBndSign)
+//     // {
+//     //     outarray[it] *= -1;
+//     // }
+
+//     // set<ExtraDirDof> &copyLocalDirDofs = m_locToGloMap->GetCopyLocalDirDofs();
+//     // for (auto &it : copyLocalDirDofs)
+//     // {
+//     //     outarray[std::get<0>(it)] = outarray[std::get<1>(it)] * std::get<2>(it);
+//     // }
+// }
 
 void ContField::v_FillBndCondFromField(void)
 {
@@ -968,7 +1055,8 @@ void ContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
 }
 
 
-void ContField::v_HelmSolveEmbed(const int bdryExpn,
+void ContField::v_HelmSolveEmbed(const int bdryStart,
+                            const int bdryEnd,
                             const Array<OneD, const NekDouble> &inarray,
                             Array<OneD, NekDouble> &outarray,
                             const StdRegions::ConstFactorMap &factors,
@@ -977,7 +1065,7 @@ void ContField::v_HelmSolveEmbed(const int bdryExpn,
                             const Array<OneD, const NekDouble> &dirForcing,
                             const bool PhysSpaceForcing)
 {
-    int j;
+    int i, j;
 
     //----------------------------------
     //  Setup RHS Inner product
@@ -1002,30 +1090,36 @@ void ContField::v_HelmSolveEmbed(const int bdryExpn,
     const Array<OneD, const int> map =
         m_locToGloMap->GetBndCondCoeffsToLocalCoeffsMap();
         
-    if (m_bndConditions[bdryExpn]->GetBoundaryConditionType() ==
-            SpatialDomains::eNeumann ||
-        m_bndConditions[bdryExpn]->GetBoundaryConditionType() ==
-            SpatialDomains::eRobin)
+    for (i = 0; i < m_bndCondExpansions.size(); ++i)
     {
-        const Array<OneD, NekDouble> bndcoeff =
-            (m_bndCondExpansions[bdryExpn])->GetCoeffs();
+        if (m_bndConditions[i]->GetBoundaryConditionType() ==
+                SpatialDomains::eNeumann ||
+            m_bndConditions[i]->GetBoundaryConditionType() ==
+                SpatialDomains::eRobin)
+        {
+            const Array<OneD, NekDouble> bndcoeff =
+                (m_bndCondExpansions[i])->GetCoeffs();
 
-        if (m_locToGloMap->GetSignChange())
-        {
-            for (j = 0; j < (m_bndCondExpansions[bdryExpn])->GetNcoeffs(); j++)
+            if( (i>=bdryStart) && (i<=bdryEnd) )
             {
-                wsp[map[bndcnt + j]] += sign[bndcnt + j] * bndcoeff[j];
+                if (m_locToGloMap->GetSignChange())
+                {
+                    for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+                    {
+                        wsp[map[bndcnt + j]] += sign[bndcnt + j] * bndcoeff[j];
+                    }
+                }
+                else
+                {
+                    for (j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); j++)
+                    {
+                        wsp[map[bndcnt + j]] += bndcoeff[j];
+                    }
+                }
             }
         }
-        else
-        {
-            for (j = 0; j < (m_bndCondExpansions[bdryExpn])->GetNcoeffs(); j++)
-            {
-                wsp[map[bndcnt + j]] += bndcoeff[j];
-            }
-        }
+        bndcnt += m_bndCondExpansions[i]->GetNcoeffs();
     }
-    bndcnt += m_bndCondExpansions[bdryExpn]->GetNcoeffs();
 
     StdRegions::MatrixType mtype = StdRegions::eHelmholtz;
 
@@ -1061,7 +1155,7 @@ void ContField::v_HelmSolveEmbed(const int bdryExpn,
 
     GlobalLinSysKey key(mtype, m_locToGloMap, factors, varcoeff, varfactors);
 
-    GlobalSolve(key, wsp, outarray, dirForcing);
+    GlobalSolveEmbed(bdryStart, bdryEnd, key, wsp, outarray, dirForcing);
 }
 
 /**

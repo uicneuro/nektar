@@ -344,7 +344,8 @@ public:
         const bool PhysSpaceForcing                    = true);
 
     inline void HelmSolveEmbed(
-        const int bdryExpansion,
+        const int bdryStart,
+        const int bdryEnd,
         const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray,
         const StdRegions::ConstFactorMap &factors,
@@ -493,11 +494,12 @@ public:
 
     /// Impose Dirichlet Boundary Conditions onto Array
     inline void ImposeDirichletConditions(Array<OneD, NekDouble> &outarray);
+    inline void ImposeDirichletConditionsEmbed(const int bdryStart,const int bdryEnd, Array<OneD, NekDouble> &outarray);
 
-    inline void ImposeZeroDirichletConditionsEmbed(
-        const int bdryExpansion, 
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray);
+    // inline void ImposeZeroDirichletConditionsEmbed(
+    //     const int bdryExpansion, 
+    //     const Array<OneD, const NekDouble> &inarray,
+    //     Array<OneD, NekDouble> &outarray);
 
     /// Fill Bnd Condition expansion from the values stored in expansion
     inline void FillBndCondFromField(void);
@@ -1396,7 +1398,8 @@ NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
                              const Array<OneD, const NekDouble> &dirForcing,
                              const bool PhysSpaceForcing);
 
-    virtual void v_HelmSolveEmbed(const int bdryExpansion,
+    virtual void v_HelmSolveEmbed(const int bdryStart,
+                             const int bdryEnd,
                              const Array<OneD, const NekDouble> &inarray,
                              Array<OneD, NekDouble> &outarray,
                              const StdRegions::ConstFactorMap &factors,
@@ -1419,11 +1422,13 @@ NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
 
     // wrapper functions about virtual functions
     virtual void v_ImposeDirichletConditions(Array<OneD, NekDouble> &outarray);
+    
+    virtual void v_ImposeDirichletConditionsEmbed(const int bdryStart, const int bdryEnd, Array<OneD, NekDouble> &outarray);
 
-    virtual void v_ImposeZeroDirichletConditionsEmbed(        
-        const int bdryExpansion, 
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray);
+    // virtual void v_ImposeZeroDirichletConditionsEmbed(        
+    //     const int bdryExpansion, 
+    //     const Array<OneD, const NekDouble> &inarray,
+    //     Array<OneD, NekDouble> &outarray);
 
     virtual void v_FillBndCondFromField();
 
@@ -1929,7 +1934,8 @@ inline void ExpList::HelmSolve(const Array<OneD, const NekDouble> &inarray,
                 PhysSpaceForcing);
 }
 
-inline void ExpList::HelmSolveEmbed(const int bdryExpansion, 
+inline void ExpList::HelmSolveEmbed(const int bdryStart, 
+                               const int bdryEnd, 
                                const Array<OneD, const NekDouble> &inarray,
                                Array<OneD, NekDouble> &outarray,
                                const StdRegions::ConstFactorMap &factors,
@@ -1939,7 +1945,7 @@ inline void ExpList::HelmSolveEmbed(const int bdryExpansion,
                                const bool PhysSpaceForcing)
 
 {
-    v_HelmSolveEmbed(bdryExpansion, inarray, outarray, factors, varcoeff, varfactors, dirForcing,
+    v_HelmSolveEmbed(bdryStart, bdryEnd, inarray, outarray, factors, varcoeff, varfactors, dirForcing,
                 PhysSpaceForcing);
 }
 
@@ -2177,13 +2183,19 @@ inline void ExpList::ImposeDirichletConditions(Array<OneD, NekDouble> &outarray)
     v_ImposeDirichletConditions(outarray);
 }
 
-inline void ExpList::ImposeZeroDirichletConditionsEmbed(       
-        const int bdryExpansion, 
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray)
+inline void ExpList::ImposeDirichletConditionsEmbed(const int bdryStart,
+    const int bdryEnd, Array<OneD, NekDouble> &outarray)
 {
-    v_ImposeZeroDirichletConditionsEmbed(bdryExpansion, inarray, outarray);
+    v_ImposeDirichletConditionsEmbed(bdryStart, bdryEnd, outarray);
 }
+
+// inline void ExpList::ImposeZeroDirichletConditionsEmbed(       
+//         const int bdryExpansion, 
+//         const Array<OneD, const NekDouble> &inarray,
+//         Array<OneD, NekDouble> &outarray)
+// {
+//     v_ImposeZeroDirichletConditionsEmbed(bdryExpansion, inarray, outarray);
+// }
 
 inline void ExpList::FillBndCondFromField(void)
 {

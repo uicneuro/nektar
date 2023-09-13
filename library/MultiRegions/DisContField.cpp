@@ -3547,6 +3547,152 @@ void DisContField::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     out = (*InvHDGHelm) * F + (*HDGLamToU) * LocLambda;
 }
 
+
+void DisContField::v_HelmSolveEmbed(
+                               const int bdryStart,
+                               const int bdryEnd,
+                               const Array<OneD, const NekDouble> &inarray,
+                               Array<OneD, NekDouble> &outarray,
+                               const StdRegions::ConstFactorMap &factors,
+                               const StdRegions::VarCoeffMap &varcoeff,
+                               const MultiRegions::VarFactorsMap &varfactors,
+                               const Array<OneD, const NekDouble> &dirForcing,
+                               const bool PhysSpaceForcing)
+{
+    boost::ignore_unused(varfactors, dirForcing);
+    int i, n, cnt, nbndry;
+    int nexp = GetExpSize();
+
+    Array<OneD, NekDouble> f(m_ncoeffs);
+    DNekVec F(m_ncoeffs, f, eWrapper);
+    Array<OneD, NekDouble> e_f, e_l;
+
+    //----------------------------------
+    // Setup RHS Inner product if required
+    //----------------------------------
+    if (PhysSpaceForcing)
+    {
+        IProductWRTBase(inarray, f);
+        Vmath::Neg(m_ncoeffs, f, 1);
+    }
+    else
+    {
+        Vmath::Smul(m_ncoeffs, -1.0, inarray, 1, f, 1);
+    }
+
+    //----------------------------------
+    // Solve continuous Boundary System
+    //----------------------------------
+    int GloBndDofs = m_traceMap->GetNumGlobalBndCoeffs();
+    int NumDirBCs  = m_traceMap->GetNumLocalDirBndCoeffs();
+    int e_ncoeffs;
+
+    GlobalMatrixKey HDGLamToUKey(StdRegions::eHybridDGLamToU,
+                                 NullAssemblyMapSharedPtr, factors, varcoeff);
+    const DNekScalBlkMatSharedPtr &HDGLamToU = GetBlockMatrix(HDGLamToUKey);
+
+    // Retrieve number of local trace space coefficients N_{\lambda},
+    // and set up local elemental trace solution \lambda^e.
+    int LocBndCoeffs = m_traceMap->GetNumLocalBndCoeffs();
+    Array<OneD, NekDouble> bndrhs(LocBndCoeffs, 0.0);
+    Array<OneD, NekDouble> loclambda(LocBndCoeffs, 0.0);
+    DNekVec LocLambda(LocBndCoeffs, loclambda, eWrapper);
+
+    //----------------------------------
+    // Evaluate Trace Forcing
+    // Kirby et al, 2010, P23, Step 5.
+    //----------------------------------
+    // Determing <u_lam,f> terms using HDGLamToU matrix
+    for (cnt = n = 0; n < nexp; ++n)
+    {
+        nbndry = (*m_exp)[n]->NumDGBndryCoeffs();
+
+        e_ncoeffs = (*m_exp)[n]->GetNcoeffs();
+        e_f       = f + m_coeff_offset[n];
+        e_l       = bndrhs + cnt;
+
+        // use outarray as tmp space
+        DNekVec Floc(nbndry, e_l, eWrapper);
+        DNekVec ElmtFce(e_ncoeffs, e_f, eWrapper);
+        Floc = Transpose(*(HDGLamToU->GetBlock(n, n))) * ElmtFce;
+
+        cnt += nbndry;
+    }
+
+    Array<OneD, const int> bndCondMap =
+        m_traceMap->GetBndCondCoeffsToLocalTraceMap();
+    Array<OneD, const NekDouble> Sign = m_traceMap->GetLocalToGlobalBndSign();
+
+    // Copy Dirichlet boundary conditions and weak forcing
+    // into trace space
+    int locid;
+    cnt = 0;
+    for (i = 0; i < m_bndCondExpansions.size(); ++i)
+    {
+        Array<OneD, const NekDouble> bndcoeffs =
+            m_bndCondExpansions[i]->GetCoeffs();
+
+            if( (i>=bdryStart) && (i<=bdryEnd) )
+            {
+                if (m_bndConditions[i]->GetBoundaryConditionType() ==
+                    SpatialDomains::eDirichlet)
+                {
+                    for (int j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); ++j)
+                    {
+                        locid            = bndCondMap[cnt + j];
+                        loclambda[locid] = Sign[locid] * bndcoeffs[j];
+                    }
+                }
+                else if (m_bndConditions[i]->GetBoundaryConditionType() ==
+                            SpatialDomains::eNeumann ||
+                        m_bndConditions[i]->GetBoundaryConditionType() ==
+                            SpatialDomains::eRobin)
+                {
+                    // Add weak boundary condition to trace forcing
+                    for (int j = 0; j < (m_bndCondExpansions[i])->GetNcoeffs(); ++j)
+                    {
+                        locid = bndCondMap[cnt + j];
+                        bndrhs[locid] += Sign[locid] * bndcoeffs[j];
+                    }
+                }
+            }
+
+        cnt += (m_bndCondExpansions[i])->GetNcoeffs();
+    }
+
+    //----------------------------------
+    // Solve trace problem: \Lambda = K^{-1} F
+    // K is the HybridDGHelmBndLam matrix.
+    //----------------------------------
+    if (GloBndDofs - NumDirBCs > 0)
+    {
+        GlobalLinSysKey key(StdRegions::eHybridDGHelmBndLam, m_traceMap,
+                            factors, varcoeff);
+
+        GlobalLinSysSharedPtr LinSys = GetGlobalBndLinSys(key);
+
+        LinSys->Solve(bndrhs, loclambda, m_traceMap);
+
+        // For consistency with previous version put global
+        // solution into m_trace->m_coeffs
+        m_traceMap->LocalToGlobal(loclambda, m_trace->UpdateCoeffs());
+    }
+
+    //----------------------------------
+    // Internal element solves
+    //----------------------------------
+    GlobalMatrixKey invHDGhelmkey(StdRegions::eInvHybridDGHelmholtz,
+                                  NullAssemblyMapSharedPtr, factors, varcoeff);
+
+    const DNekScalBlkMatSharedPtr &InvHDGHelm = GetBlockMatrix(invHDGhelmkey);
+    DNekVec out(m_ncoeffs, outarray, eWrapper);
+    Vmath::Zero(m_ncoeffs, outarray, 1);
+
+    //  out =  u_f + u_lam = (*InvHDGHelm)*f + (LamtoU)*Lam
+    out = (*InvHDGHelm) * F + (*HDGLamToU) * LocLambda;
+}
+
+
 /* \brief This function evaluates the boundary conditions at a certain
  * time-level.
  *
