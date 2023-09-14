@@ -281,7 +281,12 @@ protected:
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
     NekDouble m_AnisotropyStrength;
+
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
+    void PlotHelmSolvephie(const Array<OneD, const NekDouble> &Helmforcing,
+                                   const Array<OneD, const NekDouble> &phie,
+                                   const Array<OneD, const NekDouble> &extcurrent,
+                                   const int nstep);
 
     void DisplayatNode(const Array<OneD, const Array<OneD, NekDouble>> &fields);
     void DisplayatNodevar1(const Array<OneD, const Array<OneD, NekDouble>> &fields);

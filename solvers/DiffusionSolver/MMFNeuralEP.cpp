@@ -2134,6 +2134,37 @@ void MMFNeuralEP::DoSolveMMFFirst()
     }
 } // namespace Nektar
 
+
+void MMFNeuralEP::PlotHelmSolvephie(const Array<OneD, const NekDouble> &Helmforcing,
+                                   const Array<OneD, const NekDouble> &phie,
+                                   const Array<OneD, const NekDouble> &extcurrent,
+                                   const int nstep)
+{
+    int nvar = 3;
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname;
+    outname = m_sessionName + "_Helmphie_" +
+              boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "forcing";
+    variables[1] = "phie";
+    variables[2] = "extcurrent";
+
+    m_fields[0]->FwdTrans(Helmforcing, fieldcoeffs[0]);
+    m_fields[0]->FwdTrans(phie, fieldcoeffs[1]);
+    m_fields[0]->FwdTrans(extcurrent, fieldcoeffs[2]);
+
+    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
+}
+
 void MMFNeuralEP::PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray,
                                    const int nstep)
 {
@@ -2896,7 +2927,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbbi(
         // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
         // (\sigma_i \nabla \phi_m)
         Array<OneD, NekDouble> phie(nq,0.0);
-        SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
+        // SolveHelmholtzDiffusion(m_NodeZone[0], inarray[0], m_unitmovingframes, m_phievarcoeff, phie);
 
         // Add the current changes by the external current
         Array<OneD, NekDouble> extcurrent(nq,0.0);
@@ -3053,8 +3084,8 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     // Only nonzero for node.
     OnlyValideinNode(NodeZone, phimLaplacian);
 
-    NekDouble phimavg = -1.0 * AvgInt(phimLaplacian);
-    Vmath::Sadd(nq, phimavg, phimLaplacian, 1, phimLaplacian, 1);
+    // NekDouble phimavg = -1.0 * AvgInt(phimLaplacian);
+    // Vmath::Sadd(nq, phimavg, phimLaplacian, 1, phimLaplacian, 1);
     
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
     // Compute phie distribution
@@ -3062,12 +3093,12 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     // SetBoundaryConditions(0.0);
 
     // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->HelmSolveEmbed(1, 2, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
-    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    m_fields[1]->SetPhysState(true);
+    m_fields[0]->HelmSolveEmbed(1, 2, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
+    m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    m_fields[0]->SetPhysState(true);
 
-    NekDouble phieavg = -1.0 * Average(m_fields[1]->GetPhys());
-    Vmath::Sadd(nq, phieavg, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
+    // NekDouble phieavg = -1.0 * Average(m_fields[1]->GetPhys());
+    // Vmath::Sadd(nq, phieavg, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
 
     outarray = m_fields[1]->GetPhys();
 }
@@ -3252,7 +3283,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->Update(tmp, 0.001);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }
@@ -3261,6 +3292,75 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             CheckNodeZoneMF(m_movingframes, m_NodeZone, tmp[0]);
 
             PrintRegionalAvgMax(m_fields[0]->GetPhys());
+
+            // Test HelmSolveEmbed
+            NekDouble Rf = m_neuron->GetRecistanceValue();
+            NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+
+            Array<OneD, NekDouble> phim(nq,0.0);    
+            Array<OneD, NekDouble> phie(nq,0.0);    
+
+           //  SolveHelmholtzDiffusion(m_NodeZone[0], tmp[0], m_unitmovingframes, m_phievarcoeff, phie);
+            Array<OneD, NekDouble> x0(nq);
+            Array<OneD, NekDouble> x1(nq);
+            Array<OneD, NekDouble> x2(nq);
+
+            m_fields[0]->GetCoords(x0, x1, x2);
+            NekDouble Vmin, Vmax;
+            int Imin, Imax;
+
+            NekDouble phiemax0 = Vmath::Vamax(nq, tmp[0], 1);
+            Vmath::Smul(nq, 100.0/phiemax0, tmp[0], 1, phim, 1);
+
+            StdRegions::ConstFactorMap phiefactors;
+            phiefactors[StdRegions::eFactorTau]    = 1.0;
+            phiefactors[StdRegions::eFactorLambda] = 0.0;
+
+            Array<OneD, NekDouble> phimLaplacian(nq,0.0);
+            phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
+
+             Vmin = Vmath::Vmin(nq, phimLaplacian, 1);
+             Imin = Vmath::Imin(nq, phimLaplacian, 1);
+             Vmax = Vmath::Vmax(nq, phimLaplacian, 1);
+             Imax = Vmath::Imax(nq, phimLaplacian, 1);
+
+            std::cout << "phimLaplacian max = " << Vmax  << " at x = " << x0[Imin]  << " at y = " << x1[Imin] 
+            << ", phimLaplacian min = " << Vmin << " at x = " << x0[Imax] << " at y = " << x1[Imax] << std::endl;
+
+            // Only nonzero for node.
+            OnlyValideinNode(m_NodeZone[0], phimLaplacian);
+            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+            
+            m_fields[1]->HelmSolveEmbed(1, 2, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+            m_fields[1]->SetPhysState(true);
+
+            // Add the current changes by the external current
+            Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+
+             Vmin = Vmath::Vmin(nq, phie, 1);
+             Imin = Vmath::Imin(nq, phie, 1);
+             Vmax = Vmath::Vmax(nq, phie, 1);
+             Imax = Vmath::Imax(nq, phie, 1);
+
+            std::cout << "phie max = " << Vmax  << " at x = " << x0[Imin]  << " at y = " << x1[Imin] 
+                << ", phie min = " << Vmin << " at x = " << x0[Imax] << " at y = " << x1[Imax] << std::endl;
+
+            Array<OneD, NekDouble> extcurrent(nq,0.0);
+            extcurrent = ComputeMMFDiffusion(m_unitmovingframes, phie);
+
+            Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+
+              Vmin = Vmath::Vmin(nq, extcurrent, 1);
+             Imin = Vmath::Imin(nq, extcurrent, 1);
+             Vmax = Vmath::Vmax(nq, extcurrent, 1);
+             Imax = Vmath::Imax(nq, extcurrent, 1);
+
+            std::cout << "extcurrent max = " << Vmax  << " at x = " << x0[Imin]  << " at y = " << x1[Imin] 
+                << ", extcurrent min = " << Vmin << " at x = " << x0[Imax] << " at y = " << x1[Imax] << std::endl;
+
+            PlotHelmSolvephie(phimLaplacian, phie, extcurrent, 0);
+            wait_on_enter();
 
             break;
         }
