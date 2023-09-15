@@ -761,7 +761,52 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
         std::cout << "ExactSoln = " << RootMeanSquare(ExactSoln[1]) << std::endl;
 
+        m_NodeZone = Array<OneD, Array<OneD, int>>(1);
+        for (int i = 0; i < 1; i++)
+        {
+            m_NodeZone[i] = Array<OneD, int>(nq, 1);
+        }
+
+        std::cout << "Constructing phieunitMF ================================================"
+                << std::endl;
+        Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+        }
+
+        SetUpMovingFrames(FindMMFdir("LOCAL"), phieAniStrength,
+                        m_unitmovingframes);
+
+        std::cout << "Constructing phiemovingframes ================================================"
+                << std::endl;
+
+        m_phiemovingframes =
+            Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+        NekDouble Helmfactor =
+            sqrt((1.0 + m_ratio_re_ri) / m_ratio_re_ri);
+
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            Vmath::Smul(nq, Helmfactor, &phieAniStrength[j][0], 1,
+                        &phieAniStrength[j][0], 1);
+        }
+
+        SetUpMovingFrames(FindMMFdir("LOCAL"), phieAniStrength,
+                            m_phiemovingframes);
+        CheckMovingFrames(m_phiemovingframes);
+
+        std::cout << "Constructing m_phievarcoeff ================================================"
+                << std::endl;
+        ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+
+        std::cout << "SolveHelmholtzDiffusion ================================================"
+                << std::endl;
         SolveHelmholtzDiffusion(inputarray[0], outputarray);
+        const NekDouble R_f = m_neuron->GetRecistanceValue();
+        const NekDouble C_n = m_neuron->GetCapacitanceValue(1);
+
+        Vmath::Smul(nq, R_f * C_n, outputarray, 1, outputarray, 1);
 
         Vmath::Vsub(nq, ExactSoln[1], 1, outputarray, 1, outputarray, 1);
         std::cout << "SolveHelmholtzDiffusion Error = " << RootMeanSquare(outputarray) << std::endl;
@@ -2871,12 +2916,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 
     // Add the current changes by the external current
-    Array<OneD, NekDouble> extcurrent(nq,0.0);
-    extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+    Array<OneD, NekDouble> extcurrent = ComputeMMFDiffusion(m_movingframes, m_fields[1]->GetPhys());
     Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
-
-    // Let the extcurrent be zero at Myeline nodes (-1).
-    // OnlyValideinNode(extcurrent);
 
     // add divergence of phie to the current
     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
@@ -3057,6 +3098,8 @@ void MMFNeuralEP::OnlyValideinNode(Array<OneD, NekDouble> &outarray)
     }
 }
 
+// Input: phi_m
+// output: phi_e (m_fields[1]->UpdatePhys()) and outarray (1/C_n/r) * \nabla^2 \phi_e
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
@@ -3066,8 +3109,6 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     const int nstep)
 {
     int nq = m_fields[0]->GetNpoints();
-    NekDouble Rf = m_neuron->GetRecistanceValue();
-    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
     // \sigma_i \nabla phi_m
@@ -3084,34 +3125,38 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
     OnlyValideinNode(phimLaplacian);
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
-  if(nstep>=0)
-    {
-    for (int i=0;i<nq; ++i)
-    {
-        std::cout << "i = " << i << ", NodeZone = " << m_NodeZone[0][i] 
-        << ", phie = " << phim[i]
-        << ", forcing = " << phimLaplacian[i] << std::endl;
-    }
-    }
-
-    Array<OneD, NekDouble> extcurrent(nq,0.0);
-    extcurrent = ComputeMMFDiffusion(m_movingframes, m_fields[1]->GetPhys());
-    Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+//   if(nstep>=0)
+//     {
+//     for (int i=0;i<nq; ++i)
+//     {
+//         std::cout << "i = " << i << ", NodeZone = " << m_NodeZone[0][i] 
+//         << ", phie = " << phim[i]
+//         << ", forcing = " << phimLaplacian[i] << std::endl;
+//     }
+//     }
 
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
     // SetBoundaryConditions(0.0);
+
+    // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
+    //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
 
     // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[0]->HelmSolveEmbed(1, 2, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[0]->SetPhysState(true);
 
-    outarray = m_fields[1]->GetPhys();
+    // Compute (1/C_n/r) * \nabla^2 \phi_e
+    outarray = ComputeMMFDiffusion(m_movingframes, m_fields[1]->GetPhys());
+
+    NekDouble Rf = m_neuron->GetRecistanceValue();
+    NekDouble Cn = m_neuron->GetCapacitanceValue(1);
+    Vmath::Smul(nq, 1.0 / (Cn * Rf), outarray, 1, outarray, 1);
 
     if(nstep>=0)
     {
-        PlotHelmSolvephie(phimLaplacian, outarray, extcurrent, nstep);
+        PlotHelmSolvephie(phimLaplacian, m_fields[1]->GetPhys(), outarray, nstep);
     }
 }
 
