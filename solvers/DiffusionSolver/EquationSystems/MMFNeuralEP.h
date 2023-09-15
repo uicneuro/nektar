@@ -297,8 +297,7 @@ protected:
         const Array<OneD, const Array<OneD, int>> &NodeZone,
         const Array<OneD, const NekDouble> &inarray);
 
-    void OnlyValideinNode(const Array<OneD, const int> &NodeZone,
-                          Array<OneD, NekDouble> &outarray);
+    void OnlyValideinNode(Array<OneD, NekDouble> &outarray);
 
     void GetFluxVector(
         const Array<OneD, Array<OneD, NekDouble>> &inarray,
@@ -393,11 +392,9 @@ protected:
         const Array<OneD, const NekDouble> &phim);
 
     void SolveHelmholtzDiffusion(
-        const Array<OneD, const int> &NodeZone,
         const Array<OneD, const NekDouble> &phim,
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        StdRegions::VarCoeffMap &Helmvarcoeff,
-        Array<OneD, NekDouble> &outarray);
+        Array<OneD, NekDouble> &outarray,
+        const int ploton = -1);
 
 
     void MembraneBoundary2D(int bcRegion, int cnt,
