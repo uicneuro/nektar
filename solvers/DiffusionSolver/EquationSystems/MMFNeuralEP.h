@@ -128,16 +128,18 @@ const char *const TimeMapTypeMap[] = {
     "Processing",
 };
 
-enum ExtCondType
+enum ExternalCondType
 {
-    eExtActivated,
-    eExtDeActivated,
-    SIZE_ExtCondType ///< Length of enum list
+    eNoExternal,
+    eComputePhie,
+    eApproxByPhim,
+    SIZE_ExternalCondType ///< Length of enum list
 };
 
-const char *const ExtCondTypeMap[] = {
-    "ExtActivated",
-    "ExtDeActivated",
+const char *const ExternalCondTypeMap[] = {
+    "NoExternal",
+    "ComputePhie",
+    "ApproxByPhim",
 };
 
 
@@ -164,7 +166,7 @@ public:
     NeuralEPType m_NeuralEPType;
     SolverSchemeType m_SolverSchemeType;
 
-    ExtCondType m_ExtCondType;
+    ExternalCondType m_ExternalCondType;
 
     NekDouble d_max, d_min;
 
@@ -391,11 +393,9 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim);
 
-    void SolveHelmholtzDiffusion(
+    Array<OneD, NekDouble> Derivephie(
         const Array<OneD, const NekDouble> &phim,
-        Array<OneD, NekDouble> &outarray,
         const int ploton = -1);
-
 
     void MembraneBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,
