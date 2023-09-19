@@ -2923,12 +2923,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         NekDouble phieratio = -1.0*m_ratio_re_ri/(m_ratio_re_ri + 1.0);
         Vmath::Smul(nq, phieratio, inarray[0], 1, phie, 1);
 
-        // extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
+        extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
         // WeakDGMMFLDG2D(
         //     const int var, const Array<OneD, const NekDouble> &inarray,
         //     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         //     const NekDouble time)
-        WeakDGMMFDiffusion(0, phie, extcurrent, time);
+        // WeakDGMMFDiffusion(0, phie, extcurrent, time);
 
         Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
     }
