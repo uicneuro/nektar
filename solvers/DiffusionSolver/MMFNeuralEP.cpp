@@ -1316,7 +1316,8 @@ void MMFNeuralEP::DoSolveMMFZero()
                 DisplayatNode(fields);
             }
 
-            std::cout << "phim = " << RootMeanSquare(fields[0]) << ", phie = " << RootMeanSquare(m_fields[1]->GetPhys()) << std::endl;
+            std::cout << "phim = [ " << Vmath::Vmin(nq, fields[0], 1) << " , " << Vmath::Vmax(nq, fields[0], 1) << " ] " << std::endl;
+            std::cout << "phie = [ " << Vmath::Vmin(nq, m_fields[1]->GetPhys(), 1) << " , " << Vmath::Vmax(nq, m_fields[1]->GetPhys(), 1) << " ] " << std::endl;
 
             Array<OneD, NekDouble> phie(nq);
             SolveHelmholtzDiffusion(fields[0], phie, nchk);
@@ -2972,11 +2973,14 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DEmbbi(
         // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
         // (\sigma_i \nabla \phi_m)
         Array<OneD, NekDouble> phie(nq,0.0);
-        SolveHelmholtzDiffusion(inarray[0], phie);
+        // SolveHelmholtzDiffusion(inarray[0], phie);
 
         // Add the current changes by the external current
         Array<OneD, NekDouble> extcurrent(nq,0.0);
-        extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+        NekDouble phieratio = -1.0*m_ratio_re_ri/(m_ratio_re_ri + 1.0);
+        Vmath::Smul(nq, phieratio, inarray[0], 1, phie, 1);
+       // extcurrent = ComputeMMFDiffusion(m_unitmovingframes, m_fields[1]->GetPhys());
+        extcurrent = ComputeMMFDiffusion(m_unitmovingframes, inarray[0]);
         Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
 
         // Extcurrent be zero at Myeline nodes (-1).
@@ -3123,17 +3127,10 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
 
     // Only nonzero for node.
     OnlyValideinNode(phimLaplacian);
-    Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
-//   if(nstep>=0)
-//     {
-//     for (int i=0;i<nq; ++i)
-//     {
-//         std::cout << "i = " << i << ", NodeZone = " << m_NodeZone[0][i] 
-//         << ", phie = " << phim[i]
-//         << ", forcing = " << phimLaplacian[i] << std::endl;
-//     }
-//     }
+    // Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    // Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+    Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
     // Compute phie distribution
     // SetMembraneBoundaryCondition();
@@ -3141,11 +3138,12 @@ void MMFNeuralEP::SolveHelmholtzDiffusion(
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-
-    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, Helmvarcoeff);
     m_fields[0]->HelmSolveEmbed(1, 2, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[0]->SetPhysState(true);
+
+    NekDouble phiemin = Vmath::Vmin(nq, m_fields[1]->GetPhys(), 1);
+    Vmath::Sadd(nq, -1.0*phiemin, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
 
     // Compute (1/C_n/r) * \nabla^2 \phi_e
     outarray = ComputeMMFDiffusion(m_movingframes, m_fields[1]->GetPhys());
