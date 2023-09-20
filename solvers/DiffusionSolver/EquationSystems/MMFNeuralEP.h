@@ -236,6 +236,8 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
+    Array<OneD, int> m_InternalBoundary;
+
     Array<OneD, NekDouble> m_NeuralCmRf;
     Array<OneD, int> m_NodeElement;
 
@@ -284,6 +286,8 @@ protected:
     int m_AnisotropyRegion;
     NekDouble m_AnisotropyStrength;
 
+    Array<OneD, int> GetInternalBoundaryPoints();
+    
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     void PlotHelmSolvephie(const Array<OneD, const NekDouble> &Helmforcing,
                                    const Array<OneD, const NekDouble> &phie,

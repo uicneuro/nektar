@@ -300,6 +300,22 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_NodeZone = Array<OneD, Array<OneD, int>>(1);
             m_NodeZone[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
 
+            // Point touching internal boundary condition: Internal boundary index = 0;
+            m_InternalBoundary = GetInternalBoundaryPoints();
+
+            int indexj, cnt = 0;
+            for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+            {
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                {
+                    indexj = m_fields[0]->GetPhys_Offset(i) + j;
+                    std::cout << "elem = " << i << ", pts = " << j << ", IB = " << m_InternalBoundary[indexj] << std::endl;                    cnt++;
+                }
+                std::cout << " " << std::endl;
+            }
+
+            wait_on_enter();
+
             // Constrct m_NeuralCm: node: 1/Cn, Myelin: 1/Cm
             const NekDouble Rf = m_neuron->GetRecistanceValue();
             const NekDouble Cm = m_neuron->GetCapacitanceValue(0);
@@ -878,6 +894,75 @@ void MMFNeuralEP::CheckNodeZoneMF(
     }
 }
 
+    Array<OneD, int> MMFNeuralEP::GetInternalBoundaryPoints()
+    {
+        int nq    = GetNpoints();
+        int nTracePts  = GetTraceTotPoints();
+
+        Array<OneD, int> outarray(nq,0);
+
+        Array<OneD, NekDouble> x0(nq);
+        Array<OneD, NekDouble> x1(nq);
+        Array<OneD, NekDouble> x2(nq);
+
+        m_fields[0]->GetCoords(x0, x1, x2);
+
+        Array<OneD, NekDouble> x0Fwd(nTracePts);
+        Array<OneD, NekDouble> x1Fwd(nTracePts);
+        Array<OneD, NekDouble> x2Fwd(nTracePts);
+
+        m_fields[0]->ExtractTracePhys(x0, x0Fwd);
+        m_fields[0]->ExtractTracePhys(x1, x1Fwd);
+        m_fields[0]->ExtractTracePhys(x2, x2Fwd);
+
+        NekDouble xp, yp, distx, disty, dist;
+        NekDouble Tol = 0.000001;
+
+        int cnt=0;
+        for (int n = 0; n < m_fields[0]->GetBndConditions().size(); ++n)
+        {
+            if (boost::iequals(m_fields[0]->GetBndConditions()[n]->GetUserDefined(), "Membrane"))
+            {
+                int id2, index, npts;
+
+                const Array<OneD, const int> &traceBndMap = m_fields[0]->GetTraceBndMap();
+
+                for (int e = 0; e < m_fields[0]->GetBndCondExpansions()[n]->GetExpSize(); ++e)
+                {
+                    npts = m_fields[0]
+                                    ->GetBndCondExpansions()[n]
+                                    ->GetExp(e)
+                                    ->GetTotPoints();
+                    // id1 = m_fields[0]->GetBndCondExpansions()[n]->GetPhys_Offset(e);
+                    id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
+
+                    for (int i=0;i<npts;++i)
+                    {
+                        index = id2+i;
+                        xp = x0Fwd[index];
+                        yp = x1Fwd[index];
+                        for (int j=0; j<nq; ++j)
+                        {
+                            distx = xp - x0[j];
+                            disty = yp - x1[j];
+                            dist = sqrt(distx*distx + disty*disty);
+
+                            if (dist<Tol)
+                            {
+                                outarray[j] = 1;
+                                // std::cout << "j = " << j << ", m_NodeZone = " << m_NodeZone[0][j] 
+                                // << " at x = " << x0[j] << ", y = " << x1[j] << std::endl;
+                            }
+                        }
+                    }
+                }
+            }
+            cnt += m_fields[0]->GetBndCondExpansions()[n]->GetExpSize();
+        }
+
+        return outarray;
+    }
+
 // void MMFNeuralEP::ImportFiberXml(
 //     const int nfibers,
 //     Array<OneD, MultiRegions::ExpListSharedPtr> &fiberfields,
@@ -1316,10 +1401,24 @@ void MMFNeuralEP::DoSolveMMFZero()
                 DisplayatNode(fields);
             }
 
+            // Array<OneD, NekDouble> phie = Derivephie(fields[0], nchk);
+
+            if(nvariables==2)
+            {
+                Array<OneD, NekDouble> phie(nq);
+                Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+                for (int i=0; i<nq; i++)
+                {
+                    if(m_NodeZone[0][i]==-2)
+                    {
+                        phie[i] = fields[0][i];
+                    }
+                }
+                Vmath::Vcopy(nq, phie, 1, m_fields[1]->UpdatePhys(), 1);
+            }
+
             std::cout << "phim = [ " << Vmath::Vmin(nq, fields[0], 1) << " , " << Vmath::Vmax(nq, fields[0], 1) << " ] " << std::endl;
             std::cout << "phie = [ " << Vmath::Vmin(nq, m_fields[1]->GetPhys(), 1) << " , " << Vmath::Vmax(nq, m_fields[1]->GetPhys(), 1) << " ] " << std::endl;
-
-            Array<OneD, NekDouble> phie = Derivephie(fields[0], nchk);
 
             Checkpoint_Output(nchk++);
 
@@ -1489,12 +1588,12 @@ void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0
     }
 
     std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << " at y = " << yavgindex << ", ue_max = " << ExtMaxe << std::endl;
-    // for (int j = 0; j < m_fields[0]->GetTotPoints(Extid); ++j)
-    // {
-    //     index = m_fields[0]->GetPhys_Offset(Extid) + j; 
-    //     std::cout << "index = " << index << ", type = " << m_NodeZone[0][index] << ", um = " << field0[index] 
-    //     << " at x = " << x0[index] << ", y = " << x1[index] << std::endl;
-    // }
+    for (int j = 0; j < m_fields[0]->GetTotPoints(Extid); ++j)
+    {
+        index = m_fields[0]->GetPhys_Offset(Extid) + j; 
+        std::cout << "index = " << index << ", type = " << m_NodeZone[0][index] << ", um = " << field0[index] 
+        << " at x = " << x0[index] << ", y = " << x1[index] << std::endl;
+    }
 
     std::cout << " ========================================================================================== " << std::endl;
 }
@@ -2385,6 +2484,20 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
                            factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
+
+    // NekDouble Tol = 0.001;
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     if( (m_NodeZone[0][i]==-2))
+    //     {
+    //         outarray[0][i] = 0.0;
+    //     }
+
+    //     // if( (m_NodeZone[0][i]==-2) && (outarray[0][i]>Tol))
+    //     // {
+    //     //     std::cout << "output: i = " << i << ", NodZone = " << m_NodeZone[0][i] << outarray[0][i] << std::endl;
+    //     // }
+    // }
 }
 
 
@@ -2924,12 +3037,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         Vmath::Smul(nq, phieratio, inarray[0], 1, phie, 1);
 
         extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
-        // WeakDGMMFLDG2D(
-        //     const int var, const Array<OneD, const NekDouble> &inarray,
-        //     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        //     const NekDouble time)
-        // WeakDGMMFDiffusion(0, phie, extcurrent, time);
-
         Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
     }
 
@@ -3547,22 +3654,12 @@ void MMFNeuralEP::MembraneBoundary2D(
     NekDouble bdval;
     for (int e = 0; e < eMax; ++e)
     {
-        std::cout << "e = " << e << std::endl;
         npts = m_fields[0]
                          ->GetBndCondExpansions()[bcRegion]
                          ->GetExp(e)
                          ->GetTotPoints();
         id1 = m_fields[0]->GetBndCondExpansions()[bcRegion]->GetPhys_Offset(e);
         id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
-        // id2 = m_fields[0]->GetTrace()->GetPhys_Offset(
-        // m_fields[0]->GetTraceMap()->GetBndCondIDToGlobalTraceID(cnt++));
-
-        for (int i=0;i<npts;++i)
-        {
-            bdval = (m_fields[0]->GetBndCondExpansions()[bcRegion]->UpdatePhys())[id1+i];
-            std::cout << "(x,y,z) = ( " << x0tmp[id2+i] << "," << x1tmp[id2+i] << " ), Fwd = " << Fwd[0][id2+i]
-            << ", bdval = " << bdval << std::endl;
-        }
 
         // Pure Neumann boundary condtiion
         Vmath::Vcopy(npts, &Fwd[0][id2], 1,
