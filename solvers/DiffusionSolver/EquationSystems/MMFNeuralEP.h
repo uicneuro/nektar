@@ -278,7 +278,7 @@ protected:
 
     InitWaveType m_InitWaveType;
 
-    void DoSolveMMFFirst();
+    // void DoSolveMMFFirst();
     void DoSolveMMFZero();
     void DoSolvePoint();
     

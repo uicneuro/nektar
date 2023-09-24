@@ -303,18 +303,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Point touching internal boundary condition: Internal boundary index = 0;
             m_InternalBoundary = GetInternalBoundaryPoints();
 
-            int indexj, cnt = 0;
-            for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
-            {
-                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                {
-                    indexj = m_fields[0]->GetPhys_Offset(i) + j;
-                    std::cout << "elem = " << i << ", pts = " << j << ", IB = " << m_InternalBoundary[indexj] << std::endl;                    cnt++;
-                }
-                std::cout << " " << std::endl;
-            }
-
-            wait_on_enter();
+            // int indexj, cnt = 0;
+            // for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+            // {
+            //     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+            //     {
+            //         indexj = m_fields[0]->GetPhys_Offset(i) + j;
+            //         std::cout << "elem = " << i << ", pts = " << j << ", IB = " << m_InternalBoundary[indexj] << std::endl;                    cnt++;
+            //     }
+            //     std::cout << " " << std::endl;
+            // }
 
             // Constrct m_NeuralCm: node: 1/Cn, Myelin: 1/Cm
             const NekDouble Rf = m_neuron->GetRecistanceValue();
@@ -1228,11 +1226,11 @@ void MMFNeuralEP::v_DoSolve()
 {
     switch (m_SolverSchemeType)
     {
-        case eMMFFirst:
-        {
-            DoSolveMMFFirst();
-            break;
-        }
+        // case eMMFFirst:
+        // {
+        //     DoSolveMMFFirst();
+        //     break;
+        // }
 
         case ePointWise:
         {
@@ -1906,7 +1904,6 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
         phieMyel[Rnodeid] += locphiesum / m_fields[0]->GetTotPoints(i) / m_NumelemMyel;
     }
 
-    std::cout << " " << std::endl;
     std::cout << "(Myelid,phim,phie): ";
     for (int i = 0; i < Rnodeid + 1; ++i)
     {
@@ -1915,372 +1912,372 @@ void MMFNeuralEP::DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDoubl
     std::cout << " " << std::endl << std::endl;
 }
 
-void MMFNeuralEP::DoSolveMMFFirst()
-{
-    ASSERTL0(m_intScheme != 0, "No time integration scheme.");
-
-    int i, nchk = 1;
-    int nq         = GetTotPoints();
-    int ncoeffs    = GetNcoeffs();
-    int nvariables = 0;
-    int nfields    = m_fields.size();
-
-    if (m_intVariables.empty())
-    {
-        for (i = 0; i < nfields; ++i)
-        {
-            m_intVariables.push_back(i);
-        }
-        nvariables = nfields;
-    }
-    else
-    {
-        nvariables = m_intVariables.size();
-    }
-
-    // Set up wrapper to fields data storage.
-    Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
-    Array<OneD, Array<OneD, NekDouble>> fieldsold(nvariables);
-
-    // Order storage to list time-integrated fields first.
-    for (i = 0; i < nvariables; ++i)
-    {
-        fields[i] = m_fields[m_intVariables[i]]->GetPhys();
-        m_fields[m_intVariables[i]]->SetPhysState(false);
-
-        fieldsold[i] = Array<OneD, NekDouble>(nq);
-    }
-
-    // Initialise time integration scheme
-    m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
-
-    // Check uniqueness of checkpoint output
-    ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
-                 (m_checktime > 0.0 && m_checksteps == 0) ||
-                 (m_checktime == 0.0 && m_checksteps > 0),
-             "Only one of IO_CheckTime and IO_CheckSteps "
-             "should be set!");
-
-    LibUtilities::Timer timer;
-    bool doCheckTime  = false;
-    int step          = 0;
-    NekDouble intTime = 0.0;
-    NekDouble cpuTime = 0.0;
-    NekDouble elapsed = 0.0;
-
-    Array<OneD, NekDouble> tmpc(ncoeffs);
-
-    Array<OneD, NekDouble> velmag(nq, 0.0);
-    Array<OneD, NekDouble> velocity(m_spacedim * nq);
-
-    // Aligh Moving Frames along the velocit vector
-    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
-    Array<OneD, Array<OneD, NekDouble>> MF1sttmp(m_spacedim);
-    Array<OneD, Array<OneD, NekDouble>> MF1stAligned(m_spacedim);
-    Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
-    for (int i = 0; i < m_spacedim; ++i)
-    {
-        MF1st[i]    = Array<OneD, NekDouble>(m_spacedim * nq);
-        MF1sttmp[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-
-        MF1stAligned[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
-
-        TimeMapMF[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
-
-        Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
-                    &MF1st[i][0], 1);
-    }
-
-    // Connection 1-form
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MF1stConnection(m_mfdim);
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> TMMFConnection(m_mfdim);
-
-    Array<OneD, Array<OneD, NekDouble>> MF1stCurvature(m_mfdim);
-    Array<OneD, Array<OneD, NekDouble>> TMMFCurvature(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
-    {
-        MF1stCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
-        TMMFCurvature[i]  = Array<OneD, NekDouble>(nq, 0.0);
-
-        TMMFConnection[i]  = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        MF1stConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; j++)
-        {
-            TMMFConnection[i][j]  = Array<OneD, NekDouble>(nq, 0.0);
-            MF1stConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
-        }
-    }
-
-    Array<OneD, Array<OneD, NekDouble>> Relacc(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> TMRelacc(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
-    {
-        Relacc[j]   = Array<OneD, NekDouble>(nq, 0.0);
-        TMRelacc[j] = Array<OneD, NekDouble>(nq, 0.0);
-    }
-
-    Array<OneD, int> ActivatedPre(nq, 0);
-    Array<OneD, int> Activated(nq, 0);
-    Array<OneD, int> ActivatedHistory(nq, 0);
-
-    Array<OneD, NekDouble> VelmagHistory(nq, 0.0);
-    Array<OneD, NekDouble> fieldHistory(nq, 0.0);
-
-    Array<OneD, NekDouble> DivDiff(nq, 0.0);
-
-    Array<OneD, NekDouble> dudtval(nq);
-    Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
-    Array<OneD, NekDouble> NoBoundaryZone(nq, 1.0);
-
-    Array<OneD, int> dudt(nq);
-    Array<OneD, int> APindex(nq, 1);
-
-    Array<OneD, int> NewValidTimeMap(nq, 1);
-
-    Array<OneD, NekDouble> Laplacian(nq);
-    Array<OneD, NekDouble> LaplacianNew(nq);
-
-    Array<OneD, Array<OneD, NekDouble>> qfield(m_expdim);
-    Array<OneD, Array<OneD, NekDouble>> qfieldNew(m_expdim);
-
-    Array<OneD, NekDouble> TimeMap(nq, 0.0);
-    Array<OneD, NekDouble> IappMap(nq, 0.0);
-    Array<OneD, NekDouble> UnitVelMap(m_spacedim * nq, 0.0);
-
-    int totsteps = (m_steps + 1) / m_checksteps;
-    Array<OneD, NekDouble> uval(totsteps, 0.0);
-    Array<OneD, NekDouble> mval(totsteps, 0.0);
-    Array<OneD, NekDouble> nval(totsteps, 0.0);
-    Array<OneD, NekDouble> hval(totsteps, 0.0);
-    Array<OneD, NekDouble> pval(totsteps, 0.0);
-
-    Array<OneD, NekDouble> fieldoldchk(nq, 0.0);
-    Array<OneD, NekDouble> fieldchkdiff(nq, 0.0);
-    while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
-    {
-        // Initialize Activated
-        Activated = Array<OneD, int>(nq, 0);
-
-        // Save fields into fieldsold
-        for (i = 0; i < nvariables; ++i)
-        {
-            Vmath::Vcopy(nq, &fields[i][0], 1, &fieldsold[i][0], 1);
-        }
-
-        // field time integration
-        timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
-        timer.Stop();
-
-        m_time += m_timestep;
-        elapsed = timer.TimePerTest(1);
-        intTime += elapsed;
-        cpuTime += elapsed;
-
-        // Compute TimeMap
-        // dudtsign: wavefront = -1.0, waveback = 1.0
-        //  dudt = Computedudt(m_uTol, fields[0], fieldsold[0]);
-        Vmath::Vsub(nq, fields[0], 1, fieldsold[0], 1, dudtval, 1);
-        Vmath::Smul(nq, 1.0 / m_timestep, dudtval, 1, dudtval, 1);
-
-        // Smoothing dudt map for a smooth time map
-        // HelmSolveSmoothing(m_TimeMapSmoothL, dudtval);
-        // Vmath::Vmul(nq, m_ValidTimeMap, 1, dudtval, 1, dudtval, 1);
-
-        // Compute Proper Time Map by weight integration of field.
-        // TMmode = 0 (Gradient-weighted time)
-        // Output = Propertimemap: time when the cell is excited.
-        //          fieldHistory: sum of field is updated
-
-        if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
-        {
-            ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
-                           dudtvalHistory, IappMap, TimeMap);
-        }
-
-        // Aligning moving frames along the velocity vector
-
-        // For multiple waves, if dudt changes from positive to
-        // negative, it is a peak to distinguish WB from WF. if dudt
-        // changes from negative to a negligible magnitude or positive,
-        // then it is another peak to change index of AP.
-        // ComputedudtHistory(dudt, fields[0], dudtHistory, APindex);
-
-        // vector = the gradient of u
-        velocity = ComputeDirectionVector(m_movingframes, fields[0], dudtval);
-
-        // Compute the magnitude of velocityls
-        velmag = ComputeVelocityMag(velocity);
-
-        // Activated = 1 only where u > m_uTol. is rad >
-        // m_NoAlignInitRadius.
-        ActivatedPre =
-            ComputeZoneActivation(m_uTol, fields[0], m_NoAlignInitRadius);
-
-        // Elementwise activation: Activate when velmag is larger than
-        // VATol
-        m_fields[0]->ElementWiseActivation(-1, velmag, m_VelActivationTol,
-                                           ActivatedPre);
-
-        // Align MF to Velocity vector if Activated is on.
-        // Input: Activated, velocity, MF1st_old (movingframes)
-        // Output: MF1st
-        AlignMFtoVelocity(ActivatedPre, velocity, m_movingframes, MF1sttmp);
-
-        // MF1sttmp has the same magnitude with m_movingframes which may
-        // have anisotropy
-
-        // Compute the difference of the divergence of the gradient
-        WeakDGMMFirstLaplacian(0, m_movingframes, fields[0], Laplacian);
-        WeakDGMMFirstLaplacian(0, MF1sttmp, fields[0], LaplacianNew);
-
-        DivDiff = ComputeLaplacianDiff(Laplacian, LaplacianNew);
-
-        // Validate New frames to modify MF1st and Activated
-        // Elementwise activation: Activate when DivDiff is smaller than
-        // AdaptNewFramesTol
-        Vmath::Vcopy(nq, ActivatedPre, 1, Activated, 1);
-        m_fields[0]->ElementWiseActivation(1, DivDiff, m_AdaptNewFramesTol,
-                                           Activated);
-
-        // Align MF to Velocity vector if Activated is on.
-        // Input: Activated, velocity, MF1st_old (movingframes)
-        // Output: MF1st
-        AlignMFtoVelocity(Activated, velocity, m_movingframes, MF1st);
-
-        // For Weighted integration
-        // ================================================== Input:
-        // Activated, MF1st Output: ActivatedHistory: 0 or 1. 1 is
-        // activated.
-        //         MF1stAligned: MF1st is updated and stored
-        //         VelmagHistory: sum of velmag is updated and stored
-        UpdateMF1st(Activated, MF1st, velmag, VelmagHistory, MF1stAligned,
-                    ActivatedHistory);
-
-        if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
-        {
-            std::cout << "Steps: " << std::setw(8) << std::left << step + 1
-                      << " "
-                      << "Time: " << std::setw(12) << std::left << m_time
-                      << std::endl;
-
-            std::cout << "DivDiff = " << Vmath::Vamax(nq, DivDiff, 1)
-                      << ", ActivatedHistory = "
-                      << CountActivated(ActivatedHistory) << " ( "
-                      << 100.0 * CountActivated(ActivatedHistory) / nq
-                      << " % ) " << std::endl;
-
-            std::stringstream ss;
-            ss << cpuTime / 60.0 << " min.";
-            std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
-                      << std::endl;
-
-            if (CountActivated(ActivatedHistory) > 0)
-            {
-                // Check the Curvature 2-form of the aligned moving frames
-                Compute2DConnectionCurvature(MF1stAligned, MF1stConnection,
-                                             MF1stCurvature);
-
-                // Test moving frames Connection whenever it is possible
-                Test2DConnectionCurvature(m_Initx, m_Inity, m_Initz,
-                                          ActivatedHistory, MF1stAligned,
-                                          MF1stConnection, MF1stCurvature);
-            }
-
-            cpuTime = 0.0;
-        }
-
-        // Write out checkpoint files
-        if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
-            doCheckTime)
-        {
-            // NekDouble dudtpros, dudtneg;
-            // dudtpros = Computedudtpercent(1, dudt);
-            // dudtneg  = Computedudtpercent(-1, dudt);
-
-            // NekDouble udiff;
-            // udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq,
-            // fields[0], 1);
-
-            Array<OneD, NekDouble> x0(nq);
-            Array<OneD, NekDouble> x1(nq);
-            Array<OneD, NekDouble> x2(nq);
-
-            m_fields[0]->GetCoords(x0, x1, x2);
-
-            int Iumax = Vmath::Iamax(nq, fields[0], 1);
-            std::cout << "u_max= " << Vmath::Vamax(nq, fields[0], 1)
-                      << " at x = " << x0[Iumax] << ", y = " << x1[Iumax]
-                      << std::endl;
-
-            int Ivelmax = Vmath::Iamax(nq, velmag, 1);
-            std::cout << "vel_max= " << Vmath::Vamax(nq, velmag, 1)
-                      << " at x = " << x0[Ivelmax] << ", y = " << x1[Ivelmax]
-                      << std::endl;
-
-            if (CountActivated(ActivatedHistory) > 0)
-            {
-                ComputeRelacc(MF1stAligned, Relacc);
-
-                PlotTrajectoryMF(ActivatedHistory, fields[0], MF1stAligned,
-                                 MF1stConnection, Relacc, NoBoundaryZone, nchk);
-
-                // Plot relative acceleration and conduction block zone
-                // PlotRelacc2D(ActivatedHistory, MF1stConnection,
-                // MF1stCurvature, Relacc, RelaccOmega, nchk);
-            }
-
-            if (m_TimeMap == eActivated)
-            {
-                // Compute velocity field
-                // VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
-                ComputeMFTimeMap(m_ValidTimeMap, TimeMap, NewValidTimeMap,
-                                 TimeMapMF);
-
-                // Compute2DConnectionCurvature(TimeMapMF, TMMFConnection,
-                // TMMFCurvature);
-
-                Compute2DConnection1form(TimeMapMF, TMMFConnection);
-
-                // Compute Relative Acceleration
-                ComputeRelacc(TimeMapMF, TMRelacc);
-
-                // PlotTimeMap(TimeMap, IappMap, TimeMapMF, nchk);
-
-                // PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned,
-                //               TMMFConnection, TMRelacc, nchk);
-
-                std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
-                          << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
-                          << std::endl;
-            }
-
-            Checkpoint_Output(nchk++);
-            doCheckTime = false;
-        }
-
-        // Step advance
-        ++step;
-    } // namespace Nektar
-
-    // Print out summary statistics
-    if (m_session->GetComm()->GetRank() == 0)
-    {
-        std::cout << "Time-integration  : " << intTime << "s" << std::endl;
-    }
-
-    for (i = 0; i < nvariables; ++i)
-    {
-        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-        m_fields[m_intVariables[i]]->SetPhysState(true);
-    }
-
-    for (i = 0; i < nvariables; ++i)
-    {
-        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
-                              m_fields[i]->UpdateCoeffs());
-    }
-} // namespace Nektar
+// void MMFNeuralEP::DoSolveMMFFirst()
+// {
+//     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
+
+//     int i, nchk = 1;
+//     int nq         = GetTotPoints();
+//     int ncoeffs    = GetNcoeffs();
+//     int nvariables = 0;
+//     int nfields    = m_fields.size();
+
+//     if (m_intVariables.empty())
+//     {
+//         for (i = 0; i < nfields; ++i)
+//         {
+//             m_intVariables.push_back(i);
+//         }
+//         nvariables = nfields;
+//     }
+//     else
+//     {
+//         nvariables = m_intVariables.size();
+//     }
+
+//     // Set up wrapper to fields data storage.
+//     Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
+//     Array<OneD, Array<OneD, NekDouble>> fieldsold(nvariables);
+
+//     // Order storage to list time-integrated fields first.
+//     for (i = 0; i < nvariables; ++i)
+//     {
+//         fields[i] = m_fields[m_intVariables[i]]->GetPhys();
+//         m_fields[m_intVariables[i]]->SetPhysState(false);
+
+//         fieldsold[i] = Array<OneD, NekDouble>(nq);
+//     }
+
+//     // Initialise time integration scheme
+//     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
+
+//     // Check uniqueness of checkpoint output
+//     ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
+//                  (m_checktime > 0.0 && m_checksteps == 0) ||
+//                  (m_checktime == 0.0 && m_checksteps > 0),
+//              "Only one of IO_CheckTime and IO_CheckSteps "
+//              "should be set!");
+
+//     LibUtilities::Timer timer;
+//     bool doCheckTime  = false;
+//     int step          = 0;
+//     NekDouble intTime = 0.0;
+//     NekDouble cpuTime = 0.0;
+//     NekDouble elapsed = 0.0;
+
+//     Array<OneD, NekDouble> tmpc(ncoeffs);
+
+//     Array<OneD, NekDouble> velmag(nq, 0.0);
+//     Array<OneD, NekDouble> velocity(m_spacedim * nq);
+
+//     // Aligh Moving Frames along the velocit vector
+//     Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
+//     Array<OneD, Array<OneD, NekDouble>> MF1sttmp(m_spacedim);
+//     Array<OneD, Array<OneD, NekDouble>> MF1stAligned(m_spacedim);
+//     Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
+//     for (int i = 0; i < m_spacedim; ++i)
+//     {
+//         MF1st[i]    = Array<OneD, NekDouble>(m_spacedim * nq);
+//         MF1sttmp[i] = Array<OneD, NekDouble>(m_spacedim * nq);
+
+//         MF1stAligned[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
+
+//         TimeMapMF[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
+
+//         Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
+//                     &MF1st[i][0], 1);
+//     }
+
+//     // Connection 1-form
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MF1stConnection(m_mfdim);
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> TMMFConnection(m_mfdim);
+
+//     Array<OneD, Array<OneD, NekDouble>> MF1stCurvature(m_mfdim);
+//     Array<OneD, Array<OneD, NekDouble>> TMMFCurvature(m_mfdim);
+//     for (int i = 0; i < m_mfdim; i++)
+//     {
+//         MF1stCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
+//         TMMFCurvature[i]  = Array<OneD, NekDouble>(nq, 0.0);
+
+//         TMMFConnection[i]  = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+//         MF1stConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+//         for (int j = 0; j < m_mfdim; j++)
+//         {
+//             TMMFConnection[i][j]  = Array<OneD, NekDouble>(nq, 0.0);
+//             MF1stConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
+//         }
+//     }
+
+//     Array<OneD, Array<OneD, NekDouble>> Relacc(m_shapedim);
+//     Array<OneD, Array<OneD, NekDouble>> TMRelacc(m_shapedim);
+//     for (int j = 0; j < m_shapedim; ++j)
+//     {
+//         Relacc[j]   = Array<OneD, NekDouble>(nq, 0.0);
+//         TMRelacc[j] = Array<OneD, NekDouble>(nq, 0.0);
+//     }
+
+//     Array<OneD, int> ActivatedPre(nq, 0);
+//     Array<OneD, int> Activated(nq, 0);
+//     Array<OneD, int> ActivatedHistory(nq, 0);
+
+//     Array<OneD, NekDouble> VelmagHistory(nq, 0.0);
+//     Array<OneD, NekDouble> fieldHistory(nq, 0.0);
+
+//     Array<OneD, NekDouble> DivDiff(nq, 0.0);
+
+//     Array<OneD, NekDouble> dudtval(nq);
+//     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
+//     Array<OneD, NekDouble> NoBoundaryZone(nq, 1.0);
+
+//     Array<OneD, int> dudt(nq);
+//     Array<OneD, int> APindex(nq, 1);
+
+//     Array<OneD, int> NewValidTimeMap(nq, 1);
+
+//     Array<OneD, NekDouble> Laplacian(nq);
+//     Array<OneD, NekDouble> LaplacianNew(nq);
+
+//     Array<OneD, Array<OneD, NekDouble>> qfield(m_expdim);
+//     Array<OneD, Array<OneD, NekDouble>> qfieldNew(m_expdim);
+
+//     Array<OneD, NekDouble> TimeMap(nq, 0.0);
+//     Array<OneD, NekDouble> IappMap(nq, 0.0);
+//     Array<OneD, NekDouble> UnitVelMap(m_spacedim * nq, 0.0);
+
+//     int totsteps = (m_steps + 1) / m_checksteps;
+//     Array<OneD, NekDouble> uval(totsteps, 0.0);
+//     Array<OneD, NekDouble> mval(totsteps, 0.0);
+//     Array<OneD, NekDouble> nval(totsteps, 0.0);
+//     Array<OneD, NekDouble> hval(totsteps, 0.0);
+//     Array<OneD, NekDouble> pval(totsteps, 0.0);
+
+//     Array<OneD, NekDouble> fieldoldchk(nq, 0.0);
+//     Array<OneD, NekDouble> fieldchkdiff(nq, 0.0);
+//     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
+//     {
+//         // Initialize Activated
+//         Activated = Array<OneD, int>(nq, 0);
+
+//         // Save fields into fieldsold
+//         for (i = 0; i < nvariables; ++i)
+//         {
+//             Vmath::Vcopy(nq, &fields[i][0], 1, &fieldsold[i][0], 1);
+//         }
+
+//         // field time integration
+//         timer.Start();
+//         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+//         timer.Stop();
+
+//         m_time += m_timestep;
+//         elapsed = timer.TimePerTest(1);
+//         intTime += elapsed;
+//         cpuTime += elapsed;
+
+//         // Compute TimeMap
+//         // dudtsign: wavefront = -1.0, waveback = 1.0
+//         //  dudt = Computedudt(m_uTol, fields[0], fieldsold[0]);
+//         Vmath::Vsub(nq, fields[0], 1, fieldsold[0], 1, dudtval, 1);
+//         Vmath::Smul(nq, 1.0 / m_timestep, dudtval, 1, dudtval, 1);
+
+//         // Smoothing dudt map for a smooth time map
+//         // HelmSolveSmoothing(m_TimeMapSmoothL, dudtval);
+//         // Vmath::Vmul(nq, m_ValidTimeMap, 1, dudtval, 1, dudtval, 1);
+
+//         // Compute Proper Time Map by weight integration of field.
+//         // TMmode = 0 (Gradient-weighted time)
+//         // Output = Propertimemap: time when the cell is excited.
+//         //          fieldHistory: sum of field is updated
+
+//         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
+//         {
+//             ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
+//                            dudtvalHistory, IappMap, TimeMap);
+//         }
+
+//         // Aligning moving frames along the velocity vector
+
+//         // For multiple waves, if dudt changes from positive to
+//         // negative, it is a peak to distinguish WB from WF. if dudt
+//         // changes from negative to a negligible magnitude or positive,
+//         // then it is another peak to change index of AP.
+//         // ComputedudtHistory(dudt, fields[0], dudtHistory, APindex);
+
+//         // vector = the gradient of u
+//         velocity = ComputeDirectionVector(m_movingframes, fields[0], dudtval);
+
+//         // Compute the magnitude of velocityls
+//         velmag = ComputeVelocityMag(velocity);
+
+//         // Activated = 1 only where u > m_uTol. is rad >
+//         // m_NoAlignInitRadius.
+//         ActivatedPre =
+//             ComputeZoneActivation(m_uTol, fields[0], m_NoAlignInitRadius);
+
+//         // Elementwise activation: Activate when velmag is larger than
+//         // VATol
+//         m_fields[0]->ElementWiseActivation(-1, velmag, m_VelActivationTol,
+//                                            ActivatedPre);
+
+//         // Align MF to Velocity vector if Activated is on.
+//         // Input: Activated, velocity, MF1st_old (movingframes)
+//         // Output: MF1st
+//         AlignMFtoVelocity(ActivatedPre, velocity, m_movingframes, MF1sttmp);
+
+//         // MF1sttmp has the same magnitude with m_movingframes which may
+//         // have anisotropy
+
+//         // Compute the difference of the divergence of the gradient
+//         WeakDGMMFirstLaplacian(0, m_movingframes, fields[0], Laplacian);
+//         WeakDGMMFirstLaplacian(0, MF1sttmp, fields[0], LaplacianNew);
+
+//         DivDiff = ComputeLaplacianDiff(Laplacian, LaplacianNew);
+
+//         // Validate New frames to modify MF1st and Activated
+//         // Elementwise activation: Activate when DivDiff is smaller than
+//         // AdaptNewFramesTol
+//         Vmath::Vcopy(nq, ActivatedPre, 1, Activated, 1);
+//         m_fields[0]->ElementWiseActivation(1, DivDiff, m_AdaptNewFramesTol,
+//                                            Activated);
+
+//         // Align MF to Velocity vector if Activated is on.
+//         // Input: Activated, velocity, MF1st_old (movingframes)
+//         // Output: MF1st
+//         AlignMFtoVelocity(Activated, velocity, m_movingframes, MF1st);
+
+//         // For Weighted integration
+//         // ================================================== Input:
+//         // Activated, MF1st Output: ActivatedHistory: 0 or 1. 1 is
+//         // activated.
+//         //         MF1stAligned: MF1st is updated and stored
+//         //         VelmagHistory: sum of velmag is updated and stored
+//         UpdateMF1st(Activated, MF1st, velmag, VelmagHistory, MF1stAligned,
+//                     ActivatedHistory);
+
+//         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
+//         {
+//             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
+//                       << " "
+//                       << "Time: " << std::setw(12) << std::left << m_time
+//                       << std::endl;
+
+//             std::cout << "DivDiff = " << Vmath::Vamax(nq, DivDiff, 1)
+//                       << ", ActivatedHistory = "
+//                       << CountActivated(ActivatedHistory) << " ( "
+//                       << 100.0 * CountActivated(ActivatedHistory) / nq
+//                       << " % ) " << std::endl;
+
+//             std::stringstream ss;
+//             ss << cpuTime / 60.0 << " min.";
+//             std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+//                       << std::endl;
+
+//             if (CountActivated(ActivatedHistory) > 0)
+//             {
+//                 // Check the Curvature 2-form of the aligned moving frames
+//                 Compute2DConnectionCurvature(MF1stAligned, MF1stConnection,
+//                                              MF1stCurvature);
+
+//                 // Test moving frames Connection whenever it is possible
+//                 Test2DConnectionCurvature(m_Initx, m_Inity, m_Initz,
+//                                           ActivatedHistory, MF1stAligned,
+//                                           MF1stConnection, MF1stCurvature);
+//             }
+
+//             cpuTime = 0.0;
+//         }
+
+//         // Write out checkpoint files
+//         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
+//             doCheckTime)
+//         {
+//             // NekDouble dudtpros, dudtneg;
+//             // dudtpros = Computedudtpercent(1, dudt);
+//             // dudtneg  = Computedudtpercent(-1, dudt);
+
+//             // NekDouble udiff;
+//             // udiff = Vmath::Vmax(nq, fields[0], 1) - Vmath::Vmin(nq,
+//             // fields[0], 1);
+
+//             Array<OneD, NekDouble> x0(nq);
+//             Array<OneD, NekDouble> x1(nq);
+//             Array<OneD, NekDouble> x2(nq);
+
+//             m_fields[0]->GetCoords(x0, x1, x2);
+
+//             int Iumax = Vmath::Iamax(nq, fields[0], 1);
+//             std::cout << "u_max= " << Vmath::Vamax(nq, fields[0], 1)
+//                       << " at x = " << x0[Iumax] << ", y = " << x1[Iumax]
+//                       << std::endl;
+
+//             int Ivelmax = Vmath::Iamax(nq, velmag, 1);
+//             std::cout << "vel_max= " << Vmath::Vamax(nq, velmag, 1)
+//                       << " at x = " << x0[Ivelmax] << ", y = " << x1[Ivelmax]
+//                       << std::endl;
+
+//             if (CountActivated(ActivatedHistory) > 0)
+//             {
+//                 ComputeRelacc(MF1stAligned, Relacc);
+
+//                 PlotTrajectoryMF(ActivatedHistory, fields[0], MF1stAligned,
+//                                  MF1stConnection, Relacc, NoBoundaryZone, nchk);
+
+//                 // Plot relative acceleration and conduction block zone
+//                 // PlotRelacc2D(ActivatedHistory, MF1stConnection,
+//                 // MF1stCurvature, Relacc, RelaccOmega, nchk);
+//             }
+
+//             if (m_TimeMap == eActivated)
+//             {
+//                 // Compute velocity field
+//                 // VelocityMap = ComputeVelocityField(m_ValidTimeMap, TimeMap);
+//                 ComputeMFTimeMap(m_ValidTimeMap, TimeMap, NewValidTimeMap,
+//                                  TimeMapMF);
+
+//                 // Compute2DConnectionCurvature(TimeMapMF, TMMFConnection,
+//                 // TMMFCurvature);
+
+//                 Compute2DConnection1form(TimeMapMF, TMMFConnection);
+
+//                 // Compute Relative Acceleration
+//                 ComputeRelacc(TimeMapMF, TMRelacc);
+
+//                 // PlotTimeMap(TimeMap, IappMap, TimeMapMF, nchk);
+
+//                 // PlotTimeMapMF(NoBoundaryZone, TimeMap, TimeMapMF, MF1stAligned,
+//                 //               TMMFConnection, TMRelacc, nchk);
+
+//                 std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+//                           << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
+//                           << std::endl;
+//             }
+
+//             Checkpoint_Output(nchk++);
+//             doCheckTime = false;
+//         }
+
+//         // Step advance
+//         ++step;
+//     } // namespace Nektar
+
+//     // Print out summary statistics
+//     if (m_session->GetComm()->GetRank() == 0)
+//     {
+//         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
+//     }
+
+//     for (i = 0; i < nvariables; ++i)
+//     {
+//         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+//         m_fields[m_intVariables[i]]->SetPhysState(true);
+//     }
+
+//     for (i = 0; i < nvariables; ++i)
+//     {
+//         m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
+//                               m_fields[i]->UpdateCoeffs());
+//     }
+// } // namespace Nektar
 
 
 void MMFNeuralEP::PlotHelmSolvephie(const Array<OneD, const NekDouble> &Helmforcing,
@@ -3026,7 +3023,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
         // Compute (1/C_n/r) * \nabla^2 \phi_e
         extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
-        Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+        // Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
     }
 
     else if(m_ExternalCondType==eApproxByPhim)
@@ -3037,11 +3034,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         Vmath::Smul(nq, phieratio, inarray[0], 1, phie, 1);
 
         extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
-        Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
+        // Vmath::Smul(nq, 1.0 / (Cn * Rf), extcurrent, 1, extcurrent, 1);
     }
 
     // add divergence of phie to the current
-    Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    Vmath::Svtvp(nq, 1.0 / (Cn * Rf), &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    // Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     if (m_explicitDiffusion)
     {
