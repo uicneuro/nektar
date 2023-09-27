@@ -57,8 +57,6 @@ enum NeuralEPType
     eNeuralEP1D,
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
-    eNeuralEP2DEmbmono,
-    eNeuralEP2DEmbbi,
     SIZE_NeuralEPType ///< Length of enum list
 };
 
@@ -68,8 +66,6 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP1D",
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
-    "NeuralEP2DEmbmono",
-    "NeuralEP2DEmbbi",
 };
 
 enum SolverSchemeType
@@ -181,6 +177,9 @@ protected:
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
+    NekDouble m_Rf, m_Cn;
+
+    Array<OneD, NekDouble> m_StimAtNode;
 
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     
