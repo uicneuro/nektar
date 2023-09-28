@@ -41,7 +41,7 @@
 #include <SolverUtils/Diffusion/Diffusion.h>
 
 #include <CardiacEPSolver/CellModels/CellModel.h>
-#include <CardiacEPSolver/Stimuli/Stimulus.h>
+#include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulus.h>
 
 #include <DiffusionSolver/NeuronModels/NeuronModel.h>
 
@@ -232,6 +232,8 @@ protected:
     Array<OneD, int> m_ValidTimeMap;
 
     Array<OneD, Array<OneD, int>> m_NodeZone;
+    Array<OneD, NekDouble> m_NodeZoneDouble;
+
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
@@ -476,15 +478,15 @@ private:
     NekDouble m_capMembrane;
     NekDouble m_conductivity;
 
+    int m_zonestart, m_zoneend;
+
     CellModelSharedPtr m_cell;
 
     NeuronModelSharedPtr m_neuron;
     Array<OneD, NeuronModelSharedPtr> m_fiberneurons;
 
-    std::vector<StimulusSharedPtr> m_stimulus;
-    std::vector<StimulusSharedPtr> m_fiberstimulus;
-
-    // Array<OneD, std::vector<StimulusSharedPtr>> m_fiberstimulus;
+    std::vector<NeuralStimulusSharedPtr> m_stimulus;
+    std::vector<NeuralStimulusSharedPtr> m_fiberstimulus;
 
     Array<OneD, NekDouble> ComputeLaplacianDiff(
         const Array<OneD, const NekDouble> &Laplacian,

@@ -1,0 +1,148 @@
+MMFActivation = 57120 / 57600
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 1920 elements, adapated from MF1 = 1023, MF2 = 897, MF3 = 0
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.576493 , 0.577487 , 0.578069 ) 
+*** MF 1 = ( 0.578117 , 0.577302 , 0.576631 ) 
+*** MF 2 = ( 0.577439 , 0.577262 , 0.57735 ) 
+============ End of MMFInitObect ============
+k = 0, m_varcoeff = ( 0.576493 , 0.577487 , 0.578069 , 0.00438236 , 1 ) 
+k = 1, m_varcoeff = ( 0.578117 , 0.577302 , 0.576631 , 0.00396538 , 1 ) 
+k = 2, m_varcoeff = ( 0.577439 , 0.577262 , 0.57735 , 0.200302 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: SphereAPh20TM
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 30000
+	 Checkpoints (steps): 3000
+	    Integration Type: IMEX
+	             Surface: Sphere
+	           DerivType: Euclidean
+	          MediumType: Isotropy
+	              MMFdir: LOCAL
+	    SolverSchemeType: Default
+	    AnisotropyRegion: 1000000
+	  AnisotropyStrength: 4
+	          TimeMapEnd: 10000
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0
+total 480 / 57600 is init-Acitvated
+Initial: max u = 5.14996
+Writing: "SphereAPh20TM_initial.chk"
+ (0s, XML)
+xmax = 10, xmin = -10, ymax = 10, ymin = -10
+Steps: 3000     Time: 3           
+ CPU Time: 2.17354 min.
+u_max = 0.998924 at x = 0, y = 0, z = 10
+u_min = -4.78963e-22 at x = 0, y = -7.23163, z = -6.90687
+Writing: "SphereAPh20TM_TimeMap_1.chk"
+ (0s, XML)
+Time Map: Max = 2.999, Min = 0
+Writing: "SphereAPh20TM_1.chk"
+ (0s, XML)
+Steps: 6000     Time: 6           
+ CPU Time: 2.09062 min.
+u_max = 0.997859 at x = 0, y = 0, z = 10
+u_min = 1.76075e-20 at x = 0, y = 0, z = -10
+Writing: "SphereAPh20TM_TimeMap_2.chk"
+ (0s, XML)
+Time Map: Max = 5.99801, Min = 0
+Writing: "SphereAPh20TM_2.chk"
+ (0s, XML)
+Steps: 9000     Time: 9           
+ CPU Time: 2.09753 min.
+u_max = 0.995888 at x = -5.24604, y = 5.24604, z = 6.70509
+u_min = 7.59435e-16 at x = 0, y = 0, z = -10
+Writing: "SphereAPh20TM_TimeMap_3.chk"
+ (0s, XML)
+Time Map: Max = 8.9995, Min = 0
+Writing: "SphereAPh20TM_3.chk"
+ (0s, XML)
+Steps: 12000    Time: 12          
+ CPU Time: 2.09839 min.
+u_max = 0.996152 at x = 5.10307, y = 7.97922, z = 3.20792
+u_min = 1.46436e-12 at x = 0, y = 0, z = -10
+Writing: "SphereAPh20TM_TimeMap_4.chk"
+ (0s, XML)
+Time Map: Max = 11.9995, Min = 0
+Writing: "SphereAPh20TM_4.chk"
+ (0s, XML)
+Steps: 15000    Time: 15          
+ CPU Time: 2.09547 min.
+u_max = 0.996339 at x = -0.744181, y = -9.92465, z = -0.973591
+u_min = 4.94061e-09 at x = 0, y = 0, z = -10
+Writing: "SphereAPh20TM_TimeMap_5.chk"
+ (0s, XML)
+Time Map: Max = 14.999, Min = 0
+Writing: "SphereAPh20TM_5.chk"
+ (0s, XML)
+Steps: 18000    Time: 18          
+ CPU Time: 2.08192 min.
+u_max = 0.996547 at x = -1.68532, y = 8.39989, z = -5.15781
+u_min = 2.61904e-05 at x = 0, y = 0, z = -10
+Writing: "SphereAPh20TM_TimeMap_6.chk"
+ (0s, XML)
+Time Map: Max = 17.9995, Min = 0
+Writing: "SphereAPh20TM_6.chk"
+ (0s, XML)
+Steps: 21000    Time: 21          
+ CPU Time: 2.08011 min.
+u_max = 0.997002 at x = 4.3421, y = -2.49111, z = -8.65682
+u_min = 0.446087 at x = 0, y = 0, z = -10
+Writing: "SphereAPh20TM_TimeMap_7.chk"
+ (0s, XML)
+Time Map: Max = 20.624, Min = 0
+Writing: "SphereAPh20TM_7.chk"
+ (0s, XML)
+Steps: 24000    Time: 24          
+ CPU Time: 2.08311 min.
+u_max = 0.997645 at x = 0, y = 0, z = -10
+u_min = 0.661867 at x = 1.708, y = -1.47848, z = 9.74154
+Writing: "SphereAPh20TM_TimeMap_8.chk"
+ (0s, XML)
+Time Map: Max = 20.7967, Min = 0
+Writing: "SphereAPh20TM_8.chk"
+ (0s, XML)
+Steps: 27000    Time: 27          
+ CPU Time: 2.08005 min.
+u_max = 0.994445 at x = 0, y = 0, z = -10
+u_min = 0.0500239 at x = 0.194131, y = -0.893903, z = 9.95802
+Writing: "SphereAPh20TM_TimeMap_9.chk"
+ (0s, XML)
+Time Map: Max = 20.7967, Min = 0
+Writing: "SphereAPh20TM_9.chk"
+ (0s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 2.08382 min.
+u_max = 0.988787 at x = 0, y = 0, z = -10
+u_min = 0.000970072 at x = 0, y = 0, z = 10
+Writing: "SphereAPh20TM_TimeMap_10.chk"
+ (0s, XML)
+Time Map: Max = 20.7967, Min = 0
+Writing: "SphereAPh20TM_10.chk"
+ (0s, XML)
+Time-integration  : 1257.87s
+Writing: "SphereAPh20TM.fld"
+ (0s, XML)
+-------------------------------------------
+Total Computation Time = 6300.34s
+-------------------------------------------
+L 2 error (variable u) : 28.1267
+L inf error (variable u) : 0.988787

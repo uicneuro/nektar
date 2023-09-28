@@ -1,0 +1,147 @@
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 1946 elements, adapated from MF1 = 852, MF2 = 795, MF3 = 299
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.700511 , 0.713642 , 0 ) 
+*** MF 1 = ( 0.713642 , 0.700511 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+============ End of MMFInitObect ============
+k = 0, m_varcoeff = ( 0.700511 , 0.713642 , 0 , 1.81355e-08 , 1 ) 
+k = 1, m_varcoeff = ( 0.713642 , 0.700511 , 0 , 1.93964e-08 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: FHNPlaneh30LeftTM
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 100000
+	 Checkpoints (steps): 10000
+	    Integration Type: IMEX
+	             Surface: PlaneLeft
+	           DerivType: Euclidean
+	          MediumType: Isotropy
+	              MMFdir: LOCAL
+	    SolverSchemeType: Default
+	    AnisotropyRegion: 1000000
+	  AnisotropyStrength: 4
+	          TimeMapEnd: 10000
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+total 0 / 58380 is init-Acitvated
+Initial: max u = 5.71377
+Writing: "FHNPlaneh30LeftTM_initial.chk"
+ (0s, XML)
+xmax = 40, xmin = -40, ymax = 40, ymin = -40
+Steps: 10000    Time: 10          
+ CPU Time: 7.82801 min.
+u_max = 1.01768 at x = -16.9069, y = -5.76089, z = 0
+u_min = -0.00405699 at x = -12.71, y = 3.04158, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_1.chk"
+ (0s, XML)
+Time Map: Max = 9.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_1.chk"
+ (0s, XML)
+Steps: 20000    Time: 20          
+ CPU Time: 7.7532 min.
+u_max = 1.01112 at x = -2.91689, y = 18.7432, z = 0
+u_min = -0.0109371 at x = 1.29843, y = -9.84423, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_2.chk"
+ (0s, XML)
+Time Map: Max = 20, Min = 0
+Writing: "FHNPlaneh30LeftTM_2.chk"
+ (0s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 7.71515 min.
+u_max = 1.03604 at x = 10.953, y = 30.7222, z = 0
+u_min = -0.00806121 at x = 15.6931, y = -32.2271, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_3.chk"
+ (0s, XML)
+Time Map: Max = 29.999, Min = 0
+Writing: "FHNPlaneh30LeftTM_3.chk"
+ (0s, XML)
+Steps: 40000    Time: 40          
+ CPU Time: 7.6158 min.
+u_max = 1.01176 at x = 25.1852, y = 40, z = 0
+u_min = -0.011204 at x = 29.7127, y = -6.50726, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_4.chk"
+ (0s, XML)
+Time Map: Max = 40, Min = 0
+Writing: "FHNPlaneh30LeftTM_4.chk"
+ (0s, XML)
+Steps: 50000    Time: 50          
+ CPU Time: 7.61662 min.
+u_max = 0.998438 at x = 40, y = -40, z = 0
+u_min = 5.18401e-14 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_5.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_5.chk"
+ (0s, XML)
+Steps: 60000    Time: 60          
+ CPU Time: 7.58395 min.
+u_max = 0.979722 at x = 40, y = -40, z = 0
+u_min = 1.53922e-18 at x = -40, y = 1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_6.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_6.chk"
+ (0s, XML)
+Steps: 70000    Time: 70          
+ CPU Time: 7.58123 min.
+u_max = 0.801033 at x = 40, y = -40, z = 0
+u_min = 2.90481e-22 at x = -40, y = -1.48148, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_7.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_7.chk"
+ (0s, XML)
+Steps: 80000    Time: 80          
+ CPU Time: 7.56118 min.
+u_max = 4.53735e-07 at x = 40, y = 40, z = 0
+u_min = 5.9879e-26 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_8.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_8.chk"
+ (0s, XML)
+Steps: 90000    Time: 90          
+ CPU Time: 7.53589 min.
+u_max = 6.92933e-13 at x = 40, y = 40, z = 0
+u_min = 1.24121e-29 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_9.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_9.chk"
+ (0s, XML)
+Steps: 100000   Time: 100         
+ CPU Time: 7.56888 min.
+u_max = 2.00035e-18 at x = 40, y = 40, z = 0
+u_min = 2.59146e-33 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_10.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_10.chk"
+ (0s, XML)
+Time-integration  : 4581.6s
+Writing: "FHNPlaneh30LeftTM.fld"
+ (0s, XML)
+-------------------------------------------
+Total Computation Time = 21066.1s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 2.00035e-18

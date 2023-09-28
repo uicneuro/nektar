@@ -1,0 +1,2307 @@
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 4800, Myelin = 1440, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.3752 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.3752 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.3752 , 0 ) 
+*** MF 1 = ( 11.3752 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+============ End of MMFInitObect ============
+
+Constructing phieunitMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 208 elements, adapated from MF1 = 88, MF2 = 105, MF3 = 15
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.480038 , 0.877248 , 0 ) 
+*** MF 1 = ( 0.877248 , 0.480038 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.480038 , 0.877248 , 0 ) 
+*** MF 1 = ( 0.877248 , 0.480038 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 208 elements, adapated from MF1 = 88, MF2 = 105, MF3 = 15
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.22474 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.22474 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.587924 , 1.0744 , 0 ) 
+*** MF 1 = ( 1.0744 , 0.587924 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.22474 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.22474 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.587924 , 1.0744 , 0 ) 
+*** MF 1 = ( 1.0744 , 0.587924 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Compute Varcoeff for phim ====================== 
+k = 0, m_varcoeff = ( 0 , 11.3752 , 0 , 1.39065e-12 , 147.271 ) 
+k = 1, m_varcoeff = ( 11.3752 , 0 , 0 , 2.76616e-12 , 147.271 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+Compute Varcoeff for phie ====================== 
+k = 0, m_varcoeff = ( 0.587924 , 1.0744 , 0 , 9.47365e-11 , 1.5 ) 
+k = 1, m_varcoeff = ( 1.0744 , 0.587924 , 0 , 1.31444e-10 , 1.5 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: NeuralEP2DL2bi_reri2
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 1e-07
+	        No. of Steps: 20000000
+	 Checkpoints (steps): 100000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	          MediumType: Anisotropy
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2D
+	    SolverSchemeType: Default
+	             TimeMap: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         ElemNodeEnd: 47
+	       ElemMyelenEnd: 207
+	         Temperature: 24
+	            diameter: 0.025
+	             Helmtau: 1
+=======================================================================
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Elemid = 0, Nodeid = 0, x = 0.0125, y = 0.005, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 1, Nodeid = 0, x = 0.005, y = 0.0125, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 2, Nodeid = 0, x = 0.02, y = 0.0125, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 3, Nodeid = 0, x = 0.0125, y = 0.02, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 4, Nodeid = 1, x = 0.02, y = 0.0375, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 5, Nodeid = 1, x = 0.0125, y = 0.045, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 6, Nodeid = 1, x = 0.0125, y = 0.03, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 7, Nodeid = 1, x = 0.005, y = 0.0375, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 8, Nodeid = 2, x = 0.005, y = 0.2625, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 9, Nodeid = 2, x = 0.02, y = 0.2625, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 10, Nodeid = 2, x = 0.0125, y = 0.255, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 11, Nodeid = 2, x = 0.0125, y = 0.27, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 12, Nodeid = 3, x = 0.02, y = 0.4875, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 13, Nodeid = 3, x = 0.0125, y = 0.495, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 14, Nodeid = 3, x = 0.0125, y = 0.48, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 15, Nodeid = 3, x = 0.005, y = 0.4875, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 16, Nodeid = 4, x = 0.005, y = 0.7125, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 17, Nodeid = 4, x = 0.0125, y = 0.72, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 18, Nodeid = 4, x = 0.0125, y = 0.705, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 19, Nodeid = 4, x = 0.02, y = 0.7125, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 20, Nodeid = 5, x = 0.005, y = 0.9375, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 21, Nodeid = 5, x = 0.0125, y = 0.93, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 22, Nodeid = 5, x = 0.0125, y = 0.945, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 23, Nodeid = 5, x = 0.02, y = 0.9375, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 24, Nodeid = 6, x = 0.0125, y = 1.155, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 25, Nodeid = 6, x = 0.0125, y = 1.17, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 26, Nodeid = 6, x = 0.005, y = 1.1625, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 27, Nodeid = 6, x = 0.02, y = 1.1625, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 28, Nodeid = 7, x = 0.0125, y = 1.38, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 29, Nodeid = 7, x = 0.0125, y = 1.395, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 30, Nodeid = 7, x = 0.005, y = 1.3875, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 31, Nodeid = 7, x = 0.02, y = 1.3875, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 32, Nodeid = 8, x = 0.0125, y = 1.62, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 33, Nodeid = 8, x = 0.0125, y = 1.605, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 34, Nodeid = 8, x = 0.005, y = 1.6125, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 35, Nodeid = 8, x = 0.02, y = 1.6125, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 36, Nodeid = 9, x = 0.0125, y = 1.83, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 37, Nodeid = 9, x = 0.0125, y = 1.845, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 38, Nodeid = 9, x = 0.005, y = 1.8375, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 39, Nodeid = 9, x = 0.02, y = 1.8375, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 40, Nodeid = 10, x = 0.0125, y = 2.055, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 41, Nodeid = 10, x = 0.0125, y = 2.07, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 42, Nodeid = 10, x = 0.005, y = 2.0625, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 43, Nodeid = 10, x = 0.02, y = 2.0625, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 44, Nodeid = 11, x = 0.005, y = 2.2875, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 45, Nodeid = 11, x = 0.0125, y = 2.295, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 46, Nodeid = 11, x = 0.0125, y = 2.28, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 47, Nodeid = 11, x = 0.02, y = 2.2875, dist = 0.0177992, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 48, Nodeid = -1, x = 0.01125, y = 0.1575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 49, Nodeid = -1, x = 0.01125, y = 0.2075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 50, Nodeid = -1, x = 0.01375, y = 0.2425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 51, Nodeid = -1, x = 0.01375, y = 0.1925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 52, Nodeid = -1, x = 0.01125, y = 0.0575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 53, Nodeid = -1, x = 0.01375, y = 0.0925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 54, Nodeid = -1, x = 0.01125, y = 0.1075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 55, Nodeid = -1, x = 0.01375, y = 0.1425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 56, Nodeid = -1, x = 0.00375, y = 0.0775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 57, Nodeid = -1, x = 0.02125, y = 0.0725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 58, Nodeid = -1, x = 0.00375, y = 0.2275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 59, Nodeid = -1, x = 0.02125, y = 0.2225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 60, Nodeid = -1, x = 0.00375, y = 0.1275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 61, Nodeid = -1, x = 0.00375, y = 0.1775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 62, Nodeid = -1, x = 0.02125, y = 0.1225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 63, Nodeid = -1, x = 0.02125, y = 0.1725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 64, Nodeid = -1, x = 0.01125, y = 0.4325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 65, Nodeid = -1, x = 0.01375, y = 0.3175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 66, Nodeid = -1, x = 0.01375, y = 0.4175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 67, Nodeid = -1, x = 0.01125, y = 0.3825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 68, Nodeid = -1, x = 0.01125, y = 0.3325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 69, Nodeid = -1, x = 0.01375, y = 0.3675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 70, Nodeid = -1, x = 0.01125, y = 0.2825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 71, Nodeid = -1, x = 0.01375, y = 0.4675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 72, Nodeid = -1, x = 0.00375, y = 0.3025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 73, Nodeid = -1, x = 0.02125, y = 0.2975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 74, Nodeid = -1, x = 0.00375, y = 0.4525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 75, Nodeid = -1, x = 0.02125, y = 0.4475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 76, Nodeid = -1, x = 0.00375, y = 0.3525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 77, Nodeid = -1, x = 0.00375, y = 0.4025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 78, Nodeid = -1, x = 0.02125, y = 0.3475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 79, Nodeid = -1, x = 0.02125, y = 0.3975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 80, Nodeid = -1, x = 0.01125, y = 0.5575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 81, Nodeid = -1, x = 0.01375, y = 0.6425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 82, Nodeid = -1, x = 0.01375, y = 0.6925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 83, Nodeid = -1, x = 0.01125, y = 0.6575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 84, Nodeid = -1, x = 0.01125, y = 0.6075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 85, Nodeid = -1, x = 0.01375, y = 0.5925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 86, Nodeid = -1, x = 0.01375, y = 0.5425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 87, Nodeid = -1, x = 0.01125, y = 0.5075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 88, Nodeid = -1, x = 0.00375, y = 0.5275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 89, Nodeid = -1, x = 0.02125, y = 0.5225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 90, Nodeid = -1, x = 0.00375, y = 0.6775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 91, Nodeid = -1, x = 0.02125, y = 0.6725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 92, Nodeid = -1, x = 0.00375, y = 0.5775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 93, Nodeid = -1, x = 0.00375, y = 0.6275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 94, Nodeid = -1, x = 0.02125, y = 0.5725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 95, Nodeid = -1, x = 0.02125, y = 0.6225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 96, Nodeid = -1, x = 0.01125, y = 0.8825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 97, Nodeid = -1, x = 0.01375, y = 0.7675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 98, Nodeid = -1, x = 0.01125, y = 0.7325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 99, Nodeid = -1, x = 0.01125, y = 0.8325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 100, Nodeid = -1, x = 0.01375, y = 0.8675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 101, Nodeid = -1, x = 0.01125, y = 0.7825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 102, Nodeid = -1, x = 0.01375, y = 0.8175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 103, Nodeid = -1, x = 0.01375, y = 0.9175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 104, Nodeid = -1, x = 0.00375, y = 0.7525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 105, Nodeid = -1, x = 0.02125, y = 0.7475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 106, Nodeid = -1, x = 0.00375, y = 0.9025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 107, Nodeid = -1, x = 0.02125, y = 0.8975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 108, Nodeid = -1, x = 0.00375, y = 0.8025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 109, Nodeid = -1, x = 0.00375, y = 0.8525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 110, Nodeid = -1, x = 0.02125, y = 0.7975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 111, Nodeid = -1, x = 0.02125, y = 0.8475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 112, Nodeid = -1, x = 0.01125, y = 1.1075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 113, Nodeid = -1, x = 0.01375, y = 0.9925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 114, Nodeid = -1, x = 0.01125, y = 0.9575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 115, Nodeid = -1, x = 0.01125, y = 1.0575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 116, Nodeid = -1, x = 0.01125, y = 1.0075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 117, Nodeid = -1, x = 0.01375, y = 1.0425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 118, Nodeid = -1, x = 0.01375, y = 1.0925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 119, Nodeid = -1, x = 0.01375, y = 1.1425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 120, Nodeid = -1, x = 0.00375, y = 0.9775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 121, Nodeid = -1, x = 0.02125, y = 0.9725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 122, Nodeid = -1, x = 0.00375, y = 1.1275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 123, Nodeid = -1, x = 0.02125, y = 1.1225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 124, Nodeid = -1, x = 0.00375, y = 1.0275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 125, Nodeid = -1, x = 0.00375, y = 1.0775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 126, Nodeid = -1, x = 0.02125, y = 1.0225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 127, Nodeid = -1, x = 0.02125, y = 1.0725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 128, Nodeid = -1, x = 0.01125, y = 1.3325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 129, Nodeid = -1, x = 0.01375, y = 1.3175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 130, Nodeid = -1, x = 0.01125, y = 1.1825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 131, Nodeid = -1, x = 0.01125, y = 1.2325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 132, Nodeid = -1, x = 0.01375, y = 1.2675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 133, Nodeid = -1, x = 0.01125, y = 1.2825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 134, Nodeid = -1, x = 0.01375, y = 1.2175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 135, Nodeid = -1, x = 0.01375, y = 1.3675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 136, Nodeid = -1, x = 0.00375, y = 1.2025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 137, Nodeid = -1, x = 0.02125, y = 1.1975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 138, Nodeid = -1, x = 0.00375, y = 1.3525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 139, Nodeid = -1, x = 0.02125, y = 1.3475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 140, Nodeid = -1, x = 0.00375, y = 1.2525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 141, Nodeid = -1, x = 0.00375, y = 1.3025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 142, Nodeid = -1, x = 0.02125, y = 1.2475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 143, Nodeid = -1, x = 0.02125, y = 1.2975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 144, Nodeid = -1, x = 0.01125, y = 1.5575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 145, Nodeid = -1, x = 0.01125, y = 1.5075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 146, Nodeid = -1, x = 0.01125, y = 1.4575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 147, Nodeid = -1, x = 0.01375, y = 1.4425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 148, Nodeid = -1, x = 0.01125, y = 1.4075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 149, Nodeid = -1, x = 0.01375, y = 1.4925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 150, Nodeid = -1, x = 0.01375, y = 1.5425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 151, Nodeid = -1, x = 0.01375, y = 1.5925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 152, Nodeid = -1, x = 0.00375, y = 1.4275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 153, Nodeid = -1, x = 0.02125, y = 1.4225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 154, Nodeid = -1, x = 0.00375, y = 1.5775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 155, Nodeid = -1, x = 0.02125, y = 1.5725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 156, Nodeid = -1, x = 0.00375, y = 1.4775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 157, Nodeid = -1, x = 0.00375, y = 1.5275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 158, Nodeid = -1, x = 0.02125, y = 1.4725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 159, Nodeid = -1, x = 0.02125, y = 1.5225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 160, Nodeid = -1, x = 0.01125, y = 1.7825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 161, Nodeid = -1, x = 0.01375, y = 1.7675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 162, Nodeid = -1, x = 0.01125, y = 1.6325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 163, Nodeid = -1, x = 0.01375, y = 1.7175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 164, Nodeid = -1, x = 0.01125, y = 1.6825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 165, Nodeid = -1, x = 0.01125, y = 1.7325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 166, Nodeid = -1, x = 0.01375, y = 1.6675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 167, Nodeid = -1, x = 0.01375, y = 1.8175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 168, Nodeid = -1, x = 0.00375, y = 1.6525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 169, Nodeid = -1, x = 0.02125, y = 1.6475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 170, Nodeid = -1, x = 0.00375, y = 1.8025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 171, Nodeid = -1, x = 0.02125, y = 1.7975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 172, Nodeid = -1, x = 0.00375, y = 1.7025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 173, Nodeid = -1, x = 0.00375, y = 1.7525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 174, Nodeid = -1, x = 0.02125, y = 1.6975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 175, Nodeid = -1, x = 0.02125, y = 1.7475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 176, Nodeid = -1, x = 0.01125, y = 2.0075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 177, Nodeid = -1, x = 0.01125, y = 1.8575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 178, Nodeid = -1, x = 0.01125, y = 1.9575, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 179, Nodeid = -1, x = 0.01375, y = 1.8925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 180, Nodeid = -1, x = 0.01125, y = 1.9075, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 181, Nodeid = -1, x = 0.01375, y = 1.9925, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 182, Nodeid = -1, x = 0.01375, y = 1.9425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 183, Nodeid = -1, x = 0.01375, y = 2.0425, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 184, Nodeid = -1, x = 0.00375, y = 1.8775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 185, Nodeid = -1, x = 0.02125, y = 1.8725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 186, Nodeid = -1, x = 0.00375, y = 2.0275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 187, Nodeid = -1, x = 0.02125, y = 2.0225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 188, Nodeid = -1, x = 0.00375, y = 1.9275, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 189, Nodeid = -1, x = 0.00375, y = 1.9775, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 190, Nodeid = -1, x = 0.02125, y = 1.9225, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 191, Nodeid = -1, x = 0.02125, y = 1.9725, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 192, Nodeid = -1, x = 0.01125, y = 2.2325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 193, Nodeid = -1, x = 0.01125, y = 2.1325, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 194, Nodeid = -1, x = 0.01375, y = 2.1175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 195, Nodeid = -1, x = 0.01125, y = 2.0825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 196, Nodeid = -1, x = 0.01125, y = 2.1825, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 197, Nodeid = -1, x = 0.01375, y = 2.2175, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 198, Nodeid = -1, x = 0.01375, y = 2.1675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 199, Nodeid = -1, x = 0.01375, y = 2.2675, dist = 0.0237141, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 200, Nodeid = -1, x = 0.00375, y = 2.1025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 201, Nodeid = -1, x = 0.02125, y = 2.0975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 202, Nodeid = -1, x = 0.00375, y = 2.2525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 203, Nodeid = -1, x = 0.02125, y = 2.2475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 204, Nodeid = -1, x = 0.00375, y = 2.1525, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 205, Nodeid = -1, x = 0.00375, y = 2.2025, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 206, Nodeid = -1, x = 0.02125, y = 2.1475, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 207, Nodeid = -1, x = 0.02125, y = 2.1975, dist = 0.0470861, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Initial: max um = 0
+Initial: max ue = 0
+Writing: "NeuralEP2DL2bi_reri2_initial.chk"
+ (0s, XML)
+Steps: 100000   Time: 0.01        
+ CPU Time: 16.2612 min.
+
+um_max = 131.824 at x = 0, y = 0.00293681, z = 0
+ue_max = 647.98 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,124.693,-58.4054), (1,111.207,-95.878), (2,-0.245542,645.541), (3,0.000668028,566.424), (4,-0.00110079,496.26), (5,-0.00107379,425.942), (6,-0.00107421,355.62), (7,-0.0010742,285.291), (8,-0.0010742,214.955), (9,-0.0010742,144.613), (10,-0.00107421,74.2643), (11,-0.00107006,6.25409),  
+
+Writing: "NeuralEP2DL2bi_reri2_1.chk"
+ (0s, XML)
+Steps: 200000   Time: 0.02        
+ CPU Time: 16.2883 min.
+
+um_max = 117.902 at x = 0, y = 0.0279368, z = 0
+ue_max = 452.425 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,113.204,-73.4233), (1,106.112,-161.923), (2,-0.208884,451.143), (3,0.000366365,394.468), (4,-0.00111642,345.628), (5,-0.00109412,296.661), (6,-0.00109446,247.688), (7,-0.00109445,198.708), (8,-0.00109445,149.722), (9,-0.00109445,100.729), (10,-0.00109446,51.7293), (11,-0.00109024,4.35641),  
+
+Writing: "NeuralEP2DL2bi_reri2_2.chk"
+ (0s, XML)
+Steps: 300000   Time: 0.03        
+ CPU Time: 16.2764 min.
+
+um_max = 119.823 at x = 0.0110316, y = 0.0389684, z = 0
+ue_max = 2081.79 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,115.719,-89.2022), (1,112.017,-199.702), (2,-0.80912,2074.19), (3,0.00464382,1819.02), (4,-0.00119895,1593.66), (5,-0.00110984,1367.8), (6,-0.0011112,1141.94), (7,-0.00111118,916.077), (8,-0.00111118,690.206), (9,-0.00111118,464.327), (10,-0.00111119,238.442), (11,-0.00110691,20.0796),  
+
+Writing: "NeuralEP2DL2bi_reri2_3.chk"
+ (0s, XML)
+Steps: 400000   Time: 0.04        
+ CPU Time: 16.2954 min.
+
+um_max = 120.826 at x = 0.0110316, y = 0.0389684, z = 0
+ue_max = 4016.44 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,116.379,-47.6962), (1,114.496,-86.6201), (2,-1.45073,4000.57), (3,0.00924029,3512.6), (4,-0.00128371,3077.34), (5,-0.00112254,2641.19), (6,-0.00112501,2205.05), (7,-0.00112497,1768.9), (8,-0.00112497,1332.74), (9,-0.00112497,896.578), (10,-0.00112498,460.409), (11,-0.00112066,38.7715),  
+
+Writing: "NeuralEP2DL2bi_reri2_4.chk"
+ (0s, XML)
+Steps: 500000   Time: 0.05        
+ CPU Time: 16.314 min.
+
+um_max = 119.271 at x = 0.0110316, y = 0.0389684, z = 0
+ue_max = 5616.64 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,116.347,130.888), (1,115.318,259.717), (2,-1.87686,5592.78), (3,0.0123036,4916.61), (4,-0.0013425,4307.28), (5,-0.00113315,3696.81), (6,-0.00113636,3086.34), (7,-0.00113631,2475.87), (8,-0.00113631,1865.39), (9,-0.00113631,1254.91), (10,-0.00113632,644.416), (11,-0.00113195,54.2669),  
+
+Writing: "NeuralEP2DL2bi_reri2_5.chk"
+ (0s, XML)
+Steps: 600000   Time: 0.06        
+ CPU Time: 16.3059 min.
+
+um_max = 118.107 at x = 0.0110316, y = 0.0389684, z = 0
+ue_max = 6908.15 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,115.955,304.319), (1,115.362,584.316), (2,-2.20326,6877.61), (3,0.0146568,6050.25), (4,-0.00138809,5300.37), (5,-0.00114187,4549.14), (6,-0.00114565,3797.93), (7,-0.00114559,3046.7), (8,-0.0011456,2295.47), (9,-0.00114559,1544.23), (10,-0.0011456,792.989), (11,-0.0011412,66.7783),  
+
+Writing: "NeuralEP2DL2bi_reri2_6.chk"
+ (0s, XML)
+Steps: 700000   Time: 0.07        
+ CPU Time: 16.2867 min.
+
+um_max = 117.072 at x = 0.0110316, y = 0.0389684, z = 0
+ue_max = 8337.93 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,115.326,467.988), (1,114.983,889.288), (2,-2.58872,8300.04), (3,0.0174809,7304.08), (4,-0.00143905,6398.76), (5,-0.00114877,5491.85), (6,-0.00115323,4584.96), (7,-0.00115316,3678.06), (8,-0.00115316,2771.15), (9,-0.00115316,1864.24), (10,-0.00115317,957.314), (11,-0.00114874,80.6162),  
+
+Writing: "NeuralEP2DL2bi_reri2_7.chk"
+ (0s, XML)
+Steps: 800000   Time: 0.08        
+ CPU Time: 16.2929 min.
+
+um_max = 117.114 at x = 0.0235316, y = 0.0459398, z = 0
+ue_max = 10141.2 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,114.523,648.052), (1,114.346,1225.11), (2,-3.10326,10093.4), (3,0.0214878,8882.33), (4,-0.00150663,7781.38), (5,-0.00115395,6678.51), (6,-0.00115936,5575.65), (7,-0.00115928,4472.79), (8,-0.00115928,3369.92), (9,-0.00115928,2267.05), (10,-0.00115929,1164.16), (11,-0.00115484,98.035),  
+
+Writing: "NeuralEP2DL2bi_reri2_8.chk"
+ (0s, XML)
+Steps: 900000   Time: 0.09        
+ CPU Time: 16.2944 min.
+
+um_max = 116.716 at x = 0.0235316, y = 0.0459398, z = 0
+ue_max = 12250 at x = 0.0156466, y = 0.251468, z = 0
+ 
+(Nodeid,phim,phie): (0,113.58,841.921), (1,113.519,1587.21), (2,-3.78251,12172.5), (3,0.0286781,10697.9), (4,-0.00162119,9372.11), (5,-0.0011572,8043.77), (6,-0.0011643,6715.46), (7,-0.00116419,5387.14), (8,-0.00116419,4058.81), (9,-0.00116419,2730.48), (10,-0.0011642,1402.14), (11,-0.00115974,118.076),  
+
+Writing: "NeuralEP2DL2bi_reri2_9.chk"
+ (0s, XML)
+Steps: 1000000  Time: 0.1         
+ CPU Time: 16.2611 min.
+
+um_max = 116.094 at x = 0.0235316, y = 0.0459398, z = 0
+ue_max = 14953.2 at x = 0.0156466, y = 0.251468, z = 0
+ 
+(Nodeid,phim,phie): (0,112.518,1070.93), (1,112.533,2015.86), (2,-4.83935,14820.8), (3,0.0450159,12969.8), (4,-0.00187506,11363.2), (5,-0.00115727,9752.6), (6,-0.00116826,8142.1), (7,-0.00116809,6531.59), (8,-0.0011681,4921.07), (9,-0.0011681,3310.55), (10,-0.0011681,1700.01), (11,-0.00116363,143.159),  
+
+Writing: "NeuralEP2DL2bi_reri2_10.chk"
+ (0s, XML)
+Steps: 1100000  Time: 0.11        
+ CPU Time: 16.2913 min.
+
+um_max = 116.698 at x = 0.0137742, y = 0.258033, z = 0
+ue_max = 18092 at x = 0.0156466, y = 0.251468, z = 0
+ 
+(Nodeid,phim,phie): (0,111.351,1338.78), (1,111.442,2516.99), (2,-5.71722,18011), (3,0.0640454,15708.5), (4,-0.0021716,13763.3), (5,-0.0011558,11812.5), (6,-0.00117138,9861.87), (7,-0.00117115,7911.18), (8,-0.00117115,5960.49), (9,-0.00117115,4009.79), (10,-0.00117116,2059.09), (11,-0.00116667,173.397),  
+
+Writing: "NeuralEP2DL2bi_reri2_11.chk"
+ (0s, XML)
+Steps: 1200000  Time: 0.12        
+ CPU Time: 16.3026 min.
+
+um_max = 120.263 at x = 0.0137742, y = 0.258033, z = 0
+ue_max = 20775.5 at x = 0.0205327, y = 0.256355, z = 0
+ 
+(Nodeid,phim,phie): (0,110.09,1565.97), (1,110.246,2942.02), (2,-4.48168,20719.4), (3,0.0603458,18148.3), (4,-0.00212152,15900), (5,-0.00115888,13646.4), (6,-0.00117372,11392.9), (7,-0.00117349,9139.34), (8,-0.00117349,6885.82), (9,-0.00117349,4632.28), (10,-0.0011735,2378.74), (11,-0.001169,200.316),  
+
+Writing: "NeuralEP2DL2bi_reri2_12.chk"
+ (0s, XML)
+Steps: 1300000  Time: 0.13        
+ CPU Time: 16.3125 min.
+
+um_max = 122.35 at x = 0.0120812, y = 0.261032, z = 0
+ue_max = 21925.3 at x = 0.0205327, y = 0.256355, z = 0
+ 
+(Nodeid,phim,phie): (0,108.742,1667.22), (1,108.947,3131.24), (2,-0.506772,21851.9), (3,0.0284352,19344.7), (4,-0.00163608,16945.5), (5,-0.00116806,14543.8), (6,-0.00117535,12142.1), (7,-0.00117523,9740.38), (8,-0.00117524,7338.65), (9,-0.00117524,4936.92), (10,-0.00117524,2535.18), (11,-0.00117074,213.489),  
+
+Writing: "NeuralEP2DL2bi_reri2_13.chk"
+ (0s, XML)
+Steps: 1400000  Time: 0.14        
+ CPU Time: 16.2768 min.
+
+um_max = 127.346 at x = 0.0120812, y = 0.261032, z = 0
+ue_max = 20815 at x = 0.0205327, y = 0.254467, z = 0
+ 
+(Nodeid,phim,phie): (0,107.314,1587.74), (1,107.557,2981.84), (2,6.46695,20692.7), (3,-0.0293381,18645.6), (4,-0.000753592,16328.9), (5,-0.00118283,14014.7), (6,-0.00117639,11700.3), (7,-0.00117648,9385.99), (8,-0.00117648,7071.65), (9,-0.00117648,4757.3), (10,-0.00117649,2442.94), (11,-0.00117198,205.722),  
+
+Writing: "NeuralEP2DL2bi_reri2_14.chk"
+ (0s, XML)
+Steps: 1500000  Time: 0.15        
+ CPU Time: 16.2982 min.
+
+um_max = 129.188 at x = 0.0120812, y = 0.261032, z = 0
+ue_max = 18919.6 at x = 0.0235316, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,105.813,1441.57), (1,106.082,2707.65), (2,17.0906,18700.6), (3,-0.108023,17322.4), (4,0.000453767,15164.3), (5,-0.00120221,13015.1), (6,-0.00117693,10865.9), (7,-0.00117732,8716.59), (8,-0.00117731,6567.31), (9,-0.00117731,4418.01), (10,-0.00117732,2268.71), (11,-0.00117281,191.05),  
+
+Writing: "NeuralEP2DL2bi_reri2_15.chk"
+ (0s, XML)
+Steps: 1600000  Time: 0.16        
+ CPU Time: 16.2757 min.
+
+um_max = 128.268 at x = 0.0120812, y = 0.261032, z = 0
+ue_max = 18246.4 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,104.245,1388.73), (1,104.533,2608.6), (2,25.7285,17963.4), (3,-0.168398,17014.3), (4,0.00138621,14889.9), (5,-0.0012171,12779.8), (6,-0.00117719,10669.4), (7,-0.0011778,8558.95), (8,-0.00117779,6448.54), (9,-0.00117779,4338.11), (10,-0.0011778,2227.68), (11,-0.00117329,187.595),  
+
+Writing: "NeuralEP2DL2bi_reri2_16.chk"
+ (0s, XML)
+Steps: 1700000  Time: 0.17        
+ CPU Time: 16.2952 min.
+
+um_max = 125.32 at x = 0.0120812, y = 0.261032, z = 0
+ue_max = 19184.4 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,102.616,1462.22), (1,102.916,2746.53), (2,28.8927,18961.3), (3,-0.193066,18052.1), (4,0.00176954,15797), (5,-0.00122325,13558.3), (6,-0.00117728,11319.3), (7,-0.00117799,9080.37), (8,-0.00117798,6841.38), (9,-0.00117798,4602.39), (10,-0.00117799,2363.39), (11,-0.00117348,199.023),  
+
+Writing: "NeuralEP2DL2bi_reri2_17.chk"
+ (0s, XML)
+Steps: 1800000  Time: 0.18        
+ CPU Time: 16.2819 min.
+
+um_max = 126.464 at x = 0.0169673, y = 0.261226, z = 0
+ue_max = 21901.7 at x = 0.0014684, y = 0.25406, z = 0
+ 
+(Nodeid,phim,phie): (0,100.931,1673.37), (1,101.234,3142.82), (2,31.167,21781.3), (3,-0.236343,20817.9), (4,0.00241794,18216.4), (5,-0.0012329,15634.8), (6,-0.00117708,13052.9), (7,-0.00117794,10471.1), (8,-0.00117793,7889.17), (9,-0.00117793,5307.27), (10,-0.00117793,2725.36), (11,-0.00117342,229.504),  
+
+Writing: "NeuralEP2DL2bi_reri2_18.chk"
+ (0s, XML)
+Steps: 1900000  Time: 0.19        
+ CPU Time: 16.2933 min.
+
+um_max = 125.726 at x = 0.0169673, y = 0.261226, z = 0
+ue_max = 23933.6 at x = 0.0160654, y = 0.475, z = 0
+ 
+(Nodeid,phim,phie): (0,99.1958,1781.06), (1,99.5065,3344.9), (2,44.5488,23185.6), (3,-0.533692,23796.7), (4,0.00695707,20803.7), (5,-0.00130194,17855.8), (6,-0.00117577,14907.1), (7,-0.0011777,11958.5), (8,-0.00117767,9009.82), (9,-0.00117767,6061.16), (10,-0.00117768,3112.49), (11,-0.00117317,262.105),  
+
+Writing: "NeuralEP2DL2bi_reri2_19.chk"
+ (0s, XML)
+Steps: 2000000  Time: 0.2         
+ CPU Time: 16.3057 min.
+
+um_max = 123.335 at x = 0.0169673, y = 0.261226, z = 0
+ue_max = 29031.2 at x = 0.00935344, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,97.4152,2061.11), (1,97.7369,3870.01), (2,58.1526,26955.3), (3,-0.815926,28870.7), (4,0.0113309,25226.8), (5,-0.00136896,21652.3), (6,-0.00117431,18076.7), (7,-0.00117729,14501.1), (8,-0.00117725,10925.5), (9,-0.00117725,7349.88), (10,-0.00117725,3774.27), (11,-0.00117275,317.833),  
+
+Writing: "NeuralEP2DL2bi_reri2_20.chk"
+ (0s, XML)
+Steps: 2100000  Time: 0.21        
+ CPU Time: 16.3094 min.
+
+um_max = 124.303 at x = 0.0139684, y = 0.263968, z = 0
+ue_max = 35151.5 at x = 0.00935344, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,95.594,2465.87), (1,95.9156,4629.22), (2,70.708,32375.8), (3,-1.01039,34957.6), (4,0.0144719,30543.1), (5,-0.00141675,26215.3), (6,-0.001173,21886.2), (7,-0.00117674,17557), (8,-0.00117668,13227.9), (9,-0.00117668,8898.79), (10,-0.00117669,4569.65), (11,-0.00117219,384.813),  
+
+Writing: "NeuralEP2DL2bi_reri2_21.chk"
+ (0s, XML)
+Steps: 2200000  Time: 0.22        
+ CPU Time: 16.2794 min.
+
+um_max = 123.947 at x = 0.0139684, y = 0.263968, z = 0
+ue_max = 38915.1 at x = 0.0156466, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,93.7369,2676.19), (1,94.0567,5023.88), (2,83.1075,35256.8), (3,-1.16652,38701.4), (4,0.0174924,33807.6), (5,-0.00146244,29017.3), (6,-0.00117162,24225.5), (7,-0.00117608,19433.6), (8,-0.00117601,14641.8), (9,-0.00117601,9849.94), (10,-0.00117602,5058.08), (11,-0.00117151,425.944),  
+
+Writing: "NeuralEP2DL2bi_reri2_22.chk"
+ (0s, XML)
+Steps: 2300000  Time: 0.23        
+ CPU Time: 16.256 min.
+
+um_max = 121.507 at x = 0.0110316, y = 0.263968, z = 0
+ue_max = 40304.8 at x = 0.00935344, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,91.8481,2671.78), (1,92.1768,5015.55), (2,93.5084,35278.8), (3,-1.23596,40084.5), (4,0.0212968,35000.3), (5,-0.00151994,30041.2), (6,-0.00116995,25080.3), (7,-0.00117532,20119.4), (8,-0.00117524,15158.4), (9,-0.00117524,10197.5), (10,-0.00117525,5236.56), (11,-0.00117075,440.974),  
+
+Writing: "NeuralEP2DL2bi_reri2_23.chk"
+ (0s, XML)
+Steps: 2400000  Time: 0.24        
+ CPU Time: 16.2923 min.
+
+um_max = 118.074 at x = 0.0205327, y = 0.260209, z = 0
+ue_max = 39680.8 at x = 0.00935344, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,89.9316,2482.34), (1,90.2851,4659.75), (2,102.492,32793.2), (3,-0.470888,39453), (4,0.027872,34412.5), (5,-0.00161931,29537.3), (6,-0.00116758,24659.5), (7,-0.0011745,19781.8), (8,-0.0011744,14904.1), (9,-0.0011744,10026.4), (10,-0.00117441,5148.71), (11,-0.00116991,433.576),  
+
+Writing: "NeuralEP2DL2bi_reri2_24.chk"
+ (0s, XML)
+Steps: 2500000  Time: 0.25        
+ CPU Time: 16.3087 min.
+
+um_max = 119.682 at x = 0, y = 0.258935, z = 0
+ue_max = 38977.7 at x = 0.00935344, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,87.991,2241.28), (1,88.3744,4206.95), (2,110.323,29620.6), (3,3.25934,38716.8), (4,0.0435666,33682.7), (5,-0.00185832,28912), (6,-0.00116301,24137.5), (7,-0.00117365,19363.1), (8,-0.00117349,14588.6), (9,-0.00117349,9814.17), (10,-0.0011735,5039.71), (11,-0.00116901,424.397),  
+
+Writing: "NeuralEP2DL2bi_reri2_25.chk"
+ (0s, XML)
+Steps: 2600000  Time: 0.26        
+ CPU Time: 16.2798 min.
+
+um_max = 121.672 at x = 0.0205327, y = 0.254467, z = 0
+ue_max = 40550.4 at x = 0.0156466, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,86.0297,2156.04), (1,86.4544,4045.95), (2,112.637,28496.6), (3,7.57609,40332.6), (4,0.0630902,35006.4), (5,-0.00215809,30049.5), (6,-0.00115743,25087.2), (7,-0.00117277,20124.9), (8,-0.00117254,15162.6), (9,-0.00117254,10200.3), (10,-0.00117255,5238), (11,-0.00116806,441.095),  
+
+Writing: "NeuralEP2DL2bi_reri2_26.chk"
+ (0s, XML)
+Steps: 2700000  Time: 0.27        
+ CPU Time: 16.2886 min.
+
+um_max = 124.832 at x = 0.0044673, y = 0.254467, z = 0
+ue_max = 40616.7 at x = 0.00935344, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,84.051,1976.23), (1,84.5385,3706.88), (2,112.928,26064.9), (3,12.3084,40467), (4,0.0615509,35147.1), (5,-0.00213779,30170.2), (6,-0.00115666,25187.9), (7,-0.00117178,20205.7), (8,-0.00117154,15223.5), (9,-0.00117155,10241.3), (10,-0.00117155,5259.03), (11,-0.00116707,442.866),  
+
+Writing: "NeuralEP2DL2bi_reri2_27.chk"
+ (0s, XML)
+Steps: 2800000  Time: 0.28        
+ CPU Time: 16.3112 min.
+
+um_max = 121.919 at x = 0.0120812, y = 0.486032, z = 0
+ue_max = 37049.1 at x = 0.0205327, y = 0.479467, z = 0
+ 
+(Nodeid,phim,phie): (0,82.0576,1596.76), (1,82.6254,2992.88), (2,112.511,20936.1), (3,17.64,36928.7), (4,0.0312036,32218.1), (5,-0.00167362,27654.2), (6,-0.0011627,23087.4), (7,-0.00117065,18520.7), (8,-0.00117052,13954), (9,-0.00117052,9387.21), (10,-0.00117053,4820.46), (11,-0.00116605,405.934),  
+
+Writing: "NeuralEP2DL2bi_reri2_28.chk"
+ (0s, XML)
+Steps: 2900000  Time: 0.29        
+ CPU Time: 16.3023 min.
+
+um_max = 127.111 at x = 0.0129188, y = 0.486032, z = 0
+ue_max = 33335.2 at x = 0.0044673, y = 0.479467, z = 0
+ 
+(Nodeid,phim,phie): (0,80.0527,1358.94), (1,80.6558,2545.83), (2,111.757,17675.5), (3,24.105,33196.2), (4,-0.024626,29245.4), (5,-0.00081868,25098.8), (6,-0.00117472,20954.1), (7,-0.0011694,16809.3), (8,-0.00116948,12664.6), (9,-0.00116948,8519.81), (10,-0.00116949,4375.04), (11,-0.00116501,368.425),  
+
+Writing: "NeuralEP2DL2bi_reri2_29.chk"
+ (0s, XML)
+Steps: 3000000  Time: 0.3         
+ CPU Time: 16.2944 min.
+
+um_max = 129.17 at x = 0.0120812, y = 0.486032, z = 0
+ue_max = 29435.6 at x = 0.0156466, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,78.0392,1172.39), (1,78.6526,2195.67), (2,110.805,15125), (3,31.704,29238), (4,-0.10281,26188.1), (5,0.000382512,22469.1), (6,-0.00119208,18758.8), (7,-0.00116806,15048.2), (8,-0.00116842,11337.7), (9,-0.00116842,7627.21), (10,-0.00116843,3916.68), (11,-0.00116395,329.826),  
+
+Writing: "NeuralEP2DL2bi_reri2_30.chk"
+ (0s, XML)
+Steps: 3100000  Time: 0.31        
+ CPU Time: 16.3111 min.
+
+um_max = 128.387 at x = 0.0120812, y = 0.486032, z = 0
+ue_max = 27818.6 at x = 0.025, y = 0.477937, z = 0
+ 
+(Nodeid,phim,phie): (0,76.0201,1092.81), (1,76.6374,2046.25), (2,109.685,14025.8), (3,37.7919,27575.2), (4,-0.165572,25070.1), (5,0.00135303,21505), (6,-0.00120598,17953.9), (7,-0.00116675,14402.6), (8,-0.00116736,10851.3), (9,-0.00116735,7299.98), (10,-0.00116735,3748.64), (11,-0.00116289,315.675),  
+
+Writing: "NeuralEP2DL2bi_reri2_31.chk"
+ (0s, XML)
+Steps: 3200000  Time: 0.32        
+ CPU Time: 16.3096 min.
+
+um_max = 125.59 at x = 0.0129188, y = 0.486032, z = 0
+ue_max = 28945.4 at x = 0.025, y = 0.477937, z = 0
+ 
+(Nodeid,phim,phie): (0,73.998,1131.53), (1,74.6168,2118.71), (2,108.429,14527.2), (3,42.2757,28724.8), (4,-0.192153,26256.9), (5,0.00176725,22521.6), (6,-0.00121132,18802.7), (7,-0.00116557,15083.5), (8,-0.00116628,11364.3), (9,-0.00116627,7645.08), (10,-0.00116627,3925.85), (11,-0.00116181,330.598),  
+
+Writing: "NeuralEP2DL2bi_reri2_32.chk"
+ (0s, XML)
+Steps: 3300000  Time: 0.33        
+ CPU Time: 16.2779 min.
+
+um_max = 126.335 at x = 0.0080327, y = 0.486226, z = 0
+ue_max = 33191.1 at x = 0.0156466, y = 0.476468, z = 0
+ 
+(Nodeid,phim,phie): (0,71.9761,1301), (1,72.5948,2436.34), (2,107.023,16796.4), (3,48.1859,33022.3), (4,-0.227828,30271.3), (5,0.00230322,25964.7), (6,-0.00121825,21677.2), (7,-0.00116437,17389.4), (8,-0.0011652,13101.6), (9,-0.00116518,8813.82), (10,-0.00116519,4526.02), (11,-0.00116073,381.139),  
+
+Writing: "NeuralEP2DL2bi_reri2_33.chk"
+ (0s, XML)
+Steps: 3400000  Time: 0.34        
+ CPU Time: 16.2713 min.
+
+um_max = 125.905 at x = 0.0080327, y = 0.486226, z = 0
+ue_max = 35483.8 at x = 0.025, y = 0.477937, z = 0
+ 
+(Nodeid,phim,phie): (0,69.9575,1390.63), (1,70.5746,2604.29), (2,105.566,17989.1), (3,59.4257,35325.9), (4,-0.510352,33909.4), (5,0.00661105,29066.9), (6,-0.00128283,24267.4), (7,-0.00116229,19467.3), (8,-0.00116413,14667.1), (9,-0.0011641,9866.99), (10,-0.00116411,5066.84), (11,-0.00115965,426.681),  
+
+Writing: "NeuralEP2DL2bi_reri2_34.chk"
+ (0s, XML)
+Steps: 3500000  Time: 0.35        
+ CPU Time: 16.2664 min.
+
+um_max = 123.448 at x = 0.0169673, y = 0.486226, z = 0
+ue_max = 40839.4 at x = 0.0137742, y = 0.491967, z = 0
+ 
+(Nodeid,phim,phie): (0,67.9454,1606.35), (1,68.5599,3008.69), (2,104.072,20884.9), (3,73.0391,40708.3), (4,-0.800339,40431.6), (5,0.0111015,34643.6), (6,-0.00135098,28923.5), (7,-0.00116014,23202.4), (8,-0.00116306,17481.2), (9,-0.00116302,11760.1), (10,-0.00116303,6038.98), (11,-0.00115858,508.546),  
+
+Writing: "NeuralEP2DL2bi_reri2_35.chk"
+ (0s, XML)
+Steps: 3600000  Time: 0.36        
+ CPU Time: 16.2592 min.
+
+um_max = 124.256 at x = 0.0110316, y = 0.488968, z = 0
+ue_max = 49787.9 at x = 0.0160654, y = 0.7, z = 0
+ 
+(Nodeid,phim,phie): (0,65.9434,1960.73), (1,66.5541,3673.06), (2,102.445,25654.1), (3,83.2637,49461.4), (4,-0.998852,49449.8), (5,0.0142912,42368.6), (6,-0.00139901,35373), (7,-0.00115831,28376.2), (8,-0.001162,21379.3), (9,-0.00116194,14382.5), (10,-0.00116195,7385.59), (11,-0.0011575,621.945),  
+
+Writing: "NeuralEP2DL2bi_reri2_36.chk"
+ (0s, XML)
+Steps: 3700000  Time: 0.37        
+ CPU Time: 16.272 min.
+
+um_max = 124.03 at x = 0.0139684, y = 0.488968, z = 0
+ue_max = 55259.6 at x = 0.00893461, y = 0.7, z = 0
+ 
+(Nodeid,phim,phie): (0,63.9551,2152.43), (1,64.561,4032.43), (2,100.748,28228.1), (3,94.3377,54277.5), (4,-1.15711,54887.9), (5,0.0172892,47021.8), (6,-0.00144395,39258), (7,-0.00115653,31492.7), (8,-0.00116094,23727.4), (9,-0.00116087,15962.1), (10,-0.00116088,8196.74), (11,-0.00115644,690.252),  
+
+Writing: "NeuralEP2DL2bi_reri2_37.chk"
+ (0s, XML)
+Steps: 3800000  Time: 0.38        
+ CPU Time: 16.2534 min.
+
+um_max = 121.733 at x = 0.0110316, y = 0.488968, z = 0
+ue_max = 56720.1 at x = 0.0160654, y = 0.7, z = 0
+ 
+(Nodeid,phim,phie): (0,61.9843,2151.55), (1,62.5841,4030.71), (2,99.0659,28202.4), (3,103.634,54381.3), (4,-1.23961,56345.9), (5,0.0210122,48255.3), (6,-0.00149992,40288.1), (7,-0.00115459,32319), (8,-0.00115989,24349.9), (9,-0.00115981,16380.9), (10,-0.00115982,8411.8), (11,-0.00115538,708.363),  
+
+Writing: "NeuralEP2DL2bi_reri2_38.chk"
+ (0s, XML)
+Steps: 3900000  Time: 0.39        
+ CPU Time: 16.2754 min.
+
+um_max = 118.259 at x = 0.0205327, y = 0.485209, z = 0
+ue_max = 54797.4 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,60.0348,1986.38), (1,60.6274,3720.97), (2,97.4534,25958.4), (3,108.723,50414.9), (4,-0.606337,54433.6), (5,0.0272137,46582.2), (6,-0.00159342,38891.7), (7,-0.00115209,31198.8), (8,-0.00115885,23506), (9,-0.00115875,15813.1), (10,-0.00115876,8120.25), (11,-0.00115433,683.811),  
+
+Writing: "NeuralEP2DL2bi_reri2_39.chk"
+ (0s, XML)
+Steps: 4000000  Time: 0.4         
+ CPU Time: 16.2565 min.
+
+um_max = 119.593 at x = 0.025, y = 0.483935, z = 0
+ue_max = 51904 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,58.11,1753.61), (1,58.6944,3284.45), (2,95.8436,22802.1), (3,110.379,44780.5), (4,2.98003,51521.1), (5,0.0422984,44002), (6,-0.00182287,36738.6), (7,-0.00114753,29471.6), (8,-0.00115786,22204.7), (9,-0.0011577,14937.7), (10,-0.00115771,7670.71), (11,-0.00115328,645.955),  
+
+Writing: "NeuralEP2DL2bi_reri2_40.chk"
+ (0s, XML)
+Steps: 4100000  Time: 0.41        
+ CPU Time: 16.233 min.
+
+um_max = 121.158 at x = 0.0044673, y = 0.479467, z = 0
+ue_max = 52618.2 at x = 0.00935344, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,56.2133,1666.66), (1,56.7884,3121.37), (2,94.2755,21614.7), (3,110.991,42643.4), (4,7.27298,52277.5), (5,0.0621182,44559.1), (6,-0.00212682,37205.2), (7,-0.0011418,29845.9), (8,-0.0011569,22486.6), (9,-0.00115667,15127.4), (10,-0.00115668,7768.11), (11,-0.00115225,654.157),  
+
+Writing: "NeuralEP2DL2bi_reri2_41.chk"
+ (0s, XML)
+Steps: 4200000  Time: 0.42        
+ CPU Time: 16.2394 min.
+
+um_max = 124.89 at x = 0.0205327, y = 0.479467, z = 0
+ue_max = 51554.7 at x = 0.00935344, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,54.3471,1512.42), (1,54.9119,2832.14), (2,92.8346,19518.4), (3,111.128,38780.9), (4,11.9706,51291.9), (5,0.0626951,43724.9), (6,-0.00213894,36508.8), (7,-0.0011405,29287.2), (8,-0.00115588,22065.7), (9,-0.00115564,14844.2), (10,-0.00115565,7622.72), (11,-0.00115123,641.913),  
+
+Writing: "NeuralEP2DL2bi_reri2_42.chk"
+ (0s, XML)
+Steps: 4300000  Time: 0.43        
+ CPU Time: 16.2456 min.
+
+um_max = 121.447 at x = 0.0129188, y = 0.711032, z = 0
+ue_max = 45184.9 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,52.5131,1169.42), (1,53.0669,2188.98), (2,91.5155,14873.5), (3,110.659,30261.9), (4,17.2652,44990.3), (5,0.0339479,38475.2), (6,-0.00169945,32124.1), (7,-0.00114617,25769.8), (8,-0.00115476,19415.6), (9,-0.00115463,13061.4), (10,-0.00115464,6707.23), (11,-0.00115022,564.819),  
+
+Writing: "NeuralEP2DL2bi_reri2_43.chk"
+ (0s, XML)
+Steps: 4400000  Time: 0.44        
+ CPU Time: 16.254 min.
+
+um_max = 126.854 at x = 0.0129188, y = 0.711032, z = 0
+ue_max = 39676.4 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,50.7121,947.857), (1,51.2541,1773.52), (2,89.89,11871.9), (3,109.78,24760.5), (4,23.6119,39478.4), (5,-0.0199214,34025.7), (6,-0.000874647,28405.5), (7,-0.00115777,22786.9), (8,-0.00115357,17168.2), (9,-0.00115363,11549.5), (10,-0.00115364,5930.85), (11,-0.00114922,499.44),  
+
+Writing: "NeuralEP2DL2bi_reri2_44.chk"
+ (0s, XML)
+Steps: 4500000  Time: 0.45        
+ CPU Time: 16.2632 min.
+
+um_max = 129.138 at x = 0.0129188, y = 0.711032, z = 0
+ue_max = 34267.4 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,48.9432,775.11), (1,49.4729,1449.6), (2,88.0504,9532.32), (3,108.622,20517.4), (4,31.2057,34016.4), (5,-0.0974321,29735.6), (6,0.000315756,24818.4), (7,-0.00117503,19909.4), (8,-0.0011523,15000.3), (9,-0.00115265,10091.1), (10,-0.00115265,5181.91), (11,-0.00114824,436.372),  
+
+Writing: "NeuralEP2DL2bi_reri2_45.chk"
+ (0s, XML)
+Steps: 4600000  Time: 0.46        
+ CPU Time: 16.2518 min.
+
+um_max = 128.5 at x = 0.0120812, y = 0.711032, z = 0
+ue_max = 31839.1 at x = 0.00935344, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,47.2043,696.658), (1,47.7216,1302.49), (2,86.1475,8467.11), (3,107.329,18584.8), (4,37.4633,31548.5), (5,-0.16256,27960.2), (6,0.0013223,23331.6), (7,-0.00118958,18716.8), (8,-0.00115108,14101.7), (9,-0.00115167,9486.59), (10,-0.00115167,4871.49), (11,-0.00114726,410.231),  
+
+Writing: "NeuralEP2DL2bi_reri2_46.chk"
+ (0s, XML)
+Steps: 4700000  Time: 0.47        
+ CPU Time: 16.2628 min.
+
+um_max = 125.854 at x = 0.0120812, y = 0.711032, z = 0
+ue_max = 32925.5 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,45.4919,721.11), (1,45.9967,1348.34), (2,84.2139,8792.05), (3,105.94,19160.2), (4,41.9606,32649.7), (5,-0.191239,29089.8), (6,0.00176881,24272.7), (7,-0.00119553,19471.7), (8,-0.00115001,14670.5), (9,-0.00115071,9869.22), (10,-0.0011507,5067.98), (11,-0.0011463,426.778),  
+
+Writing: "NeuralEP2DL2bi_reri2_47.chk"
+ (0s, XML)
+Steps: 4800000  Time: 0.48        
+ CPU Time: 16.2296 min.
+
+um_max = 126.172 at x = 0.0169673, y = 0.711226, z = 0
+ue_max = 38147.3 at x = 0.0156466, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,43.8006,863.805), (1,44.2929,1615.9), (2,82.2606,10713.9), (3,104.462,22614.3), (4,47.7013,37911), (5,-0.220836,33819.1), (6,0.00221426,28218.9), (7,-0.00120125,22637.4), (8,-0.00114896,17055.6), (9,-0.00114976,11473.8), (10,-0.00114975,5891.94), (11,-0.00114535,496.164),  
+
+Writing: "NeuralEP2DL2bi_reri2_48.chk"
+ (0s, XML)
+Steps: 4900000  Time: 0.49        
+ CPU Time: 16.2441 min.
+
+um_max = 126.072 at x = 0.0080327, y = 0.711226, z = 0
+ue_max = 41278.6 at x = 0.00935344, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,42.1234,948.691), (1,42.6037,1775.08), (2,80.2933,11855.5), (3,102.918,24654), (4,58.4197,41044.4), (5,-0.486452,38000.1), (6,0.00625848,31691), (7,-0.00126186,25423), (8,-0.00114708,19154.3), (9,-0.00114883,12885.6), (10,-0.00114881,6616.95), (11,-0.00114442,557.217),  
+
+Writing: "NeuralEP2DL2bi_reri2_49.chk"
+ (0s, XML)
+Steps: 5000000  Time: 0.5         
+ CPU Time: 16.2487 min.
+
+um_max = 123.566 at x = 0.0169673, y = 0.711226, z = 0
+ue_max = 47293.9 at x = 0.00935344, y = 0.701468, z = 0
+ 
+(Nodeid,phim,phie): (0,40.4517,1117.76), (1,40.9204,2092.12), (2,78.3164,14133.4), (3,101.317,28739.1), (4,72.2863,47166.6), (5,-0.784332,45060.6), (6,0.0108671,37564.5), (7,-0.00133198,30135), (8,-0.00114505,22704.4), (9,-0.00114792,15273.9), (10,-0.00114788,7843.35), (11,-0.00114349,660.493),  
+
+Writing: "NeuralEP2DL2bi_reri2_50.chk"
+ (0s, XML)
+Steps: 5100000  Time: 0.51        
+ CPU Time: 16.2581 min.
+
+um_max = 124.201 at x = 0.0110316, y = 0.713968, z = 0
+ue_max = 58553.6 at x = 0.0137742, y = 0.716967, z = 0
+ 
+(Nodeid,phim,phie): (0,38.7747,1431.31), (1,39.2326,2680.07), (2,76.3336,18360.8), (3,99.6491,36338.8), (4,82.5774,58408.1), (5,-0.987181,56056.1), (6,0.0141103,46729.4), (7,-0.00138101,37487.3), (8,-0.00114337,28243.8), (9,-0.00114702,19000.4), (10,-0.00114697,9756.96), (11,-0.00114258,821.639),  
+
+Writing: "NeuralEP2DL2bi_reri2_51.chk"
+ (0s, XML)
+Steps: 5200000  Time: 0.52        
+ CPU Time: 16.2671 min.
+
+um_max = 124.103 at x = 0.0110316, y = 0.713968, z = 0
+ue_max = 65112.1 at x = 0.0137742, y = 0.716967, z = 0
+ 
+(Nodeid,phim,phie): (0,37.0798,1612.06), (1,37.5276,3019.04), (2,74.3484,20794.1), (3,97.9279,40693.6), (4,93.5969,64928.5), (5,-1.14748,62845.8), (6,0.017089,52384.1), (7,-0.00142584,42023.7), (8,-0.00114177,31661.7), (9,-0.00114612,21299.7), (10,-0.00114606,10937.7), (11,-0.00114168,921.068),  
+
+Writing: "NeuralEP2DL2bi_reri2_52.chk"
+ (0s, XML)
+Steps: 5300000  Time: 0.53        
+ CPU Time: 16.2355 min.
+
+um_max = 121.95 at x = 0.0139684, y = 0.713968, z = 0
+ue_max = 65555 at x = 0.0112258, y = 0.716967, z = 0
+ 
+(Nodeid,phim,phie): (0,35.352,1622.89), (1,35.7906,3039.41), (2,72.3639,20931), (3,96.1694,40897), (4,103.124,65364.8), (5,-1.24118,64546.3), (6,0.020735,53786.9), (7,-0.00148081,43149.2), (8,-0.00114002,32509.7), (9,-0.00114525,21870.1), (10,-0.00114517,11230.6), (11,-0.00114079,945.737),  
+
+Writing: "NeuralEP2DL2bi_reri2_53.chk"
+ (0s, XML)
+Steps: 5400000  Time: 0.54        
+ CPU Time: 16.2378 min.
+
+um_max = 118.431 at x = 0.0205327, y = 0.710209, z = 0
+ue_max = 62469.6 at x = 0.00893461, y = 0.925, z = 0
+ 
+(Nodeid,phim,phie): (0,33.5742,1489.94), (1,34.0044,2790.23), (2,70.3832,19124), (3,94.3863,37585.6), (4,108.522,60592.6), (5,-0.722498,61970.1), (6,0.0266068,51607), (7,-0.00156951,41400.9), (8,-0.00113777,31192.4), (9,-0.00114439,20984), (10,-0.00114429,10775.6), (11,-0.00113992,907.417),  
+
+Writing: "NeuralEP2DL2bi_reri2_54.chk"
+ (0s, XML)
+Steps: 5500000  Time: 0.55        
+ CPU Time: 16.2405 min.
+
+um_max = 119.509 at x = 0.025, y = 0.708935, z = 0
+ue_max = 57941 at x = 0.0160654, y = 0.925, z = 0
+ 
+(Nodeid,phim,phie): (0,31.7268,1281.07), (1,32.1496,2398.72), (2,68.4097,16287.8), (3,92.573,32412.1), (4,110.316,53073.4), (5,2.6992,57451), (6,0.0410582,47758.7), (7,-0.00178937,38314.8), (8,-0.00113354,28867.3), (9,-0.00114357,19419.8), (10,-0.00114343,9972.34), (11,-0.00113906,839.777),  
+
+Writing: "NeuralEP2DL2bi_reri2_55.chk"
+ (0s, XML)
+Steps: 5600000  Time: 0.56        
+ CPU Time: 16.2902 min.
+
+um_max = 120.667 at x = 0.0205327, y = 0.704467, z = 0
+ue_max = 57948 at x = 0.00935344, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,29.7892,1203.38), (1,30.2055,2253.17), (2,66.4464,15217.3), (3,90.7368,30423.3), (4,110.963,50152.1), (5,6.97107,57500.1), (6,0.0610446,47708.5), (7,-0.00209582,38275.8), (8,-0.00112796,28837.9), (9,-0.00114279,19400.1), (10,-0.00114257,9962.19), (11,-0.0011382,838.922),  
+
+Writing: "NeuralEP2DL2bi_reri2_56.chk"
+ (0s, XML)
+Steps: 5700000  Time: 0.57        
+ CPU Time: 16.2583 min.
+
+um_max = 124.895 at x = 0.0044673, y = 0.704467, z = 0
+ue_max = 56294.5 at x = 0.00935344, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,27.742,1081.03), (1,28.1525,2023.92), (2,64.4963,13537.3), (3,88.8935,27331.4), (4,111.143,45527.6), (5,11.6362,55932.1), (6,0.0636961,46400.5), (7,-0.0021399,37226.8), (8,-0.00112636,28047.5), (9,-0.00114196,18868.4), (10,-0.00114173,9689.16), (11,-0.00113737,815.929),  
+
+Writing: "NeuralEP2DL2bi_reri2_57.chk"
+ (0s, XML)
+Steps: 5800000  Time: 0.58        
+ CPU Time: 16.2579 min.
+
+um_max = 120.954 at x = 0.0120812, y = 0.936032, z = 0
+ue_max = 48199.2 at x = 0.00935344, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,25.5714,788.806), (1,25.9768,1476.16), (2,62.5625,9555.96), (3,87.0463,20082.5), (4,110.701,34769.9), (5,16.8941,47929.4), (6,0.0365895,39866), (7,-0.0017259,31983), (8,-0.00113183,24096.8), (9,-0.00114104,16210.6), (10,-0.0011409,8324.34), (11,-0.00113654,700.998),  
+
+Writing: "NeuralEP2DL2bi_reri2_58.chk"
+ (0s, XML)
+Steps: 5900000  Time: 0.59        
+ CPU Time: 16.2524 min.
+
+um_max = 126.582 at x = 0.0129188, y = 0.936032, z = 0
+ue_max = 41475.8 at x = 0.00935344, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,23.2776,596.552), (1,23.6777,1115.85), (2,60.6479,6914.72), (3,85.1425,15253.9), (4,109.851,27590.5), (5,23.1252,41223.6), (6,-0.0153355,34532), (7,-0.000931104,27700.6), (8,-0.00114315,20870.3), (9,-0.00114003,14040), (10,-0.00114009,7209.76), (11,-0.00113573,607.138),  
+
+Writing: "NeuralEP2DL2bi_reri2_59.chk"
+ (0s, XML)
+Steps: 6000000  Time: 0.6         
+ CPU Time: 16.2603 min.
+
+um_max = 129.091 at x = 0.0120812, y = 0.936032, z = 0
+ue_max = 35070.3 at x = 0.0156466, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,20.8835,450.728), (1,21.277,842.573), (2,58.755,4889.76), (3,83.193,11539.5), (4,108.705,22110.9), (5,30.7008,34779.2), (6,-0.0919982,29534.5), (7,0.000245743,23686.5), (8,-0.00116038,17846.1), (9,-0.00113895,12005.5), (10,-0.00113929,6165.01), (11,-0.00113492,519.159),  
+
+Writing: "NeuralEP2DL2bi_reri2_60.chk"
+ (0s, XML)
+Steps: 6100000  Time: 0.61        
+ CPU Time: 16.2405 min.
+
+um_max = 128.605 at x = 0.0129188, y = 0.936032, z = 0
+ue_max = 32030.2 at x = 0.00935344, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,18.4399,386.047), (1,18.8235,721.393), (2,56.8857,3949.79), (3,81.2236,9785.91), (4,107.419,19508.8), (5,37.1254,31702.6), (6,-0.159376,27309.8), (7,0.00128639,21897.2), (8,-0.00117564,16498.1), (9,-0.00113791,11098.7), (10,-0.00113849,5699.34), (11,-0.00113413,479.944),  
+
+Writing: "NeuralEP2DL2bi_reri2_61.chk"
+ (0s, XML)
+Steps: 6200000  Time: 0.62        
+ CPU Time: 16.2524 min.
+
+um_max = 126.106 at x = 0.0120812, y = 0.936032, z = 0
+ue_max = 32931.4 at x = 0.0156466, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,16.0206,409.206), (1,16.3882,764.836), (2,55.0413,4187.48), (3,79.2419,10161), (4,106.036,20017.1), (5,41.6522,32612.8), (6,-0.190237,28257.5), (7,0.00176637,22655.4), (8,-0.00118229,17069.3), (9,-0.00113701,11483), (10,-0.00113771,5896.68), (11,-0.00113335,496.563),  
+
+Writing: "NeuralEP2DL2bi_reri2_62.chk"
+ (0s, XML)
+Steps: 6300000  Time: 0.63        
+ CPU Time: 16.235 min.
+
+um_max = 125.982 at x = 0.0080327, y = 0.936226, z = 0
+ue_max = 38601.5 at x = 0.0156466, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,13.7059,535.749), (1,14.0499,1002.02), (2,53.2224,5817.53), (3,77.2526,13052.6), (4,104.564,24199.7), (5,47.2336,38312.7), (6,-0.215131,33200), (7,0.00214203,26618.6), (8,-0.00118716,20055.3), (9,-0.00113615,13491.8), (10,-0.00113694,6928.21), (11,-0.00113258,583.428),  
+
+Writing: "NeuralEP2DL2bi_reri2_63.chk"
+ (0s, XML)
+Steps: 6400000  Time: 0.64        
+ CPU Time: 16.2355 min.
+
+um_max = 126.226 at x = 0.0169673, y = 0.936226, z = 0
+ue_max = 42431.6 at x = 0.00935344, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,11.5644,623.426), (1,11.8775,1166.24), (2,51.4286,6926.43), (3,75.2592,15005.3), (4,103.023,27004.9), (5,57.4346,42135.6), (6,-0.462205,37741.4), (7,0.00589827,30245.2), (8,-0.00124348,22788), (9,-0.00113452,15330.1), (10,-0.00113619,7872.21), (11,-0.00113182,662.923),  
+
+Writing: "NeuralEP2DL2bi_reri2_64.chk"
+ (0s, XML)
+Steps: 6500000  Time: 0.65        
+ CPU Time: 16.2515 min.
+
+um_max = 123.691 at x = 0.0080327, y = 0.936226, z = 0
+ue_max = 48420.1 at x = 0.0156466, y = 0.926468, z = 0
+ 
+(Nodeid,phim,phie): (0,9.64176,758.496), (1,9.9184,1419.24), (2,49.6582,8685.72), (3,73.265,18133.2), (4,101.427,31521.8), (5,71.5132,48209.2), (6,-0.767898,44601.4), (7,0.0106237,35727.5), (8,-0.00131558,26918.7), (9,-0.00113265,18109), (10,-0.00113546,9299.2), (11,-0.00113108,783.091),  
+
+Writing: "NeuralEP2DL2bi_reri2_65.chk"
+ (0s, XML)
+Steps: 6600000  Time: 0.66        
+ CPU Time: 16.2453 min.
+
+um_max = 124.137 at x = 0.0139684, y = 0.938968, z = 0
+ue_max = 61016.8 at x = 0.0112258, y = 0.941967, z = 0
+ 
+(Nodeid,phim,phie): (0,7.9581,1034.49), (1,8.1958,1936.43), (2,47.9082,12363.4), (3,71.2733,24724.3), (4,99.7629,41094), (5,81.8972,60914.8), (6,-0.975346,56543.2), (7,0.0139257,45292.7), (8,-0.0013657,34125.6), (9,-0.00113113,22957.2), (10,-0.00113473,11788.8), (11,-0.00113034,992.745),  
+
+Writing: "NeuralEP2DL2bi_reri2_66.chk"
+ (0s, XML)
+Steps: 6700000  Time: 0.67        
+ CPU Time: 16.2766 min.
+
+um_max = 124.168 at x = 0.0139684, y = 0.938968, z = 0
+ue_max = 68842.8 at x = 0.0137742, y = 0.941967, z = 0
+ 
+(Nodeid,phim,phie): (0,6.51291,1204.23), (1,6.71175,2254.41), (2,46.1739,14625.1), (3,69.2872,28756.4), (4,98.0449,46919), (5,92.845,68707.9), (6,-1.13764,64209.9), (7,0.0168891,51429.8), (8,-0.00141047,38749.6), (9,-0.0011297,26067.9), (10,-0.00113402,13386.2), (11,-0.00112962,1127.26),  
+
+Writing: "NeuralEP2DL2bi_reri2_67.chk"
+ (0s, XML)
+Steps: 6800000  Time: 0.68        
+ CPU Time: 16.2627 min.
+
+um_max = 122.16 at x = 0.0110316, y = 0.938968, z = 0
+ue_max = 69712.4 at x = 0.0112258, y = 0.941967, z = 0
+ 
+(Nodeid,phim,phie): (0,5.2916,1225.41), (1,5.45366,2293.89), (2,44.4493,14900), (3,67.3094,29196.4), (4,96.2882,47486.1), (5,102.596,69570), (6,-1.241,66206.8), (7,0.0204629,53015.6), (8,-0.00146452,39944.7), (9,-0.00112814,26871.8), (10,-0.00113331,13799.1), (11,-0.00112891,1162.03),  
+
+Writing: "NeuralEP2DL2bi_reri2_68.chk"
+ (0s, XML)
+Steps: 6900000  Time: 0.69        
+ CPU Time: 16.2661 min.
+
+um_max = 118.603 at x = 0.0044673, y = 0.935209, z = 0
+ue_max = 64651.8 at x = 0.0112258, y = 0.941967, z = 0
+ 
+(Nodeid,phim,phie): (0,4.27203,1121.5), (1,4.40057,2098.86), (2,42.7265,13502.7), (3,65.3427,26610.7), (4,94.5069,43622.4), (5,108.304,64526.5), (6,-0.821168,63464.5), (7,0.0260453,50789.4), (8,-0.00154903,38267.7), (9,-0.00112613,25743.7), (10,-0.00113262,13219.7), (11,-0.0011282,1113.24),  
+
+Writing: "NeuralEP2DL2bi_reri2_69.chk"
+ (0s, XML)
+Steps: 7000000  Time: 0.7         
+ CPU Time: 16.2499 min.
+
+um_max = 119.417 at x = 0.025, y = 0.933935, z = 0
+ue_max = 58586.5 at x = 0.00893461, y = 1.15, z = 0
+ 
+(Nodeid,phim,phie): (0,3.42912,938.495), (1,3.52801,1755.59), (2,40.9965,11051.7), (3,63.3895,22113.8), (4,92.6957,36956.7), (5,110.248,55765.1), (6,2.41659,57987.3), (7,0.039843,46326.2), (8,-0.00175897,34905.9), (9,-0.00112222,23482.1), (10,-0.00113197,12058.4), (11,-0.00112751,1015.44),  
+
+Writing: "NeuralEP2DL2bi_reri2_70.chk"
+ (0s, XML)
+Steps: 7100000  Time: 0.71        
+ CPU Time: 16.275 min.
+
+um_max = 120.151 at x = 0.0205327, y = 0.929467, z = 0
+ue_max = 58024.4 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,2.73784,867.497), (1,2.81107,1622.38), (2,39.2499,10124), (3,61.452,20356.4), (4,90.8604,34286), (5,110.933,52203.9), (6,6.67054,57480), (7,0.0598801,45830.2), (8,-0.00206614,34533.5), (9,-0.0011168,23231.6), (10,-0.00113136,11929.7), (11,-0.00112684,1004.61),  
+
+Writing: "NeuralEP2DL2bi_reri2_71.chk"
+ (0s, XML)
+Steps: 7200000  Time: 0.72        
+ CPU Time: 16.2744 min.
+
+um_max = 124.857 at x = 0.0205327, y = 0.929467, z = 0
+ue_max = 56209 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,2.17469,769.797), (1,2.22611,1439.16), (2,37.4772,8844.38), (3,59.5318,17950.5), (4,89.0175,30658.3), (5,111.154,47285.9), (6,11.3053,55755.5), (7,0.064549,44438.3), (8,-0.00214125,33485.1), (9,-0.0011149,22526.3), (10,-0.0011307,11567.5), (11,-0.00112616,974.11),  
+
+Writing: "NeuralEP2DL2bi_reri2_72.chk"
+ (0s, XML)
+Steps: 7300000  Time: 0.73        
+ CPU Time: 16.2576 min.
+
+um_max = 121.081 at x = 0.0044673, y = 0.929467, z = 0
+ue_max = 47435.4 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,1.71846,524.633), (1,1.75164,979.481), (2,35.6703,5580.12), (3,57.6302,11946.7), (4,87.1713,21763.3), (5,110.741,35375.1), (6,16.526,47097.1), (7,0.039132,37625.6), (8,-0.00175349,28350.7), (9,-0.00112012,19072.2), (10,-0.00112994,9793.86), (11,-0.00112549,824.747),  
+
+Writing: "NeuralEP2DL2bi_reri2_73.chk"
+ (0s, XML)
+Steps: 7400000  Time: 0.74        
+ CPU Time: 16.248 min.
+
+um_max = 126.298 at x = 0.0120812, y = 1.16103, z = 0
+ue_max = 40084.2 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,1.35049,356.91), (1,1.3686,665.041), (2,33.823,3365.54), (3,55.7479,7822.86), (4,85.2723,15609.2), (5,109.92,27094.4), (6,22.646,39784.7), (7,-0.010878,32005.3), (8,-0.000988209,24113), (9,-0.00113115,16221.5), (10,-0.00112911,8329.96), (11,-0.00112481,701.47),  
+
+Writing: "NeuralEP2DL2bi_reri2_74.chk"
+ (0s, XML)
+Steps: 7500000  Time: 0.75        
+ CPU Time: 16.2779 min.
+
+um_max = 129.03 at x = 0.0120812, y = 1.16103, z = 0
+ue_max = 33264.1 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,1.05463,233.76), (1,1.06045,434.204), (2,31.9317,1755.34), (3,53.8846,4775.61), (4,83.3247,11023.5), (5,108.787,20950.4), (6,30.1907,32940.1), (7,-0.0865313,26877.7), (8,0.000172654,20245), (9,-0.0011483,13619.4), (10,-0.00112818,6993.76), (11,-0.00112414,588.948),  
+
+Writing: "NeuralEP2DL2bi_reri2_75.chk"
+ (0s, XML)
+Steps: 7600000  Time: 0.76        
+ CPU Time: 16.2538 min.
+
+um_max = 128.702 at x = 0.0120812, y = 1.16103, z = 0
+ue_max = 29885.2 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.817171,177.89), (1,0.813079,329.538), (2,29.9959,1054.86), (3,52.0395,3358.58), (4,81.3563,8817.02), (5,107.509,17947.4), (6,36.7774,29528.4), (7,-0.156017,24480.6), (8,0.00124519,18434.5), (9,-0.00116419,12401.5), (10,-0.00112729,6368.34), (11,-0.00112347,536.282),  
+
+Writing: "NeuralEP2DL2bi_reri2_76.chk"
+ (0s, XML)
+Steps: 7700000  Time: 0.77        
+ CPU Time: 16.2637 min.
+
+um_max = 126.347 at x = 0.0129188, y = 1.16103, z = 0
+ue_max = 30561.2 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.626609,194.776), (1,0.6146,361.308), (2,28.0177,1337.17), (3,50.2104,3707.96), (4,79.3753,9191.78), (5,106.131,18338.6), (6,41.3495,30207.9), (7,-0.189133,25214.7), (8,0.00175979,18985.5), (9,-0.00117154,12772.2), (10,-0.00112654,6558.7), (11,-0.00112283,552.312),  
+
+Writing: "NeuralEP2DL2bi_reri2_77.chk"
+ (0s, XML)
+Steps: 7800000  Time: 0.78        
+ CPU Time: 16.2713 min.
+
+um_max = 125.763 at x = 0.0169673, y = 1.16123, z = 0
+ue_max = 36235.1 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.473441,298.729), (1,0.455174,556.34), (2,26.0035,2794.84), (3,48.3944,6177.68), (4,77.3864,12668.4), (5,104.665,22808.3), (6,46.7803,35901.5), (7,-0.210526,29941.6), (8,0.0020838,22545.5), (9,-0.0011758,15167.1), (10,-0.00112584,7788.54), (11,-0.0011222,655.877),  
+
+Writing: "NeuralEP2DL2bi_reri2_78.chk"
+ (0s, XML)
+Steps: 7900000  Time: 0.79        
+ CPU Time: 16.2642 min.
+
+um_max = 126.364 at x = 0.0080327, y = 1.16123, z = 0
+ue_max = 40574.4 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.349905,379.881), (1,0.326743,708.63), (2,23.9653,3944.35), (3,46.5869,8096.57), (4,75.3931,15346.1), (5,103.128,26224.7), (6,56.4772,40223.3), (7,-0.437792,34602.9), (8,0.0055335,26043.2), (9,-0.00122754,17520.4), (10,-0.00112444,8996.95), (11,-0.0011215,757.638),  
+
+Writing: "NeuralEP2DL2bi_reri2_79.chk"
+ (0s, XML)
+Steps: 8000000  Time: 0.8         
+ CPU Time: 16.2677 min.
+
+um_max = 123.824 at x = 0.0080327, y = 1.16123, z = 0
+ue_max = 45962.2 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.249736,479.797), (1,0.222794,896.109), (2,21.9217,5346.75), (3,44.7824,10484.5), (4,73.3989,18717.3), (5,101.536,30552.5), (6,70.7174,45676), (7,-0.751024,40726), (8,0.0103715,30636.5), (9,-0.00130149,20610.7), (10,-0.00112268,10583.9), (11,-0.00112077,891.273),  
+
+Writing: "NeuralEP2DL2bi_reri2_80.chk"
+ (0s, XML)
+Steps: 8100000  Time: 0.81        
+ CPU Time: 16.2707 min.
+
+um_max = 124.063 at x = 0.0139684, y = 1.16397, z = 0
+ue_max = 58991.5 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.167929,710.931), (1,0.138121,1329.63), (2,19.8968,8520.35), (3,42.974,16087.4), (4,71.407,26794.8), (5,99.8765,41072.1), (6,81.2218,58790), (7,-0.963334,52552.8), (8,0.0137373,39533.1), (9,-0.00135275,26595.9), (10,-0.00112129,13657.3), (11,-0.00112009,1150.09),  
+
+Writing: "NeuralEP2DL2bi_reri2_81.chk"
+ (0s, XML)
+Steps: 8200000  Time: 0.82        
+ CPU Time: 16.2627 min.
+
+um_max = 124.224 at x = 0.0110316, y = 1.16397, z = 0
+ue_max = 67457 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.100525,861.875), (1,0.068605,1612.8), (2,17.9182,10611.5), (3,41.1542,19753.5), (4,69.4203,32046.6), (5,98.1617,47871.3), (6,92.084,67309.6), (7,-1.12763,60503.4), (8,0.0166895,45511.1), (9,-0.00139751,30617.6), (10,-0.00112001,15722.5), (11,-0.00111943,1324),  
+
+Writing: "NeuralEP2DL2bi_reri2_82.chk"
+ (0s, XML)
+Steps: 8300000  Time: 0.83        
+ CPU Time: 16.2631 min.
+
+um_max = 122.364 at x = 0.0110316, y = 1.16397, z = 0
+ue_max = 68697.9 at x = 0.00935344, y = 1.15147, z = 0
+ 
+(Nodeid,phim,phie): (0,0.044416,887.778), (1,0.0110178,1661.52), (2,16.0126,11015.1), (3,39.3153,20387.5), (4,67.4419,32867.2), (5,96.407,48834.7), (6,102.049,68587.5), (7,-1.23932,62744), (8,0.0201958,47184.4), (9,-0.00145067,31743.5), (10,-0.00111861,16300.7), (11,-0.00111876,1372.69),  
+
+Writing: "NeuralEP2DL2bi_reri2_83.chk"
+ (0s, XML)
+Steps: 8400000  Time: 0.84        
+ CPU Time: 16.2554 min.
+
+um_max = 118.773 at x = 0.0205327, y = 1.16021, z = 0
+ue_max = 63782.7 at x = 0.0112258, y = 1.16697, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.0028215,808.777), (1,-0.0371552,1513.56), (2,14.2032,10003.6), (3,37.4513,18475.6), (4,65.4744,29961.9), (5,94.6274,44886.9), (6,108.067,63699), (7,-0.904271,60224.3), (8,0.0255242,45262.5), (9,-0.00153149,30450.8), (10,-0.0011168,15636.9), (11,-0.00111806,1316.79),  
+
+Writing: "NeuralEP2DL2bi_reri2_84.chk"
+ (0s, XML)
+Steps: 8500000  Time: 0.85        
+ CPU Time: 16.279 min.
+
+um_max = 119.317 at x = 0.025, y = 1.15893, z = 0
+ue_max = 55200.9 at x = 0.00893461, y = 1.375, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.0430677,654.904), (1,-0.0778606,1225.22), (2,12.5083,7982.76), (3,35.5585,14744.6), (4,63.5203,24386.9), (5,92.8183,37415.2), (6,110.176,54404.8), (7,2.13242,54494.2), (8,0.0386519,40883), (9,-0.00173124,27505.4), (10,-0.00111318,14124.4), (11,-0.00111716,1189.42),  
+
+Writing: "NeuralEP2DL2bi_reri2_85.chk"
+ (0s, XML)
+Steps: 8600000  Time: 0.86        
+ CPU Time: 16.2638 min.
+
+um_max = 119.964 at x = 0, y = 1.15893, z = 0
+ue_max = 54244.1 at x = 0.0160654, y = 1.375, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.0777743,592.98), (1,-0.112598,1109.3), (2,10.9414,7204.9), (3,33.6367,13255.9), (4,61.5816,22073.5), (5,90.984,34221.3), (6,110.902,50358.7), (7,6.37163,53596.2), (8,0.0586378,40122.1), (9,-0.00203758,26994.7), (10,-0.00110791,13862.1), (11,-0.00111608,1167.33),  
+
+Writing: "NeuralEP2DL2bi_reri2_86.chk"
+ (0s, XML)
+Steps: 8700000  Time: 0.87        
+ CPU Time: 16.2516 min.
+
+um_max = 124.778 at x = 0.0205327, y = 1.15447, z = 0
+ue_max = 52564.7 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.108059,519.671), (1,-0.142518,972.032), (2,9.51234,6275.23), (3,31.6888,11487.5), (4,59.6603,19332.4), (5,89.1415,30449.3), (6,111.16,45491.8), (7,10.9778,52019.9), (8,0.0652509,38917.6), (9,-0.00214253,26184.7), (10,-0.00110569,13446.2), (11,-0.00111534,1132.31),  
+
+Writing: "NeuralEP2DL2bi_reri2_87.chk"
+ (0s, XML)
+Steps: 8800000  Time: 0.88        
+ CPU Time: 16.2579 min.
+
+um_max = 121.492 at x = 0.0044673, y = 1.15447, z = 0
+ue_max = 44087.2 at x = 0.0156466, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.134781,325.119), (1,-0.168509,607.448), (2,8.22737,3710.82), (3,29.7205,6760.72), (4,57.7574,12246.6), (5,87.2959,20945.4), (6,110.778,33450.2), (7,16.1603,43677.6), (8,0.0415785,32749.9), (9,-0.00178183,22034.2), (10,-0.00111063,11314.8), (11,-0.00111542,952.829),  
+
+Writing: "NeuralEP2DL2bi_reri2_88.chk"
+ (0s, XML)
+Steps: 8900000  Time: 0.89        
+ CPU Time: 16.2458 min.
+
+um_max = 126.002 at x = 0.0129188, y = 1.38603, z = 0
+ue_max = 36705 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.158612,187.189), (1,-0.191269,349.035), (2,7.0883,1912.69), (3,27.7386,3411.74), (4,55.8737,7154.22), (5,85.4019,14051.9), (6,109.988,24651.3), (7,22.1751,36356.4), (8,-0.0065566,27456.9), (9,-0.00104539,18470.7), (10,-0.00112135,9484.97), (11,-0.00111615,798.735),  
+
+Writing: "NeuralEP2DL2bi_reri2_89.chk"
+ (0s, XML)
+Steps: 9000000  Time: 0.9         
+ CPU Time: 16.2711 min.
+
+um_max = 128.953 at x = 0.0120812, y = 1.38603, z = 0
+ue_max = 30049.8 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.180087,92.7291), (1,-0.211374,172.135), (2,6.09198,702.673), (3,25.7502,1121.86), (4,54.0092,3592.2), (5,83.4563,9163.08), (6,108.868,18413.7), (7,29.6768,29691.2), (8,-0.0810522,22771.4), (9,9.72689e-05,15314.4), (10,-0.00113834,7864.23), (11,-0.00111759,662.251),  
+
+Writing: "NeuralEP2DL2bi_reri2_90.chk"
+ (0s, XML)
+Steps: 9100000  Time: 0.91        
+ CPU Time: 16.2599 min.
+
+um_max = 128.791 at x = 0.0120812, y = 1.38603, z = 0
+ue_max = 26609.5 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.19965,51.8881), (1,-0.229329,95.7705), (2,5.23067,216.487), (3,23.7623,140.422), (4,52.1629,1930.21), (5,81.4889,6769.26), (6,107.598,15280.7), (7,36.4183,26222.2), (8,-0.152479,20485.2), (9,0.00119912,13772.4), (10,-0.00115481,7072.42), (11,-0.001119,595.572),  
+
+Writing: "NeuralEP2DL2bi_reri2_91.chk"
+ (0s, XML)
+Steps: 9200000  Time: 0.92        
+ CPU Time: 16.274 min.
+
+um_max = 126.576 at x = 0.0129188, y = 1.38603, z = 0
+ue_max = 27033.2 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.217671,69.0092), (1,-0.245582,128.078), (2,4.49312,511.006), (3,21.7815,574.912), (4,50.3329,2332.63), (5,79.5087,7092.32), (6,106.227,15515.7), (7,41.0514,26644.5), (8,-0.187915,20989.4), (9,0.00174932,14109.5), (10,-0.00116283,7245.55), (11,-0.00111946,610.152),  
+
+Writing: "NeuralEP2DL2bi_reri2_92.chk"
+ (0s, XML)
+Steps: 9300000  Time: 0.93        
+ CPU Time: 16.3025 min.
+
+um_max = 125.514 at x = 0.0080327, y = 1.38623, z = 0
+ue_max = 32268.3 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.234456,155.804), (1,-0.260526,291.013), (2,3.86607,1742.53), (3,19.8162,2711.74), (4,48.5161,5226.92), (5,77.5201,10700.8), (6,104.766,19824.9), (7,46.34,31889.4), (8,-0.206842,25079.2), (9,0.00203727,16859.8), (10,-0.00116669,8657.86), (11,-0.00111944,729.083),  
+
+Writing: "NeuralEP2DL2bi_reri2_93.chk"
+ (0s, XML)
+Steps: 9400000  Time: 0.94        
+ CPU Time: 16.2876 min.
+
+um_max = 126.483 at x = 0.0080327, y = 1.38623, z = 0
+ue_max = 36770.4 at x = 0.0156466, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.250243,231.539), (1,-0.274476,433.191), (2,3.33548,2819.68), (3,17.878,4583.3), (4,46.7082,7746.64), (5,75.5271,13828.6), (6,103.233,23541.1), (7,55.5536,36362.6), (8,-0.413451,29471.9), (9,0.00516836,19803.4), (10,-0.00121364,10169.6), (11,-0.00112421,856.385),  
+
+Writing: "NeuralEP2DL2bi_reri2_94.chk"
+ (0s, XML)
+Steps: 9500000  Time: 0.95        
+ CPU Time: 16.265 min.
+
+um_max = 123.965 at x = 0.0080327, y = 1.38623, z = 0
+ue_max = 41108.8 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.265209,304.735), (1,-0.287669,570.59), (2,2.88745,3856.63), (3,15.983,6397.26), (4,44.9038,10203.3), (5,73.5328,16889.1), (6,101.645,27179.3), (7,69.8966,40747.2), (8,-0.733695,34443.7), (9,0.0101106,23129.7), (10,-0.00128929,11877.9), (11,-0.00113231,1000.24),  
+
+Writing: "NeuralEP2DL2bi_reri2_95.chk"
+ (0s, XML)
+Steps: 9600000  Time: 0.96        
+ CPU Time: 16.2645 min.
+
+um_max = 123.98 at x = 0.0139684, y = 1.38897, z = 0
+ue_max = 53439.1 at x = 0.0156466, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.279474,492.129), (1,-0.300267,922.089), (2,2.50881,6429.05), (3,14.1519,10998.8), (4,43.0959,16760), (5,71.5406,25360.9), (6,99.9898,37534.1), (7,80.5497,53137.3), (8,-0.951127,45030.6), (9,0.0135453,30239.1), (10,-0.00134174,15528.8), (11,-0.0011378,1307.69),  
+
+Writing: "NeuralEP2DL2bi_reri2_96.chk"
+ (0s, XML)
+Steps: 9700000  Time: 0.97        
+ CPU Time: 16.2568 min.
+
+um_max = 124.273 at x = 0.0110316, y = 1.38897, z = 0
+ue_max = 61930.5 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.293122,622.256), (1,-0.312373,1166.19), (2,2.18747,8222.28), (3,12.4075,14208.4), (4,41.277,21308.9), (5,69.5536,31204.5), (6,98.2784,44634.5), (7,91.3166,61665.4), (8,-1.11746,52506.9), (9,0.0164906,35257.7), (10,-0.00138651,18106.1), (11,-0.00114241,1524.72),  
+
+Writing: "NeuralEP2DL2bi_reri2_97.chk"
+ (0s, XML)
+Steps: 9800000  Time: 0.98        
+ CPU Time: 16.2661 min.
+
+um_max = 122.559 at x = 0.0110316, y = 1.38897, z = 0
+ue_max = 63429.7 at x = 0.0156466, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.306203,650.462), (1,-0.324049,1219.17), (2,1.91265,8633.97), (3,10.7723,14937.5), (4,39.4397,22255.4), (5,67.5745,32316.8), (6,96.5256,45869), (7,101.485,63197.1), (8,-1.23635,54792.3), (9,0.0199336,36782.2), (10,-0.00143883,18889.1), (11,-0.00114787,1590.66),  
+
+Writing: "NeuralEP2DL2bi_reri2_98.chk"
+ (0s, XML)
+Steps: 9900000  Time: 0.99        
+ CPU Time: 16.2527 min.
+
+um_max = 118.968 at x = 0.0110316, y = 1.38897, z = 0
+ue_max = 58932.9 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.31875,592.821), (1,-0.335325,1111.18), (2,1.67499,7881.69), (3,9.26457,13577.8), (4,37.5775,20166.1), (5,65.6062,29436.1), (6,94.7478,42148.3), (7,107.81,58742.2), (8,-0.973745,52744.3), (9,0.0250384,35384.3), (10,-0.00151638,18171.5), (11,-0.00115613,1530.23),  
+
+Writing: "NeuralEP2DL2bi_reri2_99.chk"
+ (0s, XML)
+Steps: 10000000 Time: 1           
+ CPU Time: 16.2582 min.
+
+um_max = 119.209 at x = 0.025, y = 1.38393, z = 0
+ue_max = 49740.2 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.330783,468.022), (1,-0.346216,877.245), (2,1.46655,6218.34), (3,7.89619,10584.9), (4,35.6867,15699.5), (5,63.6511,23422), (6,92.9408,34534.2), (7,110.098,49603.5), (8,1.84754,47446.3), (9,0.0374846,31767.4), (10,-0.00170575,16314.7), (11,-0.00117686,1373.86),  
+
+Writing: "NeuralEP2DL2bi_reri2_100.chk"
+ (0s, XML)
+Steps: 10100000 Time: 1.01        
+ CPU Time: 16.2763 min.
+
+um_max = 119.979 at x = 0, y = 1.38393, z = 0
+ue_max = 47073.4 at x = 0.00893461, y = 1.6, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.342313,412.414), (1,-0.356725,773.034), (2,1.28069,5485.27), (3,6.6723,9282.23), (4,33.7668,13706.8), (5,61.7113,20651.5), (6,91.1076,30930.1), (7,110.869,45199.3), (8,6.0746,46312.7), (9,0.0573317,30929), (10,-0.0020099,15885), (11,-0.0012106,1337.68),  
+
+Writing: "NeuralEP2DL2bi_reri2_101.chk"
+ (0s, XML)
+Steps: 10200000 Time: 1.02        
+ CPU Time: 16.2365 min.
+
+um_max = 124.659 at x = 0.0044673, y = 1.37947, z = 0
+ue_max = 45671.2 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.35335,355.25), (1,-0.366849,665.895), (2,1.11199,4727.97), (3,5.59195,7945.25), (4,31.8205,11663), (5,59.7888,17797.4), (6,89.2655,27207.7), (7,111.163,40549.7), (8,10.6536,45030), (9,0.0657998,30043.5), (10,-0.00214326,15430.7), (11,-0.0012256,1299.42),  
+
+Writing: "NeuralEP2DL2bi_reri2_102.chk"
+ (0s, XML)
+Steps: 10300000 Time: 1.03        
+ CPU Time: 16.2669 min.
+
+um_max = 121.914 at x = 0.0044673, y = 1.37947, z = 0
+ue_max = 38289.2 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.363897,203.328), (1,-0.376581,381.074), (2,0.956176,2688.71), (3,4.64944,4301.97), (4,29.8534,6245.37), (5,57.8846,10485.3), (6,87.4203,17942), (7,110.815,29215.8), (8,15.7966,37801.4), (9,0.0439309,25278.7), (10,-0.00181051,12982.9), (11,-0.00118824,1093.3),  
+
+Writing: "NeuralEP2DL2bi_reri2_103.chk"
+ (0s, XML)
+Steps: 10400000 Time: 1.04        
+ CPU Time: 16.261 min.
+
+um_max = 125.693 at x = 0.0129188, y = 1.61103, z = 0
+ue_max = 31445.8 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.373959,88.8741), (1,-0.385915,166.501), (2,0.810171,1153.03), (3,3.83569,1575.07), (4,27.8721,2164.26), (5,55.9997,4912.96), (6,85.5313,10820.6), (7,110.055,20433.3), (8,21.7134,31042.8), (9,-0.00237743,20924.5), (10,-0.00110215,10745), (11,-0.00110866,904.842),  
+
+Writing: "NeuralEP2DL2bi_reri2_104.chk"
+ (0s, XML)
+Steps: 10500000 Time: 1.05        
+ CPU Time: 16.2571 min.
+
+um_max = 128.862 at x = 0.0129188, y = 1.61103, z = 0
+ue_max = 25460.4 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.38354,15.9324), (1,-0.394843,29.7566), (2,0.672288,175.912), (3,3.13943,-137.799), (4,25.884,-435.351), (5,54.1339,1273.68), (6,83.5878,6086.82), (7,108.949,14580.3), (8,29.1605,25063), (9,-0.0755804,17197.5), (10,2.02821e-05,8827.92), (11,-0.000982478,743.411),  
+
+Writing: "NeuralEP2DL2bi_reri2_105.chk"
+ (0s, XML)
+Steps: 10600000 Time: 1.06        
+ CPU Time: 16.2488 min.
+
+um_max = 128.872 at x = 0.0129188, y = 1.61103, z = 0
+ue_max = 22189.5 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.392643,-16.6966), (1,-0.403357,-31.4061), (2,0.542241,-258.497), (3,2.54842,-867.387), (4,23.8959,-1594.84), (5,52.2864,-481.956), (6,81.6216,3683.51), (7,107.687,11521.8), (8,36.0474,21769.1), (9,-0.148758,15281.1), (10,0.0011485,7840.61), (11,-0.000854982,660.276),  
+
+Writing: "NeuralEP2DL2bi_reri2_106.chk"
+ (0s, XML)
+Steps: 10700000 Time: 1.07        
+ CPU Time: 16.2531 min.
+
+um_max = 126.793 at x = 0.0129188, y = 1.61103, z = 0
+ue_max = 22303.1 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.401272,-5.44222), (1,-0.411453,-10.2913), (2,0.420805,-101.698), (3,2.05042,-528.655), (4,21.9144,-1185.93), (5,50.4554,-178.01), (6,79.642,3834.91), (7,106.322,11512.3), (8,40.7568,21877.7), (9,-0.186571,15528.2), (10,0.00173521,7965.86), (11,-0.000788166,670.828),  
+
+Writing: "NeuralEP2DL2bi_reri2_107.chk"
+ (0s, XML)
+Steps: 10800000 Time: 1.08        
+ CPU Time: 16.2634 min.
+
+um_max = 125.236 at x = 0.0169673, y = 1.61123, z = 0
+ue_max = 26641 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.409431,58.3627), (1,-0.419124,109.353), (2,0.309167,763.561), (3,1.63371,1087.62), (4,19.9478,1100.69), (5,48.6378,2601.19), (6,77.6539,7063.14), (7,104.867,15176.4), (8,45.9118,26216.7), (9,-0.203912,18563.7), (10,0.00200032,9523.84), (11,-0.000758265,802.028),  
+
+Writing: "NeuralEP2DL2bi_reri2_108.chk"
+ (0s, XML)
+Steps: 10900000 Time: 1.09        
+ CPU Time: 16.2801 min.
+
+um_max = 126.583 at x = 0.0080327, y = 1.61123, z = 0
+ue_max = 30784.2 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.417128,119.268), (1,-0.426371,223.559), (2,0.208288,1588.91), (3,1.28727,2628.21), (4,18.0073,3289.61), (5,46.8295,5265.58), (6,75.661,10162.8), (7,103.337,18692.1), (8,54.6688,30319.5), (9,-0.389466,22147.7), (10,0.00480768,11356.3), (11,-0.000447174,956.361),  
+
+Writing: "NeuralEP2DL2bi_reri2_109.chk"
+ (0s, XML)
+Steps: 11000000 Time: 1.1         
+ CPU Time: 16.2531 min.
+
+um_max = 124.116 at x = 0.0080327, y = 1.61123, z = 0
+ue_max = 33720.9 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.424368,164.989), (1,-0.433191,309.291), (2,0.118561,2208.65), (3,1.00088,3792.65), (4,16.1088,4942.8), (5,45.025,7246.83), (6,73.6668,12433.3), (7,101.754,21226.1), (8,69.0489,33285.7), (9,-0.715892,25653.3), (10,0.00984086,13142.2), (11,0.000119943,1106.78),  
+
+Writing: "NeuralEP2DL2bi_reri2_110.chk"
+ (0s, XML)
+Steps: 11100000 Time: 1.11        
+ CPU Time: 16.2503 min.
+
+um_max = 123.888 at x = 0.0139684, y = 1.61397, z = 0
+ue_max = 44173.6 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.43116,302.932), (1,-0.439589,567.939), (2,0.0397689,4072.93), (3,0.76523,7198.62), (4,14.2727,9886.24), (5,43.2176,13584), (6,71.6743,20124.3), (7,100.103,30239.2), (8,79.8793,43773.8), (9,-0.938706,33850.8), (10,0.0133493,17341.7), (11,0.000515625,1460.44),  
+
+Writing: "NeuralEP2DL2bi_reri2_111.chk"
+ (0s, XML)
+Steps: 11200000 Time: 1.12        
+ CPU Time: 16.2586 min.
+
+um_max = 124.312 at x = 0.0139684, y = 1.61397, z = 0
+ue_max = 51815 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.437512,404.404), (1,-0.445568,758.203), (2,-0.0287723,5444.47), (3,0.571983,9709.32), (4,12.5218,13534.9), (5,41.3997,18245), (6,69.6868,25753.6), (7,98.3948,36799.1), (8,90.5459,51433), (9,-1.10714,39946.2), (10,0.0162922,20463.4), (11,0.000846613,1723.34),  
+
+Writing: "NeuralEP2DL2bi_reri2_112.chk"
+ (0s, XML)
+Steps: 11300000 Time: 1.13        
+ CPU Time: 16.2348 min.
+
+um_max = 122.746 at x = 0.0139684, y = 1.61397, z = 0
+ue_max = 53281.6 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.443433,428.365), (1,-0.451135,803.132), (2,-0.0880205,5769.33), (3,0.413837,10324.8), (4,10.8787,14426.4), (5,39.5639,19302.4), (6,67.7071,26925.6), (7,96.6442,38042.8), (8,100.904,52926.1), (9,-1.23228,41953.2), (10,0.019676,21484.2), (11,0.00122631,1809.33),  
+
+Writing: "NeuralEP2DL2bi_reri2_113.chk"
+ (0s, XML)
+Steps: 11400000 Time: 1.14        
+ CPU Time: 16.2664 min.
+
+um_max = 119.254 at x = 0.0110316, y = 1.61397, z = 0
+ue_max = 49391.4 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.448934,386.457), (1,-0.456296,724.557), (2,-0.139041,5204.75), (3,0.284518,9329.51), (4,9.36187,12975.5), (5,37.7035,17295.7), (6,65.738,24302.2), (7,94.868,34754.3), (8,107.533,49082.5), (9,-1.03143,40529.6), (10,0.0245832,20738.4), (11,0.00177535,1746.56),  
+
+Writing: "NeuralEP2DL2bi_reri2_114.chk"
+ (0s, XML)
+Steps: 11500000 Time: 1.15        
+ CPU Time: 16.2401 min.
+
+um_max = 119.092 at x = 0, y = 1.60893, z = 0
+ue_max = 41033.1 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.454025,289.687), (1,-0.46106,543.116), (2,-0.182894,3899.35), (3,0.17873,6992.32), (4,7.98389,9574.17), (5,35.8147,12733.7), (6,63.7819,18506.5), (7,93.0631,27672.5), (8,110.015,40791.3), (9,1.56352,36344.8), (10,0.0363417,18551.1), (11,0.00308697,1562.44),  
+
+Writing: "NeuralEP2DL2bi_reri2_115.chk"
+ (0s, XML)
+Steps: 11600000 Time: 1.16        
+ CPU Time: 16.2472 min.
+
+um_max = 119.985 at x = 0, y = 1.60893, z = 0
+ue_max = 36360.2 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.458717,240.007), (1,-0.465437,449.967), (2,-0.220575,3229.55), (3,0.0920595,5798.95), (4,6.75026,7854.32), (5,33.8967,10388.6), (6,61.8411,15449.4), (7,91.2311,23847.9), (8,110.835,36237.5), (9,5.77972,35217.1), (10,0.0559751,17913.9), (11,0.0052899,1508.9),  
+
+Writing: "NeuralEP2DL2bi_reri2_116.chk"
+ (0s, XML)
+Steps: 11700000 Time: 1.17        
+ CPU Time: 16.2456 min.
+
+um_max = 124.502 at x = 0.0044673, y = 1.60447, z = 0
+ue_max = 35076.2 at x = 0.00893461, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.46302,194.958), (1,-0.469435,365.502), (2,-0.252981,2622.16), (3,0.0208723,4715.09), (4,5.66039,6303.27), (5,31.9521,8265.52), (6,59.9174,12651.9), (7,89.3894,20318.1), (8,111.161,31921.9), (9,10.3325,34326), (10,0.0661938,17433.3), (11,0.00646273,1468.49),  
+
+Writing: "NeuralEP2DL2bi_reri2_117.chk"
+ (0s, XML)
+Steps: 11800000 Time: 1.18        
+ CPU Time: 16.2476 min.
+
+um_max = 122.337 at x = 0.0205327, y = 1.60447, z = 0
+ue_max = 29482.3 at x = 0.00935344, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.466946,82.3397), (1,-0.473064,154.344), (2,-0.28091,1102.51), (3,-0.0378029,1981.37), (4,4.70886,2348.66), (5,29.9861,2977.4), (6,58.012,5911.26), (7,87.5444,12065.9), (8,110.849,22048.5), (9,15.4346,28912.4), (10,0.0461891,14723), (11,0.00424184,1240.14),  
+
+Writing: "NeuralEP2DL2bi_reri2_118.chk"
+ (0s, XML)
+Steps: 11900000 Time: 1.19        
+ CPU Time: 16.2746 min.
+
+um_max = 125.372 at x = 0.0120812, y = 1.83603, z = 0
+ue_max = 23871.9 at x = 0.00935344, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.470506,-7.57599), (1,-0.476336,-14.2467), (2,-0.305057,-110.715), (3,-0.0863885,-201.333), (4,3.88679,-793.945), (5,28.0057,-1244.68), (6,56.1257,473.805), (7,85.6605,5355.04), (8,110.12,13944.9), (9,21.2613,23412.5), (10,0.00165529,12041.4), (11,-0.000737466,1014.04),  
+
+Writing: "NeuralEP2DL2bi_reri2_119.chk"
+ (0s, XML)
+Steps: 12000000 Time: 1.2         
+ CPU Time: 16.2453 min.
+
+um_max = 128.754 at x = 0.0129188, y = 1.83603, z = 0
+ue_max = 19113.2 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.473711,-58.7962), (1,-0.479261,-110.283), (2,-0.326026,-801.596), (3,-0.126867,-1442.77), (4,3.18301,-2555.66), (5,26.0178,-3650.18), (6,54.2587,-2727.4), (7,83.7193,1303.08), (8,109.029,9014.68), (9,28.6428,18675.4), (10,-0.0701329,9831.86), (11,-0.0087822,827.515),  
+
+Writing: "NeuralEP2DL2bi_reri2_120.chk"
+ (0s, XML)
+Steps: 12100000 Time: 1.21        
+ CPU Time: 16.2418 min.
+
+um_max = 128.946 at x = 0.0129188, y = 1.83603, z = 0
+ue_max = 16338.6 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.476571,-82.0665), (1,-0.481849,-153.914), (2,-0.344337,-1115.19), (3,-0.160876,-2004.5), (4,2.5853,-3320.8), (5,24.0294,-4741.49), (6,52.41,-4310.35), (7,81.7541,-823.287), (8,107.775,6337.08), (9,35.6642,15884.8), (10,-0.144852,8633.27), (11,-0.0171974,726.105),  
+
+Writing: "NeuralEP2DL2bi_reri2_121.chk"
+ (0s, XML)
+Steps: 12200000 Time: 1.22        
+ CPU Time: 16.2893 min.
+
+um_max = 126.999 at x = 0.0129188, y = 1.83603, z = 0
+ue_max = 16187.3 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.479098,-75.0504), (1,-0.484111,-140.758), (2,-0.360435,-1019.95), (3,-0.189773,-1829.25), (4,2.08143,-3008.1), (5,22.0473,-4408), (6,50.578,-4130.79), (7,79.7753,-845.516), (8,106.416,6104.88), (9,40.4645,15726.1), (10,-0.185093,8691.59), (11,-0.0217549,730.758),  
+
+Writing: "NeuralEP2DL2bi_reri2_122.chk"
+ (0s, XML)
+Steps: 12300000 Time: 1.23        
+ CPU Time: 16.3167 min.
+
+um_max = 124.93 at x = 0.0169673, y = 1.83623, z = 0
+ue_max = 19287.9 at x = 0.00935344, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.481303,-32.5323), (1,-0.486057,-61.0352), (2,-0.374695,-445.451), (3,-0.214674,-789.634), (4,1.6596,-1433.83), (5,20.0794,-2404.67), (6,48.7596,-1876.22), (7,77.7876,1616.5), (8,104.967,8761.58), (9,45.495,18819.8), (10,-0.201589,10366.3), (11,-0.0236035,871.683),  
+
+Writing: "NeuralEP2DL2bi_reri2_123.chk"
+ (0s, XML)
+Steps: 12400000 Time: 1.24        
+ CPU Time: 16.3047 min.
+
+um_max = 126.662 at x = 0.0080327, y = 1.83623, z = 0
+ue_max = 22499.2 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.483197,10.7466), (1,-0.487699,20.1138), (2,-0.387428,139.296), (3,-0.236475,267.758), (4,1.30876,162.687), (5,18.1367,-359.981), (6,46.9509,443.234), (7,75.795,4170.27), (8,103.442,11531), (9,53.8268,21978.9), (10,-0.366158,12552.1), (11,-0.0417893,1054.73),  
+
+Writing: "NeuralEP2DL2bi_reri2_124.chk"
+ (0s, XML)
+Steps: 12500000 Time: 1.25        
+ CPU Time: 16.2698 min.
+
+um_max = 124.276 at x = 0.0080327, y = 1.83623, z = 0
+ue_max = 23843.3 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.484789,33.5201), (1,-0.489046,62.8152), (2,-0.398883,447.203), (3,-0.25587,824.736), (4,1.01863,1022.78), (5,16.2348,728.879), (6,45.1463,1599.16), (7,73.8007,5354.44), (8,101.862,12718), (9,68.173,23337.5), (10,-0.697591,14418.9), (11,-0.0791229,1209.82),  
+
+Writing: "NeuralEP2DL2bi_reri2_125.chk"
+ (0s, XML)
+Steps: 12600000 Time: 1.26        
+ CPU Time: 16.3297 min.
+
+um_max = 123.785 at x = 0.0139684, y = 1.83897, z = 0
+ue_max = 31310.6 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.486092,121.959), (1,-0.49011,228.639), (2,-0.409259,1641.57), (3,-0.273389,2981.85), (4,0.779843,4215.85), (5,14.3938,4900.72), (6,43.3393,6604.85), (7,71.8081,11154.2), (8,100.216,19280.5), (9,79.2093,30816.2), (10,-0.926045,19153.2), (11,-0.105346,1607.02),  
+
+Writing: "NeuralEP2DL2bi_reri2_126.chk"
+ (0s, XML)
+Steps: 12700000 Time: 1.27        
+ CPU Time: 16.2722 min.
+
+um_max = 124.344 at x = 0.0110316, y = 1.83897, z = 0
+ue_max = 37137.1 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.487113,191.187), (1,-0.4909,358.443), (2,-0.41871,2576.6), (3,-0.289423,4670.38), (4,0.583982,6718.32), (5,12.6365,8176.67), (6,41.5224,10527.5), (7,69.8201,15679.9), (8,98.5111,24372), (9,89.775,36640), (10,-1.09669,22870.5), (11,-0.126873,1918.83),  
+
+Writing: "NeuralEP2DL2bi_reri2_127.chk"
+ (0s, XML)
+Steps: 12800000 Time: 1.28        
+ CPU Time: 16.2714 min.
+
+um_max = 122.923 at x = 0.0110316, y = 1.83897, z = 0
+ue_max = 38194.9 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.487865,207.77), (1,-0.491425,389.536), (2,-0.427361,2800.88), (3,-0.304256,5075.39), (4,0.423681,7339.4), (5,10.9855,8989.15), (6,39.688,11420.3), (7,67.8398,16602.4), (8,96.7627,25281.5), (9,100.306,37716.7), (10,-1.22725,24186), (11,-0.151208,2028.22),  
+
+Writing: "NeuralEP2DL2bi_reri2_128.chk"
+ (0s, XML)
+Steps: 12900000 Time: 1.29        
+ CPU Time: 16.2851 min.
+
+um_max = 119.535 at x = 0.0139684, y = 1.83897, z = 0
+ue_max = 35023.9 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.488357,178.895), (1,-0.491697,335.397), (2,-0.435304,2411.49), (3,-0.318097,4372.2), (4,0.292597,6335.83), (5,9.45972,7675.05), (6,37.8294,9695.04), (7,65.8699,14405.7), (8,94.9882,22565.5), (9,107.235,34595.6), (10,-1.07897,23469.6), (11,-0.185808,1965.82),  
+
+Writing: "NeuralEP2DL2bi_reri2_129.chk"
+ (0s, XML)
+Steps: 13000000 Time: 1.3         
+ CPU Time: 16.2885 min.
+
+um_max = 118.966 at x = 0, y = 1.83393, z = 0
+ue_max = 28172.9 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.488599,110.573), (1,-0.491725,207.294), (2,-0.442616,1489.54), (3,-0.331096,2707.33), (4,0.185371,3922.31), (5,8.07217,4515.94), (6,35.9426,5693.73), (7,63.9129,9490.11), (8,93.1854,16683.4), (9,109.925,27824.8), (10,1.28274,21049.7), (11,-0.266795,1756.73),  
+
+Writing: "NeuralEP2DL2bi_reri2_130.chk"
+ (0s, XML)
+Steps: 13100000 Time: 1.31        
+ CPU Time: 16.0902 min.
+
+um_max = 119.983 at x = 0, y = 1.83393, z = 0
+ue_max = 23662.9 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.488599,68.761), (1,-0.491519,128.898), (2,-0.449356,925.468), (3,-0.343361,1688.55), (4,0.0975337,2449.22), (5,6.82879,2603.49), (6,34.0265,3243.47), (7,61.971,6416.2), (8,91.3547,12930.5), (9,110.8,23435.9), (10,5.4873,20278.5), (11,-0.408366,1683.32),  
+
+Writing: "NeuralEP2DL2bi_reri2_131.chk"
+ (0s, XML)
+Steps: 13200000 Time: 1.32        
+ CPU Time: 16.0397 min.
+
+um_max = 124.307 at x = 0.0044673, y = 1.82947, z = 0
+ue_max = 20700.2 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.488369,33.6359), (1,-0.491086,63.0388), (2,-0.455569,451.659), (3,-0.354971,832.676), (4,0.0254021,1210.97), (5,5.72938,1008.35), (6,32.0835,1187.08), (7,60.046,3797.29), (8,89.5132,9691.31), (9,111.156,19528.8), (10,10.0144,19837.5), (11,-0.494939,1642.2),  
+
+Writing: "NeuralEP2DL2bi_reri2_132.chk"
+ (0s, XML)
+Steps: 13300000 Time: 1.33        
+ CPU Time: 16.0166 min.
+
+um_max = 122.754 at x = 0.0205327, y = 1.82947, z = 0
+ue_max = 17451.5 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.487916,-42.6443), (1,-0.490438,-79.9857), (2,-0.461294,-577.754), (3,-0.36598,-1026.41), (4,-0.0340363,-1496.28), (5,4.76881,-2512.24), (6,30.1188,-3258.95), (7,58.1394,-1692.02), (8,87.6683,3099.66), (9,110.883,11730), (10,15.0744,16795.9), (11,-0.362548,1395.57),  
+
+Writing: "NeuralEP2DL2bi_reri2_133.chk"
+ (0s, XML)
+Steps: 13400000 Time: 1.34        
+ CPU Time: 16.0125 min.
+
+um_max = 125.038 at x = 0.0120812, y = 2.06103, z = 0
+ue_max = 13877.4 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.48725,-105.646), (1,-0.489582,-198.112), (2,-0.466561,-1427.91), (3,-0.376429,-2561.86), (4,-0.0832371,-3732.82), (5,3.93837,-5407.07), (6,28.1391,-6931.24), (7,56.2518,-6276.54), (8,85.7894,-2455.28), (9,110.184,5078.64), (10,20.8192,13359.5), (11,-0.049327,1126.44),  
+
+Writing: "NeuralEP2DL2bi_reri2_134.chk"
+ (0s, XML)
+Steps: 13500000 Time: 1.35        
+ CPU Time: 16.0378 min.
+
+um_max = 128.631 at x = 0.0120812, y = 2.06103, z = 0
+ue_max = 10905 at x = 0.0156466, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.48638,-134.559), (1,-0.488528,-252.325), (2,-0.471396,-1817.9), (3,-0.386348,-3266.45), (4,-0.124209,-4756.92), (5,3.22701,-6701.54), (6,26.1516,-8619.45), (7,54.3835,-8509.4), (8,83.8506,-5288.05), (9,109.109,1615.23), (10,28.1249,10425.4), (11,0.464549,911.394),  
+
+Writing: "NeuralEP2DL2bi_reri2_135.chk"
+ (0s, XML)
+Steps: 13600000 Time: 1.36        
+ CPU Time: 16.0239 min.
+
+um_max = 129.01 at x = 0.0120812, y = 2.06103, z = 0
+ue_max = 9773.01 at x = 0.00893461, y = 1.375, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.485313,-146.823), (1,-0.487283,-275.319), (2,-0.47582,-1983.12), (3,-0.395756,-3565.22), (4,-0.158611,-5189.44), (5,2.62256,-7214.52), (6,24.163,-9335.88), (7,52.5337,-9593.93), (8,81.8866,-6792.71), (9,107.863,-317.741), (10,35.2683,8522.29), (11,1.02041,786.105),  
+
+Writing: "NeuralEP2DL2bi_reri2_136.chk"
+ (0s, XML)
+Steps: 13700000 Time: 1.37        
+ CPU Time: 16.0079 min.
+
+um_max = 127.193 at x = 0.0120812, y = 2.06103, z = 0
+ue_max = 9665.46 at x = 0.00893461, y = 1.375, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.48406,-142.103), (1,-0.485857,-266.468), (2,-0.479851,-1919.07), (3,-0.40467,-3450.03), (4,-0.187817,-5018.15), (5,2.11275,-6932.31), (6,22.1802,-9059.98), (7,50.7006,-9498.62), (8,79.9085,-6926.12), (9,106.511,-687.818), (10,40.1734,8203.85), (11,1.3326,780.967),  
+
+Writing: "NeuralEP2DL2bi_reri2_137.chk"
+ (0s, XML)
+Steps: 13800000 Time: 1.38        
+ CPU Time: 16.0422 min.
+
+um_max = 124.595 at x = 0.0080327, y = 2.06123, z = 0
+ue_max = 10309.4 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.482627,-118.7), (1,-0.484257,-222.586), (2,-0.483505,-1602.8), (3,-0.4131,-2879.44), (4,-0.21296,-4182.23), (5,1.68576,-5777.3), (6,20.2111,-7692.35), (7,48.8814,-8096.22), (8,77.9214,-5532.99), (9,105.067,683.633), (10,45.0896,9799.11), (11,1.45154,928.294),  
+
+Writing: "NeuralEP2DL2bi_reri2_138.chk"
+ (0s, XML)
+Steps: 13900000 Time: 1.39        
+ CPU Time: 16.0246 min.
+
+um_max = 126.718 at x = 0.0169673, y = 2.06123, z = 0
+ue_max = 11940 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.481024,-95.5192), (1,-0.482492,-179.121), (2,-0.486797,-1289.55), (3,-0.421057,-2314.29), (4,-0.234948,-3355.01), (5,1.33048,-4637.46), (6,18.2663,-6331.9), (7,47.0722,-6689.1), (8,75.9289,-4119.85), (9,103.546,2084.53), (10,53.0293,11365.4), (11,2.50511,1133.82),  
+
+Writing: "NeuralEP2DL2bi_reri2_139.chk"
+ (0s, XML)
+Steps: 14000000 Time: 1.4         
+ CPU Time: 16.0332 min.
+
+um_max = 124.442 at x = 0.0169673, y = 2.06123, z = 0
+ue_max = 11555.5 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.479257,-92.0108), (1,-0.480568,-172.542), (2,-0.489739,-1241.88), (3,-0.428551,-2228.65), (4,-0.254491,-3229.18), (5,1.03658,-4425.56), (6,16.3611,-6109.43), (7,45.2675,-6618.74), (8,73.9347,-4240.45), (9,101.97,1748.04), (10,67.2676,10981.3), (11,4.95603,1275.97),  
+
+Writing: "NeuralEP2DL2bi_reri2_140.chk"
+ (0s, XML)
+Steps: 14100000 Time: 1.41        
+ CPU Time: 16.0249 min.
+
+um_max = 123.675 at x = 0.0139684, y = 2.06397, z = 0
+ue_max = 14991.2 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.477334,-52.4293), (1,-0.478494,-98.3259), (2,-0.492346,-707.242), (3,-0.435589,-1263.74), (4,-0.272125,-1818.68), (5,0.794608,-2529.03), (6,14.5153,-3785.2), (7,43.461,-4012.95), (8,71.9418,-1392.7), (9,100.328,4806.73), (10,78.5353,14405.3), (11,6.70306,1701.23),  
+
+Writing: "NeuralEP2DL2bi_reri2_141.chk"
+ (0s, XML)
+Steps: 14200000 Time: 1.42        
+ CPU Time: 16.0268 min.
+
+um_max = 124.37 at x = 0.0139684, y = 2.06397, z = 0
+ue_max = 17918.9 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.475263,-18.9521), (1,-0.476277,-35.5555), (2,-0.494627,-255.017), (3,-0.442182,-447.627), (4,-0.288251,-625.971), (5,0.596102,-924.859), (6,12.7516,-1811.13), (7,41.645,-1796.92), (8,69.9535,1021.96), (9,98.6271,7383.22), (10,89.001,17308), (11,8.13739,2055.69),  
+
+Writing: "NeuralEP2DL2bi_reri2_142.chk"
+ (0s, XML)
+Steps: 14300000 Time: 1.43        
+ CPU Time: 16.0275 min.
+
+um_max = 123.093 at x = 0.0110316, y = 2.06397, z = 0
+ue_max = 18066.8 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.47305,-13.0235), (1,-0.473923,-24.4386), (2,-0.496595,-174.706), (3,-0.44834,-303.011), (4,-0.303161,-414.914), (5,0.433617,-617.862), (6,11.0928,-1433.89), (7,39.8119,-1461.43), (8,67.9726,1265.63), (9,96.8811,7492.71), (10,99.6868,17465.4), (11,9.81441,2182.79),  
+
+Writing: "NeuralEP2DL2bi_reri2_143.chk"
+ (0s, XML)
+Steps: 14400000 Time: 1.44        
+ CPU Time: 16.0332 min.
+
+um_max = 119.811 at x = 0.0110316, y = 2.06397, z = 0
+ue_max = 15616.9 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.470704,-31.7212), (1,-0.471441,-59.4961), (2,-0.49826,-426.861), (3,-0.454072,-758.668), (4,-0.317067,-1081.34), (5,0.300746,-1470.49), (6,9.55816,-2483.79), (7,37.9552,-2809.76), (8,66.0019,-440.65), (9,95.1082,5380.88), (10,106.912,15067.1), (11,12.5501,2113.48),  
+
+Writing: "NeuralEP2DL2bi_reri2_144.chk"
+ (0s, XML)
+Steps: 14500000 Time: 1.45        
+ CPU Time: 16.0022 min.
+
+um_max = 118.831 at x = 0.025, y = 2.05893, z = 0
+ue_max = 10813.1 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.46823,-72.5863), (1,-0.468836,-136.117), (2,-0.499633,-978.283), (3,-0.459389,-1754.66), (4,-0.330121,-2537.6), (5,0.192063,-3366.84), (6,8.16106,-4818), (7,36.0703,-5678.54), (8,64.0439,-3915.22), (9,93.3075,1248.61), (10,109.828,10355.8), (11,21.3647,1878.33),  
+
+Writing: "NeuralEP2DL2bi_reri2_145.chk"
+ (0s, XML)
+Steps: 14600000 Time: 1.46        
+ CPU Time: 16.0282 min.
+
+um_max = 119.973 at x = 0.025, y = 2.05893, z = 0
+ue_max = 8072.19 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.465636,-105.237), (1,-0.466115,-197.336), (2,-0.500724,-1418.82), (3,-0.464301,-2550.42), (4,-0.342436,-3701.3), (5,0.103043,-4882.12), (6,6.90794,-6670.69), (7,34.1562,-7966.78), (8,62.101,-6723.91), (9,91.4781,-2135.66), (10,110.762,6443.23), (11,34.9415,1750.62),  
+
+Writing: "NeuralEP2DL2bi_reri2_146.chk"
+ (0s, XML)
+Steps: 14700000 Time: 1.47        
+ CPU Time: 16.0441 min.
+
+um_max = 124.075 at x = 0.0205327, y = 2.05447, z = 0
+ue_max = 9995.37 at x = 0.00935344, y = 1.37647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.462928,-133.01), (1,-0.463285,-249.411), (2,-0.501544,-1793.52), (3,-0.468819,-3227.31), (4,-0.35409,-4691.31), (5,0.0299548,-6172.18), (6,5.79897,-8235.97), (7,32.2149,-9911.17), (8,60.1748,-9147.58), (9,89.6371,-5096.25), (10,111.148,2904.37), (11,45.1531,1644.89),  
+
+Writing: "NeuralEP2DL2bi_reri2_147.chk"
+ (0s, XML)
+Steps: 14800000 Time: 1.48        
+ CPU Time: 16.0312 min.
+
+um_max = 123.158 at x = 0.0044673, y = 2.05447, z = 0
+ue_max = 12983.1 at x = 0.00893461, y = 1.6, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.460111,-175.552), (1,-0.460352,-329.177), (2,-0.502102,-2367.61), (3,-0.472953,-4264.18), (4,-0.365141,-6207.48), (5,-0.030257,-8157.34), (6,4.8293,-10655.9), (7,30.2514,-12877.4), (8,58.2669,-12776.9), (9,87.7921,-9447.57), (10,110.917,-2269.38), (11,51.8038,1360.31),  
+
+Writing: "NeuralEP2DL2bi_reri2_148.chk"
+ (0s, XML)
+Steps: 14900000 Time: 1.49        
+ CPU Time: 16.0068 min.
+
+um_max = 125.291 at x = 0.0120812, y = 2.28603, z = 0
+ue_max = 15667.3 at x = 0.00893461, y = 1.6, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.457193,-206.578), (1,-0.457321,-387.349), (2,-0.502407,-2786.24), (3,-0.476716,-5020.35), (4,-0.37563,-7313.4), (5,-0.0800811,-9605.02), (6,3.99044,-12403), (7,28.2725,-15042.8), (8,56.378,-15494.1), (9,85.9181,-12775), (10,110.246,-6338.66), (11,55.6874,1065.94),  
+
+Writing: "NeuralEP2DL2bi_reri2_149.chk"
+ (0s, XML)
+Steps: 15000000 Time: 1.5         
+ CPU Time: 16.0068 min.
+
+um_max = 128.717 at x = 0.0120812, y = 2.28603, z = 0
+ue_max = 16047.6 at x = 0.0160654, y = 1.6, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.454179,-208.649), (1,-0.454198,-391.232), (2,-0.50247,-2813.99), (3,-0.480117,-5070.76), (4,-0.385586,-7387.83), (5,-0.121553,-9697.39), (6,3.27146,-12464.6), (7,26.2853,-15196.7), (8,54.5085,-15890.2), (9,83.9819,-13468.9), (10,109.187,-7364.7), (11,57.4584,923.123),  
+
+Writing: "NeuralEP2DL2bi_reri2_150.chk"
+ (0s, XML)
+Steps: 15100000 Time: 1.51        
+ CPU Time: 16.0184 min.
+
+um_max = 128.886 at x = 0.0120812, y = 2.28603, z = 0
+ue_max = 15855.1 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.451074,-203.47), (1,-0.450989,-381.52), (2,-0.502299,-2743.86), (3,-0.483167,-4944.43), (4,-0.39503,-7203.95), (5,-0.156353,-9451.43), (6,2.66021,-12103.4), (7,24.2966,-14843.6), (8,52.6574,-15709), (9,82.0191,-13511.8), (10,107.949,-7640.32), (11,57.1582,884.316),  
+
+Writing: "NeuralEP2DL2bi_reri2_151.chk"
+ (0s, XML)
+Steps: 15200000 Time: 1.52        
+ CPU Time: 16.0193 min.
+
+um_max = 127.012 at x = 0.0120812, y = 2.28603, z = 0
+ue_max = 15515.5 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.447885,-196.461), (1,-0.4477,-368.378), (2,-0.501903,-2649.05), (3,-0.485878,-4773.51), (4,-0.403979,-6954.88), (5,-0.185874,-9120.93), (6,2.14442,-11636.7), (7,22.3132,-14358.4), (8,50.8233,-15379.2), (9,80.0417,-13385.7), (10,106.603,-7725.76), (11,56.1439,883.431),  
+
+Writing: "NeuralEP2DL2bi_reri2_152.chk"
+ (0s, XML)
+Steps: 15300000 Time: 1.53        
+ CPU Time: 16.0149 min.
+
+um_max = 124.549 at x = 0.0169673, y = 2.28623, z = 0
+ue_max = 15130.5 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.444616,-189.009), (1,-0.444336,-354.405), (2,-0.501291,-2548.26), (3,-0.488261,-4591.81), (4,-0.412444,-6690.04), (5,-0.211261,-8770.64), (6,1.71222,-11147.1), (7,20.3429,-13836.7), (8,49.0033,-15003.3), (9,78.0551,-13199.9), (10,105.166,-7742.16), (11,54.1835,930.683),  
+
+Writing: "NeuralEP2DL2bi_reri2_153.chk"
+ (0s, XML)
+Steps: 15400000 Time: 1.54        
+ CPU Time: 15.9853 min.
+
+um_max = 125.771 at x = 0.0169673, y = 2.28623, z = 0
+ue_max = 14685.8 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.441273,-181.047), (1,-0.440901,-339.476), (2,-0.500471,-2440.6), (3,-0.490325,-4397.68), (4,-0.420435,-6407.01), (5,-0.23344,-8397.18), (6,1.35245,-10632.3), (7,18.396,-13273.8), (8,47.1935,-14566.7), (9,76.0629,-12930.4), (10,103.651,-7657.58), (11,51.6858,1070.14),  
+
+Writing: "NeuralEP2DL2bi_reri2_154.chk"
+ (0s, XML)
+Steps: 15500000 Time: 1.55        
+ CPU Time: 15.9869 min.
+
+um_max = 122.317 at x = 0.0169673, y = 2.28623, z = 0
+ue_max = 14351.1 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.437861,-174.789), (1,-0.437401,-327.741), (2,-0.499453,-2355.94), (3,-0.492082,-4245.08), (4,-0.427962,-6184.65), (5,-0.25313,-8104.11), (6,1.05472,-10222.3), (7,16.4876,-12823.5), (8,45.3888,-14239.7), (9,74.0686,-12765.7), (10,102.081,-7679.67), (11,52.9892,1030.07),  
+
+Writing: "NeuralEP2DL2bi_reri2_155.chk"
+ (0s, XML)
+Steps: 15600000 Time: 1.56        
+ CPU Time: 15.9859 min.
+
+um_max = 124.014 at x = 0.0110316, y = 2.28897, z = 0
+ue_max = 14001.9 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.434384,-168.74), (1,-0.43384,-316.399), (2,-0.498244,-2274.12), (3,-0.493541,-4097.59), (4,-0.435033,-5969.75), (5,-0.270882,-7821.28), (6,0.809539,-9830.77), (7,14.6371,-12382.7), (8,43.5826,-13896.9), (9,72.0756,-12560.5), (10,100.443,-7642.6), (11,54.2818,1078.15),  
+
+Writing: "NeuralEP2DL2bi_reri2_156.chk"
+ (0s, XML)
+Steps: 15700000 Time: 1.57        
+ CPU Time: 16.0204 min.
+
+um_max = 124.694 at x = 0.0139684, y = 2.28897, z = 0
+ue_max = 13687.4 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.430848,-163.532), (1,-0.430223,-306.633), (2,-0.496852,-2203.65), (3,-0.494714,-3970.59), (4,-0.441658,-5784.78), (5,-0.287101,-7578.14), (6,0.608355,-9494.23), (7,12.8672,-11995.4), (8,41.7674,-13588.1), (9,70.0869,-12373), (10,98.7447,-7612.88), (11,55.6514,1140.53),  
+
+Writing: "NeuralEP2DL2bi_reri2_157.chk"
+ (0s, XML)
+Steps: 15800000 Time: 1.58        
+ CPU Time: 16.0207 min.
+
+um_max = 122.978 at x = 0.0205327, y = 2.28521, z = 0
+ue_max = 13346.5 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.427256,-158.365), (1,-0.426555,-296.945), (2,-0.495285,-2133.76), (3,-0.495611,-3844.61), (4,-0.447847,-5601.27), (5,-0.302088,-7337.17), (6,0.44366,-9165.94), (7,11.2007,-11606.5), (8,39.9358,-13251.5), (9,68.1054,-12138.3), (10,96.9962,-7521.94), (11,57.783,1275.6),  
+
+Writing: "NeuralEP2DL2bi_reri2_158.chk"
+ (0s, XML)
+Steps: 15900000 Time: 1.59        
+ CPU Time: 16.01 min.
+
+um_max = 124.026 at x = 0.0080327, y = 2.29197, z = 0
+ue_max = 13074.2 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.423613,-154.359), (1,-0.422839,-289.433), (2,-0.493552,-2079.53), (3,-0.496241,-3746.92), (4,-0.45361,-5459.09), (5,-0.316058,-7150.73), (6,0.308976,-8910.36), (7,9.65719,-11293.8), (8,38.0808,-12983.4), (9,66.1339,-11973.5), (10,95.2125,-7507.47), (11,61.0315,1277.38),  
+
+Writing: "NeuralEP2DL2bi_reri2_159.chk"
+ (0s, XML)
+Steps: 16000000 Time: 1.6         
+ CPU Time: 16.0105 min.
+
+um_max = 121.208 at x = 0.0169673, y = 2.29197, z = 0
+ue_max = 12948.5 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.419924,-152.402), (1,-0.419079,-285.764), (2,-0.491658,-2052.99), (3,-0.496613,-3699.19), (4,-0.458956,-5389.92), (5,-0.329168,-7060.47), (6,0.198817,-8778.55), (7,8.25057,-11119.1), (8,36.1979,-12862.5), (9,64.175,-11976.9), (10,93.4122,-7686.74), (11,67.618,938.16),  
+
+Writing: "NeuralEP2DL2bi_reri2_160.chk"
+ (0s, XML)
+Steps: 16100000 Time: 1.61        
+ CPU Time: 15.9889 min.
+
+um_max = 118.626 at x = 0.025, y = 2.28393, z = 0
+ue_max = 12759.7 at x = 0.0156466, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.416192,-149.794), (1,-0.415281,-280.873), (2,-0.489612,-2017.65), (3,-0.496739,-3635.6), (4,-0.463897,-5297.53), (5,-0.341532,-6939.73), (6,0.108599,-8612.86), (7,6.98771,-10895), (8,34.2857,-12678), (9,62.231,-11915.8), (10,91.5856,-7804.12), (11,74.9797,597.348),  
+
+Writing: "NeuralEP2DL2bi_reri2_161.chk"
+ (0s, XML)
+Steps: 16200000 Time: 1.62        
+ CPU Time: 15.9895 min.
+
+um_max = 122.018 at x = 0.0205327, y = 2.27947, z = 0
+ue_max = 12422.7 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.412421,-145.41), (1,-0.411447,-272.653), (2,-0.487422,-1958.35), (3,-0.496627,-3528.72), (4,-0.468443,-5141.86), (5,-0.353231,-6735.77), (6,0.0345398,-8347.33), (7,5.86916,-10543.8), (8,32.3461,-12344.4), (9,60.3037,-11699.1), (10,89.7394,-7761.51), (11,82.6706,338.665),  
+
+Writing: "NeuralEP2DL2bi_reri2_162.chk"
+ (0s, XML)
+Steps: 16300000 Time: 1.63        
+ CPU Time: 16.0058 min.
+
+um_max = 124.751 at x = 0.0044673, y = 2.27947, z = 0
+ue_max = 12060.2 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.408615,-140.748), (1,-0.40758,-263.91), (2,-0.485092,-1895.3), (3,-0.496286,-3415.05), (4,-0.472605,-4976.25), (5,-0.364323,-6518.76), (6,-0.0264559,-8068.44), (7,4.89036,-10169.4), (8,30.384,-11985.6), (9,58.3945,-11471.3), (10,87.89,-7723.66), (11,92.3809,-76.634),  
+
+Writing: "NeuralEP2DL2bi_reri2_163.chk"
+ (0s, XML)
+Steps: 16400000 Time: 1.64        
+ CPU Time: 15.987 min.
+
+um_max = 119.597 at x = 0.0044673, y = 2.27947, z = 0
+ue_max = 11662.6 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.404778,-135.676), (1,-0.403686,-254.4), (2,-0.482632,-1826.72), (3,-0.495725,-3291.41), (4,-0.476395,-4796.04), (5,-0.374851,-6282.55), (6,-0.0769121,-7768.1), (7,4.04304,-9763.09), (8,28.4059,-11591.7), (9,56.5044,-11222.3), (10,86.0331,-7678.41), (11,102.486,-593.055),  
+
+Writing: "NeuralEP2DL2bi_reri2_164.chk"
+ (0s, XML)
+Steps: 16500000 Time: 1.65        
+ CPU Time: 15.997 min.
+
+um_max = 117.027 at x = 0.0235316, y = 2.27906, z = 0
+ue_max = 11143.2 at x = 0.00935344, y = 1.60147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.400912,-129.118), (1,-0.399766,-242.104), (2,-0.480046,-1738.1), (3,-0.494954,-3131.57), (4,-0.479822,-4562.91), (5,-0.384844,-5976.69), (6,-0.118892,-7383.32), (7,3.31637,-9251), (8,26.419,-11075.3), (9,54.6335,-10850.5), (10,84.1106,-7507.1), (11,105.134,-759.872),  
+
+Writing: "NeuralEP2DL2bi_reri2_165.chk"
+ (0s, XML)
+Steps: 16600000 Time: 1.66        
+ CPU Time: 16.0228 min.
+
+um_max = 116.989 at x = 0.0014684, y = 2.29853, z = 0
+ue_max = 10646.2 at x = 0.0160654, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.397022,-122.148), (1,-0.395825,-229.035), (2,-0.477342,-1643.91), (3,-0.493981,-2961.67), (4,-0.482897,-4315.06), (5,-0.394324,-5651.47), (6,-0.154096,-6976.1), (7,2.69827,-8708.92), (8,24.4302,-10521.7), (9,52.7812,-10448.4), (10,82.1515,-7309.04), (11,104.962,-799.259),  
+
+Writing: "NeuralEP2DL2bi_reri2_166.chk"
+ (0s, XML)
+Steps: 16700000 Time: 1.67        
+ CPU Time: 16.0217 min.
+
+um_max = 118.082 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 10223.7 at x = 0.0160654, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.393111,-115.081), (1,-0.391865,-215.783), (2,-0.474525,-1548.41), (3,-0.492814,-2789.41), (4,-0.485633,-4063.74), (5,-0.403308,-5321.65), (6,-0.183934,-6564.43), (7,2.17644,-8160.62), (8,22.4463,-9955.1), (9,50.946,-10036.8), (10,80.1757,-7101.11), (11,104.093,-810.49),  
+
+Writing: "NeuralEP2DL2bi_reri2_167.chk"
+ (0s, XML)
+Steps: 16800000 Time: 1.68        
+ CPU Time: 16.045 min.
+
+um_max = 118.422 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 9806.01 at x = 0.0160654, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.389181,-108.169), (1,-0.38789,-202.822), (2,-0.471603,-1455.01), (3,-0.491462,-2620.93), (4,-0.488039,-3817.92), (5,-0.411807,-4999.06), (6,-0.209571,-6162.71), (7,1.73898,-7625.73), (8,20.4747,-9395.19), (9,49.1252,-9629.62), (10,78.1899,-6891.31), (11,102.95,-812.755),  
+
+Writing: "NeuralEP2DL2bi_reri2_168.chk"
+ (0s, XML)
+Steps: 16900000 Time: 1.69        
+ CPU Time: 16.0068 min.
+
+um_max = 118.299 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 9406.2 at x = 0.0160654, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.385236,-101.652), (1,-0.383901,-190.603), (2,-0.46858,-1366.97), (3,-0.489932,-2462.1), (4,-0.490126,-3586.21), (5,-0.419832,-4695), (6,-0.231942,-5784.72), (7,1.37467,-7122.72), (8,18.5259,-8861.29), (9,47.3149,-9239.74), (10,76.1982,-6686.47), (11,101.654,-811.505),  
+
+Writing: "NeuralEP2DL2bi_reri2_169.chk"
+ (0s, XML)
+Steps: 17000000 Time: 1.7         
+ CPU Time: 15.9947 min.
+
+um_max = 117.906 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 9034.5 at x = 0.0160654, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.381278,-95.7277), (1,-0.379903,-179.495), (2,-0.465462,-1286.92), (3,-0.488234,-2317.71), (4,-0.491905,-3375.58), (5,-0.427391,-4418.67), (6,-0.251783,-5441.68), (7,1.07308,-6666.42), (8,16.6143,-8369.5), (9,45.51,-8877.03), (10,74.2041,-6491.82), (11,100.255,-808.868),  
+
+Writing: "NeuralEP2DL2bi_reri2_170.chk"
+ (0s, XML)
+Steps: 17100000 Time: 1.71        
+ CPU Time: 15.9898 min.
+
+um_max = 117.325 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 8695.81 at x = 0.0160654, y = 1.825, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.37731,-90.5046), (1,-0.375897,-169.701), (2,-0.462256,-1216.34), (3,-0.486373,-2190.43), (4,-0.493386,-3189.93), (5,-0.434495,-4175.17), (6,-0.269652,-5139.79), (7,0.824645,-6264.94), (8,14.7593,-7929.06), (9,43.7041,-8546.19), (10,72.211,-6309.91), (11,98.775,-805.751),  
+
+Writing: "NeuralEP2DL2bi_reri2_171.chk"
+ (0s, XML)
+Steps: 17200000 Time: 1.72        
+ CPU Time: 16.0054 min.
+
+um_max = 116.594 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 8388.4 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.373335,-85.9786), (1,-0.371886,-161.215), (2,-0.458965,-1155.18), (3,-0.484359,-2080.13), (4,-0.494579,-3029.1), (5,-0.441151,-3964.3), (6,-0.285967,-4878.69), (7,0.620749,-5917.99), (8,12.9832,-7540.03), (9,41.8898,-8245.41), (10,70.2219,-6140.03), (11,97.2296,-802.408),  
+
+Writing: "NeuralEP2DL2bi_reri2_172.chk"
+ (0s, XML)
+Steps: 17300000 Time: 1.73        
+ CPU Time: 15.9911 min.
+
+um_max = 115.737 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 8104.64 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.369355,-82.0352), (1,-0.367872,-153.821), (2,-0.455596,-1101.89), (3,-0.482198,-1984.05), (4,-0.495496,-2889.03), (5,-0.447371,-3780.72), (6,-0.30103,-4651.64), (7,0.453814,-5617.28), (8,11.3091,-7193.42), (9,40.0595,-7966.79), (10,68.2399,-5978.4), (11,95.6278,-798.676),  
+
+Writing: "NeuralEP2DL2bi_reri2_173.chk"
+ (0s, XML)
+Steps: 17400000 Time: 1.74        
+ CPU Time: 16.0127 min.
+
+um_max = 114.766 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 7831.79 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.365373,-78.4827), (1,-0.363859,-147.159), (2,-0.452154,-1053.89), (3,-0.479897,-1897.49), (4,-0.496145,-2762.87), (5,-0.453164,-3615.43), (6,-0.315065,-4447.43), (7,0.317295,-5348.95), (8,9.75683,-6873.94), (9,38.2063,-7698.4), (10,66.2678,-5819.21), (11,93.9767,-794.147),  
+
+Writing: "NeuralEP2DL2bi_reri2_174.chk"
+ (0s, XML)
+Steps: 17500000 Time: 1.75        
+ CPU Time: 16.0283 min.
+
+um_max = 113.692 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 7556.28 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.36139,-75.0982), (1,-0.359847,-140.813), (2,-0.448643,-1008.15), (3,-0.477464,-1815.04), (4,-0.496536,-2642.69), (5,-0.45854,-3457.98), (6,-0.328231,-4253.06), (7,0.205638,-5096.92), (8,8.34072,-6563.72), (9,36.3254,-7426.94), (10,64.308,-5656.05), (11,92.2819,-788.327),  
+
+Writing: "NeuralEP2DL2bi_reri2_175.chk"
+ (0s, XML)
+Steps: 17600000 Time: 1.76        
+ CPU Time: 15.994 min.
+
+um_max = 112.521 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 7265.61 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.35741,-71.673), (1,-0.35584,-134.391), (2,-0.445068,-961.872), (3,-0.474904,-1731.6), (4,-0.49668,-2521.05), (5,-0.463509,-3298.59), (6,-0.340644,-4056.36), (7,0.114205,-4846.06), (8,7.06812,-6246.07), (9,34.4151,-7140.15), (10,62.363,-5483.07), (11,90.5483,-780.757),  
+
+Writing: "NeuralEP2DL2bi_reri2_176.chk"
+ (0s, XML)
+Steps: 17700000 Time: 1.77        
+ CPU Time: 15.9756 min.
+
+um_max = 111.259 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 6950.15 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.353433,-68.0456), (1,-0.351838,-127.589), (2,-0.441435,-912.867), (3,-0.472225,-1643.24), (4,-0.496585,-2392.21), (5,-0.468083,-3129.69), (6,-0.352387,-3847.9), (7,0.0391628,-4584.56), (8,5.93996,-5908.06), (9,32.4773,-6828.58), (10,60.4346,-5295.98), (11,88.7806,-771.099),  
+
+Writing: "NeuralEP2DL2bi_reri2_177.chk"
+ (0s, XML)
+Steps: 17800000 Time: 1.78        
+ CPU Time: 15.9394 min.
+
+um_max = 109.913 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 6604.38 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.349463,-64.1225), (1,-0.347845,-120.233), (2,-0.437746,-859.876), (3,-0.469433,-1547.67), (4,-0.49626,-2252.83), (5,-0.472272,-2946.9), (6,-0.36352,-3622.24), (7,-0.0226277,-4305.39), (8,4.952,-5542.33), (9,30.5164,-6486.81), (10,58.5242,-5092.6), (11,86.983,-759.193),  
+
+Writing: "NeuralEP2DL2bi_reri2_178.chk"
+ (0s, XML)
+Steps: 17900000 Time: 1.79        
+ CPU Time: 15.9625 min.
+
+um_max = 108.489 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 6227.56 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.345501,-59.8855), (1,-0.343861,-112.288), (2,-0.434006,-802.65), (3,-0.466535,-1444.45), (4,-0.495716,-2102.26), (5,-0.476088,-2749.37), (6,-0.374086,-3378.31), (7,-0.0737248,-4006.78), (8,4.09615,-5147.73), (9,28.5392,-6114.13), (10,56.6328,-4873.22), (11,85.1597,-745.092),  
+
+Writing: "NeuralEP2DL2bi_reri2_179.chk"
+ (0s, XML)
+Steps: 18000000 Time: 1.8         
+ CPU Time: 15.9709 min.
+
+um_max = 106.991 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 5823.79 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.341548,-55.3852), (1,-0.339889,-103.85), (2,-0.430221,-741.873), (3,-0.463535,-1334.82), (4,-0.49496,-1942.3), (5,-0.47954,-2539.46), (6,-0.384116,-3119.03), (7,-0.116219,-3691.81), (8,3.36174,-4729.05), (9,26.5527,-5714.59), (10,54.7607,-4640.6), (11,83.315,-729.053),  
+
+Writing: "NeuralEP2DL2bi_reri2_180.chk"
+ (0s, XML)
+Steps: 18100000 Time: 1.81        
+ CPU Time: 15.976 min.
+
+um_max = 105.426 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 5401.52 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.337606,-50.726), (1,-0.335929,-95.1136), (2,-0.426393,-678.956), (3,-0.460441,-1221.32), (4,-0.494001,-1776.68), (5,-0.482641,-2322.09), (6,-0.393633,-2850.47), (7,-0.151833,-3367.35), (8,2.73674,-4296.05), (9,24.5638,-5296.53), (10,52.9072,-4399.65), (11,81.453,-711.521),  
+
+Writing: "NeuralEP2DL2bi_reri2_181.chk"
+ (0s, XML)
+Steps: 18200000 Time: 1.82        
+ CPU Time: 15.9685 min.
+
+um_max = 103.8 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 4972.67 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.333678,-46.0495), (1,-0.331985,-86.3451), (2,-0.422526,-615.81), (3,-0.457257,-1107.41), (4,-0.492848,-1610.45), (5,-0.4854,-2103.88), (6,-0.402651,-2580.85), (7,-0.181995,-3042.9), (8,2.20881,-3862.03), (9,22.5793,-4871.77), (10,51.0709,-4156.91), (11,79.5778,-693.078),  
+
+Writing: "NeuralEP2DL2bi_reri2_182.chk"
+ (0s, XML)
+Steps: 18300000 Time: 1.83        
+ CPU Time: 15.9579 min.
+
+um_max = 102.117 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 4551.46 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.329764,-41.5172), (1,-0.328056,-77.8467), (2,-0.418624,-554.612), (3,-0.453989,-997.006), (4,-0.49151,-1449.34), (5,-0.48783,-1892.4), (6,-0.411184,-2319.56), (7,-0.207883,-2729.37), (8,1.76604,-3442.1), (9,20.6067,-4454.42), (10,49.2492,-3919.84), (11,77.6933,-674.388),  
+
+Writing: "NeuralEP2DL2bi_reri2_183.chk"
+ (0s, XML)
+Steps: 18400000 Time: 1.84        
+ CPU Time: 15.9669 min.
+
+um_max = 100.384 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 4152.68 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.325866,-37.291), (1,-0.324145,-69.9224), (2,-0.414691,-497.551), (3,-0.450643,-894.072), (4,-0.489993,-1299.13), (5,-0.489939,-1695.25), (6,-0.419242,-2076.01), (7,-0.230451,-2437.78), (8,1.39716,-3051.15), (9,18.6559,-4059.24), (10,47.4382,-3695.78), (11,75.8033,-656.104),  
+
+Writing: "NeuralEP2DL2bi_reri2_184.chk"
+ (0s, XML)
+Steps: 18500000 Time: 1.85        
+ CPU Time: 15.9893 min.
+
+um_max = 98.6043 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 3789.15 at x = 0.0156466, y = 1.82647, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.321985,-33.5078), (1,-0.320253,-62.8287), (2,-0.410731,-446.474), (3,-0.447223,-801.94), (4,-0.488307,-1164.71), (5,-0.49174,-1518.84), (6,-0.426834,-1858.15), (7,-0.250444,-2177.45), (8,1.09166,-2701.44), (9,16.7413,-3699.07), (10,45.633,-3490.62), (11,73.9115,-638.761),  
+
+Writing: "NeuralEP2DL2bi_reri2_185.chk"
+ (0s, XML)
+Steps: 18600000 Time: 1.86        
+ CPU Time: 15.9887 min.
+
+um_max = 96.784 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 3495.34 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.318124,-30.2497), (1,-0.316381,-56.7195), (2,-0.406745,-402.488), (3,-0.443735,-722.61), (4,-0.486459,-1048.98), (5,-0.493242,-1367.02), (6,-0.433969,-1670.76), (7,-0.268433,-1953.91), (8,0.839933,-2400.18), (9,14.8818,-3381.89), (10,43.8272,-3307.24), (11,72.0212,-622.641),  
+
+Writing: "NeuralEP2DL2bi_reri2_186.chk"
+ (0s, XML)
+Steps: 18700000 Time: 1.87        
+ CPU Time: 15.9767 min.
+
+um_max = 94.9272 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 3324.86 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.314282,-27.524), (1,-0.312531,-51.6087), (2,-0.402739,-365.693), (3,-0.440183,-656.261), (4,-0.484456,-952.224), (5,-0.494456,-1240.14), (6,-0.440657,-1514.26), (7,-0.284843,-1767.56), (8,0.633292,-2148), (9,13.0997,-3108.76), (10,42.0135,-3144.71), (11,70.1353,-607.707),  
+
+Writing: "NeuralEP2DL2bi_reri2_187.chk"
+ (0s, XML)
+Steps: 18800000 Time: 1.88        
+ CPU Time: 15.9777 min.
+
+um_max = 93.0385 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 3171.73 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.310461,-25.2632), (1,-0.308702,-47.3696), (2,-0.398714,-335.179), (3,-0.436572,-601.248), (4,-0.482305,-872.025), (5,-0.495392,-1135.03), (6,-0.446907,-1384.73), (7,-0.299984,-1613.64), (8,0.464088,-1939.14), (9,11.418,-2873.75), (10,40.1843,-2998.42), (11,68.256,-593.615),  
+
+Writing: "NeuralEP2DL2bi_reri2_188.chk"
+ (0s, XML)
+Steps: 18900000 Time: 1.89        
+ CPU Time: 15.9853 min.
+
+um_max = 91.1218 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 3028.53 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.306662,-23.3446), (1,-0.304897,-43.772), (2,-0.394673,-309.285), (3,-0.432907,-554.577), (4,-0.480015,-804.011), (5,-0.49606,-1045.94), (6,-0.452729,-1275.03), (7,-0.314084,-1483.55), (8,0.325708,-1763.13), (9,9.85706,-2665.75), (10,38.3324,-2861.25), (11,66.3852,-579.815),  
+
+Writing: "NeuralEP2DL2bi_reri2_189.chk"
+ (0s, XML)
+Steps: 19000000 Time: 1.9         
+ CPU Time: 15.976 min.
+
+um_max = 89.1809 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 2886.85 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.302886,-21.6206), (1,-0.301117,-40.5392), (2,-0.39062,-286.021), (3,-0.429191,-512.651), (4,-0.477591,-742.927), (5,-0.49647,-965.956), (6,-0.458134,-1176.6), (7,-0.327306,-1367.01), (8,0.212534,-1607.47), (9,8.4315,-2471.3), (10,36.453,-2725.11), (11,64.5237,-565.678),  
+
+Writing: "NeuralEP2DL2bi_reri2_190.chk"
+ (0s, XML)
+Steps: 19100000 Time: 1.91        
+ CPU Time: 15.9885 min.
+
+um_max = 87.2196 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 2738.72 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.299135,-19.9492), (1,-0.297362,-37.4053), (2,-0.386557,-263.471), (3,-0.42543,-472.014), (4,-0.475041,-683.718), (5,-0.496631,-888.423), (6,-0.463132,-1081.18), (7,-0.339768,-1254.14), (8,0.119869,-1460.07), (9,7.14916,-2277.49), (10,34.5443,-2582.34), (11,62.6718,-550.62),  
+
+Writing: "NeuralEP2DL2bi_reri2_191.chk"
+ (0s, XML)
+Steps: 19200000 Time: 1.92        
+ CPU Time: 15.9808 min.
+
+um_max = 85.2411 at x = 0.00935344, y = 2.27647, z = 0
+ue_max = 2577.8 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.295408,-18.2176), (1,-0.293632,-34.1584), (2,-0.382487,-240.11), (3,-0.421626,-429.909), (4,-0.472371,-622.358), (5,-0.496553,-808.047), (6,-0.467734,-982.211), (7,-0.351555,-1137.08), (8,0.0438288,-1311.21), (9,6.01138,-2074.07), (10,32.6077,-2426.82), (11,60.8287,-534.196),  
+
+Writing: "NeuralEP2DL2bi_reri2_192.chk"
+ (0s, XML)
+Steps: 19300000 Time: 1.93        
+ CPU Time: 15.9813 min.
+
+um_max = 83.2488 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 2400.06 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.291708,-16.3559), (1,-0.28993,-30.6676), (2,-0.378412,-214.995), (3,-0.417784,-384.637), (4,-0.469588,-556.363), (5,-0.496245,-721.558), (6,-0.47195,-875.636), (7,-0.362729,-1010.95), (8,-0.0187677,-1154.71), (9,5.01421,-1854.76), (10,30.6478,-2254.68), (11,58.9927,-516.162),  
+
+Writing: "NeuralEP2DL2bi_reri2_193.chk"
+ (0s, XML)
+Steps: 19400000 Time: 1.94        
+ CPU Time: 15.9731 min.
+
+um_max = 81.2459 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 2204.29 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.288034,-14.342), (1,-0.286256,-26.8914), (2,-0.374335,-187.827), (3,-0.413908,-335.655), (4,-0.466697,-484.941), (5,-0.495716,-627.916), (6,-0.475792,-760.166), (7,-0.373334,-874.215), (8,-0.0705147,-988.284), (9,4.1498,-1617.84), (10,28.6711,-2064.73), (11,57.1614,-496.508),  
+
+Writing: "NeuralEP2DL2bi_reri2_194.chk"
+ (0s, XML)
+Steps: 19500000 Time: 1.95        
+ CPU Time: 15.9987 min.
+
+um_max = 79.2358 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 1992.14 at x = 0.00893461, y = 2.05, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.284388,-12.1959), (1,-0.28261,-22.8674), (2,-0.370258,-158.878), (3,-0.410001,-283.455), (4,-0.463705,-408.81), (5,-0.494975,-528.066), (6,-0.479269,-636.975), (7,-0.383401,-728.253), (8,-0.113531,-813.118), (9,3.4076,-1365.84), (10,26.6848,-1858.53), (11,55.3314,-475.463),  
+
+Writing: "NeuralEP2DL2bi_reri2_195.chk"
+ (0s, XML)
+Steps: 19600000 Time: 1.96        
+ CPU Time: 15.9989 min.
+
+um_max = 77.2218 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 1768.17 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.280769,-9.96979), (1,-0.278993,-18.6932), (2,-0.366182,-128.849), (3,-0.406067,-229.305), (4,-0.460618,-329.823), (5,-0.494031,-424.446), (6,-0.482395,-509.087), (7,-0.392952,-576.668), (8,-0.149561,-633.024), (9,2.77563,-1104.83), (10,24.6958,-1640.21), (11,53.4987,-453.468),  
+
+Writing: "NeuralEP2DL2bi_reri2_196.chk"
+ (0s, XML)
+Steps: 19700000 Time: 1.97        
+ CPU Time: 16.0018 min.
+
+um_max = 75.2075 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 1538.53 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.27718,-7.73609), (1,-0.275405,-14.5049), (2,-0.362111,-98.7201), (3,-0.402108,-174.973), (4,-0.457441,-250.565), (5,-0.492892,-320.458), (6,-0.485178,-380.719), (7,-0.402005,-424.489), (8,-0.180051,-453.523), (9,2.24156,-843.341), (10,22.7107,-1416.02), (11,51.6588,-431.134),  
+
+Writing: "NeuralEP2DL2bi_reri2_197.chk"
+ (0s, XML)
+Steps: 19800000 Time: 1.98        
+ CPU Time: 15.9754 min.
+
+um_max = 73.1969 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 1311.16 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.27362,-5.57851), (1,-0.271848,-10.4594), (2,-0.358046,-69.621), (3,-0.398129,-122.498), (4,-0.454179,-174.016), (5,-0.491567,-220.024), (6,-0.48763,-256.739), (7,-0.410571,-277.52), (8,-0.206196,-281.085), (9,1.79343,-591.148), (10,20.737,-1193.85), (11,49.8068,-409.174),  
+
+Writing: "NeuralEP2DL2bi_reri2_198.chk"
+ (0s, XML)
+Steps: 19900000 Time: 1.99        
+ CPU Time: 15.9761 min.
+
+um_max = 71.1941 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 1094.85 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.270089,-3.5831), (1,-0.268322,-6.71786), (2,-0.353989,-42.7126), (3,-0.394132,-73.9768), (4,-0.450839,-103.242), (5,-0.490063,-127.178), (6,-0.489762,-142.146), (7,-0.418662,-141.729), (8,-0.228962,-122.414), (9,1.41992,-358.013), (10,18.7844,-982.415), (11,47.9381,-388.315),  
+
+Writing: "NeuralEP2DL2bi_reri2_199.chk"
+ (0s, XML)
+Steps: 20000000 Time: 2           
+ CPU Time: 15.9458 min.
+
+um_max = 69.2037 at x = 0.0156466, y = 2.27647, z = 0
+ue_max = 897.791 at x = 0.00935344, y = 2.05147, z = 0
+ 
+(Nodeid,phim,phie): (0,-0.26659,-1.8267), (1,-0.264826,-3.42452), (2,-0.349941,-19.0327), (3,-0.39012,-31.2837), (4,-0.447425,-40.9804), (5,-0.488389,-45.5239), (6,-0.491584,-41.4112), (7,-0.426286,-22.4469), (8,-0.24911,16.4781), (9,1.11047,-152.281), (10,16.8667,-789.881), (11,46.0487,-369.179),  
+
+Writing: "NeuralEP2DL2bi_reri2_200.chk"
+ (0s, XML)
+Time-integration  : 194107s
+Writing: "NeuralEP2DL2bi_reri2.fld"
+ (0s, XML)
+-------------------------------------------
+Total Computation Time = 194110s
+-------------------------------------------
+L 2 error (variable um) : 3.1095
+L inf error (variable um) : 69.2037
+L 2 error (variable ue) : 61.2709
+L inf error (variable ue) : 897.791

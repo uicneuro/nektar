@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>174fc7242908fb8bcb532d10a7ae914322a69385</GitSHA1>
+            <Hostname>apple.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>18-Jun-2023 00:13:27</Timestamp>
+        </Provenance>
+        <ChkFileNum>1</ChkFileNum>
+        <SessionName0>SphereAPh20TMMarching.opt</SessionName0>
+        <SessionName1>SphereAPh20TMMarching.xml</SessionName1>
+        <Time>30.00000000000189</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="u" SHAPE="Triangle" BASIS="Modified_A,Modified_B" NUMMODESPERDIR="UNIORDER:5,5" ID="0-1919" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">eJztwQENAAAAwqD3T+3sARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4QtAAEA</ELEMENTS>
+</NEKTAR>

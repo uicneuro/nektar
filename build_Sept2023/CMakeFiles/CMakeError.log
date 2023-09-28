@@ -1,0 +1,189 @@
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library not found for -lSystem
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library not found for -lc++
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Determining if the function dgemm_ exists failed with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_06f87/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_06f87.dir/build.make CMakeFiles/cmTC_06f87.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_06f87.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=dgemm_ -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -MD -MT CMakeFiles/cmTC_06f87.dir/CheckFunctionExists.c.o -MF CMakeFiles/cmTC_06f87.dir/CheckFunctionExists.c.o.d -o CMakeFiles/cmTC_06f87.dir/CheckFunctionExists.c.o -c /opt/local/share/cmake-3.24/Modules/CheckFunctionExists.c
+Linking C executable cmTC_06f87
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_06f87.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=dgemm_ -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_06f87.dir/CheckFunctionExists.c.o -o cmTC_06f87 
+Undefined symbols for architecture arm64:
+  "_dgemm_", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture arm64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+gmake[1]: *** [CMakeFiles/cmTC_06f87.dir/build.make:100: cmTC_06f87] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_06f87/fast] Error 2
+
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library not found for -lSystem
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library not found for -lc++
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Determining if files mpi.h exist failed with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_5d39b/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_5d39b.dir/build.make CMakeFiles/cmTC_5d39b.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5d39b.dir/HAVE_MPI_H.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -MD -MT CMakeFiles/cmTC_5d39b.dir/HAVE_MPI_H.c.o -MF CMakeFiles/cmTC_5d39b.dir/HAVE_MPI_H.c.o.d -o CMakeFiles/cmTC_5d39b.dir/HAVE_MPI_H.c.o -c /Users/schun/nektar/build/CMakeFiles/CheckIncludeFiles/HAVE_MPI_H.c
+/Users/schun/nektar/build/CMakeFiles/CheckIncludeFiles/HAVE_MPI_H.c:2:10: fatal error: 'mpi.h' file not found
+#include <mpi.h>
+         ^~~~~~~
+1 error generated.
+gmake[1]: *** [CMakeFiles/cmTC_5d39b.dir/build.make:79: CMakeFiles/cmTC_5d39b.dir/HAVE_MPI_H.c.o] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_5d39b/fast] Error 2
+
+
+Source:
+/* */
+#include <mpi.h>
+
+
+int main(void){return 0;}
+
+Determining if the function MPI_Send exists failed with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_cd341/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_cd341.dir/build.make CMakeFiles/cmTC_cd341.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_cd341.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=MPI_Send -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -MD -MT CMakeFiles/cmTC_cd341.dir/CheckFunctionExists.c.o -MF CMakeFiles/cmTC_cd341.dir/CheckFunctionExists.c.o.d -o CMakeFiles/cmTC_cd341.dir/CheckFunctionExists.c.o -c /opt/local/share/cmake-3.24/Modules/CheckFunctionExists.c
+Linking C executable cmTC_cd341
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cd341.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=MPI_Send -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_cd341.dir/CheckFunctionExists.c.o -o cmTC_cd341 
+Undefined symbols for architecture arm64:
+  "_MPI_Send", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture arm64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+gmake[1]: *** [CMakeFiles/cmTC_cd341.dir/build.make:100: cmTC_cd341] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_cd341/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_4def9/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_4def9.dir/build.make CMakeFiles/cmTC_4def9.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_4def9.dir/test_mpi.f90.o
+/opt/homebrew/bin/gfortran  -I/opt/homebrew/Cellar/mpich/4.1/include -I/opt/homebrew/include -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fallow-argument-mismatch -c /Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_4def9.dir/test_mpi.f90.o
+/Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90:2:11:
+
+    2 |       use mpi_f08
+      |           1
+Fatal Error: Cannot open module file 'mpi_f08.mod' for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_4def9.dir/build.make:78: CMakeFiles/cmTC_4def9.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_4def9/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_abf52/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_abf52.dir/build.make CMakeFiles/cmTC_abf52.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_abf52.dir/test_mpi.f90.o
+/opt/homebrew/bin/gfortran  -I/opt/homebrew/Cellar/mpich/4.1/include -I/opt/homebrew/include -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fallow-argument-mismatch -c /Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_abf52.dir/test_mpi.f90.o
+/Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90:2:11:
+
+    2 |       use mpi_f08
+      |           1
+Fatal Error: Cannot open module file 'mpi_f08.mod' for reading at (1): No such file or directory
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_abf52.dir/build.make:78: CMakeFiles/cmTC_abf52.dir/test_mpi.f90.o] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_abf52/fast] Error 2
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_34c5d/fast && gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+/opt/local/bin/gmake  -f CMakeFiles/cmTC_34c5d.dir/build.make CMakeFiles/cmTC_34c5d.dir/build
+gmake[2]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_34c5d.dir/test_mpi.f90.o
+/opt/homebrew/bin/gfortran  -I/opt/homebrew/Cellar/mpich/4.1/include -I/opt/homebrew/include -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fallow-argument-mismatch -c /Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_34c5d.dir/test_mpi.f90.o
+/Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90:2:11:
+
+    2 |       use mpi_f08
+      |           1
+Fatal Error: Cannot open module file 'mpi_f08.mod' for reading at (1): No such file or directory
+compilation terminated.
+gmake[2]: *** [CMakeFiles/cmTC_34c5d.dir/build.make:78: CMakeFiles/cmTC_34c5d.dir/test_mpi.f90.o] Error 1
+gmake[2]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake[1]: *** [Makefile:127: cmTC_34c5d/fast] Error 2
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+
+
+
+The MPI test test_mpi for Fortran in mode F08_MODULE failed to compile with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_acdf0/fast && gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+/opt/local/bin/gmake  -f CMakeFiles/cmTC_acdf0.dir/build.make CMakeFiles/cmTC_acdf0.dir/build
+gmake[2]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_acdf0.dir/test_mpi.f90.o
+/opt/homebrew/bin/gfortran  -I/opt/homebrew/Cellar/mpich/4.1/include -I/opt/homebrew/include -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fallow-argument-mismatch -c /Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90 -o CMakeFiles/cmTC_acdf0.dir/test_mpi.f90.o
+/Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.f90:2:11:
+
+    2 |       use mpi_f08
+      |           1
+Fatal Error: Cannot open module file 'mpi_f08.mod' for reading at (1): No such file or directory
+compilation terminated.
+gmake[2]: *** [CMakeFiles/cmTC_acdf0.dir/build.make:78: CMakeFiles/cmTC_acdf0.dir/test_mpi.f90.o] Error 1
+gmake[2]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake[1]: *** [Makefile:127: cmTC_acdf0/fast] Error 2
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+
+
+

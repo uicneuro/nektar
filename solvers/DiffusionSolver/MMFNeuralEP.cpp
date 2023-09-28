@@ -204,7 +204,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             // Stimulus
-            m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
+            m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
             break;
         }
 
@@ -277,7 +277,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             << std::endl;
 
             // Stimulus
-            m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
+            m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
             break;
         }
 
@@ -297,6 +297,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Ranvier node zone: 0>: Myelin, -1: node, -2: Extracellular space
             m_NodeZone = Array<OneD, Array<OneD, int>>(1);
             m_NodeZone[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
+
+            m_NodeZoneDouble = Array<OneD, NekDouble>(nq, 0.0);
+            for (int i=0; i<nq; ++i)
+            {
+                if( (m_NodeZone[0][i]==0) && (m_NodeZone[0][i]==1) )
+                {
+                    m_NodeZoneDouble[i] = 1.0;
+                }
+            }
 
             // Point touching internal boundary condition: Internal boundary index = 0;
             m_InternalBoundary = GetInternalBoundaryPoints();
@@ -360,7 +369,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                       << std::endl;
 
             // Stimulus
-            m_stimulus = Stimulus::LoadStimuli(m_session, m_fields[0]);
+            m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
             break;
         }
 
@@ -1162,6 +1171,27 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     }
 
     std::cout << "cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << cnte << std::endl;
+
+    // Get the first and last index of the excitation zone [1,2]
+    m_zonestart = 0;
+    m_zoneend = 0;
+    for (int i=0; i<fnq; ++i)
+    {
+        if( (m_NodeZone[0][i] == 0) && (m_NodeZone[0][i] == 1))
+        {
+            if (i<m_zonestart)
+            {
+                m_zonestart = i;
+            }
+
+            if(i>m_zoneend)
+            {
+                m_zoneend = i;
+            }
+        }
+    }
+
+    std::cout << "Zone start = " << m_zonestart << ", end = " << m_zoneend << std::endl;
 
     return outarray;
 }
@@ -2760,22 +2790,22 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
         Vmath::Vcopy(nq, m_neuron->GetNeuronSolution(i), 1, m_fields[i]->UpdatePhys(), 1);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
-    }
+    // Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
+    // for (int i = 0; i < nvar; ++i)
+    // {
+    //     RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
+    // }
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(RHSstimulus, time);
+        m_stimulus[i]->RegionalUpdate(m_zonestart, m_zoneend, m_NodeZoneDouble, outarray, time);
     }
 
     // ONLY simulation at node zone: No excitation at myelinated region
-    StimulusAtNode(RHSstimulus[0]);
+    // StimulusAtNode(RHSstimulus[0]);
 
     // Add it to the RHS
-    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+    // Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 }
 
 
@@ -2789,22 +2819,22 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
-    Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
-    }
+    // Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
+    // for (int i = 0; i < nvar; ++i)
+    // {
+    //     RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
+    // }
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(RHSstimulus, time);
+        m_stimulus[i]->RegionalUpdate(m_zonestart, m_zoneend, m_NodeZoneDouble, outarray, time);
     }
 
     // ONLY simulation at node zone: No excitation at myelinated region
-    StimulusAtNode(RHSstimulus[0]);
+    // StimulusAtNode(RHSstimulus[0]);
 
-    // Add it to the RHS
-    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+    // // Add it to the RHS
+    // Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
         switch (m_projectionType)
         {
@@ -2907,22 +2937,22 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
-    Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
-    }
+    // Array<OneD, Array<OneD, NekDouble>> RHSstimulus(nvar);
+    // for (int i = 0; i < nvar; ++i)
+    // {
+    //     RHSstimulus[i] = Array<OneD, NekDouble>(nq, 0.0);
+    // }
 
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
-        m_stimulus[j]->Update(RHSstimulus, time);
+        m_stimulus[j]->RegionalUpdate(m_zonestart, m_zoneend, m_NodeZoneDouble, outarray, time);
     }
 
     // ONLY simulation at node zone: No excitation at myelinated region
-    StimulusAtNode(RHSstimulus[0]);
+    // StimulusAtNode(RHSstimulus[0]);
 
-    // Add it to the RHS
-    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+    // // Add it to the RHS
+    // Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
     if (m_explicitDiffusion)
     {
@@ -2951,19 +2981,19 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_NodeZone[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
-    Array<OneD, Array<OneD, NekDouble>> RHSstimulus(0);
-    RHSstimulus[0] = Array<OneD, NekDouble>(nq, 0.0);
+    // Array<OneD, Array<OneD, NekDouble>> RHSstimulus(0);
+    // RHSstimulus[0] = Array<OneD, NekDouble>(nq, 0.0);
 
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
-        m_stimulus[j]->Update(RHSstimulus, time);
+        m_stimulus[j]->RegionalUpdate(m_zonestart, m_zoneend, m_NodeZoneDouble, outarray, time);
     }
 
     // ONLY simulation at node zone: No excitation at myelinated region
-    StimulusAtNode(RHSstimulus[0]);
+    // StimulusAtNode(RHSstimulus[0]);
 
-    // Add it to the RHS
-    Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
+    // // Add it to the RHS
+    // Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
@@ -3264,7 +3294,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(tmp, initialtime);
+                m_stimulus[i]->RegionalUpdate(m_zonestart, m_zoneend, m_NodeZoneDouble, tmp, initialtime);
                 StimulusAtNode(tmp[0]);
                 m_fields[0]->SetPhys(tmp[0]);
             }

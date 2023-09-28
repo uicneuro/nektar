@@ -1,0 +1,28 @@
+# CMake generated Testfile for 
+# Source directory: /Users/schun/nektar/solvers/AcousticSolver
+# Build directory: /Users/schun/nektar/buildtest/solvers/AcousticSolver
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+add_test(AcousticSolver_APE_1DPulseSource_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_1DPulseSource_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_1DPulseSource_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;26;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_APE_1DPulseWall_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_1DPulseWall_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_1DPulseWall_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;27;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_APE_2DChannel_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_2DChannel_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_2DChannel_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;28;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_APE_2DPulseInterp_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_2DPulseInterp_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_2DPulseInterp_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;29;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_APE_2DPulseWall_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_2DPulseWall_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_2DPulseWall_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;30;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_APE_2DVariableC_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_2DVariableC_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_2DVariableC_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;31;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_APE_3DMMF_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/APE_3DMMF_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_APE_3DMMF_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;34;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_LEE_1DPulseSource_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/LEE_1DPulseSource_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_LEE_1DPulseSource_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;40;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_LEE_2DPulseAdv_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/LEE_2DPulseAdv_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_LEE_2DPulseAdv_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;41;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_LEE_2DPulseWall_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/LEE_2DPulseWall_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_LEE_2DPulseWall_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;42;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")
+add_test(AcousticSolver_LEE_2DVariableC_WeakDG_MODIFIED "/Users/schun/nektar/buildtest/tests/Tester" "/Users/schun/nektar/solvers/AcousticSolver/Tests/LEE_2DVariableC_WeakDG_MODIFIED.tst")
+set_tests_properties(AcousticSolver_LEE_2DVariableC_WeakDG_MODIFIED PROPERTIES  _BACKTRACE_TRIPLES "/Users/schun/nektar/cmake/NektarCommon.cmake;263;ADD_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;43;ADD_NEKTAR_TEST;/Users/schun/nektar/solvers/AcousticSolver/CMakeLists.txt;0;")

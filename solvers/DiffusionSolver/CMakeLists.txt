@@ -42,14 +42,11 @@ IF(NEKTAR_SOLVER_DIFFUSION)
         NeuronModels/FitzhughNagumo.cpp
         NeuronModels/HodgkinHuxley.cpp
         NeuronModels/FrankenHuxley.cpp
-        ../CardiacEPSolver/Stimuli/Stimulus.cpp
-        ../CardiacEPSolver/Stimuli/StimulusCircle.cpp
-        ../CardiacEPSolver/Stimuli/StimulusRect.cpp
-        ../CardiacEPSolver/Stimuli/StimulusPoint.cpp
-        ../CardiacEPSolver/Stimuli/Protocol.cpp
-        ../CardiacEPSolver/Stimuli/ProtocolSingle.cpp
-        ../CardiacEPSolver/Stimuli/ProtocolS1.cpp
-        ../CardiacEPSolver/Stimuli/ProtocolS1S2.cpp
+        NeuronModels/NeuralStimuli/NeuralStimulus.cpp
+        NeuronModels/NeuralStimuli/Protocol.cpp
+        NeuronModels/NeuralStimuli/ProtocolSingle.cpp
+        NeuronModels/NeuralStimuli/ProtocolS1.cpp
+        NeuronModels/NeuralStimuli/ProtocolS1S2.cpp
     )
 
     ADD_NEKTAR_TEST(ImDiffusion_m6)
