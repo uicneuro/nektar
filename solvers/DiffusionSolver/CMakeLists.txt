@@ -43,6 +43,7 @@ IF(NEKTAR_SOLVER_DIFFUSION)
         NeuronModels/HodgkinHuxley.cpp
         NeuronModels/FrankenHuxley.cpp
         NeuronModels/NeuralStimuli/NeuralStimulus.cpp
+        NeuronModels/NeuralStimuli/NeuralStimulusRegion.cpp
         NeuronModels/NeuralStimuli/Protocol.cpp
         NeuronModels/NeuralStimuli/ProtocolSingle.cpp
         NeuronModels/NeuralStimuli/ProtocolS1.cpp

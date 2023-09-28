@@ -138,89 +138,19 @@ vector<NeuralStimulusSharedPtr> NeuralStimulus::LoadStimuli(
     TiXmlElement *vStimuli = pSession->GetElement("Nektar/Stimuli");
     if (vStimuli)
     {
-        TiXmlElement *vStimulus = vStimuli->FirstChildElement("NEURALSTIMULUS");
+        TiXmlElement *vStimulus = vStimuli->FirstChildElement("STIMULUS");
         while (vStimulus)
         {
             string vType = vStimulus->Attribute("TYPE");
-
+            
             vStimList.push_back(GetStimulusFactory().CreateInstance(
-                vType, pSession, pField, vStimulus));
-            vStimulus = vStimulus->NextSiblingElement("NEURALSTIMULUS");
+                  vType, pSession, pField, vStimulus));
+     
+            vStimulus = vStimulus->NextSiblingElement("STIMULUS");
         }
     }
+
     return vStimList;
-}
-
-void NeuralStimulus::RegionalUpdate(const int zonestart,
-                                    const int zoneend,
-                                    const Array<OneD, const NekDouble> &excitezone,
-                                    Array<OneD, Array<OneD, NekDouble>> &outarray,
-                                    const NekDouble time)
-{
-    if (m_field->GetNumElmts() == 0)
-    {
-        return;
-    }
-
-    // int dim = m_field->GetShapeDimension();
-    int dim;
-    NekDouble Tol=1.0e-7;
-    if(fabs(m_pz1-m_pz2)<Tol)
-    {
-        dim = 2;
-        if(fabs(m_py1-m_py2)<Tol)
-        {
-            dim = 1;
-        }
-    }
-
-    // Retrieve coordinates of quadrature points
-    int nq = m_field->GetNpoints();
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
-    m_field->GetCoords(x0, x1, x2);
-
-    // Get the protocol amplitude
-    NekDouble v_amp =
-        m_Protocol->GetAmplitude(time) * m_strength / m_chiCapMembrane;
-
-    Array<OneD, NekDouble> vampzone(nq);
-    Vmath::Smul(nq, v_amp, excitezone, 1, vampzone, 1);
-
-    switch (dim)
-    {
-        case 1:
-            for (int j = zonestart; j < zoneend; j++)
-            {
-                outarray[0][j] += vampzone[j] * ((tanh(m_pis * (x0[j] - m_px1)) -
-                                            tanh(m_pis * (x0[j] - m_px2))) /
-                                           2.0);
-            }
-            break;
-        case 2:
-            for (int j = zonestart; j < zoneend; j++)
-            {
-                outarray[0][j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
-                                             tanh(m_pis * (x0[j] - m_px2))) *
-                                            (tanh(m_pis * (x1[j] - m_py1)) -
-                                             tanh(m_pis * (x1[j] - m_py2)))) /
-                                           2.0);
-            }
-            break;
-        case 3:
-            for (int j = zonestart; j < zoneend; j++)
-            {
-                outarray[0][j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
-                                             tanh(m_pis * (x0[j] - m_px2))) *
-                                            (tanh(m_pis * (x1[j] - m_py1)) -
-                                             tanh(m_pis * (x1[j] - m_py2))) *
-                                            (tanh(m_pis * (x2[j] - m_pz1)) -
-                                             tanh(m_pis * (x2[j] - m_pz2)))) /
-                                           2.0);
-            }
-            break;
-    }
 }
 
 

@@ -231,8 +231,11 @@ protected:
 
     Array<OneD, int> m_ValidTimeMap;
 
-    Array<OneD, Array<OneD, int>> m_NodeZone;
-    Array<OneD, NekDouble> m_NodeZoneDouble;
+    Array<OneD, Array<OneD, int>> m_zoneindex;
+    Array<OneD, NekDouble> m_excitezone;
+    Array<OneD, NekDouble> m_nodezone;
+    Array<OneD, NekDouble> m_intrazone;
+    Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
@@ -290,9 +293,10 @@ protected:
     Array<OneD, int> GetInternalBoundaryPoints();
     
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
-    void PlotHelmSolvephie(const Array<OneD, const NekDouble> &Helmforcing,
-                                   const Array<OneD, const NekDouble> &phie,
-                                   const Array<OneD, const NekDouble> &extcurrent,
+    void Plotphiecurrent(const Array<OneD, const NekDouble> &phi_m,
+                                   const Array<OneD, const NekDouble> &phi_e,
+                                   const Array<OneD, const NekDouble> &extcurrent_m,
+                                   const Array<OneD, const NekDouble> &extcurrent_e,
                                    const int nstep);
 
     void DisplayatNode(const Array<OneD, const Array<OneD, NekDouble>> &fields);
@@ -303,8 +307,6 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const Array<OneD, int>> &NodeZone,
         const Array<OneD, const NekDouble> &inarray);
-
-    void OnlyValideinNode(Array<OneD, NekDouble> &outarray);
 
     void GetFluxVector(
         const Array<OneD, Array<OneD, NekDouble>> &inarray,

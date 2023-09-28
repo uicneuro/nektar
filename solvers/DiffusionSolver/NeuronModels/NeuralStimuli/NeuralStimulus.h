@@ -72,14 +72,20 @@ public:
     void Initialise();
 
     /// Updates RHS of outarray by adding a stimulus to it
-    void RegionalUpdate(const int zonestart,
-                        const int zoneend,
-                        const Array<OneD, const NekDouble> &excitezone,
-                        Array<OneD, Array<OneD, NekDouble>> &outarray,
-                        const NekDouble time);
+    void Update(const int zonestart,
+                                const int zoneend,
+                                const Array<OneD, const NekDouble> &excitezone,
+                                Array<OneD, Array<OneD, NekDouble>> &outarray,
+                                const NekDouble time)
+    {
+        v_Update(zonestart, zoneend, excitezone, outarray, time);
+    }
 
     /// Print a summary of the outarray
-    void GenerateSummary(SolverUtils::SummaryList &s);
+    void GenerateSummary(SolverUtils::SummaryList &s)
+    {
+        v_GenerateSummary(s);
+    }
 
     static std::vector<NeuralStimulusSharedPtr> LoadStimuli(
         const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -108,6 +114,15 @@ protected:
     NeuralStimulus(const LibUtilities::SessionReaderSharedPtr &pSession,
              const MultiRegions::ExpListSharedPtr &pField,
              const TiXmlElement *pXml);
+
+    virtual void v_Update(const int zonestart,
+                                const int zoneend,
+                                const Array<OneD, const NekDouble> &excitezone,
+                                Array<OneD, Array<OneD, NekDouble>> &outarray,
+                                const NekDouble time) = 0;
+
+    virtual void v_GenerateSummary(SolverUtils::SummaryList &s) = 0;
+
 };
 } // namespace Nektar
 
