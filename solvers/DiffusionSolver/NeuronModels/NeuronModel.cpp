@@ -95,8 +95,6 @@ void NeuronModel::Initialise()
 {
     ASSERTL1(m_nvar > 0, "Neuron model must have at least 1 variable.");
 
-    std::cout << "Initialise: nvar = " << m_nvar << ", m_nq = " << m_nq << std::endl;
-
     m_NeuronSol = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
     m_wsp     = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
     for (unsigned int i = 0; i < m_nvar; ++i)
