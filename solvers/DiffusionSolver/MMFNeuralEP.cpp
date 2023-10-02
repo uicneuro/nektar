@@ -95,6 +95,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
     // Node and Myelen elements range
+    m_session->LoadParameter("Verbose", m_Verbose, 0);
 
     m_session->LoadParameter("ExtElemMFLength", m_ExtElemMFLength, 1.0);
     m_session->LoadParameter("ElemNodeEnd", m_ElemNodeEnd, 0);
@@ -1400,7 +1401,7 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            if(m_NeuralEPType==eNeuralEP2Dbi)
+            if(m_Verbose)
             {
                 PrintRegionalAvgMax(fields[0]);
             }
@@ -1433,9 +1434,9 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             // Print phim and phie at each node
 
-            if( m_expdim>1 )
+            if(m_Verbose)
             {
-                DisplayatNode(fields);
+               DisplayatNode(fields);
             }
 
             if(nvariables==2)
@@ -3307,7 +3308,10 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             
             // Check NodeZone and moving frames
             CheckNodeZoneMF(m_movingframes, m_zoneindex, tmp[0]);
-            PrintRegionalAvgMax(m_fields[0]->GetPhys());
+            if(m_Verbose)
+            {
+                PrintRegionalAvgMax(m_fields[0]->GetPhys());
+            }
 
             break;
         }
