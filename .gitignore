@@ -7,8 +7,7 @@
 !.gitlab-ci
 # Ignore builds and ThirdParty directories
 build
-buildDebug
-builds
+buildarchive
 ThirdParty
 # Ignore .DS_Store sometimes created by OS X.
 .DS_Store
