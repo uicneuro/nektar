@@ -131,6 +131,8 @@ protected:
     int m_TimeMapnstep;
     int m_TimeMapExactnstep;
 
+    SpatialDomains::GeomMMF m_MMFdirinBox;
+
     // Aliev_Panfilov model parameters
     NekDouble m_k, m_a, m_mu1, m_mu2, m_eps;
 
