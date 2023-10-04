@@ -396,15 +396,12 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
         
-    void StimulusAtNode(Array<OneD, NekDouble> &outarray);
-
     Array<OneD, NekDouble> Computephie(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> Derivephie(
-        const Array<OneD, const NekDouble> &phim,
-        const int ploton = -1);
+        const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,

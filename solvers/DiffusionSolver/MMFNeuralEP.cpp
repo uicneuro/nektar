@@ -2844,9 +2844,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
         m_stimulus[i]->Update(m_zonestart, m_zoneend, m_excitezone, outarray, time);
     }
 
-    // ONLY simulation at node zone: No excitation at myelinated region
-    // StimulusAtNode(RHSstimulus[0]);
-
     // Add it to the RHS
     // Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
 }
@@ -2872,9 +2869,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     {
         m_stimulus[i]->Update(m_zonestart, m_zoneend, m_excitezone, outarray, time);
     }
-
-    // ONLY simulation at node zone: No excitation at myelinated region
-    // StimulusAtNode(RHSstimulus[0]);
 
     // // Add it to the RHS
     // Vmath::Vadd(nq, RHSstimulus[0], 1, outarray[0], 1, outarray[0], 1);
@@ -3059,33 +3053,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 }
 
-void MMFNeuralEP::StimulusAtNode(Array<OneD, NekDouble> &outarray)
-{
-    int nq   = m_fields[0]->GetNpoints();
-
-    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
-    for (int k = 0; k < nq; ++k)
-    {
-        if ( (m_zoneindex[0][k] == 0) || (m_zoneindex[0][k] == 1) )
-        {
-            outarray[k] = outarray[k] / Cn;
-        }
-
-        else
-        {
-            outarray[k] = 0.0;
-        }
-    }
-}
-
 // Input: phi_m
 // output: phi_e (m_fields[1]->UpdatePhys()) and outarray (1/C_n/r) * \nabla^2 \phi_e
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
 Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
-    const Array<OneD, const NekDouble> &phim,
-    const int nstep)
+    const Array<OneD, const NekDouble> &phim)
 {
     int nq = m_fields[0]->GetNpoints();
 
@@ -3302,7 +3276,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
                 m_stimulus[i]->Update(m_zonestart, m_zoneend, m_excitezone, tmp, initialtime);
-                StimulusAtNode(tmp[0]);
+                Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
             
