@@ -1904,6 +1904,7 @@ void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
         if ((udiff > uTol) && (dudt[i] > 0))
         {
+            
             // Gradient as the main weight
             fnow = dudt[i];
             fsum = dudtHistory[i];
