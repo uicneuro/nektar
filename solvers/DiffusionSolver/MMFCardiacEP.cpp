@@ -166,6 +166,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     }
 
     // TimeMap ?
+    m_session->LoadParameter("TimeMapScheme", m_TimeMapScheme, 0);
     m_session->LoadParameter("TimeMapStart", m_TimeMapStart, 0.0);
     m_session->LoadParameter("TimeMapEnd", m_TimeMapEnd, 10000.0);
 
@@ -801,6 +802,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
     Array<OneD, NekDouble> dudtval(nq);
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
+    Array<OneD, NekDouble> dudtMax(nq, 0.0);
     Array<OneD, NekDouble> NoBoundaryZone(nq, 1.0);
 
     Array<OneD, int> dudt(nq);
@@ -866,7 +868,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
             ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
-                           dudtvalHistory, IappMap, TimeMap);
+                           dudtvalHistory, dudtMax, IappMap, TimeMap, m_TimeMapScheme);
         }
 
         // Aligning moving frames along the velocity vector
@@ -1112,6 +1114,7 @@ void MMFCardiacEP::DoSolveMMF()
 
     Array<OneD, NekDouble> dudtval(nq);
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
+    Array<OneD, NekDouble> dudtMax(nq, 0.0);
 
     // Aligh Moving Frames along the velocit vector
     Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
@@ -1156,7 +1159,7 @@ void MMFCardiacEP::DoSolveMMF()
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
             ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
-                        dudtvalHistory, IappMap, TimeMap);
+                        dudtvalHistory, dudtMax, IappMap, TimeMap, m_TimeMapScheme);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -1187,7 +1190,7 @@ void MMFCardiacEP::DoSolveMMF()
             std::cout << "u_min = " << Vmath::Vmin(nq, fields[0], 1)
                       << " at x = " << x0[Iumin] << ", y = " << x1[Iumin] << ", z = " << x2[Iumin]
                       << std::endl;
-
+                      
             PlotTimeMap(m_ValidTimeMap, TimeMap, nchk);
 
             Checkpoint_Output(nchk++);
@@ -1417,6 +1420,7 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
         WriteFld(outname);
     }
 }
+
 
 Array<OneD, int> MMFCardiacEP::ComputeTimeMapInitialZone(
     const NekDouble urest,
@@ -1872,6 +1876,82 @@ void MMFCardiacEP::PlotTimeEnergyMap(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
+
+void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
+                               const NekDouble urest,
+                               const Array<OneD, const NekDouble> &field,
+                               const Array<OneD, const NekDouble> &dudt,
+                               const Array<OneD, const int> &ValidTimeMap,
+                               Array<OneD, NekDouble> &dudtHistory,
+                               Array<OneD, NekDouble> &dudtMax,
+                               Array<OneD, NekDouble> &IappMap,
+                               Array<OneD, NekDouble> &TimeMap,
+                               const int TimeMapScheme)
+{
+    int nq = GetTotPoints();
+
+    NekDouble fnow, fsum, fnewsum;
+    NekDouble uTol = 0.01;
+    NekDouble dudtTol = 0.001;
+
+    // Compute WeakDGLaplacian
+    Array<OneD, NekDouble> Lapu = ComputeCovariantDiffusion(m_movingframes, field);
+
+    NekDouble udiff;
+    for (int i = 0; i < nq; ++i)
+    {
+        udiff = field[i] - urest;
+        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
+        if ((udiff > uTol) && (dudt[i] > 0))
+        {
+            // Gradient as the main weight
+            fnow = dudt[i];
+            fsum = dudtHistory[i];
+
+            fnewsum = fnow + fsum;
+
+            // Choose time when dudt is the maximum
+            if(TimeMapScheme==1)
+            {
+                if(dudt[i]>dudtMax[i])
+                {
+                    TimeMap[i] = time;
+                    dudtMax[i] = dudt[i];
+                }
+            }
+
+            // Weighted integration
+            else
+            {
+                if(fabs(fnewsum)>dudtTol)
+                {
+                    TimeMap[i] = (fnow * time + fsum * TimeMap[i]) / fnewsum;
+                }
+            }
+
+            if ( (Lapu[i] > 0) && (fabs(fnewsum)>dudtTol) )
+            {
+                IappMap[i] = (fnow * Lapu[i] + fsum * IappMap[i]) / fnewsum;
+            }
+
+            dudtHistory[i] += fnow;
+        }
+    }
+
+    NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
+    for (int i = 0; i < nq; ++i)
+    {
+        if (ValidTimeMap[i] == 0)
+        {
+            TimeMap[i] = TimeMapMin;
+        }
+    }
+
+    // std::cout << "Time Map updated = " << cnt << " / " << nq 
+    // << ", TimeMap = [ " << Vmath::Vmin(nq, TimeMap, 1) << " , " << Vmath::Vmax(nq, TimeMap, 1) << " ] " << std::endl;
+
+    // TimeMapforInitZone(ValidTimeMap, dudtHistory, TimeMap);
+}
 
 void MMFCardiacEP::PlotTimeMap(
     const Array<OneD, const int> &ValidTimeMap,
@@ -2342,17 +2422,18 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     MMFSystem::v_GenerateSummary(s);
     AddSummaryItem(s, "SolverSchemeType", SolverSchemeTypeMap[m_SolverSchemeType]);
 
+    SolverUtils::AddSummaryItem(s, "TimeMapScheme", m_TimeMapScheme);
+    SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
+    SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
+
     if(m_SolverSchemeType==eTimeMapMarching)
     {
         SolverUtils::AddSummaryItem(s, "TimeMapIapp", m_TimeMapIapp);
         SolverUtils::AddSummaryItem(s, "m_TimeMapDelay", m_TimeMapDelay);
-        SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
-        SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
     }
 
     SolverUtils::AddSummaryItem(s, "AnisotropyRegion", m_AnisotropyRegion);
     SolverUtils::AddSummaryItem(s, "AnisotropyStrength", m_AnisotropyStrength);
-    SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
     SolverUtils::AddSummaryItem(s, "urest", m_urest);
 
     m_cell->GenerateSummary(s);

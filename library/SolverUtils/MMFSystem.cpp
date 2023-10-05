@@ -6916,135 +6916,75 @@ void MMFSystem::PlotTrajectoryMF(
 //     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 // }
 
-void MMFSystem::ComputeTimeMap(const NekDouble time,
-                               const NekDouble urest,
-                               const Array<OneD, const NekDouble> &field,
-                               const Array<OneD, const NekDouble> &dudt,
-                               const Array<OneD, const int> &ValidTimeMap,
-                               Array<OneD, NekDouble> &dudtHistory,
-                               Array<OneD, NekDouble> &IappMap,
-                               Array<OneD, NekDouble> &TimeMap)
-{
-    int nq = GetTotPoints();
 
-    NekDouble fnow, fsum, tnow, tsum;
-    NekDouble uTol = 0.01;
+// void MMFSystem::TimeMapforInitZone(
+//     const Array<OneD, const int> &ValidTimeMap,
+//     const Array<OneD, const NekDouble> &dudtHistory,
+//     Array<OneD, NekDouble> &TimeMap)
+// {
+//     int nq = GetTotPoints();
 
-    // Compute WeakDGLaplacian
-    Array<OneD, NekDouble> Lapu(nq);
-    // WeakDGMMFLaplacian(0, field, Lapu);
-    Lapu = ComputeCovariantDiffusion(m_movingframes, field);
+//     // Substitute the initial excited zone with the minimum or maximum of the
+//     // Time Map depending on the distance
 
-    NekDouble udiff;
-    // int cnt=0;
-    for (int i = 0; i < nq; ++i)
-    {
-        udiff = field[i] - urest;
-        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((udiff > uTol) && (dudt[i] > 0))
-        {
-            // Gradient as the main weight
-            fnow = dudt[i];
-            fsum = dudtHistory[i];
+//     // Find min and max Timemap for which integration has been computed.
+//     NekDouble TimeMapMin = 0.0, TimeMapMax = 0.0;
+//     int ITMmin = 0, ITMmax = 0;
+//     NekDouble dudtTol = 0.01;
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         if (fabs(dudtHistory[i]) > dudtTol)
+//         {
+//             if (TimeMapMin > TimeMap[i])
+//             {
+//                 TimeMapMin = TimeMap[i];
+//                 ITMmin     = i;
+//             }
 
-            tnow = time;
-            tsum = TimeMap[i];
+//             if (TimeMapMax < TimeMap[i])
+//             {
+//                 TimeMapMax = TimeMap[i];
+//                 ITMmax     = i;
+//             }
+//         }
+//     }
 
-            TimeMap[i] = (fnow * tnow + fsum * tsum) / (fnow + fsum);
+//     Array<OneD, NekDouble> x(nq);
+//     Array<OneD, NekDouble> y(nq);
+//     Array<OneD, NekDouble> z(nq);
 
-            if (Lapu[i] > 0)
-            {
-                IappMap[i] =
-                    (fnow * Lapu[i] + fsum * IappMap[i]) / (fnow + fsum);
-            }
-            dudtHistory[i] += fnow;
+//     m_fields[0]->GetCoords(x, y, z);
 
-     //       cnt++;
-        }
-    }
+//     NekDouble xp1, yp1, zp1, xp2, yp2, zp2;
+//     NekDouble distmin, distmax;
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         if (ValidTimeMap[i] == 0)
+//         {
+//             xp1 = x[i] - x[ITMmin];
+//             yp1 = y[i] - y[ITMmin];
+//             zp1 = z[i] - z[ITMmin];
 
-    NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
-    for (int i = 0; i < nq; ++i)
-    {
-        if (ValidTimeMap[i] == 0)
-        {
-            TimeMap[i] = TimeMapMin;
-        }
-    }
+//             distmin = sqrt(xp1 * xp1 + yp1 * yp1 + zp1 * zp1);
 
-    // std::cout << "Time Map updated = " << cnt << " / " << nq << ", TimeMap = " << RootMeanSquare(TimeMap) << std::endl;
-    // TimeMapforInitZone(ValidTimeMap, dudtHistory, TimeMap);
-}
+//             xp2 = x[i] - x[ITMmax];
+//             yp2 = y[i] - y[ITMmax];
+//             zp2 = z[i] - z[ITMmax];
 
+//             distmax = sqrt(xp2 * xp2 + yp2 * yp2 + zp2 * zp2);
 
-void MMFSystem::TimeMapforInitZone(
-    const Array<OneD, const int> &ValidTimeMap,
-    const Array<OneD, const NekDouble> &dudtHistory,
-    Array<OneD, NekDouble> &TimeMap)
-{
-    int nq = GetTotPoints();
+//             if (distmin < distmax)
+//             {
+//                 TimeMap[i] = TimeMapMin;
+//             }
 
-    // Substitute the initial excited zone with the minimum or maximum of the
-    // Time Map depending on the distance
-
-    // Find min and max Timemap for which integration has been computed.
-    NekDouble TimeMapMin = 0.0, TimeMapMax = 0.0;
-    int ITMmin = 0, ITMmax = 0;
-    NekDouble dudtTol = 0.01;
-    for (int i = 0; i < nq; ++i)
-    {
-        if (fabs(dudtHistory[i]) > dudtTol)
-        {
-            if (TimeMapMin > TimeMap[i])
-            {
-                TimeMapMin = TimeMap[i];
-                ITMmin     = i;
-            }
-
-            if (TimeMapMax < TimeMap[i])
-            {
-                TimeMapMax = TimeMap[i];
-                ITMmax     = i;
-            }
-        }
-    }
-
-    Array<OneD, NekDouble> x(nq);
-    Array<OneD, NekDouble> y(nq);
-    Array<OneD, NekDouble> z(nq);
-
-    m_fields[0]->GetCoords(x, y, z);
-
-    NekDouble xp1, yp1, zp1, xp2, yp2, zp2;
-    NekDouble distmin, distmax;
-    for (int i = 0; i < nq; ++i)
-    {
-        if (ValidTimeMap[i] == 0)
-        {
-            xp1 = x[i] - x[ITMmin];
-            yp1 = y[i] - y[ITMmin];
-            zp1 = z[i] - z[ITMmin];
-
-            distmin = sqrt(xp1 * xp1 + yp1 * yp1 + zp1 * zp1);
-
-            xp2 = x[i] - x[ITMmax];
-            yp2 = y[i] - y[ITMmax];
-            zp2 = z[i] - z[ITMmax];
-
-            distmax = sqrt(xp2 * xp2 + yp2 * yp2 + zp2 * zp2);
-
-            if (distmin < distmax)
-            {
-                TimeMap[i] = TimeMapMin;
-            }
-
-            else
-            {
-                TimeMap[i] = TimeMapMax;
-            }
-        }
-    }
-}
+//             else
+//             {
+//                 TimeMap[i] = TimeMapMax;
+//             }
+//         }
+//     }
+// }
 
 
 Array<OneD, NekDouble> MMFSystem::ComputeSpaceTime(
@@ -8785,100 +8725,6 @@ int MMFSystem::NewValueReplacerPointWise(
 
     return cnt;
 } // namespace SolverUtils
-
-// Should be changed as pointwise update
-// void MMFSystem::ComputeTimeMap(const NekDouble time,
-//     const Array<OneD, const NekDouble> &field,
-//     const Array<OneD, const int> &dudt,
-//     const Array<OneD, const NekDouble> &InitExcitation,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-//     Array<OneD, NekDouble> &fieldHistory, Array<OneD, NekDouble> &IappMap,
-//     Array<OneD, NekDouble> &TimeMap)
-// {
-//     int nq      = GetTotPoints();
-
-//     NekDouble fieldnow, fieldsum;
-//     NekDouble tnow, tsum;
-//     NekDouble uTol = 0.01, graduTol = 0.0001;
-
-//     Array<OneD, NekDouble> fieldgradmag(nq,0.0);
-//     Array<OneD, NekDouble> grad(nq,0.0);
-
-//     // Compute magnitude of the gradient
-//     grad = ComputeCovGrad(field, movingframes);
-
-//     for (int i = 0; i < m_spacedim; ++i)
-//     {
-//         Vmath::Vvtvp(nq, &grad[i * nq], 1, &grad[i * nq], 1,
-//         &fieldgradmag[0], 1,
-//                      &fieldgradmag[0], 1);
-//     }
-//     Vmath::Vsqrt(nq, fieldgradmag, 1, fieldgradmag, 1);
-
-//     // Compute WeakDGLaplacian
-//     Array<OneD, NekDouble> Lapu(nq);
-
-//     WeakDGMMFLaplacian(0, field, Lapu);
-
-//     NekDouble ITMMin, TimeMapMin=100.0;
-//     NekDouble ITMmax, TimeMapMax=0.0;
-//     for (int i = 0; i < nq; ++i)
-//     {
-//         // Ignore the waveback
-//         if (dudt[i] < 0)
-//         {
-//             fieldgradmag[i] = 0.0;
-//         }
-
-//         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-//         if ((field[i] > uTol) && (fieldgradmag[i] > graduTol) && (dudt[i] >
-//         0))
-//         {
-//             // Gradient as the main weight
-//             fieldnow = fieldgradmag[i];
-//             fieldsum = fieldHistory[i];
-
-//             tnow = time;
-//             tsum = TimeMap[i];
-
-//             TimeMap[i] = (fieldnow * tnow + fieldsum * tsum) / (fieldnow +
-//             fieldsum);
-
-//             if(TimeMap[i] < TimeMapMin)
-//             {
-//                 TimeMapMin = TimeMap[i];
-//                 ITMMin = i;
-//             }
-
-//             if(TimeMap[i] > TimeMapMax)
-//             {
-//                 TimeMapMax = TimeMap[i];
-//                 ITMMax = i;
-//             }
-
-//             if (Lapu[i] > 0)
-//             {
-//                 IappMap[i] = (fieldnow * Lapu[i] + fieldsum * IappMap[i]) /
-//                                 (fieldnow + fieldsum);
-//             }
-//             fieldHistory[i] += fieldnow;
-//         }
-//     }
-
-//     // Substitute the initial excited zone with the minimum of the Time Map
-//     for (int i = 0; i < nq; ++i)
-//     {
-//         if(InitExcitation[i]>0)
-//         {
-//             TimeMap[i] = TimeMapMin;
-//         }
-//     }
-// }
-
-// ComputeTimeMap from du/dt
-
-// ComputeTimeMap(m_time, fields[0], dudtval, m_ValidTimeMap, dudtvalHistory,
-// IappMap, TimeMap);
 
 int MMFSystem::WeakerValueReplacer(
     const Array<OneD, const NekDouble> &Intensity,

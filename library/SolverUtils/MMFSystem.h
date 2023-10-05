@@ -1133,23 +1133,14 @@ protected:
     //     const Array<OneD, const Array<OneD, NekDouble>> &RelaccOmega,
     //     const int nstep);
 
-    SOLVER_UTILS_EXPORT void ComputeTimeMap(
-        const NekDouble time, 
-        const NekDouble urest, 
-        const Array<OneD, const NekDouble> &field,
-        const Array<OneD, const NekDouble> &dudt,
-        const Array<OneD, const int> &ValidTimeMap,
-        Array<OneD, NekDouble> &dudtHistory, Array<OneD, NekDouble> &IappMap,
-        Array<OneD, NekDouble> &TimeMap);
+    // SOLVER_UTILS_EXPORT void TimeMapforInitZone(
+    //     const Array<OneD, const int> &ValidTimeMap,
+    //     const Array<OneD, const NekDouble> &dudtHistory,
+    //     Array<OneD, NekDouble> &TimeMap);
 
-    SOLVER_UTILS_EXPORT void TimeMapforInitZone(
-        const Array<OneD, const int> &ValidTimeMap,
-        const Array<OneD, const NekDouble> &dudtHistory,
-        Array<OneD, NekDouble> &TimeMap);
-
-    SOLVER_UTILS_EXPORT Array<OneD, int> ComputeTimeMapInitialZone(
-        const NekDouble urest,
-        const Array<OneD, const NekDouble> &inarray);
+    // SOLVER_UTILS_EXPORT Array<OneD, int> ComputeTimeMapInitialZone(
+    //     const NekDouble urest,
+    //     const Array<OneD, const NekDouble> &inarray);
 
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeLaplacianDiff(
         const Array<OneD, const NekDouble> &Laplacian,
