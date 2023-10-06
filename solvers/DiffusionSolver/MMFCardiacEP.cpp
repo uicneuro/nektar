@@ -1214,7 +1214,6 @@ void MMFCardiacEP::DoSolveMMF()
     }
 } // namespace Nektar
 
-
 void MMFCardiacEP::DoImplicitSolveCardiacEP(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
@@ -1370,12 +1369,12 @@ void MMFCardiacEP::v_SetInitialConditions(NekDouble initialtime,
 
         WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 
+        m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition[0]);
+
     // Only the excited regions are considered for m_InitExcitation
     // Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1);
     if (m_SolverSchemeType == eTimeMapMarching)
     {
-        m_ValidTimeMap = ComputeTimeMapInitialZone(m_urest, initialcondition[0]);
-
         // std::cout << "PlotTimeEnergyMap starts ==========================" << std::endl;
 
         // Array<OneD, NekDouble> VelVector = ComputeVelocityTimeMap(m_ValidTimeMap, m_TimeMap[0]);
@@ -1890,9 +1889,9 @@ void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
 {
     int nq = GetTotPoints();
 
-    NekDouble fnow, fsum, fnewsum;
+    NekDouble fnewsum;
     NekDouble uTol = 0.01;
-    NekDouble dudtTol = 0.001;
+    NekDouble dudtTol = 0.01;
 
     // Compute WeakDGLaplacian
     Array<OneD, NekDouble> Lapu = ComputeCovariantDiffusion(m_movingframes, field);
@@ -1902,40 +1901,32 @@ void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
     {
         udiff = field[i] - urest;
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((udiff > uTol) && (dudt[i] > 0))
+        if ((udiff > uTol) && (dudt[i] > dudtTol))
         {
-            
             // Gradient as the main weight
-            fnow = dudt[i];
-            fsum = dudtHistory[i];
-
-            fnewsum = fnow + fsum;
+            fnewsum = dudt[i] + dudtHistory[i];
 
             // Choose time when dudt is the maximum
-            if(TimeMapScheme==1)
-            {
-                if(dudt[i]>dudtMax[i])
-                {
-                    TimeMap[i] = time;
-                    dudtMax[i] = dudt[i];
-                }
-            }
+            // if(TimeMapScheme==1)
+            // {
+            //     if(dudt[i]>dudtMax[i])
+            //     {
+            //         TimeMap[i] = time;
+            //         dudtMax[i] = dudt[i];
+            //     }
+            // }
 
-            // Weighted integration
-            else
+            // // Weighted integration
+            // else
+            // {
+            if(fabs(fnewsum)>dudtTol)
             {
-                if(fabs(fnewsum)>dudtTol)
-                {
-                    TimeMap[i] = (fnow * time + fsum * TimeMap[i]) / fnewsum;
-                }
+                TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
+                IappMap[i] = (dudt[i] * Lapu[i] + dudtHistory[i] * IappMap[i]) / fnewsum;
             }
+            // }
 
-            if ( (Lapu[i] > 0) && (fabs(fnewsum)>dudtTol) )
-            {
-                IappMap[i] = (fnow * Lapu[i] + fsum * IappMap[i]) / fnewsum;
-            }
-
-            dudtHistory[i] += fnow;
+            dudtHistory[i] += dudt[i];
         }
     }
 
