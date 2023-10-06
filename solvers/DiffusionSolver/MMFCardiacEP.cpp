@@ -1906,25 +1906,11 @@ void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
             // Gradient as the main weight
             fnewsum = dudt[i] + dudtHistory[i];
 
-            // Choose time when dudt is the maximum
-            // if(TimeMapScheme==1)
-            // {
-            //     if(dudt[i]>dudtMax[i])
-            //     {
-            //         TimeMap[i] = time;
-            //         dudtMax[i] = dudt[i];
-            //     }
-            // }
-
-            // // Weighted integration
-            // else
-            // {
             if(fabs(fnewsum)>dudtTol)
             {
                 TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
                 IappMap[i] = (dudt[i] * Lapu[i] + dudtHistory[i] * IappMap[i]) / fnewsum;
             }
-            // }
 
             dudtHistory[i] += dudt[i];
         }
@@ -1952,7 +1938,7 @@ void MMFCardiacEP::PlotTimeMap(
 {
     boost::ignore_unused(ValidTimeMap);
 
-    int nvar    = 4;
+    int nvar    = 5;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -1967,36 +1953,63 @@ void MMFCardiacEP::PlotTimeMap(
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMap";
-    variables[1] = "TMex1";
-    variables[2] = "TMey1";
-    variables[3] = "TMez1";
+    variables[1] = "velmag";
+    variables[2] = "velx";
+    variables[3] = "vely";
+    variables[4] = "velz";
 
     // index:0 -> u
     m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
 
-    Array<OneD, int> NewValidTimeMap(nq, 0);
     Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
     for (int k=0; k<m_spacedim; ++k)
     {
         TimeMapMF[k] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    // ComputeMFTimeMap(ValidTimeMap, TimeMap, NewValidTimeMap, TimeMapMF);
+    // Compute the gradient of the time map
+    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
+    TmapGrad = ComputeCovGrad(TimeMap, m_movingframes);
+
+    Array<OneD, NekDouble> TmapGradMag(nq);
+    TmapGradMag = ComputeVelocityMag(TmapGrad);
+
+    m_fields[0]->FwdTrans(TmapGradMag, fieldcoeffs[1]);
+
+    NekDouble Tol = 0.001;
+    for (int i=0; i<nq; ++i)
+    {
+        if(ValidTimeMap[i]==1)
+        {
+            if(TmapGradMag[i]>Tol)
+            {
+                TmapGrad[i] = TmapGrad[i] / TmapGradMag[i];
+                TmapGrad[i+nq] = TmapGrad[i+nq] / TmapGradMag[i];
+                TmapGrad[i+2*nq] = TmapGrad[i+2*nq] / TmapGradMag[i];
+            }
+        }
+
+        else
+        {
+            TmapGrad[i] = 0.0;
+            TmapGrad[i+nq] = 0.0;
+            TmapGrad[i+2*nq] = 0.0;
+        }
+    }
 
     Array<OneD, NekDouble> tmp(nq);
     for (int k=0; k<m_spacedim; ++k)
     {
-        Vmath::Vcopy(nq, &TimeMapMF[k][0], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+1]);
+        Vmath::Vcopy(nq, &TmapGrad[k*nq], 1, &tmp[0], 1);
+        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+2]);
     }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 
     std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
                 << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
-                << std::endl;
+                << ", vel mag max = " << Vmath::Vmax(nq, TmapGradMag, 1) << std::endl;
 }
-
 
 void MMFCardiacEP::PlotTimeMapMF(
     const Array<OneD, const NekDouble> &NoboundaryZone,
@@ -2122,6 +2135,96 @@ void MMFCardiacEP::PlotTimeMapMF(
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
+
+// Compute Velocity field from Time Map
+// flag = 1: Use \vec{v} = \nabla T / \| \nabla T \|^2
+// flag = 0:
+void MMFCardiacEP::ComputeMFTimeMap(const Array<OneD, const int> &ValidTimeMap,
+                                 const Array<OneD, const NekDouble> &inarray,
+                                 Array<OneD, int> &NewValidTimeMap,
+                                 Array<OneD, Array<OneD, NekDouble>> &TMMF)
+{
+    int nq = m_fields[0]->GetTotPoints();
+
+    Array<OneD, NekDouble> outarray(m_spacedim * nq, 0.0);
+
+    Array<OneD, NekDouble> physarray(nq);
+    Vmath::Vcopy(nq, inarray, 1, physarray, 1);
+
+    for (int i = 0; i < nq; ++i)
+    {
+        NewValidTimeMap[i] = ValidTimeMap[i];
+    }
+
+    // TmapGrad = \nabla Tmap
+    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
+    TmapGrad = ComputeCovGrad(physarray, m_movingframes);
+
+    Array<OneD, NekDouble> TmapGradMag(nq);
+    TmapGradMag = ComputeVelocityMag(TmapGrad);
+
+    // Compute VelField \vec{v} = \sum_{i=1}^3 1/(\nabla T \cdot \hat{x}_i)
+    // \hat{x}_i
+    NekDouble tmp, TmapGradTol = 0.01;
+    for (int i = 0; i < nq; i++)
+    {
+        tmp = TmapGradMag[i];
+        for (int k = 0; k < m_spacedim; ++k)
+        {
+            if ((ValidTimeMap[i] == 1) && (tmp > TmapGradTol))
+            {
+                TMMF[0][i + k * nq] = TmapGrad[i + k * nq] / tmp;
+                NewValidTimeMap[i]  = 1;
+            }
+
+            else
+            {
+                TMMF[0][i + k * nq] = m_movingframes[0][i + k * nq];
+                NewValidTimeMap[i]  = 0;
+            }
+        }
+    }
+
+    NekDouble MF1x, MF1y, MF1z, MF2x, MF2y, MF2z, MF3x, MF3y, MF3z;
+    NekDouble MFmag1, MFmag2;
+    for (int i = 0; i < nq; i++)
+    {
+        MF1x = TMMF[0][i];
+        MF1y = TMMF[0][i + nq];
+        MF1z = TMMF[0][i + 2 * nq];
+
+        MFmag1 = sqrt(MF1x * MF1x + MF1y * MF1y + MF1z * MF1z);
+
+        TMMF[0][i]          = MF1x / MFmag1;
+        TMMF[0][i + nq]     = MF1y / MFmag1;
+        TMMF[0][i + 2 * nq] = MF1z / MFmag1;
+
+        MF1x = TMMF[0][i];
+        MF1y = TMMF[0][i + nq];
+        MF1z = TMMF[0][i + 2 * nq];
+
+        TMMF[2][i]          = m_movingframes[2][i];
+        TMMF[2][i + nq]     = m_movingframes[2][i + nq];
+        TMMF[2][i + 2 * nq] = m_movingframes[2][i + 2 * nq];
+
+        MF3x = TMMF[2][i];
+        MF3y = TMMF[2][i + nq];
+        MF3z = TMMF[2][i + 2 * nq];
+
+        MF2x = MF3y * MF1z - MF3z * MF1y;
+        MF2y = MF3z * MF1x - MF3x * MF1z;
+        MF2z = MF3x * MF1y - MF3y * MF1x;
+
+        MFmag2              = sqrt(MF2x * MF2x + MF2y * MF2y + MF2z * MF2z);
+        TMMF[1][i]          = MF2x / MFmag2;
+        TMMF[1][i + nq]     = MF2y / MFmag2;
+        TMMF[1][i + 2 * nq] = MF2z / MFmag2;
+    }
+
+    // Check TimeMap Moving frames
+    std::cout << "============= Check Moving frames from TimeMap =============" << std::endl;
+}
+
 
 // Array<OneD, NekDouble> MMFCardiacEP::PlanePhiWave()
 // {

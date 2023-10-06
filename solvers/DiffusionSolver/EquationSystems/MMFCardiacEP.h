@@ -197,6 +197,11 @@ protected:
                     const Array<OneD, const NekDouble> &udiff,
                     const int nstep);
 
+    void ComputeMFTimeMap(const Array<OneD, const int> &ValidTimeMap,
+                                 const Array<OneD, const NekDouble> &inarray,
+                                 Array<OneD, int> &NewValidTimeMap,
+                                 Array<OneD, Array<OneD, NekDouble>> &TMMF);
+
     Array<OneD, NekDouble> ReadFibermap(const NekDouble AnisotropyStrength, Array<OneD, NekDouble> &CardiacFibre);
     Array<OneD, NekDouble> ReadConductivityMap();
 
