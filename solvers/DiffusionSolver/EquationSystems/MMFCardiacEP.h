@@ -59,14 +59,15 @@ const char *const CardiacEPTypeMap[] = {
 
 enum SolverSchemeType
 {
-    eDefault,
+    eMMFZero,
     eMMFFirst,
-    eTimeMapMarching,
+    eTimeMapMarch,
+    eTimeMapDeform,
     SIZE_SolverSchemeType,
 };
 
 const char *const SolverSchemeTypeMap[] = {
-    "Default", "MMFFirst", "TimeMapMarching",
+    "MMFZero", "MMFFirst", "TimeMapMarch", "TimeMapDeform",
 };
 
 enum InitWaveType
@@ -141,11 +142,20 @@ protected:
     NekDouble m_TimeMapEnd;
     NekDouble m_TimeMapIapp;
     NekDouble m_TimeMapDelay;
+    
     std::string m_TMsessionName;
 
     std::string m_TimeMapfile;
     std::string m_PDEsolfile;
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
+    Array<OneD, Array<OneD, NekDouble>> m_TMvelocity;
+    Array<OneD, NekDouble> m_TMvelocitymag;
+
+    void LoadTimeMap(std::string &loadname, 
+                    Array<OneD, Array<OneD, NekDouble>> &TimeMap,
+                    Array<OneD, Array<OneD, NekDouble>> &AniStrength,
+                    Array<OneD, NekDouble> &TMvelocitymag,
+                    Array<OneD, Array<OneD, NekDouble>> &TMvelocity);
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
     NekDouble m_urest;
@@ -154,6 +164,11 @@ protected:
     NekDouble m_PVcond;
     NekDouble m_ScarSize, m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy, m_ScarLocz;
     NekDouble m_RelDivSize, m_RelDivStr, m_RelDivPis, m_RelDivLocx;
+
+    // Coefficients for Anisotropy
+    int m_AnisotropyRegion;
+    NekDouble m_AnisotropyStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
 
     // Relative divergence related variables
     NekDouble m_LambDivSmoothL;
@@ -233,6 +248,7 @@ protected:
 
     void PlotTimeMap(
     const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep);
 
@@ -245,10 +261,6 @@ protected:
             &MF1stConnection,
         const Array<OneD, const Array<OneD, NekDouble>> &Relacc,
         const int nstep);
-
-    // Coefficients for Anisotropy
-    int m_AnisotropyRegion;
-    NekDouble m_AnisotropyStrength;
 
     void DoImplicitSolveCardiacEP(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -271,8 +283,6 @@ protected:
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-
-    Array<OneD, NekDouble> PlanePhiWave();
 
     void AlievPanfilovReaction(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
