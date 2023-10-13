@@ -81,6 +81,12 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
+    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
+    for (int i = 0; i < 1; ++i)
+    {
+        m_TimeMap[i] = Array<OneD, NekDouble>(nq,0.0);
+    }
+
     // Conductance parameters
     m_session->LoadParameter("Chi", m_chi, 28.0);
     m_session->LoadParameter("Cm", m_capMembrane, 0.125);
@@ -163,31 +169,58 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         std::string TMsessionName_old;
 
         m_session->LoadSolverInfo("TMsessionName_old", TMsessionName_old, "m_sessionName");
+        
+        Array<OneD, Array<OneD, NekDouble>> TMvelocity_old(m_spacedim);
+        Array<OneD, NekDouble> TMvelocitymag_old(nq);
+        Array<OneD, Array<OneD, NekDouble>> AniStrength_old(m_expdim);
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            AniStrength_old[j] = Array<OneD, NekDouble>(nq, 1.0);
+        }
 
-        Array<OneD, Array<OneD, NekDouble>> TimeMap_old;
-        Array<OneD, Array<OneD, NekDouble>> TMvelocity_old;
-        Array<OneD, NekDouble> TMvelocitymag_old;
-        Array<OneD, Array<OneD, NekDouble>> AniStrength_old;
+        Array<OneD, Array<OneD, NekDouble>> TimeMap_old(1);
+        for (int i = 0; i < 1; ++i)
+        {
+            TimeMap_old[i] = Array<OneD, NekDouble>(nq,0.0);
+        }
 
         std::string loadname_old = TMsessionName_old + "_TimeMap_" +
                            boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
         LoadTimeMap(loadname_old, TimeMap_old, AniStrength_old, TMvelocitymag_old, TMvelocity_old);
+        std::cout << "TimeMapName_old = " << loadname_old << std::endl;
+        std::cout << "TimeMap_old = [ " << Vmath::Vmin(nq, TimeMap_old[0], 1)  << " , " 
+        << Vmath::Vmax(nq, TimeMap_old[0], 1) << " ] " << std::endl;
+        std::cout << "AniStrength_old = [ " << Vmath::Vmin(nq, AniStrength_old[0], 1)  << " , " 
+        << Vmath::Vmax(nq, AniStrength_old[0], 1) << " ] " << std::endl << std::endl;
 
         // Deformed TimeMap
+        Array<OneD, Array<OneD, NekDouble>> TMvelocity_new(m_spacedim);
+        Array<OneD, NekDouble> TMvelocitymag_new(nq);
+        Array<OneD, Array<OneD, NekDouble>> AniStrength_new(m_expdim);
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            AniStrength_new[j] = Array<OneD, NekDouble>(nq, 1.0);
+        }
+
+        Array<OneD, Array<OneD, NekDouble>> TimeMap_new(1);
+        for (int i = 0; i < 1; ++i)
+        {
+            TimeMap_new[i] = Array<OneD, NekDouble>(nq,0.0);
+        }
 
         m_session->LoadSolverInfo("TMsessionName", m_TMsessionName, "m_sessionName");
 
         std::string loadname = m_TMsessionName + "_TimeMap_" +
                            boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        LoadTimeMap(loadname, m_TimeMap, m_AniStrength, m_TMvelocitymag, m_TMvelocity);
+        LoadTimeMap(loadname, TimeMap_new, AniStrength_new, TMvelocitymag_new, TMvelocity_new);
 
-        std::cout << "Loading is successful: TimeMapName_old = " << loadname_old 
-        << ", TimeMapName = " << loadname << std::endl;
-
-        std::cout << "TimeMap_old max = " << Vmath::Vmax(nq, TimeMap_old[0], 1) 
-         << ", TimeMap max = " << Vmath::Vmax(nq, m_TimeMap[0], 1) << std::endl;
+        std::cout << "TimeMapName_new = " << loadname << std::endl;
+        std::cout << "TimeMap_new = [ " << Vmath::Vmin(nq, TimeMap_new[0], 1)  << " , " 
+        << Vmath::Vmax(nq, TimeMap_new[0], 1) << " ] " << std::endl;
+        std::cout << "AniStrength_new = [ " << Vmath::Vmin(nq, AniStrength_new[0], 1)  << " , " 
+        << Vmath::Vmax(nq, AniStrength_new[0], 1) << " ] " << std::endl;
     }
     wait_on_enter();
 
@@ -403,13 +436,11 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
     variables[3] = "velx";
     variables[4] = "vely";
     variables[5] = "velz";
-
+        
     Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
-    TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvar);
     for (int i = 0; i < nvar; ++i)
     {
-        tmpc[i]      = Array<OneD, NekDouble>(ncoeffs);
-        TimeMap[i] = Array<OneD, NekDouble>(nq);
+       // tmpc[i]      = Array<OneD, NekDouble>(ncoeffs,0.0);
     }
 
     EquationSystem::ImportFld(loadname, variables, tmpc);
@@ -423,7 +454,7 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
     // Time Map Velocity Magnitude 
     m_fields[0]->BwdTrans(tmpc[2], TMvelocitymag);
 
-    TMvelocity = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    // TMvelocity = Array<OneD, Array<OneD, NekDouble>>(3);
     for (int i=0; i<m_spacedim; ++i)
     {
         TMvelocity[i] = Array<OneD, NekDouble>(nq);
