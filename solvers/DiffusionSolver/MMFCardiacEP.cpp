@@ -192,7 +192,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         std::cout << "TimeMap_old = [ " << Vmath::Vmin(nq, TimeMap_old[0], 1)  << " , " 
         << Vmath::Vmax(nq, TimeMap_old[0], 1) << " ] " << std::endl;
         std::cout << "AniStrength_old = [ " << Vmath::Vmin(nq, AniStrength_old[0], 1)  << " , " 
-        << Vmath::Vmax(nq, AniStrength_old[0], 1) << " ] " << std::endl << std::endl;
+        << Vmath::Vmax(nq, AniStrength_old[0], 1) << " ] " << std::endl;
+        std::cout << "TMvelocitymag_old = [ " << Vmath::Vmin(nq, TMvelocitymag_old, 1)  << " , " 
+        << Vmath::Vmax(nq, TMvelocitymag_old, 1) << " ] " << std::endl << std::endl << std::endl;
 
         // Deformed TimeMap
         Array<OneD, Array<OneD, NekDouble>> TMvelocity_new(m_spacedim);
@@ -221,6 +223,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         << Vmath::Vmax(nq, TimeMap_new[0], 1) << " ] " << std::endl;
         std::cout << "AniStrength_new = [ " << Vmath::Vmin(nq, AniStrength_new[0], 1)  << " , " 
         << Vmath::Vmax(nq, AniStrength_new[0], 1) << " ] " << std::endl;
+        std::cout << "TMvelocitymag_new = [ " << Vmath::Vmin(nq, TMvelocitymag_new, 1)  << " , " 
+        << Vmath::Vmax(nq, TMvelocitymag_new, 1) << " ] " << std::endl << std::endl;    
     }
     wait_on_enter();
 
@@ -440,7 +444,7 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
     Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
     for (int i = 0; i < nvar; ++i)
     {
-       // tmpc[i]      = Array<OneD, NekDouble>(ncoeffs,0.0);
+       tmpc[i]  = Array<OneD, NekDouble>(ncoeffs,0.0);
     }
 
     EquationSystem::ImportFld(loadname, variables, tmpc);
