@@ -70,6 +70,26 @@ const char *const SolverSchemeTypeMap[] = {
     "MMFZero", "MMFFirst", "TimeMapMarch", "TimeMapDeform",
 };
 
+enum MediumType
+{
+    eIsotropy,
+    eAnisotropy,
+    eAnisotropyFiberMap,
+    eHeterogeneousIsotropy,
+    eHeterogeneousAnisotropy,
+    eRegionalHeterogeneous,
+    SIZE_MediumType
+};
+
+const char *const MediumTypeMap[] = {
+    "Isotropy",
+    "Anisotropy",
+    "AnisotropyFiberMap",
+    "HeterogeneousIsotropy",
+    "HeterogeneousAnisotropy",
+    "RegionalHeterogeneous",
+};
+
 enum InitWaveType
 {
     ePoint,
@@ -132,6 +152,8 @@ protected:
     int m_TimeMapnstep;
     int m_TimeMapExactnstep;
     int m_TimeMapScheme;
+
+    MediumType m_MediumType;
 
     SpatialDomains::GeomMMF m_MMFdirinBox;
 
@@ -221,7 +243,7 @@ protected:
     Array<OneD, NekDouble> ReadConductivityMap();
 
     void LoadCardiacFiber(
-                const SolverUtils::MediumType CardiacMediumType,
+                const MediumType CardiacMediumType,
                 const NekDouble AnisotropyStrength, 
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);

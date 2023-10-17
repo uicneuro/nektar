@@ -226,7 +226,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         std::cout << "TMvelocitymag_new = [ " << Vmath::Vmin(nq, TMvelocitymag_new, 1)  << " , " 
         << Vmath::Vmax(nq, TMvelocitymag_new, 1) << " ] " << std::endl << std::endl;    
     }
-    wait_on_enter();
 
     // TimeMap ?
     m_session->LoadParameter("TimeMapScheme", m_TimeMapScheme, 0);
@@ -467,16 +466,25 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
 }
 
 void MMFCardiacEP::LoadCardiacFiber(
-    const SolverUtils::MediumType CardiacMediumType,
+    const MediumType CardiacMediumType,
     const NekDouble AnisotropyStrength,
     Array<OneD, Array<OneD, NekDouble>> &AniStrength,
     Array<OneD, NekDouble> &CardiacFibre)
 {
     int nq = m_fields[0]->GetNpoints();
-
+    
     switch (CardiacMediumType)
     {
         case eAnisotropy:
+        {
+            for (int i=0; i<nq; ++i)
+            {
+                AniStrength[0][i] = sqrt(AnisotropyStrength);            
+            }
+        }
+        break;
+
+        case eAnisotropyFiberMap:
         {
             m_ImportedFiberExist = 1;
             AniStrength[0] = ReadFibermap(AnisotropyStrength, CardiacFibre);
@@ -519,8 +527,6 @@ void MMFCardiacEP::LoadCardiacFiber(
         default:
             break;
     }
-
-    std::cout << "AniStrength = " << RootMeanSquare(AniStrength[0]) << std::endl;
 
     // Plot Cardiac fibre projection map
     // PlotProcessedCardiacFibre(movingframes[0], fcdotk, AniConstruction);
@@ -1348,6 +1354,9 @@ void MMFCardiacEP::DoImplicitSolveCardiacEP(
     // back into physical space.
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
+
+        // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+        //                    factors);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 

@@ -136,24 +136,6 @@ void MMFSystem::MMFInitObject(
         }
     }
 
-    if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
-    {
-        std::string MediumTypeStr;
-        MediumTypeStr = m_session->GetSolverInfo("MEDIUMTYPE");
-        for (int i = 0; i < (int)SIZE_MediumType; ++i)
-        {
-            if (boost::iequals(MediumTypeMap[i], MediumTypeStr))
-            {
-                m_MediumType = (MediumType)i;
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_MediumType = (MediumType)0;
-    }
-
     m_session->LoadParameter("SphereExactRadius", m_SphereExactRadius, 1.0);
 
     m_session->LoadParameter("Initx", m_Initx, 0.0);
@@ -13476,7 +13458,6 @@ void MMFSystem::v_GenerateSummary(SummaryList &s)
         AddSummaryItem(s, "Avg edge length", m_seglength[nq - 1] / (nq - 2));
     }
     AddSummaryItem(s, "DerivType", DerivTypeMap[m_DerivType]);
-    AddSummaryItem(s, "MediumType", MediumTypeMap[m_MediumType]);
 
     // AddSummaryItem(s, "AdaptNewFramesTol", m_AdaptNewFramesTol);
     // AddSummaryItem(s, "VelActivateTol", m_VelActivationTol);

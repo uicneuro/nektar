@@ -84,6 +84,24 @@ const char *const SolverSchemeTypeMap[] = {
     "TimeMap",
 };
 
+enum MediumType
+{
+    eIsotropy,
+    eAnisotropy,
+    eHeterogeneousIsotropy,
+    eHeterogeneousAnisotropy,
+    eRegionalHeterogeneous,
+    SIZE_MediumType
+};
+
+const char *const MediumTypeMap[] = {
+    "Isotropy",
+    "Anisotropy",
+    "HeterogeneousIsotropy",
+    "HeterogeneousAnisotropy",
+    "RegionalHeterogeneous",
+};
+
 enum InitWaveType
 {
     ePoint,
@@ -175,6 +193,8 @@ protected:
 
     SolverUtils::DiffusionSharedPtr m_diffusion;
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
+
+    MediumType m_MediumType;
 
     int m_Verbose;
 

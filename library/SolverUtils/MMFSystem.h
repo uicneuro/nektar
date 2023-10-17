@@ -156,24 +156,6 @@ enum DerivType
 
 const char *const DerivTypeMap[] = {"Euclidean", "Covariant", "Exact"};
 
-enum MediumType
-{
-    eIsotropy,
-    eAnisotropy,
-    eHeterogeneousIsotropy,
-    eHeterogeneousAnisotropy,
-    eRegionalHeterogeneous,
-    SIZE_MediumType
-};
-
-const char *const MediumTypeMap[] = {
-    "Isotropy",
-    "Anisotropy",
-    "HeterogeneousIsotropy",
-    "HeterogeneousAnisotropy",
-    "RegionalHeterogeneous",
-};
-
 enum EvalType
 {
     eStronger,
@@ -264,7 +246,6 @@ public:
     SurfaceType m_surfaceType;
     UpwindType m_upwindType;
     DerivType m_DerivType;
-    MediumType m_MediumType;
 
     Array<OneD, NekDouble> m_MMFfactors;
 
