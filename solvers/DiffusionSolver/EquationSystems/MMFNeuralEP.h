@@ -57,6 +57,7 @@ enum NeuralEPType
     eNeuralEP1D,
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
+    eNeuralEP2DbiEmbed,
     SIZE_NeuralEPType ///< Length of enum list
 };
 
@@ -66,21 +67,22 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP1D",
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
+    "NeuralEP2DbiEmbed",
 };
 
 enum SolverSchemeType
 {
-    eDefault,
-    ePointWise,
+    eMMFZero,
     eMMFFirst,
+    ePointWise,
     eTimeMap,
     SIZE_SolverSchemeType,
 };
 
 const char *const SolverSchemeTypeMap[] = {
-    "Default",
-    "PointWise",
+    "MMFZero",
     "MMFFirst",
+    "PointWise",
     "TimeMap",
 };
 
@@ -315,15 +317,14 @@ protected:
     Array<OneD, int> GetInternalBoundaryPoints();
     
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
+    
     void Plotphiecurrent(const Array<OneD, const NekDouble> &phi_m,
                                    const Array<OneD, const NekDouble> &phi_e,
-                                   const Array<OneD, const NekDouble> &extcurrent_m,
-                                   const Array<OneD, const NekDouble> &extcurrent_e,
                                    const int nstep);
 
-    void DisplayatNode(const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    void DisplayatNodevar1(const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    void DisplayatNodevar2(const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayAtNodes(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayatNodePhim(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayatNodePhimPhie(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
@@ -421,6 +422,12 @@ protected:
         const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> Derivephie(
+        const Array<OneD, const NekDouble> &phim);
+
+    Array<OneD, NekDouble> DerivephieOne(
+        const Array<OneD, const NekDouble> &phim);
+
+    Array<OneD, NekDouble> DerivephieEmbed(
         const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
