@@ -243,7 +243,9 @@ void MMFSystem::MMFInitObject(
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
 
+    std::cout << "Start SetUpMovingframes ====================" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
+    std::cout << "End SetUpMovingframes ====================" << std::endl;
 
     switch (m_projectionType)
     {
@@ -1056,7 +1058,8 @@ void MMFSystem::SetUpMovingFrames(
 
         case SpatialDomains::eLOCAL:
         {
-            GetLOCALMovingframes(movingframes);
+            // GetLOCALMovingframes(movingframes);
+            m_fields[0]->GetMovingFrames(SpatialDomains::eLOCAL1, m_MMFfactors, movingframes);
         }
         break;
 
