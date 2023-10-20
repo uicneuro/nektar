@@ -245,7 +245,8 @@ void MMFSystem::MMFInitObject(
 
     std::cout << "Start SetUpMovingframes ====================" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
-    std::cout << "End SetUpMovingframes ====================" << std::endl;
+
+    wait_on_enter();
 
     switch (m_projectionType)
     {
@@ -1077,30 +1078,6 @@ void MMFSystem::SetUpMovingFrames(
         }
         break;
     }
-
-    // AniDirection: Direction of fiber
-    // moving frames: Constructing moving frames algined along the fiber.
-    // AniConstruction: 1 if constructed, 0 if LOCAL
-    // Reflect aniosotropic direction into the frames
-    // if (m_MediumType == eAnisotropy || m_MediumType ==
-    // eHeterogeneousAnisotropy )
-
-    // if(m_ImportedFiberExist)
-    // {
-    //     std::cout << "Moving frames are aligned along a specific direction "
-    //         "============"
-    //     << std::endl;
-
-    //     Array<OneD, NekDouble> AniConstruction(nq, 1.0);
-    //     ConstructAnisotropicFrames(AniDirection, movingframes, AniConstruction);
-
-    //     std::cout << "AniConstruction = "
-    //             << 100 * RootMeanSquare(AniConstruction)
-    //             << "  activated, Anistrength[0]: max = "
-    //             << Vmath::Vmax(nq, Anistrength[0], 1)
-    //             << ", min = " << Vmath::Vmin(nq, Anistrength[0], 1)
-    //             << std::endl;
-    // }
 
     // Multiply Anisotropic magnitude to moving frames
     for (int i = 0; i < nq; ++i)
