@@ -236,19 +236,14 @@ void MMFSystem::MMFInitObject(
 
         }
         break;
-    }
-    wait_on_enter();
-    
+    }    
 
     // SetUpMovingFrames: To generate m_movingframes
     std::string MMFdirStr = "LOCAL";
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
 
-    std::cout << "Start SetUpMovingframes ====================" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
-
-    wait_on_enter();
 
     switch (m_projectionType)
     {

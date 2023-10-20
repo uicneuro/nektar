@@ -1456,7 +1456,7 @@ void MMFNeuralEP::DoSolveMMFZero()
                 Plotphiecurrent(phi_m, phi_e, nchk);
             }
 
-            DisplayAtNodes(fulltext, fields);
+            // DisplayAtNodes(fulltext, fields);
 
             Checkpoint_Output(nchk++);
 
@@ -1840,22 +1840,25 @@ void MMFNeuralEP::DisplayatNodePhim(std::string &fulltext, const Array<OneD, con
         Array<OneD, NekDouble> phimavg(totnode,0.0);
 
         int npts = m_fields[0]->GetTotPoints(0);
+        int zoneindex;
         for (int i=0; i<nq; ++i)
         {
-            if(m_zoneindex[0][i]>=0)
+            zoneindex = m_zoneindex[0][i];
+            std::cout << "zoneindex = " << zoneindex << std::endl;
+            if(zoneindex>=0)
             {
-               phimavg[m_zoneindex[0][i]] += phi_m[i] / (npts * m_NumelemNode);
+               phimavg[zoneindex] += phi_m[i] ;
             }
         }
 
         fulltext.append(" \n");
         fulltext.append("(Nodeid,phim): ");
-        for (int i = 0; i < totnode; ++i)
+        for (int i = 0; i < totnode-1; ++i)
         {
             fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " ) ");
         }
 
-        fulltext.append(" \n");
+        // fulltext.append(" \n");
         std::cout << fulltext << "\n" << std::endl;
 }
 
