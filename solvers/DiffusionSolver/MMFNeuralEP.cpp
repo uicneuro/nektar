@@ -389,7 +389,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             " / nq = " << nq << std::endl;
 
             // Point touching internal boundary condition: Internal boundary index = 0;
-            m_InternalBoundary = GetInternalBoundaryPoints();
+            // m_InternalBoundary = GetInternalBoundaryPoints();
 
             // Constrct m_NeuralCm: node: 1/Cn, Myelin: 1/Cm
             const NekDouble Rf = m_neuron->GetRecistanceValue();
@@ -441,7 +441,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
-    
+
     if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
     {
         std::string MediumTypeStr;
