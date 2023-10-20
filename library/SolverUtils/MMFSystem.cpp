@@ -275,6 +275,9 @@ void MMFSystem::MMFInitObject(
             }
 
             ComputenperpcdotMF(m_movingframes, m_nperpcdotMFFwd, m_nperpcdotMFBwd);
+
+            ComputeDivMF(m_DerivType, m_movingframes, m_DivMF);
+            ComputeCurlMF(m_DerivType, m_movingframes, m_CurlMF);
             break;
         }
 
@@ -284,17 +287,14 @@ void MMFSystem::MMFInitObject(
         break;
     }
 
-    ComputeDivMF(m_DerivType, m_movingframes, m_DivMF);
-    ComputeCurlMF(m_DerivType, m_movingframes, m_CurlMF);
-
     // Connection 2-form
-    if(m_expdim>1)
-    {
-        Compute2DConnection1form(m_movingframes, m_MFConnection);
+    // if(m_expdim>1)
+    // {
+    //     Compute2DConnection1form(m_movingframes, m_MFConnection);
 
-        // Check the Curvature 2-form of the aligned moving frames
-        Compute2DCurvatureForm(m_movingframes, m_MFConnection, m_MFCurvature);
-    }
+    //     // Check the Curvature 2-form of the aligned moving frames
+    //     Compute2DCurvatureForm(m_movingframes, m_MFConnection, m_MFCurvature);
+    // }
 }
 
 // Check Connection and Curvature for Spherical coordinate system
