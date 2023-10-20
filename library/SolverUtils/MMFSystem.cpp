@@ -287,6 +287,8 @@ void MMFSystem::MMFInitObject(
         break;
     }
 
+    std::cout << "MMFInitObject is done ===========================" << std::endl;
+
     // Connection 2-form
     // if(m_expdim>1)
     // {

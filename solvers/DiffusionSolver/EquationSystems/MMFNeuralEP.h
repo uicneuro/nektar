@@ -508,7 +508,7 @@ private:
     NekDouble m_capMembrane;
     NekDouble m_conductivity;
 
-    int m_zonestart, m_zoneend;
+    int m_Excitezonehead, m_Excitezonetail;
 
     CellModelSharedPtr m_cell;
 

@@ -345,6 +345,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
+            // Get the first and last index of the excitation zone [1,2]
+            m_Excitezonehead = 0;
+            m_Excitezonetail = 0;
+            for (int i=0; i<nq; ++i)
+            {
+                if( (m_zoneindex[0][i] == 0) || (m_zoneindex[0][i] == 1))
+                {
+                    if (i<m_Excitezonehead)
+                    {
+                        m_Excitezonehead = i;
+                    }
+
+                    if(i>m_Excitezonetail)
+                    {
+                        m_Excitezonetail = i;
+                    }
+                }
+            }
+
             int extcnt=0;
             int nodecnt=0;
             int intracnt=0;
@@ -381,7 +400,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
             
-            std::cout << "Zone start = " << m_zonestart << ", end = " << m_zoneend <<
+            std::cout << "Zone start = " << m_Excitezonehead << ", end = " << m_Excitezonetail <<
             ", Excite zone = " << extcnt <<
             ", Node zone = " << nodecnt << 
             ", intra zone = " << intracnt << 
@@ -1230,25 +1249,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     }
 
     std::cout << "cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << cnte << std::endl;
-
-    // Get the first and last index of the excitation zone [1,2]
-    m_zonestart = 0;
-    m_zoneend = 0;
-    for (int i=0; i<fnq; ++i)
-    {
-        if( (outarray[i] == 0) || (outarray[i] == 1))
-        {
-            if (i<m_zonestart)
-            {
-                m_zonestart = i;
-            }
-
-            if(i>m_zoneend)
-            {
-                m_zoneend = i;
-            }
-        }
-    }
 
     return outarray;
 }
@@ -2902,7 +2902,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(m_zonestart, m_zoneend, m_excitezone, outarray, time);
+        m_stimulus[i]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
     }
 
     // Add it to the RHS
@@ -2928,7 +2928,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(m_zonestart, m_zoneend, m_excitezone, outarray, time);
+        m_stimulus[i]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
     }
 
     // // Add it to the RHS
@@ -3038,7 +3038,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     // Add Stimulus
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
-        m_stimulus[j]->Update(m_zonestart, m_zoneend, m_excitezone, outarray, time);
+        m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
     }
 
     if (m_explicitDiffusion)
@@ -3071,7 +3071,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Add Stimulus
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
-        m_stimulus[j]->Update(m_zonestart, m_zoneend, m_excitezone, outarray, time);
+        m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
     }
 
     // Compute phi_e to satisfy the following equation
@@ -3394,7 +3394,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(m_zonestart, m_zoneend, m_excitezone, tmp, initialtime);
+                m_stimulus[i]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, tmp, initialtime);
                 Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
@@ -3408,55 +3408,12 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             break;
         }
 
-            // case eNeuralEP2p1D:
-            // {
-            //     for (int nfib=0; nfib<m_nfibers; nfib++)
-            //     {
-            //         m_fiberneurons[nfib]->Initialise();
-            //     }
-
-            //     // Read initial condition from xml file
-            //     EquationSystem::v_SetInitialConditions(initialtime, false);
-
-            //     Array<OneD, Array<OneD, NekDouble>> tmp(1);
-            //     tmp[0] = Array<OneD, NekDouble>(nq);
-
-            //     Array<OneD, NekDouble> initialcondition(nq);
-            //     Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
-            //     Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
-            //     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-            //     {
-            //         m_stimulus[i]->Update(tmp, initialtime);
-            //         m_fields[0]->SetPhys(tmp[0]);
-            //     }
-
-            //     // Only the excited regions are considered for m_InitExcitation
-            //     Vmath::Vsub(nq, tmp[0], 1, initialcondition, 1, initialcondition, 1); 
-            //     m_ValidTimeMap = ComputeTimeMapInitialZone(initialcondition);
-            //
-            //     Array<OneD, NekDouble> x0(nq);
-            //     Array<OneD, NekDouble> x1(nq);
-            //     Array<OneD, NekDouble> x2(nq);
-
-            //     m_fields[0]->GetCoords(x0, x1, x2);
-            // }
-            // break;
-
         default:
         {
             EquationSystem::v_SetInitialConditions(initialtime, false);
             break;
         }
     }
-    
-    // std::cout << "Initial: max um = "
-    //           << Vmath::Vmax(nq, m_fields[0]->GetPhys(), 1) << std::endl;
-
-    // if (m_fields.size() > 1)
-    // {
-    //     std::cout << "Initial: max ue = "
-    //               << Vmath::Vmax(nq, m_fields[1]->GetPhys(), 1) << std::endl;
-    // }
 
     if (dumpInitialConditions)
     {
