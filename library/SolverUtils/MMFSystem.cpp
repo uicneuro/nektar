@@ -237,6 +237,8 @@ void MMFSystem::MMFInitObject(
         }
         break;
     }
+    wait_on_enter();
+    
 
     // SetUpMovingFrames: To generate m_movingframes
     std::string MMFdirStr = "LOCAL";
