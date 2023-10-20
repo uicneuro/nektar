@@ -466,6 +466,11 @@ protected:
         std::getline(std::cin, dummy);
     }
 
+    SOLVER_UTILS_EXPORT void vector_to_vcoeff(
+        const Array<OneD, const Array<OneD, NekDouble>> &vector,
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        Array<OneD, Array<OneD, NekDouble>> &vcoeff);
+
     SOLVER_UTILS_EXPORT SpatialDomains::GeomMMF FindMMFdir(
         std::string MMFdirStr);
 

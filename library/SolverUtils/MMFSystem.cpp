@@ -4799,6 +4799,29 @@ void MMFSystem::MF_to_Sph(
     }
 }
 
+void MMFSystem::vector_to_vcoeff(
+    const Array<OneD, const Array<OneD, NekDouble>> &vector,
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    Array<OneD, Array<OneD, NekDouble>> &vcoeff)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    vcoeff = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+    for (int j=0; j<m_mfdim; ++j)
+    {
+        vcoeff[j] = Array<OneD, NekDouble>(nq, 0.0);
+        for (int i=0; i<nq; ++i)
+        {
+            for (int k=0; k<m_spacedim; ++k)
+            {
+                vcoeff[j][i] += vector[k][i] * movingframes[j][i+k*nq];
+            }
+        }
+    }
+}
+
+
+
 // v_1 \vec{e}^1 + v_2 \vec{e}^2 = v_x \vec{x} + v_y \vec{y} + v_z
 // \vec{z} = \vec{v} v_x = \vec{v} \cdot \vec{x} = v_1 e^1_x + v_2 e^2_x
 // v_y = \vec{v} \cdot \vec{y} = v_1 e^1_y + v_2 e^2_y v_z = \vec{v}

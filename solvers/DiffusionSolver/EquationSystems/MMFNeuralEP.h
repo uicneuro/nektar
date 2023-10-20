@@ -214,6 +214,8 @@ protected:
     NekDouble m_urest;
 
     TimeMapType m_TimeMap;
+    
+    void savezoneindex(const Array<OneD, const int> &zoneindex);
 
     // variables for phie-Poisson solver
     StdRegions::VarCoeffMap m_phievarcoeff;

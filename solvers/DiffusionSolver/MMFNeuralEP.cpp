@@ -309,8 +309,41 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_Cn = m_neuron->GetCapacitanceValue(1);
 
             // Ranvier node zone: 0>: Myelin, -1: node, -2: Extracellular space
+            std::string zoneindexfile;
+            m_session->LoadSolverInfo("zoneindexfile", zoneindexfile, "Null");
             m_zoneindex = Array<OneD, Array<OneD, int>>(1);
-            m_zoneindex[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
+
+            if(zoneindexfile=="Null")
+            {
+                m_zoneindex[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
+                savezoneindex(m_zoneindex[0]);
+            }
+
+            else
+            {
+                std::cout << "zone index is loading ================================" << std::endl;
+                int nvar    = 1;
+                int ncoeffs          = GetNcoeffs();
+
+                std::vector<std::string> variables(nvar);
+
+                variables[0] = "zoneindex";
+                    
+                Array<OneD, Array<OneD, NekDouble>> tmpc(1);
+                for (int i = 0; i < 1; ++i)
+                {
+                    tmpc[i]  = Array<OneD, NekDouble>(ncoeffs,0.0);
+                }
+
+                Array<OneD, NekDouble> tmp(nq);
+                EquationSystem::ImportFld(zoneindexfile, variables, tmpc);
+                m_fields[0]->BwdTrans(tmpc[0], tmp);
+
+                for (int i=0; i<nq; ++i)
+                {
+                    m_zoneindex[0][i] = static_cast<int>(tmp[i]);
+                }
+            }
 
             int extcnt=0;
             int nodecnt=0;
@@ -366,38 +399,32 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             std::cout << "Cm = " << Cm << ", Cn = " << Cn << ", Rf = " << Rf
                       << ", Cm * Rf = " << Cn * Rf << std::endl;
 
-            int index;
             int cntm = 0, cntn = 0, cnte = 0;
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             m_NeuralCm[0] = Array<OneD, NekDouble>(nq);
-            for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+            for (int i=0; i<nq;  ++i)
             {
-                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                // Ranvier node zone
+                if (m_zoneindex[0][i] >= 0)
+
                 {
-                    index = m_fields[0]->GetPhys_Offset(i) + j;
+                    m_NeuralCm[0][i] = 1.0 / Cn;
+                    cntn++;
+                }
 
-                    // Ranvier node zone
-                    if (m_zoneindex[0][index] >= 0)
+                // Myelin zone
+                else if (m_zoneindex[0][i] == -1)
+                {
+                    m_NeuralCm[0][i] = 1.0 / Cm;
+                    cntm++;
+                }
 
-                    {
-                        m_NeuralCm[0][index] = 1.0 / Cn;
-                        cntn++;
-                    }
-
-                    // Myelin zone
-                    else if (m_zoneindex[0][index] == -1)
-                    {
-                        m_NeuralCm[0][index] = 1.0 / Cm;
-                        cntm++;
-                    }
-
-                    // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
-                    else if (m_zoneindex[0][index] == -2)
-                    {
-                        m_NeuralCm[0][index] = 1.0 / Cm / m_ratio_re_ri;
-                        cnte++;
-                    }
+                // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
+                else if (m_zoneindex[0][i] == -2)
+                {
+                    m_NeuralCm[0][i] = 1.0 / Cm / m_ratio_re_ri;
+                    cnte++;
                 }
             }
 
@@ -414,7 +441,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
-
+    
     if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
     {
         std::string MediumTypeStr;
@@ -1174,6 +1201,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
     Array<OneD, int> outarray(fnq, 0);
     int cntn=0, cntm=0, cnte=0;
+    std::cout << "m_fields[0]->GetExpSize() =  " << m_fields[0]->GetExpSize() << std::endl;
     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
@@ -2340,6 +2368,38 @@ void MMFNeuralEP::DisplayatNodePhim(std::string &fulltext, const Array<OneD, con
 // } // namespace Nektar
 
 //                 PlotHelmSolvephie(phi_m, phi_e, extcurrent_m, extcurrent_e);
+
+void MMFNeuralEP::savezoneindex(const Array<OneD, const int> &zoneindex)
+{
+    int nvar = 1;
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+    int nq      = m_fields[0]->GetTotPoints();
+
+    std::string outname;
+    outname = m_sessionName + "_zoneindex.chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "zoneindex";
+
+    Array<OneD, NekDouble> tmp(nq);
+
+    for (int i=0; i<nq; ++i)
+    {
+        tmp[i] = 1.0 * zoneindex[i];
+    }
+
+    m_fields[0]->FwdTrans(tmp, fieldcoeffs[0]);
+
+    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
+}
+
+
 void MMFNeuralEP::Plotphiecurrent(const Array<OneD, const NekDouble> &phi_m,
                                    const Array<OneD, const NekDouble> &phi_e,
                                    const int nstep)
