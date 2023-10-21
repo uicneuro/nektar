@@ -471,6 +471,11 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         Array<OneD, Array<OneD, NekDouble>> &vcoeff);
 
+    SOLVER_UTILS_EXPORT void vcoeff_to_vector(
+    const Array<OneD, const Array<OneD, NekDouble>> &vcoeff,
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    Array<OneD, Array<OneD, NekDouble>> &vector);
+
     SOLVER_UTILS_EXPORT SpatialDomains::GeomMMF FindMMFdir(
         std::string MMFdirStr);
 

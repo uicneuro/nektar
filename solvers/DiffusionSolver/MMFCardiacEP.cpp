@@ -287,144 +287,101 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
     if(m_SolverSchemeType==eTimeMapDeform)
     {
-        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
-
         // Import original TimeMap
         std::cout << "======= Start loading TimeMap: eTimeMapDeform  =======" << std::endl;
-        
+
+        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
+
         std::string TMsessionName_old;
         m_session->LoadSolverInfo("TMsessionName_old", TMsessionName_old, "m_sessionName");
         
-        Array<OneD, Array<OneD, NekDouble>> TMvelocity_old(m_spacedim);
-        Array<OneD, NekDouble> TMvelocitymag_old(nq);
+        Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
+        Array<OneD, NekDouble> Velocitymag_old(nq);
         Array<OneD, Array<OneD, NekDouble>> AniStrength_old(m_expdim);
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            AniStrength_old[j] = Array<OneD, NekDouble>(nq, 1.0);
-        }
-
         Array<OneD, Array<OneD, NekDouble>> TimeMap_old(1);
-        for (int i = 0; i < 1; ++i)
-        {
-            TimeMap_old[i] = Array<OneD, NekDouble>(nq,0.0);
-        }
-
-        Array<OneD, Array<OneD, NekDouble>> TMvelocity_deformed(m_spacedim);
-        Array<OneD, NekDouble> TMvelocitymag_deformed(nq);
-        Array<OneD, Array<OneD, NekDouble>> AniStrength_deformed(m_expdim);
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            AniStrength_deformed[j] = Array<OneD, NekDouble>(nq, 1.0);
-        }
-
-        Array<OneD, Array<OneD, NekDouble>> TimeMap_deformed(1);
-        for (int i = 0; i < 1; ++i)
-        {
-            TimeMap_deformed[i] = Array<OneD, NekDouble>(nq,0.0);
-        }
 
         std::string loadname_old = TMsessionName_old + "_TimeMap_" +
                            boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
         // load old timemap                   
-        LoadTimeMap(loadname_old, TimeMap_old, AniStrength_old, TMvelocitymag_old, TMvelocity_old);
+        LoadTimeMap(loadname_old, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
 
         std::cout << "TimeMapName_old = " << loadname_old << std::endl;
         std::cout << "TimeMap_old = [ " << Vmath::Vmin(nq, TimeMap_old[0], 1)  << " , " 
         << Vmath::Vmax(nq, TimeMap_old[0], 1) << " ] " << std::endl;
         std::cout << "AniStrength_old = [ " << Vmath::Vmin(nq, AniStrength_old[0], 1)  << " , " 
         << Vmath::Vmax(nq, AniStrength_old[0], 1) << " ] " << std::endl;
-        std::cout << "TMvelocitymag_old = [ " << Vmath::Vmin(nq, TMvelocitymag_old, 1)  << " , " 
-        << Vmath::Vmax(nq, TMvelocitymag_old, 1) << " ] " << std::endl << std::endl << std::endl;
+        std::cout << "Velocitymag_old = [ " << Vmath::Vmin(nq, Velocitymag_old, 1)  << " , " 
+        << Vmath::Vmax(nq, Velocitymag_old, 1) << " ] " << std::endl << std::endl << std::endl;
 
-        // Deformed TimeMap
-        Array<OneD, Array<OneD, NekDouble>> TMvelocity_new(m_spacedim);
-        Array<OneD, NekDouble> TMvelocitymag_new(nq);
+        // load new TimeMap
+        Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
+        Array<OneD, NekDouble> Velocitymag_new(nq);
         Array<OneD, Array<OneD, NekDouble>> AniStrength_new(m_expdim);
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            AniStrength_new[j] = Array<OneD, NekDouble>(nq, 1.0);
-        }
-
         Array<OneD, Array<OneD, NekDouble>> TimeMap_new(1);
-        for (int i = 0; i < 1; ++i)
-        {
-            TimeMap_new[i] = Array<OneD, NekDouble>(nq,0.0);
-        }
 
         m_session->LoadSolverInfo("TMsessionName", m_TMsessionName, "m_sessionName");
 
         std::string loadname = m_TMsessionName + "_TimeMap_" +
                            boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        LoadTimeMap(loadname, TimeMap_new, AniStrength_new, TMvelocitymag_new, TMvelocity_new);
+        LoadTimeMap(loadname, TimeMap_new, AniStrength_new, Velocitymag_new, Velocity_new);
 
         std::cout << "TimeMapName_new = " << loadname << std::endl;
         std::cout << "TimeMap_new = [ " << Vmath::Vmin(nq, TimeMap_new[0], 1)  << " , " 
         << Vmath::Vmax(nq, TimeMap_new[0], 1) << " ] " << std::endl;
         std::cout << "AniStrength_new = [ " << Vmath::Vmin(nq, AniStrength_new[0], 1)  << " , " 
         << Vmath::Vmax(nq, AniStrength_new[0], 1) << " ] " << std::endl;
-        std::cout << "TMvelocitymag_new = [ " << Vmath::Vmin(nq, TMvelocitymag_new, 1)  << " , " 
-        << Vmath::Vmax(nq, TMvelocitymag_new, 1) << " ] " << std::endl << std::endl;
+        std::cout << "Velocitymag_new = [ " << Vmath::Vmin(nq, Velocitymag_new, 1)  << " , " 
+        << Vmath::Vmax(nq, Velocitymag_new, 1) << " ] " << std::endl << std::endl;
 
-        // Compute the new velocity from the old velocity by using
-        // \vec{v}_new = v_1 \sqrt{d_{new}/d_{old}} \mathbf{e}^1 + v_2 \mathbf{e}^2
-        // v_i = \mathbf{v}_new \cdot \mathbf{e}^i
-        // for (int j=0; j<m_expdim; ++j)
-        // {
-        //     vcoeff_old[j] = Array<OneD, NekDouble>(nq, 0.0);
-        //     for (int i=0; i<nq; ++i)
-        //     {
-        //         for (int k=0; k<m_spacedim; ++k)
-        //         {
-        //             vcoeff_old[j][i] += TMvelocity_old[k][i] * m_movingframes[j][i+k*nq];
-        //         }
-        //     }
-        // }
-
-        Array<OneD, Array<OneD, NekDouble>> vcoeff_old(m_expdim);
-        vector_to_vcoeff(TMvelocity_new, m_movingframes, vcoeff_old);
-
-        std::cout << "v1 = [ " << Vmath::Vmax(nq, vcoeff_old[0], 1) << " , " << Vmath::Vmin(nq, vcoeff_old[0], 1)
-          << " ], v2 = [ " << Vmath::Vmax(nq, vcoeff_old[1], 1) << " , " << Vmath::Vmin(nq, vcoeff_old[1], 1) << " ]" << std::endl;
-
-        // Array<OneD, Array<OneD, NekDouble>> vcoeff_new(m_expdim);
-        // for (int j=0; j<m_expdim; ++j)
-        // {
-        //     vcoeff_new[j] = Array<OneD, NekDouble>(nq, 0.0);
-        //     for (int i=0; i<nq; ++i)
-        //     {
-        //         for (int k=0; k<m_spacedim; ++k)
-        //         {
-        //             vcoeff_new[j][i] =  sqrt(AniStrength_new[i]/AniStrength_old[i]) * vcoeff_old[j][i];
-        //         }
-        //     }
-        // }
-
-        // vcoeff_to_vector(vcoeff_new, TMvelocity_deformed);
-
-        // Deform the old TimeMap to new TimeMap
-        // Velocity = \nabla Tmap
-        // V_{diff} = V_{new} / || V_{new} ||^2 - V_{old} / || V_{old} ||^2
-
-        NekDouble Tol=0.001;
-        Array<OneD, Array<OneD, NekDouble>> Vdiff(m_spacedim);
-        for (int k=0;k<m_spacedim;++k)
+        // Computed the deformed timemap from the old timemap
+        Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
+        for (int i=0; i<m_spacedim; ++i)
         {
-            Vdiff[k] = Array<OneD, NekDouble>(nq);
-            for (int i=0;i<nq; ++i)
-            {
-                if( (TMvelocitymag_deformed[i]>Tol) && (TMvelocitymag_old[i]>Tol))
-                {
-                   Vdiff[k][i] = TMvelocity_deformed[k][i]/TMvelocitymag_deformed[i] - TMvelocity_old[k][i]/TMvelocitymag_old[i];
-                }
-            }
+            Velocity_deformed[i] = Array<OneD, NekDouble>(nq);
         }
 
-        Array<OneD, NekDouble> VdiffMag(nq);
-        VdiffMag = ComputeVelocityMag(Vdiff);
+        ComputeVelocityDeformed(AniStrength_old[0], Velocity_old, AniStrength_new[0], Velocity_deformed);
+        
+        // Compute Vdiff = V_new/Vmag_new^2 - V_old/Vmag_old^2
+        Array<OneD, Array<OneD, NekDouble>> Vdiff(m_spacedim);
+        ComputeVelocityDeformedDiff(Velocity_deformed, Velocity_old, Vdiff);
+
+        Array<OneD, NekDouble> VdiffMag = ComputeVelocityMag(Vdiff);
 
         std::cout << "Vdiffmag = [ " << Vmath::Vmin(nq, VdiffMag, 1) << " , " << Vmath::Vmax(nq, VdiffMag, 1) << " ] " << std::endl;
+
+        // Compute Euclidean divergence of Vdiff
+        Array<OneD, NekDouble> VdiffDivergence = ComputeEuclideanDivergence(Vdiff);
+
+        std::cout << "VdiffDivergence = [ " << Vmath::Vmin(nq, VdiffDivergence, 1) << " , " << Vmath::Vmax(nq, VdiffDivergence, 1) << " ] " << std::endl;
+
+        // Solve the Poisson equation: \nabla^2 T_{diff} = \nabla \cdot \mathbf{V}_{diff}
+        StdRegions::ConstFactorMap factors;
+        factors[StdRegions::eFactorTau]    = m_Helmtau;
+        factors[StdRegions::eFactorLambda] = 0.0;
+
+        Vmath::Sadd(nq, -1.0 * AvgInt(VdiffDivergence), VdiffDivergence, 1, VdiffDivergence, 1);
+        Vmath::Vcopy(nq, VdiffDivergence, 1, m_fields[0]->UpdatePhys(), 1);
+
+        m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors);
+        m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), m_fields[0]->UpdatePhys());
+        m_fields[0]->SetPhysState(true);
+
+        Array<OneD, NekDouble> TimeMap_diff = m_fields[0]->GetPhys();
+
+        std::cout << "Timemap_diff = [ " << Vmath::Vmin(nq, TimeMap_diff, 1) << " , " << Vmath::Vmax(nq, TimeMap_diff, 1) << " ] " << std::endl;
+
+        Array<OneD, NekDouble> TimeMap_Deformed(nq);
+        Vmath::Vadd(nq, TimeMap_diff, 1, TimeMap_old[0], 1, TimeMap_Deformed, 1);
+
+        std::cout << "TimeMap_Deformed = [ " << Vmath::Vmin(nq, TimeMap_Deformed, 1) << " , " << Vmath::Vmax(nq, TimeMap_Deformed, 1) << " ] " << std::endl;
+
+        Array<OneD, NekDouble> TimeMap_Error(nq);
+        Vmath::Vsub(nq, TimeMap_new[0], 1, TimeMap_Deformed, 1, TimeMap_Error, 1);
+
+        std::cout << "TimeMap_Error = [ " << Vmath::Vmin(nq, TimeMap_Error, 1) << " , " << Vmath::Vmax(nq, TimeMap_Error, 1) << " ] " << std::endl;
 
         wait_on_enter();
     }
@@ -460,6 +417,82 @@ MMFCardiacEP::~MMFCardiacEP()
 {
 }
 
+    void MMFCardiacEP::ComputeVelocityDeformedDiff(const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                                                    const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                                                    Array<OneD, Array<OneD, NekDouble>> &Vdiff)
+    {  
+        int nq      = GetNpoints();
+
+        NekDouble Tol=0.1;
+        NekDouble Velmag_def, Velmag_old;
+
+        Array<OneD, NekDouble> Velocitymag_deformed = ComputeVelocityMag(Velocity_deformed);
+        Array<OneD, NekDouble> Velocitymag_old = ComputeVelocityMag(Velocity_old);
+
+        for (int k=0;k<m_spacedim;++k)
+        {
+            Vdiff[k] = Array<OneD, NekDouble>(nq);
+            for (int i=0;i<nq; ++i)
+            {
+                Velmag_def = Velocitymag_deformed[i];
+                Velmag_old = Velocitymag_old[i];
+                if( (Velmag_def>Tol) && (Velmag_old>Tol))
+                {
+                Vdiff[k][i] = Velocity_deformed[k][i]/Velmag_def/Velmag_def - Velocity_old[k][i]/Velmag_old/Velmag_old;
+                }
+            }
+        }
+    }
+
+void MMFCardiacEP::ComputeVelocityDeformed(const Array<OneD, const NekDouble> &AniStrength_old,
+                            const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                            const Array<OneD, const NekDouble> &AniStrength_new,
+                            Array<OneD, Array<OneD, NekDouble>> &Velocity_deformed)
+
+    {
+            int nq      = GetNpoints();
+
+            Array<OneD, NekDouble> Velocitymag_deformed(nq);
+            Array<OneD, Array<OneD, NekDouble>> AniStrength_deformed(m_expdim);
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                AniStrength_deformed[j] = Array<OneD, NekDouble>(nq, 1.0);
+            }
+
+            Array<OneD, Array<OneD, NekDouble>> TimeMap_deformed(1);
+            for (int i = 0; i < 1; ++i)
+            {
+                TimeMap_deformed[i] = Array<OneD, NekDouble>(nq,0.0);
+            }
+
+            Array<OneD, Array<OneD, NekDouble>> vcoeff_old(m_expdim);
+
+            // convert vectoer coeffcients to vector
+            vector_to_vcoeff(Velocity_old, m_movingframes, vcoeff_old);
+
+            std::cout << "v1 = [ " << Vmath::Vmax(nq, vcoeff_old[0], 1) << " , " << Vmath::Vmin(nq, vcoeff_old[0], 1)
+            << " ], v2 = [ " << Vmath::Vmax(nq, vcoeff_old[1], 1) << " , " << Vmath::Vmin(nq, vcoeff_old[1], 1) << " ]" << std::endl;
+
+            Array<OneD, Array<OneD, NekDouble>> vcoeff_deformed(m_expdim);
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                vcoeff_deformed[j] = Array<OneD, NekDouble>(nq);
+            }
+
+            Array<OneD, NekDouble> aniratio(nq);
+            Vmath::Vdiv(nq, AniStrength_new, 1, AniStrength_old, 1, aniratio, 1);
+            Vmath::Vsqrt(nq, aniratio, 1, aniratio, 1);
+
+            std::cout << "aniratio = [ " << Vmath::Vmax(nq, aniratio, 1) << " , " 
+            << Vmath::Vmin(nq, aniratio, 1) << " ]" << std::endl;
+
+            // \mathbf{v}^{deformed} = sqrt(d_{new}/d_{old}) v_1 \mathbf{e}^1 + v_2 \mathbf{e}^2
+            Vmath::Vmul(nq, aniratio, 1, vcoeff_old[0], 1, vcoeff_deformed[0], 1);
+            Vmath::Vcopy(nq, vcoeff_old[1], 1, vcoeff_deformed[1], 1);
+
+            vcoeff_to_vector(vcoeff_deformed, m_movingframes, Velocity_deformed);
+    }
+
 void MMFCardiacEP::LoadTimeMap(std::string &loadname, 
                     Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                     Array<OneD, Array<OneD, NekDouble>> &AniStrength,
@@ -487,9 +520,20 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
     EquationSystem::ImportFld(loadname, variables, tmpc);
 
     // Time Map
+    TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
+    for (int i = 0; i < 1; ++i)
+    {
+        TimeMap[i] = Array<OneD, NekDouble>(nq,0.0);
+    }
     m_fields[0]->BwdTrans(tmpc[0], TimeMap[0]);
 
     // AniStrength
+    AniStrength = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+    }
+
     m_fields[0]->BwdTrans(tmpc[1], AniStrength[0]);
 
     // Time Map Velocity Magnitude 
@@ -964,7 +1008,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
     Array<OneD, NekDouble> TimeMap(nq, 0.0);
     Array<OneD, NekDouble> IappMap(nq, 0.0);
-    Array<OneD, NekDouble> UnitVelMap(m_spacedim * nq, 0.0);
+    Array<OneD, NekDouble> VelMap(m_spacedim * nq, 0.0);
 
     int totsteps = (m_steps + 1) / m_checksteps;
     Array<OneD, NekDouble> uval(totsteps, 0.0);
@@ -2121,41 +2165,30 @@ void MMFCardiacEP::PlotTimeMap(
     }
 
     // Compute the gradient of the time map
-    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
-    TmapGrad = ComputeCovGrad(TimeMap, m_movingframes);
+    Array<OneD, NekDouble> Velocity(m_spacedim * nq);
+    Velocity = ComputeCovGrad(TimeMap, m_movingframes);
 
     m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[1]);
 
-    Array<OneD, NekDouble> TmapGradMag(nq);
-    TmapGradMag = ComputeVelocityMag(TmapGrad);
+    Array<OneD, NekDouble> VelocityMag(nq);
+    VelocityMag = ComputeVelocityMag(Velocity);
 
-    m_fields[0]->FwdTrans(TmapGradMag, fieldcoeffs[2]);
+    m_fields[0]->FwdTrans(VelocityMag, fieldcoeffs[2]);
 
-    NekDouble Tol = 0.001;
     for (int i=0; i<nq; ++i)
     {
-        if(ValidTimeMap[i]==1)
+        if(ValidTimeMap[i] != 1)
         {
-            if(TmapGradMag[i]>Tol)
-            {
-                TmapGrad[i] = TmapGrad[i] / TmapGradMag[i];
-                TmapGrad[i+nq] = TmapGrad[i+nq] / TmapGradMag[i];
-                TmapGrad[i+2*nq] = TmapGrad[i+2*nq] / TmapGradMag[i];
-            }
-        }
-
-        else
-        {
-            TmapGrad[i] = 0.0;
-            TmapGrad[i+nq] = 0.0;
-            TmapGrad[i+2*nq] = 0.0;
+            Velocity[i] = 0.0;
+            Velocity[i+nq] = 0.0;
+            Velocity[i+2*nq] = 0.0;
         }
     }
 
     Array<OneD, NekDouble> tmp(nq);
     for (int k=0; k<m_spacedim; ++k)
     {
-        Vmath::Vcopy(nq, &TmapGrad[k*nq], 1, &tmp[0], 1);
+        Vmath::Vcopy(nq, &Velocity[k*nq], 1, &tmp[0], 1);
         m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+3]);
     }
 
@@ -2163,7 +2196,7 @@ void MMFCardiacEP::PlotTimeMap(
 
     std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
                 << ", Min = " << Vmath::Vmin(nq, TimeMap, 1)
-                << ", vel mag max = " << Vmath::Vmax(nq, TmapGradMag, 1) << std::endl;
+                << ", vel mag max = " << Vmath::Vmax(nq, VelocityMag, 1) << std::endl;
 }
 
 void MMFCardiacEP::PlotTimeMapMF(

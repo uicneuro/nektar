@@ -4778,6 +4778,8 @@ void MMFSystem::MF_to_Sph(
     }
 }
 
+// \mathbf{v} = v_1 \mathbf{e}^1 + v_2 \mathbf{e}^2
+// v_i = \mathbf{v} \cdot \mathbf{e}^i
 void MMFSystem::vector_to_vcoeff(
     const Array<OneD, const Array<OneD, NekDouble>> &vector,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
@@ -4785,8 +4787,8 @@ void MMFSystem::vector_to_vcoeff(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    vcoeff = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j=0; j<m_mfdim; ++j)
+    vcoeff = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j=0; j<m_expdim; ++j)
     {
         vcoeff[j] = Array<OneD, NekDouble>(nq, 0.0);
         for (int i=0; i<nq; ++i)
@@ -4799,6 +4801,29 @@ void MMFSystem::vector_to_vcoeff(
     }
 }
 
+//
+// \mathbf{v} = v_1 \mathbf{e}^1 + v_2 \mathbf{e}^2
+// 
+void MMFSystem::vcoeff_to_vector(
+    const Array<OneD, const Array<OneD, NekDouble>> &vcoeff,
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    Array<OneD, Array<OneD, NekDouble>> &vector)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    vector = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        vector[k] = Array<OneD, NekDouble>(nq, 0.0);
+        for (int i=0; i<nq; ++i)
+        {
+            for (int j=0; j<m_expdim; ++j)
+            {
+                vector[k][i] += vcoeff[j][i] * movingframes[j][i+k*nq];
+            }
+        }
+    }
+}
 
 
 // v_1 \vec{e}^1 + v_2 \vec{e}^2 = v_x \vec{x} + v_y \vec{y} + v_z

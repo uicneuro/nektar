@@ -179,6 +179,15 @@ protected:
                     Array<OneD, NekDouble> &TMvelocitymag,
                     Array<OneD, Array<OneD, NekDouble>> &TMvelocity);
 
+    void ComputeVelocityDeformed(const Array<OneD, const NekDouble> &AniStrength_old,
+                            const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                            const Array<OneD, const NekDouble> &AniStrength_new,
+                            Array<OneD, Array<OneD, NekDouble>> &Velocity_deformed);
+
+    void ComputeVelocityDeformedDiff(const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                                                    const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                                                    Array<OneD, Array<OneD, NekDouble>> &Vdiff);
+
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
     NekDouble m_urest;
 
