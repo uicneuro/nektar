@@ -2473,24 +2473,24 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         case eNeuralEP2Dbi:
         case eNeuralEP2DbiEmbed:
         {
-            m_neuron->Initialise();
+            // m_neuron->Initialise();
 
-            // Read initial condition from xml file
-            EquationSystem::v_SetInitialConditions(initialtime, false);
+            // // Read initial condition from xml file
+            // EquationSystem::v_SetInitialConditions(initialtime, false);
 
-            Array<OneD, Array<OneD, NekDouble>> tmp(1);
-            tmp[0] = Array<OneD, NekDouble>(nq);
+            // Array<OneD, Array<OneD, NekDouble>> tmp(1);
+            // tmp[0] = Array<OneD, NekDouble>(nq);
 
-            Array<OneD, NekDouble> initialcondition(nq);
-            Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
-            Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
+            // Array<OneD, NekDouble> initialcondition(nq);
+            // Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
+            // Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
 
-            for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-            {
-                m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
-                Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
-                m_fields[0]->SetPhys(tmp[0]);
-            }
+            // for (unsigned int i = 0; i < m_stimulus.size(); ++i)
+            // {
+            //     m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
+            //     Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
+            //     m_fields[0]->SetPhys(tmp[0]);
+            // }
         }
 
         default:
