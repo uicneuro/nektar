@@ -106,6 +106,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     // Relative Extracellular resistance: 1 < \beta < 10
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
 
+    if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
+    {
+        std::string MediumTypeStr;
+        MediumTypeStr = m_session->GetSolverInfo("MEDIUMTYPE");
+        for (int i = 0; i < (int)SIZE_MediumType; ++i)
+        {
+            if (boost::iequals(MediumTypeMap[i], MediumTypeStr))
+            {
+                m_MediumType = (MediumType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_MediumType = (MediumType)0;
+    }
+
     // Define ProblemType
     if (m_session->DefinesSolverInfo("NeuralEPType"))
     {
@@ -184,6 +202,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_ExternalCondType = (ExternalCondType)0;
     }
 
+    /*
     switch (m_NeuralEPType)
     {
         case eNeuralEPPT:
@@ -456,24 +475,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
     }
 
-    if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
-    {
-        std::string MediumTypeStr;
-        MediumTypeStr = m_session->GetSolverInfo("MEDIUMTYPE");
-        for (int i = 0; i < (int)SIZE_MediumType; ++i)
-        {
-            if (boost::iequals(MediumTypeMap[i], MediumTypeStr))
-            {
-                m_MediumType = (MediumType)i;
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_MediumType = (MediumType)0;
-    }
-
     // Derive AnisotropyStrength.
     switch (m_NeuralEPType)
     {
@@ -718,7 +719,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
     }
-
+    */
 
     // std::string fulltext = ""; 
 
@@ -1123,7 +1124,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
     Array<OneD, int> outarray(nq, -2);
     int cntn=0, cntm=0, cnte=0;
-    std::cout << "m_fields[0]->GetExpSize() =  " << m_fields[0]->GetExpSize() << std::endl;
 
     // Node 0
     for (int i = 0; i < 2*m_NumelemNode; ++i)
@@ -1287,60 +1287,61 @@ void MMFNeuralEP::DoSolveMMFZero()
     }
 
     // Set up wrapper to fields data storage.
-    Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
-    Array<OneD, Array<OneD, NekDouble>> fields_old(nvariables);
+    // Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
+    // Array<OneD, Array<OneD, NekDouble>> fields_old(nvariables);
 
-    // Order storage to list time-integrated fields first.
-    for (i = 0; i < 1; ++i)
-    {
-        fields[i] = m_fields[m_intVariables[i]]->GetPhys();
-        m_fields[m_intVariables[i]]->SetPhysState(false);
+    // // Order storage to list time-integrated fields first.
+    // for (i = 0; i < 1; ++i)
+    // {
+    //     fields[i] = m_fields[m_intVariables[i]]->GetPhys();
+    //     m_fields[m_intVariables[i]]->SetPhysState(false);
 
-        fields_old[i] = Array<OneD, NekDouble>(nq, 0.0);
-    }
+    //     fields_old[i] = Array<OneD, NekDouble>(nq, 0.0);
+    // }
 
-    // Initialise time integration scheme
-    m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
+    // // Initialise time integration scheme
+    // m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
 
-    // Check uniqueness of checkpoint output
-    ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
-                 (m_checktime > 0.0 && m_checksteps == 0) ||
-                 (m_checktime == 0.0 && m_checksteps > 0),
-             "Only one of IO_CheckTime and IO_CheckSteps "
-             "should be set!");
+    // // Check uniqueness of checkpoint output
+    // ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
+    //              (m_checktime > 0.0 && m_checksteps == 0) ||
+    //              (m_checktime == 0.0 && m_checksteps > 0),
+    //          "Only one of IO_CheckTime and IO_CheckSteps "
+    //          "should be set!");
 
-    LibUtilities::Timer timer;
-    bool doCheckTime  = false;
+    // LibUtilities::Timer timer;
+//    bool doCheckTime  = false;
     int step          = 0;
-    NekDouble intTime = 0.0;
-    NekDouble cpuTime = 0.0;
-    NekDouble elapsed = 0.0;
+    // NekDouble intTime = 0.0;
+    // NekDouble cpuTime = 0.0;
+    // NekDouble elapsed = 0.0;
 
-    Array<OneD, NekDouble> tmpc(ncoeffs);
+    // Array<OneD, NekDouble> tmpc(ncoeffs);
 
-    Array<OneD, NekDouble> velmag(nq, 0.0);
-    Array<OneD, NekDouble> velocity(m_spacedim * nq);
+    // Array<OneD, NekDouble> velmag(nq, 0.0);
+    // Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
+    // Array<OneD, NekDouble> x0(nq);
+    // Array<OneD, NekDouble> x1(nq);
+    // Array<OneD, NekDouble> x2(nq);
 
-    m_fields[0]->GetCoords(x0, x1, x2);
+    // m_fields[0]->GetCoords(x0, x1, x2);
 
-    // Aligh Moving Frames along the velocit vector
-    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
-    for (int i = 0; i < m_spacedim; ++i)
-    {
-        MF1st[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-        Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
-                    &MF1st[i][0], 1);
-    }
+    // // Aligh Moving Frames along the velocit vector
+    // Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
+    // for (int i = 0; i < m_spacedim; ++i)
+    // {
+    //     MF1st[i] = Array<OneD, NekDouble>(m_spacedim * nq);
+    //     Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
+    //                 &MF1st[i][0], 1);
+    // }
 
-    Array<OneD, int> phimhistory(nq, 0.0);
+    // Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
+        /*
         timer.Start();
-        // fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
 
         m_time += m_timestep;
@@ -1405,28 +1406,28 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             doCheckTime = false;
         }
-
+        */
 
         ++step;
     } // namespace Nektar
 
     // Print out summary statistics
-    if (m_session->GetComm()->GetRank() == 0)
-    {
-        std::cout << "Time-integration  : " << intTime << "s" << std::endl;
-    }
+    // if (m_session->GetComm()->GetRank() == 0)
+    // {
+    //     std::cout << "Time-integration  : " << intTime << "s" << std::endl;
+    // }
 
-    for (i = 0; i < 1; ++i)
-    {
-        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-        m_fields[m_intVariables[i]]->SetPhysState(true);
-    }
+    // for (i = 0; i < 1; ++i)
+    // {
+    //     m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+    //     m_fields[m_intVariables[i]]->SetPhysState(true);
+    // }
 
-    for (i = 0; i < nvariables; ++i)
-    {
-        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
-                              m_fields[i]->UpdateCoeffs());
-    }
+    // for (i = 0; i < nvariables; ++i)
+    // {
+    //     m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
+    //                           m_fields[i]->UpdateCoeffs());
+    // }
 } 
 // namespace Nektar
 
