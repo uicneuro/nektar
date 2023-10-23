@@ -722,6 +722,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
 
+    std::string fulltext = ""; 
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    for (int i=0; i<nq; ++i)
+    {
+        fulltext.append( "x = " + std::to_string(x0[i]) + ", y = " +  std::to_string(x1[i]));
+        fulltext.append( ", zoneindex = " + std::to_string(m_zoneindex[0][i]));
+        fulltext.append(", MF = ( " + std::to_string(m_movingframes[0][i]) + " , " + std::to_string(m_movingframes[0][nq+i]) + " ) ");
+        fulltext.append("\n");
+    }
+
+    std::cout << fulltext << std::endl;
+
     wait_on_enter();
 
 
@@ -774,33 +792,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
     }
 
-    std::string fulltext = ""; 
-
-            // fulltext.append("\n");
-            // fulltext.append("Time: " + std::to_string(m_time));
-            // fulltext.append("\n");
-
-            // fulltext.append("CPU Time: " + std::to_string(cpuTime / 60.0) + " min.");
-            // fulltext.append("\n");
-
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
-
-    m_fields[0]->GetCoords(x0, x1, x2);
-
-    for (int i=0; i<nq; ++i)
-    {
-        fulltext.append( "x = " + std::to_string(x0[i]) + ", y = " +  std::to_string(x1[i]));
-        fulltext.append( ", zoneindex = " + std::to_string(m_zoneindex[0][i]));
-        fulltext.append(", MF = ( " + std::to_string(m_movingframes[0][i]) + " , " + std::to_string(m_movingframes[0][nq+i]) + " ) ");
-        fulltext.append("\n");
-    }
-
-    std::cout << fulltext << std::endl;
-
-
-    wait_on_enter();
 
     //     switch (m_NeuralEPType)
     //     {
