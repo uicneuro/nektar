@@ -345,17 +345,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            // Array<OneD, NekDouble> x0(nq);
-            // Array<OneD, NekDouble> x1(nq);
-            // Array<OneD, NekDouble> x2(nq);
-
-            // m_fields[0]->GetCoords(x0, x1, x2);
-
-            // for (int i=0; i<nq; ++i)
-            // {
-            //     std::cout << "x = " << x0[i] << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i] << std::endl;
-            // }
-
             // Get the first and last index of the excitation zone [1,2]
             m_Excitezonehead = 0;
             m_Excitezonetail = 0;
@@ -412,11 +401,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
             
             std::cout << "Zone start = " << m_Excitezonehead << ", end = " << m_Excitezonetail <<
-            ", Excite zone = " << extcnt <<
-            ", Node zone = " << nodecnt << 
-            ", intra zone = " << intracnt << 
-            ", extra zone = " << extracnt << 
-            " / nq = " << nq << std::endl;
+            ", Excite zone = " << extcnt << ", Node zone = " << nodecnt <<  ", intra zone = " << intracnt << 
+            ", extra zone = " << extracnt << " / nq = " << nq << std::endl;
 
             // Point touching internal boundary condition: Internal boundary index = 0;
             // m_InternalBoundary = GetInternalBoundaryPoints();
@@ -735,6 +721,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
     }
 
+
+    wait_on_enter();
+
+
     if (m_explicitDiffusion)
     {
         m_ode.DefineImplicitSolve(&MMFNeuralEP::DoNullSolve, this);
@@ -783,6 +773,32 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 break;
         }
     }
+
+    std::string fulltext = ""; 
+
+            // fulltext.append("\n");
+            // fulltext.append("Time: " + std::to_string(m_time));
+            // fulltext.append("\n");
+
+            // fulltext.append("CPU Time: " + std::to_string(cpuTime / 60.0) + " min.");
+            // fulltext.append("\n");
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    for (int i=0; i<nq; ++i)
+    {
+        fulltext.append( "x = " + std::to_string(x0[i]) + ", y = " +  std::to_string(x1[i]));
+        fulltext.append( ", zoneindex = " + std::to_string(m_zoneindex[0][i]));
+        fulltext.append(", MF = ( " + std::to_string(m_movingframes[0][i]) + " , " + std::to_string(m_movingframes[0][nq+i]) + " ) ");
+        fulltext.append("\n");
+    }
+
+    std::cout << fulltext << std::endl;
+
 
     wait_on_enter();
 
