@@ -2282,13 +2282,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     }
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
+   // m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
-    // Add Stimulus
-    for (unsigned int j = 0; j < m_stimulus.size(); ++j)
-    {
-        m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
-    }
+    // // Add Stimulus
+    // for (unsigned int j = 0; j < m_stimulus.size(); ++j)
+    // {
+    //     m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
+    // }
 
     if (m_explicitDiffusion)
     {
@@ -2496,14 +2496,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                 Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
-
-            // Check NodeZone and moving frames
-            // CheckNodeZoneMF(m_movingframes, m_zoneindex, tmp[0]);
-            // if(m_Verbose)
-            // {
-            //     PrintRegionalAvgMax(m_fields[0]->GetPhys());
-            // }
-            // break;
         }
 
         default:
