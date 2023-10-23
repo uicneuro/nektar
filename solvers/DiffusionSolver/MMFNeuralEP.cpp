@@ -89,8 +89,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
     m_session->LoadParameter("diameter", m_diameter, 0.001);
 
+    m_session->LoadParameter("NumberNode", m_Nnode, 10);
     m_session->LoadParameter("NumelemNode", m_NumelemNode, 4);
-    m_session->LoadParameter("NumelemMyel", m_NumelemMyel, 44);
+    m_session->LoadParameter("NumelemMyel", m_NumelemMyel, 14);
 
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
@@ -317,6 +318,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 m_zoneindex[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
                 savezoneindex(m_zoneindex[0]);
+
+                wait_on_enter();
             }
 
             else
@@ -722,25 +725,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
 
-    std::string fulltext = ""; 
+    // std::string fulltext = ""; 
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
+    // Array<OneD, NekDouble> x0(nq);
+    // Array<OneD, NekDouble> x1(nq);
+    // Array<OneD, NekDouble> x2(nq);
 
-    m_fields[0]->GetCoords(x0, x1, x2);
+    // m_fields[0]->GetCoords(x0, x1, x2);
 
-    for (int i=0; i<nq; ++i)
-    {
-        fulltext.append( "x = " + std::to_string(x0[i]) + ", y = " +  std::to_string(x1[i]));
-        fulltext.append( ", zoneindex = " + std::to_string(m_zoneindex[0][i]));
-        fulltext.append(", MF = ( " + std::to_string(m_movingframes[0][i]) + " , " + std::to_string(m_movingframes[0][nq+i]) + " ) ");
-        fulltext.append("\n");
-    }
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     fulltext.append( "x = " + std::to_string(x0[i]) + ", y = " +  std::to_string(x1[i]));
+    //     fulltext.append( ", zoneindex = " + std::to_string(m_zoneindex[0][i]));
+    //     fulltext.append(", MF = ( " + std::to_string(m_movingframes[0][i]) + " , " + std::to_string(m_movingframes[0][nq+i]) + " ) ");
+    //     fulltext.append("\n");
+    // }
 
-    std::cout << fulltext << std::endl;
+    // std::cout << fulltext << std::endl;
 
-    wait_on_enter();
+    // wait_on_enter();
 
 
     if (m_explicitDiffusion)
@@ -1120,40 +1123,80 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
     const int ElemMyelenEnd)
 {
-    int fnq = field->GetNpoints();
+    int nq = field->GetNpoints();
     int index;
 
-    Array<OneD, int> outarray(fnq, 0);
+    Array<OneD, int> outarray(nq, -2);
     int cntn=0, cntm=0, cnte=0;
     std::cout << "m_fields[0]->GetExpSize() =  " << m_fields[0]->GetExpSize() << std::endl;
-    for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+
+    // Node 0
+    for (int i = 0; i < 2*m_NumelemNode; ++i)
     {
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j ;
 
             // First and last element is all node for easier excitation
-            if (i <= ElemNodeEnd)
-            {
-                outarray[index] = i / m_NumelemNode;
-                cntn++;
-            }
+            outarray[index] = i / m_NumelemNode;
+            cntn++;
+        }
+    }
 
-            else if ((i> ElemNodeEnd) && (i <= ElemMyelenEnd))
+    // Myelin index
+    int Myelid;
+    for (int inode = 0; inode<m_Nnode; ++inode)
+    {
+        for (int i = 0; i < m_NumelemMyel; ++i)
+        {
+            Myelid = (m_NumelemNode+m_NumelemMyel)*inode + 2*m_NumelemNode + i;
+            for (int j = 0; j < m_fields[0]->GetTotPoints(Myelid); ++j)
             {
+                index = m_fields[0]->GetPhys_Offset(Myelid) + j ;
+
+                // First and last element is all node for easier excitation
                 outarray[index] = -1;
                 cntm++;
-            }
-
-            else if (i > ElemMyelenEnd)
-            {
-                outarray[index] = -2;
-                cnte++;
             }
         }
     }
 
-    std::cout << "cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << cnte << std::endl;
+    // Node index
+    int Nodeid;
+    for (int inode = 0; inode<m_Nnode; ++inode)
+    {
+        for (int i = 0; i < m_NumelemNode; ++i)
+        {
+            Nodeid = (m_NumelemNode+m_NumelemMyel)*inode + 2*m_NumelemNode + m_NumelemMyel + i;
+            for (int j = 0; j < m_fields[0]->GetTotPoints(Nodeid); ++j)
+            {
+                index = m_fields[0]->GetPhys_Offset(Nodeid) + j ;
+
+                // First and last element is all node for easier excitation
+                outarray[index] = inode + 2;
+                cntn++;
+            }
+        }
+    }
+
+    std::cout << "cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << (nq-cntn-cntm) << std::endl;
+
+//    Array<OneD, NekDouble> x0(nq);
+//     Array<OneD, NekDouble> x1(nq);
+//     Array<OneD, NekDouble> x2(nq);
+
+//     m_fields[0]->GetCoords(x0, x1, x2);
+
+//     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+//     {
+//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+//         {
+//             index = m_fields[0]->GetPhys_Offset(i) + j ;
+
+//             std::cout << "elem = " << i << ", y = " << x1[index] << ", index = " << index << ", zoneindex = " << outarray[index] << std::endl;
+//         }
+//         std::cout << std::endl;
+//     }
 
     return outarray;
 }
@@ -2645,6 +2688,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
+    SolverUtils::AddSummaryItem(s, "Nnode", m_Nnode);
     SolverUtils::AddSummaryItem(s, "ExtElemMFLength", m_ExtElemMFLength);
     SolverUtils::AddSummaryItem(s, "ElemNodeEnd", m_ElemNodeEnd);
     SolverUtils::AddSummaryItem(s, "ElemMyelenEnd", m_ElemMyelenEnd);

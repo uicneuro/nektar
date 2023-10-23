@@ -208,7 +208,7 @@ protected:
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     
     int m_Convectiven;
-    int m_NumelemNode, m_NumelemMyel;
+    int m_Nnode, m_NumelemNode, m_NumelemMyel;
     NekDouble m_ExtElemMFLength;
 
     NekDouble m_urest;
