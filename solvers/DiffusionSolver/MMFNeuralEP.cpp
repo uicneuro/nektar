@@ -2492,7 +2492,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-               // m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
+                m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
                 Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
