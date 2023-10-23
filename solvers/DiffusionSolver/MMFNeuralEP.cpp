@@ -365,10 +365,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            int extcnt=0;
-            int nodecnt=0;
-            int intracnt=0;
-            int extracnt=0;
+            int extcnt=0, nodecnt=0, intracnt=0, extracnt=0;
 
             m_excitezone = Array<OneD, NekDouble>(nq, 0.0);
             m_nodezone = Array<OneD, NekDouble>(nq, 0.0);
@@ -721,6 +718,28 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
     }
+
+
+    // std::string fulltext = ""; 
+
+    // Array<OneD, NekDouble> x0(nq);
+    // Array<OneD, NekDouble> x1(nq);
+    // Array<OneD, NekDouble> x2(nq);
+
+    // m_fields[0]->GetCoords(x0, x1, x2);
+
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     fulltext.append( "x = " + std::to_string(x0[i]) + ", y = " +  std::to_string(x1[i]));
+    //     fulltext.append( ", zoneindex = " + std::to_string(m_zoneindex[0][i]));
+    //     fulltext.append(", MF = ( " + std::to_string(m_movingframes[0][i]) + " , " + std::to_string(m_movingframes[0][nq+i]) + " ) ");
+    //     fulltext.append("\n");
+    // }
+
+    // std::cout << fulltext << std::endl;
+
+    // wait_on_enter();
+
 
     if (m_explicitDiffusion)
     {
@@ -1321,7 +1340,7 @@ void MMFNeuralEP::DoSolveMMFZero()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         timer.Start();
-        // fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
 
         m_time += m_timestep;
@@ -1335,6 +1354,11 @@ void MMFNeuralEP::DoSolveMMFZero()
                       << " "
                       << "Time: " << std::setw(12) << std::left << m_time
                       << std::endl;
+
+            // std::stringstream ss;
+            // ss << cpuTime / 60.0 << " min.";
+            // std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
+            //           << std::endl << std::endl;
 
             fulltext.append("\n");
             fulltext.append("Time: " + std::to_string(m_time));
