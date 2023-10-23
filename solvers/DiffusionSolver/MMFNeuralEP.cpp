@@ -345,18 +345,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            Array<OneD, NekDouble> x0(nq);
-            Array<OneD, NekDouble> x1(nq);
-            Array<OneD, NekDouble> x2(nq);
+            // Array<OneD, NekDouble> x0(nq);
+            // Array<OneD, NekDouble> x1(nq);
+            // Array<OneD, NekDouble> x2(nq);
 
-            m_fields[0]->GetCoords(x0, x1, x2);
+            // m_fields[0]->GetCoords(x0, x1, x2);
 
-            for (int i=0; i<nq; ++i)
-            {
-                std::cout << "x = " << x0[i] << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i] << std::endl;
-            }
-
-            wait_on_enter();
+            // for (int i=0; i<nq; ++i)
+            // {
+            //     std::cout << "x = " << x0[i] << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i] << std::endl;
+            // }
 
             // Get the first and last index of the excitation zone [1,2]
             m_Excitezonehead = 0;
@@ -752,56 +750,32 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 // ComputeVarCoeff1D(m_movingframes, m_varcoeff);
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                m_ode.DefineImplicitSolve(
+                    &MMFNeuralEP::DoImplicitSolveNeuralEP1D, this);
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEPPT, this);
                 break;
             }
             
             case eNeuralHelmTest:
             case eNeuralEP2Dmono:
             {
-                std::cout << "Compute Varcoeff for phim ====================== " << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-
-                break;
-            }
-
-            case eNeuralEP2Dbi:
-            case eNeuralEP2DbiEmbed:
-            {
-                std::cout << "Compute Varcoeff for phim ====================== " << std::endl;
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-
-                std::cout << "Compute Varcoeff for phie ====================== " << std::endl;
-                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-                break;
-            }
-
-            default:
-                break;
-        }
-
-        switch (m_NeuralEPType)
-        {
-            case eNeuralEPPT:
-            case eNeuralEP1D:
-            {
-                m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolveNeuralEP1D, this);
-                break;
-            }
-
-            case eNeuralHelmTest:
-            case eNeuralEP2Dmono:
-            {
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
                 break;
             }
 
             case eNeuralEP2Dbi:
             case eNeuralEP2DbiEmbed:
             {
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+
                 m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this);
+                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
+
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
                 break;
             }
 
@@ -810,37 +784,70 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         }
     }
 
-    switch (m_NeuralEPType)
-    {
-        case eNeuralEPPT:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEPPT, this);
-            break;
-        }
+    wait_on_enter();
 
-        case eNeuralEP1D:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
-            break;
-        }
+    //     switch (m_NeuralEPType)
+    //     {
+    //         case eNeuralEPPT:
+    //         case eNeuralEP1D:
+    //         {
+    //             m_ode.DefineImplicitSolve(
+    //                 &MMFNeuralEP::DoImplicitSolveNeuralEP1D, this);
+    //             break;
+    //         }
 
-        case eNeuralHelmTest:
-        case eNeuralEP2Dmono:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
-            break;
-        }
+    //         case eNeuralHelmTest:
+    //         case eNeuralEP2Dmono:
+    //         {
+    //             m_ode.DefineImplicitSolve(
+    //                 &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
+    //             break;
+    //         }
 
-        case eNeuralEP2Dbi:
-        case eNeuralEP2DbiEmbed:
-        {
-            m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
-            break;
-        }
+    //         case eNeuralEP2Dbi:
+    //         case eNeuralEP2DbiEmbed:
+    //         {
+    //             m_ode.DefineImplicitSolve(
+    //                 &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this);
+    //             break;
+    //         }
 
-        default:
-            break;
-    }
+    //         default:
+    //             break;
+    //     }
+    // 
+
+    // switch (m_NeuralEPType)
+    // {
+    //     case eNeuralEPPT:
+    //     {
+    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEPPT, this);
+    //         break;
+    //     }
+
+    //     case eNeuralEP1D:
+    //     {
+    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
+    //         break;
+    //     }
+
+    //     case eNeuralHelmTest:
+    //     case eNeuralEP2Dmono:
+    //     {
+    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
+    //         break;
+    //     }
+
+    //     case eNeuralEP2Dbi:
+    //     case eNeuralEP2DbiEmbed:
+    //     {
+    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
+    //         break;
+    //     }
+
+    //     default:
+    //         break;
+    // }
 
        // Test Helm 2D Solver 
     if(m_NeuralEPType==eNeuralHelmTest)
