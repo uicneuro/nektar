@@ -765,7 +765,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralHelmTest:
             case eNeuralEP2Dmono:
             {
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                // ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
@@ -775,8 +775,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEP2Dbi:
             case eNeuralEP2DbiEmbed:
             {
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+                // ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                // ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
 
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
