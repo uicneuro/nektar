@@ -202,7 +202,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_ExternalCondType = (ExternalCondType)0;
     }
 
-    /*
     switch (m_NeuralEPType)
     {
         case eNeuralEPPT:
@@ -337,13 +336,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 m_zoneindex[0] = IndexNodeZone2D(m_fields[0], m_ElemNodeEnd, m_ElemMyelenEnd);
                 savezoneindex(m_zoneindex[0]);
+
+                wait_on_enter();
             }
 
             else
             {
                 std::cout << "zone index is loading ================================" << std::endl;
                 int nvar    = 1;
-                int ncoeffs = GetNcoeffs();
+                int ncoeffs          = GetNcoeffs();
 
                 std::vector<std::string> variables(nvar);
 
@@ -384,7 +385,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            int extcnt=0, nodecnt=0, intracnt=0, extracnt=0;
+            int extcnt=0;
+            int nodecnt=0;
+            int intracnt=0;
+            int extracnt=0;
 
             m_excitezone = Array<OneD, NekDouble>(nq, 0.0);
             m_nodezone = Array<OneD, NekDouble>(nq, 0.0);
@@ -719,7 +723,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
     }
-    */
 
     // std::string fulltext = ""; 
 
@@ -766,7 +769,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralHelmTest:
             case eNeuralEP2Dmono:
             {
-                // ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
@@ -776,8 +779,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEP2Dbi:
             case eNeuralEP2DbiEmbed:
             {
-                // ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-                // ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
 
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
@@ -790,70 +793,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 break;
         }
     }
-
-
-    //     switch (m_NeuralEPType)
-    //     {
-    //         case eNeuralEPPT:
-    //         case eNeuralEP1D:
-    //         {
-    //             m_ode.DefineImplicitSolve(
-    //                 &MMFNeuralEP::DoImplicitSolveNeuralEP1D, this);
-    //             break;
-    //         }
-
-    //         case eNeuralHelmTest:
-    //         case eNeuralEP2Dmono:
-    //         {
-    //             m_ode.DefineImplicitSolve(
-    //                 &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
-    //             break;
-    //         }
-
-    //         case eNeuralEP2Dbi:
-    //         case eNeuralEP2DbiEmbed:
-    //         {
-    //             m_ode.DefineImplicitSolve(
-    //                 &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this);
-    //             break;
-    //         }
-
-    //         default:
-    //             break;
-    //     }
-    // 
-
-    // switch (m_NeuralEPType)
-    // {
-    //     case eNeuralEPPT:
-    //     {
-    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEPPT, this);
-    //         break;
-    //     }
-
-    //     case eNeuralEP1D:
-    //     {
-    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP1D, this);
-    //         break;
-    //     }
-
-    //     case eNeuralHelmTest:
-    //     case eNeuralEP2Dmono:
-    //     {
-    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
-    //         break;
-    //     }
-
-    //     case eNeuralEP2Dbi:
-    //     case eNeuralEP2DbiEmbed:
-    //     {
-    //         m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
-    //         break;
-    //     }
-
-    //     default:
-    //         break;
-    // }
 
        // Test Helm 2D Solver 
     if(m_NeuralEPType==eNeuralHelmTest)
@@ -1124,6 +1063,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
     Array<OneD, int> outarray(nq, -2);
     int cntn=0, cntm=0, cnte=0;
+    std::cout << "m_fields[0]->GetExpSize() =  " << m_fields[0]->GetExpSize() << std::endl;
 
     // Node 0
     for (int i = 0; i < 2*m_NumelemNode; ++i)
@@ -1287,59 +1227,58 @@ void MMFNeuralEP::DoSolveMMFZero()
     }
 
     // Set up wrapper to fields data storage.
-    // Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
-    // Array<OneD, Array<OneD, NekDouble>> fields_old(nvariables);
+    Array<OneD, Array<OneD, NekDouble>> fields(nvariables);
+    Array<OneD, Array<OneD, NekDouble>> fields_old(nvariables);
 
-    // // Order storage to list time-integrated fields first.
-    // for (i = 0; i < 1; ++i)
-    // {
-    //     fields[i] = m_fields[m_intVariables[i]]->GetPhys();
-    //     m_fields[m_intVariables[i]]->SetPhysState(false);
+    // Order storage to list time-integrated fields first.
+    for (i = 0; i < 1; ++i)
+    {
+        fields[i] = m_fields[m_intVariables[i]]->GetPhys();
+        m_fields[m_intVariables[i]]->SetPhysState(false);
 
-    //     fields_old[i] = Array<OneD, NekDouble>(nq, 0.0);
-    // }
+        fields_old[i] = Array<OneD, NekDouble>(nq, 0.0);
+    }
 
-    // // Initialise time integration scheme
-    // m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
+    // Initialise time integration scheme
+    m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
 
-    // // Check uniqueness of checkpoint output
-    // ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
-    //              (m_checktime > 0.0 && m_checksteps == 0) ||
-    //              (m_checktime == 0.0 && m_checksteps > 0),
-    //          "Only one of IO_CheckTime and IO_CheckSteps "
-    //          "should be set!");
+    // Check uniqueness of checkpoint output
+    ASSERTL0((m_checktime == 0.0 && m_checksteps == 0) ||
+                 (m_checktime > 0.0 && m_checksteps == 0) ||
+                 (m_checktime == 0.0 && m_checksteps > 0),
+             "Only one of IO_CheckTime and IO_CheckSteps "
+             "should be set!");
 
-    // LibUtilities::Timer timer;
-//    bool doCheckTime  = false;
+    LibUtilities::Timer timer;
+    bool doCheckTime  = false;
     int step          = 0;
-    // NekDouble intTime = 0.0;
-    // NekDouble cpuTime = 0.0;
-    // NekDouble elapsed = 0.0;
+    NekDouble intTime = 0.0;
+    NekDouble cpuTime = 0.0;
+    NekDouble elapsed = 0.0;
 
-    // Array<OneD, NekDouble> tmpc(ncoeffs);
+    Array<OneD, NekDouble> tmpc(ncoeffs);
 
-    // Array<OneD, NekDouble> velmag(nq, 0.0);
-    // Array<OneD, NekDouble> velocity(m_spacedim * nq);
+    Array<OneD, NekDouble> velmag(nq, 0.0);
+    Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
-    // Array<OneD, NekDouble> x0(nq);
-    // Array<OneD, NekDouble> x1(nq);
-    // Array<OneD, NekDouble> x2(nq);
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
 
-    // m_fields[0]->GetCoords(x0, x1, x2);
+    m_fields[0]->GetCoords(x0, x1, x2);
 
-    // // Aligh Moving Frames along the velocit vector
-    // Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
-    // for (int i = 0; i < m_spacedim; ++i)
-    // {
-    //     MF1st[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-    //     Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
-    //                 &MF1st[i][0], 1);
-    // }
+    // Aligh Moving Frames along the velocit vector
+    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
+    {
+        MF1st[i] = Array<OneD, NekDouble>(m_spacedim * nq);
+        Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
+                    &MF1st[i][0], 1);
+    }
 
-    // Array<OneD, int> phimhistory(nq, 0.0);
+    Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
-        /*
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
@@ -1406,28 +1345,28 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             doCheckTime = false;
         }
-        */
+
 
         ++step;
     } // namespace Nektar
 
     // Print out summary statistics
-    // if (m_session->GetComm()->GetRank() == 0)
-    // {
-    //     std::cout << "Time-integration  : " << intTime << "s" << std::endl;
-    // }
+    if (m_session->GetComm()->GetRank() == 0)
+    {
+        std::cout << "Time-integration  : " << intTime << "s" << std::endl;
+    }
 
-    // for (i = 0; i < 1; ++i)
-    // {
-    //     m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-    //     m_fields[m_intVariables[i]]->SetPhysState(true);
-    // }
+    for (i = 0; i < 1; ++i)
+    {
+        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+        m_fields[m_intVariables[i]]->SetPhysState(true);
+    }
 
-    // for (i = 0; i < nvariables; ++i)
-    // {
-    //     m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
-    //                           m_fields[i]->UpdateCoeffs());
-    // }
+    for (i = 0; i < nvariables; ++i)
+    {
+        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
+                              m_fields[i]->UpdateCoeffs());
+    }
 } 
 // namespace Nektar
 
@@ -2474,24 +2413,24 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         case eNeuralEP2Dbi:
         case eNeuralEP2DbiEmbed:
         {
-            // m_neuron->Initialise();
+            m_neuron->Initialise();
 
-            // // Read initial condition from xml file
-            // EquationSystem::v_SetInitialConditions(initialtime, false);
+            // Read initial condition from xml file
+            EquationSystem::v_SetInitialConditions(initialtime, false);
 
-            // Array<OneD, Array<OneD, NekDouble>> tmp(1);
-            // tmp[0] = Array<OneD, NekDouble>(nq);
+            Array<OneD, Array<OneD, NekDouble>> tmp(1);
+            tmp[0] = Array<OneD, NekDouble>(nq);
 
-            // Array<OneD, NekDouble> initialcondition(nq);
-            // Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
-            // Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
+            Array<OneD, NekDouble> initialcondition(nq);
+            Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
+            Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
 
-            // for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-            // {
-            //     m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
-            //     Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
-            //     m_fields[0]->SetPhys(tmp[0]);
-            // }
+            for (unsigned int i = 0; i < m_stimulus.size(); ++i)
+            {
+                m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
+                Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
+                m_fields[0]->SetPhys(tmp[0]);
+            }
         }
 
         default:
