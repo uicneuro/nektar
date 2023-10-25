@@ -149,6 +149,7 @@ protected:
     bool m_useSpecVanVisc;
     NekDouble m_frequency;
     NekDouble m_d00, m_d11, m_d22;
+    StdRegions::VarCoeffMap m_varcoeff;
 
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
     SpatialDomains::GeomMMF m_phieMMFdir;

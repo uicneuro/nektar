@@ -157,6 +157,8 @@ protected:
 
     SpatialDomains::GeomMMF m_MMFdirinBox;
 
+    StdRegions::VarCoeffMap m_varcoeff;
+
     // Aliev_Panfilov model parameters
     NekDouble m_k, m_a, m_mu1, m_mu2, m_eps;
 

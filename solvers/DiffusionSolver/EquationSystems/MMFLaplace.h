@@ -69,7 +69,7 @@ protected:
             const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
     NekDouble m_AniStrength;
-
+    StdRegions::VarCoeffMap m_varcoeff;
 
     virtual ~MMFLaplace();
 

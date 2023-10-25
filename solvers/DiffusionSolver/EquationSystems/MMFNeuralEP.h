@@ -198,30 +198,31 @@ protected:
 
     MediumType m_MediumType;
 
+    StdRegions::VarCoeffMap m_varcoeff;
+    StdRegions::VarCoeffMap m_phievarcoeff;
+
     int m_Verbose;
-
-    NekDouble m_InitPtx, m_InitPty, m_InitPtz;
-    NekDouble m_Rf, m_Cn;
-
-    Array<OneD, NekDouble> m_StimAtNode;
-
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     
     int m_Convectiven;
     int m_Nnode, m_NumelemNode, m_NumelemMyel;
-    NekDouble m_ExtElemMFLength;
 
+
+    NekDouble m_InitPtx, m_InitPty, m_InitPtz;
+    NekDouble m_Rf, m_Cn, m_Cm;
+
+    Array<OneD, NekDouble> m_StimAtNode;
+
+    NekDouble m_ExtElemMFLength;
     NekDouble m_urest;
 
     TimeMapType m_TimeMap;
     
-    void savezoneindex(const Array<OneD, const int> &zoneindex);
-
     // variables for phie-Poisson solver
-    StdRegions::VarCoeffMap m_phievarcoeff;
+    // StdRegions::VarCoeffMap m_phievarcoeff;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
 
-    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_helmfmovingframes;
 
     // Elements for fiber 2D: Start and End index
     int m_fiber2DElemStart, m_fiber2DElemEnd;
@@ -268,36 +269,35 @@ protected:
 
     Array<OneD, int> m_InternalBoundary;
 
-    Array<OneD, NekDouble> m_NeuralCmRf;
     Array<OneD, int> m_NodeElement;
-
-    // NeuralEP2D variables
-    // Array<OneD, LibUtilities::TimeIntegrationWrapperSharedPtr>
-    // m_fiberintScheme; Array<OneD,
-    // LibUtilities::TimeIntegrationSchemeOperators> m_fiberode; Array<OneD,
-    // LibUtilities::TimeIntegrationSolutionSharedPtr> m_fiberintSoln;
-
-    // Moving frames
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_fibermovingframes;
-
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_ncdotfiberMFFwd;
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_ncdotfiberMFBwd;
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_DivfiberMF;
-
-    Array<OneD, MultiRegions::ExpListSharedPtr> m_fiberfields;
-    Array<OneD, Array<OneD, Array<OneD, int>>> m_fiberindex;
-
-    Array<OneD, StdRegions::VarCoeffMap> m_fibervarcoeff;
 
     /// Constructor
     MMFNeuralEP(const LibUtilities::SessionReaderSharedPtr &pSession,
                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    LibUtilities::SessionReaderSharedPtr m_session1D;
-    SpatialDomains::MeshGraphSharedPtr m_graph1D;
+    void savezoneindex(const Array<OneD, const int> &zoneindex);
 
-    Array<OneD, LibUtilities::SessionReaderSharedPtr> m_fibersession;
-    Array<OneD, SpatialDomains::MeshGraphSharedPtr> m_fibergraph;
+    void Generatephiemovingframes(
+    const NekDouble ratio_re_ri,
+    Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
+    Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
+
+    Array<OneD, NekDouble> ComputeConductivity(
+                 const Array<OneD, const int> &zoneindex);
+
+    void SetUpDomainZone(
+        const Array<OneD, const int> &zoneindex,
+        int &Excitezonehead, int &Excitezonetail, 
+        Array<OneD, NekDouble> &excitezone,
+        Array<OneD, NekDouble> &nodezone,
+        Array<OneD, NekDouble> &intrazone,
+        Array<OneD, NekDouble> &extrazone);
+
+    void SetUpAnisotropy(
+            const Array<OneD, const int> &zoneindex,
+            const NekDouble &AnisotropyStrength, 
+            const NekDouble &ExtElemMFLength, 
+            Array<OneD, Array<OneD, NekDouble>> &AniStrength);
 
     Array<OneD, NekDouble> ExtractFiberValue(
         const int nfib, const Array<OneD, const NekDouble> &inarray);
@@ -483,12 +483,14 @@ protected:
     // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int
     // Rnodegap);
     Array<OneD, int> IndexNodeZone1D(
-        const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-        const int ElemMyelenEnd);
+        const MultiRegions::ExpListSharedPtr &field);
         
     Array<OneD, int> IndexNodeZone2D(
-        const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-        const int ElemMyelenEnd);
+        const MultiRegions::ExpListSharedPtr &field);
+
+    Array<OneD, int> ImportIndexNodeZone2D(
+        const std::string &zoneindexfile);
+
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,

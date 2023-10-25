@@ -344,9 +344,7 @@ protected:
 
     // Variable for LDG scheme
     NekDouble m_LDGC11;
-
-    StdRegions::VarCoeffMap m_varcoeff;
-
+    
     // Spherical coordinate vectors
     Array<OneD, int> m_MMFActivation;
 
