@@ -186,9 +186,15 @@ protected:
                             const Array<OneD, const NekDouble> &AniStrength_new,
                             Array<OneD, Array<OneD, NekDouble>> &Velocity_deformed);
 
-    void ComputeDeformedDiff(const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
-                            const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+    void ComputeDeformedDiff(const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                            const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
                             Array<OneD, Array<OneD, NekDouble>> &Vdiff);
+
+    Array<OneD, NekDouble> HelmSolveTimeMapDiff(
+                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                Array<OneD, NekDouble> &VdiffDivergence,
+                Array<OneD, NekDouble> &VdiffMag);
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
     NekDouble m_urest;
@@ -286,11 +292,11 @@ protected:
     const int nstep);
 
     void PlotDeformedTimeMap(
-    const Array<OneD, const NekDouble> &TimeMapDiffExact,
-    const Array<OneD, const NekDouble> &VdiffMag,
-    const Array<OneD, const NekDouble> &VdiffDivergence,
+    const Array<OneD, const NekDouble> &TimeMap_old,
+    const Array<OneD, const NekDouble> &TimeMap_new,
     const Array<OneD, const NekDouble> &TimeMapDiff,
-    const int nstep = 0);
+    const Array<OneD, const NekDouble> &VdiffMag,
+    const Array<OneD, const NekDouble> &VdiffDivergence);
 
     void PlotTimeMapMF(
         const Array<OneD, const NekDouble> &NoboundaryZone,

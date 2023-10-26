@@ -4795,15 +4795,13 @@ void MMFSystem::vector_to_vcoeff(
         {
             for (int k=0; k<m_spacedim; ++k)
             {
-                vcoeff[j][i] += vector[k][i] * movingframes[j][i+k*nq];
+                vcoeff[j][i] = vcoeff[j][i] + vector[k][i] * movingframes[j][i+k*nq];
             }
         }
     }
 }
 
-//
 // \mathbf{v} = v_1 \mathbf{e}^1 + v_2 \mathbf{e}^2
-// 
 void MMFSystem::vcoeff_to_vector(
     const Array<OneD, const Array<OneD, NekDouble>> &vcoeff,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
@@ -4819,7 +4817,7 @@ void MMFSystem::vcoeff_to_vector(
         {
             for (int j=0; j<m_expdim; ++j)
             {
-                vector[k][i] += vcoeff[j][i] * movingframes[j][i+k*nq];
+                vector[k][i] = vector[k][i] + vcoeff[j][i] * movingframes[j][i+k*nq];
             }
         }
     }
