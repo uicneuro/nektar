@@ -193,6 +193,7 @@ protected:
     Array<OneD, NekDouble> HelmSolveTimeMapDiff(
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                Array<OneD, Array<OneD, NekDouble>> &Vdiff,
                 Array<OneD, NekDouble> &VdiffDivergence,
                 Array<OneD, NekDouble> &VdiffMag);
 
@@ -295,6 +296,7 @@ protected:
     const Array<OneD, const NekDouble> &TimeMap_old,
     const Array<OneD, const NekDouble> &TimeMap_new,
     const Array<OneD, const NekDouble> &TimeMapDiff,
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
     const Array<OneD, const NekDouble> &VdiffMag,
     const Array<OneD, const NekDouble> &VdiffDivergence);
 

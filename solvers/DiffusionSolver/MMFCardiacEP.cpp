@@ -311,10 +311,11 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         // Computed the deformed timemap from the old timemap
         Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
         ComputeVelocityDeformed(AniStrength_old[0], Velocity_old, AniStrength_new[0], Velocity_deformed);
+        
+        Array<OneD, Array<OneD, NekDouble>> Vdiff;
+        Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff, VdiffDivergence, VdiffMag);
 
-        Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, VdiffDivergence, VdiffMag);
-
-        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, VdiffMag, VdiffDivergence);
+        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Vdiff, VdiffMag, VdiffDivergence);
 
         wait_on_enter();
     }
@@ -356,6 +357,7 @@ MMFCardiacEP::~MMFCardiacEP()
     Array<OneD, NekDouble> MMFCardiacEP::HelmSolveTimeMapDiff(
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                Array<OneD, Array<OneD, NekDouble>> &Vdiff,
                 Array<OneD, NekDouble> &VdiffDivergence,
                 Array<OneD, NekDouble> &VdiffMag)
     {
@@ -364,7 +366,7 @@ MMFCardiacEP::~MMFCardiacEP()
         Array<OneD, NekDouble> outarray(nq);
 
         // Compute Vdiff = V_new/Vmag_new^2 - V_old/Vmag_old^2
-        Array<OneD, Array<OneD, NekDouble>> Vdiff(m_spacedim);
+        Vdiff = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
         ComputeDeformedDiff(Velocity_old, Velocity_deformed, Vdiff);
 
         VdiffMag = ComputeVelocityMag(Vdiff);
@@ -2170,10 +2172,11 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     const Array<OneD, const NekDouble> &TimeMap_old,
     const Array<OneD, const NekDouble> &TimeMap_new,
     const Array<OneD, const NekDouble> &TimeMapDiff,
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
     const Array<OneD, const NekDouble> &VdiffMag,
     const Array<OneD, const NekDouble> &VdiffDivergence)
 {
-    int nvar    = 7;
+    int nvar    = 10;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2198,20 +2201,28 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMapDiffExact";
     variables[1] = "TimeMapDiff";
-    variables[2] = "VdiffMag";
-    variables[3] = "VdiffDivergence";
-    variables[4] = "TimeMapError";
-    variables[5] = "TimeMap_old";
-    variables[6] = "TimeMap_new";
+    variables[2] = "Vdiffx";
+    variables[3] = "Vdiffy";
+    variables[4] = "Vdiffz";
+    variables[5] = "VdiffMag";
+    variables[6] = "VdiffDivergence";
+    variables[7] = "TimeMapError";
+    variables[8] = "TimeMap_old";
+    variables[9] = "TimeMap_new";
 
     // index:0 -> u
     m_fields[0]->FwdTrans(TimeMapDiffExact, fieldcoeffs[0]);
     m_fields[0]->FwdTrans(TimeMapDiff, fieldcoeffs[1]);
-    m_fields[0]->FwdTrans(VdiffMag, fieldcoeffs[2]);
-    m_fields[0]->FwdTrans(VdiffDivergence, fieldcoeffs[3]);
-    m_fields[0]->FwdTrans(TimeMapError, fieldcoeffs[4]);
-    m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[5]);
-    m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[6]);
+
+    m_fields[0]->FwdTrans(Vdiff[0], fieldcoeffs[2]);
+    m_fields[0]->FwdTrans(Vdiff[1], fieldcoeffs[3]);
+    m_fields[0]->FwdTrans(Vdiff[2], fieldcoeffs[4]);
+    m_fields[0]->FwdTrans(VdiffMag, fieldcoeffs[5]);
+    m_fields[0]->FwdTrans(VdiffDivergence, fieldcoeffs[6]);
+
+    m_fields[0]->FwdTrans(TimeMapError, fieldcoeffs[7]);
+    m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[8]);
+    m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[9]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
