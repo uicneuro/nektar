@@ -261,8 +261,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 ImportIndexNodeZone2D(zoneindexfile);
             }
 
+            std::cout << "HERE 1" << std::endl;
+
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
+            std::cout << "HERE 2" << std::endl;
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(m_nfibers);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
