@@ -3841,18 +3841,18 @@ void ExpList::v_GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
 
     // Assume whole array is of same coordinate dimension
     int coordim = (*m_exp)[0]->GetGeom()->GetCoordim();
+    Array<OneD, Array<OneD, NekDouble>> MFloc;
 
-    Array<OneD, Array<OneD, NekDouble>> MFloc(MFdim * coordim);
     // Process each expansion.
     for (int i = 0; i < m_exp->size(); ++i)
     {
+        MFloc = Array<OneD, Array<OneD, NekDouble>> (MFdim * coordim);
         npts = (*m_exp)[i]->GetTotPoints();
-
+        
         for (int j = 0; j < MFdim * coordim; ++j)
         {
             MFloc[j] = Array<OneD, NekDouble>(npts, 0.0);
         }
-
         // MF from LOCALREGIONS
         (*m_exp)[i]->GetMetricInfo()->GetMovingFrames(
             (*m_exp)[i]->GetPointsKeys(), MMFdir, CircCentre, MFloc);

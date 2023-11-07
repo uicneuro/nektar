@@ -76,9 +76,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    // LibUtilities::CommMpiSharedPtr vCommMpi =
-    //     std::dynamic_pointer_cast<LibUtilities::CommMpi>(pComm);
-
     int nq   = GetTotPoints();
 
     // Derive AnisotropyStrength.

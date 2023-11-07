@@ -242,8 +242,10 @@ void MMFSystem::MMFInitObject(
     std::string MMFdirStr = "LOCAL";
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
-
+    
+    std::cout << "HERE 1" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
+    std::cout << "HERE 2" << std::endl;
 
     switch (m_projectionType)
     {
@@ -978,7 +980,6 @@ void MMFSystem::SetUpMovingFrames(
 
     // Construct The Moving Frames
     movingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-
     for (int j = 0; j < m_mfdim; ++j)
     {
         movingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
