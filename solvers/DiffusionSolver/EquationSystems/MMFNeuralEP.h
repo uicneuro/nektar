@@ -57,7 +57,6 @@ enum NeuralEPType
     eNeuralEP1D,
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
-    eNeuralEP2DbiEmbed,
     SIZE_NeuralEPType ///< Length of enum list
 };
 
@@ -67,7 +66,6 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP1D",
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
-    "NeuralEP2DbiEmbed",
 };
 
 enum SolverSchemeType
@@ -144,18 +142,16 @@ const char *const TimeMapTypeMap[] = {
     "Processing",
 };
 
-enum ExternalCondType
+enum ExtCurrentType
 {
-    eNoExternal,
-    eComputePhie,
-    eApproxByPhim,
-    SIZE_ExternalCondType ///< Length of enum list
+    eWithCurrent,
+    eNoCurrent,
+    SIZE_ExtCurrentType ///< Length of enum list
 };
 
-const char *const ExternalCondTypeMap[] = {
-    "NoExternal",
-    "ComputePhie",
-    "ApproxByPhim",
+const char *const ExtCurrentTypeMap[] = {
+    "WithCurrent",
+    "NoCurrent",
 };
 
 /// A model for cardiac conduction.
@@ -181,7 +177,7 @@ public:
     NeuralEPType m_NeuralEPType;
     SolverSchemeType m_SolverSchemeType;
 
-    ExternalCondType m_ExternalCondType;
+    ExtCurrentType m_ExtCurrentType;
 
     NekDouble d_max, d_min;
 
@@ -442,12 +438,6 @@ protected:
         const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> Derivephie(
-        const Array<OneD, const NekDouble> &phim);
-
-    Array<OneD, NekDouble> DerivephieOne(
-        const Array<OneD, const NekDouble> &phim);
-
-    Array<OneD, NekDouble> DerivephieEmbed(
         const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,

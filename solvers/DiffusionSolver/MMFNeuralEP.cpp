@@ -197,22 +197,22 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     // Either incorporating external current effect or not.
-    if (m_session->DefinesSolverInfo("ExternalCondType"))
+    if (m_session->DefinesSolverInfo("ExtCurrentType"))
     {
-        std::string ExternalCondTypeStr;
-        ExternalCondTypeStr = m_session->GetSolverInfo("ExternalCondType");
-        for (int i = 0; i < (int)SIZE_ExternalCondType; ++i)
+        std::string ExtCurrentTypeStr;
+        ExtCurrentTypeStr = m_session->GetSolverInfo("ExtCurrentType");
+        for (int i = 0; i < (int)SIZE_ExtCurrentType; ++i)
         {
-            if (boost::iequals(ExternalCondTypeMap[i], ExternalCondTypeStr))
+            if (boost::iequals(ExtCurrentTypeMap[i], ExtCurrentTypeStr))
             {
-                m_ExternalCondType = (ExternalCondType)i;
+                m_ExtCurrentType = (ExtCurrentType)i;
                 break;
             }
         }
     }
     else
     {
-        m_ExternalCondType = (ExternalCondType)0;
+        m_ExtCurrentType = (ExtCurrentType)0;
     }
 
     std::string vNeuronModel;
@@ -253,7 +253,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralHelmTest:
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
-        case eNeuralEP2DbiEmbed:
         {
             // Ranvier node zone: 0>: Myelin, -1: node, -2: Extracellular space
             std::string zoneindexfile;
@@ -297,7 +296,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     {
         case eNeuralHelmTest:
         case eNeuralEP2Dbi:
-        case eNeuralEP2DbiEmbed:
         {
             // Set up for phie Poisson solver
             ComputephieMF(m_ratio_re_ri, m_helmfmovingframes, m_phiemovingframes);
@@ -343,7 +341,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             case eNeuralEP2Dbi:
-            case eNeuralEP2DbiEmbed:
             {
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
@@ -1171,7 +1168,16 @@ void MMFNeuralEP::DoSolveMMFZero()
             Array<OneD, NekDouble> phi_m(nq);
             Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
 
-            fulltext.append("phi_m, min: " + std::to_string(Vmath::Vmin(nq, phi_m, 1)) + " , max: " + std::to_string(Vmath::Vmax(nq, phi_m, 1)) );
+            int phimMaxid, phimMinid;
+
+            phimMaxid = Vmath::Imax(nq, phi_m, 1);
+            phimMinid = Vmath::Imin(nq, phi_m, 1);
+
+            fulltext.append("phi_m, max: " + std::to_string(Vmath::Vmax(nq, phi_m, 1)) + " at y = " + std::to_string(x1[phimMaxid]) );
+                        fulltext.append("\n");
+
+            fulltext.append("phi_m, min: " + std::to_string(Vmath::Vmin(nq, phi_m, 1)) + " at y = " + std::to_string(x1[phimMinid]) );
+
             fulltext.append("\n");
 
             if(nvariables==2)
@@ -1181,13 +1187,22 @@ void MMFNeuralEP::DoSolveMMFZero()
 
                 Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
 
-                fulltext.append("phi_e:, min: " + std::to_string(Vmath::Vmin(nq, phi_e, 1)) + " , max: " + std::to_string(Vmath::Vmax(nq, phi_e, 1)) );
-                fulltext.append("\n");
+                int phieMaxid, phieMinid;
+
+                phieMaxid = Vmath::Imax(nq, phi_e, 1);
+                phieMinid = Vmath::Imin(nq, phi_e, 1);
+
+                fulltext.append("phi_e, max: " + std::to_string(Vmath::Vmax(nq, phi_e, 1)) + " at y = " + std::to_string(x1[phieMaxid]) );
+                            fulltext.append("\n");
+
+                fulltext.append("phi_e, min: " + std::to_string(Vmath::Vmin(nq, phi_e, 1)) + " at y = " + std::to_string(x1[phieMinid]) );
 
                 Plotphiecurrent(phi_m, phi_e, nchk);
             }
 
-            // DisplayAtNodes(fulltext, fields);
+            std::cout << fulltext << "\n" << std::endl;
+
+            DisplayAtNodes(fulltext, fields);
 
             Checkpoint_Output(nchk++);
 
@@ -1568,7 +1583,6 @@ void MMFNeuralEP::DisplayatNodePhim(std::string &fulltext, const Array<OneD, con
         for (int i=0; i<nq; ++i)
         {
             zoneindex = m_zoneindex[0][i];
-            std::cout << "zoneindex = " << zoneindex << std::endl;
             if(zoneindex>=0)
             {
                phimavg[zoneindex] += phi_m[i] ;
@@ -1582,7 +1596,7 @@ void MMFNeuralEP::DisplayatNodePhim(std::string &fulltext, const Array<OneD, con
             fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " ) ");
         }
 
-        // fulltext.append(" \n");
+        fulltext.append(" \n");
         std::cout << fulltext << "\n" << std::endl;
 }
 
@@ -2050,7 +2064,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
-    if(m_ExternalCondType==eComputePhie)
+    if(m_ExtCurrentType == eWithCurrent)
     {
         Array<OneD, NekDouble> phie = Derivephie(inarray[0]);
 
@@ -2060,16 +2074,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         // extra current caused by phi_e only occurs in the intracellular space
         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
     }
-
-    // else if(m_ExternalCondType==eApproxByPhim)
-    // {
-    //     Array<OneD, NekDouble> phie(nq);
-
-    //     NekDouble phieratio = -1.0*m_ratio_re_ri/(m_ratio_re_ri + 1.0);
-    //     Vmath::Smul(nq, phieratio, inarray[0], 1, phie, 1);
-
-    //     extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
-    // }
 
     // add divergence of phie to the current
     // Vmath::Svtvp(nq, 1.0 / (m_Cn * m_Rf), &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
@@ -2086,32 +2090,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 }
 
-Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
-    const Array<OneD, const NekDouble> &phim)
-    {
-        int nq = m_fields[0]->GetNpoints();
-        Array<OneD, NekDouble> outarray(nq);
-
-        if(m_NeuralEPType==eNeuralEP2Dbi)
-        {
-            outarray = DerivephieOne(phim);
-        }
-
-        else if (m_NeuralEPType==eNeuralEP2DbiEmbed)
-        {
-            outarray = DerivephieEmbed(phim);
-        }
-
-        return outarray;
-    }
-
-
 // Input: phi_m
 // output: phi_e (m_fields[1]->UpdatePhys()) and outarray (1/C_n/r) * \nabla^2 \phi_e
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-Array<OneD, NekDouble> MMFNeuralEP::DerivephieEmbed(
+Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
     const Array<OneD, const NekDouble> &phim)
 {
     int nq = m_fields[0]->GetNpoints();
@@ -2132,16 +2116,34 @@ Array<OneD, NekDouble> MMFNeuralEP::DerivephieEmbed(
     // Only nonzero for node.
     Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
 
-    // Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-    Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-
     // Compute phie distribution
-    // SetMembraneBoundaryCondition();
     // SetBoundaryConditions(0.0);
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-    m_fields[0]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+
+    switch(m_surfaceType)
+    {
+        // Helsolve with pure Neumann boundary condition
+        case SolverUtils::ePlaneEmbed:
+        {
+            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+            m_fields[0]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            break;
+        }
+
+        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
+        case SolverUtils::ePlane:
+        default:
+        {
+            Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+            m_fields[0]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            break;
+        }
+        
+    }
+
     m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[0]->SetPhysState(true);
 
@@ -2150,40 +2152,102 @@ Array<OneD, NekDouble> MMFNeuralEP::DerivephieEmbed(
     return outarray;
 }
 
-Array<OneD, NekDouble> MMFNeuralEP::DerivephieOne(
-    const Array<OneD, const NekDouble> &phim)
-{
-    int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, NekDouble> outarray(nq);
+// Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
+//     const Array<OneD, const NekDouble> &phim)
+//     {
+//         int nq = m_fields[0]->GetNpoints();
+//         Array<OneD, NekDouble> outarray(nq);
 
-    // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
-    // \sigma_i \nabla phi_m
-    StdRegions::ConstFactorMap phiefactors;
-    phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
-    phiefactors[StdRegions::eFactorLambda] = 0.0;
+//         if(m_NeuralEPType==eNeuralEP2Dbi)
+//         {
+//             outarray = DerivephieOne(phim);
+//         }
 
-    // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
-    // phi_e. This is equivalently achieved by removing all the point sources in
-    // myelinnated fiber region.
-    Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_helmfmovingframes, phim);
+//         else if (m_NeuralEPType==eNeuralEP2DbiEmbed)
+//         {
+//             outarray = DerivephieEmbed(phim);
+//         }
 
-    // Only nonzero for node.
-    Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+//         return outarray;
+//     }
 
-    Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-    Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+// Array<OneD, NekDouble> MMFNeuralEP::DerivephieOne(
+//     const Array<OneD, const NekDouble> &phim)
+// {
+//     int nq = m_fields[0]->GetNpoints();
 
-    // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
-    //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-    m_fields[0]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    m_fields[0]->SetPhysState(true);
+//     Array<OneD, NekDouble> outarray(nq);
 
-    outarray = m_fields[1]->GetPhys();
+//     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
+//     // \sigma_i \nabla phi_m
+//     StdRegions::ConstFactorMap phiefactors;
+//     phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
+//     phiefactors[StdRegions::eFactorLambda] = 0.0;
 
-    return outarray;
-}
+//     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
+//     // phi_e. This is equivalently achieved by removing all the point sources in
+//     // myelinnated fiber region.
+//     Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_helmfmovingframes, phim);
+
+//     // Only nonzero for node.
+//     Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+
+//     Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+//     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+
+//     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
+//     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
+//     m_fields[0]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+//     m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+//     m_fields[0]->SetPhysState(true);
+
+//     outarray = m_fields[1]->GetPhys();
+
+//     return outarray;
+// }
+
+
+// Array<OneD, NekDouble> MMFNeuralEP::DerivephieEmbed(
+//     const Array<OneD, const NekDouble> &phim)
+// {
+//     int nq = m_fields[0]->GetNpoints();
+
+//     Array<OneD, NekDouble> outarray(nq);
+
+//     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
+//     // \sigma_i \nabla phi_m
+//     StdRegions::ConstFactorMap phiefactors;
+//     phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
+//     phiefactors[StdRegions::eFactorLambda] = 0.0;
+
+//     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
+//     // phi_e. This is equivalently achieved by removing all the point sources in
+//     // myelinnated fiber region.
+//     Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_helmfmovingframes, phim);
+
+//     // Only nonzero for node.
+//     Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+
+//     // Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+//     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+
+//     // Compute phie distribution
+//     // SetMembraneBoundaryCondition();
+//     // SetBoundaryConditions(0.0);
+
+//     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
+//     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
+//     m_fields[0]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+//     m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+//     m_fields[0]->SetPhysState(true);
+
+//     outarray = m_fields[1]->GetPhys();
+
+//     return outarray;
+// }
+
+
 
 void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                                          bool dumpInitialConditions,
@@ -2199,7 +2263,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         case eNeuralEP1D:
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
-        case eNeuralEP2DbiEmbed:
         {
             m_neuron->Initialise();
 
@@ -2396,7 +2459,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 
     SolverUtils::AddSummaryItem(s, "NeuralEPType",
                                 NeuralEPTypeMap[m_NeuralEPType]);
-    SolverUtils::AddSummaryItem(s, "ExternalCondType", ExternalCondTypeMap[m_ExternalCondType]);
+    SolverUtils::AddSummaryItem(s, "ExtCurrentType", ExtCurrentTypeMap[m_ExtCurrentType]);
     SolverUtils::AddSummaryItem(s, "SolverSchemeType",
                                 SolverSchemeTypeMap[m_SolverSchemeType]);
     SolverUtils::AddSummaryItem(s, "TimeMapScheme", TimeMapTypeMap[m_TimeMapScheme]);

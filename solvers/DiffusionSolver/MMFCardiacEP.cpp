@@ -312,7 +312,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         Array<OneD, Array<OneD, NekDouble>> Vdiff;
         Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff, VdiffDivergence, VdiffMag);
 
-        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Vdiff, VdiffMag, VdiffDivergence);
+        std::cout << "TimeMapDiff = [ " << Vmath::Vmax(nq, TimeMapDiff, 1) << " , " << Vmath::Vmin(nq, TimeMapDiff, 1) << " ] " << std::endl;
+
+        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Velocity_old, VdiffMag, VdiffDivergence);
 
         wait_on_enter();
     }
@@ -381,6 +383,7 @@ MMFCardiacEP::~MMFCardiacEP()
         factors[StdRegions::eFactorLambda] = 0.0;
 
         Vmath::Sadd(nq, -1.0 * AvgInt(VdiffDivergence), VdiffDivergence, 1, VdiffDivergence, 1);
+        std::cout << "VdiffDiv for pure Neumann = " << AvgInt(VdiffDivergence) << std::endl;
         Vmath::Vcopy(nq, VdiffDivergence, 1, m_fields[0]->UpdatePhys(), 1);
 
         m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors);
@@ -2184,8 +2187,6 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     {
         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
-
-    std::cout << "Timemap_diff = [ " << Vmath::Vmin(nq, TimeMapDiff, 1) << " , " << Vmath::Vmax(nq, TimeMapDiff, 1) << " ] " << std::endl;
 
     Array<OneD, NekDouble> TimeMapDiffExact(nq);
     Vmath::Vsub(nq, TimeMap_new, 1, TimeMap_old, 1, TimeMapDiffExact, 1);

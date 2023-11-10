@@ -6302,7 +6302,7 @@ NekDouble MMFSystem::AvgInt(const Array<OneD, const NekDouble> &inarray)
 
     NekDouble jac = m_fields[0]->PhysIntegral(Ones);
 
-    return (m_fields[0]->PhysIntegral(inarray)) / jac;
+   return (m_fields[0]->PhysIntegral(inarray)) / jac;
 }
 
 NekDouble MMFSystem::AvgAbsInt(const Array<OneD, const NekDouble> &inarray)
