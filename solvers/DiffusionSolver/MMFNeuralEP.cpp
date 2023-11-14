@@ -1140,11 +1140,6 @@ void MMFNeuralEP::DoSolveMMFZero()
                       << "Time: " << std::setw(12) << std::left << m_time
                       << std::endl;
 
-            // std::stringstream ss;
-            // ss << cpuTime / 60.0 << " min.";
-            // std::cout << " CPU Time: " << std::setw(8) << std::left << ss.str()
-            //           << std::endl << std::endl;
-
             fulltext.append("\n");
             fulltext.append("Time: " + std::to_string(m_time));
             fulltext.append("\n");
@@ -1180,7 +1175,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             fulltext.append("\n");
 
-            if(nvariables==2)
+            if( (nvariables==2) && (m_ExtCurrentType == eWithCurrent) )
             {
                 // phi_e is defined at the node and extracellular space
                 Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
@@ -1202,13 +1197,11 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
-            DisplayAtNodes(fulltext, fields);
-
+            // DisplayAtNodes(fulltext, fields);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
         }
-
 
         ++step;
     } // namespace Nektar
@@ -1857,8 +1850,12 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    // m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    //                        factors, m_varcoeff);
+
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                            factors, m_varcoeff);
+
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 }
