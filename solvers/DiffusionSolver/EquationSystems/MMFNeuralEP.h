@@ -154,6 +154,18 @@ const char *const ExtCurrentTypeMap[] = {
     "NoCurrent",
 };
 
+enum NodeIndexType
+{
+    eSequential,
+    eNodefirst,
+    SIZE_NodeIndexType ///< Length of enum list
+};
+
+const char *const NodeIndexTypeMap[] = {
+    "Sequential",
+    "Nodefirst",
+};
+
 /// A model for cardiac conduction.
 class MMFNeuralEP : public SolverUtils::MMFSystem
 {
@@ -179,6 +191,8 @@ public:
 
     ExtCurrentType m_ExtCurrentType;
 
+    NodeIndexType m_NodeIndexType;
+
     NekDouble d_max, d_min;
 
     virtual void v_InitObject(bool DeclareField = true) override;
@@ -197,21 +211,19 @@ protected:
     StdRegions::VarCoeffMap m_phievarcoeff;
 
     int m_Verbose;
-
-    NekDouble m_InitPtx, m_InitPty, m_InitPtz;
-    NekDouble m_Rf, m_Cn, m_Cm;
-
-    Array<OneD, NekDouble> m_StimAtNode;
-
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
-    
     int m_Convectiven;
     int m_Nnode, m_NumelemNode, m_NumelemMyel;
     int m_zonestart, m_zoneend;
 
+    NekDouble m_InitPtx, m_InitPty, m_InitPtz;
+    NekDouble m_Rf, m_Cn, m_Cm;
     NekDouble m_ExtElemMFLength;
-
     NekDouble m_urest;
+
+    std::string m_zoneindexfile;
+
+    Array<OneD, NekDouble> m_StimAtNode;
 
     TimeMapType m_TimeMapScheme;
     
@@ -248,8 +260,7 @@ protected:
 
     // Scar tisseu related variables
     NekDouble m_PVcond;
-    NekDouble m_ScarSize, m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy,
-        m_ScarLocz;
+    NekDouble m_ScarSize, m_ScarStr, m_ScarPis, m_ScarLocx, m_ScarLocy, m_ScarLocz;
     NekDouble m_RelDivSize, m_RelDivStr, m_RelDivPis, m_RelDivLocx;
 
     // Relative divergence related variables
@@ -324,6 +335,8 @@ protected:
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
     NekDouble m_AnisotropyStrength;
+    
+    void CheckOutZoneAni();
 
     Array<OneD, int> GetInternalBoundaryPoints();
     
@@ -495,11 +508,17 @@ protected:
         const int ElemMyelenEnd);
         
     Array<OneD, int> IndexNodeZone2D(
+        const MultiRegions::ExpListSharedPtr &field);
+
+    Array<OneD, int> IndexNodeZone2DNodefirst(
         const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
         const int ElemMyelenEnd);
 
-    Array<OneD, int> ImportIndexNodeZone2D(
-        const std::string &zoneindexfile);
+    Array<OneD, int> IndexNodeZone2DSequential(
+        const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
+        const int NumelemNode, const int NumelemMyel);
+        
+    Array<OneD, int> ImportIndexNodeZone2D(const std::string &zoneindexfile);
 
     void SetUpAnisotropy(
             const Array<OneD, const int> &zoneindex,
