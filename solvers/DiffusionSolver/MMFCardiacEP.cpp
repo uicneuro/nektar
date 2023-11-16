@@ -102,7 +102,11 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
 
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
-    m_session->LoadParameter("AnisotropyRegion", m_AnisotropyRegion, 1000000);
+
+    m_session->LoadParameter("AniRegionStart", m_AniRegionStart, 0);
+    m_session->LoadParameter("AniRegionEnd", m_AniRegionEnd, 1000000);
+
+    m_session->LoadParameter("Gaussiantau", m_Gaussiantau, 10);
 
     //Aliev-Panfilov Parameter
     m_session->LoadParameter("k", m_k, 0.0);
@@ -212,6 +216,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
         case eHeterogeneousIsotropy:
         case eRegionalHeterogeneous:
+        case eGaussianHeterogeneous:
         {
             LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, m_AniStrength);
             MMFSystem::MMFInitObject(m_AniStrength);
@@ -270,51 +275,15 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
     if(m_SolverSchemeType==eTimeMapDeform)
     {
-        Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
-        Array<OneD, NekDouble> Velocitymag_old(nq);
-        Array<OneD, Array<OneD, NekDouble>> AniStrength_old(m_expdim);
-        Array<OneD, Array<OneD, NekDouble>> TimeMap_old(1);
-
-        Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
-        Array<OneD, NekDouble> Velocitymag_new(nq);
-        Array<OneD, Array<OneD, NekDouble>> AniStrength_new(m_expdim);
-        Array<OneD, Array<OneD, NekDouble>> TimeMap_new(1);
-
-        Array<OneD, NekDouble> VdiffMag(nq);
-        Array<OneD, NekDouble> VdiffDivergence(nq);
-
-        // load old timemap                   
-        std::cout << " Load old Time Map =============================" << std::endl;
-
-        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
-
+        // load original timemap
         std::string TMsessionName_old;
         m_session->LoadSolverInfo("TMsessionName_old", TMsessionName_old, "m_sessionName");
-        
-        std::string loadname_old = TMsessionName_old + "_TimeMap_" +
-                           boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        LoadTimeMap(loadname_old, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
-
-        // load new TimeMap
-        std::cout << " Load new Time Map =============================" << std::endl;
+        // consider a new conductivity map
         m_session->LoadSolverInfo("TMsessionName", m_TMsessionName, "m_sessionName");
 
-        std::string loadname = m_TMsessionName + "_TimeMap_" +
-                           boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
-
-        LoadTimeMap(loadname, TimeMap_new, AniStrength_new, Velocitymag_new, Velocity_new);
-
-        // Computed the deformed timemap from the old timemap
-        Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
-        ComputeVelocityDeformed(AniStrength_old[0], Velocity_old, AniStrength_new[0], Velocity_deformed);
-        
-        Array<OneD, Array<OneD, NekDouble>> Vdiff;
-        Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff, VdiffDivergence, VdiffMag);
-
-        std::cout << "TimeMapDiff = [ " << Vmath::Vmax(nq, TimeMapDiff, 1) << " , " << Vmath::Vmin(nq, TimeMapDiff, 1) << " ] " << std::endl;
-
-        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Velocity_old, VdiffMag, VdiffDivergence);
+        ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+        Array<OneD, NekDouble> TimeMapDiff = ComputeTimeMapDeform(TMsessionName_old, m_TMsessionName); 
 
         wait_on_enter();
     }
@@ -353,6 +322,52 @@ MMFCardiacEP::~MMFCardiacEP()
 {
 }
 
+Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew) 
+    {
+        int nq      = GetNpoints();
+
+        Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
+        Array<OneD, NekDouble> Velocitymag_old(nq);
+        Array<OneD, Array<OneD, NekDouble>> AniStrength_old(m_expdim);
+        Array<OneD, Array<OneD, NekDouble>> TimeMap_old(1);
+
+        Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
+        Array<OneD, NekDouble> Velocitymag_new(nq);
+        Array<OneD, Array<OneD, NekDouble>> AniStrength_new(m_expdim);
+        Array<OneD, Array<OneD, NekDouble>> TimeMap_new(1);
+
+        Array<OneD, NekDouble> VdiffMag(nq);
+        Array<OneD, NekDouble> VdiffDivergence(nq);
+
+        // load old timemap                   
+        m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
+        
+        std::string loadname_old = sessionold + "_TimeMap_" +
+                        boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
+
+        LoadTimeMap(loadname_old, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
+
+        // load new timemap                               
+        std::string loadname = sessionnew + "_TimeMap_" +
+                        boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
+
+        LoadTimeMap(loadname, TimeMap_new, AniStrength_new, Velocitymag_new, Velocity_new);
+
+        // Computed the deformed timemap from the old timemap
+        Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
+        ComputeVelocityDeformed(AniStrength_old[0], Velocity_old, AniStrength_new[0], Velocity_deformed);
+        
+        Array<OneD, Array<OneD, NekDouble>> Vdiff;
+        Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff, VdiffDivergence, VdiffMag);
+
+        std::cout << "TimeMapDiff = [ " << Vmath::Vmax(nq, TimeMapDiff, 1) << " , " << Vmath::Vmin(nq, TimeMapDiff, 1) << " ] " << std::endl;
+
+        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Velocity_old, VdiffMag, VdiffDivergence);
+
+        return TimeMapDiff;
+    }
+
+
     Array<OneD, NekDouble> MMFCardiacEP::HelmSolveTimeMapDiff(
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
@@ -386,7 +401,7 @@ MMFCardiacEP::~MMFCardiacEP()
         std::cout << "VdiffDiv for pure Neumann = " << AvgInt(VdiffDivergence) << std::endl;
         Vmath::Vcopy(nq, VdiffDivergence, 1, m_fields[0]->UpdatePhys(), 1);
 
-        m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors);
+        m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
         m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), m_fields[0]->UpdatePhys());
         m_fields[0]->SetPhysState(true);
 
@@ -595,7 +610,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         case eRegionalHeterogeneous:
         {
             int index;
-            for (int i = 0; i < m_AnisotropyRegion; ++i)
+            for (int i = m_AniRegionStart; i < m_AniRegionEnd; ++i)
                 {
                     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                         {
@@ -603,6 +618,23 @@ void MMFCardiacEP::LoadCardiacFiber(
                             AniStrength[0][index] = sqrt(AnisotropyStrength);            
                         }
                 }
+        }
+        break;
+
+        case eGaussianHeterogeneous:
+        {
+            Array<OneD, NekDouble> x0(nq);
+            Array<OneD, NekDouble> x1(nq);
+            Array<OneD, NekDouble> x2(nq);
+
+            m_fields[0]->GetCoords(x0, x1, x2);
+
+            NekDouble tau;
+            for (int i=0; i<nq; ++i)
+            {
+                tau = x0[i]/m_Gaussiantau;
+                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp(-0.5 * tau * tau);
+            }
         }
         break;
 
@@ -2533,7 +2565,8 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
         SolverUtils::AddSummaryItem(s, "m_TimeMapDelay", m_TimeMapDelay);
     }
 
-    SolverUtils::AddSummaryItem(s, "AnisotropyRegion", m_AnisotropyRegion);
+    SolverUtils::AddSummaryItem(s, "AniRegionStart", m_AniRegionStart);
+    SolverUtils::AddSummaryItem(s, "AniRegionEnd", m_AniRegionEnd);
     SolverUtils::AddSummaryItem(s, "AnisotropyStrength", m_AnisotropyStrength);
     SolverUtils::AddSummaryItem(s, "urest", m_urest);
 

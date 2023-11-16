@@ -78,6 +78,7 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
+    eGaussianHeterogeneous,
     SIZE_MediumType
 };
 
@@ -88,6 +89,7 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
+    "GaussianHeterogeneous",
 };
 
 enum InitWaveType
@@ -175,6 +177,8 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_TMvelocity;
     Array<OneD, NekDouble> m_TMvelocitymag;
 
+    Array<OneD, NekDouble> ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
+
     void LoadTimeMap(std::string &loadname, 
                     Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                     Array<OneD, Array<OneD, NekDouble>> &AniStrength,
@@ -206,7 +210,8 @@ protected:
     NekDouble m_RelDivSize, m_RelDivStr, m_RelDivPis, m_RelDivLocx;
 
     // Coefficients for Anisotropy
-    int m_AnisotropyRegion;
+    int m_AniRegionStart, m_AniRegionEnd;
+    int m_Gaussiantau;
     NekDouble m_AnisotropyStrength;
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
 
