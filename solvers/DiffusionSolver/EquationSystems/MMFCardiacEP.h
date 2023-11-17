@@ -78,6 +78,7 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
+    eRegionalIsotropy,
     eGaussianHeterogeneous,
     SIZE_MediumType
 };
@@ -89,6 +90,7 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
+    "RegionalIsotropy",
     "GaussianHeterogeneous",
 };
 

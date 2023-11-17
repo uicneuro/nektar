@@ -216,6 +216,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
         case eHeterogeneousIsotropy:
         case eRegionalHeterogeneous:
+        case eRegionalIsotropy:
         case eGaussianHeterogeneous:
         {
             LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, m_AniStrength);
@@ -360,9 +361,9 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
         Array<OneD, Array<OneD, NekDouble>> Vdiff;
         Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff, VdiffDivergence, VdiffMag);
 
-        std::cout << "TimeMapDiff = [ " << Vmath::Vmax(nq, TimeMapDiff, 1) << " , " << Vmath::Vmin(nq, TimeMapDiff, 1) << " ] " << std::endl;
-
         PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Velocity_old, VdiffMag, VdiffDivergence);
+
+        std::cout << "TimeMapExact[0] = " << TimeMap_old[0][0] - TimeMap_new[0][0] << ", TimeMapExact[end] = " << TimeMap_old[0][nq-1] - TimeMap_new[0][nq-1] << std::endl;
 
         return TimeMapDiff;
     }
@@ -406,6 +407,11 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
         m_fields[0]->SetPhysState(true);
 
         outarray = m_fields[0]->GetPhys();
+
+        std::cout << "outarray[0] = " << outarray[0] << ", outarray[end] = " << outarray[nq-1] << ", outarray_diff = " << outarray[0] - outarray[nq-1] <<  std::endl;
+
+        // Let the Time Map at the left end should be zero
+        Vmath::Sadd(nq, -1.0 * outarray[0], outarray, 1, outarray, 1);
 
         return outarray;
     }
@@ -486,10 +492,10 @@ void MMFCardiacEP::ComputeVelocityDeformed(const Array<OneD, const NekDouble> &A
     }
 
 void MMFCardiacEP::LoadTimeMap(std::string &loadname,
-                   Array<OneD, Array<OneD, NekDouble>> &TimeMap,
-                    Array<OneD, Array<OneD, NekDouble>> &AniStrength,
-                    Array<OneD, NekDouble> &Velocitymag,
-                    Array<OneD, Array<OneD, NekDouble>> &Velocity)
+                                Array<OneD, Array<OneD, NekDouble>> &TimeMap,
+                                Array<OneD, Array<OneD, NekDouble>> &AniStrength,
+                                Array<OneD, NekDouble> &Velocitymag,
+                                Array<OneD, Array<OneD, NekDouble>> &Velocity)
 {
     int nvar    = 6;
     int nq      = GetNpoints();
@@ -621,6 +627,21 @@ void MMFCardiacEP::LoadCardiacFiber(
         }
         break;
 
+        case eRegionalIsotropy:
+        {
+            int index;
+            for (int i = m_AniRegionStart; i < m_AniRegionEnd; ++i)
+                {
+                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                        {
+                            index = m_fields[0]->GetPhys_Offset(i) + j;
+                            AniStrength[0][index] = sqrt(AnisotropyStrength);
+                            AniStrength[1][index] = sqrt(AnisotropyStrength);                        
+                        }
+                }
+        }
+        break;
+
         case eGaussianHeterogeneous:
         {
             Array<OneD, NekDouble> x0(nq);
@@ -641,6 +662,8 @@ void MMFCardiacEP::LoadCardiacFiber(
         default:
             break;
     }
+
+    std::cout << "Anisotropy = [ " << Vmath::Vmin(nq, AniStrength[0], 1) << " , " << Vmath::Vmax(nq, AniStrength[0], 1) << " ] " << std::endl;
 
     // Plot Cardiac fibre projection map
     // PlotProcessedCardiacFibre(movingframes[0], fcdotk, AniConstruction);
@@ -2199,7 +2222,6 @@ void MMFCardiacEP::PlotTimeMap(
                 << ", vel mag max = " << Vmath::Vmax(nq, VelocityMag, 1) << std::endl;
 }
 
-//           PlotDeformedTimeMap(TimeMap_old, TimeMap_new, TimeMapDiff, VdiffMag, VdiffDivergence);
 void MMFCardiacEP::PlotDeformedTimeMap(
     const Array<OneD, const NekDouble> &TimeMap_old,
     const Array<OneD, const NekDouble> &TimeMap_new,
@@ -2226,7 +2248,9 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     Array<OneD, NekDouble> TimeMapError(nq);
     Vmath::Vsub(nq, TimeMapDiffExact, 1, TimeMapDiff, 1, TimeMapError, 1);
 
-    std::cout << "TimeMapError = [ " << Vmath::Vmin(nq, TimeMapError, 1) << " , " << Vmath::Vmax(nq, TimeMapError, 1) << " ] " << std::endl;
+    NekDouble TMerrMax = Vmath::Vamax(nq, TimeMapError, 1) / Vmath::Vamax(nq, TimeMap_old, 1);
+
+    std::cout << "Max. TimeMapError = " << TMerrMax << std::endl;
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMapDiffExact";

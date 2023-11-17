@@ -243,9 +243,7 @@ void MMFSystem::MMFInitObject(
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
     
-    std::cout << "HERE 1" << std::endl;
     SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
-    std::cout << "HERE 2" << std::endl;
 
     switch (m_projectionType)
     {
