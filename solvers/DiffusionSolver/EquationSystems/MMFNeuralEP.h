@@ -351,9 +351,11 @@ protected:
                                    const Array<OneD, const NekDouble> &phi_e,
                                    const int nstep);
 
-    void DisplayAtNodes(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    void DisplayatNodePhim(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    void DisplayatNodePhimPhie(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+
+    void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
@@ -382,11 +384,6 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
-
-    // void DoImplicitSolveNeuralEP2p1D(
-    //     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    //     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    //     const NekDouble lambda);
 
     void DoImplicitSolveNeuralEP2Dmono(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -503,9 +500,13 @@ protected:
 
     // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int
     // Rnodegap);
+    // Array<OneD, int> IndexNodeZone1D(
+    //     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
+    //     const int ElemMyelenEnd);
+
     Array<OneD, int> IndexNodeZone1D(
-        const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-        const int ElemMyelenEnd);
+        const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
+        const int NumelemNode, const int NumelemMyel);
         
     Array<OneD, int> IndexNodeZone2D(
         const MultiRegions::ExpListSharedPtr &field);
