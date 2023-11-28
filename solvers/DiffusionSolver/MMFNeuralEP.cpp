@@ -2255,14 +2255,18 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         outarray[i] = Array<OneD, NekDouble>(nq);
     }
 
+    std::cout << "DoOdeRhsNeuralEP2Dbi: HERE 1" << std::endl;
+
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
+    std::cout << "DoOdeRhsNeuralEP2Dbi: HERE 2" << std::endl;
 
     // Add Stimulus
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
         m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
     }
+    std::cout << "DoOdeRhsNeuralEP2Dbi: HERE 3" << std::endl;
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
@@ -2278,6 +2282,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         // extra current caused by phi_e only occurs in the intracellular space
         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
     }
+    std::cout << "DoOdeRhsNeuralEP2Dbi: HERE 4" << std::endl;
 
     // add divergence of phie to the current
     // Vmath::Svtvp(nq, 1.0 / (m_Cn * m_Rf), &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
