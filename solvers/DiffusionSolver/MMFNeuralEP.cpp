@@ -271,7 +271,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
               // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
-            std::cout << "Excitezonehead = " << m_Excitezonehead << ", Excitezonetail = " << m_Excitezonetail << std::endl;
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(m_nfibers);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
@@ -286,22 +285,23 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_session->LoadSolverInfo("zoneindexfile", m_zoneindexfile, "Null");
             
             m_zoneindex = Array<OneD, Array<OneD, int>>(1);
-            if(m_zoneindexfile=="Null")
-            {
-                std::cout << "zoneindex is generated =============================================" << std::endl;
-                m_zoneindex[0] = IndexNodeZone2D(m_fields[0]);
-                savezoneindex(m_zoneindex[0]);
-            }
+            m_zoneindex[0]  = Array<OneD, int>(nq, 1); 
 
-            else
-            {
-                std::cout << "MPI: zoneindex is imported =============================================" << std::endl;
-                ImportIndexNodeZone2D(m_zoneindexfile);
-            }
+            // if(m_zoneindexfile=="Null")
+            // {
+            //     std::cout << "zoneindex is generated =============================================" << std::endl;
+            //     m_zoneindex[0] = IndexNodeZone2D(m_fields[0]);
+            //     savezoneindex(m_zoneindex[0]);
+            // }
+
+            // else
+            // {
+            //     std::cout << "MPI: zoneindex is imported =============================================" << std::endl;
+            //     ImportIndexNodeZone2D(m_zoneindexfile);
+            // }
 
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
-            std::cout << "Excitezonehead = " << m_Excitezonehead << ", Excitezonetail = " << m_Excitezonetail << std::endl;
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
