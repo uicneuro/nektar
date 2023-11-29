@@ -248,6 +248,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_Cm = m_neuron->GetCapacitanceValue(0);
     m_Cn = m_neuron->GetCapacitanceValue(1);
 
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    Array<OneD, NekDouble> x0avg(nq);
+    Array<OneD, NekDouble> x1avg(nq);
+    Array<OneD, NekDouble> x2avg(nq);
+
+    m_fields[0]->ComputeCellAvg(x0, x1, x2, x0avg, x1avg, x2avg);
+    for (int i=0; i<nq; ++i)
+    {
+        std::cout << "i = " << i << ", x = " << x0[i] << ", y = " << x1[i] 
+        << ", xavg = " << x0avg[i] << ", yavg = " << x1avg[i] << std::endl;
+    }
+
+    wait_on_enter();
+
    switch (m_NeuralEPType)
     {
         // case eNeuralEPPT:

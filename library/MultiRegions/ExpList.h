@@ -1098,6 +1098,14 @@ public:
 
     MULTI_REGIONS_EXPORT void ClearGlobalLinSysManager(void);
 
+    MULTI_REGIONS_EXPORT void ComputeCellAvg(
+    const Array<OneD, const NekDouble> &x, 
+    const Array<OneD, const NekDouble> &y, 
+    const Array<OneD, const NekDouble> &z,
+    Array<OneD, NekDouble> &xcellavg, 
+    Array<OneD, NekDouble> &ycellavg, 
+    Array<OneD, NekDouble> &zcellavg);
+
     MULTI_REGIONS_EXPORT void ElementWiseActivation(
         const int sign, const Array<OneD, const NekDouble> &velmag,
         const NekDouble ActivationTol, Array<OneD, int> &Activated);
@@ -1618,6 +1626,14 @@ NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
         Array<OneD, NekDouble> &outarray);
 
     virtual void v_ClearGlobalLinSysManager(void);
+
+    virtual void v_ComputeCellAvg(
+    const Array<OneD, const NekDouble> &x, 
+    const Array<OneD, const NekDouble> &y, 
+    const Array<OneD, const NekDouble> &z,
+    Array<OneD, NekDouble> &xcellavg, 
+    Array<OneD, NekDouble> &ycellavg, 
+    Array<OneD, NekDouble> &zcellavg);
 
     virtual void v_ElementWiseActivation(
         const int sign, const Array<OneD, const NekDouble> &velmag,
@@ -2576,6 +2592,19 @@ inline void ExpList::GetBoundaryNormals(
 {
     v_GetBoundaryNormals(i, normals);
 }
+
+
+inline void ExpList::ComputeCellAvg(
+    const Array<OneD, const NekDouble> &x, 
+    const Array<OneD, const NekDouble> &y, 
+    const Array<OneD, const NekDouble> &z,
+    Array<OneD, NekDouble> &xcellavg, 
+    Array<OneD, NekDouble> &ycellavg, 
+    Array<OneD, NekDouble> &zcellavg)
+{
+    v_ComputeCellAvg(x, y, z, xcellavg, ycellavg, zcellavg);
+}
+
 
 inline void ExpList::ElementWiseActivation(
     const int sign, const Array<OneD, const NekDouble> &velmag,

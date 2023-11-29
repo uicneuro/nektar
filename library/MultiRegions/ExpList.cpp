@@ -3382,6 +3382,52 @@ void ExpList::v_ClearGlobalLinSysManager(void)
 }
 
 // Return all 0 if there is at least one zero velocity.
+void ExpList::v_ComputeCellAvg(
+    const Array<OneD, const NekDouble> &x, 
+    const Array<OneD, const NekDouble> &y, 
+    const Array<OneD, const NekDouble> &z,
+    Array<OneD, NekDouble> &xcellavg, 
+    Array<OneD, NekDouble> &ycellavg, 
+    Array<OneD, NekDouble> &zcellavg)
+{
+    int i, j, npts, offset;
+    int nq = x.size();
+
+    xcellavg = Array<OneD, NekDouble>(nq);
+    ycellavg = Array<OneD, NekDouble>(nq);
+    zcellavg = Array<OneD, NekDouble>(nq);
+
+    NekDouble xavg, yavg, zavg;
+    for (i = 0; i < (*m_exp).size(); ++i)
+    {
+        npts   = (*m_exp)[i]->GetTotPoints();
+        offset = m_phys_offset[i];
+
+        xavg = 0.0;
+        yavg = 0.0;
+        zavg = 0.0;
+        for (j = 0; j < npts; ++j)
+        {
+            xavg = xavg + x[offset+j];
+            yavg = yavg + y[offset+j];
+            zavg = zavg + z[offset+j];
+        }
+
+        xavg = xavg/npts;
+        yavg = yavg/npts;
+        zavg = zavg/npts;
+
+        for (j = 0; j < npts; ++j)
+        {
+            xcellavg[offset+j] = xavg;
+            ycellavg[offset+j] = yavg;
+            zcellavg[offset+j] = zavg;
+        }
+    }
+}
+
+
+// Return all 0 if there is at least one zero velocity.
 void ExpList::v_ElementWiseActivation(
     const int sign, const Array<OneD, const NekDouble> &vector,
     const NekDouble ActivationTol, Array<OneD, int> &Activated)
