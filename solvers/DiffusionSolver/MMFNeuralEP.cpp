@@ -1310,11 +1310,6 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            if(m_Verbose)
-            {
-                PrintRegionalAvgMax(fields[0]);
-            }
-            
             // phim should be only defined in the intracellular space
             Array<OneD, NekDouble> phi_m(nq);
             Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
@@ -1353,19 +1348,20 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
-            if(m_NeuralEPType==eNeuralEP1D)
-            {
-                DisplayNode1D(fulltext, fields);
-                for (int i=0; i<nq; ++i)
-                {
-                    std::cout << "i = " << i << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i]
-                    << ", phim = " << phi_m[i] << std::endl;
-                }
-            }
+            // if(m_NeuralEPType==eNeuralEP1D)
+            // {
+            //     DisplayNode1D(fulltext, fields);
+            //     for (int i=0; i<nq; ++i)
+            //     {
+            //         std::cout << "i = " << i << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i]
+            //         << ", phim = " << phi_m[i] << std::endl;
+            //     }
+            // }
 
-            else{
-                DisplayNode2D(fulltext, fields);
-            }
+            // else
+            // {
+            //     DisplayNode2D(fulltext, fields);
+            // }
 
             Checkpoint_Output(nchk++);
 
@@ -1395,149 +1391,149 @@ void MMFNeuralEP::DoSolveMMFZero()
 } 
 // namespace Nektar
 
-void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0)
-{
-    int index;
-    int Nodeid, Myelid, Extid;
-    int nq               = GetTotPoints();
+// void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0)
+// {
+//     int index;
+//     int Nodeid, Myelid, Extid;
+//     int nq               = GetTotPoints();
 
-    NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
-    NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
+//     NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
+//     NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
 
-    NekDouble ue, um, elemavgm, elemavge;
+//     NekDouble ue, um, elemavgm, elemavge;
 
-    NekDouble yavgindex, yavg;
+//     NekDouble yavgindex, yavg;
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
+//     Array<OneD, NekDouble> x0(nq);
+//     Array<OneD, NekDouble> x1(nq);
+//     Array<OneD, NekDouble> x2(nq);
 
-    m_fields[0]->GetCoords(x0, x1, x2);
+//     m_fields[0]->GetCoords(x0, x1, x2);
     
-    std::cout << " ========================================================================================== " << std::endl;
+//     std::cout << " ========================================================================================== " << std::endl;
 
-    // Max um and ue at Node
-    NodeMaxm = 0.0;
-    NodeMaxe = 0.0;
+//     // Max um and ue at Node
+//     NodeMaxm = 0.0;
+//     NodeMaxe = 0.0;
 
-    Nodeid = 0;
-    yavg = 0.0;
-    for (int i = 0; i < m_ElemNodeEnd; ++i)
-    {
-        elemavgm = 0.0;
-        elemavge = 0.0;
-        yavg = 0.0;
-        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-        {
-            index = m_fields[0]->GetPhys_Offset(i) + j;
-            um = field0[index];
-            ue = (m_fields[1]->GetPhys())[index];
+//     Nodeid = 0;
+//     yavg = 0.0;
+//     for (int i = 0; i < m_ElemNodeEnd; ++i)
+//     {
+//         elemavgm = 0.0;
+//         elemavge = 0.0;
+//         yavg = 0.0;
+//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+//         {
+//             index = m_fields[0]->GetPhys_Offset(i) + j;
+//             um = field0[index];
+//             ue = (m_fields[1]->GetPhys())[index];
 
-            elemavgm += um;
-            elemavge += ue;
-            yavg += x1[index];
-        }
-        elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
-        elemavge = elemavge/m_fields[0]->GetTotPoints(i);
-        yavg = yavg/m_fields[0]->GetTotPoints(i);
+//             elemavgm += um;
+//             elemavge += ue;
+//             yavg += x1[index];
+//         }
+//         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
+//         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
+//         yavg = yavg/m_fields[0]->GetTotPoints(i);
 
-        if(elemavgm>NodeMaxm)
-        {
-            NodeMaxm = elemavgm;
-            yavgindex = yavg;
-            Nodeid = i;
-        }
+//         if(elemavgm>NodeMaxm)
+//         {
+//             NodeMaxm = elemavgm;
+//             yavgindex = yavg;
+//             Nodeid = i;
+//         }
 
-        if(elemavge>NodeMaxe)
-        {
-            NodeMaxe = elemavge;
-        }
-    }
+//         if(elemavge>NodeMaxe)
+//         {
+//             NodeMaxe = elemavge;
+//         }
+//     }
 
-    std::cout << "Node id = " << Nodeid << ", : um_max = " << NodeMaxm << " at y = " << yavgindex << ", ue_max = " << NodeMaxe << std::endl;
+//     std::cout << "Node id = " << Nodeid << ", : um_max = " << NodeMaxm << " at y = " << yavgindex << ", ue_max = " << NodeMaxe << std::endl;
 
-    // Max um and ue at Myelin
-    MyelineMaxm = 0.0;
-    MyelineMaxe = 0.0;
+//     // Max um and ue at Myelin
+//     MyelineMaxm = 0.0;
+//     MyelineMaxe = 0.0;
     
-    Myelid = m_ElemNodeEnd;
-    yavg = 0.0;
-    for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
-    {
-        elemavgm = 0.0;
-        elemavge = 0.0;
-        yavg = 0.0;
-        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-        {
-            index = m_fields[0]->GetPhys_Offset(i) + j;
-            um = field0[index];
-            ue = (m_fields[1]->GetPhys())[index];
+//     Myelid = m_ElemNodeEnd;
+//     yavg = 0.0;
+//     for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
+//     {
+//         elemavgm = 0.0;
+//         elemavge = 0.0;
+//         yavg = 0.0;
+//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+//         {
+//             index = m_fields[0]->GetPhys_Offset(i) + j;
+//             um = field0[index];
+//             ue = (m_fields[1]->GetPhys())[index];
 
-            elemavgm += um;
-            elemavge += ue;
-            yavg += x1[index];
-        }
-        elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
-        elemavge = elemavge/m_fields[0]->GetTotPoints(i);
-        yavg = yavg/m_fields[0]->GetTotPoints(i);
+//             elemavgm += um;
+//             elemavge += ue;
+//             yavg += x1[index];
+//         }
+//         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
+//         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
+//         yavg = yavg/m_fields[0]->GetTotPoints(i);
 
-        if(elemavgm>MyelineMaxm)
-        {
-            MyelineMaxm = elemavgm;
-            yavgindex = yavg;
-            Myelid = i;
-        }
+//         if(elemavgm>MyelineMaxm)
+//         {
+//             MyelineMaxm = elemavgm;
+//             yavgindex = yavg;
+//             Myelid = i;
+//         }
 
-        if(elemavge>MyelineMaxe)
-        {
-            MyelineMaxe = elemavge;
-        }
-    }
+//         if(elemavge>MyelineMaxe)
+//         {
+//             MyelineMaxe = elemavge;
+//         }
+//     }
 
-    std::cout << "Myelid id = " << Myelid << ", : um_max = " << MyelineMaxm << " at y = " << yavgindex << ", ue_max = " << MyelineMaxe << std::endl;
+//     std::cout << "Myelid id = " << Myelid << ", : um_max = " << MyelineMaxm << " at y = " << yavgindex << ", ue_max = " << MyelineMaxe << std::endl;
 
-    // Max um and ue at Exterial space
-    ExtMaxm = 0.0;
-    ExtMaxe = 0.0;
+//     // Max um and ue at Exterial space
+//     ExtMaxm = 0.0;
+//     ExtMaxe = 0.0;
 
-    Extid = m_ElemMyelenEnd;
-    yavg = 0.0;
-    for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
-    {
-        elemavgm = 0.0;
-        elemavge = 0.0;
-        yavg = 0.0;
-        for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-        {
-            index = m_fields[0]->GetPhys_Offset(i) + j;
-            um = field0[index];
-            ue = (m_fields[1]->GetPhys())[index];
+//     Extid = m_ElemMyelenEnd;
+//     yavg = 0.0;
+//     for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
+//     {
+//         elemavgm = 0.0;
+//         elemavge = 0.0;
+//         yavg = 0.0;
+//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+//         {
+//             index = m_fields[0]->GetPhys_Offset(i) + j;
+//             um = field0[index];
+//             ue = (m_fields[1]->GetPhys())[index];
 
-            elemavgm += um;
-            elemavge += ue;
-            yavg += x1[index];
-        }
-        elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
-        elemavge = elemavge/m_fields[0]->GetTotPoints(i);
-        yavg = yavg/m_fields[0]->GetTotPoints(i);
+//             elemavgm += um;
+//             elemavge += ue;
+//             yavg += x1[index];
+//         }
+//         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
+//         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
+//         yavg = yavg/m_fields[0]->GetTotPoints(i);
 
-        if(elemavgm>ExtMaxm)
-        {
-            ExtMaxm = elemavgm;
-            yavgindex = yavg;
-            Extid = i;
-        }
+//         if(elemavgm>ExtMaxm)
+//         {
+//             ExtMaxm = elemavgm;
+//             yavgindex = yavg;
+//             Extid = i;
+//         }
 
-        if(elemavge>ExtMaxe)
-        {
-            ExtMaxe = elemavge;
-        }
-    }
+//         if(elemavge>ExtMaxe)
+//         {
+//             ExtMaxe = elemavge;
+//         }
+//     }
 
-    std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << " at y = " << yavgindex << ", ue_max = " << ExtMaxe << std::endl;
+//     std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << " at y = " << yavgindex << ", ue_max = " << ExtMaxe << std::endl;
 
-    std::cout << " ========================================================================================== " << std::endl;
-}
+//     std::cout << " ========================================================================================== " << std::endl;
+// }
 
 void MMFNeuralEP::DoSolvePoint()
 {
@@ -1797,40 +1793,40 @@ void MMFNeuralEP::DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, con
         std::cout << fulltext << "\n" << std::endl;
 }
 
-    void MMFNeuralEP::DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
+void MMFNeuralEP::DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
+{
+    int nq               = GetTotPoints();
+    int totnode = m_ElemNodeEnd / m_NumelemNode;
+
+    Array<OneD, NekDouble> phi_m(nq);
+    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
+    
+    Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
+
+    Array<OneD, NekDouble> phimavg(totnode,0.0);
+    Array<OneD, NekDouble> phieavg(totnode,0.0);
+
+    int npts = m_fields[0]->GetTotPoints(0);
+    for (int i=0; i<nq; ++i)
     {
-        int nq               = GetTotPoints();
-        int totnode = m_ElemNodeEnd / m_NumelemNode;
-
-        Array<OneD, NekDouble> phi_m(nq);
-        Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
-        
-        Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
-
-        Array<OneD, NekDouble> phimavg(totnode,0.0);
-        Array<OneD, NekDouble> phieavg(totnode,0.0);
-
-        int npts = m_fields[0]->GetTotPoints(0);
-        for (int i=0; i<nq; ++i)
+        if(m_zoneindex[0][i]>=0)
         {
-            if(m_zoneindex[0][i]>=0)
-            {
-               phimavg[m_zoneindex[0][i]] += phi_m[i]/(npts * m_NumelemNode);
-               phieavg[m_zoneindex[0][i]] += phi_e[i]/(npts * m_NumelemNode);
-               std::cout << "i = " << i << ", phim = " << phi_m[i] << ", phie = " << phi_e[i] << std::endl;
-            }
+            phimavg[m_zoneindex[0][i]] += phi_m[i]/(npts * m_NumelemNode);
+            phieavg[m_zoneindex[0][i]] += phi_e[i]/(npts * m_NumelemNode);
+            std::cout << "i = " << i << ", phim = " << phi_m[i] << ", phie = " << phi_e[i] << std::endl;
         }
-
-        fulltext.append(" \n");
-        fulltext.append("(Nodeid,phim,phie): ");
-        for (int i = 0; i < totnode; ++i)
-        {
-            fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " , " + std::to_string(phieavg[i]) + " ) ");
-        }
-        
-        fulltext.append(" \n");
-        std::cout << fulltext << "\n" << std::endl;
     }
+
+    fulltext.append(" \n");
+    fulltext.append("(Nodeid,phim,phie): ");
+    for (int i = 0; i < totnode; ++i)
+    {
+        fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " , " + std::to_string(phieavg[i]) + " ) ");
+    }
+    
+    fulltext.append(" \n");
+    std::cout << fulltext << "\n" << std::endl;
+}
 
 
 
