@@ -102,6 +102,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
     m_session->LoadParameter("diameter", m_diameter, 0.001);
 
+    // ComputeRegionalzoneindex(m_fiberlen, m_nodelen, m_myelinlen, m_Nnode, Regionalzoneindex);
+    m_session->LoadParameter("FiberLength", m_fiberlen, 0.01);
+    m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
+    m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
+
     m_session->LoadParameter("NumberNode", m_Nnode, 10);
     m_session->LoadParameter("NumelemNode", m_NumelemNode, 4);
     m_session->LoadParameter("NumelemMyel", m_NumelemMyel, 14);
@@ -248,25 +253,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_Cm = m_neuron->GetCapacitanceValue(0);
     m_Cn = m_neuron->GetCapacitanceValue(1);
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
-
-    m_fields[0]->GetCoords(x0, x1, x2);
-
-    Array<OneD, NekDouble> x0avg(nq);
-    Array<OneD, NekDouble> x1avg(nq);
-    Array<OneD, NekDouble> x2avg(nq);
-
-    m_fields[0]->ComputeCellAvg(x0, x1, x2, x0avg, x1avg, x2avg);
-    for (int i=0; i<nq; ++i)
-    {
-        std::cout << "i = " << i << ", x = " << x0[i] << ", y = " << x1[i] 
-        << ", xavg = " << x0avg[i] << ", yavg = " << x1avg[i] << std::endl;
-    }
-
-    wait_on_enter();
-
    switch (m_NeuralEPType)
     {
         // case eNeuralEPPT:
@@ -308,9 +294,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // if(m_zoneindexfile=="Null")
             // {
-            //     std::cout << "zoneindex is generated =============================================" << std::endl;
-            //     m_zoneindex[0] = IndexNodeZone2D(m_fields[0]);
-            //     savezoneindex(m_zoneindex[0]);
+            std::cout << "zoneindex is generated =============================================" << std::endl;
+            m_zoneindex[0] = IndexNodeZone2D(m_fields[0]);
+            // savezoneindex(m_zoneindex[0]);
             // }
 
             // else
@@ -330,6 +316,36 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    Array<OneD, NekDouble> x0avg(nq);
+    Array<OneD, NekDouble> x1avg(nq);
+    Array<OneD, NekDouble> x2avg(nq);
+
+    m_fields[0]->ComputeCellAvg(x0, x1, x2, x0avg, x1avg, x2avg);
+
+    Array<OneD, int> Regionalzoneindex(nq);
+
+    std::cout << "fiberlen = " << m_fiberlen << ", nodelen = " << m_nodelen << ", myelinlen = " << m_myelinlen << ", Nnode = " << m_Nnode << std::endl;
+    Regionalzoneindex = ComputeRegionalzoneindex(m_fiberlen, m_nodelen, m_myelinlen, m_Nnode, x0avg, x1avg, x2avg);
+
+    for (int i=0; i<nq; ++i)
+    {
+        if(m_zoneindex[0][i] != Regionalzoneindex[i])
+        {
+            std::cout << "i = " << i << ", x = " << x0[i] << ", y = " << x1[i] 
+            << ", xavg = " << x0avg[i] << ", yavg = " << x1avg[i] 
+            << ", index = " << m_zoneindex[0][i] << ", Regionalindex = " << Regionalzoneindex[i] << std::endl;
+        }
+
+    }
+
+    wait_on_enter();
 
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
@@ -513,6 +529,53 @@ void MMFNeuralEP::CheckOutZoneAni()
     }
 
 }
+
+Array<OneD, int> MMFNeuralEP::ComputeRegionalzoneindex(
+    const NekDouble fiberlen, 
+    const NekDouble nodelen, 
+    const NekDouble myelinlen,
+    const int Nnode,
+    const Array<OneD, const NekDouble> &xcell,
+    const Array<OneD, const NekDouble> &ycell,
+    const Array<OneD, const NekDouble> &zcell)
+{
+    int nq   = GetTotPoints();
+
+    Array<OneD, int> outarray(nq, -1);
+
+    NekDouble nodestart, nodeend;
+    for (int i=0; i<nq; ++i)
+    {
+        if((xcell[i]>=0.0) && (xcell[i]<=fiberlen))
+        {
+            for (int k=0; k<2; ++k)
+            {
+                if( (ycell[i]>=k*nodelen) && (ycell[i]<=(k+1)*nodelen) )
+                {
+                    outarray[i] = k;
+                }
+            }
+
+            for (int k=0; k<Nnode; ++k)
+            {
+                nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
+                nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
+                if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
+                {
+                    outarray[i] = k+2;
+                }
+            }
+        }
+
+        else
+        {
+            outarray[i] = -2;
+        }
+    }
+
+    return outarray;
+}
+
 
 void MMFNeuralEP::ComputephieMF(
     const NekDouble ratio_re_ri,

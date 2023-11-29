@@ -216,6 +216,7 @@ protected:
     int m_Nnode, m_NumelemNode, m_NumelemMyel;
     int m_zonestart, m_zoneend;
 
+    NekDouble m_fiberlen, m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
     NekDouble m_ExtElemMFLength;
@@ -227,6 +228,15 @@ protected:
 
     TimeMapType m_TimeMapScheme;
     
+    Array<OneD, int> ComputeRegionalzoneindex(
+        const NekDouble fiberlen, 
+        const NekDouble nodelen, 
+        const NekDouble myelinlen,
+        const int Nnode,
+        const Array<OneD, const NekDouble> &xcell,
+        const Array<OneD, const NekDouble> &ycell,
+        const Array<OneD, const NekDouble> &zcell);
+
     void savezoneindex(const Array<OneD, const int> &zoneindex);
 
     Array<OneD, NekDouble> ComputeConductivity(
