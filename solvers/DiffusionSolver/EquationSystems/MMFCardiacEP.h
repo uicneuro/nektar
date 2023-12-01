@@ -275,7 +275,7 @@ protected:
 
     Array<OneD, NekDouble> ComputeVelocityTimeMap(
     const Array<OneD, const int> &ValidTimeMap,
-    const Array<OneD, const NekDouble> &inarray, const int DividebyVelmag = 1);
+    const Array<OneD, const NekDouble> &inarray);
 
     Array<OneD, NekDouble> ComputeLambDiv(
         const Array<OneD, const int> &ValidTimeMap,
