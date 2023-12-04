@@ -228,7 +228,7 @@ protected:
 
     TimeMapType m_TimeMapScheme;
     
-    Array<OneD, int> ComputeRegionalzoneindex(
+    Array<OneD, int> ComputeRegionalZoneIndex(
         const NekDouble fiberlen, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
