@@ -113,9 +113,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
-    // Node and Myelen elements range
-    m_session->LoadParameter("Verbose", m_Verbose, 0);
-
     m_session->LoadParameter("ExtElemMFLength", m_ExtElemMFLength, 1.0);
     // m_session->LoadParameter("ElemNodeEnd", m_ElemNodeEnd, 0);
     // m_session->LoadParameter("ElemMyelenEnd", m_ElemMyelenEnd, 0);
@@ -306,6 +303,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             m_zoneindex[0] = ComputeRegionalZoneIndex(m_fiberlen, m_nodelen, m_myelinlen, m_Nnode, x0avg, x1avg, x2avg);
 
+            // count the number of points in a element: m_npts
+            int cnt=0;
+            for (int i=0; i<nq; ++i)
+            {
+                if(m_zoneindex[0][i]==0)
+                {
+                    cnt++;
+                }
+            }
+            m_npts = cnt;
+
             // for (int i=0; i<nq; ++i)
             // {
             //         std::cout << "i = " << i << ", x = " << x0[i] << ", y = " << x1[i] 
@@ -338,47 +346,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
     }
 
-
-
-
-    // Array<OneD, NekDouble> x0(nq);
-    // Array<OneD, NekDouble> x1(nq);
-    // Array<OneD, NekDouble> x2(nq);
-
-    // m_fields[0]->GetCoords(x0, x1, x2);
-
-    // Array<OneD, NekDouble> x0avg(nq);
-    // Array<OneD, NekDouble> x1avg(nq);
-    // Array<OneD, NekDouble> x2avg(nq);
-
-    // m_fields[0]->ComputeCellAvg(x0, x1, x2, x0avg, x1avg, x2avg);
-
-    // Array<OneD, int> Regionalzoneindex(nq);
-
-    // std::cout << "fiberlen = " << m_fiberlen << ", nodelen = " << m_nodelen << ", myelinlen = " << m_myelinlen << ", Nnode = " << m_Nnode << std::endl;
-    // Regionalzoneindex = ComputeRegionalzoneindex(m_fiberlen, m_nodelen, m_myelinlen, m_Nnode, x0avg, x1avg, x2avg);
-
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     if(m_zoneindex[0][i] != Regionalzoneindex[i])
-    //     {
-    //         std::cout << "i = " << i << ", x = " << x0[i] << ", y = " << x1[i] 
-    //         << ", xavg = " << x0avg[i] << ", yavg = " << x1avg[i] 
-    //         << ", index = " << m_zoneindex[0][i] << ", Regionalindex = " << Regionalzoneindex[i] << std::endl;
-    //     }
-    // }
-
-    // wait_on_enter();
-
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
     // Derive AnisotropyStrength.
     m_AnisotropyStrength = m_Cn / m_Cm;
     SetUpAnisotropy(m_zoneindex[0], m_ExtElemMFLength, m_NeuralCm, m_AniStrength);
-
-    // Checkout zoneindex and Anisotropy
-    // CheckOutZoneAni();
 
     MMFSystem::MMFInitObject(m_AniStrength);
 
@@ -1871,21 +1844,15 @@ void MMFNeuralEP::DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, con
 
         Array<OneD, NekDouble> phimavg(m_Nnode+1,0.0);
 
-        int npts=0;
         for (int i=0; i<nq; ++i)
         {
             if(m_zoneindex[0][i]>=0)
             {
                phimavg[m_zoneindex[0][i]] += phi_m[i] ;
-
-               if(m_zoneindex[0][i]==0)
-               {
-                npts++;
-               }
             }
         }
 
-        Vmath::Smul((m_Nnode+1), 1.0/npts, phimavg, 1, phimavg, 1);
+        Vmath::Smul((m_Nnode+1), 1.0/m_npts, phimavg, 1, phimavg, 1);
 
         fulltext.append(" \n");
         fulltext.append("(Nodeid,phim): ");

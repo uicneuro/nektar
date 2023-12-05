@@ -210,7 +210,7 @@ protected:
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::VarCoeffMap m_phievarcoeff;
 
-    int m_Verbose;
+    int m_npts; // Number of points for each element
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     int m_Convectiven;
     int m_Nnode, m_NumelemNode, m_NumelemMyel;
