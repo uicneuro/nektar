@@ -2413,7 +2413,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
         case SolverUtils::ePlaneEmbed:
         {
             Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-            m_fields[0]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            m_fields[1]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
             break;
         }
 
@@ -2421,9 +2421,9 @@ Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
         case SolverUtils::ePlane:
         default:
         {
-            Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+            // Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
             Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-            m_fields[0]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
             break;
         }
     }
@@ -2754,7 +2754,10 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
 
     SolverUtils::AddSummaryItem(s, "Nnode", m_Nnode);
-    SolverUtils::AddSummaryItem(s, "ExtElemMFLength", m_ExtElemMFLength);
+    if(m_ExtElemMFLength<1.0)
+    {
+        SolverUtils::AddSummaryItem(s, "ExtElemMFLength", m_ExtElemMFLength);
+    }
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "diameter", m_diameter);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
