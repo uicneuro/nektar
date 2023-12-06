@@ -102,6 +102,22 @@ const char *const MediumTypeMap[] = {
     "RegionalHeterogeneous",
 };
 
+enum FiberType
+{
+    eMonoBCDirichlet,
+    eMonoBCNeumann,
+    eEmbedBCDirichlet,
+    eEmbedBCNeumann,
+    SIZE_FiberType
+};
+
+const char *const FiberTypeMap[] = {
+    "MonoBCDirichlet",
+    "MonoBCNeumann",
+    "EmbedBCDirichlet",
+    "EmbedBCNeumann",
+};
+
 enum InitWaveType
 {
     ePoint,
@@ -206,6 +222,7 @@ protected:
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
     MediumType m_MediumType;
+    FiberType m_fiberType;
 
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::VarCoeffMap m_phievarcoeff;

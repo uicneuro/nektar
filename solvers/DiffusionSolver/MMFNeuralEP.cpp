@@ -158,6 +158,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_NeuralEPType = (NeuralEPType)0;
     }
 
+    // Define FiberType
+    if (m_session->DefinesSolverInfo("FIBERTYPE"))
+    {
+        std::string FiberTypeStr;
+        FiberTypeStr = m_session->GetSolverInfo("FIBERTYPE");
+        for (int i = 0; i < (int)SIZE_FiberType; ++i)
+        {
+            if (FiberTypeMap[i] == FiberTypeStr)
+            {
+                m_fiberType = (FiberType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_fiberType = (FiberType)0;
+    }
+
     // Define SovlerSchemeType
     if (m_session->DefinesSolverInfo("SolverSchemeType"))
     {
@@ -1394,8 +1413,9 @@ void MMFNeuralEP::DoSolveMMFZero()
             Array<OneD, NekDouble> phi_m(nq);
             Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
 
-            int phimMaxid = Vmath::Imax(nq, phi_m, 1);
-            fulltext.append("phi_m, max: " + std::to_string(Vmath::Vmax(nq, phi_m, 1)) + " at y = " + std::to_string(x1[phimMaxid]) );
+            NekDouble phimMax = Vmath::Vamax(nq, phi_m, 1);
+            int phimMaxid = Vmath::Iamax(nq, phi_m, 1);
+            fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
                         fulltext.append("\n");
 
             fulltext.append("\n");
@@ -1406,37 +1426,33 @@ void MMFNeuralEP::DoSolveMMFZero()
                 Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
 
                 Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
+                
+                NekDouble phieMax = Vmath::Vamax(nq, phi_e, 1);
+                int phieMaxid = Vmath::Iamax(nq, phi_e, 1);
 
-                int phieMaxid, phieMinid;
-
-                phieMaxid = Vmath::Imax(nq, phi_e, 1);
-                phieMinid = Vmath::Imin(nq, phi_e, 1);
-
-                fulltext.append("phi_e, max: " + std::to_string(Vmath::Vmax(nq, phi_e, 1)) + " at y = " + std::to_string(x1[phieMaxid]) );
+                fulltext.append("phi_e, max: " + std::to_string(phieMax) + " at y = " + std::to_string(x1[phieMaxid]) );
                             fulltext.append("\n");
-
-                fulltext.append("phi_e, min: " + std::to_string(Vmath::Vmin(nq, phi_e, 1)) + " at y = " + std::to_string(x1[phieMinid]) );
 
                 Plotphiecurrent(phi_m, phi_e, nchk);
             }
 
             std::cout << fulltext << "\n" << std::endl;
 
-            if(m_NeuralEPType==eNeuralEP1D)
-            {
-                DisplayNode1D(fulltext, fields);
-                for (int i=0; i<nq; ++i)
-                {
-                    std::cout << "i = " << i << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i]
-                    << ", phim = " << phi_m[i] << std::endl;
-                }
-            }
+            // if(m_NeuralEPType==eNeuralEP1D)
+            // {
+            //     DisplayNode1D(fulltext, fields);
+            //     for (int i=0; i<nq; ++i)
+            //     {
+            //         std::cout << "i = " << i << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i]
+            //         << ", phim = " << phi_m[i] << std::endl;
+            //     }
+            // }
 
-            else
-            {
-                // DisplayNode2D(fulltext, fields);            
-               DisplayNode2Dvar1(fulltext, fields);
-            }
+            // else
+            // {
+            //     // DisplayNode2D(fulltext, fields);            
+            //    DisplayNode2Dvar1(fulltext, fields);
+            // }
 
             Checkpoint_Output(nchk++);
 
@@ -2120,10 +2136,11 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-   switch(m_surfaceType)
+   switch(m_fiberType)
     {
         // Helsolve with pure Neumann boundary condition
-        case SolverUtils::ePlaneEmbed:
+        case eEmbedBCDirichlet:
+        case eEmbedBCNeumann:
         {
             m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                                 factors, m_varcoeff);
@@ -2131,7 +2148,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
         }
 
         // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-        case SolverUtils::ePlane:
+        case eMonoBCDirichlet:
+        case eMonoBCNeumann:
         default:
         {
             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
@@ -2407,25 +2425,42 @@ Array<OneD, NekDouble> MMFNeuralEP::Derivephie(
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
 
-    switch(m_surfaceType)
+    switch(m_fiberType)
     {
         // Helsolve with pure Neumann boundary condition
-        case SolverUtils::ePlaneEmbed:
+        case eEmbedBCDirichlet:
         {
             Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
             m_fields[1]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
             break;
         }
 
-        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-        case SolverUtils::ePlane:
-        default:
+        case eEmbedBCNeumann:
         {
-            // Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+            Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+            m_fields[1]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            break;
+        }
+
+        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
+        case eMonoBCDirichlet:
+        {
             Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
             m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
             break;
         }
+
+        case eMonoBCNeumann:
+        {
+            Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+            m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+            break;
+        }
+
+        default:
+        break;
     }
 
     m_fields[0]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
@@ -2749,6 +2784,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
+    SolverUtils::AddSummaryItem(s, "Fiber Type", FiberTypeMap[m_fiberType]);
     SolverUtils::AddSummaryItem(s, "Fiber Length", m_fiberlen);
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
