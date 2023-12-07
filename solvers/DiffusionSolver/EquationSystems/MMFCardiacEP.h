@@ -182,6 +182,7 @@ protected:
     Array<OneD, NekDouble> ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
 
     void LoadTimeMap(std::string &loadname, 
+                    const Array<OneD, const NekDouble> &ValidTM,
                     Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                     Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                     Array<OneD, NekDouble> &TMvelocitymag,

@@ -198,7 +198,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         std::string loadname = m_TMsessionName + "_TimeMap_" +
                             boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        LoadTimeMap(loadname, m_TimeMap, m_AniStrength, m_TMvelocitymag, m_TMvelocity);
+        Array<OneD, NekDouble> m_ValidTM(nq, 1.0);
+        LoadTimeMap(loadname, m_ValidTM, m_TimeMap, m_AniStrength, m_TMvelocitymag, m_TMvelocity);
     }
 
     // Ratio between along the fiber and orthogonal to the fiber
@@ -339,6 +340,33 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
         Array<OneD, NekDouble> VdiffMag(nq);
         Array<OneD, NekDouble> VdiffDivergence(nq);
+        
+        /////
+        Array<OneD, NekDouble> x0(nq);
+        Array<OneD, NekDouble> x1(nq);
+        Array<OneD, NekDouble> x2(nq);
+
+        m_fields[0]->GetCoords(x0, x1, x2);
+
+        Array<OneD, NekDouble> x0avg(nq);
+        Array<OneD, NekDouble> x1avg(nq);
+        Array<OneD, NekDouble> x2avg(nq);
+
+        m_fields[0]->ComputeCellAvg(x0, x1, x2, x0avg, x1avg, x2avg);
+
+        NekDouble x0limitm = 15.0;
+        NekDouble x0limitp = 5.0;
+        NekDouble x0max = Vmath::Vmax(nq, x0, 1);
+        NekDouble x0min = Vmath::Vmin(nq, x0, 1);
+
+        Array<OneD, NekDouble> m_ValidTM(nq, 1.0);
+        for (int i=0; i<nq; ++i)
+        {
+            if( (x0avg[i]<x0min+x0limitm) || (x0avg[i]>x0max-x0limitp) )
+            {
+                m_ValidTM[i] = 0.0;
+            }
+        }
 
         // load old timemap                   
         m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
@@ -346,13 +374,26 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
         std::string loadname_old = sessionold + "_TimeMap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        LoadTimeMap(loadname_old, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
+        LoadTimeMap(loadname_old, m_ValidTM, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
+
+
+        for (int i=0; i<nq; ++i)
+        {
+            std::cout << "i = " << i << ", velmag = " << Velocitymag_old[i] << ", x = " << x0[i] << std::endl;
+        }
+
+        // NekDouble velmagmax = Vmath::Vmax(nq, Velocitymag_old, 1);
+        // int velmagIndex = Vmath::Imax(nq, Velocitymag_old, 1);
+
+        // std::cout << ", velmag max = " << velmagmax << ", x = " << x0[velmagIndex] << std::endl;
+        // wait_on_enter();
+
 
         // load new timemap                               
         std::string loadname = sessionnew + "_TimeMap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        LoadTimeMap(loadname, TimeMap_new, AniStrength_new, Velocitymag_new, Velocity_new);
+        LoadTimeMap(loadname, m_ValidTM, TimeMap_new, AniStrength_new, Velocitymag_new, Velocity_new);
 
         // Computed the deformed timemap from the old timemap
         Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
@@ -468,8 +509,8 @@ void MMFCardiacEP::ComputeVelocityDeformed(const Array<OneD, const NekDouble> &A
             Array<OneD, Array<OneD, NekDouble>> vcoeff_old;
             vector_to_vcoeff(Velocity_old, m_movingframes, vcoeff_old);
 
-            std::cout << "v1 = [ " << Vmath::Vmax(nq, vcoeff_old[0], 1) << " , " << Vmath::Vmin(nq, vcoeff_old[0], 1)
-            << " ], v2 = [ " << Vmath::Vmax(nq, vcoeff_old[1], 1) << " , " << Vmath::Vmin(nq, vcoeff_old[1], 1) << " ]" << std::endl;
+            std::cout << "v1 = [ " << Vmath::Vmin(nq, vcoeff_old[0], 1) << " , " << Vmath::Vmax(nq, vcoeff_old[0], 1)
+            << " ], v2 = [ " << Vmath::Vmin(nq, vcoeff_old[1], 1) << " , " << Vmath::Vmax(nq, vcoeff_old[1], 1) << " ]" << std::endl;
 
             Array<OneD, Array<OneD, NekDouble>> vcoeff_deformed(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
@@ -492,6 +533,7 @@ void MMFCardiacEP::ComputeVelocityDeformed(const Array<OneD, const NekDouble> &A
     }
 
 void MMFCardiacEP::LoadTimeMap(std::string &loadname,
+                                const Array<OneD, const NekDouble> &ValidTM,
                                 Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                                 Array<OneD, NekDouble> &Velocitymag,
@@ -555,6 +597,15 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
                 TimeMap[0][i] = TimeMap[0][i] - m_TimeMapDelay;
             }
         }
+    }
+
+    // Apply the Valid region
+    Vmath::Vmul(nq, ValidTM, 1, TimeMap[0], 1, TimeMap[0], 1);
+    Vmath::Vmul(nq, ValidTM, 1, AniStrength[0], 1, AniStrength[0], 1);
+    Vmath::Vmul(nq, ValidTM, 1, Velocitymag, 1, Velocitymag, 1);
+    for (int i=0; i<m_spacedim; ++i)
+    {
+        Vmath::Vmul(nq, ValidTM, 1, Velocity[i], 1, Velocity[i], 1);
     }
 
     std::cout << "TimeMap Mag = " << RootMeanSquare(TimeMap[0]) << std::endl ;
@@ -1723,13 +1774,9 @@ void MMFCardiacEP::ComputeTimeMapError(const int TMnstep, const Array<OneD, cons
     // Vmath::Vsub(nq, tmp, 1, uexact[1], 1, vdiff, 1);
 
     NekDouble L2uerr = RootMeanSquare(udiff) / Vmath::Vamax(nq, uexact[0], 1);
-   // L2verr = RootMeanSquare(vdiff) / Vmath::Vamax(nq, uexact[1], 1);
 
     NekDouble Linfuerr = Vmath::Vamax(nq, udiff, 1) / Vmath::Vamax(nq, uexact[0], 1);
-    // Linfverr = Vmath::Vamax(nq, vdiff, 1) / Vmath::Vamax(nq, uexact[1], 1);
     std::cout << " TimeMap: uExact = " << RootMeanSquare(uexact[0]) << ", u_Error: L2 = " << L2uerr << ", Linf = " << Linfuerr << std::endl;
-    // std::cout << "TimeMap: v_Error: L2 = " << L2verr << ", Linf = " << Linfverr
-    //           << std::endl;
 
     PlotTimeMapErr(m_TimeMap, m_ValidTimeMap, outfield[0], uexact[0], udiff, TMnstep);
 }
@@ -1800,7 +1847,7 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeVelocityTimeMap(
 
     // Compute VelField \vec{v} = \sum_{i=1}^3 1/(\nabla T \cdot \hat{x}_i)
     // \hat{x}_i
-    NekDouble tmp, TmapGradTol = 0.001;
+    NekDouble tmp, TmapGradTol = 0.1;
     for (int i = 0; i < nq; i++)
     {
         tmp = TmapGradMag[i];
