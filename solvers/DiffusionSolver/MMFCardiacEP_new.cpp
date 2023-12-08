@@ -280,8 +280,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     m_session->LoadSolverInfo("TMMMFDir", MMFdirStr, "LOCAL");
     m_TMMMFdir = FindMMFdir(MMFdirStr);
     
-    m_TMAniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
-    for (int j = 0; j < m_expdim; ++j)
+    m_TMAniStrength = Array<OneD, Array<OneD, NekDouble>> (1);
+    for (int j = 0; j < 1; ++j)
     {
         m_TMAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
@@ -390,11 +390,26 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
         LoadTimeMap(loadname_old, m_ValidTM, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
 
+        Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
+        TmapGrad = ComputeCovGrad(TimeMap_old[0], m_TMmovingframes);
 
-        for (int i=0; i<nq; ++i)
-        {
-            std::cout << "i = " << i << ", velmag = " << Velocitymag_old[i] << ", x = " << x0[i] << std::endl;
-        }
+        Array<OneD, NekDouble> TmapGradMag(nq);
+        TmapGradMag = ComputeVelocityMag(TmapGrad);
+
+
+            // Array<OneD, NekDouble> TMVelocity(m_spacedim * nq);
+            // TMVelocity = ComputeVelocityTimeMap(m_ValidTimeMap, TimeMap_old);
+
+            // Array<OneD, NekDouble> TMVelMag = ComputeVelocityMag(TMVelocity);
+
+
+        // for (int i=0; i<nq; ++i)
+        // {
+        //     // if( (x0[i]<10.0) && (x0[i]>-10.0) )
+        //     {
+        //         std::cout << "i = " << i << ", TMgradmag = " << TmapGradMag[i] << ", velmag = " << Velocitymag_old[i] << ", x = " << x0[i] << std::endl;
+        //     }
+        // }
 
         // NekDouble velmagmax = Vmath::Vmax(nq, Velocitymag_old, 1);
         // int velmagIndex = Vmath::Imax(nq, Velocitymag_old, 1);

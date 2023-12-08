@@ -166,6 +166,11 @@ protected:
     // Aliev_Panfilov model parameters
     NekDouble m_k, m_a, m_mu1, m_mu2, m_eps;
 
+    // Moving frames for time map
+    SpatialDomains::GeomMMF m_TMMMFdir;
+    Array<OneD, Array<OneD, NekDouble>> m_TMmovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_TMAniStrength;
+
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
     NekDouble m_TimeMapIapp;
