@@ -160,14 +160,14 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eWithCurrent,
-    eNoCurrent,
+    eWithPhie,
+    eNoPhie,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "WithCurrent",
-    "NoCurrent",
+    "WithPhie",
+    "NoPhie",
 };
 
 enum NodeIndexType
@@ -236,7 +236,6 @@ protected:
     NekDouble m_fiberlen, m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
-    NekDouble m_ExtElemMFLength;
     NekDouble m_urest;
 
     std::string m_zoneindexfile;
@@ -245,15 +244,6 @@ protected:
 
     TimeMapType m_TimeMapScheme;
     
-    Array<OneD, int> ComputeRegionalZoneIndex(
-        const NekDouble fiberlen, 
-        const NekDouble nodelen, 
-        const NekDouble myelinlen,
-        const int Nnode,
-        const Array<OneD, const NekDouble> &xcell,
-        const Array<OneD, const NekDouble> &ycell,
-        const Array<OneD, const NekDouble> &zcell);
-
     void savezoneindex(const Array<OneD, const int> &zoneindex);
 
     Array<OneD, NekDouble> ComputeConductivity(
@@ -378,11 +368,11 @@ protected:
                                    const Array<OneD, const NekDouble> &phi_e,
                                    const int nstep);
 
-    void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    // void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
-    void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    void DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    void DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    // void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    // void DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    // void DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
@@ -534,23 +524,28 @@ protected:
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
-        
+
     Array<OneD, int> IndexNodeZone2D(
-        const MultiRegions::ExpListSharedPtr &field);
-
-    Array<OneD, int> IndexNodeZone2DNodefirst(
-        const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-        const int ElemMyelenEnd);
-
-    Array<OneD, int> IndexNodeZone2DSequential(
-        const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
-        const int NumelemNode, const int NumelemMyel);
+        const NekDouble fiberlen, 
+        const NekDouble nodelen, 
+        const NekDouble myelinlen,
+        const int Nnode);
         
-    Array<OneD, int> ImportIndexNodeZone2D(const std::string &zoneindexfile);
+    // Array<OneD, int> IndexNodeZone2D(
+    //     const MultiRegions::ExpListSharedPtr &field);
 
-    void SetUpAnisotropy(
+    // Array<OneD, int> IndexNodeZone2DNodefirst(
+    //     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
+    //     const int ElemMyelenEnd);
+
+    // Array<OneD, int> IndexNodeZone2DSequential(
+    //     const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
+    //     const int NumelemNode, const int NumelemMyel);
+        
+    // Array<OneD, int> ImportIndexNodeZone2D(const std::string &zoneindexfile);
+
+    void SetUpBiAnisotropy(
             const Array<OneD, const int> &zoneindex,
-            const NekDouble &ExtElemMFLength, 
             const Array<OneD, const Array<OneD, NekDouble>> NeuralCm,
             Array<OneD, Array<OneD, NekDouble>> &AniStrength);
 

@@ -291,7 +291,7 @@ protected:
         const NekDouble x3_in = NekConstants::kNekUnsetDouble) override;
 
     /// Solve the Helmholtz equation.
-    virtual void v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
+    MULTI_REGIONS_EXPORT virtual void v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
                              Array<OneD, NekDouble> &outarray,
                              const StdRegions::ConstFactorMap &factors,
                              const StdRegions::VarCoeffMap &varcoeff,
@@ -299,7 +299,7 @@ protected:
                              const Array<OneD, const NekDouble> &dirForcing,
                              const bool PhysSpaceForcing) override;
 
-    virtual void v_HelmSolveEmbed(
+    MULTI_REGIONS_EXPORT virtual void v_HelmSolveEmbed(
                              const int bdryStart,
                              const int bdryEnd,
                              const Array<OneD, const NekDouble> &inarray,
