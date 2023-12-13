@@ -2304,12 +2304,12 @@ void MMFSystem::ComputeRelaccOmega(
 
     // w_{211} * w_{212} - \nabla_{e_1} w_{211}
     Vmath::Vmul(nq, &w211[0], 1, &w212[0], 1, &outarray[0][0], 1);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], w211, tmp);
+    MMFDirectionalDeriv(movingframes[0], w211, tmp);
     Vmath::Vsub(nq, &outarray[0][0], 1, &tmp[0], 1, &outarray[0][0], 1);
 
     // w_{212} * w_{212} - \nabla_{e_1} w_{212}
     Vmath::Vmul(nq, &w212[0], 1, &w212[0], 1, &outarray[1][0], 1);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], w212, tmp);
+    MMFDirectionalDeriv(movingframes[0], w212, tmp);
     Vmath::Vsub(nq, &outarray[1][0], 1, &tmp[0], 1, &outarray[1][0], 1);
 }
 
@@ -2378,10 +2378,10 @@ void MMFSystem::ComputeSecondCovDeriv(
     Array<OneD, NekDouble> DerivXb(nq);
 
     // Compute \nabla_{e_X} CovDeriv[0]
-    m_fields[0]->PhysDirectionalDeriv(movingframes[dirX], CovDeriv[0], DerivXa);
+    MMFDirectionalDeriv(movingframes[dirX], CovDeriv[0], DerivXa);
 
     // Compute \nabla_{e_X} CovDeriv[1]
-    m_fields[0]->PhysDirectionalDeriv(movingframes[dirX], CovDeriv[1], DerivXb);
+    MMFDirectionalDeriv(movingframes[dirX], CovDeriv[1], DerivXb);
 
     for (int i = 0; i < nq; ++i)
     {
@@ -2623,7 +2623,7 @@ void MMFSystem::ComputeCovDeriv(
 
     // j=0:  \nabla_{e_1} \vec{u} \cdot e_1 = \nabla u^1 \cdot e_1 - \omega_{21}
     // (e_1) u^2
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], u1, duide);
+    MMFDirectionalDeriv(movingframes[0], u1, duide);
     Vmath::Vvtvm(nq, &MFConnection[0][0][0], 1, &u2[0], 1, &duide[0], 1,
                  &tmp[0], 1);
     Vmath::Neg(nq, tmp, 1);
@@ -2631,7 +2631,7 @@ void MMFSystem::ComputeCovDeriv(
 
     // j=0:  \nabla_{e_2} \vec{u} \cdot e_1 = \nabla u^1 \cdot e_2 - \omega_{21}
     // (e_2) u^2
-    m_fields[0]->PhysDirectionalDeriv(movingframes[1], u1, duide);
+    MMFDirectionalDeriv(movingframes[1], u1, duide);
     Vmath::Vvtvm(nq, &MFConnection[0][1][0], 1, &u2[0], 1, &duide[0], 1,
                  &tmp[0], 1);
     Vmath::Neg(nq, tmp, 1);
@@ -2639,14 +2639,14 @@ void MMFSystem::ComputeCovDeriv(
 
     // j=1: \nabla_{e_1} \vec{u} \cdot e_2 = \nabla u^2 \cdot e_1 + \omega_{21}
     // (e_1) u^1
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], u2, duide);
+    MMFDirectionalDeriv(movingframes[0], u2, duide);
     Vmath::Vvtvp(nq, &MFConnection[0][0][0], 1, &u1[0], 1, &duide[0], 1,
                  &tmp[0], 1);
     Vmath::Vcopy(nq, &tmp[0], 1, &outarray[1][0], 1);
 
     // j=1:  \nabla_{e_2} \vec{u} \cdot e_2 = \nabla u^2 \cdot e_2 - \omega_{21}
     // (e_2) u^2
-    m_fields[0]->PhysDirectionalDeriv(movingframes[1], u2, duide);
+    MMFDirectionalDeriv(movingframes[1], u2, duide);
     Vmath::Vvtvp(nq, &MFConnection[0][1][0], 1, &u1[0], 1, &duide[0], 1,
                  &tmp[0], 1);
     Vmath::Vcopy(nq, &tmp[0], 1, &outarray[1][nq], 1);
@@ -3147,8 +3147,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeCurlSphericalCoord(
         d2[i] = inarrayth[i];
     }
 
-    m_fields[0]->PhysDirectionalDeriv(Theta, d1, d1);
-    m_fields[0]->PhysDirectionalDeriv(Phi, d2, d2);
+    MMFDirectionalDeriv(Theta, d1, d1);
+    MMFDirectionalDeriv(Phi, d2, d2);
 
     for (int i = 0; i < nq; i++)
     {
@@ -3234,8 +3234,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeDivSphericalCoord(
 
     ComputeSphericalTangentVector(Phi, Theta);
 
-    m_fields[0]->PhysDirectionalDeriv(Phi, vphi, dphi);
-    m_fields[0]->PhysDirectionalDeriv(Theta, vth, dth);
+    MMFDirectionalDeriv(Phi, vphi, dphi);
+    MMFDirectionalDeriv(Theta, vth, dth);
 
     Vmath::Vadd(nq, dphi, 1, dth, 1, DirectDiv, 1);
 
@@ -3270,7 +3270,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeVecCdotNabla(
     for (int i = 0; i < m_spacedim; ++i)
     {
         Vmath::Vcopy(nq, &vecB[i * nq], 1, &vectmp[0], 1);
-        m_fields[0]->PhysDirectionalDeriv(vecA, vectmp, tmp);
+
+        MMFDirectionalDeriv(vecA, vectmp, tmp);
         Vmath::Vvtvp(nq, &tmp[0], 1, &vecC[i * nq], 1, &outarray[0], 1,
                      &outarray[0], 1);
     }
@@ -4447,8 +4448,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovGrad2D(
     Array<OneD, NekDouble> dfdu1(nq);
     Array<OneD, NekDouble> dfdu2(nq);
 
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], fn, dfdu1);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[1], fn, dfdu2);
+    MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
+    MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
 
     NekDouble dfde1 = 0.0, dfde2 = 0.0;
     for (int i = 0; i < nq; ++i)
@@ -4481,9 +4482,9 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovGrad3D(
     Array<OneD, NekDouble> dfdu2(nq);
     Array<OneD, NekDouble> dfdu3(nq);
 
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], fn, dfdu1);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[1], fn, dfdu2);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[2], fn, dfdu3);
+    MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
+    MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
+    MMFDirectionalDeriv(movingframes[2], fn, dfdu3);
 
     std::cout << "dfdu3 = " << RootMeanSquare(dfdu3) << std::endl;
 
@@ -4521,8 +4522,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovJGrad(
     Array<OneD, NekDouble> dfdu1(nq);
     Array<OneD, NekDouble> dfdu2(nq);
 
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], fn, dfdu1);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[1], fn, dfdu2);
+    MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
+    MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
 
     NekDouble dfde1 = 0.0, dfde2 = 0.0;
     for (int i = 0; i < nq; ++i)
@@ -4576,14 +4577,60 @@ Array<OneD, NekDouble> MMFSystem::ComputeMMFDiffusion(
     {
         // Dtmp = \nabla u \cdot e^i
         // D2tmp = \nabla Dtmp \cdot e^i
-        m_fields[0]->PhysDirectionalDeriv(movingframes[i], inarray, tmp);
-        m_fields[0]->PhysDirectionalDeriv(movingframes[i], tmp, Dtmp);
+        MMFDirectionalDeriv(movingframes[i], inarray, tmp);
+        MMFDirectionalDeriv(movingframes[i], tmp, Dtmp);
 
         Vmath::Vadd(nq, Dtmp, 1, outarray, 1, outarray, 1);
     }
 
     return outarray;
 }
+
+void MMFSystem::MMFDirectionalDeriv(const Array<OneD, const NekDouble> &movingframe, 
+                                    const Array<OneD, const NekDouble> &inarray, 
+                                    Array<OneD, NekDouble> &outarray)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    Array<OneD, Array<OneD, NekDouble>> Dtmp(m_spacedim);
+
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        Dtmp[k] = Array<OneD, NekDouble>(nq);
+        m_fields[0]->PhysDeriv(MultiRegions::DirCartesianMap[k], inarray, Dtmp[k]);
+    }
+
+    // \nabla_v f = \nabla f \cdot \mathbf{v}
+    outarray = Array<OneD, NekDouble>(nq, 0.0);
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        Vmath::Vvtvp(nq, &movingframe[k*nq], 1, &Dtmp[k][0], 1, &outarray[0], 1, &outarray[0], 1);
+    }
+}
+
+
+// Array<OneD, NekDouble> MMFSystem::ComputeMMFDiffusion(
+//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+//     const Array<OneD, const NekDouble> &inarray)
+// {
+//     int nq = m_fields[0]->GetNpoints();
+
+//     Array<OneD, NekDouble> tmp(nq);
+//     Array<OneD, NekDouble> Dtmp(nq);
+
+//     Array<OneD, NekDouble> outarray(nq, 0.0);
+//     for (int i = 0; i < m_expdim; ++i)
+//     {
+//         // Dtmp = \nabla u \cdot e^i
+//         // D2tmp = \nabla Dtmp \cdot e^i
+//         m_fields[0]->PhysDirectionalDeriv(movingframes[i], inarray, tmp);
+//         m_fields[0]->PhysDirectionalDeriv(movingframes[i], tmp, Dtmp);
+
+//         Vmath::Vadd(nq, Dtmp, 1, outarray, 1, outarray, 1);
+//     }
+
+//     return outarray;
+// }
 
 // \nabla^2 u = \nabla u^i \cdot e^i + u^i (\nabla \cdot e^i)
 Array<OneD, NekDouble> MMFSystem::ComputeCovariantDiffusion(
@@ -4606,8 +4653,10 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovariantDiffusion(
     {
         // Dtmp = \nabla u \cdot e^i
         // D2tmp = \nabla Dtmp \cdot e^i
-        m_fields[0]->PhysDirectionalDeriv(movingframes[i], inarray, Dtmp);
-        m_fields[0]->PhysDirectionalDeriv(movingframes[i], Dtmp, D2tmp);
+        // m_fields[0]->PhysDirectionalDeriv(movingframes[i], inarray, Dtmp);
+        // m_fields[0]->PhysDirectionalDeriv(movingframes[i], Dtmp, D2tmp);
+        MMFDirectionalDeriv(movingframes[i], inarray, Dtmp);
+        MMFDirectionalDeriv(movingframes[i], Dtmp, D2tmp);
 
         Vmath::Vvtvp(nq, Dtmp, 1, DivMFCov[i], 1, D2tmp, 1, D2tmp, 1);
         Vmath::Vadd(nq, D2tmp, 1, outarray, 1, outarray, 1);
@@ -5854,7 +5903,7 @@ void MMFSystem::GetCurvatureForm(
             Vmath::Vcopy(nq, &Connectionform[i][j][0], 1, &wij[0], 1);
             for (int k = 0; k < m_mfdim; ++k)
             {
-                m_fields[0]->PhysDirectionalDeriv(movingframes[k], wij, dwij);
+                MMFDirectionalDeriv(movingframes[k], wij, dwij);
                 Vmath::Vadd(nq, &dwij[0], 1, &Curvatureform[i][j][k][0], 1,
                             &Curvatureform[i][j][k][0], 1);
             }
@@ -6111,8 +6160,8 @@ void MMFSystem::Compute2DCurvatureForm(
         Vmath::Vcopy(nq, &Connectionform[i][0][0], 1, &wij0[0], 1);
         Vmath::Vcopy(nq, &Connectionform[i][1][0], 1, &wij1[0], 1);
 
-        m_fields[0]->PhysDirectionalDeriv(movingframes[1], wij0, dwij01);
-        m_fields[0]->PhysDirectionalDeriv(movingframes[0], wij1, dwij10);
+        MMFDirectionalDeriv(movingframes[1], wij0, dwij01);
+        MMFDirectionalDeriv(movingframes[0], wij1, dwij10);
 
         Vmath::Neg(nq, dwij10, 1);
         Vmath::Vadd(nq, &dwij01[0], 1, &dwij10[0], 1, &Curvatureform[i][0], 1);
@@ -7080,7 +7129,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeDirectionVector(
     for (int j = 0; j < m_expdim; ++j)
     {
         qfield[j] = Array<OneD, NekDouble>(nq, 0.0);
-        m_fields[0]->PhysDirectionalDeriv(movingframes[j], inarray, qfield[j]);
+        MMFDirectionalDeriv(movingframes[j], inarray, qfield[j]);
     }
 
     Array<OneD, NekDouble> dudtapplied(nq, 0.0);
@@ -9939,7 +9988,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeSpuriousDivergence(
         Vmath::Vcopy(nq, &Velmf[i][0], 1, &tmp[0], 1);
         for (int j = 0; j < m_expdim; ++j)
         {
-            m_fields[0]->PhysDirectionalDeriv(movingframes[j], tmp, Dtmp);
+            MMFDirectionalDeriv(movingframes[j], tmp, Dtmp);
             Vmath::Vvtvp(nq, &SNmf[j][0], 1, &Dtmp[0], 1, &locsum1[0], 1,
                          &locsum1[0], 1);
         }
@@ -9951,7 +10000,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeSpuriousDivergence(
         Vmath::Neg(nq, &tmp[0], 1);
         for (int j = 0; j < m_expdim; ++j)
         {
-            m_fields[0]->PhysDirectionalDeriv(movingframes[j], tmp, Dtmp);
+            MMFDirectionalDeriv(movingframes[j], tmp, Dtmp);
             Vmath::Vvtvp(nq, &Velmf[j][0], 1, &Dtmp[0], 1, &locsum2[0], 1,
                          &locsum2[0], 1);
         }
@@ -10651,11 +10700,11 @@ Array<OneD, NekDouble> MMFSystem::ComputeLaplacianSphericalCoord(
 
     Array<OneD, NekDouble> dudphi(nq), du2dphi2(nq), dudth(nq), du2dth2(nq);
 
-    m_fields[0]->PhysDirectionalDeriv(Phi, inarray, dudphi);
-    m_fields[0]->PhysDirectionalDeriv(Phi, dudphi, du2dphi2);
+    MMFDirectionalDeriv(Phi, inarray, dudphi);
+    MMFDirectionalDeriv(Phi, dudphi, du2dphi2);
 
-    m_fields[0]->PhysDirectionalDeriv(Theta, inarray, dudth);
-    m_fields[0]->PhysDirectionalDeriv(Theta, dudth, du2dth2);
+    MMFDirectionalDeriv(Theta, inarray, dudth);
+    MMFDirectionalDeriv(Theta, dudth, du2dth2);
 
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
@@ -11177,8 +11226,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeVectorLaplacian2D(
     Array<OneD, NekDouble> dhcdx1(nq);
     Array<OneD, NekDouble> dhcdx2(nq);
 
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[1], Curlharmon, dhcdx2);
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[0], Curlharmon, dhcdx1);
+    MMFDirectionalDeriv(m_movingframes[1], Curlharmon, dhcdx2);
+    MMFDirectionalDeriv(m_movingframes[0], Curlharmon, dhcdx1);
 
     NekDouble tmp2i;
     for (int k = 0; k < m_spacedim; ++k)
@@ -12349,7 +12398,7 @@ void MMFSystem::ComputeGradientDirect(
     for (int j = 0; j < m_expdim; ++j)
     {
         qfield[j] = Array<OneD, NekDouble>(nq, 0.0);
-        m_fields[0]->PhysDirectionalDeriv(MF1st[j], inarray, qfield[j]);
+        MMFDirectionalDeriv(MF1st[j], inarray, qfield[j]);
     }
 }
 
@@ -12369,8 +12418,8 @@ void MMFSystem::ComputeGradientSphericalCoord(
 
     ComputeSphericalTangentVector(Phi, Theta);
 
-    m_fields[0]->PhysDirectionalDeriv(Phi, inarray, DPhi);
-    m_fields[0]->PhysDirectionalDeriv(Theta, inarray, DTh);
+    MMFDirectionalDeriv(Phi, inarray, DPhi);
+    MMFDirectionalDeriv(Theta, inarray, DTh);
 
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
@@ -12583,7 +12632,7 @@ void MMFSystem::CheckMeshErr(
     Array<OneD, NekDouble> dfdu3err(nq);
     for (int i = 0; i < m_spacedim; ++i)
     {
-        m_fields[0]->PhysDirectionalDeriv(movingframes[2], velocity[i],
+        MMFDirectionalDeriv(movingframes[2], velocity[i],
                                           dfdu3err);
 
         std::cout << "i = " << i << ", dfdu3err = "

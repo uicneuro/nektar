@@ -278,6 +278,10 @@ public:
 
     SOLVER_UTILS_EXPORT virtual void v_GenerateSummary(SummaryList &s) override;
 
+    SOLVER_UTILS_EXPORT void MMFDirectionalDeriv(const Array<OneD, const NekDouble> &movingframe, 
+                          const Array<OneD, const NekDouble> &inarray, 
+                          Array<OneD, NekDouble> &outarray);
+
     SOLVER_UTILS_EXPORT void ComputeDirectionVector(
         Array<OneD, Array<OneD, NekDouble>> &distance);
 

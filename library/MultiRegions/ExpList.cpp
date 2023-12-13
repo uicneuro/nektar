@@ -1627,78 +1627,62 @@ void ExpList::v_PhysDeriv(const int dir,
     v_PhysDeriv(edir, inarray, out_d);
 }
 
+// void ExpList::v_PhysDirectionalDeriv(
+//     const Array<OneD, const NekDouble> &direction,
+//     const Array<OneD, const NekDouble> &inarray,
+//     Array<OneD, NekDouble> &out_d)
+
+// {
+//     Array<OneD, NekDouble> e_out_d0;
+//     Array<OneD, NekDouble> e_out_d1;
+//     Array<OneD, NekDouble> e_out_d2;
+
+//     v_PhysDeriv(0, inarray, e_out_d0);
+//     v_PhysDeriv(1, inarray, e_out_d1);
+//     v_PhysDeriv(2, inarray, e_out_d2);
+
+// }
 
 // void ExpList::v_PhysDirectionalDeriv(
 //     const Array<OneD, const NekDouble> &direction,
 //     const Array<OneD, const NekDouble> &inarray,
-//     Array<OneD, NekDouble> &outarray)
-// {
-//     int npts_e;
-//     int coordim = (*m_exp)[0]->GetGeom()->GetCoordim();
-//     int nq      = direction.size() / coordim;
+//     Array<OneD, NekDouble> &out_d)
 
-//     Array<OneD, NekDouble> e_outarray;
-//     Array<OneD, NekDouble> e_MFdiv;
-//     Array<OneD, NekDouble> locdir;
-
-//     for (int i = 0; i < (*m_exp).size(); ++i)
 //     {
-//         npts_e = (*m_exp)[i]->GetTotPoints();
-//         locdir = Array<OneD, NekDouble>(npts_e * coordim);
+//         int nq = GetTotPoints();
+//         int npts = GetTotPoints(0);
+//         int coordim = GetCoordim(0);
 
-//         for (int k = 0; k < coordim; ++k)
+//         // initialise if required
+//         if (m_collectionsDoInit[Collections::ePhysDeriv])
 //         {
-//             Vmath::Vcopy(npts_e, &direction[k * nq + m_phys_offset[i]], 1,
-//                          &locdir[k * npts_e], 1);
+//             for (int i = 0; i < m_collections.size(); ++i)
+//             {
+//                 m_collections[i].Initialise(Collections::ePhysDeriv);
+//             }
+//             m_collectionsDoInit[Collections::ePhysDeriv] = false;
 //         }
 
-//         (*m_exp)[i]->PhysDirectionalDeriv(locdir,
-//                                           inarray + m_phys_offset[i], 
-//                                           e_outarray =
-//                                               outarray + m_phys_offset[i]);
+//         // convert enum into int
+//         Array<OneD, NekDouble> tmp(npts);
+//         Array<OneD, NekDouble> keout(npts);
+//         Array<OneD, NekDouble> e_out_d(npts, 0.0);
+//         int offset;
+
+//         out_d = Array<OneD, NekDouble>(npts, 0.0);
+//         for (int i = 0; i < m_collections.size(); ++i)
+//         {
+//             offset  = m_coll_phys_offset[i];
+//             e_out_d = out_d + offset;
+
+//             for (int k = 0; k<coordim; ++k)
+//             {
+//                 m_collections[i].ApplyOperator(Collections::ePhysDeriv, k,
+//                                             inarray + offset, keout); 
+//                 Vmath::Vvtvp(npts, &keout[0], 1, &direction[k*nq+offset], 1,  &e_out_d[0], 1, &e_out_d[0], 1);
+//             }
+//         }
 //     }
-// }
-
-
-void ExpList::v_PhysDirectionalDeriv(
-    const Array<OneD, const NekDouble> &direction,
-    const Array<OneD, const NekDouble> &inarray,
-    Array<OneD, NekDouble> &out_d)
-
-    {
-        int nq = GetTotPoints();
-        int coordim = GetCoordim(0);
-
-        // initialise if required
-        if (m_collectionsDoInit[Collections::ePhysDeriv])
-        {
-            for (int i = 0; i < m_collections.size(); ++i)
-            {
-                m_collections[i].Initialise(Collections::ePhysDeriv);
-            }
-            m_collectionsDoInit[Collections::ePhysDeriv] = false;
-        }
-
-        // convert enum into int
-        Array<OneD, NekDouble> tmp(nq);
-        Array<OneD, NekDouble> keout(nq);
-        Array<OneD, NekDouble> e_out_d(nq, 0.0);
-        int offset;
-
-        out_d = Array<OneD, NekDouble>(nq, 0.0);
-        for (int i = 0; i < m_collections.size(); ++i)
-        {
-            offset  = m_coll_phys_offset[i];
-            e_out_d = out_d + offset;
-
-            for (int k = 0; k<coordim; ++k)
-            {
-                m_collections[i].ApplyOperator(Collections::ePhysDeriv, k,
-                                            inarray + offset, keout); 
-                Vmath::Vvtvp(nq, &keout[0], 1, &direction[k*nq], 1,  &e_out_d[0], 1, &e_out_d[0], 1);
-            }
-        }
-    }
 
 
 void ExpList::v_PhysDeriv(Direction edir,

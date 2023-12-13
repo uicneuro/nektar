@@ -1788,7 +1788,7 @@ void MMFSWE::AddElevationEffect(Array<OneD, Array<OneD, NekDouble>> &physarray,
 
     for (int j = 0; j < m_shapedim; ++j)
     {
-        m_fields[0]->PhysDirectionalDeriv(m_movingframes[j], m_depth, tmp);
+        MMFDirectionalDeriv(m_movingframes[j], m_depth, tmp);
         Vmath::Vmul(nq, h, 1, tmp, 1, tmp, 1);
         Vmath::Smul(nq, m_g, tmp, 1, tmp, 1);
 
@@ -1815,7 +1815,7 @@ void MMFSWE::AddElevationEffectPhys(
 
     for (int j = 0; j < m_shapedim; ++j)
     {
-        m_fields[0]->PhysDirectionalDeriv(m_movingframes[j], m_depth, tmp);
+        MMFDirectionalDeriv(m_movingframes[j], m_depth, tmp);
         Vmath::Vmul(nq, h, 1, tmp, 1, tmp, 1);
         Vmath::Smul(nq, m_g, tmp, 1, tmp, 1);
 
@@ -1921,7 +1921,7 @@ void MMFSWE::Compute_demdt_cdot_ek(
         {
             // Compute d e^m / d \xi_1 and d e^m / d \xi_2
             Vmath::Vcopy(nq, &m_movingframes[indm][k * nq], 1, &tmp[0], 1);
-            m_fields[0]->PhysDirectionalDeriv(movingframes[j], tmp, tmp);
+            MMFDirectionalDeriv(movingframes[j], tmp, tmp);
 
             Vmath::Vmul(nq, &physarray[j + 1][0], 1, &tmp[0], 1, &tmp[0], 1);
 
@@ -2268,7 +2268,7 @@ void MMFSWE::EvaluateWaterDepth(void)
     for (int j = 0; j < m_shapedim; j++)
     {
         m_Derivdepth[j] = Array<OneD, NekDouble>(nq);
-        m_fields[0]->PhysDirectionalDeriv(m_movingframes[j], m_depth,
+        MMFDirectionalDeriv(m_movingframes[j], m_depth,
                                           m_Derivdepth[j]);
     }
 
@@ -2899,11 +2899,11 @@ void MMFSWE::ComputeVorticity(const Array<OneD, const NekDouble> &u,
 
     Vorticity = Array<OneD, NekDouble>(nq, 0.0);
 
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[0], v, Vorticity);
+    MMFDirectionalDeriv(m_movingframes[0], v, Vorticity);
     Vmath::Vvtvp(nq, &v[0], 1, &m_CurlMF[1][0], 1, &Vorticity[0], 1,
                  &Vorticity[0], 1);
 
-    m_fields[0]->PhysDirectionalDeriv(m_movingframes[1], u, tmp);
+    MMFDirectionalDeriv(m_movingframes[1], u, tmp);
     Vmath::Neg(nq, tmp, 1);
     Vmath::Vvtvp(nq, &u[0], 1, &m_CurlMF[0][0], 1, &tmp[0], 1, &tmp[0], 1);
 

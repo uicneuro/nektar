@@ -821,10 +821,10 @@ public:
     inline void CurlCurl(Array<OneD, Array<OneD, NekDouble>> &Vel,
                          Array<OneD, Array<OneD, NekDouble>> &Q);
 
-    inline void PhysDirectionalDeriv(
-        const Array<OneD, const NekDouble> &direction,
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray);
+    // inline void PhysDirectionalDeriv(
+    //     const Array<OneD, const NekDouble> &direction,
+    //     const Array<OneD, const NekDouble> &inarray,
+    //     Array<OneD, NekDouble> &outarray);
 
     inline void GetMovingFrames(const SpatialDomains::GeomMMF MMFdir,
                                 const Array<OneD, const NekDouble> &CircCentre,
@@ -1498,10 +1498,10 @@ NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
     virtual void v_CurlCurl(Array<OneD, Array<OneD, NekDouble>> &Vel,
                             Array<OneD, Array<OneD, NekDouble>> &Q);
 
-    virtual void v_PhysDirectionalDeriv(
-        const Array<OneD, const NekDouble> &direction,
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray);
+    // virtual void v_PhysDirectionalDeriv(
+    //     const Array<OneD, const NekDouble> &direction,
+    //     const Array<OneD, const NekDouble> &inarray,
+    //     Array<OneD, NekDouble> &outarray);
 
     virtual void v_GetMovingFrames(
         const SpatialDomains::GeomMMF MMFdir,
@@ -2053,13 +2053,13 @@ inline void ExpList::PhysDeriv(Direction edir,
 /**
  *
  */
-inline void ExpList::PhysDirectionalDeriv(
-    const Array<OneD, const NekDouble> &direction,
-    const Array<OneD, const NekDouble> &inarray,
-    Array<OneD, NekDouble> &outarray)
-{
-    v_PhysDirectionalDeriv(direction, inarray, outarray);
-}
+// inline void ExpList::PhysDirectionalDeriv(
+//     const Array<OneD, const NekDouble> &direction,
+//     const Array<OneD, const NekDouble> &inarray,
+//     Array<OneD, NekDouble> &outarray)
+// {
+//     v_PhysDirectionalDeriv(direction, inarray, outarray);
+// }
 
 /**
  *

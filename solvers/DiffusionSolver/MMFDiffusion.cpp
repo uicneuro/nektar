@@ -810,8 +810,8 @@ void MMFDiffusion::TestPhysDirectionalDeriv(const Array<OneD, const Array<OneD, 
 
     TestPlaneAniProblem(0.0, m_varcoeff, tmp);
 
-    m_fields[0]->PhysDirectionalDeriv(movingframes[0], tmp, Dxtmp);
-    m_fields[0]->PhysDirectionalDeriv(movingframes[1], tmp, Dytmp);
+    MMFDirectionalDeriv(movingframes[0], tmp, Dxtmp);
+    MMFDirectionalDeriv(movingframes[1], tmp, Dytmp);
 
     TestPlaneAniDerivProblem(0.0, m_varcoeff, ExtDxtmp, ExtDytmp);
 
