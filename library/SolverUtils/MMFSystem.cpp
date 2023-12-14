@@ -4385,130 +4385,145 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovGrad(
 
     Array<OneD, NekDouble> outarray(3 * nq, 0.0);
 
-    switch (m_expdim)
+    Array<OneD, Array<OneD, NekDouble>> dfdu(m_expdim);
+    for (int j=0; j<m_expdim; ++j)
     {
-        case 1:
-        {
-            outarray = ComputeCovGrad1D(fn, movingframes);
-        }
-        break;
-
-        case 2:
-        {
-            outarray = ComputeCovGrad2D(fn, movingframes);
-        }
-        break;
-
-        case 3:
-        {
-            outarray = ComputeCovGrad3D(fn, movingframes);
-        }
-        break;
-
-        default:
-            break;
+        dfdu[j] = Array<OneD, NekDouble>(nq);
+        MMFDirectionalDeriv(movingframes[j], fn, dfdu[j]);
     }
-
-    return outarray;
-}
-
-Array<OneD, NekDouble> MMFSystem::ComputeCovGrad1D(
-    const Array<OneD, const NekDouble> &fn,
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-{
-    int nq = GetNpoints();
-
-    Array<OneD, NekDouble> outarray(3 * nq, 0.0);
-
-    Array<OneD, NekDouble> dfdu1(nq);
-    // m_fields[0]->PhysDirectionalDeriv(movingframes[0], fn, dfdu1);
-    m_fields[0]->PhysDeriv(MultiRegions::eS, fn, dfdu1);
-
-    // std::cout << "dfdu1 = " << RootMeanSquare(dfdu1) << std::endl;
 
     for (int i = 0; i < nq; ++i)
     {
-        outarray[i]          = dfdu1[i] * movingframes[0][i];
-        outarray[i + nq]     = dfdu1[i] * movingframes[0][i + nq];
-        outarray[i + 2 * nq] = dfdu1[i] * movingframes[0][i + 2 * nq];
+        for (int k=0; k<m_spacedim; ++k)
+        {        
+           for (int j=0; j<m_expdim; ++j)
+           {
+                outarray[i + k * nq] = outarray[i + k * nq] + dfdu[j][i] * movingframes[j][i + k * nq];
+           }
+        }
     }
 
     return outarray;
 }
 
-// Compute Covariant gradent: \nabla f
-Array<OneD, NekDouble> MMFSystem::ComputeCovGrad2D(
-    const Array<OneD, const NekDouble> &fn,
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-{
-    int nq = GetNpoints();
 
-    Array<OneD, NekDouble> outarray(3 * nq, 0.0);
 
-    Array<OneD, NekDouble> dfdu1(nq);
-    Array<OneD, NekDouble> dfdu2(nq);
+    // switch (m_expdim)
+    // {
+    //     case 1:
+    //     {
+    //         outarray = ComputeCovGrad1D(fn, movingframes);
+    //     }
+    //     break;
 
-    MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
-    MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
+    //     case 2:
+    //     {
+    //         outarray = ComputeCovGrad2D(fn, movingframes);
+    //     }
+    //     break;
 
-    NekDouble dfde1 = 0.0, dfde2 = 0.0;
-    for (int i = 0; i < nq; ++i)
-    {
-        dfde1 = dfdu1[i];
-        dfde2 = dfdu2[i];
+    //     case 3:
+    //     {
+    //         outarray = ComputeCovGrad3D(fn, movingframes);
+    //     }
+    //     break;
 
-        outarray[i] = dfde1 * movingframes[0][i] + dfde2 * movingframes[1][i];
+    //     default:
+    //         break;
+    // }
 
-        outarray[i + nq] =
-            dfde1 * movingframes[0][i + nq] + dfde2 * movingframes[1][i + nq];
+//     return outarray;
+// }
 
-        outarray[i + 2 * nq] = dfde1 * movingframes[0][i + 2 * nq] +
-                               dfde2 * movingframes[1][i + 2 * nq];
-    }
+// Array<OneD, NekDouble> MMFSystem::ComputeCovGrad1D(
+//     const Array<OneD, const NekDouble> &fn,
+//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+// {
+//     int nq = GetNpoints();
 
-    return outarray;
-}
+//     Array<OneD, NekDouble> outarray(3 * nq, 0.0);
 
-// Compute Covariant gradent: \nabla f
-Array<OneD, NekDouble> MMFSystem::ComputeCovGrad3D(
-    const Array<OneD, const NekDouble> &fn,
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-{
-    int nq = GetNpoints();
+//     Array<OneD, NekDouble> dfdu1(nq);
+//     // m_fields[0]->PhysDirectionalDeriv(movingframes[0], fn, dfdu1);
+//     m_fields[0]->PhysDeriv(MultiRegions::eS, fn, dfdu1);
 
-    Array<OneD, NekDouble> outarray(3 * nq, 0.0);
+//     // std::cout << "dfdu1 = " << RootMeanSquare(dfdu1) << std::endl;
 
-    Array<OneD, NekDouble> dfdu1(nq);
-    Array<OneD, NekDouble> dfdu2(nq);
-    Array<OneD, NekDouble> dfdu3(nq);
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         for (int k=0; k<m_spacedim; ++k)
+//         {
+//             outarray[i+k*nq] = dfdu1[i] * movingframes[0][i+k*nq];
+//         }
+//     }
 
-    MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
-    MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
-    MMFDirectionalDeriv(movingframes[2], fn, dfdu3);
+//     return outarray;
+// }
 
-    std::cout << "dfdu3 = " << RootMeanSquare(dfdu3) << std::endl;
+// // Compute Covariant gradent: \nabla f
+// Array<OneD, NekDouble> MMFSystem::ComputeCovGrad2D(
+//     const Array<OneD, const NekDouble> &fn,
+//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+// {
+//     int nq = GetNpoints();
 
-    NekDouble dfde1 = 0.0, dfde2 = 0.0, dfde3 = 0.0;
-    for (int i = 0; i < nq; ++i)
-    {
-        dfde1 = dfdu1[i];
-        dfde2 = dfdu2[i];
-        dfde3 = dfdu3[i];
+//     Array<OneD, NekDouble> outarray(3 * nq, 0.0);
 
-        outarray[i] = dfde1 * movingframes[0][i] + dfde2 * movingframes[1][i] +
-                      dfde3 * movingframes[2][i];
+//     Array<OneD, NekDouble> dfdu1(nq);
+//     Array<OneD, NekDouble> dfdu2(nq);
 
-        outarray[i + nq] = dfde1 * movingframes[0][i + nq] +
-                           dfde2 * movingframes[1][i + nq] +
-                           dfde3 * movingframes[2][i + nq];
+//     MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
+//     MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
 
-        outarray[i + 2 * nq] = dfde1 * movingframes[0][i + 2 * nq] +
-                               dfde2 * movingframes[1][i + 2 * nq] +
-                               dfde3 * movingframes[2][i + 2 * nq];
-    }
+//     NekDouble dfde1 = 0.0, dfde2 = 0.0;
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         dfde1 = dfdu1[i];
+//         dfde2 = dfdu2[i];
 
-    return outarray;
-}
+//         for (int k=0; k<m_spacedim; ++k)
+//         {
+//             outarray[i+k*nq] = dfde1 * movingframes[0][i+k*nq] + dfde2 * movingframes[1][i+k*nq];
+//         }
+//     }
+
+//     return outarray;
+// }
+
+// // Compute Covariant gradent: \nabla f
+// Array<OneD, NekDouble> MMFSystem::ComputeCovGrad3D(
+//     const Array<OneD, const NekDouble> &fn,
+//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+// {
+//     int nq = GetNpoints();
+
+//     Array<OneD, NekDouble> outarray(3 * nq, 0.0);
+
+//     Array<OneD, NekDouble> dfdu1(nq);
+//     Array<OneD, NekDouble> dfdu2(nq);
+//     Array<OneD, NekDouble> dfdu3(nq);
+
+//     MMFDirectionalDeriv(movingframes[0], fn, dfdu1);
+//     MMFDirectionalDeriv(movingframes[1], fn, dfdu2);
+//     MMFDirectionalDeriv(movingframes[2], fn, dfdu3);
+
+//     NekDouble dfde1 = 0.0, dfde2 = 0.0, dfde3 = 0.0;
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         dfde1 = dfdu1[i];
+//         dfde2 = dfdu2[i];
+//         dfde3 = dfdu3[i];
+
+//         for (int k=0; k<m_spacedim; ++k)
+//         {
+//             outarray[i + k * nq] = dfde1 * movingframes[0][i + k * nq] +
+//                                 dfde2 * movingframes[1][i + k * nq] +
+//                                 dfde3 * movingframes[2][i + k * nq];
+//         }
+//     }
+
+//     return outarray;
+// }
 
 // Curlike gradient
 Array<OneD, NekDouble> MMFSystem::ComputeCovJGrad(

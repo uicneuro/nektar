@@ -721,17 +721,17 @@ protected:
         const Array<OneD, const NekDouble> &fn,
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
 
-    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovGrad1D(
-        const Array<OneD, const NekDouble> &fn,
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
+    // SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovGrad1D(
+    //     const Array<OneD, const NekDouble> &fn,
+    //     const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
 
-    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovGrad2D(
-        const Array<OneD, const NekDouble> &fn,
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
+    // SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovGrad2D(
+    //     const Array<OneD, const NekDouble> &fn,
+    //     const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
 
-    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovGrad3D(
-        const Array<OneD, const NekDouble> &fn,
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
+    // SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovGrad3D(
+    //     const Array<OneD, const NekDouble> &fn,
+    //     const Array<OneD, const Array<OneD, NekDouble>> &movingframes);
 
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeCovJGrad(
         const Array<OneD, const NekDouble> &fn,

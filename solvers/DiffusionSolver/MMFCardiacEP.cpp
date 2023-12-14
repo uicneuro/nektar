@@ -390,19 +390,6 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
         LoadTimeMap(loadname_old, m_ValidTM, TimeMap_old, AniStrength_old, Velocitymag_old, Velocity_old);
 
-
-        for (int i=0; i<nq; ++i)
-        {
-            std::cout << "i = " << i << ", velmag = " << Velocitymag_old[i] << ", x = " << x0[i] << std::endl;
-        }
-
-        // NekDouble velmagmax = Vmath::Vmax(nq, Velocitymag_old, 1);
-        // int velmagIndex = Vmath::Imax(nq, Velocitymag_old, 1);
-
-        // std::cout << ", velmag max = " << velmagmax << ", x = " << x0[velmagIndex] << std::endl;
-        // wait_on_enter();
-
-
         // load new timemap                               
         std::string loadname = sessionnew + "_TimeMap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
@@ -454,7 +441,6 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
         factors[StdRegions::eFactorLambda] = 0.0;
 
         Vmath::Sadd(nq, -1.0 * AvgInt(VdiffDivergence), VdiffDivergence, 1, VdiffDivergence, 1);
-        std::cout << "VdiffDiv for pure Neumann = " << AvgInt(VdiffDivergence) << std::endl;
         Vmath::Vcopy(nq, VdiffDivergence, 1, m_fields[0]->UpdatePhys(), 1);
 
         m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
@@ -2314,7 +2300,8 @@ void MMFCardiacEP::PlotDeformedTimeMap(
 
     NekDouble TMerrMax = Vmath::Vamax(nq, TimeMapError, 1) / Vmath::Vamax(nq, TimeMap_old, 1);
 
-    std::cout << "Max. TimeMapError = " << TMerrMax << std::endl;
+    std::cout << std::endl;
+    std::cout << "Max. TimeMap rel. err = " << TMerrMax << std::endl;
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMapDiffExact";
@@ -2330,7 +2317,11 @@ void MMFCardiacEP::PlotDeformedTimeMap(
 
     // index:0 -> u
     m_fields[0]->FwdTrans(TimeMapDiffExact, fieldcoeffs[0]);
+
+    std::cout << "TimeMapDiffExact max = " << Vmath::Vamax(nq, TimeMapDiffExact, 1) << std::endl;
+
     m_fields[0]->FwdTrans(TimeMapDiff, fieldcoeffs[1]);
+    std::cout << "TimeMapDiff max = " << Vmath::Vamax(nq, TimeMapDiff, 1) << std::endl;
 
     m_fields[0]->FwdTrans(Vdiff[0], fieldcoeffs[2]);
     m_fields[0]->FwdTrans(Vdiff[1], fieldcoeffs[3]);
