@@ -686,8 +686,8 @@ void MMFCardiacEP::LoadCardiacFiber(
                     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                         {
                             index = m_fields[0]->GetPhys_Offset(i) + j;
-                            AniStrength[0][index] = sqrt(AnisotropyStrength);
-                            AniStrength[1][index] = sqrt(AnisotropyStrength);                        
+                            AniStrength[0][index] = AnisotropyStrength;
+                            AniStrength[1][index] = AnisotropyStrength;                        
                         }
                 }
         }

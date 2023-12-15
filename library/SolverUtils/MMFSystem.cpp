@@ -1083,7 +1083,7 @@ void MMFSystem::SetUpMovingFrames(
             for (int k = 0; k < m_spacedim; ++k)
             {
                 movingframes[j][k * nq + i] =
-                    Anistrength[j][i] * movingframes[j][k * nq + i];
+                    sqrt(Anistrength[j][i]) * movingframes[j][k * nq + i];
             }
         }
     }
