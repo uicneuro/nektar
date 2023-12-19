@@ -230,7 +230,7 @@ protected:
     int m_npts; // Number of points for each element
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     int m_Convectiven;
-    int m_Nnode, m_NumelemNode, m_NumelemMyel;
+    int m_totNode, m_elemperNode, m_elemperMyel;
     int m_zonestart, m_zoneend;
 
     NekDouble m_fiberlen, m_nodelen, m_myelinlen;

@@ -106,9 +106,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
 
-    m_session->LoadParameter("NumberNode", m_Nnode, 10);
-    m_session->LoadParameter("NumelemNode", m_NumelemNode, 4);
-    m_session->LoadParameter("NumelemMyel", m_NumelemMyel, 14);
+    m_session->LoadParameter("Total_Number_Node", m_totNode, 10);
+    m_session->LoadParameter("Element_per_Node", m_elemperNode, 4);
+    m_session->LoadParameter("Element_per_Myelin", m_elemperMyel, 14);
 
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
@@ -230,25 +230,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_ExtCurrentType = (ExtCurrentType)0;
     }
 
-    // Either incorporating external current effect or not.
-    // if (m_session->DefinesSolverInfo("NodeIndexType"))
-    // {
-    //     std::string NodeIndexTypeStr;
-    //     NodeIndexTypeStr = m_session->GetSolverInfo("NodeIndexType");
-    //     for (int i = 0; i < (int)SIZE_NodeIndexType; ++i)
-    //     {
-    //         if (boost::iequals(NodeIndexTypeMap[i], NodeIndexTypeStr))
-    //         {
-    //             m_NodeIndexType = (NodeIndexType)i;
-    //             break;
-    //         }
-    //     }
-    // }
-    // else
-    // {
-    //     m_NodeIndexType = (NodeIndexType)0;
-    // }
-
     std::string vNeuronModel;
     m_session->LoadSolverInfo("NEURONMODEL", vNeuronModel,
                                 "FrankenHuxley");
@@ -282,7 +263,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Ranvier node zone: 0: Myelin, 1: node
             m_nfibers  = 1;
             m_zoneindex = Array<OneD, Array<OneD, int>>(m_nfibers);
-            m_zoneindex[0] = IndexNodeZone1D(m_fields[0], m_Nnode, m_NumelemNode, m_NumelemMyel); 
+            m_zoneindex[0] = IndexNodeZone1D(m_fields[0], m_totNode, m_elemperNode, m_elemperMyel); 
 
               // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
@@ -302,11 +283,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_zoneindex = Array<OneD, Array<OneD, int>>(1);
             m_zoneindex[0]  = Array<OneD, int>(nq, 1); 
 
+            std::cout << "m_Nnode = " << m_totNode << std::endl;
+
             m_npts = m_fields[0]->GetTotPoints(0);
-            m_zoneindex[0] = IndexNodeZone2D(m_fiberlen, m_nodelen, m_myelinlen, m_Nnode);
+            m_zoneindex[0] = IndexNodeZone2D(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
 
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
+
+            wait_on_enter();
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
@@ -578,18 +563,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
         }
     }
 
-
-    // count the number of points in a element: m_npts
-    // int cnt=0;
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     if(outarray[i]==0)
-    //     {
-    //         cnt++;
-    //     }
-    // }
-    // m_npts = cnt/m_NumelemNode;
-
     return outarray;
 }
 
@@ -749,12 +722,12 @@ void MMFNeuralEP::SetUpDomainZone(
         }
     }
 
-    int extcntelem = extcnt/m_npts/m_NumelemNode;
-    int nodecntelem = nodecnt/m_npts/m_NumelemNode;
-    int myelcntelem = (intracnt-nodecnt)/m_npts/m_NumelemMyel;
+    int extcntelem = extcnt/m_npts/m_elemperNode;
+    int nodecntelem = nodecnt/m_npts/m_elemperNode;
+    int myelcntelem = (intracnt-nodecnt)/m_npts/m_elemperMyel;
     int intraelem = intracnt/m_npts;
     int extraelem = extracnt/m_npts;
-    int totelem = intraelem + extraelem - nodecntelem*m_NumelemNode;
+    int totelem = intraelem + extraelem - nodecntelem*m_elemperNode;
     
     std::cout << "Zone start = " << Excitezonehead << ", end = " << Excitezonetail <<
     ", Excite zone = " << extcnt << ", Node zone = " << nodecnt <<  ", intra zone = " << intracnt/nq << 
@@ -764,38 +737,6 @@ void MMFNeuralEP::SetUpDomainZone(
     << ", Myelin elem. = " << myelcntelem << ", intra elem. = " << intraelem << ", external elem. = " << extraelem 
     << ", total elem = " << totelem << std::endl;
 }
-
-// Array<OneD, int> MMFNeuralEP::ImportIndexNodeZone2D(const std::string &zoneindexfile)
-// {
-//     int nvar    = 1;
-//     int ncoeffs          = GetNcoeffs();
-//     int nq   = GetTotPoints();
-
-//     std::string outname = zoneindexfile + "_zoneindex.chk";
-
-//     std::vector<std::string> variables(nvar);
-
-//     variables[0] = "zoneindex";
-        
-//     Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
-//     for (int i = 0; i < nvar; ++i)
-//     {
-//         tmpc[i]  = Array<OneD, NekDouble>(ncoeffs,0.0);
-//     }
-
-//     Array<OneD, NekDouble> tmp(nq);
-//     Array<OneD, int> tmpint(nq);
-
-//     EquationSystem::ImportFld(outname, variables, tmpc);
-//     m_fields[0]->BwdTrans(tmpc[0], tmp);
-
-//     for (int i=0; i<nq; ++i)
-//     {
-//         tmpint[i] = static_cast<int>(tmp[i]);
-//     }
-
-//     return tmpint;
-// }
 
 Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
                  const Array<OneD, const int> &zoneindex)
@@ -1036,214 +977,6 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
 
     return outarray;
 }
-
-
-// Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
-//     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-//         const int ElemMyelenEnd)
-// {
-//     boost::ignore_unused(ElemNodeEnd,ElemMyelenEnd);
-
-//     int fnq = field->GetNpoints();
-
-//     Array<OneD, NekDouble> x0(fnq);
-//     Array<OneD, NekDouble> x1(fnq);
-//     Array<OneD, NekDouble> x2(fnq);
-
-//     field->GetCoords(x0, x1, x2);
-
-//     int index, npts;
-//     int Nelem = m_fields[0]->GetExpSize();
-
-//     Array<OneD, int> outarray(fnq, 0);
-//     int cnn=0;
-//     int cnm=0;
-//     for (int i = 0; i < Nelem; ++i)
-//     {
-//         npts = m_fields[0]->GetTotPoints(i);
-
-//         for (int j = 0; j < npts; ++j)
-//         {
-//             index = m_fields[0]->GetPhys_Offset(i) + j ;
-
-//             if(i <=1)
-//             {
-//                 outarray[index] = i;
-//                 cnn++;
-//             }
-
-//             else if (i % 2 == 1)
-//             {
-//                 outarray[index] = i/2+1;
-//                 cnn++;
-//             }
-
-//             else 
-//             {
-//                 outarray[index] = -1;
-//                 cnm++;
-//             }
-//         }
-//     }
-
-//     std::cout << "No.: Node = " << cnn << ", Myelin = " << cnm << std::endl;
-
-//     return outarray;
-// }
-
-// Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
-//     const MultiRegions::ExpListSharedPtr &field)
-//     {
-//         int nq = field->GetNpoints();
-//         Array<OneD, int> outarray(nq, 0);
-
-//         switch(m_NodeIndexType)
-//         {
-//             case eSequential:
-//             {
-//                 outarray = IndexNodeZone2DSequential(field, m_Nnode, m_NumelemNode, m_NumelemMyel);
-//                 break;
-//             }
-
-//             case eNodefirst:
-//             {
-//                 outarray = IndexNodeZone2DNodefirst(field, m_ElemNodeEnd, m_ElemMyelenEnd);
-//                 break;
-//             }
-
-//             default:
-//             break;
-//         }
-
-//         return outarray;
-//     }
-
-// Array<OneD, int> MMFNeuralEP::IndexNodeZone2DNodefirst(
-//     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-//     const int ElemMyelenEnd)
-// {
-//     int nq = field->GetNpoints();
-//     int index;
-
-//     Array<OneD, int> outarray(nq, 0);
-//     int cntn=0, cntm=0, cnte=0;
-//     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
-//     {
-//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-//         {
-//             index = m_fields[0]->GetPhys_Offset(i) + j ;
-
-//             // First and last element is all node for easier excitation
-//             if (i <= ElemNodeEnd)
-//             {
-//                 outarray[index] = i / m_NumelemNode;
-//                 cntn++;
-//             }
-
-//             else if ((i> ElemNodeEnd) && (i <= ElemMyelenEnd))
-//             {
-//                 outarray[index] = -1;
-//                 cntm++;
-//             }
-
-//             else if (i > ElemMyelenEnd)
-//             {
-//                 outarray[index] = -2;
-//                 cnte++;
-//             }
-//         }
-//     }
-
-//     std::cout << "Nodefirst: cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << cnte << std::endl;
-
-//     // Get the first and last index of the excitation zone [1,2]
-//     m_zonestart = 0;
-//     m_zoneend = 0;
-//     for (int i=0; i<nq; ++i)
-//     {
-//         if( (outarray[i] == 0) || (outarray[i] == 1))
-//         {
-//             if (i<m_zonestart)
-//             {
-//                 m_zonestart = i;
-//             }
-
-//             if(i>m_zoneend)
-//             {
-//                 m_zoneend = i;
-//             }
-//         }
-//     }
-
-//     return outarray;
-// }
-
-
-// // Constrcuct Cm vector: 1.0/Cn if node. 1.0/Cm if myeline.
-// Array<OneD, int> MMFNeuralEP::IndexNodeZone2DSequential(
-//     const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
-//     const int NumelemNode, const int NumelemMyel)
-// {
-//     int nq = field->GetNpoints();
-
-//     Array<OneD, int> outarray(nq, -2);
-//     int cntn=0, cntm=0;
-
-//     // Node 0
-//     int indexNode;
-//     for (int i = 0; i < 2 * NumelemNode; ++i)
-//     {
-//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-//         {
-//             indexNode = m_fields[0]->GetPhys_Offset(i) + j ;
-
-//             // First and last element is all node for easier excitation
-//             outarray[indexNode] = i / NumelemNode;
-//             cntn++;
-//         }
-//     }
-
-//     // Myelin index
-//     int Myelid;
-//     int indexMyelin;
-//     for (int k = 0; k < Nnode; ++k)
-//     {
-//         for (int i = 0; i < NumelemMyel; ++i)
-//         {
-//             Myelid = (NumelemNode + NumelemMyel)*k + 2 * NumelemNode + i;
-//             for (int j = 0; j < m_fields[0]->GetTotPoints(Myelid); ++j)
-//             {
-//                 indexMyelin = m_fields[0]->GetPhys_Offset(Myelid) + j ;
-
-//                 // First and last element is all node for easier excitation
-//                 outarray[indexMyelin] = -1;
-//                 cntm++;
-//             }
-//         }
-//     }
-
-//     // Node index
-//     int Nodeid;
-//     for (int k = 0; k < Nnode; ++k)
-//     {
-//         for (int i = 0; i < NumelemNode; ++i)
-//         {
-//             Nodeid = (NumelemNode + NumelemMyel)*k + 2 * NumelemNode + NumelemMyel + i;
-//             for (int j = 0; j < m_fields[0]->GetTotPoints(Nodeid); ++j)
-//             {
-//                 indexNode = m_fields[0]->GetPhys_Offset(Nodeid) + j ;
-
-//                 // First and last element is all node for easier excitation
-//                 outarray[indexNode] = k + 2;
-//                 cntn++;
-//             }
-//         }
-//     }
-
-//     std::cout << "Sequential: cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << (nq-cntn-cntm) << std::endl;
-
-//     return outarray;
-// }
 
 void MMFNeuralEP::DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -2805,7 +2538,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
 
-    SolverUtils::AddSummaryItem(s, "Nnode", m_Nnode);
+    SolverUtils::AddSummaryItem(s, "Total_Number_Node", m_totNode);
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "diameter", m_diameter);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
