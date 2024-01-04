@@ -1,0 +1,1443 @@
+cntn = 960, cntm = 12000, cnte = 9880
+Cm = 1.87e-11, Cn = 3.14e-09, Rf = 1.26e+08, Cm * Rf = 0.39564
+v_InitObject: Node = 960, Myelin = 12000, extracell = 9880
+ =======================================================================
+ Moving frames 9880 / 22840 ( 43.2574 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 0, Anistrength 2 = 0
+MMFActivation = 22840 /  22840 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.472 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.472 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 9.39485 , 0 ) 
+*** MF 1 = ( 9.39485 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+
+Constructing phieunitMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 1142 elements, adapated from MF1 = 406, MF2 = 708, MF3 = 28
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.542663 , 0.839951 , 0 ) 
+*** MF 1 = ( 0.839951 , 0.542663 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.542663 , 0.839951 , 0 ) 
+*** MF 1 = ( 0.839951 , 0.542663 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+
+Constructing phieMF ================================================
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 1142 elements, adapated from MF1 = 406, MF2 = 708, MF3 = 28
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.767441 , 1.18787 , 0 ) 
+*** MF 1 = ( 1.18787 , 0.767441 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.767441 , 1.18787 , 0 ) 
+*** MF 1 = ( 1.18787 , 0.767441 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+Compute Varcoeff for phim ====================== 
+k = 0, m_varcoeff = ( 0 , 9.39485 , 0 , 4.02671e-12 , 121.711 ) 
+k = 1, m_varcoeff = ( 9.39485 , 0 , 0 , 5.36857e-12 , 121.711 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+Compute Varcoeff for phie ====================== 
+k = 0, m_varcoeff = ( 0.767441 , 1.18787 , 0 , 1.37195e-05 , 2 ) 
+k = 1, m_varcoeff = ( 1.18787 , 0.767441 , 0 , 7.14751e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: NeuralEP2DExtL2Phie
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 4
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 1e-08
+	        No. of Steps: 100000000
+	 Checkpoints (steps): 1000000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	          MediumType: Anisotropy
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2DEmbbi
+	    ExternalCondType: ComputePhie
+	    SolverSchemeType: Default
+	             TimeMap: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	     ExtElemMFLength: 0
+	         ElemNodeEnd: 47
+	       ElemMyelenEnd: 647
+	         Temperature: 24
+	            diameter: 0.01
+	             Helmtau: 1
+=======================================================================
+Initialise: nvar = 5, m_nq = 22840
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Elemid = 0, Nodeid = 0, x = 0.005, y = 0.001875, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 1, Nodeid = 0, x = 0.001875, y = 0.005, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 2, Nodeid = 0, x = 0.008125, y = 0.005, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 3, Nodeid = 0, x = 0.005, y = 0.008125, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 4, Nodeid = 1, x = 0.001875, y = 0.015, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 5, Nodeid = 1, x = 0.005, y = 0.011875, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 6, Nodeid = 1, x = 0.005, y = 0.018125, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 7, Nodeid = 1, x = 0.008125, y = 0.015, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 8, Nodeid = 2, x = 0.001875, y = 0.225, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 9, Nodeid = 2, x = 0.008125, y = 0.225, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 10, Nodeid = 2, x = 0.005, y = 0.221875, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 11, Nodeid = 2, x = 0.005, y = 0.228125, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 12, Nodeid = 3, x = 0.001875, y = 0.435, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 13, Nodeid = 3, x = 0.008125, y = 0.435, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 14, Nodeid = 3, x = 0.005, y = 0.431875, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 15, Nodeid = 3, x = 0.005, y = 0.438125, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 16, Nodeid = 4, x = 0.001875, y = 0.645, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 17, Nodeid = 4, x = 0.008125, y = 0.645, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 18, Nodeid = 4, x = 0.005, y = 0.641875, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 19, Nodeid = 4, x = 0.005, y = 0.648125, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 20, Nodeid = 5, x = 0.001875, y = 0.855, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 21, Nodeid = 5, x = 0.008125, y = 0.855, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 22, Nodeid = 5, x = 0.005, y = 0.858125, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 23, Nodeid = 5, x = 0.005, y = 0.851875, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 24, Nodeid = 6, x = 0.001875, y = 1.065, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 25, Nodeid = 6, x = 0.005, y = 1.06188, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 26, Nodeid = 6, x = 0.005, y = 1.06812, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 27, Nodeid = 6, x = 0.008125, y = 1.065, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 28, Nodeid = 7, x = 0.001875, y = 1.275, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 29, Nodeid = 7, x = 0.008125, y = 1.275, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 30, Nodeid = 7, x = 0.005, y = 1.27187, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 31, Nodeid = 7, x = 0.005, y = 1.27812, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 32, Nodeid = 8, x = 0.001875, y = 1.485, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 33, Nodeid = 8, x = 0.005, y = 1.48812, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 34, Nodeid = 8, x = 0.005, y = 1.48187, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 35, Nodeid = 8, x = 0.008125, y = 1.485, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 36, Nodeid = 9, x = 0.001875, y = 1.695, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 37, Nodeid = 9, x = 0.005, y = 1.69187, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 38, Nodeid = 9, x = 0.005, y = 1.69812, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 39, Nodeid = 9, x = 0.008125, y = 1.695, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 40, Nodeid = 10, x = 0.001875, y = 1.905, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 41, Nodeid = 10, x = 0.005, y = 1.90187, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 42, Nodeid = 10, x = 0.005, y = 1.90812, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 43, Nodeid = 10, x = 0.008125, y = 1.905, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 44, Nodeid = 11, x = 0.005, y = 2.11187, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 45, Nodeid = 11, x = 0.005, y = 2.11813, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 46, Nodeid = 11, x = 0.001875, y = 2.115, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 47, Nodeid = 11, x = 0.008125, y = 2.115, dist = 0.00717571, e1mag = 1, e2mag = 1, inarray = 0
+Elemid = 48, Nodeid = -1, x = 0.0084375, y = 0.132917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 49, Nodeid = -1, x = 0.0015625, y = 0.13375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 50, Nodeid = -1, x = 0.0084375, y = 0.159583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 51, Nodeid = -1, x = 0.0015625, y = 0.160417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 52, Nodeid = -1, x = 0.0084375, y = 0.212917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 53, Nodeid = -1, x = 0.0015625, y = 0.21375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 54, Nodeid = -1, x = 0.0084375, y = 0.172917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 55, Nodeid = -1, x = 0.0015625, y = 0.17375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 56, Nodeid = -1, x = 0.0084375, y = 0.18625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 57, Nodeid = -1, x = 0.0015625, y = 0.187083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 58, Nodeid = -1, x = 0.0015625, y = 0.200417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 59, Nodeid = -1, x = 0.0084375, y = 0.14625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 60, Nodeid = -1, x = 0.0015625, y = 0.147083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 61, Nodeid = -1, x = 0.0084375, y = 0.199583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 62, Nodeid = -1, x = 0.0084375, y = 0.119583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 63, Nodeid = -1, x = 0.0015625, y = 0.120417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 64, Nodeid = -1, x = 0.0015625, y = 0.0404167, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 65, Nodeid = -1, x = 0.0084375, y = 0.0395833, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 66, Nodeid = -1, x = 0.0084375, y = 0.02625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 67, Nodeid = -1, x = 0.0015625, y = 0.0270833, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 68, Nodeid = -1, x = 0.0015625, y = 0.107083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 69, Nodeid = -1, x = 0.0015625, y = 0.0804167, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 70, Nodeid = -1, x = 0.0084375, y = 0.0795833, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 71, Nodeid = -1, x = 0.0084375, y = 0.10625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 72, Nodeid = -1, x = 0.0084375, y = 0.06625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 73, Nodeid = -1, x = 0.0015625, y = 0.0670833, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 74, Nodeid = -1, x = 0.0015625, y = 0.09375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 75, Nodeid = -1, x = 0.0084375, y = 0.0529167, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 76, Nodeid = -1, x = 0.0084375, y = 0.0929167, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 77, Nodeid = -1, x = 0.0015625, y = 0.05375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 78, Nodeid = -1, x = 0.0053125, y = 0.137917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 79, Nodeid = -1, x = 0.0046875, y = 0.12875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 80, Nodeid = -1, x = 0.0053125, y = 0.164583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 81, Nodeid = -1, x = 0.0046875, y = 0.155417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 82, Nodeid = -1, x = 0.0046875, y = 0.20875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 83, Nodeid = -1, x = 0.0053125, y = 0.217917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 84, Nodeid = -1, x = 0.0053125, y = 0.177917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 85, Nodeid = -1, x = 0.0046875, y = 0.16875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 86, Nodeid = -1, x = 0.0046875, y = 0.182083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 87, Nodeid = -1, x = 0.0053125, y = 0.19125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 88, Nodeid = -1, x = 0.0053125, y = 0.204583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 89, Nodeid = -1, x = 0.0046875, y = 0.142083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 90, Nodeid = -1, x = 0.0053125, y = 0.15125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 91, Nodeid = -1, x = 0.0046875, y = 0.195417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 92, Nodeid = -1, x = 0.0053125, y = 0.124583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 93, Nodeid = -1, x = 0.0046875, y = 0.115417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 94, Nodeid = -1, x = 0.0046875, y = 0.0354167, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 95, Nodeid = -1, x = 0.0053125, y = 0.0445833, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 96, Nodeid = -1, x = 0.0053125, y = 0.03125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 97, Nodeid = -1, x = 0.0046875, y = 0.0220833, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 98, Nodeid = -1, x = 0.0053125, y = 0.11125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 99, Nodeid = -1, x = 0.0046875, y = 0.0754167, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 100, Nodeid = -1, x = 0.0053125, y = 0.0845833, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 101, Nodeid = -1, x = 0.0053125, y = 0.07125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 102, Nodeid = -1, x = 0.0046875, y = 0.102083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 103, Nodeid = -1, x = 0.0046875, y = 0.0620833, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 104, Nodeid = -1, x = 0.0053125, y = 0.0979167, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 105, Nodeid = -1, x = 0.0046875, y = 0.04875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 106, Nodeid = -1, x = 0.0053125, y = 0.0579167, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 107, Nodeid = -1, x = 0.0046875, y = 0.08875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 108, Nodeid = -1, x = 0.0015625, y = 0.410417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 109, Nodeid = -1, x = 0.0084375, y = 0.409583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 110, Nodeid = -1, x = 0.0015625, y = 0.370417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 111, Nodeid = -1, x = 0.0084375, y = 0.369583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 112, Nodeid = -1, x = 0.0015625, y = 0.42375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 113, Nodeid = -1, x = 0.0015625, y = 0.34375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 114, Nodeid = -1, x = 0.0084375, y = 0.342917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 115, Nodeid = -1, x = 0.0084375, y = 0.422917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 116, Nodeid = -1, x = 0.0015625, y = 0.397083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 117, Nodeid = -1, x = 0.0015625, y = 0.357083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 118, Nodeid = -1, x = 0.0084375, y = 0.35625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 119, Nodeid = -1, x = 0.0084375, y = 0.39625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 120, Nodeid = -1, x = 0.0084375, y = 0.382917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 121, Nodeid = -1, x = 0.0015625, y = 0.38375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 122, Nodeid = -1, x = 0.0015625, y = 0.330417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 123, Nodeid = -1, x = 0.0084375, y = 0.329583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 124, Nodeid = -1, x = 0.0084375, y = 0.23625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 125, Nodeid = -1, x = 0.0015625, y = 0.237083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 126, Nodeid = -1, x = 0.0084375, y = 0.249583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 127, Nodeid = -1, x = 0.0015625, y = 0.250417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 128, Nodeid = -1, x = 0.0084375, y = 0.27625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 129, Nodeid = -1, x = 0.0015625, y = 0.290417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 130, Nodeid = -1, x = 0.0015625, y = 0.26375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 131, Nodeid = -1, x = 0.0084375, y = 0.262917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 132, Nodeid = -1, x = 0.0084375, y = 0.289583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 133, Nodeid = -1, x = 0.0015625, y = 0.30375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 134, Nodeid = -1, x = 0.0084375, y = 0.302917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 135, Nodeid = -1, x = 0.0015625, y = 0.317083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 136, Nodeid = -1, x = 0.0084375, y = 0.31625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 137, Nodeid = -1, x = 0.0015625, y = 0.277083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 138, Nodeid = -1, x = 0.0053125, y = 0.414583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 139, Nodeid = -1, x = 0.0046875, y = 0.405417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 140, Nodeid = -1, x = 0.0046875, y = 0.365417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 141, Nodeid = -1, x = 0.0053125, y = 0.374583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 142, Nodeid = -1, x = 0.0053125, y = 0.347917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 143, Nodeid = -1, x = 0.0053125, y = 0.427917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 144, Nodeid = -1, x = 0.0046875, y = 0.41875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 145, Nodeid = -1, x = 0.0046875, y = 0.33875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 146, Nodeid = -1, x = 0.0053125, y = 0.36125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 147, Nodeid = -1, x = 0.0046875, y = 0.392083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 148, Nodeid = -1, x = 0.0053125, y = 0.40125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 149, Nodeid = -1, x = 0.0046875, y = 0.352083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 150, Nodeid = -1, x = 0.0046875, y = 0.37875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 151, Nodeid = -1, x = 0.0053125, y = 0.387917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 152, Nodeid = -1, x = 0.0046875, y = 0.325417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 153, Nodeid = -1, x = 0.0053125, y = 0.334583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 154, Nodeid = -1, x = 0.0046875, y = 0.232083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 155, Nodeid = -1, x = 0.0053125, y = 0.24125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 156, Nodeid = -1, x = 0.0053125, y = 0.254583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 157, Nodeid = -1, x = 0.0046875, y = 0.245417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 158, Nodeid = -1, x = 0.0053125, y = 0.307917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 159, Nodeid = -1, x = 0.0053125, y = 0.267917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 160, Nodeid = -1, x = 0.0046875, y = 0.285417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 161, Nodeid = -1, x = 0.0053125, y = 0.28125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 162, Nodeid = -1, x = 0.0053125, y = 0.32125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 163, Nodeid = -1, x = 0.0046875, y = 0.272083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 164, Nodeid = -1, x = 0.0046875, y = 0.312083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 165, Nodeid = -1, x = 0.0053125, y = 0.294583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 166, Nodeid = -1, x = 0.0046875, y = 0.25875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 167, Nodeid = -1, x = 0.0046875, y = 0.29875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 168, Nodeid = -1, x = 0.0015625, y = 0.580417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 169, Nodeid = -1, x = 0.0015625, y = 0.620417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 170, Nodeid = -1, x = 0.0084375, y = 0.579583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 171, Nodeid = -1, x = 0.0084375, y = 0.619583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 172, Nodeid = -1, x = 0.0015625, y = 0.59375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 173, Nodeid = -1, x = 0.0084375, y = 0.592917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 174, Nodeid = -1, x = 0.0084375, y = 0.56625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 175, Nodeid = -1, x = 0.0015625, y = 0.567083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 176, Nodeid = -1, x = 0.0015625, y = 0.63375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 177, Nodeid = -1, x = 0.0084375, y = 0.632917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 178, Nodeid = -1, x = 0.0015625, y = 0.55375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 179, Nodeid = -1, x = 0.0084375, y = 0.552917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 180, Nodeid = -1, x = 0.0015625, y = 0.607083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 181, Nodeid = -1, x = 0.0084375, y = 0.60625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 182, Nodeid = -1, x = 0.0015625, y = 0.540417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 183, Nodeid = -1, x = 0.0084375, y = 0.539583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 184, Nodeid = -1, x = 0.0015625, y = 0.460417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 185, Nodeid = -1, x = 0.0084375, y = 0.459583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 186, Nodeid = -1, x = 0.0084375, y = 0.44625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 187, Nodeid = -1, x = 0.0015625, y = 0.447083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 188, Nodeid = -1, x = 0.0084375, y = 0.48625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 189, Nodeid = -1, x = 0.0015625, y = 0.487083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 190, Nodeid = -1, x = 0.0015625, y = 0.47375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 191, Nodeid = -1, x = 0.0084375, y = 0.472917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 192, Nodeid = -1, x = 0.0015625, y = 0.500417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 193, Nodeid = -1, x = 0.0084375, y = 0.499583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 194, Nodeid = -1, x = 0.0015625, y = 0.527083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 195, Nodeid = -1, x = 0.0084375, y = 0.52625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 196, Nodeid = -1, x = 0.0015625, y = 0.51375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 197, Nodeid = -1, x = 0.0084375, y = 0.512917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 198, Nodeid = -1, x = 0.0046875, y = 0.615417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 199, Nodeid = -1, x = 0.0053125, y = 0.584583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 200, Nodeid = -1, x = 0.0046875, y = 0.575417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 201, Nodeid = -1, x = 0.0053125, y = 0.624583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 202, Nodeid = -1, x = 0.0046875, y = 0.58875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 203, Nodeid = -1, x = 0.0053125, y = 0.597917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 204, Nodeid = -1, x = 0.0046875, y = 0.562083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 205, Nodeid = -1, x = 0.0046875, y = 0.62875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 206, Nodeid = -1, x = 0.0053125, y = 0.57125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 207, Nodeid = -1, x = 0.0053125, y = 0.637917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 208, Nodeid = -1, x = 0.0053125, y = 0.557917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 209, Nodeid = -1, x = 0.0046875, y = 0.54875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 210, Nodeid = -1, x = 0.0053125, y = 0.61125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 211, Nodeid = -1, x = 0.0046875, y = 0.602083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 212, Nodeid = -1, x = 0.0046875, y = 0.535417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 213, Nodeid = -1, x = 0.0053125, y = 0.544583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 214, Nodeid = -1, x = 0.0053125, y = 0.464583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 215, Nodeid = -1, x = 0.0046875, y = 0.455417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 216, Nodeid = -1, x = 0.0046875, y = 0.442083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 217, Nodeid = -1, x = 0.0053125, y = 0.45125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 218, Nodeid = -1, x = 0.0046875, y = 0.46875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 219, Nodeid = -1, x = 0.0053125, y = 0.49125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 220, Nodeid = -1, x = 0.0046875, y = 0.482083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 221, Nodeid = -1, x = 0.0053125, y = 0.477917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 222, Nodeid = -1, x = 0.0053125, y = 0.504583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 223, Nodeid = -1, x = 0.0046875, y = 0.495417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 224, Nodeid = -1, x = 0.0053125, y = 0.53125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 225, Nodeid = -1, x = 0.0046875, y = 0.522083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 226, Nodeid = -1, x = 0.0046875, y = 0.50875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 227, Nodeid = -1, x = 0.0053125, y = 0.517917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 228, Nodeid = -1, x = 0.0015625, y = 0.817083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 229, Nodeid = -1, x = 0.0084375, y = 0.81625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 230, Nodeid = -1, x = 0.0015625, y = 0.72375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 231, Nodeid = -1, x = 0.0084375, y = 0.722917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 232, Nodeid = -1, x = 0.0015625, y = 0.777083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 233, Nodeid = -1, x = 0.0084375, y = 0.77625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 234, Nodeid = -1, x = 0.0015625, y = 0.737083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 235, Nodeid = -1, x = 0.0015625, y = 0.76375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 236, Nodeid = -1, x = 0.0084375, y = 0.73625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 237, Nodeid = -1, x = 0.0084375, y = 0.762917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 238, Nodeid = -1, x = 0.0015625, y = 0.84375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 239, Nodeid = -1, x = 0.0084375, y = 0.842917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 240, Nodeid = -1, x = 0.0015625, y = 0.830417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 241, Nodeid = -1, x = 0.0084375, y = 0.829583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 242, Nodeid = -1, x = 0.0015625, y = 0.80375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 243, Nodeid = -1, x = 0.0084375, y = 0.802917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 244, Nodeid = -1, x = 0.0084375, y = 0.789583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 245, Nodeid = -1, x = 0.0015625, y = 0.790417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 246, Nodeid = -1, x = 0.0015625, y = 0.750417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 247, Nodeid = -1, x = 0.0084375, y = 0.749583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 248, Nodeid = -1, x = 0.0015625, y = 0.657083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 249, Nodeid = -1, x = 0.0084375, y = 0.65625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 250, Nodeid = -1, x = 0.0015625, y = 0.697083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 251, Nodeid = -1, x = 0.0084375, y = 0.69625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 252, Nodeid = -1, x = 0.0084375, y = 0.682917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 253, Nodeid = -1, x = 0.0084375, y = 0.669583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 254, Nodeid = -1, x = 0.0084375, y = 0.709583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 255, Nodeid = -1, x = 0.0015625, y = 0.670417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 256, Nodeid = -1, x = 0.0015625, y = 0.710417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 257, Nodeid = -1, x = 0.0015625, y = 0.68375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 258, Nodeid = -1, x = 0.0046875, y = 0.71875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 259, Nodeid = -1, x = 0.0053125, y = 0.82125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 260, Nodeid = -1, x = 0.0046875, y = 0.772083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 261, Nodeid = -1, x = 0.0053125, y = 0.78125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 262, Nodeid = -1, x = 0.0046875, y = 0.812083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 263, Nodeid = -1, x = 0.0053125, y = 0.74125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 264, Nodeid = -1, x = 0.0053125, y = 0.727917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 265, Nodeid = -1, x = 0.0053125, y = 0.767917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 266, Nodeid = -1, x = 0.0046875, y = 0.75875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 267, Nodeid = -1, x = 0.0053125, y = 0.847917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 268, Nodeid = -1, x = 0.0046875, y = 0.732083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 269, Nodeid = -1, x = 0.0053125, y = 0.834583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 270, Nodeid = -1, x = 0.0046875, y = 0.83875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 271, Nodeid = -1, x = 0.0046875, y = 0.79875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 272, Nodeid = -1, x = 0.0046875, y = 0.825417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 273, Nodeid = -1, x = 0.0053125, y = 0.794583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 274, Nodeid = -1, x = 0.0053125, y = 0.807917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 275, Nodeid = -1, x = 0.0046875, y = 0.785417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 276, Nodeid = -1, x = 0.0046875, y = 0.745417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 277, Nodeid = -1, x = 0.0053125, y = 0.754583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 278, Nodeid = -1, x = 0.0046875, y = 0.652083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 279, Nodeid = -1, x = 0.0053125, y = 0.66125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 280, Nodeid = -1, x = 0.0053125, y = 0.70125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 281, Nodeid = -1, x = 0.0046875, y = 0.67875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 282, Nodeid = -1, x = 0.0046875, y = 0.665417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 283, Nodeid = -1, x = 0.0046875, y = 0.705417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 284, Nodeid = -1, x = 0.0053125, y = 0.674583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 285, Nodeid = -1, x = 0.0053125, y = 0.714583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 286, Nodeid = -1, x = 0.0053125, y = 0.687917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 287, Nodeid = -1, x = 0.0046875, y = 0.692083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 288, Nodeid = -1, x = 0.0084375, y = 0.98625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 289, Nodeid = -1, x = 0.0015625, y = 0.987083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 290, Nodeid = -1, x = 0.0015625, y = 0.93375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 291, Nodeid = -1, x = 0.0084375, y = 0.932917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 292, Nodeid = -1, x = 0.0015625, y = 0.947083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 293, Nodeid = -1, x = 0.0084375, y = 0.972917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 294, Nodeid = -1, x = 0.0084375, y = 0.94625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 295, Nodeid = -1, x = 0.0015625, y = 0.97375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 296, Nodeid = -1, x = 0.0015625, y = 0.960417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 297, Nodeid = -1, x = 0.0084375, y = 0.959583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 298, Nodeid = -1, x = 0.0015625, y = 0.867083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 299, Nodeid = -1, x = 0.0084375, y = 0.86625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 300, Nodeid = -1, x = 0.0015625, y = 0.920417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 301, Nodeid = -1, x = 0.0084375, y = 0.879583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 302, Nodeid = -1, x = 0.0015625, y = 0.880417, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 303, Nodeid = -1, x = 0.0084375, y = 0.919583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 304, Nodeid = -1, x = 0.0084375, y = 0.892917, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 305, Nodeid = -1, x = 0.0015625, y = 0.89375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 306, Nodeid = -1, x = 0.0084375, y = 0.90625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 307, Nodeid = -1, x = 0.0015625, y = 0.907083, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 308, Nodeid = -1, x = 0.0015625, y = 1.00042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 309, Nodeid = -1, x = 0.0084375, y = 0.999583, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 310, Nodeid = -1, x = 0.0084375, y = 1.03958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 311, Nodeid = -1, x = 0.0015625, y = 1.04042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 312, Nodeid = -1, x = 0.0084375, y = 1.02625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 313, Nodeid = -1, x = 0.0015625, y = 1.02708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 314, Nodeid = -1, x = 0.0015625, y = 1.05375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 315, Nodeid = -1, x = 0.0084375, y = 1.05292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 316, Nodeid = -1, x = 0.0015625, y = 1.01375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 317, Nodeid = -1, x = 0.0084375, y = 1.01292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 318, Nodeid = -1, x = 0.0046875, y = 0.92875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 319, Nodeid = -1, x = 0.0046875, y = 0.982083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 320, Nodeid = -1, x = 0.0053125, y = 0.99125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 321, Nodeid = -1, x = 0.0046875, y = 0.96875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 322, Nodeid = -1, x = 0.0053125, y = 0.937917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 323, Nodeid = -1, x = 0.0053125, y = 0.95125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 324, Nodeid = -1, x = 0.0046875, y = 0.942083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 325, Nodeid = -1, x = 0.0053125, y = 0.977917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 326, Nodeid = -1, x = 0.0053125, y = 0.964583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 327, Nodeid = -1, x = 0.0046875, y = 0.955417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 328, Nodeid = -1, x = 0.0046875, y = 0.862083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 329, Nodeid = -1, x = 0.0053125, y = 0.87125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 330, Nodeid = -1, x = 0.0053125, y = 0.884583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 331, Nodeid = -1, x = 0.0046875, y = 0.88875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 332, Nodeid = -1, x = 0.0053125, y = 0.924583, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 333, Nodeid = -1, x = 0.0053125, y = 0.91125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 334, Nodeid = -1, x = 0.0046875, y = 0.902083, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 335, Nodeid = -1, x = 0.0046875, y = 0.915417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 336, Nodeid = -1, x = 0.0053125, y = 0.897917, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 337, Nodeid = -1, x = 0.0046875, y = 0.875417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 338, Nodeid = -1, x = 0.0053125, y = 1.00458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 339, Nodeid = -1, x = 0.0046875, y = 0.995417, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 340, Nodeid = -1, x = 0.0046875, y = 1.03542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 341, Nodeid = -1, x = 0.0053125, y = 1.04458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 342, Nodeid = -1, x = 0.0046875, y = 1.02208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 343, Nodeid = -1, x = 0.0053125, y = 1.05792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 344, Nodeid = -1, x = 0.0053125, y = 1.01792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 345, Nodeid = -1, x = 0.0046875, y = 1.00875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 346, Nodeid = -1, x = 0.0046875, y = 1.04875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 347, Nodeid = -1, x = 0.0053125, y = 1.03125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 348, Nodeid = -1, x = 0.0015625, y = 1.13042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 349, Nodeid = -1, x = 0.0015625, y = 1.11708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 350, Nodeid = -1, x = 0.0015625, y = 1.17042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 351, Nodeid = -1, x = 0.0084375, y = 1.12958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 352, Nodeid = -1, x = 0.0084375, y = 1.11625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 353, Nodeid = -1, x = 0.0084375, y = 1.16958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 354, Nodeid = -1, x = 0.0084375, y = 1.18292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 355, Nodeid = -1, x = 0.0015625, y = 1.15708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 356, Nodeid = -1, x = 0.0084375, y = 1.15625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 357, Nodeid = -1, x = 0.0015625, y = 1.18375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 358, Nodeid = -1, x = 0.0084375, y = 1.14292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 359, Nodeid = -1, x = 0.0015625, y = 1.14375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 360, Nodeid = -1, x = 0.0015625, y = 1.19708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 361, Nodeid = -1, x = 0.0084375, y = 1.19625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 362, Nodeid = -1, x = 0.0015625, y = 1.10375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 363, Nodeid = -1, x = 0.0084375, y = 1.10292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 364, Nodeid = -1, x = 0.0084375, y = 1.20958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 365, Nodeid = -1, x = 0.0015625, y = 1.21042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 366, Nodeid = -1, x = 0.0015625, y = 1.09042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 367, Nodeid = -1, x = 0.0084375, y = 1.24958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 368, Nodeid = -1, x = 0.0015625, y = 1.25042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 369, Nodeid = -1, x = 0.0084375, y = 1.08958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 370, Nodeid = -1, x = 0.0084375, y = 1.23625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 371, Nodeid = -1, x = 0.0015625, y = 1.23708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 372, Nodeid = -1, x = 0.0015625, y = 1.07708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 373, Nodeid = -1, x = 0.0015625, y = 1.26375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 374, Nodeid = -1, x = 0.0084375, y = 1.26292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 375, Nodeid = -1, x = 0.0084375, y = 1.07625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 376, Nodeid = -1, x = 0.0015625, y = 1.22375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 377, Nodeid = -1, x = 0.0084375, y = 1.22292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 378, Nodeid = -1, x = 0.0053125, y = 1.12125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 379, Nodeid = -1, x = 0.0046875, y = 1.12542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 380, Nodeid = -1, x = 0.0046875, y = 1.16542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 381, Nodeid = -1, x = 0.0053125, y = 1.17458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 382, Nodeid = -1, x = 0.0053125, y = 1.16125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 383, Nodeid = -1, x = 0.0046875, y = 1.11208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 384, Nodeid = -1, x = 0.0053125, y = 1.13458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 385, Nodeid = -1, x = 0.0053125, y = 1.18792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 386, Nodeid = -1, x = 0.0046875, y = 1.17875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 387, Nodeid = -1, x = 0.0046875, y = 1.15208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 388, Nodeid = -1, x = 0.0046875, y = 1.13875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 389, Nodeid = -1, x = 0.0053125, y = 1.20125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 390, Nodeid = -1, x = 0.0046875, y = 1.19208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 391, Nodeid = -1, x = 0.0053125, y = 1.14792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 392, Nodeid = -1, x = 0.0046875, y = 1.09875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 393, Nodeid = -1, x = 0.0046875, y = 1.20542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 394, Nodeid = -1, x = 0.0053125, y = 1.10792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 395, Nodeid = -1, x = 0.0053125, y = 1.21458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 396, Nodeid = -1, x = 0.0053125, y = 1.09458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 397, Nodeid = -1, x = 0.0053125, y = 1.25458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 398, Nodeid = -1, x = 0.0046875, y = 1.24542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 399, Nodeid = -1, x = 0.0046875, y = 1.08542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 400, Nodeid = -1, x = 0.0046875, y = 1.07208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 401, Nodeid = -1, x = 0.0053125, y = 1.24125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 402, Nodeid = -1, x = 0.0046875, y = 1.21875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 403, Nodeid = -1, x = 0.0046875, y = 1.25875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 404, Nodeid = -1, x = 0.0053125, y = 1.26792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 405, Nodeid = -1, x = 0.0046875, y = 1.23208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 406, Nodeid = -1, x = 0.0053125, y = 1.22792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 407, Nodeid = -1, x = 0.0053125, y = 1.08125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 408, Nodeid = -1, x = 0.0084375, y = 1.32625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 409, Nodeid = -1, x = 0.0084375, y = 1.37958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 410, Nodeid = -1, x = 0.0015625, y = 1.34042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 411, Nodeid = -1, x = 0.0084375, y = 1.33958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 412, Nodeid = -1, x = 0.0015625, y = 1.32708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 413, Nodeid = -1, x = 0.0015625, y = 1.38042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 414, Nodeid = -1, x = 0.0084375, y = 1.36625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 415, Nodeid = -1, x = 0.0084375, y = 1.39292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 416, Nodeid = -1, x = 0.0015625, y = 1.36708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 417, Nodeid = -1, x = 0.0015625, y = 1.39375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 418, Nodeid = -1, x = 0.0015625, y = 1.35375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 419, Nodeid = -1, x = 0.0015625, y = 1.40708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 420, Nodeid = -1, x = 0.0084375, y = 1.35292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 421, Nodeid = -1, x = 0.0084375, y = 1.40625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 422, Nodeid = -1, x = 0.0015625, y = 1.31375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 423, Nodeid = -1, x = 0.0084375, y = 1.31292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 424, Nodeid = -1, x = 0.0015625, y = 1.42042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 425, Nodeid = -1, x = 0.0084375, y = 1.41958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 426, Nodeid = -1, x = 0.0084375, y = 1.29958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 427, Nodeid = -1, x = 0.0084375, y = 1.45958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 428, Nodeid = -1, x = 0.0015625, y = 1.30042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 429, Nodeid = -1, x = 0.0015625, y = 1.46042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 430, Nodeid = -1, x = 0.0084375, y = 1.44625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 431, Nodeid = -1, x = 0.0015625, y = 1.44708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 432, Nodeid = -1, x = 0.0084375, y = 1.28625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 433, Nodeid = -1, x = 0.0084375, y = 1.47292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 434, Nodeid = -1, x = 0.0015625, y = 1.47375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 435, Nodeid = -1, x = 0.0015625, y = 1.28708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 436, Nodeid = -1, x = 0.0015625, y = 1.43375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 437, Nodeid = -1, x = 0.0084375, y = 1.43292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 438, Nodeid = -1, x = 0.0053125, y = 1.38458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 439, Nodeid = -1, x = 0.0053125, y = 1.33125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 440, Nodeid = -1, x = 0.0046875, y = 1.33542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 441, Nodeid = -1, x = 0.0046875, y = 1.38875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 442, Nodeid = -1, x = 0.0053125, y = 1.34458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 443, Nodeid = -1, x = 0.0046875, y = 1.32208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 444, Nodeid = -1, x = 0.0046875, y = 1.36208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 445, Nodeid = -1, x = 0.0053125, y = 1.37125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 446, Nodeid = -1, x = 0.0046875, y = 1.37542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 447, Nodeid = -1, x = 0.0053125, y = 1.39792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 448, Nodeid = -1, x = 0.0046875, y = 1.40208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 449, Nodeid = -1, x = 0.0046875, y = 1.34875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 450, Nodeid = -1, x = 0.0053125, y = 1.35792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 451, Nodeid = -1, x = 0.0053125, y = 1.41125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 452, Nodeid = -1, x = 0.0046875, y = 1.41542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 453, Nodeid = -1, x = 0.0053125, y = 1.31792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 454, Nodeid = -1, x = 0.0046875, y = 1.30875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 455, Nodeid = -1, x = 0.0053125, y = 1.42458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 456, Nodeid = -1, x = 0.0046875, y = 1.45542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 457, Nodeid = -1, x = 0.0046875, y = 1.29542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 458, Nodeid = -1, x = 0.0053125, y = 1.30458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 459, Nodeid = -1, x = 0.0053125, y = 1.45125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 460, Nodeid = -1, x = 0.0053125, y = 1.46458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 461, Nodeid = -1, x = 0.0053125, y = 1.43792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 462, Nodeid = -1, x = 0.0053125, y = 1.47792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 463, Nodeid = -1, x = 0.0053125, y = 1.29125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 464, Nodeid = -1, x = 0.0046875, y = 1.28208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 465, Nodeid = -1, x = 0.0046875, y = 1.44208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 466, Nodeid = -1, x = 0.0046875, y = 1.46875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 467, Nodeid = -1, x = 0.0046875, y = 1.42875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 468, Nodeid = -1, x = 0.0084375, y = 1.54958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 469, Nodeid = -1, x = 0.0084375, y = 1.58958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 470, Nodeid = -1, x = 0.0015625, y = 1.55042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 471, Nodeid = -1, x = 0.0084375, y = 1.53625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 472, Nodeid = -1, x = 0.0015625, y = 1.53708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 473, Nodeid = -1, x = 0.0015625, y = 1.59042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 474, Nodeid = -1, x = 0.0084375, y = 1.57625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 475, Nodeid = -1, x = 0.0015625, y = 1.60375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 476, Nodeid = -1, x = 0.0084375, y = 1.60292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 477, Nodeid = -1, x = 0.0015625, y = 1.57708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 478, Nodeid = -1, x = 0.0015625, y = 1.61708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 479, Nodeid = -1, x = 0.0084375, y = 1.61625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 480, Nodeid = -1, x = 0.0015625, y = 1.56375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 481, Nodeid = -1, x = 0.0084375, y = 1.56292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 482, Nodeid = -1, x = 0.0084375, y = 1.52292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 483, Nodeid = -1, x = 0.0015625, y = 1.52375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 484, Nodeid = -1, x = 0.0015625, y = 1.63042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 485, Nodeid = -1, x = 0.0084375, y = 1.62958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 486, Nodeid = -1, x = 0.0084375, y = 1.50958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 487, Nodeid = -1, x = 0.0084375, y = 1.66958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 488, Nodeid = -1, x = 0.0015625, y = 1.67042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 489, Nodeid = -1, x = 0.0015625, y = 1.51042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 490, Nodeid = -1, x = 0.0084375, y = 1.65625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 491, Nodeid = -1, x = 0.0015625, y = 1.65708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 492, Nodeid = -1, x = 0.0084375, y = 1.49625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 493, Nodeid = -1, x = 0.0015625, y = 1.68375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 494, Nodeid = -1, x = 0.0084375, y = 1.68292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 495, Nodeid = -1, x = 0.0015625, y = 1.49708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 496, Nodeid = -1, x = 0.0015625, y = 1.64375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 497, Nodeid = -1, x = 0.0084375, y = 1.64292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 498, Nodeid = -1, x = 0.0053125, y = 1.59458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 499, Nodeid = -1, x = 0.0046875, y = 1.57208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 500, Nodeid = -1, x = 0.0053125, y = 1.55458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 501, Nodeid = -1, x = 0.0053125, y = 1.54125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 502, Nodeid = -1, x = 0.0046875, y = 1.53208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 503, Nodeid = -1, x = 0.0046875, y = 1.54542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 504, Nodeid = -1, x = 0.0046875, y = 1.59875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 505, Nodeid = -1, x = 0.0053125, y = 1.60792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 506, Nodeid = -1, x = 0.0046875, y = 1.58542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 507, Nodeid = -1, x = 0.0046875, y = 1.61208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 508, Nodeid = -1, x = 0.0053125, y = 1.58125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 509, Nodeid = -1, x = 0.0053125, y = 1.56792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 510, Nodeid = -1, x = 0.0046875, y = 1.55875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 511, Nodeid = -1, x = 0.0053125, y = 1.62125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 512, Nodeid = -1, x = 0.0053125, y = 1.52792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 513, Nodeid = -1, x = 0.0046875, y = 1.62542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 514, Nodeid = -1, x = 0.0053125, y = 1.63458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 515, Nodeid = -1, x = 0.0046875, y = 1.51875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 516, Nodeid = -1, x = 0.0046875, y = 1.50542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 517, Nodeid = -1, x = 0.0053125, y = 1.67458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 518, Nodeid = -1, x = 0.0046875, y = 1.66542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 519, Nodeid = -1, x = 0.0053125, y = 1.51458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 520, Nodeid = -1, x = 0.0053125, y = 1.68792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 521, Nodeid = -1, x = 0.0053125, y = 1.64792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 522, Nodeid = -1, x = 0.0053125, y = 1.66125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 523, Nodeid = -1, x = 0.0046875, y = 1.49208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 524, Nodeid = -1, x = 0.0046875, y = 1.65208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 525, Nodeid = -1, x = 0.0053125, y = 1.50125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 526, Nodeid = -1, x = 0.0046875, y = 1.63875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 527, Nodeid = -1, x = 0.0046875, y = 1.67875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 528, Nodeid = -1, x = 0.0084375, y = 1.74625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 529, Nodeid = -1, x = 0.0084375, y = 1.79958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 530, Nodeid = -1, x = 0.0015625, y = 1.76042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 531, Nodeid = -1, x = 0.0084375, y = 1.75958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 532, Nodeid = -1, x = 0.0015625, y = 1.74708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 533, Nodeid = -1, x = 0.0015625, y = 1.80042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 534, Nodeid = -1, x = 0.0084375, y = 1.78625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 535, Nodeid = -1, x = 0.0084375, y = 1.81292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 536, Nodeid = -1, x = 0.0015625, y = 1.78708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 537, Nodeid = -1, x = 0.0015625, y = 1.81375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 538, Nodeid = -1, x = 0.0015625, y = 1.77375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 539, Nodeid = -1, x = 0.0015625, y = 1.82708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 540, Nodeid = -1, x = 0.0084375, y = 1.77292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 541, Nodeid = -1, x = 0.0084375, y = 1.82625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 542, Nodeid = -1, x = 0.0015625, y = 1.73375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 543, Nodeid = -1, x = 0.0084375, y = 1.73292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 544, Nodeid = -1, x = 0.0015625, y = 1.84042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 545, Nodeid = -1, x = 0.0084375, y = 1.83958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 546, Nodeid = -1, x = 0.0084375, y = 1.71958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 547, Nodeid = -1, x = 0.0084375, y = 1.87958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 548, Nodeid = -1, x = 0.0015625, y = 1.72042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 549, Nodeid = -1, x = 0.0015625, y = 1.88042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 550, Nodeid = -1, x = 0.0084375, y = 1.86625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 551, Nodeid = -1, x = 0.0015625, y = 1.86708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 552, Nodeid = -1, x = 0.0084375, y = 1.70625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 553, Nodeid = -1, x = 0.0015625, y = 1.89375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 554, Nodeid = -1, x = 0.0084375, y = 1.89292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 555, Nodeid = -1, x = 0.0015625, y = 1.70708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 556, Nodeid = -1, x = 0.0015625, y = 1.85375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 557, Nodeid = -1, x = 0.0084375, y = 1.85292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 558, Nodeid = -1, x = 0.0053125, y = 1.80458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 559, Nodeid = -1, x = 0.0053125, y = 1.76458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 560, Nodeid = -1, x = 0.0046875, y = 1.74208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 561, Nodeid = -1, x = 0.0053125, y = 1.79125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 562, Nodeid = -1, x = 0.0046875, y = 1.80875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 563, Nodeid = -1, x = 0.0053125, y = 1.75125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 564, Nodeid = -1, x = 0.0046875, y = 1.75542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 565, Nodeid = -1, x = 0.0046875, y = 1.79542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 566, Nodeid = -1, x = 0.0046875, y = 1.76875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 567, Nodeid = -1, x = 0.0053125, y = 1.81792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 568, Nodeid = -1, x = 0.0046875, y = 1.78208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 569, Nodeid = -1, x = 0.0046875, y = 1.82208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 570, Nodeid = -1, x = 0.0053125, y = 1.83125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 571, Nodeid = -1, x = 0.0053125, y = 1.84458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 572, Nodeid = -1, x = 0.0053125, y = 1.77792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 573, Nodeid = -1, x = 0.0053125, y = 1.73792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 574, Nodeid = -1, x = 0.0046875, y = 1.72875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 575, Nodeid = -1, x = 0.0046875, y = 1.83542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 576, Nodeid = -1, x = 0.0053125, y = 1.88458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 577, Nodeid = -1, x = 0.0046875, y = 1.71542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 578, Nodeid = -1, x = 0.0053125, y = 1.72458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 579, Nodeid = -1, x = 0.0046875, y = 1.88875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 580, Nodeid = -1, x = 0.0046875, y = 1.87542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 581, Nodeid = -1, x = 0.0046875, y = 1.86208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 582, Nodeid = -1, x = 0.0046875, y = 1.84875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 583, Nodeid = -1, x = 0.0046875, y = 1.70208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 584, Nodeid = -1, x = 0.0053125, y = 1.71125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 585, Nodeid = -1, x = 0.0053125, y = 1.85792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 586, Nodeid = -1, x = 0.0053125, y = 1.87125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 587, Nodeid = -1, x = 0.0053125, y = 1.89792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 588, Nodeid = -1, x = 0.0084375, y = 1.99625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 589, Nodeid = -1, x = 0.0015625, y = 1.99708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 590, Nodeid = -1, x = 0.0015625, y = 1.97042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 591, Nodeid = -1, x = 0.0084375, y = 1.95625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 592, Nodeid = -1, x = 0.0015625, y = 1.95708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 593, Nodeid = -1, x = 0.0084375, y = 1.96958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 594, Nodeid = -1, x = 0.0084375, y = 1.98292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 595, Nodeid = -1, x = 0.0015625, y = 1.98375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 596, Nodeid = -1, x = 0.0015625, y = 1.94375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 597, Nodeid = -1, x = 0.0084375, y = 1.94292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 598, Nodeid = -1, x = 0.0084375, y = 2.03625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 599, Nodeid = -1, x = 0.0084375, y = 2.08958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 600, Nodeid = -1, x = 0.0015625, y = 2.03708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 601, Nodeid = -1, x = 0.0015625, y = 2.09042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 602, Nodeid = -1, x = 0.0084375, y = 2.04958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 603, Nodeid = -1, x = 0.0015625, y = 2.05042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 604, Nodeid = -1, x = 0.0084375, y = 1.92958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 605, Nodeid = -1, x = 0.0015625, y = 1.93042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 606, Nodeid = -1, x = 0.0084375, y = 2.07625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 607, Nodeid = -1, x = 0.0015625, y = 2.07708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 608, Nodeid = -1, x = 0.0015625, y = 1.91708, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 609, Nodeid = -1, x = 0.0015625, y = 2.01042, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 610, Nodeid = -1, x = 0.0084375, y = 2.00958, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 611, Nodeid = -1, x = 0.0084375, y = 1.91625, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 612, Nodeid = -1, x = 0.0015625, y = 2.10375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 613, Nodeid = -1, x = 0.0084375, y = 2.10292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 614, Nodeid = -1, x = 0.0084375, y = 2.02292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 615, Nodeid = -1, x = 0.0015625, y = 2.02375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 616, Nodeid = -1, x = 0.0084375, y = 2.06292, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 617, Nodeid = -1, x = 0.0015625, y = 2.06375, dist = 0.0122127, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 618, Nodeid = -1, x = 0.0053125, y = 2.00125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 619, Nodeid = -1, x = 0.0046875, y = 1.99208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 620, Nodeid = -1, x = 0.0053125, y = 1.96125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 621, Nodeid = -1, x = 0.0053125, y = 1.97458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 622, Nodeid = -1, x = 0.0046875, y = 1.96542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 623, Nodeid = -1, x = 0.0046875, y = 1.95208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 624, Nodeid = -1, x = 0.0046875, y = 1.97875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 625, Nodeid = -1, x = 0.0053125, y = 1.98792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 626, Nodeid = -1, x = 0.0053125, y = 1.94792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 627, Nodeid = -1, x = 0.0046875, y = 2.03208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 628, Nodeid = -1, x = 0.0053125, y = 2.05458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 629, Nodeid = -1, x = 0.0046875, y = 1.93875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 630, Nodeid = -1, x = 0.0046875, y = 2.08542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 631, Nodeid = -1, x = 0.0046875, y = 1.92542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 632, Nodeid = -1, x = 0.0053125, y = 2.09458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 633, Nodeid = -1, x = 0.0053125, y = 2.04125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 634, Nodeid = -1, x = 0.0053125, y = 2.08125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 635, Nodeid = -1, x = 0.0053125, y = 1.92125, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 636, Nodeid = -1, x = 0.0046875, y = 2.00542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 637, Nodeid = -1, x = 0.0046875, y = 2.07208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 638, Nodeid = -1, x = 0.0046875, y = 2.04542, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 639, Nodeid = -1, x = 0.0053125, y = 1.93458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 640, Nodeid = -1, x = 0.0046875, y = 2.09875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 641, Nodeid = -1, x = 0.0053125, y = 2.01458, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 642, Nodeid = -1, x = 0.0046875, y = 1.91208, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 643, Nodeid = -1, x = 0.0053125, y = 2.10792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 644, Nodeid = -1, x = 0.0053125, y = 2.02792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 645, Nodeid = -1, x = 0.0046875, y = 2.01875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 646, Nodeid = -1, x = 0.0046875, y = 2.05875, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 647, Nodeid = -1, x = 0.0053125, y = 2.06792, dist = 0.00920887, e1mag = 12.9582, e2mag = 12.9582, inarray = 0
+Elemid = 648, Nodeid = -2, x = 0.013125, y = 0.157249, dist = 0.0104707, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 649, Nodeid = -2, x = -0.003125, y = 0.157249, dist = 0.013582, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 650, Nodeid = -2, x = -0.00375, y = 0.590564, dist = 0.00844791, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 651, Nodeid = -2, x = 0.01375, y = 0.590564, dist = 0.0161988, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 652, Nodeid = -2, x = 0.01375, y = 1.02393, dist = 0.0161388, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 653, Nodeid = -2, x = -0.00375, y = 1.02393, dist = 0.00846231, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 654, Nodeid = -2, x = -0.00375, y = 1.45729, dist = 0.00847726, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 655, Nodeid = -2, x = 0.01375, y = 1.45729, dist = 0.0160789, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 656, Nodeid = -2, x = -0.003125, y = 0.184048, dist = 0.0135097, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 657, Nodeid = -2, x = 0.013125, y = 0.184048, dist = 0.0103534, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 658, Nodeid = -2, x = -0.00375, y = 0.617389, dist = 0.00852538, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 659, Nodeid = -2, x = 0.01375, y = 0.617389, dist = 0.0158997, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 660, Nodeid = -2, x = -0.00375, y = 0.635881, dist = 0.0157806, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 661, Nodeid = -2, x = 0.01375, y = 0.635881, dist = 0.00856016, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 662, Nodeid = -2, x = 0.013125, y = 0.20168, dist = 0.0149203, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 663, Nodeid = -2, x = -0.003125, y = 0.20168, dist = 0.0111582, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 664, Nodeid = -2, x = -0.003125, y = 1.47579, dist = 0.010234, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 665, Nodeid = -2, x = 0.013125, y = 1.47579, dist = 0.013423, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 666, Nodeid = -2, x = -0.00375, y = 1.04242, dist = 0.0155435, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 667, Nodeid = -2, x = 0.01375, y = 1.04242, dist = 0.00863607, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 668, Nodeid = -2, x = -0.00375, y = 0.609056, dist = 0.0154845, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 669, Nodeid = -2, x = 0.01375, y = 0.609056, dist = 0.00865635, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 670, Nodeid = -2, x = -0.00375, y = 0.448107, dist = 0.0137596, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 671, Nodeid = -2, x = 0.01375, y = 0.448107, dist = 0.00948617, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 672, Nodeid = -2, x = -0.003125, y = 0.174881, dist = 0.0112301, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 673, Nodeid = -2, x = 0.013125, y = 0.174881, dist = 0.0146099, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 674, Nodeid = -2, x = -0.00375, y = 1.88233, dist = 0.0153666, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 675, Nodeid = -2, x = 0.01375, y = 1.88233, dist = 0.00869846, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 676, Nodeid = -2, x = 0.013125, y = 1.28737, dist = 0.0127756, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 677, Nodeid = -2, x = -0.003125, y = 1.28737, dist = 0.0116911, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 678, Nodeid = -2, x = 0.01375, y = 1.44896, dist = 0.00872027, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 679, Nodeid = -2, x = -0.00375, y = 1.44896, dist = 0.0153078, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 680, Nodeid = -2, x = -0.00375, y = 1.0156, dist = 0.0152491, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 681, Nodeid = -2, x = 0.01375, y = 1.0156, dist = 0.00874259, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 682, Nodeid = -2, x = -0.00375, y = 0.582231, dist = 0.0151905, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 683, Nodeid = -2, x = 0.01375, y = 0.582231, dist = 0.00876541, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 684, Nodeid = -2, x = -0.003125, y = 0.148083, dist = 0.0113021, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 685, Nodeid = -2, x = 0.013125, y = 0.148083, dist = 0.0143052, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 686, Nodeid = -2, x = -0.00375, y = 1.8555, dist = 0.0150736, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 687, Nodeid = -2, x = 0.01375, y = 1.8555, dist = 0.00881252, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 688, Nodeid = -2, x = -0.00375, y = 1.42214, dist = 0.0150153, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 689, Nodeid = -2, x = 0.01375, y = 1.42214, dist = 0.00883681, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 690, Nodeid = -2, x = -0.00375, y = 0.988771, dist = 0.0149571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 691, Nodeid = -2, x = 0.01375, y = 0.988771, dist = 0.00886159, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 692, Nodeid = -2, x = -0.00375, y = 0.555406, dist = 0.014899, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 693, Nodeid = -2, x = 0.01375, y = 0.555406, dist = 0.00888684, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 694, Nodeid = -2, x = 0.013125, y = 0.121284, dist = 0.0140066, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 695, Nodeid = -2, x = -0.003125, y = 0.121284, dist = 0.0113741, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 696, Nodeid = -2, x = -0.00375, y = 1.82868, dist = 0.014783, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 697, Nodeid = -2, x = 0.01375, y = 1.82868, dist = 0.00893877, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 698, Nodeid = -2, x = -0.00375, y = 1.39531, dist = 0.0147252, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 699, Nodeid = -2, x = 0.01375, y = 1.39531, dist = 0.00896544, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 700, Nodeid = -2, x = -0.003125, y = 1.48309, dist = 0.0101695, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 701, Nodeid = -2, x = 0.013125, y = 1.48309, dist = 0.0101703, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 702, Nodeid = -2, x = -0.00375, y = 0.961946, dist = 0.0146675, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 703, Nodeid = -2, x = 0.01375, y = 0.961946, dist = 0.00899257, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 704, Nodeid = -2, x = -0.00375, y = 0.528581, dist = 0.0146099, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 705, Nodeid = -2, x = 0.01375, y = 0.528581, dist = 0.00902016, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 706, Nodeid = -2, x = 0.013125, y = 2.12625, dist = 0.0129787, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 707, Nodeid = -2, x = -0.003125, y = 2.12625, dist = 0.00845154, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 708, Nodeid = -2, x = -0.003125, y = -0.006875, dist = 0.010148, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 709, Nodeid = -2, x = 0.013125, y = -0.006875, dist = 0.010148, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 710, Nodeid = -2, x = 0.013125, y = 0.0944858, dist = 0.0137145, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 711, Nodeid = -2, x = -0.003125, y = 0.0944858, dist = 0.0114462, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 712, Nodeid = -2, x = 0.01375, y = 1.80185, dist = 0.00907669, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 713, Nodeid = -2, x = -0.00375, y = 1.80185, dist = 0.0144951, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 714, Nodeid = -2, x = -0.00375, y = 0.643172, dist = 0.00847356, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 715, Nodeid = -2, x = 0.01375, y = 0.643172, dist = 0.0128982, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 716, Nodeid = -2, x = -0.00375, y = 1.36849, dist = 0.0144378, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 717, Nodeid = -2, x = 0.01375, y = 1.36849, dist = 0.00910563, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 718, Nodeid = -2, x = -0.00375, y = 0.935121, dist = 0.0143806, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 719, Nodeid = -2, x = 0.01375, y = 0.935121, dist = 0.00913502, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 720, Nodeid = -2, x = -0.00375, y = 0.501756, dist = 0.0143236, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 721, Nodeid = -2, x = 0.01375, y = 0.501756, dist = 0.00916484, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 722, Nodeid = -2, x = -0.003125, y = 0.0676872, dist = 0.0115182, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 723, Nodeid = -2, x = 0.013125, y = 0.0676872, dist = 0.0134292, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 724, Nodeid = -2, x = -0.00375, y = 1.77503, dist = 0.0142098, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 725, Nodeid = -2, x = 0.01375, y = 1.77503, dist = 0.00922577, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 726, Nodeid = -2, x = -0.00375, y = 1.34166, dist = 0.0141531, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 727, Nodeid = -2, x = 0.01375, y = 1.34166, dist = 0.00925688, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 728, Nodeid = -2, x = -0.00375, y = 0.908296, dist = 0.0140965, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 729, Nodeid = -2, x = 0.01375, y = 0.908296, dist = 0.00928841, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 730, Nodeid = -2, x = -0.00375, y = 0.474931, dist = 0.0140401, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 731, Nodeid = -2, x = 0.01375, y = 0.474931, dist = 0.00932035, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 732, Nodeid = -2, x = -0.003125, y = 2.10362, dist = 0.0110864, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 733, Nodeid = -2, x = 0.01375, y = 2.10318, dist = 0.0116252, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 734, Nodeid = -2, x = 0.013125, y = 0.0408887, dist = 0.0131514, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 735, Nodeid = -2, x = -0.003125, y = 0.0408887, dist = 0.0115902, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 736, Nodeid = -2, x = 0.01375, y = 1.7482, dist = 0.00938547, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 737, Nodeid = -2, x = -0.00375, y = 1.7482, dist = 0.0139275, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 738, Nodeid = -2, x = 0.013125, y = 1.2637, dist = 0.0122751, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 739, Nodeid = -2, x = -0.003125, y = 1.2637, dist = 0.0109795, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 740, Nodeid = -2, x = -0.00375, y = 1.31484, dist = 0.0138714, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 741, Nodeid = -2, x = 0.01375, y = 1.31484, dist = 0.00941864, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 742, Nodeid = -2, x = -0.00375, y = 0.423365, dist = 0.0114307, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 743, Nodeid = -2, x = 0.01375, y = 0.423365, dist = 0.0113348, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 744, Nodeid = -2, x = -0.00375, y = 0.881472, dist = 0.0138154, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 745, Nodeid = -2, x = 0.01375, y = 0.881472, dist = 0.00945221, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 746, Nodeid = -2, x = -0.00375, y = 1.9154, dist = 0.00967983, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 747, Nodeid = -2, x = 0.01375, y = 1.9154, dist = 0.0134547, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 748, Nodeid = -2, x = 0.013125, y = 1.07527, dist = 0.0100768, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 749, Nodeid = -2, x = -0.003125, y = 1.07527, dist = 0.012838, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 750, Nodeid = -2, x = -0.00375, y = 1.72138, dist = 0.0136483, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 751, Nodeid = -2, x = 0.01375, y = 1.72138, dist = 0.00955526, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 752, Nodeid = -2, x = 0.013125, y = 0.236187, dist = 0.0118136, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 753, Nodeid = -2, x = -0.003125, y = 0.236187, dist = 0.012342, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 754, Nodeid = -2, x = -0.00375, y = 1.50886, dist = 0.00982771, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 755, Nodeid = -2, x = 0.01375, y = 1.50886, dist = 0.0132356, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 756, Nodeid = -2, x = -0.00375, y = 1.94223, dist = 0.00986557, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 757, Nodeid = -2, x = 0.01375, y = 1.94223, dist = 0.0131812, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 758, Nodeid = -2, x = 0.01375, y = 0.668956, dist = 0.0130728, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 759, Nodeid = -2, x = -0.00375, y = 0.668956, dist = 0.00994232, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 760, Nodeid = -2, x = -0.00375, y = 1.10232, dist = 0.00998121, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 761, Nodeid = -2, x = 0.01375, y = 1.10232, dist = 0.0130188, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 762, Nodeid = -2, x = 0.01375, y = 1.53569, dist = 0.012965, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 763, Nodeid = -2, x = -0.00375, y = 1.53569, dist = 0.0100204, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 764, Nodeid = -2, x = -0.00375, y = 1.96905, dist = 0.01006, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 765, Nodeid = -2, x = 0.01375, y = 1.96905, dist = 0.0129113, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 766, Nodeid = -2, x = 0.01375, y = 0.262416, dist = 0.0128578, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 767, Nodeid = -2, x = -0.003125, y = 0.262152, dist = 0.0127225, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 768, Nodeid = -2, x = -0.00375, y = 0.695781, dist = 0.0101401, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 769, Nodeid = -2, x = 0.01375, y = 0.695781, dist = 0.0128044, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 770, Nodeid = -2, x = -0.00375, y = 1.12915, dist = 0.0101806, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 771, Nodeid = -2, x = 0.01375, y = 1.12915, dist = 0.0127512, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 772, Nodeid = -2, x = -0.00375, y = 1.56251, dist = 0.0102214, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 773, Nodeid = -2, x = 0.01375, y = 1.56251, dist = 0.0126981, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 774, Nodeid = -2, x = -0.00375, y = 1.99588, dist = 0.0102626, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 775, Nodeid = -2, x = 0.01375, y = 1.99588, dist = 0.0126453, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 776, Nodeid = -2, x = -0.003125, y = 0.28895, dist = 0.0126503, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 777, Nodeid = -2, x = 0.01375, y = 0.289241, dist = 0.0125925, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 778, Nodeid = -2, x = -0.00375, y = 0.722605, dist = 0.0103458, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 779, Nodeid = -2, x = 0.01375, y = 0.722605, dist = 0.01254, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 780, Nodeid = -2, x = -0.00375, y = 1.15597, dist = 0.0103879, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 781, Nodeid = -2, x = 0.01375, y = 1.15597, dist = 0.0124876, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 782, Nodeid = -2, x = 0.01375, y = 1.58934, dist = 0.0124354, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 783, Nodeid = -2, x = -0.00375, y = 1.58934, dist = 0.0104303, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 784, Nodeid = -2, x = -0.00375, y = 2.0227, dist = 0.0104729, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 785, Nodeid = -2, x = 0.01375, y = 2.0227, dist = 0.0123834, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 786, Nodeid = -2, x = -0.00375, y = 0.316065, dist = 0.0105159, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 787, Nodeid = -2, x = 0.01375, y = 0.316065, dist = 0.0123315, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 788, Nodeid = -2, x = -0.00375, y = 0.74943, dist = 0.0105591, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 789, Nodeid = -2, x = 0.01375, y = 0.74943, dist = 0.0122798, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 790, Nodeid = -2, x = -0.00375, y = 1.1828, dist = 0.0106027, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 791, Nodeid = -2, x = 0.01375, y = 1.1828, dist = 0.0122283, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 792, Nodeid = -2, x = -0.00375, y = 1.61616, dist = 0.0106465, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 793, Nodeid = -2, x = 0.01375, y = 1.61616, dist = 0.012177, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 794, Nodeid = -2, x = -0.00375, y = 2.04953, dist = 0.0106905, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 795, Nodeid = -2, x = 0.01375, y = 2.04953, dist = 0.0121259, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 796, Nodeid = -2, x = -0.00375, y = 0.34289, dist = 0.0107349, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 797, Nodeid = -2, x = 0.01375, y = 0.34289, dist = 0.0120749, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 798, Nodeid = -2, x = -0.00375, y = 0.776255, dist = 0.0107795, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 799, Nodeid = -2, x = 0.01375, y = 0.776255, dist = 0.0120242, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 800, Nodeid = -2, x = -0.00375, y = 1.20962, dist = 0.0108244, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 801, Nodeid = -2, x = 0.01375, y = 1.20962, dist = 0.0119736, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 802, Nodeid = -2, x = -0.00375, y = 1.64299, dist = 0.0108695, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 803, Nodeid = -2, x = 0.01375, y = 1.64299, dist = 0.0119232, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 804, Nodeid = -2, x = -0.00375, y = 2.07635, dist = 0.010915, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 805, Nodeid = -2, x = 0.01375, y = 2.07635, dist = 0.011873, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 806, Nodeid = -2, x = -0.00375, y = 0.369715, dist = 0.0109606, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 807, Nodeid = -2, x = 0.01375, y = 0.369715, dist = 0.0118231, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 808, Nodeid = -2, x = -0.00375, y = 0.80308, dist = 0.0110066, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 809, Nodeid = -2, x = 0.01375, y = 0.80308, dist = 0.0117733, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 810, Nodeid = -2, x = 0.01375, y = 1.23645, dist = 0.0117237, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 811, Nodeid = -2, x = -0.00375, y = 1.23645, dist = 0.0110527, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 812, Nodeid = -2, x = -0.00375, y = 1.66981, dist = 0.0110991, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 813, Nodeid = -2, x = 0.01375, y = 1.66981, dist = 0.0116744, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 814, Nodeid = -2, x = -0.00375, y = 0.39654, dist = 0.0111927, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 815, Nodeid = -2, x = 0.01375, y = 0.39654, dist = 0.0115763, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 816, Nodeid = -2, x = -0.00375, y = 0.829905, dist = 0.0112399, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 817, Nodeid = -2, x = 0.01375, y = 0.829905, dist = 0.0115275, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 818, Nodeid = -2, x = 0.013125, y = 0.0153402, dist = 0.0113468, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 819, Nodeid = -2, x = -0.00375, y = 0.0157832, dist = 0.0112283, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 820, Nodeid = -2, x = -0.003125, y = 0.855261, dist = 0.00898714, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 821, Nodeid = -2, x = 0.013125, y = 0.855261, dist = 0.0112294, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 822, Nodeid = -2, x = -0.00375, y = 1.69559, dist = 0.0109495, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 823, Nodeid = -2, x = 0.013125, y = 1.69518, dist = 0.0111165, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 824, Nodeid = -2, x = 0.001875, y = -0.005, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 825, Nodeid = -2, x = 0.008125, y = 2.125, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 826, Nodeid = -2, x = 0.005, y = 2.12812, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 827, Nodeid = -2, x = 0.005, y = -0.008125, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 828, Nodeid = -2, x = 0.008125, y = -0.005, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 829, Nodeid = -2, x = 0.005, y = -0.001875, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 830, Nodeid = -2, x = 0.005, y = 2.12188, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 831, Nodeid = -2, x = 0.001875, y = 2.125, dist = 0.00717571, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 832, Nodeid = -2, x = -0.006875, y = 0.00159019, dist = 0.0113283, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 833, Nodeid = -2, x = 0.013125, y = 0.00846519, dist = 0.01833, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 834, Nodeid = -2, x = -0.00375, y = 0.430657, dist = 0.0090707, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 835, Nodeid = -2, x = 0.016875, y = 0.438758, dist = 0.0115748, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 836, Nodeid = -2, x = 0.016875, y = 0.65337, dist = 0.0160373, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 837, Nodeid = -2, x = -0.003125, y = 0.847969, dist = 0.0135462, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 838, Nodeid = -2, x = 0.013125, y = 1.27099, dist = 0.0131648, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 839, Nodeid = -2, x = -0.00625, y = 1.27794, dist = 0.0155447, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 840, Nodeid = -2, x = 0.01625, y = 1.49214, dist = 0.0154561, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 841, Nodeid = -2, x = -0.00625, y = 2.11778, dist = 0.0153678, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 842, Nodeid = -2, x = -0.00625, y = 0.0316456, dist = 0.0159606, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 843, Nodeid = -2, x = -0.00625, y = 0.0585759, dist = 0.0162601, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 844, Nodeid = -2, x = -0.00625, y = 0.0855063, dist = 0.0165616, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 845, Nodeid = -2, x = -0.00625, y = 0.112437, dist = 0.0168649, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 846, Nodeid = -2, x = -0.00625, y = 0.139367, dist = 0.0171699, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 847, Nodeid = -2, x = -0.00625, y = 0.166297, dist = 0.0174766, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 848, Nodeid = -2, x = -0.00625, y = 0.193228, dist = 0.0177849, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 849, Nodeid = -2, x = 0.01625, y = 0.166297, dist = 0.0183434, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 850, Nodeid = -2, x = 0.01625, y = 0.193228, dist = 0.0180326, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 851, Nodeid = -2, x = -0.00375, y = 0.334557, dist = 0.0196935, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 852, Nodeid = -2, x = -0.00375, y = 0.361382, dist = 0.0200108, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 853, Nodeid = -2, x = -0.00375, y = 0.388207, dist = 0.0203292, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 854, Nodeid = -2, x = -0.00375, y = 0.415032, dist = 0.0206486, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 855, Nodeid = -2, x = 0.01625, y = 0.245839, dist = 0.0150456, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 856, Nodeid = -2, x = 0.016875, y = 0.273892, dist = 0.0166378, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 857, Nodeid = -2, x = 0.016875, y = 0.300849, dist = 0.0169769, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 858, Nodeid = -2, x = 0.01375, y = 0.334557, dist = 0.00857004, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 859, Nodeid = -2, x = 0.016875, y = 0.327806, dist = 0.0173197, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 860, Nodeid = -2, x = 0.01375, y = 0.361382, dist = 0.00866767, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 861, Nodeid = -2, x = 0.016875, y = 0.354763, dist = 0.0176658, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 862, Nodeid = -2, x = 0.01375, y = 0.388207, dist = 0.0087781, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 863, Nodeid = -2, x = 0.016875, y = 0.381719, dist = 0.0180153, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 864, Nodeid = -2, x = 0.01375, y = 0.415032, dist = 0.00890085, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 865, Nodeid = -2, x = 0.016875, y = 0.408676, dist = 0.0183677, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 866, Nodeid = -2, x = 0.016875, y = 0.465715, dist = 0.0117929, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 867, Nodeid = -2, x = 0.016875, y = 0.492671, dist = 0.0120219, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 868, Nodeid = -2, x = 0.016875, y = 0.519628, dist = 0.0122611, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 869, Nodeid = -2, x = 0.016875, y = 0.546585, dist = 0.01251, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 870, Nodeid = -2, x = 0.016875, y = 0.573542, dist = 0.012768, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 871, Nodeid = -2, x = 0.016875, y = 0.600498, dist = 0.0130345, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 872, Nodeid = -2, x = 0.016875, y = 0.627455, dist = 0.0133091, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 873, Nodeid = -2, x = -0.00375, y = 0.767922, dist = 0.0197569, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 874, Nodeid = -2, x = -0.00375, y = 0.794747, dist = 0.0200744, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 875, Nodeid = -2, x = -0.00375, y = 0.821572, dist = 0.020393, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 876, Nodeid = -2, x = 0.016875, y = 0.680327, dist = 0.0163693, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 877, Nodeid = -2, x = 0.016875, y = 0.707284, dist = 0.0167053, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 878, Nodeid = -2, x = 0.016875, y = 0.734241, dist = 0.0170452, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 879, Nodeid = -2, x = 0.01375, y = 0.767922, dist = 0.00858852, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 880, Nodeid = -2, x = 0.016875, y = 0.761197, dist = 0.0173886, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 881, Nodeid = -2, x = 0.01375, y = 0.794747, dist = 0.00868874, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 882, Nodeid = -2, x = 0.016875, y = 0.788154, dist = 0.0177355, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 883, Nodeid = -2, x = 0.01375, y = 0.821572, dist = 0.00880168, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 884, Nodeid = -2, x = 0.016875, y = 0.815111, dist = 0.0180855, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 885, Nodeid = -2, x = 0.016875, y = 0.842068, dist = 0.0184386, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 886, Nodeid = -2, x = 0.016875, y = 0.872149, dist = 0.0116175, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 887, Nodeid = -2, x = 0.016875, y = 0.899106, dist = 0.0118378, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 888, Nodeid = -2, x = 0.016875, y = 0.926063, dist = 0.0120689, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 889, Nodeid = -2, x = 0.016875, y = 0.95302, dist = 0.0123101, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 890, Nodeid = -2, x = 0.016875, y = 0.979976, dist = 0.0125609, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 891, Nodeid = -2, x = 0.016875, y = 1.00693, dist = 0.0128206, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 892, Nodeid = -2, x = 0.016875, y = 1.03389, dist = 0.0130888, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 893, Nodeid = -2, x = -0.00375, y = 1.20129, dist = 0.0198203, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 894, Nodeid = -2, x = -0.00375, y = 1.22811, dist = 0.0201381, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 895, Nodeid = -2, x = -0.00375, y = 1.25494, dist = 0.0204568, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 896, Nodeid = -2, x = 0.016875, y = 1.08676, dist = 0.0161033, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 897, Nodeid = -2, x = 0.016875, y = 1.11372, dist = 0.0164362, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 898, Nodeid = -2, x = 0.016875, y = 1.14068, dist = 0.016773, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 899, Nodeid = -2, x = 0.016875, y = 1.16763, dist = 0.0171136, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 900, Nodeid = -2, x = 0.01375, y = 1.20129, dist = 0.00860753, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 901, Nodeid = -2, x = 0.016875, y = 1.19459, dist = 0.0174577, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 902, Nodeid = -2, x = 0.01375, y = 1.22811, dist = 0.00871033, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 903, Nodeid = -2, x = 0.016875, y = 1.22155, dist = 0.0178052, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 904, Nodeid = -2, x = 0.01375, y = 1.25494, dist = 0.00882575, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 905, Nodeid = -2, x = 0.016875, y = 1.2485, dist = 0.0181559, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 906, Nodeid = -2, x = 0.016875, y = 1.30554, dist = 0.0116607, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 907, Nodeid = -2, x = 0.016875, y = 1.3325, dist = 0.0118832, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 908, Nodeid = -2, x = 0.016875, y = 1.35945, dist = 0.0121164, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 909, Nodeid = -2, x = 0.016875, y = 1.38641, dist = 0.0123595, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 910, Nodeid = -2, x = 0.016875, y = 1.41337, dist = 0.0126121, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 911, Nodeid = -2, x = 0.016875, y = 1.44032, dist = 0.0128736, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 912, Nodeid = -2, x = 0.016875, y = 1.46728, dist = 0.0131434, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 913, Nodeid = -2, x = -0.00375, y = 1.63465, dist = 0.0198838, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 914, Nodeid = -2, x = -0.00375, y = 1.66148, dist = 0.0202017, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 915, Nodeid = -2, x = 0.016875, y = 1.52015, dist = 0.0161696, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 916, Nodeid = -2, x = 0.016875, y = 1.54711, dist = 0.0165032, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 917, Nodeid = -2, x = 0.016875, y = 1.57407, dist = 0.0168408, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 918, Nodeid = -2, x = 0.016875, y = 1.60102, dist = 0.0171821, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 919, Nodeid = -2, x = 0.01375, y = 1.63465, dist = 0.00862705, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 920, Nodeid = -2, x = 0.016875, y = 1.62798, dist = 0.017527, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 921, Nodeid = -2, x = 0.01375, y = 1.66148, dist = 0.00873242, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 922, Nodeid = -2, x = 0.016875, y = 1.65494, dist = 0.0178751, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 923, Nodeid = -2, x = 0.016875, y = 1.68189, dist = 0.0182264, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 924, Nodeid = -2, x = 0.016875, y = 1.71198, dist = 0.0114907, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 925, Nodeid = -2, x = 0.016875, y = 1.73893, dist = 0.0117043, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 926, Nodeid = -2, x = 0.016875, y = 1.76589, dist = 0.011929, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 927, Nodeid = -2, x = 0.016875, y = 1.79285, dist = 0.0121642, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 928, Nodeid = -2, x = 0.016875, y = 1.8198, dist = 0.0124093, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 929, Nodeid = -2, x = 0.016875, y = 1.84676, dist = 0.0126637, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 930, Nodeid = -2, x = 0.016875, y = 1.87372, dist = 0.0129269, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 931, Nodeid = -2, x = -0.00375, y = 2.04119, dist = 0.0196302, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 932, Nodeid = -2, x = -0.006875, y = 2.03272, dist = 0.0106546, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 933, Nodeid = -2, x = -0.00375, y = 2.06802, dist = 0.0199473, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 934, Nodeid = -2, x = -0.00375, y = 2.09484, dist = 0.0202654, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 935, Nodeid = -2, x = 0.016875, y = 1.92659, dist = 0.0159057, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 936, Nodeid = -2, x = 0.016875, y = 1.95354, dist = 0.016236, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 937, Nodeid = -2, x = 0.016875, y = 1.9805, dist = 0.0165704, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 938, Nodeid = -2, x = 0.016875, y = 2.00746, dist = 0.0169088, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 939, Nodeid = -2, x = 0.01375, y = 2.04119, dist = 0.0085521, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 940, Nodeid = -2, x = 0.016875, y = 2.03441, dist = 0.0172508, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 941, Nodeid = -2, x = 0.01375, y = 2.06802, dist = 0.0086471, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 942, Nodeid = -2, x = 0.016875, y = 2.06137, dist = 0.0175963, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 943, Nodeid = -2, x = 0.01375, y = 2.09484, dist = 0.00875501, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 944, Nodeid = -2, x = 0.016875, y = 2.08833, dist = 0.0179451, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 945, Nodeid = -2, x = -0.00375, y = 0.00953323, dist = 0.0178922, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 946, Nodeid = -2, x = 0.016875, y = 0.00159019, dist = 0.0254206, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 947, Nodeid = -2, x = -0.003125, y = 0.0240902, dist = 0.0171578, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 948, Nodeid = -2, x = 0.013125, y = 0.0240902, dist = 0.010669, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 949, Nodeid = -2, x = -0.00375, y = 0.228299, dist = 0.0155291, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 950, Nodeid = -2, x = -0.003125, y = 0.210847, dist = 0.0134375, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 951, Nodeid = -2, x = -0.006875, y = 0.221021, dist = 0.0247664, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 952, Nodeid = -2, x = 0.01375, y = 0.228299, dist = 0.0083934, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 953, Nodeid = -2, x = 0.013125, y = 0.210847, dist = 0.0102522, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 954, Nodeid = -2, x = 0.016875, y = 0.221021, dist = 0.0135342, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 955, Nodeid = -2, x = 0.01375, y = 0.430657, dist = 0.0175219, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 956, Nodeid = -2, x = -0.006875, y = 0.438758, dist = 0.0253334, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 957, Nodeid = -2, x = -0.00375, y = 0.660622, dist = 0.0184981, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 958, Nodeid = -2, x = -0.006875, y = 0.65337, dist = 0.0241777, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 959, Nodeid = -2, x = 0.01375, y = 0.660622, dist = 0.00832308, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 960, Nodeid = -2, x = 0.013125, y = 0.847969, dist = 0.014616, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 961, Nodeid = -2, x = -0.003125, y = 0.863178, dist = 0.0139868, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 962, Nodeid = -2, x = 0.013125, y = 0.863178, dist = 0.0113968, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 963, Nodeid = -2, x = -0.003125, y = 1.06736, dist = 0.00785344, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 964, Nodeid = -2, x = -0.003125, y = 1.0516, dist = 0.015046, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 965, Nodeid = -2, x = -0.00625, y = 1.06, dist = 0.0179086, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 966, Nodeid = -2, x = 0.013125, y = 1.06736, dist = 0.0154808, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 967, Nodeid = -2, x = 0.013125, y = 1.0516, dist = 0.0111294, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 968, Nodeid = -2, x = 0.01625, y = 1.06, dist = 0.0179086, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 969, Nodeid = -2, x = -0.003125, y = 1.27099, dist = 0.0113129, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 970, Nodeid = -2, x = 0.01625, y = 1.27794, dist = 0.0203624, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 971, Nodeid = -2, x = -0.003125, y = 1.49947, dist = 0.0105468, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 972, Nodeid = -2, x = -0.00625, y = 1.49214, dist = 0.0204581, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 973, Nodeid = -2, x = 0.013125, y = 1.49947, dist = 0.0177456, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 974, Nodeid = -2, x = -0.00375, y = 1.6883, dist = 0.0205207, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 975, Nodeid = -2, x = 0.013125, y = 1.68789, dist = 0.0145726, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 976, Nodeid = -2, x = -0.00375, y = 1.70289, dist = 0.00828993, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 977, Nodeid = -2, x = 0.013125, y = 1.7031, dist = 0.0115204, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 978, Nodeid = -2, x = -0.00375, y = 1.90811, dist = 0.0151762, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 979, Nodeid = -2, x = -0.00375, y = 1.89066, dist = 0.00849276, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 980, Nodeid = -2, x = -0.006875, y = 1.89898, dist = 0.0135342, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 981, Nodeid = -2, x = 0.013125, y = 1.90728, dist = 0.0152884, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 982, Nodeid = -2, x = 0.013125, y = 1.89152, dist = 0.0110862, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 983, Nodeid = -2, x = 0.01625, y = 1.89984, dist = 0.0180946, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 984, Nodeid = -2, x = -0.003125, y = 2.11091, dist = 0.0113561, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 985, Nodeid = -2, x = 0.01375, y = 2.11047, dist = 0.0178922, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 986, Nodeid = -2, x = 0.016875, y = 2.11672, dist = 0.0241995, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 987, Nodeid = -2, x = -0.003125, y = 0.0500554, dist = 0.0138711, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 988, Nodeid = -2, x = -0.003125, y = 0.0768539, dist = 0.0137988, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 989, Nodeid = -2, x = -0.003125, y = 0.103652, dist = 0.0137265, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 990, Nodeid = -2, x = -0.003125, y = 0.130451, dist = 0.0136542, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 991, Nodeid = -2, x = 0.01625, y = 0.0316456, dist = 0.0199168, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 992, Nodeid = -2, x = 0.013125, y = 0.0500554, dist = 0.0110888, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 993, Nodeid = -2, x = 0.01625, y = 0.0585759, dist = 0.0195998, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 994, Nodeid = -2, x = 0.013125, y = 0.0768539, dist = 0.0109131, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 995, Nodeid = -2, x = 0.01625, y = 0.0855063, dist = 0.0192839, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 996, Nodeid = -2, x = 0.013125, y = 0.103652, dist = 0.0107511, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 997, Nodeid = -2, x = 0.01625, y = 0.112437, dist = 0.0189692, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 998, Nodeid = -2, x = 0.013125, y = 0.130451, dist = 0.0106034, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 999, Nodeid = -2, x = 0.01625, y = 0.139367, dist = 0.0186557, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1000, Nodeid = -2, x = -0.003125, y = 0.252985, dist = 0.0104461, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1001, Nodeid = -2, x = -0.00625, y = 0.245839, dist = 0.020906, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1002, Nodeid = -2, x = -0.003125, y = 0.279784, dist = 0.0103743, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1003, Nodeid = -2, x = -0.00625, y = 0.272769, dist = 0.021227, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1004, Nodeid = -2, x = -0.00375, y = 0.307732, dist = 0.0193773, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1005, Nodeid = -2, x = -0.006875, y = 0.300849, dist = 0.0239743, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1006, Nodeid = -2, x = -0.006875, y = 0.327806, dist = 0.0239016, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1007, Nodeid = -2, x = -0.006875, y = 0.354763, dist = 0.0238289, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1008, Nodeid = -2, x = -0.006875, y = 0.381719, dist = 0.0237563, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1009, Nodeid = -2, x = -0.006875, y = 0.408676, dist = 0.0236836, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1010, Nodeid = -2, x = 0.013125, y = 0.252985, dist = 0.0182367, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1011, Nodeid = -2, x = 0.01375, y = 0.280907, dist = 0.00841494, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1012, Nodeid = -2, x = 0.01375, y = 0.307732, dist = 0.00848567, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1013, Nodeid = -2, x = -0.00375, y = 0.45644, dist = 0.00827335, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1014, Nodeid = -2, x = -0.006875, y = 0.465715, dist = 0.0252607, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1015, Nodeid = -2, x = -0.00375, y = 0.483265, dist = 0.00827917, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1016, Nodeid = -2, x = -0.006875, y = 0.492671, dist = 0.025188, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1017, Nodeid = -2, x = -0.00375, y = 0.51009, dist = 0.00829968, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1018, Nodeid = -2, x = -0.006875, y = 0.519628, dist = 0.0251153, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1019, Nodeid = -2, x = -0.00375, y = 0.536915, dist = 0.00833478, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1020, Nodeid = -2, x = -0.006875, y = 0.546585, dist = 0.0250426, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1021, Nodeid = -2, x = -0.00375, y = 0.563739, dist = 0.00838427, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1022, Nodeid = -2, x = -0.006875, y = 0.573542, dist = 0.0249699, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1023, Nodeid = -2, x = -0.006875, y = 0.600498, dist = 0.0248972, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1024, Nodeid = -2, x = -0.006875, y = 0.627455, dist = 0.0248246, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1025, Nodeid = -2, x = 0.01375, y = 0.45644, dist = 0.0177219, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1026, Nodeid = -2, x = 0.01375, y = 0.483265, dist = 0.0174139, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1027, Nodeid = -2, x = 0.01375, y = 0.51009, dist = 0.0171076, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1028, Nodeid = -2, x = 0.01375, y = 0.536915, dist = 0.0168029, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1029, Nodeid = -2, x = 0.01375, y = 0.563739, dist = 0.0164999, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1030, Nodeid = -2, x = -0.00375, y = 0.687447, dist = 0.018811, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1031, Nodeid = -2, x = -0.006875, y = 0.680327, dist = 0.0241051, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1032, Nodeid = -2, x = -0.00375, y = 0.714272, dist = 0.0191251, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1033, Nodeid = -2, x = -0.006875, y = 0.707284, dist = 0.0240324, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1034, Nodeid = -2, x = -0.00375, y = 0.741097, dist = 0.0194404, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1035, Nodeid = -2, x = -0.006875, y = 0.734241, dist = 0.0239597, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1036, Nodeid = -2, x = -0.006875, y = 0.761197, dist = 0.0238871, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1037, Nodeid = -2, x = -0.006875, y = 0.788154, dist = 0.0238144, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1038, Nodeid = -2, x = -0.006875, y = 0.815111, dist = 0.0237417, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1039, Nodeid = -2, x = -0.006875, y = 0.842068, dist = 0.0236691, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1040, Nodeid = -2, x = 0.01375, y = 0.687447, dist = 0.00836842, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1041, Nodeid = -2, x = 0.01375, y = 0.714272, dist = 0.00842798, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1042, Nodeid = -2, x = 0.01375, y = 0.741097, dist = 0.00850146, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1043, Nodeid = -2, x = -0.006875, y = 0.872149, dist = 0.0253188, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1044, Nodeid = -2, x = -0.00375, y = 0.889805, dist = 0.00827334, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1045, Nodeid = -2, x = -0.006875, y = 0.899106, dist = 0.0252461, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1046, Nodeid = -2, x = -0.00375, y = 0.91663, dist = 0.0082821, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1047, Nodeid = -2, x = -0.006875, y = 0.926063, dist = 0.0251735, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1048, Nodeid = -2, x = -0.00375, y = 0.943455, dist = 0.00830554, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1049, Nodeid = -2, x = -0.006875, y = 0.95302, dist = 0.0251008, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1050, Nodeid = -2, x = -0.00375, y = 0.97028, dist = 0.00834353, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1051, Nodeid = -2, x = -0.006875, y = 0.979976, dist = 0.0250281, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1052, Nodeid = -2, x = -0.00375, y = 0.997104, dist = 0.00839588, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1053, Nodeid = -2, x = -0.006875, y = 1.00693, dist = 0.0249554, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1054, Nodeid = -2, x = -0.006875, y = 1.03389, dist = 0.0248827, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1055, Nodeid = -2, x = 0.01375, y = 0.889805, dist = 0.0176602, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1056, Nodeid = -2, x = 0.01375, y = 0.91663, dist = 0.0173525, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1057, Nodeid = -2, x = 0.01375, y = 0.943455, dist = 0.0170465, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1058, Nodeid = -2, x = 0.01375, y = 0.97028, dist = 0.0167421, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1059, Nodeid = -2, x = 0.01375, y = 0.997104, dist = 0.0164395, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1060, Nodeid = -2, x = -0.00375, y = 1.09399, dist = 0.0185606, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1061, Nodeid = -2, x = -0.006875, y = 1.08676, dist = 0.0241632, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1062, Nodeid = -2, x = -0.00375, y = 1.12081, dist = 0.0188737, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1063, Nodeid = -2, x = -0.006875, y = 1.11372, dist = 0.0240905, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1064, Nodeid = -2, x = -0.00375, y = 1.14764, dist = 0.0191881, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1065, Nodeid = -2, x = -0.006875, y = 1.14068, dist = 0.0240179, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1066, Nodeid = -2, x = -0.00375, y = 1.17446, dist = 0.0195036, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1067, Nodeid = -2, x = -0.006875, y = 1.16763, dist = 0.0239452, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1068, Nodeid = -2, x = -0.006875, y = 1.19459, dist = 0.0238725, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1069, Nodeid = -2, x = -0.006875, y = 1.22155, dist = 0.0237999, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1070, Nodeid = -2, x = -0.006875, y = 1.2485, dist = 0.0237272, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1071, Nodeid = -2, x = 0.01375, y = 1.09399, dist = 0.008331, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1072, Nodeid = -2, x = 0.01375, y = 1.12081, dist = 0.0083792, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1073, Nodeid = -2, x = 0.01375, y = 1.14764, dist = 0.00844157, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1074, Nodeid = -2, x = 0.01375, y = 1.17446, dist = 0.0085178, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1075, Nodeid = -2, x = -0.00375, y = 1.29634, dist = 0.00827692, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1076, Nodeid = -2, x = -0.006875, y = 1.30554, dist = 0.0253043, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1077, Nodeid = -2, x = -0.00375, y = 1.32317, dist = 0.00827391, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1078, Nodeid = -2, x = -0.006875, y = 1.3325, dist = 0.0252316, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1079, Nodeid = -2, x = -0.00375, y = 1.34999, dist = 0.00828562, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1080, Nodeid = -2, x = -0.006875, y = 1.35945, dist = 0.0251589, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1081, Nodeid = -2, x = -0.00375, y = 1.37682, dist = 0.00831198, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1082, Nodeid = -2, x = -0.006875, y = 1.38641, dist = 0.0250862, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1083, Nodeid = -2, x = -0.00375, y = 1.40364, dist = 0.00835286, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1084, Nodeid = -2, x = -0.006875, y = 1.41337, dist = 0.0250135, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1085, Nodeid = -2, x = -0.00375, y = 1.43047, dist = 0.00840804, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1086, Nodeid = -2, x = -0.006875, y = 1.44032, dist = 0.0249409, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1087, Nodeid = -2, x = -0.006875, y = 1.46728, dist = 0.0248682, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1088, Nodeid = -2, x = 0.01375, y = 1.29634, dist = 0.0179074, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1089, Nodeid = -2, x = 0.01375, y = 1.32317, dist = 0.0175985, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1090, Nodeid = -2, x = 0.01375, y = 1.34999, dist = 0.0172912, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1091, Nodeid = -2, x = 0.01375, y = 1.37682, dist = 0.0169855, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1092, Nodeid = -2, x = 0.01375, y = 1.40364, dist = 0.0166815, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1093, Nodeid = -2, x = 0.01375, y = 1.43047, dist = 0.0163793, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1094, Nodeid = -2, x = -0.00375, y = 1.52735, dist = 0.0186231, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1095, Nodeid = -2, x = -0.006875, y = 1.52015, dist = 0.0241487, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1096, Nodeid = -2, x = -0.00375, y = 1.55418, dist = 0.0189365, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1097, Nodeid = -2, x = -0.006875, y = 1.54711, dist = 0.024076, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1098, Nodeid = -2, x = -0.00375, y = 1.581, dist = 0.0192511, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1099, Nodeid = -2, x = -0.006875, y = 1.57407, dist = 0.0240033, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1100, Nodeid = -2, x = -0.00375, y = 1.60783, dist = 0.0195669, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1101, Nodeid = -2, x = -0.006875, y = 1.60102, dist = 0.0239307, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1102, Nodeid = -2, x = -0.006875, y = 1.62798, dist = 0.023858, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1103, Nodeid = -2, x = -0.006875, y = 1.65494, dist = 0.0237853, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1104, Nodeid = -2, x = -0.006875, y = 1.68189, dist = 0.0237127, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1105, Nodeid = -2, x = 0.01375, y = 1.52735, dist = 0.00833949, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1106, Nodeid = -2, x = 0.01375, y = 1.55418, dist = 0.00839055, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1107, Nodeid = -2, x = 0.01375, y = 1.581, dist = 0.00845572, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1108, Nodeid = -2, x = 0.01375, y = 1.60783, dist = 0.00853468, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1109, Nodeid = -2, x = -0.006875, y = 1.71198, dist = 0.0253624, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1110, Nodeid = -2, x = -0.00375, y = 1.72971, dist = 0.00827514, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1111, Nodeid = -2, x = -0.006875, y = 1.73893, dist = 0.0252897, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1112, Nodeid = -2, x = -0.00375, y = 1.75653, dist = 0.00827507, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1113, Nodeid = -2, x = -0.006875, y = 1.76589, dist = 0.0252171, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1114, Nodeid = -2, x = -0.00375, y = 1.78336, dist = 0.00828972, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1115, Nodeid = -2, x = -0.006875, y = 1.79285, dist = 0.0251444, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1116, Nodeid = -2, x = -0.00375, y = 1.81018, dist = 0.008319, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1117, Nodeid = -2, x = -0.006875, y = 1.8198, dist = 0.0250717, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1118, Nodeid = -2, x = -0.00375, y = 1.83701, dist = 0.00836276, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1119, Nodeid = -2, x = -0.006875, y = 1.84676, dist = 0.024999, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1120, Nodeid = -2, x = -0.00375, y = 1.86383, dist = 0.00842078, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1121, Nodeid = -2, x = -0.006875, y = 1.87372, dist = 0.0249263, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1122, Nodeid = -2, x = 0.01375, y = 1.72971, dist = 0.0178455, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1123, Nodeid = -2, x = 0.01375, y = 1.75653, dist = 0.0175369, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1124, Nodeid = -2, x = 0.01375, y = 1.78336, dist = 0.0172299, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1125, Nodeid = -2, x = 0.01375, y = 1.81018, dist = 0.0169245, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1126, Nodeid = -2, x = 0.01375, y = 1.83701, dist = 0.0166209, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1127, Nodeid = -2, x = 0.01375, y = 1.86383, dist = 0.016319, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1128, Nodeid = -2, x = -0.00375, y = 1.93389, dist = 0.0183733, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1129, Nodeid = -2, x = -0.006875, y = 1.92659, dist = 0.0242068, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1130, Nodeid = -2, x = -0.00375, y = 1.96072, dist = 0.0186857, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1131, Nodeid = -2, x = -0.006875, y = 1.95354, dist = 0.0241341, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1132, Nodeid = -2, x = -0.00375, y = 1.98754, dist = 0.0189993, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1133, Nodeid = -2, x = -0.006875, y = 1.9805, dist = 0.0240615, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1134, Nodeid = -2, x = -0.00375, y = 2.01437, dist = 0.0193142, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1135, Nodeid = -2, x = -0.006875, y = 2.00746, dist = 0.0239888, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1136, Nodeid = -2, x = -0.006875, y = 2.06137, dist = 0.0238435, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1137, Nodeid = -2, x = -0.006875, y = 2.08833, dist = 0.0237708, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1138, Nodeid = -2, x = 0.01375, y = 1.93389, dist = 0.00830899, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1139, Nodeid = -2, x = 0.01375, y = 1.96072, dist = 0.00834856, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1140, Nodeid = -2, x = 0.01375, y = 1.98754, dist = 0.00840246, e1mag = 0, e2mag = 0, inarray = 0
+Elemid = 1141, Nodeid = -2, x = 0.01375, y = 2.01437, dist = 0.00847042, e1mag = 0, e2mag = 0, inarray = 0
+ ========================================================================================== 
+Node id = 0, : um_max = 0 at y = 4.64382e-310, ue_max = 0
+Myelid id = 47, : um_max = 0 at y = 4.64382e-310, ue_max = 0
+Extid id = 647, : um_max = 0 at y = 4.64382e-310, ue_max = 0
+index = 12940, type = -1, um = 0 at x = 0, y = 2.07
+index = 12941, type = -1, um = 0 at x = 0.000863366, y = 2.06885
+index = 12942, type = -1, um = 0 at x = 0.0025, y = 2.06667
+index = 12943, type = -1, um = 0 at x = 0.00413663, y = 2.06448
+index = 12944, type = -1, um = 0 at x = 0.005, y = 2.06333
+index = 12945, type = -1, um = 0 at x = 0.00172673, y = 2.07
+index = 12946, type = -1, um = 0 at x = 0.00244102, y = 2.06905
+index = 12947, type = -1, um = 0 at x = 0.00379505, y = 2.06724
+index = 12948, type = -1, um = 0 at x = 0.00514908, y = 2.06544
+index = 12949, type = -1, um = 0 at x = 0.00586337, y = 2.06448
+index = 12950, type = -1, um = 0 at x = 0.005, y = 2.07
+index = 12951, type = -1, um = 0 at x = 0.00543168, y = 2.06942
+index = 12952, type = -1, um = 0 at x = 0.00625, y = 2.06833
+index = 12953, type = -1, um = 0 at x = 0.00706832, y = 2.06724
+index = 12954, type = -1, um = 0 at x = 0.0075, y = 2.06667
+index = 12955, type = -1, um = 0 at x = 0.00827327, y = 2.07
+index = 12956, type = -1, um = 0 at x = 0.00842235, y = 2.0698
+index = 12957, type = -1, um = 0 at x = 0.00870495, y = 2.06942
+index = 12958, type = -1, um = 0 at x = 0.00898755, y = 2.06905
+index = 12959, type = -1, um = 0 at x = 0.00913663, y = 2.06885
+ ========================================================================================== 
+Initial: max um = 0
+Initial: max ue = 0
+Writing: "NeuralEP2DExtL2Phie_initial.chk"
+ (0s, XML)
+Steps: 1000000  Time: 0.01        
+ CPU Time: 990.669 min.
+
+ ========================================================================================== 
+Node id = 1, : um_max = 122.087 at y = 0.005, ue_max = 726.854
+Myelid id = 97, : um_max = 90.4906 at y = 0.0220833, ue_max = 719.615
+Extid id = 945, : um_max = 34.9024 at y = 0.00953323, ue_max = 717.754
+index = 18900, type = -2, um = 122.154 at x = 0, y = 0
+index = 18901, type = -2, um = 122.161 at x = 0, y = 0.00172673
+index = 18902, type = -2, um = 122.162 at x = 0, y = 0.005
+index = 18903, type = -2, um = 122.255 at x = 0, y = 0.00827327
+index = 18904, type = -2, um = 122.385 at x = 0, y = 0.01
+index = 18905, type = -2, um = 19.5218 at x = -0.00172673, y = 0.00295074
+index = 18906, type = -2, um = 13.2846 at x = -0.00172673, y = 0.00437932
+index = 18907, type = -2, um = 5.66106 at x = -0.00172673, y = 0.00708738
+index = 18908, type = -2, um = 3.59786 at x = -0.00172673, y = 0.00979544
+index = 18909, type = -2, um = 4.77451 at x = -0.00172673, y = 0.011224
+index = 18910, type = -2, um = -6.88341 at x = -0.005, y = 0.0085443
+index = 18911, type = -2, um = -9.64448 at x = -0.005, y = 0.00940767
+index = 18912, type = -2, um = -10.4306 at x = -0.005, y = 0.0110443
+index = 18913, type = -2, um = -5.37956 at x = -0.005, y = 0.0126809
+index = 18914, type = -2, um = -0.357709 at x = -0.005, y = 0.0135443
+index = 18915, type = -2, um = 3.98058 at x = -0.00827327, y = 0.0141379
+index = 18916, type = -2, um = 7.06531 at x = -0.00827327, y = 0.014436
+index = 18917, type = -2, um = 13.7909 at x = -0.00827327, y = 0.0150012
+index = 18918, type = -2, um = 21.6665 at x = -0.00827327, y = 0.0155664
+index = 18919, type = -2, um = 26.2848 at x = -0.00827327, y = 0.0158646
+ ========================================================================================== 
+ 
+(Nodeid,phim,phie): (0,121.597,-2.62293), (1,116.872,-9.55847), (2,14.6771,725.48), (3,0.0690192,644.842), (4,-0.000721367,564.945), (5,-0.00105884,485.056), (6,-0.00106087,405.166), (7,-0.00106089,325.276), (8,-0.00106089,245.385), (9,-0.00106089,165.493), (10,-0.00106091,85.6003), (11,-0.000800027,4.28004),  
+(Myelid,phim,phie): (0,74.6178,351.974), (1,1.7248,675.078), (2,0.00779464,606.218), (3,-0.000999231,526.104), (4,-0.00104324,447.262), (5,-0.00104351,365.538), (6,-0.00104356,287.534), (7,-0.00104352,207.024), (8,-0.00104353,126.936), (9,-0.00104373,46.7314),  
+
+phim = [ -48.9593 , 123.765 ] 
+phie = [ -48.9593 , 732.414 ] 
+Writing: "NeuralEP2DExtL2Phie_1.chk"
+ (0s, XML)
+Steps: 2000000  Time: 0.02        
+ CPU Time: 997.335 min.
+
+ ========================================================================================== 
+Node id = 1, : um_max = 112.995 at y = 0.005, ue_max = 538.521
+Myelid id = 97, : um_max = 97.0388 at y = 0.0220833, ue_max = 534.321
+Extid id = 819, : um_max = 32.2877 at y = 0.0157832, ue_max = 530.712
+index = 16380, type = -2, um = 113.186 at x = 0, y = 0.01
+index = 16381, type = -2, um = 111.97 at x = 0, y = 0.0117267
+index = 16382, type = -2, um = 113.954 at x = 0, y = 0.015
+index = 16383, type = -2, um = 108.45 at x = 0, y = 0.0182733
+index = 16384, type = -2, um = 97.2496 at x = 0, y = 0.02
+index = 16385, type = -2, um = 4.13896 at x = -0.00172673, y = 0.011224
+index = 16386, type = -2, um = 1.64122 at x = -0.00172673, y = 0.0126526
+index = 16387, type = -2, um = 2.79543 at x = -0.00172673, y = 0.0153606
+index = 16388, type = -2, um = 4.23874 at x = -0.00172673, y = 0.0180687
+index = 16389, type = -2, um = 2.12646 at x = -0.00172673, y = 0.0194973
+index = 16390, type = -2, um = -1.09977 at x = -0.005, y = 0.0135443
+index = 16391, type = -2, um = -4.01665 at x = -0.005, y = 0.0144077
+index = 16392, type = -2, um = -5.35075 at x = -0.005, y = 0.0160443
+index = 16393, type = -2, um = -2.8302 at x = -0.005, y = 0.0176809
+index = 16394, type = -2, um = -0.607522 at x = -0.005, y = 0.0185443
+index = 16395, type = -2, um = 22.5624 at x = -0.00827327, y = 0.0158646
+index = 16396, type = -2, um = 21.2054 at x = -0.00827327, y = 0.0161628
+index = 16397, type = -2, um = 19.3771 at x = -0.00827327, y = 0.016728
+index = 16398, type = -2, um = 18.4556 at x = -0.00827327, y = 0.0172932
+index = 16399, type = -2, um = 18.3077 at x = -0.00827327, y = 0.0175913
+ ========================================================================================== 
+ 
+(Nodeid,phim,phie): (0,112.924,6.31687), (1,110.631,7.2764), (2,21.8441,535.779), (3,0.0721042,479.226), (4,-0.000727274,419.847), (5,-0.00107878,360.477), (6,-0.00108089,301.107), (7,-0.00108091,241.735), (8,-0.0010809,182.363), (9,-0.0010809,122.99), (10,-0.00108093,63.6159), (11,-0.000815117,3.18082),  
+(Myelid,phim,phie): (0,86.6074,264.465), (1,1.91454,501.162), (2,0.00816554,450.501), (3,-0.00101712,390.982), (4,-0.00106295,332.39), (5,-0.00106323,271.657), (6,-0.00106328,213.687), (7,-0.00106324,153.854), (8,-0.00106325,94.3356), (9,-0.00106345,34.7296),  
+
+phim = [ -47.9498 , 113.954 ] 
+phie = [ -47.9498 , 542.053 ] 
+Writing: "NeuralEP2DExtL2Phie_2.chk"
+ (0s, XML)
+Steps: 3000000  Time: 0.03        
+ CPU Time: 995.568 min.
+
+ ========================================================================================== 
+Node id = 1, : um_max = 115.594 at y = 0.005, ue_max = 252.204
+Myelid id = 97, : um_max = 109.852 at y = 0.0220833, ue_max = 249.966
+Extid id = 819, : um_max = 33.8269 at y = 0.0157832, ue_max = 246.643
+index = 16380, type = -2, um = 115.67 at x = 0, y = 0.01
+index = 16381, type = -2, um = 115.217 at x = 0, y = 0.0117267
+index = 16382, type = -2, um = 115.963 at x = 0, y = 0.015
+index = 16383, type = -2, um = 114.002 at x = 0, y = 0.0182733
+index = 16384, type = -2, um = 109.941 at x = 0, y = 0.02
+index = 16385, type = -2, um = 3.9323 at x = -0.00172673, y = 0.011224
+index = 16386, type = -2, um = 2.19046 at x = -0.00172673, y = 0.0126526
+index = 16387, type = -2, um = 2.058 at x = -0.00172673, y = 0.0153606
+index = 16388, type = -2, um = 3.35371 at x = -0.00172673, y = 0.0180687
+index = 16389, type = -2, um = 3.51609 at x = -0.00172673, y = 0.0194973
+index = 16390, type = -2, um = -1.78145 at x = -0.005, y = 0.0135443
+index = 16391, type = -2, um = -3.64687 at x = -0.005, y = 0.0144077
+index = 16392, type = -2, um = -4.59114 at x = -0.005, y = 0.0160443
+index = 16393, type = -2, um = -2.74255 at x = -0.005, y = 0.0176809
+index = 16394, type = -2, um = -0.884174 at x = -0.005, y = 0.0185443
+index = 16395, type = -2, um = 21.6767 at x = -0.00827327, y = 0.0158646
+index = 16396, type = -2, um = 21.0925 at x = -0.00827327, y = 0.0161628
+index = 16397, type = -2, um = 20.4653 at x = -0.00827327, y = 0.016728
+index = 16398, type = -2, um = 20.4421 at x = -0.00827327, y = 0.0172932
+index = 16399, type = -2, um = 20.6632 at x = -0.00827327, y = 0.0175913
+ ========================================================================================== 
+ 
+(Nodeid,phim,phie): (0,115.568,4.33882), (1,114.768,5.96073), (2,36.6293,243.556), (3,0.197498,231.978), (4,-0.000148511,203.215), (5,-0.0010918,174.48), (6,-0.00109741,145.745), (7,-0.00109744,117.008), (8,-0.00109744,88.2704), (9,-0.00109744,59.5321), (10,-0.00109747,30.7929), (11,-0.000827585,1.53967),  
+(Myelid,phim,phie): (0,104.703,117.063), (1,2.88146,237.319), (2,0.0239503,217.912), (3,-0.000955878,189.244), (4,-0.00107874,160.886), (5,-0.00107951,131.49), (6,-0.00107957,103.432), (7,-0.00107953,74.4715), (8,-0.00107954,45.6624), (9,-0.00107974,16.8107),  
+
+phim = [ -51.1652 , 115.963 ] 
+phie = [ -51.1652 , 253.721 ] 
+Writing: "NeuralEP2DExtL2Phie_3.chk"
+ (0s, XML)
+Steps: 4000000  Time: 0.04        
+ CPU Time: 996.821 min.
+
+ ========================================================================================== 
+Node id = 1, : um_max = 116.34 at y = 0.005, ue_max = 112.76
+Myelid id = 97, : um_max = 114.148 at y = 0.0220833, ue_max = 112.104
+Extid id = 819, : um_max = 34.3108 at y = 0.0157832, ue_max = 111.76
+index = 16380, type = -2, um = 116.369 at x = 0, y = 0.01
+index = 16381, type = -2, um = 116.197 at x = 0, y = 0.0117267
+index = 16382, type = -2, um = 116.48 at x = 0, y = 0.015
+index = 16383, type = -2, um = 115.732 at x = 0, y = 0.0182733
+index = 16384, type = -2, um = 114.184 at x = 0, y = 0.02
+index = 16385, type = -2, um = 3.84853 at x = -0.00172673, y = 0.011224
+index = 16386, type = -2, um = 2.38534 at x = -0.00172673, y = 0.0126526
+index = 16387, type = -2, um = 1.79631 at x = -0.00172673, y = 0.0153606
+index = 16388, type = -2, um = 3.03089 at x = -0.00172673, y = 0.0180687
+index = 16389, type = -2, um = 3.99917 at x = -0.00172673, y = 0.0194973
+index = 16390, type = -2, um = -2.02025 at x = -0.005, y = 0.0135443
+index = 16391, type = -2, um = -3.51163 at x = -0.005, y = 0.0144077
+index = 16392, type = -2, um = -4.31748 at x = -0.005, y = 0.0160443
+index = 16393, type = -2, um = -2.70572 at x = -0.005, y = 0.0176809
+index = 16394, type = -2, um = -0.973618 at x = -0.005, y = 0.0185443
+index = 16395, type = -2, um = 21.3384 at x = -0.00827327, y = 0.0158646
+index = 16396, type = -2, um = 21.0233 at x = -0.00827327, y = 0.0161628
+index = 16397, type = -2, um = 20.8128 at x = -0.00827327, y = 0.016728
+index = 16398, type = -2, um = 21.0996 at x = -0.00827327, y = 0.0172932
+index = 16399, type = -2, um = 21.4475 at x = -0.00827327, y = 0.0175913
+ ========================================================================================== 
+ 
+(Nodeid,phim,phie): (0,116.33,-0.0337664), (1,116.026,-0.551936), (2,53.9024,72.7976), (3,0.696388,112.487), (4,0.00222618,98.4647), (5,-0.0010912,84.5428), (6,-0.00111095,70.6203), (7,-0.00111108,56.6969), (8,-0.00111108,42.7727), (9,-0.00111108,28.8476), (10,-0.00111111,14.9216), (11,-0.000837863,0.746104),  
+(Myelid,phim,phie): (0,111.223,30.601), (1,5.72353,95.5546), (2,0.086821,105.07), (3,-0.000657998,91.6932), (4,-0.00109018,77.9563), (5,-0.00109293,63.7138), (6,-0.001093,50.1188), (7,-0.00109296,36.0864), (8,-0.00109297,22.1268), (9,-0.00109317,8.14611),  
+
+phim = [ -52.2125 , 116.48 ] 
+phie = [ -52.2125 , 116.48 ] 
+Writing: "NeuralEP2DExtL2Phie_4.chk"
+ (0s, XML)
+Steps: 5000000  Time: 0.05        
+ CPU Time: 996.474 min.
+
+ ========================================================================================== 
+Node id = 5, : um_max = 116.355 at y = 0.011875, ue_max = 1.78197
+Myelid id = 97, : um_max = 115.024 at y = 0.0220833, ue_max = 1.1848
+Extid id = 819, : um_max = 34.3809 at y = 0.0157832, ue_max = 1.18286
+index = 16380, type = -2, um = 116.372 at x = 0, y = 0.01
+index = 16381, type = -2, um = 116.259 at x = 0, y = 0.0117267
+index = 16382, type = -2, um = 116.453 at x = 0, y = 0.015
+index = 16383, type = -2, um = 116.011 at x = 0, y = 0.0182733
+index = 16384, type = -2, um = 115.051 at x = 0, y = 0.02
+index = 16385, type = -2, um = 3.82673 at x = -0.00172673, y = 0.011224
+index = 16386, type = -2, um = 2.42378 at x = -0.00172673, y = 0.0126526
+index = 16387, type = -2, um = 1.73259 at x = -0.00172673, y = 0.0153606
+index = 16388, type = -2, um = 2.95603 at x = -0.00172673, y = 0.0180687
+index = 16389, type = -2, um = 4.10592 at x = -0.00172673, y = 0.0194973
+index = 16390, type = -2, um = -2.07141 at x = -0.005, y = 0.0135443
+index = 16391, type = -2, um = -3.47519 at x = -0.005, y = 0.0144077
+index = 16392, type = -2, um = -4.24784 at x = -0.005, y = 0.0160443
+index = 16393, type = -2, um = -2.69424 at x = -0.005, y = 0.0176809
+index = 16394, type = -2, um = -0.996331 at x = -0.005, y = 0.0185443
+index = 16395, type = -2, um = 21.2263 at x = -0.00827327, y = 0.0158646
+index = 16396, type = -2, um = 20.9766 at x = -0.00827327, y = 0.0161628
+index = 16397, type = -2, um = 20.868 at x = -0.00827327, y = 0.016728
+index = 16398, type = -2, um = 21.2308 at x = -0.00827327, y = 0.0172932
+index = 16399, type = -2, um = 21.6097 at x = -0.00827327, y = 0.0175913
+ ========================================================================================== 
+ 
+(Nodeid,phim,phie): (0,116.349,-10.9493), (1,116.178,-18.5889), (2,72.7615,-123.437), (3,1.78182,1.60946), (4,0.00745367,1.18971), (5,-0.00107092,1.02358), (6,-0.00112196,0.857181), (7,-0.00112229,0.68992), (8,-0.00112229,0.521794), (9,-0.00112229,0.352804), (10,-0.00112232,0.182949), (11,-0.000846311,0.00917116),  
+(Myelid,phim,phie): (0,112.513,-73.3313), (1,11.7065,-56.2703), (2,0.223678,-0.252915), (3,1.43721e-05,1.10136), (4,-0.0010968,0.944793), (5,-0.00110395,0.774212), (6,-0.00110404,0.610481), (7,-0.001104,0.440649), (8,-0.00110401,0.27083), (9,-0.00110422,0.0998934),  
+
+phim = [ -52.3909 , 116.453 ] 
+phie = [ -133.906 , 116.453 ] 
+Writing: "NeuralEP2DExtL2Phie_5.chk"
+ (0s, XML)

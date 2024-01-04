@@ -114,9 +114,7 @@ void NeuralStimulusRegion::Initialise()
 /**
  *
  */
-void NeuralStimulusRegion::v_Update(const int zonestart,
-                                const int zoneend,
-                                const Array<OneD, const NekDouble> &excitezone,
+void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezone,
                                 Array<OneD, Array<OneD, NekDouble>> &outarray,
                                 const NekDouble time)
 {
@@ -153,15 +151,16 @@ void NeuralStimulusRegion::v_Update(const int zonestart,
     switch (dim)
     {
         case 1:
-            for (int j = zonestart; j < zoneend; j++)
+            for (int j = 0; j < nq; j++)
             {
                 outarray[0][j] += vampzone[j] * ((tanh(m_pis * (x0[j] - m_px1)) -
                                             tanh(m_pis * (x0[j] - m_px2))) /
                                            2.0);
             }
             break;
+
         case 2:
-            for (int j = zonestart; j < zoneend; j++)
+            for (int j = 0; j < nq; j++)
             {
                 outarray[0][j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
                                              tanh(m_pis * (x0[j] - m_px2))) *
@@ -170,8 +169,9 @@ void NeuralStimulusRegion::v_Update(const int zonestart,
                                            2.0);
             }
             break;
+
         case 3:
-            for (int j = zonestart; j < zoneend; j++)
+            for (int j = 0; j < nq; j++)
             {
                 outarray[0][j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
                                              tanh(m_pis * (x0[j] - m_px2))) *

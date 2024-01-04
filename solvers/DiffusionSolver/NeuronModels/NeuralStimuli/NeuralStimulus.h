@@ -72,13 +72,11 @@ public:
     void Initialise();
 
     /// Updates RHS of outarray by adding a stimulus to it
-    void Update(const int zonestart,
-                                const int zoneend,
-                                const Array<OneD, const NekDouble> &excitezone,
-                                Array<OneD, Array<OneD, NekDouble>> &outarray,
+    void Update(const Array<OneD, const NekDouble> &excitezone,
+                 Array<OneD, Array<OneD, NekDouble>> &outarray,
                                 const NekDouble time)
     {
-        v_Update(zonestart, zoneend, excitezone, outarray, time);
+        v_Update(excitezone, outarray, time);
     }
 
     /// Print a summary of the outarray
@@ -115,10 +113,8 @@ protected:
              const MultiRegions::ExpListSharedPtr &pField,
              const TiXmlElement *pXml);
 
-    virtual void v_Update(const int zonestart,
-                                const int zoneend,
-                                const Array<OneD, const NekDouble> &excitezone,
-                                Array<OneD, Array<OneD, NekDouble>> &outarray,
+    virtual void v_Update(const Array<OneD, const NekDouble> &excitezone,
+                         Array<OneD, Array<OneD, NekDouble>> &outarray,
                                 const NekDouble time) = 0;
 
     virtual void v_GenerateSummary(SolverUtils::SummaryList &s) = 0;

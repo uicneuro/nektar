@@ -266,7 +266,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_zoneindex[0] = IndexNodeZone1D(m_fields[0], m_totNode, m_elemperNode, m_elemperMyel); 
 
               // Get the first and last index of the excitation zone [1,2]
-            SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
+            SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(m_nfibers);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
@@ -287,7 +287,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_zoneindex[0] = IndexNodeZone2D(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
 
             // Get the first and last index of the excitation zone [1,2]
-            SetUpDomainZone(m_zoneindex[0], m_Excitezonehead, m_Excitezonetail, m_excitezone, m_nodezone, m_intrazone, m_extrazone);
+            SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
 
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
@@ -659,31 +659,12 @@ void MMFNeuralEP::SetUpBiAnisotropy(
 
 void MMFNeuralEP::SetUpDomainZone(
         const Array<OneD, const int> &zoneindex,
-        int &Excitezonehead, int &Excitezonetail, 
         Array<OneD, NekDouble> &excitezone,
         Array<OneD, NekDouble> &nodezone,
         Array<OneD, NekDouble> &intrazone,
         Array<OneD, NekDouble> &extrazone)
 {
     int nq   = GetTotPoints();
-
-    Excitezonehead = 0;
-    Excitezonetail = 0;
-    for (int i=0; i<nq; ++i)
-    {
-        if( (zoneindex[i] == 0) || (zoneindex[i] == 1))
-        {
-            if (i<Excitezonehead)
-            {
-                Excitezonehead = i;
-            }
-
-            if(i>Excitezonetail)
-            {
-                Excitezonetail = i;
-            }
-        }
-    }
 
     int extcnt=0, nodecnt=0, intracnt=0, extracnt=0;
 
@@ -725,8 +706,7 @@ void MMFNeuralEP::SetUpDomainZone(
     int extraelem = extracnt/m_npts;
     int totelem = intraelem + extraelem - nodecntelem*m_elemperNode;
     
-    std::cout << "Zone start = " << Excitezonehead << ", end = " << Excitezonetail <<
-    ", Excite zone = " << extcnt << ", Node zone = " << nodecnt <<  ", intra zone = " << intracnt/nq << 
+    std::cout << "Excite zone = " << extcnt << ", Node zone = " << nodecnt <<  ", intra zone = " << intracnt/nq << 
     " %, extra zone = " << extracnt/nq << " % " << std::endl;
 
     std::cout << "npts = " << m_npts << ", Excite node elem. = " << extcntelem << ", Node elem. = " << nodecntelem 
@@ -1936,7 +1916,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
+        m_stimulus[i]->Update(m_excitezone, outarray, time);
     }
 }
 
@@ -1957,7 +1937,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
 
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {
-        m_stimulus[i]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
+        m_stimulus[i]->Update(m_excitezone, outarray, time);
     }
 
     // // Add it to the RHS
@@ -2067,7 +2047,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     // // Add Stimulus
      for (unsigned int j = 0; j < m_stimulus.size(); ++j)
      {
-         m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
+         m_stimulus[j]->Update(m_excitezone, outarray, time);
      }
 
     if (m_explicitDiffusion)
@@ -2100,7 +2080,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Add Stimulus
     for (unsigned int j = 0; j < m_stimulus.size(); ++j)
     {
-        m_stimulus[j]->Update(m_Excitezonehead, m_Excitezonetail, m_excitezone, outarray, time);
+        m_stimulus[j]->Update(m_excitezone, outarray, time);
     }
 
     // Compute phi_e to satisfy the following equation
@@ -2341,7 +2321,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
             for (unsigned int i = 0; i < m_stimulus.size(); ++i)
             {
-                m_stimulus[i]->Update(0, nq, m_excitezone, tmp, initialtime);
+                m_stimulus[i]->Update(m_excitezone, tmp, initialtime);
                 Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }

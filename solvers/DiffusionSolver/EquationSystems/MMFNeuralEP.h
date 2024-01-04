@@ -551,7 +551,6 @@ protected:
 
     void SetUpDomainZone(
         const Array<OneD, const int> &zoneindex,
-        int &Excitezonehead, int &Excitezonetail, 
         Array<OneD, NekDouble> &excitezone,
         Array<OneD, NekDouble> &nodezone,
         Array<OneD, NekDouble> &intrazone,
@@ -574,8 +573,6 @@ private:
     NekDouble m_chi;
     NekDouble m_capMembrane;
     NekDouble m_conductivity;
-
-    int m_Excitezonehead, m_Excitezonetail;
 
     CellModelSharedPtr m_cell;
 

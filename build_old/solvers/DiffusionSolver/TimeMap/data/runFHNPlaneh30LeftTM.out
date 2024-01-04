@@ -1,0 +1,960 @@
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 1946 elements, adapated from MF1 = 852, MF2 = 795, MF3 = 299
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.700511 , 0.713642 , 0 ) 
+*** MF 1 = ( 0.713642 , 0.700511 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+============ End of MMFInitObect ============
+k = 0, m_varcoeff = ( 0.700511 , 0.713642 , 0 , 1.81355e-08 , 1 ) 
+k = 1, m_varcoeff = ( 0.713642 , 0.700511 , 0 , 1.93964e-08 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: FHNPlaneh30LeftTM
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 100000
+	 Checkpoints (steps): 1000
+	    Integration Type: IMEX
+	             Surface: PlaneLeft
+	           DerivType: Euclidean
+	          MediumType: Isotropy
+	              MMFdir: LOCAL
+	    SolverSchemeType: Default
+	             TimeMap: Activated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	    AnisotropyRegion: 1000000
+	  AnisotropyStrength: 4
+	          TimeMapEnd: 10000
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+total 0 / 58380 is init-Acitvated
+Initial: max u = 5.71377
+Writing: "FHNPlaneh30LeftTM_initial.chk"
+ (0s, XML)
+xmax = 40, xmin = -40, ymax = 40, ymin = -40
+Steps: 1000     Time: 1           
+ CPU Time: 0.84362 min.
+u_max = 1.02932 at x = -29.7325, y = 6.54017, z = 0
+u_min = -0.0146695 at x = -25.1852, y = -40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_1.chk"
+ (0s, XML)
+Time Map: Max = 1, Min = 0
+Writing: "FHNPlaneh30LeftTM_1.chk"
+ (0s, XML)
+Steps: 2000     Time: 2           
+ CPU Time: 0.792485 min.
+u_max = 1.00267 at x = -29.5243, y = 6.21081, z = 0
+u_min = -0.00668437 at x = -23.397, y = 3.15178, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_2.chk"
+ (0s, XML)
+Time Map: Max = 2, Min = 0
+Writing: "FHNPlaneh30LeftTM_2.chk"
+ (0s, XML)
+Steps: 3000     Time: 3           
+ CPU Time: 0.792454 min.
+u_max = 1.00674 at x = -26.6303, y = 2.32671, z = 0
+u_min = -0.0244956 at x = -22.1612, y = 0.00099479, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_3.chk"
+ (0s, XML)
+Time Map: Max = 3, Min = 0
+Writing: "FHNPlaneh30LeftTM_3.chk"
+ (0s, XML)
+Steps: 4000     Time: 4           
+ CPU Time: 0.791609 min.
+u_max = 1.01817 at x = -25.1852, y = 40, z = 0
+u_min = -0.0232011 at x = -20.6453, y = 5.08899, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_4.chk"
+ (0s, XML)
+Time Map: Max = 4, Min = 0
+Writing: "FHNPlaneh30LeftTM_4.chk"
+ (0s, XML)
+Steps: 5000     Time: 5           
+ CPU Time: 0.791475 min.
+u_max = 1.00886 at x = -23.9999, y = 28.8569, z = 0
+u_min = -0.0277473 at x = -19.2593, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_5.chk"
+ (0s, XML)
+Time Map: Max = 5, Min = 0
+Writing: "FHNPlaneh30LeftTM_5.chk"
+ (0s, XML)
+Steps: 6000     Time: 6           
+ CPU Time: 0.792187 min.
+u_max = 1.00756 at x = -22.6004, y = -15.3845, z = 0
+u_min = -0.0111675 at x = -17.8084, y = -36.3873, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_6.chk"
+ (0s, XML)
+Time Map: Max = 6, Min = 0
+Writing: "FHNPlaneh30LeftTM_6.chk"
+ (0s, XML)
+Steps: 7000     Time: 7           
+ CPU Time: 0.792008 min.
+u_max = 1.02959 at x = -21.3604, y = -35.5187, z = 0
+u_min = -0.0208421 at x = -16.9069, y = -5.76089, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_7.chk"
+ (0s, XML)
+Time Map: Max = 7, Min = 0
+Writing: "FHNPlaneh30LeftTM_7.chk"
+ (0s, XML)
+Steps: 8000     Time: 8           
+ CPU Time: 0.792458 min.
+u_max = 1.01227 at x = -19.5836, y = -16.4477, z = 0
+u_min = -0.0202493 at x = -15.2387, y = 4.69326, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_8.chk"
+ (0s, XML)
+Time Map: Max = 8, Min = 0
+Writing: "FHNPlaneh30LeftTM_8.chk"
+ (0s, XML)
+Steps: 9000     Time: 9           
+ CPU Time: 0.7925 min.
+u_max = 1.03264 at x = -18.3174, y = 0.643652, z = 0
+u_min = -0.0116253 at x = -13.619, y = -10.0294, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_9.chk"
+ (0s, XML)
+Time Map: Max = 9, Min = 0
+Writing: "FHNPlaneh30LeftTM_9.chk"
+ (0s, XML)
+Steps: 10000    Time: 10          
+ CPU Time: 0.792776 min.
+u_max = 1.01768 at x = -16.9069, y = -5.76089, z = 0
+u_min = -0.00405699 at x = -12.71, y = 3.04158, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_10.chk"
+ (0s, XML)
+Time Map: Max = 9.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_10.chk"
+ (0s, XML)
+Steps: 11000    Time: 11          
+ CPU Time: 0.792792 min.
+u_max = 1.02201 at x = -15.7381, y = 6.93671, z = 0
+u_min = -0.0104532 at x = -10.687, y = 24.7663, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_11.chk"
+ (0s, XML)
+Time Map: Max = 10.997, Min = 0
+Writing: "FHNPlaneh30LeftTM_11.chk"
+ (0s, XML)
+Steps: 12000    Time: 12          
+ CPU Time: 0.792397 min.
+u_max = 1.0116 at x = -14.1587, y = -34.083, z = 0
+u_min = -0.0085977 at x = -9.67518, y = -8.84477, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_12.chk"
+ (0s, XML)
+Time Map: Max = 12, Min = 0
+Writing: "FHNPlaneh30LeftTM_12.chk"
+ (0s, XML)
+Steps: 13000    Time: 13          
+ CPU Time: 0.792478 min.
+u_max = 1.03662 at x = -12.9967, y = 5.70978, z = 0
+u_min = -0.0267052 at x = -8.39925, y = -26.1876, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_13.chk"
+ (0s, XML)
+Time Map: Max = 13, Min = 0
+Writing: "FHNPlaneh30LeftTM_13.chk"
+ (0s, XML)
+Steps: 14000    Time: 14          
+ CPU Time: 0.792864 min.
+u_max = 1.00974 at x = -11.3188, y = -18.9788, z = 0
+u_min = -0.00716068 at x = -6.50242, y = -10.0416, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_14.chk"
+ (0s, XML)
+Time Map: Max = 14, Min = 0
+Writing: "FHNPlaneh30LeftTM_14.chk"
+ (0s, XML)
+Steps: 15000    Time: 15          
+ CPU Time: 0.792204 min.
+u_max = 1.01411 at x = -10.1017, y = 6.63728, z = 0
+u_min = -0.0188512 at x = -5.17373, y = 25.9853, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_15.chk"
+ (0s, XML)
+Time Map: Max = 15, Min = 0
+Writing: "FHNPlaneh30LeftTM_15.chk"
+ (0s, XML)
+Steps: 16000    Time: 16          
+ CPU Time: 0.792969 min.
+u_max = 1.02239 at x = -8.39925, y = -26.1876, z = 0
+u_min = -0.0063922 at x = -4.44444, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_16.chk"
+ (0s, XML)
+Time Map: Max = 16, Min = 0
+Writing: "FHNPlaneh30LeftTM_16.chk"
+ (0s, XML)
+Steps: 17000    Time: 17          
+ CPU Time: 0.791775 min.
+u_max = 1.00895 at x = -7.40741, y = -40, z = 0
+u_min = -0.0202412 at x = -2.91689, y = 18.7432, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_17.chk"
+ (0s, XML)
+Time Map: Max = 17, Min = 0
+Writing: "FHNPlaneh30LeftTM_17.chk"
+ (0s, XML)
+Steps: 18000    Time: 18          
+ CPU Time: 0.792029 min.
+u_max = 1.03356 at x = -5.75012, y = -20.6106, z = 0
+u_min = -0.0074083 at x = -1.3883, y = -17.0784, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_18.chk"
+ (0s, XML)
+Time Map: Max = 18, Min = 0
+Writing: "FHNPlaneh30LeftTM_18.chk"
+ (0s, XML)
+Steps: 19000    Time: 19          
+ CPU Time: 0.792132 min.
+u_max = 1.03204 at x = -4.82043, y = -16.968, z = 0
+u_min = -0.0129705 at x = 0.280216, y = 19.3619, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_19.chk"
+ (0s, XML)
+Time Map: Max = 19, Min = 0
+Writing: "FHNPlaneh30LeftTM_19.chk"
+ (0s, XML)
+Steps: 20000    Time: 20          
+ CPU Time: 0.792372 min.
+u_max = 1.01112 at x = -2.91689, y = 18.7432, z = 0
+u_min = -0.0109371 at x = 1.29843, y = -9.84423, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_20.chk"
+ (0s, XML)
+Time Map: Max = 20, Min = 0
+Writing: "FHNPlaneh30LeftTM_20.chk"
+ (0s, XML)
+Steps: 21000    Time: 21          
+ CPU Time: 0.791745 min.
+u_max = 1.0353 at x = -1.9719, y = -26.6174, z = 0
+u_min = -0.0157678 at x = 3.34518, y = 27.9857, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_21.chk"
+ (0s, XML)
+Time Map: Max = 21, Min = 0
+Writing: "FHNPlaneh30LeftTM_21.chk"
+ (0s, XML)
+Steps: 22000    Time: 22          
+ CPU Time: 0.792538 min.
+u_max = 1.01113 at x = -0.24193, y = 6.99849, z = 0
+u_min = -0.0335953 at x = 4.23965, y = -29.6069, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_22.chk"
+ (0s, XML)
+Time Map: Max = 22, Min = 0
+Writing: "FHNPlaneh30LeftTM_22.chk"
+ (0s, XML)
+Steps: 23000    Time: 23          
+ CPU Time: 0.792407 min.
+u_max = 1.02423 at x = 1.13063, y = -27.9022, z = 0
+u_min = -0.0407584 at x = 5.73956, y = 32.4229, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_23.chk"
+ (0s, XML)
+Time Map: Max = 22.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_23.chk"
+ (0s, XML)
+Steps: 24000    Time: 24          
+ CPU Time: 0.792721 min.
+u_max = 1.01918 at x = 2.22688, y = 33.8041, z = 0
+u_min = -0.00571745 at x = 6.7314, y = -37.3475, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_24.chk"
+ (0s, XML)
+Time Map: Max = 24, Min = 0
+Writing: "FHNPlaneh30LeftTM_24.chk"
+ (0s, XML)
+Steps: 25000    Time: 25          
+ CPU Time: 0.792701 min.
+u_max = 1.02142 at x = 4.03291, y = -23.2629, z = 0
+u_min = -0.0159596 at x = 8.51991, y = 12.8728, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_25.chk"
+ (0s, XML)
+Time Map: Max = 24.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_25.chk"
+ (0s, XML)
+Steps: 26000    Time: 26          
+ CPU Time: 0.792862 min.
+u_max = 1.01726 at x = 5.65248, y = 13.8848, z = 0
+u_min = -0.00663248 at x = 9.92349, y = -31.5165, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_26.chk"
+ (0s, XML)
+Time Map: Max = 26, Min = 0
+Writing: "FHNPlaneh30LeftTM_26.chk"
+ (0s, XML)
+Steps: 27000    Time: 27          
+ CPU Time: 0.792394 min.
+u_max = 1.0194 at x = 6.96682, y = -5.9957, z = 0
+u_min = -0.028039 at x = 11.1909, y = 19.8208, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_27.chk"
+ (0s, XML)
+Time Map: Max = 27, Min = 0
+Writing: "FHNPlaneh30LeftTM_27.chk"
+ (0s, XML)
+Steps: 28000    Time: 28          
+ CPU Time: 0.792952 min.
+u_max = 1.02477 at x = 8.26219, y = 26.5921, z = 0
+u_min = -0.0487988 at x = 13.19, y = -30.0127, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_28.chk"
+ (0s, XML)
+Time Map: Max = 27.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_28.chk"
+ (0s, XML)
+Steps: 29000    Time: 29          
+ CPU Time: 0.783375 min.
+u_max = 1.01215 at x = 9.53708, y = -29.2136, z = 0
+u_min = -0.0329349 at x = 14.1713, y = 14.4769, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_29.chk"
+ (0s, XML)
+Time Map: Max = 28.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_29.chk"
+ (0s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 0.783727 min.
+u_max = 1.03604 at x = 10.953, y = 30.7222, z = 0
+u_min = -0.00806121 at x = 15.6931, y = -32.2271, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_30.chk"
+ (0s, XML)
+Time Map: Max = 29.999, Min = 0
+Writing: "FHNPlaneh30LeftTM_30.chk"
+ (0s, XML)
+Steps: 31000    Time: 31          
+ CPU Time: 0.783721 min.
+u_max = 1.00471 at x = 12.083, y = 9.03888, z = 0
+u_min = -0.0240289 at x = 17.1017, y = -5.88738, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_31.chk"
+ (0s, XML)
+Time Map: Max = 31, Min = 0
+Writing: "FHNPlaneh30LeftTM_31.chk"
+ (0s, XML)
+Steps: 32000    Time: 32          
+ CPU Time: 0.782799 min.
+u_max = 1.04204 at x = 13.19, y = -30.0127, z = 0
+u_min = -0.00142892 at x = 19.7562, y = -16.4055, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_32.chk"
+ (0s, XML)
+Time Map: Max = 31.999, Min = 0
+Writing: "FHNPlaneh30LeftTM_32.chk"
+ (0s, XML)
+Steps: 33000    Time: 33          
+ CPU Time: 0.783516 min.
+u_max = 1.00455 at x = 14.5722, y = 6.77998, z = 0
+u_min = -0.0101445 at x = 20.1696, y = -16.4104, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_33.chk"
+ (0s, XML)
+Time Map: Max = 33, Min = 0
+Writing: "FHNPlaneh30LeftTM_33.chk"
+ (0s, XML)
+Steps: 34000    Time: 34          
+ CPU Time: 0.783452 min.
+u_max = 1.0204 at x = 16.67, y = 29.7165, z = 0
+u_min = -0.020497 at x = 21.3604, y = 35.5187, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_34.chk"
+ (0s, XML)
+Time Map: Max = 33.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_34.chk"
+ (0s, XML)
+Steps: 35000    Time: 35          
+ CPU Time: 0.783569 min.
+u_max = 1.0212 at x = 18.0523, y = 7.77102, z = 0
+u_min = -0.0291507 at x = 22.3001, y = -37.601, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_35.chk"
+ (0s, XML)
+Time Map: Max = 35, Min = 0
+Writing: "FHNPlaneh30LeftTM_35.chk"
+ (0s, XML)
+Steps: 36000    Time: 36          
+ CPU Time: 0.783083 min.
+u_max = 1.0429 at x = 19.2593, y = -40, z = 0
+u_min = -0.00152997 at x = 25.0543, y = -13.1829, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_36.chk"
+ (0s, XML)
+Time Map: Max = 35.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_36.chk"
+ (0s, XML)
+Steps: 37000    Time: 37          
+ CPU Time: 0.783388 min.
+u_max = 1.00038 at x = 20.1696, y = -16.4104, z = 0
+u_min = -0.0293876 at x = 25.1852, y = -40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_37.chk"
+ (0s, XML)
+Time Map: Max = 36.9985, Min = 0
+Writing: "FHNPlaneh30LeftTM_37.chk"
+ (0s, XML)
+Steps: 38000    Time: 38          
+ CPU Time: 0.783034 min.
+u_max = 1.03005 at x = 21.9847, y = 0.256567, z = 0
+u_min = -0.00734437 at x = 27.3673, y = -15.9059, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_38.chk"
+ (0s, XML)
+Time Map: Max = 38, Min = 0
+Writing: "FHNPlaneh30LeftTM_38.chk"
+ (0s, XML)
+Steps: 39000    Time: 39          
+ CPU Time: 0.78263 min.
+u_max = 1.00264 at x = 23.1614, y = -23.223, z = 0
+u_min = -0.0108749 at x = 28.1554, y = -19.235, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_39.chk"
+ (0s, XML)
+Time Map: Max = 38.9995, Min = 0
+Writing: "FHNPlaneh30LeftTM_39.chk"
+ (0s, XML)
+Steps: 40000    Time: 40          
+ CPU Time: 0.783097 min.
+u_max = 1.01176 at x = 25.1852, y = 40, z = 0
+u_min = -0.011204 at x = 29.7127, y = -6.50726, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_40.chk"
+ (0s, XML)
+Time Map: Max = 40, Min = 0
+Writing: "FHNPlaneh30LeftTM_40.chk"
+ (0s, XML)
+Steps: 41000    Time: 41          
+ CPU Time: 0.782996 min.
+u_max = 1.02968 at x = 26.3221, y = -5.093, z = 0
+u_min = -0.00128452 at x = 30.4506, y = -30.3876, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_41.chk"
+ (0s, XML)
+Time Map: Max = 41, Min = 0
+Writing: "FHNPlaneh30LeftTM_41.chk"
+ (0s, XML)
+Steps: 42000    Time: 42          
+ CPU Time: 0.783052 min.
+u_max = 1.01635 at x = 27.4586, y = -29.0318, z = 0
+u_min = -0.022957 at x = 32.2162, y = 36.8545, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_42.chk"
+ (0s, XML)
+Time Map: Max = 42, Min = 0
+Writing: "FHNPlaneh30LeftTM_42.chk"
+ (0s, XML)
+Steps: 43000    Time: 43          
+ CPU Time: 0.783857 min.
+u_max = 1.02558 at x = 28.8764, y = 23.9993, z = 0
+u_min = -0.0165874 at x = 34.0519, y = 9.05431, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_43.chk"
+ (0s, XML)
+Time Map: Max = 43, Min = 0
+Writing: "FHNPlaneh30LeftTM_43.chk"
+ (0s, XML)
+Steps: 44000    Time: 44          
+ CPU Time: 0.78421 min.
+u_max = 1.02972 at x = 30.4506, y = -30.3876, z = 0
+u_min = -0.0347204 at x = 35.2634, y = -35.3398, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_44.chk"
+ (0s, XML)
+Time Map: Max = 44, Min = 0
+Writing: "FHNPlaneh30LeftTM_44.chk"
+ (0s, XML)
+Steps: 45000    Time: 45          
+ CPU Time: 0.783868 min.
+u_max = 1.02132 at x = 31.4775, y = -1.65407, z = 0
+u_min = -0.0479415 at x = 36.5441, y = -11.8583, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_45.chk"
+ (0s, XML)
+Time Map: Max = 45, Min = 0
+Writing: "FHNPlaneh30LeftTM_45.chk"
+ (0s, XML)
+Steps: 46000    Time: 46          
+ CPU Time: 0.783537 min.
+u_max = 1.02025 at x = 33.195, y = -10.2652, z = 0
+u_min = -0.00917722 at x = 38.3095, y = 0.0933973, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_46.chk"
+ (0s, XML)
+Time Map: Max = 46, Min = 0
+Writing: "FHNPlaneh30LeftTM_46.chk"
+ (0s, XML)
+Steps: 47000    Time: 47          
+ CPU Time: 0.784319 min.
+u_max = 1.02668 at x = 34.7779, y = -0.160657, z = 0
+u_min = -0.0096396 at x = 40, y = -4.44444, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_47.chk"
+ (0s, XML)
+Time Map: Max = 46.999, Min = 0
+Writing: "FHNPlaneh30LeftTM_47.chk"
+ (0s, XML)
+Steps: 48000    Time: 48          
+ CPU Time: 0.784427 min.
+u_max = 0.999123 at x = 34.4816, y = 9.1097, z = 0
+u_min = 6.28398e-13 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_48.chk"
+ (0s, XML)
+Time Map: Max = 47.8862, Min = 0
+Writing: "FHNPlaneh30LeftTM_48.chk"
+ (0s, XML)
+Steps: 49000    Time: 49          
+ CPU Time: 0.782658 min.
+u_max = 1.00519 at x = 36.5441, y = -11.8583, z = 0
+u_min = 1.7879e-13 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_49.chk"
+ (0s, XML)
+Time Map: Max = 48.5471, Min = 0
+Writing: "FHNPlaneh30LeftTM_49.chk"
+ (0s, XML)
+Steps: 50000    Time: 50          
+ CPU Time: 0.783396 min.
+u_max = 0.998438 at x = 40, y = -40, z = 0
+u_min = 5.18401e-14 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_50.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_50.chk"
+ (0s, XML)
+Steps: 51000    Time: 51          
+ CPU Time: 0.783552 min.
+u_max = 0.99783 at x = 40, y = -40, z = 0
+u_min = 1.54024e-14 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_51.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_51.chk"
+ (0s, XML)
+Steps: 52000    Time: 52          
+ CPU Time: 0.783761 min.
+u_max = 0.996998 at x = 40, y = -40, z = 0
+u_min = 4.72015e-15 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_52.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_52.chk"
+ (0s, XML)
+Steps: 53000    Time: 53          
+ CPU Time: 0.783972 min.
+u_max = 0.995993 at x = 40, y = -40, z = 0
+u_min = 1.50211e-15 at x = -40, y = 40, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_53.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_53.chk"
+ (0s, XML)
+Steps: 54000    Time: 54          
+ CPU Time: 0.783342 min.
+u_max = 0.994779 at x = 40, y = -40, z = 0
+u_min = 4.99142e-16 at x = -40, y = 39.6519, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_54.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_54.chk"
+ (0s, XML)
+Steps: 55000    Time: 55          
+ CPU Time: 0.783492 min.
+u_max = 0.993312 at x = 40, y = -40, z = 0
+u_min = 1.73661e-16 at x = -40, y = 39.6519, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_55.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_55.chk"
+ (0s, XML)
+Steps: 56000    Time: 56          
+ CPU Time: 0.783866 min.
+u_max = 0.991537 at x = 40, y = -40, z = 0
+u_min = 6.31959e-17 at x = -40, y = 38.9411, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_56.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_56.chk"
+ (0s, XML)
+Steps: 57000    Time: 57          
+ CPU Time: 0.784001 min.
+u_max = 0.989386 at x = 40, y = -40, z = 0
+u_min = 2.39361e-17 at x = -40, y = 36.689, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_57.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_57.chk"
+ (0s, XML)
+Steps: 58000    Time: 58          
+ CPU Time: 0.78346 min.
+u_max = 0.986775 at x = 40, y = -40, z = 0
+u_min = 9.37216e-18 at x = -40, y = 34.4221, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_58.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_58.chk"
+ (0s, XML)
+Steps: 59000    Time: 59          
+ CPU Time: 0.783211 min.
+u_max = 0.983598 at x = 40, y = -40, z = 0
+u_min = 3.76576e-18 at x = -40, y = 31.1111, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_59.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_59.chk"
+ (0s, XML)
+Steps: 60000    Time: 60          
+ CPU Time: 0.78346 min.
+u_max = 0.979722 at x = 40, y = -40, z = 0
+u_min = 1.53922e-18 at x = -40, y = 1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_60.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_60.chk"
+ (0s, XML)
+Steps: 61000    Time: 61          
+ CPU Time: 0.783921 min.
+u_max = 0.974979 at x = 40, y = -40, z = 0
+u_min = 6.38483e-19 at x = -40, y = 1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_61.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_61.chk"
+ (0s, XML)
+Steps: 62000    Time: 62          
+ CPU Time: 0.783486 min.
+u_max = 0.96915 at x = 40, y = -40, z = 0
+u_min = 2.67659e-19 at x = -40, y = 1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_62.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_62.chk"
+ (0s, XML)
+Steps: 63000    Time: 63          
+ CPU Time: 0.782887 min.
+u_max = 0.961948 at x = 40, y = -40, z = 0
+u_min = 1.13012e-19 at x = -40, y = 0.422565, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_63.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_63.chk"
+ (0s, XML)
+Steps: 64000    Time: 64          
+ CPU Time: 0.781846 min.
+u_max = 0.952989 at x = 40, y = -40, z = 0
+u_min = 4.79448e-20 at x = -40, y = -0.422565, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_64.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_64.chk"
+ (0s, XML)
+Steps: 65000    Time: 65          
+ CPU Time: 0.782068 min.
+u_max = 0.941744 at x = 40, y = -40, z = 0
+u_min = 2.04046e-20 at x = -40, y = -0.422565, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_65.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_65.chk"
+ (0s, XML)
+Steps: 66000    Time: 66          
+ CPU Time: 0.782342 min.
+u_max = 0.927457 at x = 40, y = -40, z = 0
+u_min = 8.70169e-21 at x = -40, y = -1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_66.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_66.chk"
+ (0s, XML)
+Steps: 67000    Time: 67          
+ CPU Time: 0.78313 min.
+u_max = 0.908997 at x = 40, y = -40, z = 0
+u_min = 3.71582e-21 at x = -40, y = -1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_67.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_67.chk"
+ (0s, XML)
+Steps: 68000    Time: 68          
+ CPU Time: 0.78241 min.
+u_max = 0.884549 at x = 40, y = -40, z = 0
+u_min = 1.58808e-21 at x = -40, y = -1.13342, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_68.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_68.chk"
+ (0s, XML)
+Steps: 69000    Time: 69          
+ CPU Time: 0.783585 min.
+u_max = 0.850875 at x = 40, y = -40, z = 0
+u_min = 6.79084e-22 at x = -40, y = -1.48148, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_69.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_69.chk"
+ (0s, XML)
+Steps: 70000    Time: 70          
+ CPU Time: 0.782996 min.
+u_max = 0.801033 at x = 40, y = -40, z = 0
+u_min = 2.90481e-22 at x = -40, y = -1.48148, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_70.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_70.chk"
+ (0s, XML)
+Steps: 71000    Time: 71          
+ CPU Time: 0.782832 min.
+u_max = 0.715877 at x = 40, y = 40, z = 0
+u_min = 1.24281e-22 at x = -40, y = -1.48148, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_71.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_71.chk"
+ (0s, XML)
+Steps: 72000    Time: 72          
+ CPU Time: 0.782728 min.
+u_max = 0.490531 at x = 40, y = 36.689, z = 0
+u_min = 5.31787e-23 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_72.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_72.chk"
+ (0s, XML)
+Steps: 73000    Time: 73          
+ CPU Time: 0.783303 min.
+u_max = 0.0930375 at x = 40, y = 37.037, z = 0
+u_min = 2.27566e-23 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_73.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_73.chk"
+ (0s, XML)
+Steps: 74000    Time: 74          
+ CPU Time: 0.782566 min.
+u_max = 0.00818848 at x = 40, y = 40, z = 0
+u_min = 9.73878e-24 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_74.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_74.chk"
+ (0s, XML)
+Steps: 75000    Time: 75          
+ CPU Time: 0.783541 min.
+u_max = 0.00109914 at x = 40, y = 40, z = 0
+u_min = 4.16793e-24 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_75.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_75.chk"
+ (0s, XML)
+Steps: 76000    Time: 76          
+ CPU Time: 0.781797 min.
+u_max = 0.000191181 at x = 40, y = 40, z = 0
+u_min = 1.78383e-24 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_76.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_76.chk"
+ (0s, XML)
+Steps: 77000    Time: 77          
+ CPU Time: 0.782415 min.
+u_max = 3.81934e-05 at x = 40, y = 40, z = 0
+u_min = 7.63494e-25 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_77.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_77.chk"
+ (0s, XML)
+Steps: 78000    Time: 78          
+ CPU Time: 0.782312 min.
+u_max = 8.29247e-06 at x = 40, y = 40, z = 0
+u_min = 3.26795e-25 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_78.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_78.chk"
+ (0s, XML)
+Steps: 79000    Time: 79          
+ CPU Time: 0.782254 min.
+u_max = 1.9023e-06 at x = 40, y = 40, z = 0
+u_min = 1.39883e-25 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_79.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_79.chk"
+ (0s, XML)
+Steps: 80000    Time: 80          
+ CPU Time: 0.782247 min.
+u_max = 4.53735e-07 at x = 40, y = 40, z = 0
+u_min = 5.9879e-26 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_80.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_80.chk"
+ (0s, XML)
+Steps: 81000    Time: 81          
+ CPU Time: 0.782422 min.
+u_max = 1.11414e-07 at x = 40, y = 40, z = 0
+u_min = 2.56335e-26 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_81.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_81.chk"
+ (0s, XML)
+Steps: 82000    Time: 82          
+ CPU Time: 0.78217 min.
+u_max = 2.79795e-08 at x = 40, y = 40, z = 0
+u_min = 1.0974e-26 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_82.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_82.chk"
+ (0s, XML)
+Steps: 83000    Time: 83          
+ CPU Time: 0.781854 min.
+u_max = 7.15365e-09 at x = 40, y = 40, z = 0
+u_min = 4.6984e-27 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_83.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_83.chk"
+ (0s, XML)
+Steps: 84000    Time: 84          
+ CPU Time: 0.782205 min.
+u_max = 1.85598e-09 at x = 40, y = 40, z = 0
+u_min = 2.01169e-27 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_84.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_84.chk"
+ (0s, XML)
+Steps: 85000    Time: 85          
+ CPU Time: 0.782034 min.
+u_max = 4.87427e-10 at x = 40, y = 40, z = 0
+u_min = 8.61391e-28 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_85.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_85.chk"
+ (0s, XML)
+Steps: 86000    Time: 86          
+ CPU Time: 0.781492 min.
+u_max = 1.29337e-10 at x = 40, y = 40, z = 0
+u_min = 3.68866e-28 at x = -40, y = -5.50336, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_86.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_86.chk"
+ (0s, XML)
+Steps: 87000    Time: 87          
+ CPU Time: 0.782491 min.
+u_max = 3.46234e-11 at x = 40, y = 40, z = 0
+u_min = 1.57967e-28 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_87.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_87.chk"
+ (0s, XML)
+Steps: 88000    Time: 88          
+ CPU Time: 0.782378 min.
+u_max = 9.33996e-12 at x = 40, y = 40, z = 0
+u_min = 6.76543e-29 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_88.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_88.chk"
+ (0s, XML)
+Steps: 89000    Time: 89          
+ CPU Time: 0.782448 min.
+u_max = 2.53648e-12 at x = 40, y = 40, z = 0
+u_min = 2.89771e-29 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_89.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_89.chk"
+ (0s, XML)
+Steps: 90000    Time: 90          
+ CPU Time: 0.782563 min.
+u_max = 6.92933e-13 at x = 40, y = 40, z = 0
+u_min = 1.24121e-29 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_90.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_90.chk"
+ (0s, XML)
+Steps: 91000    Time: 91          
+ CPU Time: 0.782949 min.
+u_max = 1.903e-13 at x = 40, y = 40, z = 0
+u_min = 5.31702e-30 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_91.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_91.chk"
+ (0s, XML)
+Steps: 92000    Time: 92          
+ CPU Time: 0.779108 min.
+u_max = 5.25095e-14 at x = 40, y = 40, z = 0
+u_min = 2.27784e-30 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_92.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_92.chk"
+ (0s, XML)
+Steps: 93000    Time: 93          
+ CPU Time: 0.772721 min.
+u_max = 1.45507e-14 at x = 40, y = 40, z = 0
+u_min = 9.75913e-31 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_93.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_93.chk"
+ (0s, XML)
+Steps: 94000    Time: 94          
+ CPU Time: 0.772502 min.
+u_max = 4.04768e-15 at x = 40, y = 40, z = 0
+u_min = 4.18149e-31 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_94.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_94.chk"
+ (0s, XML)
+Steps: 95000    Time: 95          
+ CPU Time: 0.772327 min.
+u_max = 1.12993e-15 at x = 40, y = 40, z = 0
+u_min = 1.79178e-31 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_95.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_95.chk"
+ (0s, XML)
+Steps: 96000    Time: 96          
+ CPU Time: 0.773042 min.
+u_max = 3.16441e-16 at x = 40, y = 40, z = 0
+u_min = 7.67838e-32 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_96.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_96.chk"
+ (0s, XML)
+Steps: 97000    Time: 97          
+ CPU Time: 0.772818 min.
+u_max = 8.88819e-17 at x = 40, y = 40, z = 0
+u_min = 3.2907e-32 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_97.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_97.chk"
+ (0s, XML)
+Steps: 98000    Time: 98          
+ CPU Time: 0.773185 min.
+u_max = 2.5033e-17 at x = 40, y = 40, z = 0
+u_min = 1.41039e-32 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_98.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_98.chk"
+ (0s, XML)
+Steps: 99000    Time: 99          
+ CPU Time: 0.772642 min.
+u_max = 7.06811e-18 at x = 40, y = 40, z = 0
+u_min = 6.04541e-33 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_99.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_99.chk"
+ (0s, XML)
+Steps: 100000   Time: 100         
+ CPU Time: 0.772184 min.
+u_max = 2.00035e-18 at x = 40, y = 40, z = 0
+u_min = 2.59146e-33 at x = -40, y = -4.79251, z = 0
+Writing: "FHNPlaneh30LeftTM_TimeMap_100.chk"
+ (0s, XML)
+Time Map: Max = 48.6098, Min = 0
+Writing: "FHNPlaneh30LeftTM_100.chk"
+ (0s, XML)
+Time-integration  : 4711.8s
+Writing: "FHNPlaneh30LeftTM.fld"
+ (0s, XML)
+-------------------------------------------
+Total Computation Time = 6522.29s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 2.00035e-18

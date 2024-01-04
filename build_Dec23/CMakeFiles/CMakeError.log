@@ -1,0 +1,145 @@
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library 'System' not found
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library 'c++' not found
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Determining if the function dgemm_ exists failed with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_fcfc4/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_fcfc4.dir/build.make CMakeFiles/cmTC_fcfc4.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_fcfc4.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=dgemm_ -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -MD -MT CMakeFiles/cmTC_fcfc4.dir/CheckFunctionExists.c.o -MF CMakeFiles/cmTC_fcfc4.dir/CheckFunctionExists.c.o.d -o CMakeFiles/cmTC_fcfc4.dir/CheckFunctionExists.c.o -c /opt/local/share/cmake-3.24/Modules/CheckFunctionExists.c
+Linking C executable cmTC_fcfc4
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fcfc4.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=dgemm_ -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_fcfc4.dir/CheckFunctionExists.c.o -o cmTC_fcfc4 
+ld: Undefined symbols:
+  _dgemm_, referenced from:
+      _main in CheckFunctionExists.c.o
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+gmake[1]: *** [CMakeFiles/cmTC_fcfc4.dir/build.make:100: cmTC_fcfc4] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_fcfc4/fast] Error 2
+
+
+
+Determining if files mpi.h exist failed with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_24958/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_24958.dir/build.make CMakeFiles/cmTC_24958.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_24958.dir/HAVE_MPI_H.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -MD -MT CMakeFiles/cmTC_24958.dir/HAVE_MPI_H.c.o -MF CMakeFiles/cmTC_24958.dir/HAVE_MPI_H.c.o.d -o CMakeFiles/cmTC_24958.dir/HAVE_MPI_H.c.o -c /Users/schun/nektar/build/CMakeFiles/CheckIncludeFiles/HAVE_MPI_H.c
+/Users/schun/nektar/build/CMakeFiles/CheckIncludeFiles/HAVE_MPI_H.c:2:10: fatal error: 'mpi.h' file not found
+#include <mpi.h>
+         ^~~~~~~
+1 error generated.
+gmake[1]: *** [CMakeFiles/cmTC_24958.dir/build.make:79: CMakeFiles/cmTC_24958.dir/HAVE_MPI_H.c.o] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_24958/fast] Error 2
+
+
+Source:
+/* */
+#include <mpi.h>
+
+
+int main(void){return 0;}
+
+Determining if the function MPI_Send exists failed with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_7c124/fast && /opt/local/bin/gmake  -f CMakeFiles/cmTC_7c124.dir/build.make CMakeFiles/cmTC_7c124.dir/build
+gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7c124.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=MPI_Send -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -MD -MT CMakeFiles/cmTC_7c124.dir/CheckFunctionExists.c.o -MF CMakeFiles/cmTC_7c124.dir/CheckFunctionExists.c.o.d -o CMakeFiles/cmTC_7c124.dir/CheckFunctionExists.c.o -c /opt/local/share/cmake-3.24/Modules/CheckFunctionExists.c
+Linking C executable cmTC_7c124
+/opt/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7c124.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=MPI_Send -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_7c124.dir/CheckFunctionExists.c.o -o cmTC_7c124 
+ld: Undefined symbols:
+  _MPI_Send, referenced from:
+      _main in CheckFunctionExists.c.o
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+gmake[1]: *** [CMakeFiles/cmTC_7c124.dir/build.make:100: cmTC_7c124] Error 1
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_7c124/fast] Error 2
+
+
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library 'System' not found
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+ld: library 'c++' not found
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_478e0/fast && gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+/opt/local/bin/gmake  -f CMakeFiles/cmTC_478e0.dir/build.make CMakeFiles/cmTC_478e0.dir/build
+gmake[2]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_478e0.dir/test_mpi.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -isystem /opt/homebrew/Cellar/open-mpi/4.1.6/include -isystem /opt/homebrew/include -arch arm64 -MD -MT CMakeFiles/cmTC_478e0.dir/test_mpi.c.o -MF CMakeFiles/cmTC_478e0.dir/test_mpi.c.o.d -o CMakeFiles/cmTC_478e0.dir/test_mpi.c.o -c /opt/local/share/cmake-3.24/Modules/FindMPI/test_mpi.c
+/opt/local/share/cmake-3.24/Modules/FindMPI/test_mpi.c:6:12: fatal error: 'stdio.h' file not found
+#  include <stdio.h>
+           ^~~~~~~~~
+1 error generated.
+gmake[2]: *** [CMakeFiles/cmTC_478e0.dir/build.make:79: CMakeFiles/cmTC_478e0.dir/test_mpi.c.o] Error 1
+gmake[2]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake[1]: *** [Makefile:127: cmTC_478e0/fast] Error 2
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: /Users/schun/nektar/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/opt/local/bin/gmake -f Makefile cmTC_baa44/fast && gmake[1]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+/opt/local/bin/gmake  -f CMakeFiles/cmTC_baa44.dir/build.make CMakeFiles/cmTC_baa44.dir/build
+gmake[2]: Entering directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_baa44.dir/test_mpi.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -isystem /opt/homebrew/Cellar/open-mpi/4.1.6/include -isystem /opt/homebrew/include -arch arm64 -MD -MT CMakeFiles/cmTC_baa44.dir/test_mpi.cpp.o -MF CMakeFiles/cmTC_baa44.dir/test_mpi.cpp.o.d -o CMakeFiles/cmTC_baa44.dir/test_mpi.cpp.o -c /Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.cpp
+/Users/schun/nektar/build/CMakeFiles/FindMPI/test_mpi.cpp:4:12: fatal error: 'cstdio' file not found
+#  include <cstdio>
+           ^~~~~~~~
+1 error generated.
+gmake[2]: *** [CMakeFiles/cmTC_baa44.dir/build.make:79: CMakeFiles/cmTC_baa44.dir/test_mpi.cpp.o] Error 1
+gmake[2]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+gmake[1]: *** [Makefile:127: cmTC_baa44/fast] Error 2
+gmake[1]: Leaving directory '/Users/schun/nektar/build/CMakeFiles/CMakeTmp'
+
+
+

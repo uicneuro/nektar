@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/schun/nektar/build/CMakeFiles/gsmpi-1.2.1_2"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/CMakeFiles/gsmpi-1.2.1_2.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/CMakeFiles/gsmpi-1.2.1_2-complete.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-build.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-configure.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-download.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-install.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-mkdir.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-patch.rule"
+		},
+		{
+			"file" : "/Users/schun/nektar/build/ThirdParty/stamp/gsmpi-1.2.1_2-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"gsmpi-1.2.1_2"
+		],
+		"name" : "gsmpi-1.2.1_2"
+	}
+}
