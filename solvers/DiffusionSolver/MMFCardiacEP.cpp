@@ -299,7 +299,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         m_session->LoadSolverInfo("TMsessionName", m_TMsessionName, "m_sessionName");
 
         ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-        Array<OneD, NekDouble> TimeMapDiff = ComputeTimeMapDeform(TMsessionName_old, m_TMsessionName); 
+
+        // Compute Time Map deformation
+        ComputeTimeMapDeform(TMsessionName_old, m_TMsessionName); 
 
         wait_on_enter();
     }
@@ -338,7 +340,7 @@ MMFCardiacEP::~MMFCardiacEP()
 {
 }
 
-Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew) 
+ void MMFCardiacEP::ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew) 
     {
         int nq      = GetNpoints();
 
@@ -351,9 +353,6 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
         Array<OneD, NekDouble> Velocitymag_new(nq);
         Array<OneD, Array<OneD, NekDouble>> AniStrength_new(m_expdim);
         Array<OneD, Array<OneD, NekDouble>> TimeMap_new(1);
-
-        Array<OneD, NekDouble> VdiffMag(nq);
-        Array<OneD, NekDouble> VdiffDivergence(nq);
         
         /////
         Array<OneD, NekDouble> x0(nq);
@@ -396,24 +395,31 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
         LoadTimeMap(loadname, m_ValidTM, TimeMap_new, AniStrength_new, Velocitymag_new, Velocity_new);
 
-        // Computed the deformed timemap from the old timemap
+        // Compute the deformed timemap from the old timemap by analytic velocity change.
         Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
         ComputeVelocityDeformed(AniStrength_old[0], Velocity_old, AniStrength_new[0], Velocity_deformed);
-        
-        Array<OneD, Array<OneD, NekDouble>> Vdiff;
-        Array<OneD, NekDouble> TimeMapDiff = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff, VdiffDivergence, VdiffMag);
 
-        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff, Velocity_old, VdiffMag, VdiffDivergence);
+        Array<OneD, Array<OneD, NekDouble>> Vdiff_ret;
+        Array<OneD, NekDouble> VdiffMag_ret(nq);
+        Array<OneD, NekDouble> VdiffDiv_ret(nq);
+
+        Array<OneD, NekDouble> TimeMapDiff_ret = HelmSolveTimeMapDiff(Velocity_old, Velocity_new, Vdiff_ret, VdiffDiv_ret, VdiffMag_ret);
+
+        Array<OneD, Array<OneD, NekDouble>> Vdiff_der;
+        Array<OneD, NekDouble> VdiffMag_der(nq);
+        Array<OneD, NekDouble> VdiffDiv_der(nq);
+
+        Array<OneD, NekDouble> TimeMapDiff_der = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff_der, VdiffDiv_der, VdiffMag_der);
+
+        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff_ret, TimeMapDiff_der, Velocity_old, VdiffMag_der, VdiffDiv_der);
 
         std::cout << "TimeMapExact[0] = " << TimeMap_old[0][0] - TimeMap_new[0][0] << ", TimeMapExact[end] = " << TimeMap_old[0][nq-1] - TimeMap_new[0][nq-1] << std::endl;
-
-        return TimeMapDiff;
     }
 
 
     Array<OneD, NekDouble> MMFCardiacEP::HelmSolveTimeMapDiff(
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
-                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_new,
                 Array<OneD, Array<OneD, NekDouble>> &Vdiff,
                 Array<OneD, NekDouble> &VdiffDivergence,
                 Array<OneD, NekDouble> &VdiffMag)
@@ -424,16 +430,12 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
         // Compute Vdiff = V_new/Vmag_new^2 - V_old/Vmag_old^2
         Vdiff = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
-        ComputeDeformedDiff(Velocity_old, Velocity_deformed, Vdiff);
+        ComputeDeformedDiff(Velocity_old, Velocity_new, Vdiff);
 
         VdiffMag = ComputeVelocityMag(Vdiff);
-        std::cout << "Vdiffmag = [ " << Vmath::Vmin(nq, VdiffMag, 1) << " , " << Vmath::Vmax(nq, VdiffMag, 1) << " ] " << std::endl;
 
         // Compute Euclidean divergence of Vdiff
         VdiffDivergence = ComputeEuclideanDivergence(Vdiff);
-
-        std::cout << "VdiffDivergence = [ " << Vmath::Vmin(nq, VdiffDivergence, 1) 
-        << " , " << Vmath::Vmax(nq, VdiffDivergence, 1) << " ] " << std::endl << std::endl;
 
         // Solve the Poisson equation: \nabla^2 T_{diff} = \nabla \cdot \mathbf{V}_{diff}
         StdRegions::ConstFactorMap factors;
@@ -449,8 +451,6 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
         outarray = m_fields[0]->GetPhys();
 
-        std::cout << "outarray[0] = " << outarray[0] << ", outarray[end] = " << outarray[nq-1] << ", outarray_diff = " << outarray[0] - outarray[nq-1] <<  std::endl;
-
         // Let the Time Map at the left end should be zero
         Vmath::Sadd(nq, -1.0 * outarray[0], outarray, 1, outarray, 1);
 
@@ -459,16 +459,16 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
 
 
     void MMFCardiacEP::ComputeDeformedDiff(const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
-                                           const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                                           const Array<OneD, const Array<OneD, NekDouble>> &Velocity_new,
                                            Array<OneD, Array<OneD, NekDouble>> &Vdiff)
     {  
         int nq      = GetNpoints();
 
         NekDouble Tol=0.001;
-        NekDouble Velmag_defm, Velmag_old;
+        NekDouble Velmag_new, Velmag_old;
 
         Array<OneD, NekDouble> Velocitymag_old = ComputeVelocityMag(Velocity_old);
-        Array<OneD, NekDouble> Velocitymag_deformed = ComputeVelocityMag(Velocity_deformed);
+        Array<OneD, NekDouble> Velocitymag_new = ComputeVelocityMag(Velocity_new);
 
         for (int k=0;k<m_spacedim;++k)
         {
@@ -476,10 +476,10 @@ Array<OneD, NekDouble> MMFCardiacEP::ComputeTimeMapDeform(const std::string &ses
             for (int i=0;i<nq; ++i)
             {
                 Velmag_old = Velocitymag_old[i];
-                Velmag_defm = Velocitymag_deformed[i];
-                if( (Velmag_defm>Tol) && (Velmag_old>Tol))
+                Velmag_new = Velocitymag_new[i];
+                if( (Velmag_new>Tol) && (Velmag_old>Tol))
                 {
-                     Vdiff[k][i] = Velocity_deformed[k][i]/(Velmag_defm*Velmag_defm) - Velocity_old[k][i]/(Velmag_old*Velmag_old);
+                     Vdiff[k][i] = Velocity_new[k][i]/(Velmag_new*Velmag_new) - Velocity_old[k][i]/(Velmag_old*Velmag_old);
                 }
             }
         }
@@ -2275,12 +2275,13 @@ void MMFCardiacEP::PlotTimeMap(
 void MMFCardiacEP::PlotDeformedTimeMap(
     const Array<OneD, const NekDouble> &TimeMap_old,
     const Array<OneD, const NekDouble> &TimeMap_new,
-    const Array<OneD, const NekDouble> &TimeMapDiff,
+    const Array<OneD, const NekDouble> &TimeMapDiff_ret,
+    const Array<OneD, const NekDouble> &TimeMapDiff_der,
     const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
     const Array<OneD, const NekDouble> &VdiffMag,
     const Array<OneD, const NekDouble> &VdiffDivergence)
 {
-    int nvar    = 10;
+    int nvar    = 12;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2294,44 +2295,61 @@ void MMFCardiacEP::PlotDeformedTimeMap(
 
     Array<OneD, NekDouble> TimeMapDiffExact(nq);
     Vmath::Vsub(nq, TimeMap_new, 1, TimeMap_old, 1, TimeMapDiffExact, 1);
-    
-    Array<OneD, NekDouble> TimeMapError(nq);
-    Vmath::Vsub(nq, TimeMapDiffExact, 1, TimeMapDiff, 1, TimeMapError, 1);
 
-    NekDouble TMerrMax = Vmath::Vamax(nq, TimeMapError, 1) / Vmath::Vamax(nq, TimeMap_old, 1);
+    NekDouble TimeMapoldmax = Vmath::Vamax(nq, TimeMap_old, 1);
+
+    Array<OneD, NekDouble> TimeMapErr_ret(nq);
+    Vmath::Vsub(nq, TimeMapDiffExact, 1, TimeMapDiff_ret, 1, TimeMapErr_ret, 1);
+    NekDouble TMerrMax_ret = Vmath::Vamax(nq, TimeMapErr_ret, 1) / TimeMapoldmax;
 
     std::cout << std::endl;
-    std::cout << "Max. TimeMap rel. err = " << TMerrMax << std::endl;
+    std::cout << "Retrieved TimeMap Linf err = " << TMerrMax_ret << ", L2 err = " << RootMeanSquare(TimeMapErr_ret)/TimeMapoldmax << std::endl;
+
+    Array<OneD, NekDouble> TimeMapErr_der(nq);
+    Vmath::Vsub(nq, TimeMapDiffExact, 1, TimeMapDiff_der, 1, TimeMapErr_der, 1);
+    NekDouble TMerrMax_der = Vmath::Vamax(nq, TimeMapErr_der, 1) / TimeMapoldmax;
+
+    std::cout << "Derived TimeMap Linf err = " << TMerrMax_der << ", L2 err = " << RootMeanSquare(TimeMapErr_der)/TimeMapoldmax << std::endl;
+
+    Array<OneD, NekDouble> TimeMapErr(nq);
+    Vmath::Vsub(nq, TimeMapDiff_der, 1, TimeMapDiff_ret, 1, TimeMapErr, 1);
+    NekDouble TMerrMax = Vmath::Vamax(nq, TimeMapErr, 1) / TimeMapoldmax;
+
+    std::cout << "TimeMap Linf err = " << TMerrMax << ", L2 err = " << RootMeanSquare(TimeMapErr)/TimeMapoldmax << std::endl;
+
+    std::cout << std::endl;
+
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMapDiffExact";
-    variables[1] = "TimeMapDiff";
-    variables[2] = "Vdiffx";
-    variables[3] = "Vdiffy";
-    variables[4] = "Vdiffz";
-    variables[5] = "VdiffMag";
-    variables[6] = "VdiffDivergence";
-    variables[7] = "TimeMapError";
-    variables[8] = "TimeMap_old";
-    variables[9] = "TimeMap_new";
+    variables[1] = "TimeMapDiff_ret";
+    variables[2] = "TimeMapDiff_der";
+    variables[3] = "TimeMapErr_ret";
+    variables[4] = "TimeMapErr_der";
+    variables[5] = "Vdiffx";
+    variables[6] = "Vdiffy";
+    variables[7] = "Vdiffz";
+    variables[8] = "VdiffMag";
+    variables[9] = "VdiffDivergence";
+    variables[10] = "TimeMap_old";
+    variables[11] = "TimeMap_new";
 
     // index:0 -> u
     m_fields[0]->FwdTrans(TimeMapDiffExact, fieldcoeffs[0]);
+    m_fields[0]->FwdTrans(TimeMapDiff_ret, fieldcoeffs[1]);
+    m_fields[0]->FwdTrans(TimeMapDiff_der, fieldcoeffs[2]);
 
-    std::cout << "TimeMapDiffExact max = " << Vmath::Vamax(nq, TimeMapDiffExact, 1) << std::endl;
+    m_fields[0]->FwdTrans(TimeMapErr_ret, fieldcoeffs[3]);
+    m_fields[0]->FwdTrans(TimeMapErr_der, fieldcoeffs[4]);
 
-    m_fields[0]->FwdTrans(TimeMapDiff, fieldcoeffs[1]);
-    std::cout << "TimeMapDiff max = " << Vmath::Vamax(nq, TimeMapDiff, 1) << std::endl;
+    m_fields[0]->FwdTrans(Vdiff[0], fieldcoeffs[5]);
+    m_fields[0]->FwdTrans(Vdiff[1], fieldcoeffs[6]);
+    m_fields[0]->FwdTrans(Vdiff[2], fieldcoeffs[7]);
+    m_fields[0]->FwdTrans(VdiffMag, fieldcoeffs[8]);
+    m_fields[0]->FwdTrans(VdiffDivergence, fieldcoeffs[9]);
 
-    m_fields[0]->FwdTrans(Vdiff[0], fieldcoeffs[2]);
-    m_fields[0]->FwdTrans(Vdiff[1], fieldcoeffs[3]);
-    m_fields[0]->FwdTrans(Vdiff[2], fieldcoeffs[4]);
-    m_fields[0]->FwdTrans(VdiffMag, fieldcoeffs[5]);
-    m_fields[0]->FwdTrans(VdiffDivergence, fieldcoeffs[6]);
-
-    m_fields[0]->FwdTrans(TimeMapError, fieldcoeffs[7]);
-    m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[8]);
-    m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[9]);
+    m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[10]);
+    m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[11]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }

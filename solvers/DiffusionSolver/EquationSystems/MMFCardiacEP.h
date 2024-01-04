@@ -184,7 +184,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_TMvelocity;
     Array<OneD, NekDouble> m_TMvelocitymag;
 
-    Array<OneD, NekDouble> ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
+    void ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
 
     void LoadTimeMap(std::string &loadname, 
                     const Array<OneD, const NekDouble> &ValidTM,
@@ -308,7 +308,8 @@ protected:
     void PlotDeformedTimeMap(
     const Array<OneD, const NekDouble> &TimeMap_old,
     const Array<OneD, const NekDouble> &TimeMap_new,
-    const Array<OneD, const NekDouble> &TimeMapDiff,
+    const Array<OneD, const NekDouble> &TimeMapDiff_ret,
+    const Array<OneD, const NekDouble> &TimeMapDiff_der,
     const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
     const Array<OneD, const NekDouble> &VdiffMag,
     const Array<OneD, const NekDouble> &VdiffDivergence);
