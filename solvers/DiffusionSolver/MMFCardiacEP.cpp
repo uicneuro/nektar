@@ -218,7 +218,8 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         case eHeterogeneousIsotropy:
         case eRegionalHeterogeneous:
         case eRegionalIsotropy:
-        case eGaussianHeterogeneous:
+        case eGaussian1DHeterogeneous:
+        case eGaussian2DHeterogeneous:
         {
             LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, m_AniStrength);
             MMFSystem::MMFInitObject(m_AniStrength);
@@ -411,7 +412,10 @@ MMFCardiacEP::~MMFCardiacEP()
 
         Array<OneD, NekDouble> TimeMapDiff_der = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff_der, VdiffDiv_der, VdiffMag_der);
 
-        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0], TimeMapDiff_ret, TimeMapDiff_der, Velocity_old, VdiffMag_der, VdiffDiv_der);
+        Array<OneD, Array<OneD, NekDouble>> Vdiff(m_spacedim);
+        ComputeDeformedDiff(Velocity_old, Velocity_new, Vdiff);
+
+        PlotDeformedTimeMap(TimeMap_old[0], TimeMap_new[0],  TimeMapDiff_ret, TimeMapDiff_der, Vdiff_ret, VdiffDiv_ret, Vdiff_der, VdiffDiv_der);
 
         std::cout << "TimeMapExact[0] = " << TimeMap_old[0][0] - TimeMap_new[0][0] << ", TimeMapExact[end] = " << TimeMap_old[0][nq-1] - TimeMap_new[0][nq-1] << std::endl;
     }
@@ -693,7 +697,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         }
         break;
 
-        case eGaussianHeterogeneous:
+        case eGaussian1DHeterogeneous:
         {
             Array<OneD, NekDouble> x0(nq);
             Array<OneD, NekDouble> x1(nq);
@@ -701,11 +705,29 @@ void MMFCardiacEP::LoadCardiacFiber(
 
             m_fields[0]->GetCoords(x0, x1, x2);
 
-            NekDouble tau;
+            NekDouble taux;
             for (int i=0; i<nq; ++i)
             {
-                tau = x0[i]/m_Gaussiantau;
-                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp(-0.5 * tau * tau);
+                taux = x0[i]/m_Gaussiantau;
+                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp( -0.5*taux*taux ) ;
+            }
+        }
+        break;
+
+        case eGaussian2DHeterogeneous:
+        {
+            Array<OneD, NekDouble> x0(nq);
+            Array<OneD, NekDouble> x1(nq);
+            Array<OneD, NekDouble> x2(nq);
+
+            m_fields[0]->GetCoords(x0, x1, x2);
+
+            NekDouble taux, tauy;
+            for (int i=0; i<nq; ++i)
+            {
+                taux = x0[i]/m_Gaussiantau;
+                tauy = x1[i]/m_Gaussiantau;
+                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp( -0.5*( taux*taux + tauy*tauy) ) ;
             }
         }
         break;
@@ -2277,11 +2299,12 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     const Array<OneD, const NekDouble> &TimeMap_new,
     const Array<OneD, const NekDouble> &TimeMapDiff_ret,
     const Array<OneD, const NekDouble> &TimeMapDiff_der,
-    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
-    const Array<OneD, const NekDouble> &VdiffMag,
-    const Array<OneD, const NekDouble> &VdiffDivergence)
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff_ret,
+    const Array<OneD, const NekDouble> &VdiffDiv_ret,
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff_der,
+    const Array<OneD, const NekDouble> &VdiffDiv_der)
 {
-    int nvar    = 12;
+    int nvar    = 11;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2319,20 +2342,18 @@ void MMFCardiacEP::PlotDeformedTimeMap(
 
     std::cout << std::endl;
 
-
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMapDiffExact";
     variables[1] = "TimeMapDiff_ret";
     variables[2] = "TimeMapDiff_der";
     variables[3] = "TimeMapErr_ret";
     variables[4] = "TimeMapErr_der";
-    variables[5] = "Vdiffx";
-    variables[6] = "Vdiffy";
-    variables[7] = "Vdiffz";
-    variables[8] = "VdiffMag";
-    variables[9] = "VdiffDivergence";
-    variables[10] = "TimeMap_old";
-    variables[11] = "TimeMap_new";
+    variables[5] = "Vdiff_ret";
+    variables[6] = "VdiffDiv_ret";
+    variables[7] = "Vdiff_der";
+    variables[8] = "VdiffDiv_der";
+    variables[9] = "TimeMap_old";
+    variables[10] = "TimeMap_new";
 
     // index:0 -> u
     m_fields[0]->FwdTrans(TimeMapDiffExact, fieldcoeffs[0]);
@@ -2342,14 +2363,14 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     m_fields[0]->FwdTrans(TimeMapErr_ret, fieldcoeffs[3]);
     m_fields[0]->FwdTrans(TimeMapErr_der, fieldcoeffs[4]);
 
-    m_fields[0]->FwdTrans(Vdiff[0], fieldcoeffs[5]);
-    m_fields[0]->FwdTrans(Vdiff[1], fieldcoeffs[6]);
-    m_fields[0]->FwdTrans(Vdiff[2], fieldcoeffs[7]);
-    m_fields[0]->FwdTrans(VdiffMag, fieldcoeffs[8]);
-    m_fields[0]->FwdTrans(VdiffDivergence, fieldcoeffs[9]);
+    m_fields[0]->FwdTrans(Vdiff_ret[0], fieldcoeffs[5]);
+    m_fields[0]->FwdTrans(VdiffDiv_ret, fieldcoeffs[6]);
 
-    m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[10]);
-    m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[11]);
+    m_fields[0]->FwdTrans(Vdiff_der[0], fieldcoeffs[7]);
+    m_fields[0]->FwdTrans(VdiffDiv_der, fieldcoeffs[8]);
+
+    m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[9]);
+    m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[10]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }

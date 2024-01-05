@@ -79,7 +79,8 @@ enum MediumType
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
     eRegionalIsotropy,
-    eGaussianHeterogeneous,
+    eGaussian1DHeterogeneous,
+    eGaussian2DHeterogeneous,
     SIZE_MediumType
 };
 
@@ -91,7 +92,8 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
     "RegionalIsotropy",
-    "GaussianHeterogeneous",
+    "Gaussian1DHeterogeneous",
+    "Gaussian2DHeterogeneous",
 };
 
 enum InitWaveType
@@ -310,9 +312,10 @@ protected:
     const Array<OneD, const NekDouble> &TimeMap_new,
     const Array<OneD, const NekDouble> &TimeMapDiff_ret,
     const Array<OneD, const NekDouble> &TimeMapDiff_der,
-    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
-    const Array<OneD, const NekDouble> &VdiffMag,
-    const Array<OneD, const NekDouble> &VdiffDivergence);
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff_ret,
+    const Array<OneD, const NekDouble> &VdiffDiv_ret,
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff_der,
+    const Array<OneD, const NekDouble> &VdiffDiv_der);
 
     void PlotTimeMapMF(
         const Array<OneD, const NekDouble> &NoboundaryZone,
