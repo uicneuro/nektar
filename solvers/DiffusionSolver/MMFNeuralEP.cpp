@@ -307,6 +307,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     MMFSystem::MMFInitObject(m_AniStrength);
 
+    // Check moving frames and anisotropy
+    CheckOutZoneAni();
+
     switch (m_NeuralEPType)
     {
         case eNeuralHelmTest:
@@ -473,7 +476,8 @@ void MMFNeuralEP::CheckOutZoneAni()
     for (int i=0; i<nq; ++i)
     {
         std::cout << "i = " << i << ", (x,y) = ( " << x0[i] << " , " << x1[i] << " ), zoneindex = " 
-        << m_zoneindex[0][i] << ", Anistrength = " << m_AniStrength[0][i] << std::endl;
+        << m_zoneindex[0][i] << ", Anistrength = ( " << m_AniStrength[0][i] << " , " << m_AniStrength[1][i]
+        << " ), e1y = " << m_movingframes[0][i+nq] << ", e2y = " << m_movingframes[1][i] << std::endl;
     }
 
 }
