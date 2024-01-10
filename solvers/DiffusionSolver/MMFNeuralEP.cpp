@@ -1158,23 +1158,12 @@ void MMFNeuralEP::DoSolveMMFZero()
                 Plotphiecurrent(phi_m, phi_e, nchk);
             }
 
+            if(m_NeuralEPType==eNeuralEP2Dbi)
+            {
+                DisplayNode2D(fulltext, fields);
+            }
+
             std::cout << fulltext << "\n" << std::endl;
-
-            // if(m_NeuralEPType==eNeuralEP1D)
-            // {
-            //     DisplayNode1D(fulltext, fields);
-            //     for (int i=0; i<nq; ++i)
-            //     {
-            //         std::cout << "i = " << i << ", y = " << x1[i] << ", zoneindex = " << m_zoneindex[0][i]
-            //         << ", phim = " << phi_m[i] << std::endl;
-            //     }
-            // }
-
-            // else
-            // {
-            //     // DisplayNode2D(fulltext, fields);            
-            //    DisplayNode2Dvar1(fulltext, fields);
-            // }
 
             Checkpoint_Output(nchk++);
 
@@ -1525,117 +1514,52 @@ void MMFNeuralEP::DoSolvePoint()
     }
 } // namespace Nektar
 
-// void MMFNeuralEP::DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
-// {
-//     int nvar = m_fields.size();
 
-//     if(nvar==1)
-//     {
-//         DisplayNode2Dvar1(fulltext, fields);
-//     }
+void MMFNeuralEP::DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
+{
+    int nq               = GetTotPoints();
 
-//     else if(nvar==2)
-//     {
-//         DisplayNode2Dvar2(fulltext, fields);
-//     }
-// }
-
-// void MMFNeuralEP::DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
-// {
-//         int nq               = GetTotPoints();
-
-//         Array<OneD, NekDouble> phi_m(nq);
-//         Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
-
-//         Array<OneD, NekDouble> phimavg(m_Nnode,0.0);
-
-//         int zoneindex;
-//         int npts = m_fields[0]->GetTotPoints(0);
-//         for (int i=0; i<nq; ++i)
-//         {
-//             zoneindex = m_zoneindex[0][i];
-//             if(zoneindex>=0)
-//             {
-//                phimavg[zoneindex] += phi_m[i] / npts ;
-//             }
-//         }
-
-//         fulltext.append(" \n");
-//         fulltext.append("(Nodeid,phim): ");
-//         for (int i = 0; i < m_Nnode-1; ++i)
-//         {
-//             fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " ) ");
-//         }
-
-//         fulltext.append(" \n");
-//         std::cout << fulltext << "\n" << std::endl;
-// }
-
-
-// void MMFNeuralEP::DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
-// {
-//         int nq               = GetTotPoints();
-
-//         Array<OneD, NekDouble> phi_m(nq);
-//         Vmath::Vcopy(nq, fields[0], 1, phi_m, 1);
-//         // Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
-
-//         Array<OneD, NekDouble> phimavg(m_Nnode+1,0.0);
-
-//         for (int i=0; i<nq; ++i)
-//         {
-//             if(m_zoneindex[0][i]>=0)
-//             {
-//                phimavg[m_zoneindex[0][i]] += phi_m[i] ;
-//             }
-//         }
-
-//         Vmath::Smul((m_Nnode+1), 1.0/m_npts, phimavg, 1, phimavg, 1);
-
-//         fulltext.append(" \n");
-//         fulltext.append("(Nodeid,phim): ");
-//         for (int i = 0; i < m_Nnode; ++i)
-//         {
-//            fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " ) ");
-//         }
-
-//         fulltext.append(" \n");
-//         std::cout << fulltext << "\n" << std::endl;
-// }
-
-// void MMFNeuralEP::DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields)
-// {
-//     int nq               = GetTotPoints();
-//     int totnode = m_ElemNodeEnd / m_NumelemNode;
-
-//     Array<OneD, NekDouble> phi_m(nq);
-//     Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
+    Array<OneD, NekDouble> phi_m(nq);
+    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
     
-//     Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
+    Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
 
-//     Array<OneD, NekDouble> phimavg(totnode,0.0);
-//     Array<OneD, NekDouble> phieavg(totnode,0.0);
+    Array<OneD, NekDouble> phimavg(m_totNode+1,0.0);
+    Array<OneD, NekDouble> phieavg(m_totNode+1,0.0);
 
-//     int npts = m_fields[0]->GetTotPoints(0);
-//     for (int i=0; i<nq; ++i)
-//     {
-//         if(m_zoneindex[0][i]>=0)
-//         {
-//             phimavg[m_zoneindex[0][i]] += phi_m[i]/(npts * m_NumelemNode);
-//             phieavg[m_zoneindex[0][i]] += phi_e[i]/(npts * m_NumelemNode);
-//         }
-//     }
+    Array<OneD, int> totnodenumpts(m_totNode+1,0);
 
-//     fulltext.append(" \n");
-//     fulltext.append("(Nodeid,phim,phie): ");
-//     for (int i = 0; i < totnode; ++i)
-//     {
-//         fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " , " + std::to_string(phieavg[i]) + " ) ");
-//     }
+    int nodeid;
+    for (int i=0; i<nq; ++i)
+    {
+        if(m_zoneindex[0][i]>=0)
+        {
+            nodeid = m_zoneindex[0][i];
+            phimavg[nodeid] += phi_m[i];
+            phieavg[nodeid] += phi_e[i];
+
+            totnodenumpts[nodeid] = totnodenumpts[nodeid] + 1;
+        }
+    }
+
+    for (int j=0; j<m_totNode+1; ++j)
+    {
+        if (totnodenumpts[j]>0)
+        {
+            phimavg[j] = phimavg[j] / totnodenumpts[j];
+            phieavg[j] = phieavg[j] / totnodenumpts[j];
+        }
+    }
+
+    fulltext.append(" \n");
+    fulltext.append("(Nodeid,phim,phie): ");
+    for (int i = 0; i < m_totNode+1; ++i)
+    {
+        fulltext.append( "( " + std::to_string(i) + " , " + std::to_string(phimavg[i]) + " , " + std::to_string(phieavg[i]) + " ) ");
+    }
     
-//     fulltext.append(" \n");
-//     std::cout << fulltext << "\n" << std::endl;
-// }
+    fulltext.append(" \n");
+}
 
 
 
