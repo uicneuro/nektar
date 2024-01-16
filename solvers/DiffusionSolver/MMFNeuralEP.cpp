@@ -106,7 +106,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
 
-    m_session->LoadParameter("Total_Number_Node", m_totNode, 10);
+    m_session->LoadParameter("Total_Number_Node", m_totNode, 3);
     m_session->LoadParameter("Element_per_Node", m_elemperNode, 4);
     m_session->LoadParameter("Element_per_Myelin", m_elemperMyel, 14);
 
@@ -308,7 +308,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     MMFSystem::MMFInitObject(m_AniStrength);
 
     // Check moving frames and anisotropy
-    CheckOutZoneAni();
+    // CheckOutZoneAni();
 
     switch (m_NeuralEPType)
     {
@@ -692,13 +692,13 @@ void MMFNeuralEP::SetUpDomainZone(
 
         if(zoneindex[i] != -2)
         {
-            intrazone[i] = 1.0 / (m_Cn * m_Rf);
+            intrazone[i] = 1.0 ;
             intracnt++;
         }
 
         if(zoneindex[i] != -1)
         {
-            extrazone[i] = 1.0 / (m_Cn * m_Rf);
+            extrazone[i] = 1.0;
             extracnt++;
         }
     }
@@ -710,8 +710,8 @@ void MMFNeuralEP::SetUpDomainZone(
     int extraelem = extracnt/m_npts;
     int totelem = intraelem + extraelem - nodecntelem*m_elemperNode;
     
-    std::cout << "Excite zone = " << extcnt << ", Node zone = " << nodecnt <<  ", intra zone = " << intracnt/nq << 
-    " %, extra zone = " << extracnt/nq << " % " << std::endl;
+    std::cout << "Excite zone = " << 100.0*extcnt/nq << ", Node zone = " << 100.0*nodecntelem/nq <<  ", intra zone = " << 100.0*intracnt/nq << 
+    " %, extra zone = " << 100.0*extracnt/nq << " % " << std::endl;
 
     std::cout << "npts = " << m_npts << ", Excite node elem. = " << extcntelem << ", Node elem. = " << nodecntelem 
     << ", Myelin elem. = " << myelcntelem << ", intra elem. = " << intraelem << ", external elem. = " << extraelem 
@@ -1524,10 +1524,10 @@ void MMFNeuralEP::DisplayNode2D(std::string &fulltext, const Array<OneD, const A
     
     Array<OneD, NekDouble> phi_e = Derivephie(fields[0]);
 
-    Array<OneD, NekDouble> phimavg(m_totNode+1,0.0);
-    Array<OneD, NekDouble> phieavg(m_totNode+1,0.0);
+    Array<OneD, NekDouble> phimavg(m_totNode+2,0.0);
+    Array<OneD, NekDouble> phieavg(m_totNode+2,0.0);
 
-    Array<OneD, int> totnodenumpts(m_totNode+1,0);
+    Array<OneD, int> totnodenumpts(m_totNode+2,0);
 
     int nodeid;
     for (int i=0; i<nq; ++i)
@@ -1542,7 +1542,7 @@ void MMFNeuralEP::DisplayNode2D(std::string &fulltext, const Array<OneD, const A
         }
     }
 
-    for (int j=0; j<m_totNode+1; ++j)
+    for (int j=0; j<m_totNode+2; ++j)
     {
         if (totnodenumpts[j]>0)
         {
@@ -1782,32 +1782,35 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-   switch(m_fiberType)
-    {
-        // Helsolve with pure Neumann boundary condition
-        case eEmbedBCDirichlet:
-        case eEmbedBCNeumann:
-        {
-            // m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-            //                     factors, m_varcoeff);
-            m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                                factors, m_varcoeff);
-            break;
-        }
-
-        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-        case eMonoBCDirichlet:
-        case eMonoBCNeumann:
-        default:
-        {
-            m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                                factors, m_varcoeff);
-            break;
-        }
-    }
-
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                        factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
+
+//    switch(m_fiberType)
+//     {
+//         // Helsolve with pure Neumann boundary condition
+//         case eEmbedBCDirichlet:
+//         case eEmbedBCNeumann:
+//         {
+//             // m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+//             //                     factors, m_varcoeff);
+//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+//                                 factors, m_varcoeff);
+//             break;
+//         }
+
+//         // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
+//         case eMonoBCDirichlet:
+//         case eMonoBCNeumann:
+//         default:
+//         {
+//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+//                                 factors, m_varcoeff);
+//             break;
+//         }
+//     }
+
 }
 
 // We Return Y[i] = rhs [i] without no Helomsolver
@@ -2020,11 +2023,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         Array<OneD, NekDouble> phie = Derivephie(inarray[0]);
         
         // Compute (1/C_n/r) * \nabla^2 \phi_e
-        // extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
-        extcurrent = ComputeEuclideanDiffusion(phie);
+        extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
+        // extcurrent = ComputeEuclideanDiffusion(phie);
 
-        // extra current caused by phi_e only occurs in the intracellular space
+        // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
+        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
     }
 
     // add divergence of phie to the current
