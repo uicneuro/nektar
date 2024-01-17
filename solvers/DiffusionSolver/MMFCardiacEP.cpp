@@ -2255,15 +2255,23 @@ void MMFCardiacEP::PlotTimeMap(
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "TimeMap";
-    variables[1] = "AniStrength";
-    variables[2] = "velmag";
-    variables[3] = "velx";
-    variables[4] = "vely";
-    variables[5] = "velz";
+    variables[0] = "ValidTimeMap";
+    variables[1] = "TimeMap";
+    variables[2] = "AniStrength";
+    variables[3] = "velmag";
+    variables[4] = "velx";
+    variables[5] = "vely";
+    variables[6] = "velz";
+
+    Array<OneD, NekDouble> tmp(nq, 1.0);
+    for (int i=0; i<nq; ++i)
+    {
+        tmp[i] = 1.0 * ValidTimeMap[i];
+    }
+    m_fields[0]->FwdTrans(tmp, fieldcoeffs[0]);
 
     // index:0 -> u
-    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
+    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[1]);
 
     Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
     for (int k=0; k<m_spacedim; ++k)
@@ -2272,19 +2280,18 @@ void MMFCardiacEP::PlotTimeMap(
     }
 
     // Compute the gradient of the time map
-    m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[1]);
+    m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[2]);
 
     Array<OneD, NekDouble> TMVelocity(m_spacedim * nq);
     TMVelocity = ComputeVelocityTimeMap(m_ValidTimeMap, TimeMap);
 
     Array<OneD, NekDouble> TMVelMag = ComputeVelocityMag(TMVelocity);
-    m_fields[0]->FwdTrans(TMVelMag, fieldcoeffs[2]);
+    m_fields[0]->FwdTrans(TMVelMag, fieldcoeffs[3]);
 
-    Array<OneD, NekDouble> tmp(nq);
     for (int k=0; k<m_spacedim; ++k)
     {
         Vmath::Vcopy(nq, &TMVelocity[k*nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+3]);
+        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+4]);
     }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
