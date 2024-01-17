@@ -305,6 +305,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_AnisotropyStrength = m_Cn / m_Cm;
     SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
 
+    std::cout << "MMFInitObejct ==============================================" << std::endl;
     MMFSystem::MMFInitObject(m_AniStrength);
 
     // Check moving frames and anisotropy
@@ -1782,34 +1783,30 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                        factors, m_varcoeff);
+   switch(m_fiberType)
+    {
+        // Helsolve with pure Neumann boundary condition
+        case eEmbedBCDirichlet:
+        case eEmbedBCNeumann:
+        {
+            m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                                factors, m_varcoeff);
+            break;
+        }
+
+        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
+        case eMonoBCDirichlet:
+        case eMonoBCNeumann:
+        default:
+        {
+            m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                                factors, m_varcoeff);
+            break;
+        }
+    }
+
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
-
-//    switch(m_fiberType)
-//     {
-//         // Helsolve with pure Neumann boundary condition
-//         case eEmbedBCDirichlet:
-//         case eEmbedBCNeumann:
-//         {
-//             // m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//             //                     factors, m_varcoeff);
-//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//                                 factors, m_varcoeff);
-//             break;
-//         }
-
-//         // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-//         case eMonoBCDirichlet:
-//         case eMonoBCNeumann:
-//         default:
-//         {
-//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//                                 factors, m_varcoeff);
-//             break;
-//         }
-//     }
 
 }
 
@@ -2447,6 +2444,9 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
 
     SolverUtils::AddSummaryItem(s, "Total_Number_Node", m_totNode);
+    SolverUtils::AddSummaryItem(s, "Element_per_Node", m_elemperNode);
+    SolverUtils::AddSummaryItem(s, "Element_per_Myelin", m_elemperMyel);
+
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "diameter", m_diameter);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
