@@ -1783,30 +1783,34 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
 
-   switch(m_fiberType)
-    {
-        // Helsolve with pure Neumann boundary condition
-        case eEmbedBCDirichlet:
-        case eEmbedBCNeumann:
-        {
-            m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                                factors, m_varcoeff);
-            break;
-        }
-
-        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-        case eMonoBCDirichlet:
-        case eMonoBCNeumann:
-        default:
-        {
-            m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                                factors, m_varcoeff);
-            break;
-        }
-    }
-
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                        factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
+
+//    switch(m_fiberType)
+//     {
+//         // Helsolve with pure Neumann boundary condition
+//         case eEmbedBCDirichlet:
+//         case eEmbedBCNeumann:
+//         {
+//             m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+//                                 factors, m_varcoeff);
+//             break;
+//         }
+
+//         // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
+//         case eMonoBCDirichlet:
+//         case eMonoBCNeumann:
+//         default:
+//         {
+//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+//                                 factors, m_varcoeff);
+//             break;
+//         }
+//     }
+
+
 
 }
 
