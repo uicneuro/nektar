@@ -1159,10 +1159,10 @@ void MMFNeuralEP::DoSolveMMFZero()
                 Plotphiecurrent(phi_m, phi_e, nchk);
             }
 
-            if(m_NeuralEPType==eNeuralEP2Dbi)
-            {
-                DisplayNode2D(fulltext, fields);
-            }
+            // if(m_NeuralEPType==eNeuralEP2Dbi)
+            // {
+            //     DisplayNode2D(fulltext, fields);
+            // }
 
             std::cout << fulltext << "\n" << std::endl;
 
