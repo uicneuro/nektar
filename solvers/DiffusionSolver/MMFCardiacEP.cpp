@@ -1009,9 +1009,9 @@ void MMFCardiacEP::DoSolveTimeMap()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            ComputeTimeMapError(nchk, fields);
+           // ComputeTimeMapError(nchk, fields);
 
-            Checkpoint_Output(nchk++);
+           // Checkpoint_Output(nchk++);
             doCheckTime = false;
         }
 
@@ -2241,7 +2241,7 @@ void MMFCardiacEP::PlotTimeMap(
 {
     boost::ignore_unused(ValidTimeMap);
 
-    int nvar    = 6;
+    int nvar    = 7;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
