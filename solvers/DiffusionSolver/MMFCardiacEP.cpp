@@ -400,17 +400,30 @@ MMFCardiacEP::~MMFCardiacEP()
         Array<OneD, Array<OneD, NekDouble>> Velocity_deformed(m_spacedim);
         ComputeVelocityDeformed(AniStrength_old[0], Velocity_old, AniStrength_new[0], Velocity_deformed);
 
+        Array<OneD, NekDouble> TimeMapDiffExact(nq);
+
+        Vmath::Vsub(nq, TimeMap_new[0], 1, TimeMap_old[0], 1, TimeMapDiffExact, 1);
+
+      std::cout << "TimeMapDiffExact: min = " << Vmath::Vmin(nq, TimeMapDiffExact, 1) << ", " 
+        << ", max = " << Vmath::Vmax(nq, TimeMapDiffExact, 1) << std::endl;
+
         Array<OneD, Array<OneD, NekDouble>> Vdiff_ret;
         Array<OneD, NekDouble> VdiffMag_ret(nq);
         Array<OneD, NekDouble> VdiffDiv_ret(nq);
 
         Array<OneD, NekDouble> TimeMapDiff_ret = HelmSolveTimeMapDiff(Velocity_old, Velocity_new, Vdiff_ret, VdiffDiv_ret, VdiffMag_ret);
 
+        std::cout << "TimeMapDiff_ret: min = " << Vmath::Vmin(nq, TimeMapDiff_ret, 1) << ", " 
+        << ", max = " << Vmath::Vmax(nq, TimeMapDiff_ret, 1) << std::endl;
+
         Array<OneD, Array<OneD, NekDouble>> Vdiff_der;
         Array<OneD, NekDouble> VdiffMag_der(nq);
         Array<OneD, NekDouble> VdiffDiv_der(nq);
 
         Array<OneD, NekDouble> TimeMapDiff_der = HelmSolveTimeMapDiff(Velocity_old, Velocity_deformed, Vdiff_der, VdiffDiv_der, VdiffMag_der);
+
+        std::cout << "TimeMapDiff_der: min = " << Vmath::Vmin(nq, TimeMapDiff_der, 1) << ", " 
+        << ", max = " << Vmath::Vmax(nq, TimeMapDiff_der, 1) << std::endl;
 
         Array<OneD, Array<OneD, NekDouble>> Vdiff(m_spacedim);
         ComputeDeformedDiff(Velocity_old, Velocity_new, Vdiff);
@@ -447,8 +460,6 @@ MMFCardiacEP::~MMFCardiacEP()
         Vmath::Sadd(nq, -1.0 * AvgInt(VdiffDivergence), VdiffDivergence, 1, VdiffDivergence, 1);
         Vmath::Vcopy(nq, VdiffDivergence, 1, m_fields[0]->UpdatePhys(), 1);
 
-        std::cout << "VdifDiv = " << RootMeanSquare(VdiffDivergence) << std::endl;
-
         m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), factors, m_varcoeff);
         m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), m_fields[0]->UpdatePhys());
         m_fields[0]->SetPhysState(true);
@@ -456,7 +467,8 @@ MMFCardiacEP::~MMFCardiacEP()
         outarray = m_fields[0]->GetPhys();
 
         // Let the Time Map at the left end should be zero
-        Vmath::Sadd(nq, -1.0 * outarray[0], outarray, 1, outarray, 1);
+        NekDouble TMmin = Vmath::Vmin(nq, outarray, 1);
+       // Vmath::Sadd(nq, -1.0 * TMmin, outarray, 1, outarray, 1);
 
         return outarray;
     }
@@ -2359,13 +2371,13 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     NekDouble TMerrMax_ret = Vmath::Vamax(nq, TimeMapErr_ret, 1) / TimeMapoldmax;
 
     std::cout << std::endl;
-    std::cout << "Retrieved TimeMap Linf err = " << TMerrMax_ret << ", L2 err = " << RootMeanSquare(TimeMapErr_ret)/TimeMapoldmax << std::endl;
+    std::cout << "Retrieved TimeMap Linf rel. err = " << TMerrMax_ret << ", L2 err = " << RootMeanSquare(TimeMapErr_ret)/TimeMapoldmax << std::endl;
 
     Array<OneD, NekDouble> TimeMapErr_der(nq);
     Vmath::Vsub(nq, TimeMapDiffExact, 1, TimeMapDiff_der, 1, TimeMapErr_der, 1);
     NekDouble TMerrMax_der = Vmath::Vamax(nq, TimeMapErr_der, 1) / TimeMapoldmax;
 
-    std::cout << "Derived TimeMap Linf err = " << TMerrMax_der << ", L2 err = " << RootMeanSquare(TimeMapErr_der)/TimeMapoldmax << std::endl;
+    std::cout << "Derived TimeMap Linf rel. err = " << TMerrMax_der << ", L2 err = " << RootMeanSquare(TimeMapErr_der)/TimeMapoldmax << std::endl;
 
     Array<OneD, NekDouble> TimeMapErr(nq);
     Vmath::Vsub(nq, TimeMapDiff_der, 1, TimeMapDiff_ret, 1, TimeMapErr, 1);
@@ -2376,6 +2388,7 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     std::cout << std::endl;
 
     std::vector<std::string> variables(nvar);
+
     variables[0] = "TimeMapDiffExact";
     variables[1] = "TimeMapDiff_ret";
     variables[2] = "TimeMapDiff_der";
@@ -2389,40 +2402,40 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     variables[10] = "TimeMap_new";
 
     // index:0 -> u
-    std::cout << "TimeMapDiffExact = " << RootMeanSquare(TimeMapDiffExact) << std::endl;
+    // std::cout << "TimeMapDiffExact = " << RootMeanSquare(TimeMapDiffExact) << std::endl;
     m_fields[0]->FwdTrans(TimeMapDiffExact, fieldcoeffs[0]);
 
-    std::cout << "TimeMapDiff_ret = " << RootMeanSquare(TimeMapDiff_ret) << std::endl;
+    // std::cout << "TimeMapDiff_ret = " << RootMeanSquare(TimeMapDiff_ret) << std::endl;
     m_fields[0]->FwdTrans(TimeMapDiff_ret, fieldcoeffs[1]);
 
-    std::cout << "TimeMapDiff_der = " << RootMeanSquare(TimeMapDiff_der) << std::endl;
+    // std::cout << "TimeMapDiff_der = " << RootMeanSquare(TimeMapDiff_der) << std::endl;
     m_fields[0]->FwdTrans(TimeMapDiff_der, fieldcoeffs[2]);
 
-    std::cout << "TimeMapErr_ret = " << RootMeanSquare(TimeMapErr_ret) << std::endl;
+    // std::cout << "TimeMapErr_ret = " << RootMeanSquare(TimeMapErr_ret) << std::endl;
     m_fields[0]->FwdTrans(TimeMapErr_ret, fieldcoeffs[3]);
 
-    std::cout << "TimeMapErr_der = " << RootMeanSquare(TimeMapErr_der) << std::endl;
+    // std::cout << "TimeMapErr_der = " << RootMeanSquare(TimeMapErr_der) << std::endl;
     m_fields[0]->FwdTrans(TimeMapErr_der, fieldcoeffs[4]);
 
-    std::cout << "Vdiff_ret[0] = " << RootMeanSquare(Vdiff_ret[0]) << std::endl;
+    // std::cout << "Vdiff_ret[0] = " << RootMeanSquare(Vdiff_ret[0]) << std::endl;
     m_fields[0]->FwdTrans(Vdiff_ret[0], fieldcoeffs[5]);
     
-    std::cout << "VdiffDiv_ret = " << RootMeanSquare(VdiffDiv_ret) << std::endl;
+    // std::cout << "VdiffDiv_ret = " << RootMeanSquare(VdiffDiv_ret) << std::endl;
     m_fields[0]->FwdTrans(VdiffDiv_ret, fieldcoeffs[6]);
 
-    std::cout << "Vdiff_der[0] = " << RootMeanSquare(Vdiff_der[0]) << std::endl;
+    // std::cout << "Vdiff_der[0] = " << RootMeanSquare(Vdiff_der[0]) << std::endl;
     m_fields[0]->FwdTrans(Vdiff_der[0], fieldcoeffs[7]);
 
-    std::cout << "VdiffDiv_der = " << RootMeanSquare(VdiffDiv_der) << std::endl;
+    // std::cout << "VdiffDiv_der = " << RootMeanSquare(VdiffDiv_der) << std::endl;
     m_fields[0]->FwdTrans(VdiffDiv_der, fieldcoeffs[8]);
 
-    std::cout << "TimeMap_old = " << RootMeanSquare(TimeMap_old) << std::endl;
+    // std::cout << "TimeMap_old = " << RootMeanSquare(TimeMap_old) << std::endl;
     m_fields[0]->FwdTrans(TimeMap_old, fieldcoeffs[9]);
 
-    std::cout << "TimeMap_new = " << RootMeanSquare(TimeMap_new) << std::endl;
+    // std::cout << "TimeMap_new = " << RootMeanSquare(TimeMap_new) << std::endl;
     m_fields[0]->FwdTrans(TimeMap_new, fieldcoeffs[10]);
 
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+   WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
 

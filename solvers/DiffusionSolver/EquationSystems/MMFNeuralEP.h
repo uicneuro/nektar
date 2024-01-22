@@ -256,7 +256,7 @@ protected:
 
     // variables for phie-Poisson solver
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
-    Array<OneD, Array<OneD, NekDouble>> m_helmfmovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
 
     // Elements for fiber 2D: Start and End index
     int m_fiber2DElemStart, m_fiber2DElemEnd;
@@ -364,7 +364,7 @@ protected:
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
-    void Plotphiecurrent(const Array<OneD, const NekDouble> &phi_m,
+    void PlotFields(const Array<OneD, const NekDouble> &phi_m,
                                    const Array<OneD, const NekDouble> &phi_e,
                                    const int nstep);
 
@@ -461,7 +461,7 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim);
 
-    Array<OneD, NekDouble> Derivephie(
+    Array<OneD, NekDouble> Computephie(
         const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
