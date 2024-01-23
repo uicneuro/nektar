@@ -361,6 +361,7 @@ protected:
     
     void ComputephieMF(
         const NekDouble ratio_re_ri,
+        const Array<OneD, const int> &zoneindex,
         Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
         Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 

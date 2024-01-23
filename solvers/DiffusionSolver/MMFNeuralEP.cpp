@@ -322,7 +322,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {
             // Set up for phie Poisson solver
-            ComputephieMF(m_ratio_re_ri, m_unitmovingframes, m_phiemovingframes);
+            ComputephieMF(m_ratio_re_ri, m_zoneindex[0], m_unitmovingframes, m_phiemovingframes);
             break;
         }
 
@@ -372,8 +372,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             case eNeuralEP2Dbi:
             {
+                std::cout << "Generating moving frames for the domain with anisotropic fiber" << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+                std::cout << std::endl;
+
+                std::cout << "Generating moving frames for the distribution of the external potential with point excitation at the Raniver node" << std::endl;
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+                std::cout << std::endl;
 
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
@@ -433,6 +438,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         NekDouble Helmfactor =
             sqrt((1.0 + m_ratio_re_ri) / m_ratio_re_ri);
 
+        // \sigma_i is zero outside the fiber. 
         for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Smul(nq, Helmfactor, &phieAniStrength[j][0], 1,
@@ -574,6 +580,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
 void MMFNeuralEP::ComputephieMF(
     const NekDouble ratio_re_ri,
+    const Array<OneD, const int> &zoneindex,
     Array<OneD, Array<OneD, NekDouble>> &unitfmovingframes, 
     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes)
 
@@ -593,15 +600,33 @@ void MMFNeuralEP::ComputephieMF(
     SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
     SetUpMovingFrames(phieMMFdir, phieAniStrength, unitfmovingframes);
 
+    NekDouble sigma_e = m_AnisotropyStrength / ratio_re_ri;
+    for (int i=0; i<nq; ++i)
+        {
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                // Node zone
+                if(zoneindex[i]>=0)
+                {
+                    phieAniStrength[j][i] = 1.0 + sigma_e;
+                }
+
+                // Myeline zone
+                else if (zoneindex[i]==-1)
+                {
+                    phieAniStrength[j][i] = (1.0 + ratio_re_ri) / ratio_re_ri;
+                }
+
+                // Extracellular zone
+                else
+                {
+                    phieAniStrength[j][i] = sigma_e;
+                }
+            }
+    }
+
     // Create Phiemovingframes
     phiemovingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    NekDouble Helmfactor = sqrt((1.0 + ratio_re_ri) / ratio_re_ri);
-
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        Vmath::Smul(nq, Helmfactor, &phieAniStrength[j][0], 1,
-                    &phieAniStrength[j][0], 1);
-    }
 
     SetUpMovingFrames(phieMMFdir, phieAniStrength, phiemovingframes);
     CheckMovingFrames(phiemovingframes);
