@@ -91,6 +91,7 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
+    eAllNode,
     SIZE_MediumType
 };
 
@@ -100,6 +101,7 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
+    "AllNode",
 };
 
 enum FiberType

@@ -289,6 +289,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
 
+            if(m_MediumType==eAllNode)
+            {
+                m_zoneindex[0]  = Array<OneD, int>(nq, 1);
+            }
+
             m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
             break;
@@ -548,12 +553,12 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
             for (int k=0; k<Nnode; ++k)
             {
-                    nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
-                    nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
-                        if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
-                        {
-                            outarray[i] = k+2;
-                        }
+                nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
+                nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
+                if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
+                {
+                    outarray[i] = k+2;
+                }
             }
         }
 
@@ -1135,10 +1140,14 @@ void MMFNeuralEP::DoSolveMMFZero()
             Array<OneD, NekDouble> phi_m(nq);
             Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
 
-            NekDouble phimMax = Vmath::Vamax(nq, phi_m, 1);
-            int phimMaxid = Vmath::Iamax(nq, phi_m, 1);
+            NekDouble phimMax = Vmath::Vmax(nq, phi_m, 1);
+            NekDouble phimMin = Vmath::Vmin(nq, phi_m, 1);
+
+            int phimMaxid = Vmath::Imax(nq, phi_m, 1);
+            int phimMinid = Vmath::Imin(nq, phi_m, 1);
+
             fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
-                        fulltext.append("\n");
+            fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
 
             fulltext.append("\n");
 
@@ -1147,11 +1156,16 @@ void MMFNeuralEP::DoSolveMMFZero()
                 // phi_e is defined at the node and extracellular space
                 Array<OneD, NekDouble> phi_e = Computephie(fields[0]);
                 
-                NekDouble phieMax = Vmath::Vamax(nq, phi_e, 1);
-                int phieMaxid = Vmath::Iamax(nq, phi_e, 1);
+                NekDouble phieMax = Vmath::Vmax(nq, phi_e, 1);
+                NekDouble phieMin = Vmath::Vmin(nq, phi_e, 1);
+
+                int phieMaxid = Vmath::Imax(nq, phi_e, 1);
+                int phieMinid = Vmath::Imin(nq, phi_e, 1);
 
                 fulltext.append("phi_e, max: " + std::to_string(phieMax) + " at y = " + std::to_string(x1[phieMaxid]) );
-                            fulltext.append("\n");
+                fulltext.append(", phi_e, min: " + std::to_string(phieMin) + " at y = " + std::to_string(x1[phieMinid]) );
+
+                fulltext.append("\n");
 
                 PlotFields(phi_m, phi_e, nchk);
             }
