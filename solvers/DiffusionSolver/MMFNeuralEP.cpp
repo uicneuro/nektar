@@ -338,6 +338,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
 
+            m_phiemovingframes = Array<OneD, Array<OneD, NekDouble>> (m_spacedim);
+            for (int j = 0; j < m_spacedim; ++j)
+            {
+                    m_phiemovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
+            }
+
             // m_phieMF = \sigma_i + \sigma_e
             for (int i = 0; i < nq; ++i)
             {
@@ -1230,7 +1236,6 @@ void MMFNeuralEP::DoSolveMMFZero()
             std::cout << fulltext << "\n" << std::endl;
 
             Checkpoint_Output(nchk++);
-    wait_on_enter();
 
             doCheckTime = false;
         }
