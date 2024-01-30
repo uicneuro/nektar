@@ -322,7 +322,34 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {
             // Set up for phie Poisson solver
-            ComputephieMF(m_ratio_re_ri, m_zoneindex[0], m_unitmovingframes, m_phiemovingframes);
+            // ComputephieMF(m_ratio_re_ri, m_zoneindex[0], m_unitmovingframes, m_phiemovingframes);
+            
+            std::string phieMMFdirStr = "TangentX";
+            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+
+            Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+            for (int j = 0; j < m_expdim; ++j)
+            {
+                phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            }
+
+            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+            SetUpMovingFrames(phieMMFdir, phieAniStrength, m_unitmovingframes);
+
+            NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
+
+            // m_phieMF = \sigma_i + \sigma_e
+            for (int i = 0; i < nq; ++i)
+            {
+                for (int j = 0; j < m_shapedim; ++j)
+                {
+                    for (int k = 0; k < m_spacedim; ++k)
+                    {
+                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k*nq+i] 
+                                                              + sigma_e_ratio * m_unitmovingframes[j][k * nq + i];
+                    }
+                }
+            }
             break;
         }
 
@@ -578,59 +605,59 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 }
 
 
-void MMFNeuralEP::ComputephieMF(
-    const NekDouble ratio_re_ri,
-    const Array<OneD, const int> &zoneindex,
-    Array<OneD, Array<OneD, NekDouble>> &unitfmovingframes, 
-    Array<OneD, Array<OneD, NekDouble>> &phiemovingframes)
+// void MMFNeuralEP::ComputephieMF(
+//     const NekDouble ratio_re_ri,
+//     const Array<OneD, const int> &zoneindex,
+//     Array<OneD, Array<OneD, NekDouble>> &unitfmovingframes, 
+//     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes)
 
-{
-    int nq   = GetTotPoints();
+// {
+//     int nq   = GetTotPoints();
 
-    std::string phieMMFdirStr = "TangentX";
-    m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+//     std::string phieMMFdirStr = "TangentX";
+//     m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
 
-    Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-    }
+//     Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+//     for (int j = 0; j < m_expdim; ++j)
+//     {
+//         phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+//     }
 
-    // Create UnitMovingFrames
-    SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
-    SetUpMovingFrames(phieMMFdir, phieAniStrength, unitfmovingframes);
+//     // Create UnitMovingFrames
+//     SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+//     SetUpMovingFrames(phieMMFdir, phieAniStrength, unitfmovingframes);
 
-    NekDouble sigma_e = m_AnisotropyStrength / ratio_re_ri;
-    for (int i=0; i<nq; ++i)
-        {
-            for (int j = 0; j < m_expdim; ++j)
-            {
-                // Node zone
-                if(zoneindex[i]>=0)
-                {
-                    phieAniStrength[j][i] = 1.0 + sigma_e;
-                }
+//     NekDouble sigma_e = m_AnisotropyStrength / ratio_re_ri;
+//     for (int i=0; i<nq; ++i)
+//         {
+//             for (int j = 0; j < m_expdim; ++j)
+//             {
+//                 // Node zone
+//                 if(zoneindex[i]>=0)
+//                 {
+//                     phieAniStrength[j][i] = 1.0 + sigma_e;
+//                 }
 
-                // Myeline zone
-                else if (zoneindex[i]==-1)
-                {
-                    phieAniStrength[j][i] = (1.0 + ratio_re_ri) / ratio_re_ri;
-                }
+//                 // Myeline zone
+//                 else if (zoneindex[i]==-1)
+//                 {
+//                     phieAniStrength[j][i] = (1.0 + ratio_re_ri) / ratio_re_ri;
+//                 }
 
-                // Extracellular zone
-                else
-                {
-                    phieAniStrength[j][i] = sigma_e;
-                }
-            }
-    }
+//                 // Extracellular zone
+//                 else
+//                 {
+//                     phieAniStrength[j][i] = sigma_e;
+//                 }
+//             }
+//     }
 
-    // Create Phiemovingframes
-    phiemovingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+//     // Create Phiemovingframes
+//     phiemovingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
 
-    SetUpMovingFrames(phieMMFdir, phieAniStrength, phiemovingframes);
-    CheckMovingFrames(phiemovingframes);
-}
+//     SetUpMovingFrames(phieMMFdir, phieAniStrength, phiemovingframes);
+//     CheckMovingFrames(phiemovingframes);
+// }
 
 void MMFNeuralEP::SetUpBiAnisotropy(
             const Array<OneD, const int> &zoneindex,
@@ -1192,7 +1219,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
                 fulltext.append("\n");
 
-                PlotFields(phi_m, phi_e, nchk);
+               //  PlotFields(phi_m, phi_e, nchk);
             }
 
             // if(m_NeuralEPType==eNeuralEP2Dbi)
@@ -1203,6 +1230,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             std::cout << fulltext << "\n" << std::endl;
 
             Checkpoint_Output(nchk++);
+    wait_on_enter();
 
             doCheckTime = false;
         }
@@ -2120,7 +2148,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
 
     // Only nonzero for node.
-    Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    // Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
 
     // Compute phie distribution
     // SetBoundaryConditions(0.0);
@@ -2158,8 +2186,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
             Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
             Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
             m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-
-            // m_fields[1]->HelmSolveEmbed(1, 4, m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
             break;
         }
 
@@ -2168,7 +2194,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     }
 
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    m_fields[1]->SetPhysState(true);
+    // m_fields[1]->SetPhysState(true);
 
     outarray = m_fields[1]->GetPhys();
 

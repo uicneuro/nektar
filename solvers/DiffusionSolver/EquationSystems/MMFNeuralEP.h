@@ -359,11 +359,11 @@ protected:
 
     Array<OneD, int> GetInternalBoundaryPoints();
     
-    void ComputephieMF(
-        const NekDouble ratio_re_ri,
-        const Array<OneD, const int> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
-        Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
+    // void ComputephieMF(
+    //     const NekDouble ratio_re_ri,
+    //     const Array<OneD, const int> &zoneindex,
+    //     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
+    //     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
