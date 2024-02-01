@@ -79,8 +79,9 @@ enum MediumType
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
     eRegionalIsotropy,
-    eGaussian1DHeterogeneous,
-    eGaussian2DHeterogeneous,
+    eGaussian1DHet,
+    eGaussian2DHet1,
+    eGaussian2DHet12,
     SIZE_MediumType
 };
 
@@ -92,8 +93,9 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
     "RegionalIsotropy",
-    "Gaussian1DHeterogeneous",
-    "Gaussian2DHeterogeneous",
+    "Gaussian1DHet",
+    "Gaussian2DHet1",
+    "Gaussian2DHet12",
 };
 
 enum InitWaveType
@@ -188,12 +190,10 @@ protected:
 
     void ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
 
-    void LoadTimeMap(std::string &loadname, 
-                    const Array<OneD, const NekDouble> &ValidTM,
-                    Array<OneD, Array<OneD, NekDouble>> &TimeMap,
-                    Array<OneD, Array<OneD, NekDouble>> &AniStrength,
-                    Array<OneD, NekDouble> &TMvelocitymag,
-                    Array<OneD, Array<OneD, NekDouble>> &TMvelocity);
+    void LoadTimeMap(std::string &loadname,
+                                 Array<OneD, NekDouble> &ValidTM,
+                                Array<OneD, Array<OneD, NekDouble>> &TimeMap,
+                                Array<OneD, Array<OneD, NekDouble>> &AniStrength);
 
     void ComputeVelocityDeformed(const Array<OneD, const NekDouble> &AniStrength_old,
                             const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
@@ -206,7 +206,7 @@ protected:
 
     Array<OneD, NekDouble> HelmSolveTimeMapDiff(
                 const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
-                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_new,
                 Array<OneD, Array<OneD, NekDouble>> &Vdiff,
                 Array<OneD, NekDouble> &VdiffDivergence,
                 Array<OneD, NekDouble> &VdiffMag);
@@ -281,9 +281,10 @@ protected:
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);
 
-    Array<OneD, NekDouble> ComputeVelocityTimeMap(
-    const Array<OneD, const int> &ValidTimeMap,
-    const Array<OneD, const NekDouble> &inarray);
+    void ComputeVelocityTimeMap(
+        const Array<OneD, const NekDouble> &ValidTimeMap,
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray);
 
     Array<OneD, NekDouble> ComputeLambDiv(
         const Array<OneD, const int> &ValidTimeMap,
@@ -308,14 +309,12 @@ protected:
     const int nstep);
 
     void PlotDeformedTimeMap(
-    const Array<OneD, const NekDouble> &TimeMap_old,
-    const Array<OneD, const NekDouble> &TimeMap_new,
-    const Array<OneD, const NekDouble> &TimeMapDiff_ret,
-    const Array<OneD, const NekDouble> &TimeMapDiff_der,
-    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff_ret,
-    const Array<OneD, const NekDouble> &VdiffDiv_ret,
-    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff_der,
-    const Array<OneD, const NekDouble> &VdiffDiv_der);
+        const std::string &outname,
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrength_diff,
+        const Array<OneD, const NekDouble> &TimeMap_old,
+        const Array<OneD, const NekDouble> &TimeMap_new,
+        const Array<OneD, const NekDouble> &TimeMapDiff,
+        const Array<OneD, const NekDouble> &VdiffDiv);
 
     void PlotTimeMapMF(
         const Array<OneD, const NekDouble> &NoboundaryZone,
