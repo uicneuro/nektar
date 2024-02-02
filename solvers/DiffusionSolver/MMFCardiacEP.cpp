@@ -354,12 +354,6 @@ MMFCardiacEP::~MMFCardiacEP()
         
         Array<OneD, Array<OneD, NekDouble>> AniStrength_diff(m_expdim);
 
-        for (int i=0; i<m_expdim; ++i)
-        {
-            AniStrength_diff[i] = Array<OneD, NekDouble>(nq);
-            Vmath::Vsub(nq, &AniStrength_new[i][0], 1, &AniStrength_old[i][0], 1, &AniStrength_diff[i][0], 1);
-        }
-
         /////
         Array<OneD, NekDouble> x0(nq);
         Array<OneD, NekDouble> x1(nq);
@@ -390,21 +384,30 @@ MMFCardiacEP::~MMFCardiacEP()
         // load old timemap                   
         m_session->LoadParameter("TimeMapnstep", m_TimeMapnstep, 10000);
         
-        std::string loadname_old = sessionold + "_TimeMap_" +
+        std::string loadname_old = sessionold + "_timemap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
-        Array<OneD, NekDouble> ValidTM_old(nq);
+         Array<OneD, NekDouble> ValidTM_old(nq);
         LoadTimeMap(loadname_old, ValidTM_old, TimeMap_old, AniStrength_old);
-
+ 
         Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
         ComputeVelocityTimeMap(ValidTM_old, TimeMap_old[0], Velocity_old);
 
         // load new timemap                               
-        std::string loadname = sessionnew + "_TimeMap_" +
+        std::string loadname = sessionnew + "_timemap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
         Array<OneD, NekDouble> ValidTM_new(nq);
         LoadTimeMap(loadname, ValidTM_new, TimeMap_new, AniStrength_new);
+
+        for (int i=0; i<m_expdim; ++i)
+        {
+            AniStrength_diff[i] = Array<OneD, NekDouble>(nq);
+            Vmath::Vsub(nq, &AniStrength_new[i][0], 1, &AniStrength_old[i][0], 1, &AniStrength_diff[i][0], 1);
+            std::cout << "i = " << i;
+            std::cout << ", AniStrength_old = " << RootMeanSquare(AniStrength_old[i]) << ", AniStrength_new = " << RootMeanSquare(AniStrength_new[i]);
+            std::cout << ", AniStrength_Diff = " << RootMeanSquare(AniStrength_diff[i]) << std::endl;
+        }
 
         Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
         ComputeVelocityTimeMap(ValidTM_new, TimeMap_new[0], Velocity_new);
@@ -570,7 +573,7 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
                                 Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                                 Array<OneD, Array<OneD, NekDouble>> &AniStrength)
 {
-    int nvar    = 7;
+    int nvar    = 4;
     int nq      = GetNpoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
     std::vector<std::string> variables(nvar);
@@ -588,15 +591,15 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
 
     EquationSystem::ImportFld(loadname, variables, tmpc);
 
-    m_fields[0]->BwdTrans(tmpc[0], ValidTM);
-
-    // Time Map
     TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
     for (int i = 0; i < 1; ++i)
     {
         TimeMap[i] = Array<OneD, NekDouble>(nq,0.0);
     }
-    m_fields[0]->BwdTrans(tmpc[1], TimeMap[0]);
+    m_fields[0]->BwdTrans(tmpc[0], TimeMap[0]);
+
+    // Time Map
+    m_fields[0]->BwdTrans(tmpc[1], ValidTM);
 
     // AniStrength
     AniStrength = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
@@ -2368,14 +2371,19 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     Array<OneD, NekDouble> TimeMapDiffExact(nq);
     Vmath::Vsub(nq, TimeMap_new, 1, TimeMap_old, 1, TimeMapDiffExact, 1);
 
-    NekDouble TimeMapoldmax = Vmath::Vamax(nq, TimeMap_old, 1);
-
     Array<OneD, NekDouble> TimeMapErr(nq);
     Vmath::Vsub(nq, TimeMapDiffExact, 1, TimeMapDiff, 1, TimeMapErr, 1);
-    NekDouble TMerrMax = Vmath::Vamax(nq, TimeMapErr, 1) / TimeMapoldmax;
+
+    for (int i=0; i<nq; ++i)
+    {
+        if(fabs(TimeMapDiffExact[i])>0.001)
+        {
+            TimeMapErr[i] = TimeMapErr[i] / TimeMapDiffExact[i];
+        }
+    }
 
     std::cout << std::endl;
-    std::cout << "TimeMap Linf rel. err = " << TMerrMax << ", L2 err = " << RootMeanSquare(TimeMapErr)/TimeMapoldmax << std::endl;
+    std::cout << "TimeMap Linf rel. err = " << RootMeanSquare(TimeMapErr) << std::endl;
 
     std::cout << std::endl;
 
