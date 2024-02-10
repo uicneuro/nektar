@@ -78,10 +78,7 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
-    eRegionalIsotropy,
-    eGaussian1DHet,
-    eGaussian2DHet1,
-    eGaussian2DHet12,
+    eGaussian,
     SIZE_MediumType
 };
 
@@ -92,10 +89,7 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
-    "RegionalIsotropy",
-    "Gaussian1DHet",
-    "Gaussian2DHet1",
-    "Gaussian2DHet12",
+    "Gaussian",
 };
 
 enum InitWaveType
@@ -221,8 +215,9 @@ protected:
 
     // Coefficients for Anisotropy
     int m_AniRegionStart, m_AniRegionEnd;
-    int m_Gaussiantau;
-    NekDouble m_AnisotropyStrength;
+    int m_Gaussiantau, m_GaussianXc, m_GaussianYc, m_GaussianZc;
+
+    NekDouble m_Ani1Magnitude, m_Ani2Magnitude;
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
 
     // Relative divergence related variables
@@ -277,7 +272,8 @@ protected:
 
     void LoadCardiacFiber(
                 const MediumType CardiacMediumType,
-                const NekDouble AnisotropyStrength, 
+                const NekDouble Ani1Magnitude,
+                const NekDouble Ani2Magnitude,
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);
 

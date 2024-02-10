@@ -101,12 +101,16 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
 
-    m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
+    m_session->LoadParameter("Ani1Magnitude", m_Ani1Magnitude, 1.0);
+    m_session->LoadParameter("Ani2Magnitude", m_Ani2Magnitude, 1.0);
 
     m_session->LoadParameter("AniRegionStart", m_AniRegionStart, 0);
-    m_session->LoadParameter("AniRegionEnd", m_AniRegionEnd, 1000000);
+    m_session->LoadParameter("AniRegionEnd", m_AniRegionEnd, m_fields[0]->GetExpSize());
 
     m_session->LoadParameter("Gaussiantau", m_Gaussiantau, 10);
+    m_session->LoadParameter("GaussianXc", m_GaussianXc, 0.0);
+    m_session->LoadParameter("GaussianYc", m_GaussianYc, 0.0);
+    m_session->LoadParameter("GaussianZc", m_GaussianZc, 0.0);
 
     //Aliev-Panfilov Parameter
     m_session->LoadParameter("k", m_k, 0.0);
@@ -209,7 +213,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
         case eHeterogeneousAnisotropy:
         {
             Array<OneD, NekDouble> CardiacFibre;
-            LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, m_AniStrength,
+            LoadCardiacFiber(m_MediumType, m_Ani1Magnitude, m_Ani2Magnitude, m_AniStrength,
                              CardiacFibre);
             MMFSystem::MMFInitObject(m_AniStrength, CardiacFibre);
         }
@@ -217,12 +221,9 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
         case eHeterogeneousIsotropy:
         case eRegionalHeterogeneous:
-        case eRegionalIsotropy:
-        case eGaussian1DHet:
-        case eGaussian2DHet1:
-        case eGaussian2DHet12:
+        case eGaussian:
         {
-            LoadCardiacFiber(m_MediumType, m_AnisotropyStrength, m_AniStrength);
+            LoadCardiacFiber(m_MediumType, m_Ani1Magnitude, m_Ani2Magnitude, m_AniStrength);
             MMFSystem::MMFInitObject(m_AniStrength);
         }
         break;
@@ -665,7 +666,8 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
 
 void MMFCardiacEP::LoadCardiacFiber(
     const MediumType CardiacMediumType,
-    const NekDouble AnisotropyStrength,
+    const NekDouble Ani1Magnitude,
+    const NekDouble Ani2Magnitude,
     Array<OneD, Array<OneD, NekDouble>> &AniStrength,
     Array<OneD, NekDouble> &CardiacFibre)
 {
@@ -677,7 +679,8 @@ void MMFCardiacEP::LoadCardiacFiber(
         {
             for (int i=0; i<nq; ++i)
             {
-                AniStrength[0][i] = sqrt(AnisotropyStrength);            
+                AniStrength[0][i] = sqrt(Ani1Magnitude);      
+                AniStrength[1][i] = sqrt(Ani2Magnitude);                  
             }
         }
         break;
@@ -685,7 +688,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         case eAnisotropyFiberMap:
         {
             m_ImportedFiberExist = 1;
-            AniStrength[0] = ReadFibermap(AnisotropyStrength, CardiacFibre);
+            AniStrength[0] = ReadFibermap(Ani1Magnitude, CardiacFibre);
         }
         break;
 
@@ -700,7 +703,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         case eHeterogeneousAnisotropy:
         {
             m_ImportedFiberExist = 1;
-            AniStrength[0] = ReadFibermap(AnisotropyStrength, CardiacFibre);
+            AniStrength[0] = ReadFibermap(Ani1Magnitude, CardiacFibre);
 
             Array<OneD, NekDouble> tmp = ReadConductivityMap();
             Vmath::Vmul(nq, &tmp[0], 1, &AniStrength[0][0], 1,
@@ -712,81 +715,40 @@ void MMFCardiacEP::LoadCardiacFiber(
         {
             int index;
             for (int i = m_AniRegionStart; i < m_AniRegionEnd; ++i)
-                {
-                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                        {
-                            index = m_fields[0]->GetPhys_Offset(i) + j;
-                            AniStrength[0][index] = sqrt(AnisotropyStrength);            
-                        }
-                }
+            {
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                    {
+                        index = m_fields[0]->GetPhys_Offset(i) + j;
+                        AniStrength[0][index] = sqrt(Ani1Magnitude);       
+                        AniStrength[1][index] = sqrt(Ani2Magnitude);                 
+                    }
+            }
         }
         break;
 
-        case eRegionalIsotropy:
+        case eGaussian:
         {
+            Array<OneD, NekDouble> x0(nq);
+            Array<OneD, NekDouble> x1(nq);
+            Array<OneD, NekDouble> x2(nq);
+
+            m_fields[0]->GetCoords(x0, x1, x2);
+
+            NekDouble taux, tauy, tauz;
             int index;
             for (int i = m_AniRegionStart; i < m_AniRegionEnd; ++i)
-                {
-                    for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                        {
-                            index = m_fields[0]->GetPhys_Offset(i) + j;
-                            AniStrength[0][index] = AnisotropyStrength;
-                            AniStrength[1][index] = AnisotropyStrength;                        
-                        }
-                }
-        }
-        break;
-
-        case eGaussian1DHet:
-        {
-            Array<OneD, NekDouble> x0(nq);
-            Array<OneD, NekDouble> x1(nq);
-            Array<OneD, NekDouble> x2(nq);
-
-            m_fields[0]->GetCoords(x0, x1, x2);
-
-            NekDouble taux;
-            for (int i=0; i<nq; ++i)
             {
-                taux = x0[i]/m_Gaussiantau;
-                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp( -0.5*taux*taux ) ;
-            }
-        }
-        break;
+                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+                    {
+                        index = m_fields[0]->GetPhys_Offset(i) + j;
 
-        case eGaussian2DHet1:
-        {
-            Array<OneD, NekDouble> x0(nq);
-            Array<OneD, NekDouble> x1(nq);
-            Array<OneD, NekDouble> x2(nq);
+                        taux = (x0[index] - m_GaussianXc)/m_Gaussiantau;
+                        tauy = (x1[index] - m_GaussianYc)/m_Gaussiantau;
+                        tauz = (x2[index] - m_GaussianZc)/m_Gaussiantau;
 
-            m_fields[0]->GetCoords(x0, x1, x2);
-
-            NekDouble taux, tauy;
-            for (int i=0; i<nq; ++i)
-            {
-                taux = x0[i]/m_Gaussiantau;
-                tauy = x1[i]/m_Gaussiantau;
-                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp( -0.5*( taux*taux + tauy*tauy) ) ;
-            }
-        }
-        break;
-
-        case eGaussian2DHet12:
-        {
-            Array<OneD, NekDouble> x0(nq);
-            Array<OneD, NekDouble> x1(nq);
-            Array<OneD, NekDouble> x2(nq);
-
-            m_fields[0]->GetCoords(x0, x1, x2);
-
-            NekDouble taux, tauy;
-            for (int i=0; i<nq; ++i)
-            {
-                taux = x0[i]/m_Gaussiantau;
-                tauy = x1[i]/m_Gaussiantau;
-                AniStrength[0][i] = 4.0 - AnisotropyStrength * exp( -0.5*( taux*taux + tauy*tauy) ) ;
-                AniStrength[1][i] = 4.0 - AnisotropyStrength * exp( -0.5*( taux*taux + tauy*tauy) ) ;
+                        AniStrength[0][index] = 1.0 + (Ani1Magnitude - 1.0) * exp( -0.5*( taux*taux + tauy*tauy + tauz*tauz) ) ;
+                        AniStrength[1][index] = 1.0 + (Ani2Magnitude - 1.0) * exp( -0.5*( taux*taux + tauy*tauy + tauz*tauz) ) ;               
+                    }
             }
         }
         break;
@@ -2733,7 +2695,9 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 
     SolverUtils::AddSummaryItem(s, "AniRegionStart", m_AniRegionStart);
     SolverUtils::AddSummaryItem(s, "AniRegionEnd", m_AniRegionEnd);
-    SolverUtils::AddSummaryItem(s, "AnisotropyStrength", m_AnisotropyStrength);
+
+    SolverUtils::AddSummaryItem(s, "Ani1Magnitude", m_Ani1Magnitude);
+    SolverUtils::AddSummaryItem(s, "Ani2Magnitude", m_Ani2Magnitude);
     SolverUtils::AddSummaryItem(s, "urest", m_urest);
 
     m_cell->GenerateSummary(s);
