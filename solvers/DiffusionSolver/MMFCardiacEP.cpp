@@ -97,6 +97,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
     // Resting potential
     m_session->LoadParameter("urest", m_urest, 0.0);
+    m_session->LoadParameter("uTol", m_uTol, 0.5);
 
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
@@ -2192,7 +2193,7 @@ void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
     int nq = GetTotPoints();
 
     NekDouble fnewsum;
-    NekDouble uTol = 0.01;
+    // NekDouble uTol = 0.01;
     NekDouble dudtTol = 0.01;
 
     // Compute WeakDGLaplacian
@@ -2203,7 +2204,7 @@ void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
     {
         udiff = field[i] - urest;
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((udiff > uTol) && (dudt[i] > dudtTol))
+        if ((udiff > m_uTol) && (dudt[i] > dudtTol))
         {
             // Gradient as the main weight
             fnewsum = dudt[i] + dudtHistory[i];

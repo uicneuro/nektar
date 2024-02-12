@@ -206,7 +206,7 @@ protected:
                 Array<OneD, NekDouble> &VdiffMag);
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
-    NekDouble m_urest;
+    NekDouble m_urest, m_uTol;
 
     // Scar tisseu related variables
     NekDouble m_PVcond;
