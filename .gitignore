@@ -9,6 +9,9 @@
 build
 buildarchive
 ThirdParty
+build_Dec23
+build_old
+build_Feb2024
 # Ignore .DS_Store sometimes created by OS X.
 .DS_Store
 # for the userguide
