@@ -1,0 +1,147 @@
+MMFActivation = 57120 / 57600
+SetUp 2D MF: ***********************************************************
+LOCAL construction for 1920 elements, adapated from MF1 = 1023, MF2 = 897, MF3 = 0
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.576493 , 0.577487 , 0.578069 ) 
+*** MF 1 = ( 0.578117 , 0.577302 , 0.576631 ) 
+*** MF 2 = ( 0.577439 , 0.577262 , 0.57735 ) 
+============ End of MMFInitObect ============
+k = 0, m_varcoeff = ( 0.576493 , 0.577487 , 0.578069 , 0.00438236 , 1 ) 
+k = 1, m_varcoeff = ( 0.578117 , 0.577302 , 0.576631 , 0.00396538 , 1 ) 
+k = 2, m_varcoeff = ( 0.577439 , 0.577262 , 0.57735 , 0.200302 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: SphereCRh20TM
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.002
+	        No. of Steps: 50000
+	 Checkpoints (steps): 5000
+	    Integration Type: IMEX
+	             Surface: Sphere
+	           DerivType: Euclidean
+	          MediumType: Isotropy
+	              MMFdir: LOCAL
+	    SolverSchemeType: Default
+	             TimeMap: Activated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	    AnisotropyRegion: 1000000
+	  AnisotropyStrength: 4
+	          TimeMapEnd: 10000
+	          Cell model: CourtemancheRamirezNattel98
+	     Cell model var.: Original
+=======================================================================
+Initial Conditions:
+  - Field u: -81.0
+total 57600 / 57600 is init-Acitvated
+Initial: max u = -31.1236
+Writing: "SphereCRh20TM_initial.chk"
+ (0s, XML)
+xmax = 10, xmin = -10, ymax = 10, ymin = -10
+Steps: 5000     Time: 10          
+ CPU Time: 12.5138 min.
+u_max = 3.67683 at x = 4.92384, y = 8.65334, z = 0.935414
+u_min = -81.0711 at x = -1.9509, y = 0, z = -9.80785
+Writing: "SphereCRh20TM_TimeMap_1.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_1.chk"
+ (0s, XML)
+Steps: 10000    Time: 20          
+ CPU Time: 12.3201 min.
+u_max = 7.86803 at x = 0, y = 0, z = -10
+u_min = -12.3855 at x = 0, y = 0, z = 10
+Writing: "SphereCRh20TM_TimeMap_2.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_2.chk"
+ (0s, XML)
+Steps: 15000    Time: 30          
+ CPU Time: 12.2245 min.
+u_max = -11.83 at x = 0, y = 0, z = -10
+u_min = -13.5799 at x = 9.0448, y = -0.304211, z = 4.25427
+Writing: "SphereCRh20TM_TimeMap_3.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_3.chk"
+ (0s, XML)
+Steps: 20000    Time: 40          
+ CPU Time: 12.199 min.
+u_max = -12.6597 at x = 0, y = 0, z = 10
+u_min = -14.4486 at x = 0, y = 0, z = -10
+Writing: "SphereCRh20TM_TimeMap_4.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_4.chk"
+ (0s, XML)
+Steps: 25000    Time: 50          
+ CPU Time: 12.1916 min.
+u_max = -11.5947 at x = 0.229637, y = 0, z = 9.99743
+u_min = -13.9758 at x = 0, y = 0, z = -10
+Writing: "SphereCRh20TM_TimeMap_5.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_5.chk"
+ (0s, XML)
+Steps: 30000    Time: 60          
+ CPU Time: 12.1979 min.
+u_max = -10.4234 at x = -1.44503, y = 0.994885, z = 9.84485
+u_min = -12.5319 at x = 0, y = 0, z = -10
+Writing: "SphereCRh20TM_TimeMap_6.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_6.chk"
+ (0s, XML)
+Steps: 35000    Time: 70          
+ CPU Time: 12.1978 min.
+u_max = -9.4055 at x = -1.67277, y = 1.67277, z = 9.71616
+u_min = -10.8748 at x = 0, y = 0, z = -10
+Writing: "SphereCRh20TM_TimeMap_7.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_7.chk"
+ (0s, XML)
+Steps: 40000    Time: 80          
+ CPU Time: 12.12 min.
+u_max = -8.69821 at x = -3.59681, y = 3.48485, z = 8.65555
+u_min = -9.42352 at x = 0, y = 0, z = -10
+Writing: "SphereCRh20TM_TimeMap_8.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_8.chk"
+ (0s, XML)
+Steps: 45000    Time: 90          
+ CPU Time: 12.0282 min.
+u_max = -8.31204 at x = -6.77641, y = 6.77641, z = 2.85677
+u_min = -8.47413 at x = 0, y = 0, z = 10
+Writing: "SphereCRh20TM_TimeMap_9.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_9.chk"
+ (0s, XML)
+Steps: 50000    Time: 100         
+ CPU Time: 12.0123 min.
+u_max = -7.9839 at x = -0.229637, y = 0, z = -9.99743
+u_min = -8.61891 at x = 0, y = 0, z = 10
+Writing: "SphereCRh20TM_TimeMap_10.chk"
+ (0s, XML)
+Time Map: Max = 0, Min = 0
+Writing: "SphereCRh20TM_10.chk"
+ (0s, XML)
+Time-integration  : 7320.45s
+Writing: "SphereCRh20TM.fld"
+ (0s, XML)
+-------------------------------------------
+Total Computation Time = 8205.56s
+-------------------------------------------
+L 2 error (variable u) : 291.551
+L inf error (variable u) : 8.61898

@@ -77,9 +77,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // Derive AnisotropyStrength.
     m_AniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
-    for (int j = 0; j < m_expdim; ++j)
+    m_phieAniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
+    for (int j = 0; j < m_mfdim; ++j)
     {
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+        m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
     m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
@@ -307,7 +309,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
-    // Derive AnisotropyStrength.
+    // Derive AnisotropyStrength for a bidomain.
     m_AnisotropyStrength = m_Cn / m_Cm;
     SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
 
@@ -322,42 +324,61 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralHelmTest:
         case eNeuralEP2Dbi:
         {
-            // Set up for phie Poisson solver
-            // ComputephieMF(m_ratio_re_ri, m_zoneindex[0], m_unitmovingframes, m_phiemovingframes);
-            
-            std::string phieMMFdirStr = "TangentX";
+            // Expression of phie moving frames in phieMMFdirStr
+            std::string phieMMFdirStr = "LOCAL";
             m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
-            Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+            Array<OneD, Array<OneD, NekDouble>> m_phieunitMF;
+
+            Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
             {
-                phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+                unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
 
-            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
-            SetUpMovingFrames(phieMMFdir, phieAniStrength, m_unitmovingframes);
+            std::cout << std::endl;
+            std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
+            SetUpMovingFrames(phieMMFdir, unitAniStrength, m_phieunitMF);
 
-            NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
-
-            m_phiemovingframes = Array<OneD, Array<OneD, NekDouble>> (m_spacedim);
-            for (int j = 0; j < m_spacedim; ++j)
+            // a \vec{e}^{LOC}_1 + b \vec{e}^{LOC}_2 = \vec{e}_1 + \vec{e}_2
+            // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
+            // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
+            Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength(m_expdim);
+            for (int j = 0; j < m_expdim; ++j)
             {
-                    m_phiemovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
+                m_phieAniStrength[j] = Array<OneD, NekDouble>(nq);
             }
 
-            // m_phieMF = \sigma_i + \sigma_e
-            for (int i = 0; i < nq; ++i)
+            // Expression of phie moving frames in MMFdir
+            for (int i = 0; i<nq; ++i)
             {
-                for (int j = 0; j < m_shapedim; ++j)
+                for (int j = 0; j < m_expdim; ++j)
                 {
-                    for (int k = 0; k < m_spacedim; ++k)
+                    m_phieAniStrength[j][i] = ( m_Cn/m_Cm ) / m_ratio_re_ri;
+                    for (int k=0; k<m_spacedim; ++k)
                     {
-                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k*nq+i] 
-                                                              + sigma_e_ratio * m_unitmovingframes[j][k * nq + i];
+                        m_phieAniStrength[j][i] += DotproductMF(i, m_movingframes[k], m_phieunitMF[j]);
                     }
                 }
             }
-            break;
+
+            std::cout << "const = " << ( m_Cn/m_Cm ) / m_ratio_re_ri << std::endl;
+
+            std::cout << "Max phieAnistrength_1  = "
+                        << Vmath::Vmax(nq, m_phieAniStrength[0], 1)
+                        << ", phieAnistrength_2 = "
+                        << Vmath::Vmax(nq, m_phieAniStrength[1], 1)
+                        << ", Min phieAnistrength 1 = "
+                        << Vmath::Vmin(nq, m_phieAniStrength[0], 1)
+                        << ", phieAnistrength 2 = "
+                        << Vmath::Vmin(nq, m_phieAniStrength[1], 1) << std::endl;
+
+            std::cout << std::endl;
+            std::cout << "Set up moving frames with m_phieAniStrength ==================== " << std::endl;
+            SetUpMovingFrames(phieMMFdir, m_phieAniStrength, m_phiemovingframes);
+
+        break;
         }
 
         default:
@@ -406,11 +427,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             case eNeuralEP2Dbi:
             {
-                std::cout << "Generating moving frames for the domain with anisotropic fiber" << std::endl;
+                std::cout << std::endl;
+                std::cout << "Generating moving frames for the domain with anisotropic fiber ===========" << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 std::cout << std::endl;
 
-                std::cout << "Generating moving frames for the distribution of the external potential with point excitation at the Raniver node" << std::endl;
+                std::cout << "Generating moving frames for the distribution of the external potential with point excitation at the Raniver node =========" << std::endl;
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
                 std::cout << std::endl;
 
@@ -462,7 +484,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         }
 
-        SetUpMovingFrames(FindMMFdir("LOCAL"), phieAniStrength, m_unitmovingframes);
+        SetUpMovingFrames(FindMMFdir("LOCAL"), phieAniStrength, m_phiemovingframes);
 
         std::cout << "Constructing phiemovingframes ================================================"
                 << std::endl;
@@ -506,6 +528,22 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
  */
 MMFNeuralEP::~MMFNeuralEP()
 {
+}
+
+NekDouble MMFNeuralEP::DotproductMF(
+    const int i, 
+    const Array<OneD, const NekDouble> &MF, 
+    const Array<OneD, const NekDouble> &MFloc)
+{
+    int nq   = GetTotPoints();
+
+    NekDouble outarray = 0.0;
+    for (int k=0; k<m_spacedim; ++k)
+    {
+        outarray += MF[k * nq + i] * MFloc[k * nq + i];
+    }
+
+    return outarray;
 }
 
 void MMFNeuralEP::CheckOutZoneAni()
@@ -1729,7 +1767,7 @@ void MMFNeuralEP::PlotFields(const Array<OneD, const NekDouble> &phi_m,
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phieforcing = ComputeMMFDiffusion(m_unitmovingframes, phi_m);
+    Array<OneD, NekDouble> phieforcing = ComputeMMFDiffusion(m_phiemovingframes, phi_m);
 
     // Only nonzero for node.
     Vmath::Vmul(nq, m_nodezone, 1, phieforcing, 1, phieforcing, 1);
@@ -2464,6 +2502,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     // SolverUtils::AddSummaryItem(s, "TimeMapScheme", TimeMapTypeMap[m_TimeMapScheme]);
     // SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     // SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
+    SolverUtils::AddSummaryItem(s, "phiedir", SpatialDomains::GeomMMFMap[m_phieMMFdir]);
 
     SolverUtils::AddSummaryItem(s, "Fiber Type", FiberTypeMap[m_fiberType]);
     SolverUtils::AddSummaryItem(s, "Fiber Length", m_fiberlen);

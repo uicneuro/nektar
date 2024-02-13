@@ -1,0 +1,160 @@
+Anisotropy = [ 3 , 4 ] 
+MMFActivation = 6720 /  6720 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.98427 *** 
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.98427 , 0 , 0 ) 
+*** MF 1 = ( 0 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+================== SetUP Time Map moving frames ==================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 1 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 1.98427 , 0 , 0 , 0.0200703 , 3.94246 ) 
+k = 1, m_varcoeff = ( 0 , 1 , 0 , 1.16285e-14 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: CardiacTimeMapDeformGaussX1
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 6
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 100000
+	 Checkpoints (steps): 10000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	              MMFdir: TangentX
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         TimeMapIapp: 0
+	      m_TimeMapDelay: 0
+	      AniRegionStart: 0
+	        AniRegionEnd: 1000000
+	  AnisotropyStrength: 1
+	               urest: 0
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+Writing: "CardiacTimeMapDeformGaussX1_initialcondition.chk"
+ (0.000877115s, XML)
+ValidTimeMap = 1008 / 6720 ( 15 % ) is De-Acitvated
+Initial: u = 1.40138, max u = 4.35157
+Writing: "CardiacTimeMapDeformGaussX1_initial.chk"
+ (0.000706054s, XML)
+xmax = 40, xmin = -40, ymax = 0.5, ymin = -0.5
+Steps: 10000    Time: 10          
+ CPU Time: 0.560524 min.
+u_max = 0.996307 at x = -8.87549, y = -0.132788, z = 0
+u_min = 1.38962e-18 at x = 40, y = 0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_1.chk"
+ (0.00486577s, XML)
+Time Map: Max = 9.99801, Min = 0, vel mag max = 9.95729
+Writing: "CardiacTimeMapDeformGaussX1_1.chk"
+ (0.000737773s, XML)
+Steps: 20000    Time: 20          
+ CPU Time: 0.556807 min.
+u_max = 0.996266 at x = 18.1698, y = 0.5, z = 0
+u_min = 1.99457e-06 at x = 40, y = 0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_2.chk"
+ (0.00505153s, XML)
+Time Map: Max = 19.995, Min = 0, vel mag max = 9.95486
+Writing: "CardiacTimeMapDeformGaussX1_2.chk"
+ (0.00079468s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 0.557678 min.
+u_max = 0.994475 at x = 40, y = -0.5, z = 0
+u_min = 0.00319784 at x = -24.3903, y = 0.367212, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_3.chk"
+ (0.00508249s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_3.chk"
+ (0.000799218s, XML)
+Steps: 40000    Time: 40          
+ CPU Time: 0.557536 min.
+u_max = 0.950727 at x = 40, y = -0.5, z = 0
+u_min = 7.05994e-09 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_4.chk"
+ (0.00505974s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_4.chk"
+ (0.000751179s, XML)
+Steps: 50000    Time: 50          
+ CPU Time: 0.558139 min.
+u_max = 0.00512412 at x = 40, y = -0.5, z = 0
+u_min = 2.79924e-13 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_5.chk"
+ (0.00502318s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_5.chk"
+ (0.000742743s, XML)
+Steps: 60000    Time: 60          
+ CPU Time: 0.557593 min.
+u_max = 1.38746e-09 at x = 40, y = -0.5, z = 0
+u_min = 5.46267e-17 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_6.chk"
+ (0.00504059s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_6.chk"
+ (0.000806041s, XML)
+Steps: 70000    Time: 70          
+ CPU Time: 0.557863 min.
+u_max = 3.07026e-15 at x = 40, y = -0.5, z = 0
+u_min = 1.06158e-20 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_7.chk"
+ (0.00502168s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_7.chk"
+ (0.000807274s, XML)
+Steps: 80000    Time: 80          
+ CPU Time: 0.558227 min.
+u_max = 9.99031e-21 at x = 40, y = 0.5, z = 0
+u_min = 1.07885e-24 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_8.chk"
+ (0.00506857s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_8.chk"
+ (0.000818735s, XML)
+Steps: 90000    Time: 90          
+ CPU Time: 0.557931 min.
+u_max = 3.8618e-26 at x = 40, y = -0.5, z = 0
+u_min = 3.73693e-29 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_9.chk"
+ (0.00502271s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_9.chk"
+ (0.000819106s, XML)
+Steps: 100000   Time: 100         
+ CPU Time: 0.558041 min.
+u_max = 1.64803e-31 at x = 40, y = 0.5, z = 0
+u_min = 6.57834e-34 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX1_TimeMap_10.chk"
+ (0.00501839s, XML)
+Time Map: Max = 24.3918, Min = 0, vel mag max = 9.718
+Writing: "CardiacTimeMapDeformGaussX1_10.chk"
+ (0.000813706s, XML)
+Time-integration  : 334.82s
+Writing: "CardiacTimeMapDeformGaussX1.fld"
+ (0.000860473s, XML)
+-------------------------------------------
+Total Computation Time = 2227.85s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 1.64803e-31

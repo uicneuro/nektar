@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>3892f23091a114c1f86237a845f2fcc3af3487f4</GitSHA1>
+            <Hostname>palmtree.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>21-Nov-2023 11:22:02</Timestamp>
+        </Provenance>
+        <ChkFileNum>2</ChkFileNum>
+        <SessionName0>Fiber1DPoint.opt</SessionName0>
+        <SessionName1>Fiber1DPoint.xml</SessionName1>
+        <Time>0</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="u,m,n,h,p" SHAPE="Segment" BASIS="Modified_A" NUMMODESPERDIR="UNIORDER:4" ID="0-1" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">eJxjYBgFlAAAAUAAAQAA</ELEMENTS>
+</NEKTAR>

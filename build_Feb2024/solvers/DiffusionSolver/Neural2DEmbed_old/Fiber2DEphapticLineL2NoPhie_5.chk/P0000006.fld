@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>ccf7f661960c265184f5a536c3590924f30ce5ed</GitSHA1>
+            <Hostname>cedrus</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>14-Dec-2023 19:49:19</Timestamp>
+        </Provenance>
+        <ChkFileNum>2</ChkFileNum>
+        <SessionName0>Fiber2DEphapticLineL2NoPhie_xml/P0000006.xml</SessionName0>
+        <Time>0.50000000001334788</Time>
+    </Metadata>
+    <ELEMENTS FIELDS="um,ue" SHAPE="Triangle" BASIS="Modified_A,Modified_B" NUMMODESPERDIR="UNIORDER:5,5" ID="154,166-187" COMPRESSED="B64Z-LittleEndian" BITSIZE="64">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</ELEMENTS>
+</NEKTAR>

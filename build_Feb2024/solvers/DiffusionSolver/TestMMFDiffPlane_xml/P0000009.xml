@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <GEOMETRY DIM="2" SPACE="3" PARTITION="9">
+        <VERTEX>
+            <V ID="31">1.00000000e+00 -2.00000000e-01 0.00000000e+00</V>
+            <V ID="32">6.81499993e-01 2.54817996e-01 0.00000000e+00</V>
+            <V ID="34">1.00000000e+00 2.00000000e-01 0.00000000e+00</V>
+            <V ID="36">1.00000000e+00 6.00000000e-01 0.00000000e+00</V>
+            <V ID="37">7.24694443e-01 6.98624937e-01 0.00000000e+00</V>
+            <V ID="42">5.00000000e-01 5.22222222e-01 0.00000000e+00</V>
+            <V ID="45">1.00000000e+00 1.00000000e+00 0.00000000e+00</V>
+            <V ID="46">6.66666667e-01 1.00000000e+00 0.00000000e+00</V>
+        </VERTEX>
+        <EDGE>
+            <E ID="72">31 32</E>
+            <E ID="75">34 32</E>
+            <E ID="76">31 34</E>
+            <E ID="81">36 37</E>
+            <E ID="82">37 32</E>
+            <E ID="83">32 36</E>
+            <E ID="93">34 36</E>
+            <E ID="95">42 32</E>
+            <E ID="96">37 42</E>
+            <E ID="102">45 46</E>
+            <E ID="103">46 37</E>
+            <E ID="104">37 45</E>
+            <E ID="111">36 45</E>
+        </EDGE>
+        <ELEMENT>
+            <T ID="43">75 72 76</T>
+            <T ID="46">81 82 83</T>
+            <T ID="50">83 75 93</T>
+            <T ID="52">95 82 96</T>
+            <T ID="55">102 103 104</T>
+            <T ID="60">104 81 111</T>
+        </ELEMENT>
+        <CURVED />
+        <COMPOSITE>
+            <C ID="1"> T[43,46,50,52,55,60] </C>
+            <C ID="2"> E[111,93,76] </C>
+            <C ID="3"> E[102] </C>
+        </COMPOSITE>
+        <DOMAIN>
+            <D ID="0"> C[1] </D>
+        </DOMAIN>
+    </GEOMETRY>
+    <CONDITIONS>
+        <SOLVERINFO>
+            <I PROPERTY="EQTYPE" VALUE="MMFDiffusion" />
+            <I PROPERTY="Projection" VALUE="DisContinuous" />
+            <I PROPERTY="DiffusionAdvancement" VALUE="Implicit" />
+            <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXdirk_3_4_3" />
+            <I PROPERTY="TestType" VALUE="TestPlane" />
+            <I PROPERTY="SurfaceType" VALUE="Plane" />
+            <I PROPERTY="MMFDir" VALUE="LOCAL" />
+            <I PROPERTY="GlobalSysSoln" VALUE="XxtMultiLevelStaticCond" />
+        </SOLVERINFO>
+        <PARAMETERS>
+            <P>TimeStep = 0.001</P>
+            <P>NumSteps = 5000</P>
+            <P>FinTime = TimeStep*NumSteps</P>
+            <P>IO_CheckSteps = 1000</P>
+            <P>IO_InfoSteps = 1000</P>
+            <P>frequency = PI</P>
+            <P>AniStrength = 1.0</P>
+            <P>Lambda = 0.0</P>
+            <P>epsilon0 = 1.0</P>
+            <P>epsilon1 = 1.0</P>
+        </PARAMETERS>
+        <VARIABLES>
+            <V ID="0">u</V>
+        </VARIABLES>
+        <BOUNDARYREGIONS>
+            <B ID="0">C[2]</B>
+            <B ID="1">C[3]</B>
+        </BOUNDARYREGIONS>
+        <BOUNDARYCONDITIONS>
+            <REGION REF="0">
+                <D VAR="u" VALUE="0" />
+            </REGION>
+            <REGION REF="1">
+                <D VAR="u" VALUE="0" />
+            </REGION>
+        </BOUNDARYCONDITIONS>
+        <FUNCTION NAME="HelmForcing">
+            <E VAR="u" VALUE="-(Lambda + (epsilon0+epsilon1)*frequency*frequency)*sin(frequency*x)*sin(frequency*y)" />
+        </FUNCTION>
+        <FUNCTION NAME="HelmExactSolution">
+            <E VAR="u" VALUE="sin(frequency*x)*sin(frequency*y)" />
+        </FUNCTION>
+    </CONDITIONS>
+    <COLLECTIONS>
+        <OPERATOR TYPE="BwdTrans">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="StdMat" />
+        </OPERATOR>
+        <OPERATOR TYPE="Helmholtz">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="MatrixFree" />
+        </OPERATOR>
+        <OPERATOR TYPE="IProductWRTBase">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="StdMat" />
+        </OPERATOR>
+        <OPERATOR TYPE="IProductWRTDerivBase">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="StdMat" />
+        </OPERATOR>
+        <OPERATOR TYPE="PhysDeriv">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="MatrixFree" />
+        </OPERATOR>
+    </COLLECTIONS>
+    <EXPANSIONS>
+        <E COMPOSITE="C[0-1]" NUMMODES="8" FIELDS="u" TYPE="MODIFIED" />
+    </EXPANSIONS>
+</NEKTAR>
