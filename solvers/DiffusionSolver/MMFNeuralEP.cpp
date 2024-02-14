@@ -342,8 +342,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             //     unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             // }
 
-            std::cout << std::endl;
-            std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
+            // std::cout << std::endl;
+            // std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
             // SetUpMovingFrames(phieMMFdir, unitAniStrength, m_phieunitMF);
 
             // // a \vec{e}^{LOC}_1 + b \vec{e}^{LOC}_2 = \vec{e}_1 + \vec{e}_2
