@@ -489,7 +489,7 @@ MMFCardiacEP::~MMFCardiacEP()
         outarray = m_fields[0]->GetPhys();
 
         // Let the Time Map at the left end should be zero
-        NekDouble TMmin = Vmath::Vmin(nq, outarray, 1);
+        // NekDouble TMmin = Vmath::Vmin(nq, outarray, 1);
        // Vmath::Sadd(nq, -1.0 * TMmin, outarray, 1, outarray, 1);
 
         return outarray;
@@ -680,8 +680,8 @@ void MMFCardiacEP::LoadCardiacFiber(
         {
             for (int i=0; i<nq; ++i)
             {
-                AniStrength[0][i] = sqrt(Ani1Magnitude);      
-                AniStrength[1][i] = sqrt(Ani2Magnitude);                  
+                AniStrength[0][i] = Ani1Magnitude;      
+                AniStrength[1][i] = Ani2Magnitude;                  
             }
         }
         break;
@@ -720,8 +720,8 @@ void MMFCardiacEP::LoadCardiacFiber(
                 for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
                     {
                         index = m_fields[0]->GetPhys_Offset(i) + j;
-                        AniStrength[0][index] = sqrt(Ani1Magnitude);       
-                        AniStrength[1][index] = sqrt(Ani2Magnitude);                 
+                        AniStrength[0][index] = Ani1Magnitude;       
+                        AniStrength[1][index] = Ani2Magnitude;                 
                     }
             }
         }

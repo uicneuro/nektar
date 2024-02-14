@@ -749,7 +749,7 @@ void MMFNeuralEP::SetUpBiAnisotropy(
         for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Smul(nq, m_Cn, &NeuralCm[0][0], 1, &AniStrength[j][0], 1);
-            Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0], 1);
+            // Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0], 1);
         }
     }
 
