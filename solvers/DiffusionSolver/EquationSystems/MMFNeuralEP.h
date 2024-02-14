@@ -60,7 +60,6 @@ enum NeuralEPType
     SIZE_NeuralEPType ///< Length of enum list
 };
 
-
 const char *const NeuralEPTypeMap[] = {
     "NeuralHelmTest",
     "NeuralEPPT",
@@ -107,14 +106,18 @@ const char *const MediumTypeMap[] = {
 
 enum FiberType
 {
-    eSinglestraight,
-    eDoublestraight,
+    eMonoBCDirichlet,
+    eMonoBCNeumann,
+    eEmbedBCDirichlet,
+    eEmbedBCNeumann,
     SIZE_FiberType
 };
 
 const char *const FiberTypeMap[] = {
-    "Singlestraight",
-    "Doublestraight",
+    "MonoBCDirichlet",
+    "MonoBCNeumann",
+    "EmbedBCDirichlet",
+    "EmbedBCNeumann",
 };
 
 enum InitWaveType
@@ -159,14 +162,14 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eNormal,
-    eIsolated,
+    eWithPhie,
+    eNoPhie,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "Normal",
-    "Isolated",
+    "WithPhie",
+    "NoPhie",
 };
 
 enum NodeIndexType
@@ -297,8 +300,6 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
-    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
-
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
@@ -336,11 +337,6 @@ protected:
 
     Array<OneD, LibUtilities::SessionReaderSharedPtr> m_fibersession;
     Array<OneD, SpatialDomains::MeshGraphSharedPtr> m_fibergraph;
-
-    NekDouble DotproductMF(
-        const int i, 
-        const Array<OneD, const NekDouble> &MF, 
-        const Array<OneD, const NekDouble> &MFloc);
 
     Array<OneD, NekDouble> ExtractFiberValue(
         const int nfib, const Array<OneD, const NekDouble> &inarray);
@@ -387,13 +383,6 @@ protected:
         const Array<OneD, Array<OneD, NekDouble>> &inarray,
         const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
         Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor);
-
-    // void ImportFiberXml(
-    //     const int nfibers,
-    //     Array<OneD, MultiRegions::ExpListSharedPtr> &fiberfields,
-    //     Array<OneD, Array<OneD, Array<OneD, int>>> &fiberindex,
-    //     Array<OneD, LibUtilities::SessionReaderSharedPtr> &fibersession,
-    //     Array<OneD, SpatialDomains::MeshGraphSharedPtr> &fibergraph);
 
     /// Solve for the diffusion term.
     void DoImplicitSolve(
@@ -528,16 +517,12 @@ protected:
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
-        
-        
-    Array<OneD, int> IndexNodeZone2D(const FiberType fiberType);
 
-    Array<OneD, int> IndexNodeSingleFiber(
+    Array<OneD, int> IndexNodeZone2D(
         const NekDouble fiberlen, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
         const int Nnode);
-
         
     // Array<OneD, int> IndexNodeZone2D(
     //     const MultiRegions::ExpListSharedPtr &field);

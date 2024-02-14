@@ -47,7 +47,6 @@
 
 using namespace Nektar::SolverUtils;
 
-
 namespace Nektar
 {
 
@@ -60,6 +59,7 @@ enum NeuralEPType
     eNeuralEP2Dbi,
     SIZE_NeuralEPType ///< Length of enum list
 };
+
 
 const char *const NeuralEPTypeMap[] = {
     "NeuralHelmTest",
@@ -92,6 +92,7 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
+    eAllNode,
     SIZE_MediumType
 };
 
@@ -101,22 +102,19 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
+    "AllNode",
 };
 
 enum FiberType
 {
-    eMonoBCDirichlet,
-    eMonoBCNeumann,
-    eEmbedBCDirichlet,
-    eEmbedBCNeumann,
+    eSinglestraight,
+    eDoublestraight,
     SIZE_FiberType
 };
 
 const char *const FiberTypeMap[] = {
-    "MonoBCDirichlet",
-    "MonoBCNeumann",
-    "EmbedBCDirichlet",
-    "EmbedBCNeumann",
+    "Singlestraight",
+    "Doublestraight",
 };
 
 enum InitWaveType
@@ -161,14 +159,14 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eWithPhie,
-    eNoPhie,
+    eNormal,
+    eIsolated,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "WithPhie",
-    "NoPhie",
+    "Normal",
+    "Isolated",
 };
 
 enum NodeIndexType
@@ -257,7 +255,7 @@ protected:
 
     // variables for phie-Poisson solver
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
-    Array<OneD, Array<OneD, NekDouble>> m_helmfmovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
 
     // Elements for fiber 2D: Start and End index
     int m_fiber2DElemStart, m_fiber2DElemEnd;
@@ -299,6 +297,8 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
+
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
@@ -337,6 +337,11 @@ protected:
     Array<OneD, LibUtilities::SessionReaderSharedPtr> m_fibersession;
     Array<OneD, SpatialDomains::MeshGraphSharedPtr> m_fibergraph;
 
+    NekDouble DotproductMF(
+        const int i, 
+        const Array<OneD, const NekDouble> &MF, 
+        const Array<OneD, const NekDouble> &MFloc);
+
     Array<OneD, NekDouble> ExtractFiberValue(
         const int nfib, const Array<OneD, const NekDouble> &inarray);
 
@@ -358,22 +363,20 @@ protected:
 
     Array<OneD, int> GetInternalBoundaryPoints();
     
-    void ComputephieMF(
-        const NekDouble ratio_re_ri,
-        Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
-        Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
+    // void ComputephieMF(
+    //     const NekDouble ratio_re_ri,
+    //     const Array<OneD, const int> &zoneindex,
+    //     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
+    //     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
-    void Plotphiecurrent(const Array<OneD, const NekDouble> &phi_m,
+    void PlotFields(const Array<OneD, const NekDouble> &phi_m,
                                    const Array<OneD, const NekDouble> &phi_e,
                                    const int nstep);
 
     // void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-
-    // void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    // void DisplayNode2Dvar1(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
-    // void DisplayNode2Dvar2(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
+    void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
@@ -465,7 +468,7 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
         const Array<OneD, const NekDouble> &phim);
 
-    Array<OneD, NekDouble> Derivephie(
+    Array<OneD, NekDouble> Computephie(
         const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
@@ -525,12 +528,16 @@ protected:
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
+        
+        
+    Array<OneD, int> IndexNodeZone2D(const FiberType fiberType);
 
-    Array<OneD, int> IndexNodeZone2D(
+    Array<OneD, int> IndexNodeSingleFiber(
         const NekDouble fiberlen, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
         const int Nnode);
+
         
     // Array<OneD, int> IndexNodeZone2D(
     //     const MultiRegions::ExpListSharedPtr &field);
@@ -552,7 +559,6 @@ protected:
 
     void SetUpDomainZone(
         const Array<OneD, const int> &zoneindex,
-        int &Excitezonehead, int &Excitezonetail, 
         Array<OneD, NekDouble> &excitezone,
         Array<OneD, NekDouble> &nodezone,
         Array<OneD, NekDouble> &intrazone,
@@ -575,8 +581,6 @@ private:
     NekDouble m_chi;
     NekDouble m_capMembrane;
     NekDouble m_conductivity;
-
-    int m_Excitezonehead, m_Excitezonetail;
 
     CellModelSharedPtr m_cell;
 
