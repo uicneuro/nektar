@@ -476,7 +476,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
                 std::cout << "Generating moving frames for the distribution of the external potential with point excitation at the Raniver node =========" << std::endl;
                 // ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-                                ComputeVarCoeff2D(m_movingframes, m_phievarcoeff);
                 std::cout << std::endl;
 
                 m_ode.DefineImplicitSolve(
@@ -2274,7 +2273,9 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
     Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
-    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    // m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+        m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_varcoeff);
+
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
     m_fields[1]->SetPhysState(true);
 
