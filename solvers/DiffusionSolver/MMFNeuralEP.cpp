@@ -327,7 +327,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         {
             // Expression of phie moving frames in phieMMFdirStr
             std::string phieMMFdirStr = "LOCAL";
-            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            // m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
             SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
             Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
@@ -344,7 +344,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             std::cout << std::endl;
             std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
-            SetUpMovingFrames(phieMMFdir, unitAniStrength, m_phieunitMF);
+            // SetUpMovingFrames(phieMMFdir, unitAniStrength, m_phieunitMF);
 
             // // a \vec{e}^{LOC}_1 + b \vec{e}^{LOC}_2 = \vec{e}_1 + \vec{e}_2
             // // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
