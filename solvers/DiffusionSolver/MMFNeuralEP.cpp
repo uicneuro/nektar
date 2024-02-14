@@ -438,7 +438,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 std::cout << std::endl;
 
                 std::cout << "Generating moving frames for the distribution of the external potential with point excitation at the Raniver node =========" << std::endl;
-                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+                // ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+                                ComputeVarCoeff2D(m_movingframes, m_phievarcoeff);
+
                 std::cout << std::endl;
 
                 m_ode.DefineImplicitSolve(
