@@ -330,7 +330,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
             SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
-            Array<OneD, Array<OneD, NekDouble>> m_phieunitMF;
+            Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
+            for (int i=0; i<m_mfdim; ++i)
+            {
+                m_phieunitMF[i] = Array<OneD, NekDouble>(m_spacedim * nq);
+            }
 
             Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
