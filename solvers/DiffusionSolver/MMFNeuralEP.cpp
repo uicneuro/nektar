@@ -325,21 +325,21 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralHelmTest:
         case eNeuralEP2Dbi:
         {
-            std::string phieMMFdirStr = "TangentX";
-            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            // std::string phieMMFdirStr = "TangentX";
+            // m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
 
-            Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
-            for (int j = 0; j < m_expdim; ++j)
-            {
-                phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-            }
+            // Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
+            // for (int j = 0; j < m_expdim; ++j)
+            // {
+            //     phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            // }
 
-            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+            // SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
-            Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
-            SetUpMovingFrames(phieMMFdir, phieAniStrength, m_unitmovingframes);
+            // Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
+            // SetUpMovingFrames(phieMMFdir, phieAniStrength, m_unitmovingframes);
 
-            NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
+            // NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
             
             m_phiemovingframes = Array<OneD, Array<OneD, NekDouble>> (m_spacedim);
             for (int j = 0; j < m_spacedim; ++j)
@@ -354,8 +354,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     for (int k = 0; k < m_spacedim; ++k)
                     {
-                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k*nq+i] 
-                                                              + sigma_e_ratio * m_unitmovingframes[j][k * nq + i];
+                        // m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k*nq+i] 
+                        //                                         + sigma_e_ratio * m_unitmovingframes[j][k * nq + i];
+                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k*nq+i];
                     }
                 }
             }
