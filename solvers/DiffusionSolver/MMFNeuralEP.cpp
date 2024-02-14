@@ -330,17 +330,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
             SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
-            Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
-            for (int i=0; i<m_mfdim; ++i)
-            {
-                m_phieunitMF[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-            }
+            // Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
+            // for (int i=0; i<m_mfdim; ++i)
+            // {
+            //     m_phieunitMF[i] = Array<OneD, NekDouble>(m_spacedim * nq);
+            // }
 
-            Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_mfdim);
-            for (int j = 0; j < m_mfdim; ++j)
-            {
-                unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-            }
+            // Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_mfdim);
+            // for (int j = 0; j < m_mfdim; ++j)
+            // {
+            //     unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            // }
 
             std::cout << std::endl;
             std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
