@@ -324,34 +324,34 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {
             // Expression of phie moving frames in phieMMFdirStr
-            std::string phieMMFdirStr = "LOCAL";
-            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
-            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+            // std::string phieMMFdirStr = "LOCAL";
+            // m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            // SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
-            Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
-            for (int i=0; i<m_mfdim; ++i)
-            {
-                m_phieunitMF[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-            }
+            // Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
+            // for (int i=0; i<m_mfdim; ++i)
+            // {
+            //     m_phieunitMF[i] = Array<OneD, NekDouble>(m_spacedim * nq);
+            // }
 
-            Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_mfdim);
-            for (int j = 0; j < m_mfdim; ++j)
-            {
-                unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-            }
+            // Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_mfdim);
+            // for (int j = 0; j < m_mfdim; ++j)
+            // {
+            //     unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            // }
 
-            std::cout << std::endl;
-            std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
-            SetUpMovingFrames(phieMMFdir, unitAniStrength, m_phieunitMF);
+            // std::cout << std::endl;
+            // std::cout << "Set up moving frames with unitAniStrength ==================== " << std::endl;
+            // SetUpMovingFrames(phieMMFdir, unitAniStrength, m_phieunitMF);
 
-            // a \vec{e}^{LOC}_1 + b \vec{e}^{LOC}_2 = \vec{e}_1 + \vec{e}_2
-            // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
-            // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
-            Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength(m_expdim);
-            for (int j = 0; j < m_expdim; ++j)
-            {
-                m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-            }
+            // // a \vec{e}^{LOC}_1 + b \vec{e}^{LOC}_2 = \vec{e}_1 + \vec{e}_2
+            // // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
+            // // a = ( \vec{e}_1 \cdot \vec^{LOC}_1 ) + ( \vec{e}_2 \cdot \vec^{LOC}_1 )
+            // Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength(m_expdim);
+            // for (int j = 0; j < m_expdim; ++j)
+            // {
+            //     m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+            // }
 
             // // Expression of phie moving frames in MMFdir
             // NekDouble tmp;
