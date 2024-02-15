@@ -104,20 +104,34 @@ const char *const MediumTypeMap[] = {
     "AllNode",
 };
 
+// enum FiberType
+// {
+//     eMonoBCDirichlet,
+//     eMonoBCNeumann,
+//     eEmbedBCDirichlet,
+//     eEmbedBCNeumann,
+//     SIZE_FiberType
+// };
+
+// const char *const FiberTypeMap[] = {
+//     "MonoBCDirichlet",
+//     "MonoBCNeumann",
+//     "EmbedBCDirichlet",
+//     "EmbedBCNeumann",
+// };
+
 enum FiberType
 {
-    eMonoBCDirichlet,
-    eMonoBCNeumann,
-    eEmbedBCDirichlet,
-    eEmbedBCNeumann,
+    eSingleLinearmono,
+    eSingleLinearbi,
+    eDoubleLinear,
     SIZE_FiberType
 };
 
 const char *const FiberTypeMap[] = {
-    "MonoBCDirichlet",
-    "MonoBCNeumann",
-    "EmbedBCDirichlet",
-    "EmbedBCNeumann",
+    "SingleLinearmono",
+    "SingleLinearbi",
+    "DoubleLinear",
 };
 
 enum InitWaveType
@@ -517,8 +531,10 @@ protected:
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
+        
+    Array<OneD, int> IndexNodeZone2D(const FiberType fiberType);
 
-    Array<OneD, int> IndexNodeZone2D(
+    Array<OneD, int> IndexNodeSingleFiber(
         const NekDouble fiberlen, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,

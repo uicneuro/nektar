@@ -620,13 +620,14 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(const FiberType fiberType)
 
     switch(fiberType)
     {
-        case eSinglestraight:
+        case eSingleLinearmono:
+        case eSingleLinearbi:
         {
             outarray = IndexNodeSingleFiber(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
         }
         break;
 
-        case eDoublestraight:
+        case eDoubleLinear:
         {
             // outarray = IndexNodeDoubleFiber(m_fiberlen, m_nodelen, m_myelinlen, m_Node);
         }

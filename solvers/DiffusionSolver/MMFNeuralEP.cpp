@@ -284,7 +284,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_zoneindex[0]  = Array<OneD, int>(nq, 1); 
 
             m_npts = m_fields[0]->GetTotPoints(0);
-            m_zoneindex[0] = IndexNodeZone2D(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
+            // m_zoneindex[0] = IndexNodeZone2D(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
+            m_zoneindex[0] = IndexNodeZone2D(m_fiberType);
 
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
@@ -526,11 +527,39 @@ void MMFNeuralEP::CheckOutZoneAni()
 
 }
 
-Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
+Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(const FiberType fiberType)
+{
+    int nq   = GetTotPoints();
+    
+    Array<OneD, int> outarray(nq);
+
+    switch(fiberType)
+    {
+        case eSingleLinearmono:
+        case eSingleLinearbi:
+        {
+            outarray = IndexNodeSingleFiber(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
+        }
+        break;
+
+        case eDoubleLinear:
+        {
+            // outarray = IndexNodeDoubleFiber(m_fiberlen, m_nodelen, m_myelinlen, m_Node);
+        }
+        break;
+
+        default:
+        break;
+    }
+
+    return outarray;
+}
+
+Array<OneD, int> MMFNeuralEP::IndexNodeSingleFiber(
     const NekDouble fiberlen, 
     const NekDouble nodelen, 
     const NekDouble myelinlen,
-    const int Nnode)
+    const int totNode)
 {
     int nq   = GetTotPoints();
 
@@ -590,7 +619,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
                 }
             }
 
-            for (int k=0; k<Nnode; ++k)
+            for (int k=0; k<totNode; ++k)
             {
                 nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
                 nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
@@ -609,6 +638,91 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
     return outarray;
 }
+
+
+// Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
+//     const NekDouble fiberlen, 
+//     const NekDouble nodelen, 
+//     const NekDouble myelinlen,
+//     const int Nnode)
+// {
+//     int nq   = GetTotPoints();
+
+//     Array<OneD, NekDouble> x0(nq);
+//     Array<OneD, NekDouble> x1(nq);
+//     Array<OneD, NekDouble> x2(nq);
+
+//     m_fields[0]->GetCoords(x0, x1, x2);
+
+//     Array<OneD, NekDouble> xcell(nq);
+//     Array<OneD, NekDouble> ycell(nq);
+//     Array<OneD, NekDouble> zcell(nq);
+
+//     int Nelem = nq/m_npts;
+
+//     Array<OneD, NekDouble> xcellavg(Nelem,0.0);
+//     Array<OneD, NekDouble> ycellavg(Nelem,0.0);
+//     Array<OneD, NekDouble> zcellavg(Nelem,0.0);
+
+//     int index;
+//     for (int i=0; i<nq; ++i)
+//     {
+//         index = i/m_npts;
+//         xcellavg[index] = xcellavg[index] + x0[i];
+//         ycellavg[index] = ycellavg[index] + x1[i];
+//         zcellavg[index] = zcellavg[index] + x2[i];
+//     }
+
+//     Vmath::Smul(Nelem, 1.0/m_npts, xcellavg, 1, xcellavg, 1);
+//     Vmath::Smul(Nelem, 1.0/m_npts, ycellavg, 1, ycellavg, 1);
+//     Vmath::Smul(Nelem, 1.0/m_npts, zcellavg, 1, zcellavg, 1);
+
+//     for (int i=0; i<nq; ++i)
+//     {
+//         index = i/m_npts;
+
+//         xcell[i] = xcellavg[index];
+//         ycell[i] = ycellavg[index];
+//         zcell[i] = zcellavg[index];
+//     }
+
+//     Array<OneD, int> outarray(nq, -1);
+
+//     NekDouble nodestart, nodeend;
+//     NekDouble fiberleft = -0.5*fiberlen;
+//     NekDouble fiberright = 0.5*fiberlen;
+
+//     for (int i=0; i<nq; ++i)
+//     {
+//         if((xcell[i]>fiberleft) && (xcell[i]<fiberright))
+//         {
+//             for (int k=0; k<2; ++k)
+//             {
+//                 if( (ycell[i]>=k*nodelen) && (ycell[i]<=(k+1)*nodelen) )
+//                 {
+//                     outarray[i] = k;
+//                 }
+//             }
+
+//             for (int k=0; k<Nnode; ++k)
+//             {
+//                 nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
+//                 nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
+//                 if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
+//                 {
+//                     outarray[i] = k+2;
+//                 }
+//             }
+//         }
+
+//         else
+//         {
+//             outarray[i] = -2;
+//         }
+//     }
+
+//     return outarray;
+// }
 
 // void MMFNeuralEP::ComputephieMF(
 //     const NekDouble ratio_re_ri,
@@ -2159,51 +2273,61 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-    switch(m_fiberType)
-    {
-        // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-        case eMonoBCDirichlet:
-        {
-            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-            m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-            break;
-        }
-
-        case eMonoBCNeumann:
-        {
-            Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-            m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-            break;
-        }
-
-        // Helsolve with pure Neumann boundary condition
-        case eEmbedBCDirichlet:
-        {
-            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-            m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-            break;
-        }
-
-        case eEmbedBCNeumann:
-        {
-            Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-            Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-            m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-            break;
-        }
-
-        default:
-        break;
-    }
-
+    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    // m_fields[1]->SetPhysState(true);
+    m_fields[1]->SetPhysState(true);
 
     outarray = m_fields[1]->GetPhys();
 
     return outarray;
 }
+
+
+    // switch(m_fiberType)
+    // {
+    //     // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
+    //     case eMonoBCDirichlet:
+    //     {
+    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    //         break;
+    //     }
+
+    //     case eSingleLinearmono:
+    //     {
+    //         Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    //         break;
+    //     }
+
+    //     // Helsolve with pure Neumann boundary condition
+    //     case eEmbedBCDirichlet:
+    //     {
+    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    //         break;
+    //     }
+
+    //     case eEmbedBCNeumann:
+    //     {
+    //         Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    //         break;
+    //     }
+
+    //     default:
+    //     break;
+    // }
+
+    // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    // // m_fields[1]->SetPhysState(true);
+
+    // outarray = m_fields[1]->GetPhys();
+
+    //     return outarray;
+    // }
 
 void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                                          bool dumpInitialConditions,
