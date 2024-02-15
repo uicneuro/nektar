@@ -78,7 +78,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     // Derive AnisotropyStrength.
     m_AniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
     m_phieAniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
@@ -339,7 +339,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // m_phieMF = \sigma_i + \sigma_e
             for (int i = 0; i < nq; ++i)
             {
-                for (int j = 0; j < m_shapedim; ++j)
+                for (int j = 0; j < m_expdim; ++j)
                 {
                     for (int k = 0; k < m_spacedim; ++k)
                     {
