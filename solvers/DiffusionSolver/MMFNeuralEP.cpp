@@ -1982,31 +1982,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
                         factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
-
-//    switch(m_fiberType)
-//     {
-//         // Helsolve with pure Neumann boundary condition
-//         case eEmbedBCDirichlet:
-//         case eEmbedBCNeumann:
-//         {
-//             m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//                                 factors, m_varcoeff);
-//             break;
-//         }
-
-//         // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-//         case eMonoBCDirichlet:
-//         case eMonoBCNeumann:
-//         default:
-//         {
-//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//                                 factors, m_varcoeff);
-//             break;
-//         }
-//     }
-
-
-
 }
 
 // We Return Y[i] = rhs [i] without no Helomsolver
@@ -2270,6 +2245,10 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // Compute phie distribution
     // SetBoundaryConditions(0.0);
 
+    // Helsolve with pure Neumann boundary condition
+    Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
+    Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
@@ -2280,53 +2259,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     return outarray;
 }
-
-
-    // switch(m_fiberType)
-    // {
-    //     // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-    //     case eMonoBCDirichlet:
-    //     {
-    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    //         break;
-    //     }
-
-    //     case eSingleLinearmono:
-    //     {
-    //         Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    //         break;
-    //     }
-
-    //     // Helsolve with pure Neumann boundary condition
-    //     case eEmbedBCDirichlet:
-    //     {
-    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    //         break;
-    //     }
-
-    //     case eEmbedBCNeumann:
-    //     {
-    //         Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-    //         Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-    //         m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    //         break;
-    //     }
-
-    //     default:
-    //     break;
-    // }
-
-    // m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    // // m_fields[1]->SetPhysState(true);
-
-    // outarray = m_fields[1]->GetPhys();
-
-    //     return outarray;
-    // }
 
 void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                                          bool dumpInitialConditions,

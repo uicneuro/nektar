@@ -2010,9 +2010,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
 //             break;
 //         }
 //     }
-
-
-
 }
 
 // We Return Y[i] = rhs [i] without no Helomsolver
