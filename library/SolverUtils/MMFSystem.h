@@ -484,12 +484,7 @@ protected:
     SOLVER_UTILS_EXPORT void SetUpMovingFrames(
         const SpatialDomains::GeomMMF MMFdir,
         const Array<OneD, const Array<OneD, NekDouble>> &Anisotropy,
-        Array<OneD, Array<OneD, NekDouble>> &movingframes,
-        const Array<OneD, const NekDouble> &AniDirection =
-            NullNekDouble1DArray);
-
-    SOLVER_UTILS_EXPORT void SetUpMovingFrames(
-        const Array<OneD, const Array<OneD, NekDouble>> &Anisotropy);
+        Array<OneD, Array<OneD, NekDouble>> &movingframes);
 
     SOLVER_UTILS_EXPORT void ComputeAxisAlignedLOCALMovingframes(
         const Array<OneD, const Array<OneD, NekDouble>> &AxisMF,

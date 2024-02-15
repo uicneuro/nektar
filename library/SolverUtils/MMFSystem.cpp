@@ -58,6 +58,8 @@ void MMFSystem::MMFInitObject(
     m_shapedim = m_expdim;
     m_mfdim    = 3;
 
+    std::cout << "MMFInitObejct Starts: ==============================================" << std::endl;
+
     ASSERTL0(m_spacedim == 3, "Space Dimension should be 3");
 
     // Define MMFOrderType
@@ -239,11 +241,19 @@ void MMFSystem::MMFInitObject(
     }    
 
     // SetUpMovingFrames: To generate m_movingframes
-    std::string MMFdirStr = "LOCAL";
-    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
-    m_MMFdir = FindMMFdir(MMFdirStr);
-    
-    SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes, AniDirection);
+    if(AniDirection == NullNekDouble1DArray)
+    {
+        std::string MMFdirStr;
+        m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
+        m_MMFdir = FindMMFdir(MMFdirStr);
+
+        SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes); 
+    }
+
+    else
+    {
+        // GenerateMFbyAniDirection(AniDreiction, m_movingframes);
+    }
 
     switch (m_projectionType)
     {
@@ -969,11 +979,8 @@ void MMFSystem::ComputeCurl(
 void MMFSystem::SetUpMovingFrames(
     const SpatialDomains::GeomMMF MMFdir,
     const Array<OneD, const Array<OneD, NekDouble>> &Anistrength,
-    Array<OneD, Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const NekDouble> &AniDirection)
+    Array<OneD, Array<OneD, NekDouble>> &movingframes)
 {
-    boost::ignore_unused(AniDirection);
-
     int nq = m_fields[0]->GetNpoints();
 
     // Construct The Moving Frames
