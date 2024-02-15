@@ -321,7 +321,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralHelmTest:
         case eNeuralEP2Dbi:
         {
-            // Set up for m_phiemovingframe Poisson solver
+            // Set up for phie Poisson solver
+            // ComputephieMF(m_ratio_re_ri, m_zoneindex[0], m_unitmovingframes, m_phiemovingframes);
+            
             std::string phieMMFdirStr = "TangentX";
             m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
 
@@ -332,14 +334,14 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
-            SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
+            SetUpMovingFrames(phieMMFdir, phieAniStrength, m_unitmovingframes);
 
             NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
 
             m_phiemovingframes = Array<OneD, Array<OneD, NekDouble>> (m_spacedim);
             for (int j = 0; j < m_spacedim; ++j)
             {
-                m_phiemovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
+                    m_phiemovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
             }
 
             // m_phieMF = \sigma_i + \sigma_e
@@ -349,8 +351,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     for (int k = 0; k < m_spacedim; ++k)
                     {
-                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k * nq + i] 
-                                                              + sigma_e_ratio * m_phiemovingframes[j][k * nq + i];
+                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k*nq+i] 
+                                                              + sigma_e_ratio * m_unitmovingframes[j][k * nq + i];
                     }
                 }
             }
