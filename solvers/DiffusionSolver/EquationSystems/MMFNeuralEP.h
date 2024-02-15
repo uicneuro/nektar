@@ -122,15 +122,13 @@ const char *const MediumTypeMap[] = {
 
 enum FiberType
 {
-    eSingleLinearmono,
-    eSingleLinearbi,
+    eSingleLinear,
     eDoubleLinear,
     SIZE_FiberType
 };
 
 const char *const FiberTypeMap[] = {
-    "SingleLinearmono",
-    "SingleLinearbi",
+    "SingleLinear",
     "DoubleLinear",
 };
 

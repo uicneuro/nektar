@@ -535,8 +535,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(const FiberType fiberType)
 
     switch(fiberType)
     {
-        case eSingleLinearmono:
-        case eSingleLinearbi:
+        case eSingleLinear:
         {
             outarray = IndexNodeSingleFiber(m_fiberlen, m_nodelen, m_myelinlen, m_totNode);
         }
