@@ -330,11 +330,33 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
 
-            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction" << std::endl;
+            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction ===============" << std::endl;
 
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
 
-            NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
+            NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
+            NekDouble ekcdoteLj;
+            for (int i = 0; i<nq; ++i)
+            {
+                for (int j = 0; j < m_expdim; ++j)
+                {
+                    m_phieAniStrength[j][i] = ( m_Cn/m_Cm ) / m_ratio_re_ri;
+                    for (int k=0; k<m_spacedim; ++k)
+                    {
+                        ekx = m_movingframes[k][i];
+                        eky = m_movingframes[k][nq+i];
+                        ekz = m_movingframes[k][2*nq+i];
+
+                        eLjx = m_phiemovingframes[j][i];
+                        eLjy = m_phiemovingframes[j][nq+i];
+                        eLjz = m_phiemovingframes[j][2*nq+i];
+
+                        ekcdoteLj = ekx * eLjx + eky * eLjy + ekz * eLjz;
+
+                        m_phieAniStrength[j][i] += ekcdoteLj * ekcdoteLj;
+                    }
+                }
+            }
 
             // m_phieMF = \sigma_i + \sigma_e
             for (int i = 0; i < nq; ++i)
@@ -347,6 +369,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     }
                 }
             }
+
+            std::cout << "Max phieAnistrength_1  = "
+                        << Vmath::Vmax(nq, m_phieAniStrength[0], 1)
+                        << ", phieAnistrength_2 = "
+                        << Vmath::Vmax(nq, m_phieAniStrength[1], 1)
+                        << ", Min phieAnistrength 1 = "
+                        << Vmath::Vmin(nq, m_phieAniStrength[0], 1)
+                        << ", phieAnistrength 2 = "
+                        << Vmath::Vmin(nq, m_phieAniStrength[1], 1) << std::endl;
+
             break;
         }
 
@@ -396,11 +428,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             case eNeuralEP2Dbi:
             {
-                std::cout << "Generating moving frames for the domain with anisotropic fiber" << std::endl;
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
                 std::cout << std::endl;
+                std::cout << "Generating m_varcoeff ================================= " << std::endl;
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
 
-                std::cout << "Generating moving frames for the distribution of the external potential with point excitation at the Raniver node" << std::endl;
+                std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
                 std::cout << std::endl;
 
