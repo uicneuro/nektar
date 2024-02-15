@@ -312,6 +312,8 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
+
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
@@ -371,6 +373,11 @@ protected:
 
     Array<OneD, int> GetInternalBoundaryPoints();
     
+    NekDouble DotproductMF(
+    const int i, 
+    const Array<OneD, const NekDouble> &MF, 
+    const Array<OneD, const NekDouble> &MFloc);
+
     // void ComputephieMF(
     //     const NekDouble ratio_re_ri,
     //     const Array<OneD, const int> &zoneindex,
