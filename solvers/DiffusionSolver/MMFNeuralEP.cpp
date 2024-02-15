@@ -324,9 +324,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {
             // Expression of phie moving frames in phieMMFdirStr
-            // std::string phieMMFdirStr = "LOCAL";
-            // m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
-            // SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+            std::string phieMMFdirStr = "LOCAL";
+            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
             // Array<OneD, Array<OneD, NekDouble>> m_phieunitMF(m_mfdim);
             // for (int i=0; i<m_mfdim; ++i)
