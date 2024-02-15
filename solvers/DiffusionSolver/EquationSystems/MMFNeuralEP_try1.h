@@ -104,6 +104,22 @@ const char *const MediumTypeMap[] = {
     "AllNode",
 };
 
+// enum FiberType
+// {
+//     eMonoBCDirichlet,
+//     eMonoBCNeumann,
+//     eEmbedBCDirichlet,
+//     eEmbedBCNeumann,
+//     SIZE_FiberType
+// };
+
+// const char *const FiberTypeMap[] = {
+//     "MonoBCDirichlet",
+//     "MonoBCNeumann",
+//     "EmbedBCDirichlet",
+//     "EmbedBCNeumann",
+// };
+
 enum FiberType
 {
     eSingleLinear,
@@ -296,6 +312,8 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
+
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
@@ -355,6 +373,11 @@ protected:
 
     Array<OneD, int> GetInternalBoundaryPoints();
     
+    NekDouble DotproductMF(
+    const int i, 
+    const Array<OneD, const NekDouble> &MF, 
+    const Array<OneD, const NekDouble> &MFloc);
+
     // void ComputephieMF(
     //     const NekDouble ratio_re_ri,
     //     const Array<OneD, const int> &zoneindex,
@@ -379,13 +402,6 @@ protected:
         const Array<OneD, Array<OneD, NekDouble>> &inarray,
         const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
         Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor);
-
-    // void ImportFiberXml(
-    //     const int nfibers,
-    //     Array<OneD, MultiRegions::ExpListSharedPtr> &fiberfields,
-    //     Array<OneD, Array<OneD, Array<OneD, int>>> &fiberindex,
-    //     Array<OneD, LibUtilities::SessionReaderSharedPtr> &fibersession,
-    //     Array<OneD, SpatialDomains::MeshGraphSharedPtr> &fibergraph);
 
     /// Solve for the diffusion term.
     void DoImplicitSolve(
@@ -520,8 +536,10 @@ protected:
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
+        
+    Array<OneD, int> IndexNodeZone2D(const FiberType fiberType);
 
-    Array<OneD, int> IndexNodeZone2D(
+    Array<OneD, int> IndexNodeSingleFiber(
         const NekDouble fiberlen, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
