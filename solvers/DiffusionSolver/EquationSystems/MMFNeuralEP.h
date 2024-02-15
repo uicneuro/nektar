@@ -254,7 +254,6 @@ protected:
 
     // variables for phie-Poisson solver
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
-    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
 
     // Elements for fiber 2D: Start and End index
     int m_fiber2DElemStart, m_fiber2DElemEnd;
@@ -296,6 +295,8 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
+
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 

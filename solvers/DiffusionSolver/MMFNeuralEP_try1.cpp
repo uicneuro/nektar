@@ -83,6 +83,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
+    
     m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
     for (int i = 0; i < 1; ++i)
     {

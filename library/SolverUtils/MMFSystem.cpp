@@ -54,11 +54,12 @@ void MMFSystem::MMFInitObject(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
     const Array<OneD, const NekDouble> &AniDirection)
 {
+    std::cout << std::endl;
+    std::cout << "MMFInitObejct Starts: ==============================================" << std::endl;
+
     m_pi       = 3.14159265358979323846;
     m_shapedim = m_expdim;
     m_mfdim    = 3;
-
-    std::cout << "MMFInitObejct Starts: ==============================================" << std::endl;
 
     ASSERTL0(m_spacedim == 3, "Space Dimension should be 3");
 
@@ -297,8 +298,8 @@ void MMFSystem::MMFInitObject(
         break;
     }
 
-    std::cout << "MMFInitObject is done ===========================" << std::endl;
-
+    std::cout << "MMFInitObject is done ==============================================" << std::endl;
+    std::cout << std::endl;
     // Connection 2-form
     // if(m_expdim>1)
     // {

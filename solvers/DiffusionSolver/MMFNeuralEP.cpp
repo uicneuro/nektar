@@ -77,9 +77,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // Derive AnisotropyStrength.
     m_AniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
-    for (int j = 0; j < m_expdim; ++j)
+    m_phieAniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
+    for (int j = 0; j < m_mfdim; ++j)
     {
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+        m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
     m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
@@ -310,11 +312,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_AnisotropyStrength = m_Cn / m_Cm;
     SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
 
-    std::cout << "MMFInitObejct ==============================================" << std::endl;
     MMFSystem::MMFInitObject(m_AniStrength);
-
-    // Check moving frames and anisotropy
-    // CheckOutZoneAni();
 
     switch (m_NeuralEPType)
     {
@@ -322,8 +320,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {
             // Set up for m_phiemovingframe Poisson solver
-            std::string phieMMFdirStr = "TangentX";
+            std::string phieMMFdirStr;
             m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
             Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
@@ -331,16 +330,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
 
-            SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction" << std::endl;
+
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
 
             NekDouble sigma_e_ratio = m_AnisotropyStrength / m_ratio_re_ri;
-
-            m_phiemovingframes = Array<OneD, Array<OneD, NekDouble>> (m_spacedim);
-            for (int j = 0; j < m_spacedim; ++j)
-            {
-                m_phiemovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
-            }
 
             // m_phieMF = \sigma_i + \sigma_e
             for (int i = 0; i < nq; ++i)
@@ -349,8 +343,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     for (int k = 0; k < m_spacedim; ++k)
                     {
-                        m_phiemovingframes[j][k * nq + i] = m_movingframes[j][k * nq + i] 
-                                                              + sigma_e_ratio * m_phiemovingframes[j][k * nq + i];
+                        m_phiemovingframes[j][k * nq + i] = sqrt(m_phieAniStrength[j][i]) * m_phiemovingframes[j][k * nq + i];
                     }
                 }
             }
@@ -459,7 +452,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         }
 
-        SetUpMovingFrames(FindMMFdir("LOCAL"), phieAniStrength, m_unitmovingframes);
+        SetUpMovingFrames(FindMMFdir("LOCAL"), phieAniStrength, m_phiemovingframes);
 
         std::cout << "Constructing phiemovingframes ================================================"
                 << std::endl;
@@ -503,25 +496,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
  */
 MMFNeuralEP::~MMFNeuralEP()
 {
-}
-
-void MMFNeuralEP::CheckOutZoneAni()
-{
-    int nq   = GetTotPoints();
-
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
-
-    m_fields[0]->GetCoords(x0, x1, x2);
-
-    for (int i=0; i<nq; ++i)
-    {
-        std::cout << "i = " << i << ", (x,y) = ( " << x0[i] << " , " << x1[i] << " ), zoneindex = " 
-        << m_zoneindex[0][i] << ", Anistrength = ( " << m_AniStrength[0][i] << " , " << m_AniStrength[1][i]
-        << " ), e1y = " << m_movingframes[0][i+nq] << ", e2y = " << m_movingframes[1][i] << std::endl;
-    }
-
 }
 
 Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
@@ -681,7 +655,7 @@ void MMFNeuralEP::SetUpBiAnisotropy(
         for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Smul(nq, m_Cn, &NeuralCm[0][0], 1, &AniStrength[j][0], 1);
-            Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0], 1);
+            // Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0], 1);
         }
     }
 
@@ -1699,7 +1673,7 @@ void MMFNeuralEP::PlotFields(const Array<OneD, const NekDouble> &phi_m,
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phieforcing = ComputeMMFDiffusion(m_unitmovingframes, phi_m);
+    Array<OneD, NekDouble> phieforcing = ComputeMMFDiffusion(m_phiemovingframes, phi_m);
 
     // Only nonzero for node.
     Vmath::Vmul(nq, m_nodezone, 1, phieforcing, 1, phieforcing, 1);
