@@ -174,14 +174,14 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eWithPhie,
-    eNoPhie,
+    eEphaptic,
+    eIsolated,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "WithPhie",
-    "NoPhie",
+    "Ephaptic",
+    "Isolated",
 };
 
 enum NodeIndexType

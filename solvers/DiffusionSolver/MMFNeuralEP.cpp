@@ -1321,7 +1321,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             fulltext.append("\n");
 
-            if( (nvariables==2) && (m_ExtCurrentType == eWithPhie) )
+            if( (nvariables==2) && (m_ExtCurrentType == eEphaptic) )
             {
                 // phi_e is defined at the node and extracellular space
                 Array<OneD, NekDouble> phi_e = Computephie(fields[0]);
@@ -2214,7 +2214,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
-    if(m_ExtCurrentType == eWithPhie)
+    if(m_ExtCurrentType == eEphaptic)
     {
         Array<OneD, NekDouble> phie = Computephie(inarray[0]);
         
