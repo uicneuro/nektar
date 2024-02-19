@@ -340,7 +340,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 for (int j = 0; j < m_expdim; ++j)
                 {
-                    m_phieAniStrength[j][i] = ( m_Cn/m_Cm ) / m_ratio_re_ri;
+                    // myelin are is not considered the external cellular space.
+                    if(m_zoneindex[0][i] != -1)
+                    {
+                        m_phieAniStrength[j][i] = ( m_Cn/m_Cm ) / m_ratio_re_ri;
+                    }
+
                     for (int k=0; k<m_spacedim; ++k)
                     {
                         ekx = m_movingframes[k][i];
@@ -365,7 +370,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     for (int k = 0; k < m_spacedim; ++k)
                     {
-                        m_phiemovingframes[j][k * nq + i] = sqrt(m_phieAniStrength[j][i]) * m_phiemovingframes[j][k * nq + i];
+                            m_phiemovingframes[j][k * nq + i] = sqrt(m_phieAniStrength[j][i]) * m_phiemovingframes[j][k * nq + i];
                     }
                 }
             }
