@@ -222,7 +222,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
         case eHeterogeneousIsotropy:
         case eRegionalHeterogeneous:
-        case eGaussian:
+        case eGaussian2D:
         {
             LoadCardiacFiber(m_MediumType, m_Ani1Magnitude, m_Ani2Magnitude, m_AniStrength);
             MMFSystem::MMFInitObject(m_AniStrength);
@@ -727,7 +727,7 @@ void MMFCardiacEP::LoadCardiacFiber(
         }
         break;
 
-        case eGaussian:
+        case eGaussian2D:
         {
             Array<OneD, NekDouble> x0(nq);
             Array<OneD, NekDouble> x1(nq);
@@ -1008,7 +1008,7 @@ void MMFCardiacEP::DoSolveTimeMap()
         {
            // ComputeTimeMapError(nchk, fields);
 
-           // Checkpoint_Output(nchk++);
+            Checkpoint_Output(nchk++);
             doCheckTime = false;
         }
 

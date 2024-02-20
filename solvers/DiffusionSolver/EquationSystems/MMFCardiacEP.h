@@ -67,7 +67,7 @@ enum SolverSchemeType
 };
 
 const char *const SolverSchemeTypeMap[] = {
-    "MMFZero", "MMFFirst", "TimeMapMarch", "TimeMapDeform",
+    "MMFZero", "MMFFirst", "TimeMapMarch ", "TimeMapDeform",
 };
 
 enum MediumType
@@ -78,7 +78,7 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
-    eGaussian,
+    eGaussian2D,
     SIZE_MediumType
 };
 
@@ -89,7 +89,7 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
-    "Gaussian",
+    "Gaussian2D",
 };
 
 enum InitWaveType
