@@ -2184,6 +2184,27 @@ void MMFSystem::ComputeMFcdotSphericalCoord(
     }
 }
 
+
+// MMFDirectionalDeriv(movingframes[i], tmp, Dtmp);
+Array<OneD, NekDouble> MMFSystem::ComputeMMFDivergence(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, NekDouble>> &velocity)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    Array<OneD, NekDouble> outarray(nq, 0.0);
+    Array<OneD, NekDouble> Dtmp(nq);
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        // m_fields[0]->PhysDeriv(k, velocity[k], Dtmp);
+        MMFDirectionalDeriv(movingframes[i], velocity[k], Dtmp);
+        Vmath::Vadd(nq, Dtmp, 1, outarray, 1, outarray, 1);
+    }
+
+    return outarray;
+}
+
+
 Array<OneD, NekDouble> MMFSystem::ComputeEuclideanDivergence(
     const Array<OneD, const Array<OneD, NekDouble>> &velocity)
 {

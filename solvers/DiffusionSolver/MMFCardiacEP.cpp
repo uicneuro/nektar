@@ -2341,7 +2341,7 @@ void MMFCardiacEP::PlotDeformedTimeMap(
     {
         if(fabs(TimeMapDiffExact[i])>0.001)
         {
-            TimeMapErr[i] = TimeMapErr[i] / TimeMapDiffExact[i];
+            TimeMapErr[i] = TimeMapErr[i] / TimeMap_new[i];
         }
     }
 
