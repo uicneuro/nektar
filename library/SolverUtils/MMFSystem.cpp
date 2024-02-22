@@ -2185,19 +2185,26 @@ void MMFSystem::ComputeMFcdotSphericalCoord(
 }
 
 
-// MMFDirectionalDeriv(movingframes[i], tmp, Dtmp);
-Array<OneD, NekDouble> MMFSystem::ComputeMMFDivergence(
+// Compute \nabla \cdot \sigma \vec{v} = \nabla^{\sigma} \cdot \vec{v}
+Array<OneD, NekDouble> MMFSystem::ComputeMFDivergence(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const Array<OneD, NekDouble>> &velocity)
 {
     int nq = m_fields[0]->GetNpoints();
 
+    Array<OneD, Array<OneD, NekDouble>> inarrayMF(m_mfdim);
+    for (int k = 0; k < m_mfdim; ++k)
+    {
+        inarrayMF[k] = Array<OneD, NekDouble>(nq);
+    }
+
+    Cart_to_MF(velocity, movingframes, inarrayMF);
+
     Array<OneD, NekDouble> outarray(nq, 0.0);
     Array<OneD, NekDouble> Dtmp(nq);
-    for (int k = 0; k < m_spacedim; ++k)
+    for (int j = 0; j < m_expdim; ++j)
     {
-        // m_fields[0]->PhysDeriv(k, velocity[k], Dtmp);
-        MMFDirectionalDeriv(movingframes[i], velocity[k], Dtmp);
+        MMFDirectionalDeriv(movingframes[j], inarrayMF[j], Dtmp);
         Vmath::Vadd(nq, Dtmp, 1, outarray, 1, outarray, 1);
     }
 

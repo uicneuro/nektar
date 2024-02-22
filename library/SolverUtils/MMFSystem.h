@@ -702,6 +702,10 @@ protected:
         const Array<OneD, const NekDouble> &vecA,
         const Array<OneD, const NekDouble> &vecB);
 
+    SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeMFDivergence(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, NekDouble>> &velocity);
+
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeEuclideanDivergence(
         const Array<OneD, const Array<OneD, NekDouble>> &velocity);
 

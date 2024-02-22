@@ -198,12 +198,7 @@ protected:
                             const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
                             Array<OneD, Array<OneD, NekDouble>> &Vdiff);
 
-    Array<OneD, NekDouble> HelmSolveTimeMapDiff(
-                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
-                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_new,
-                Array<OneD, Array<OneD, NekDouble>> &Vdiff,
-                Array<OneD, NekDouble> &VdiffDivergence,
-                Array<OneD, NekDouble> &VdiffMag);
+    Array<OneD, NekDouble> HelmSolveTimeMapDiff(const Array<OneD, const NekDouble> &VdiffDivergence);
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
     NekDouble m_urest, m_uTol;
@@ -310,6 +305,7 @@ protected:
         const Array<OneD, const NekDouble> &TimeMap_old,
         const Array<OneD, const NekDouble> &TimeMap_new,
         const Array<OneD, const NekDouble> &TimeMapDiff,
+        const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
         const Array<OneD, const NekDouble> &VdiffDiv);
 
     void PlotTimeMapMF(
