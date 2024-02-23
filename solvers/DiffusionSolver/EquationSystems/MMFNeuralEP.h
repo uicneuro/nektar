@@ -231,7 +231,7 @@ protected:
     int m_totNode, m_elemperNode, m_elemperMyel;
     int m_zonestart, m_zoneend;
 
-    NekDouble m_fiberlen, m_nodelen, m_myelinlen;
+    NekDouble m_extFieldStr, m_fiberlen, m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
     NekDouble m_urest;
@@ -355,12 +355,6 @@ protected:
     void CheckOutZoneAni();
 
     Array<OneD, int> GetInternalBoundaryPoints();
-    
-    // void ComputephieMF(
-    //     const NekDouble ratio_re_ri,
-    //     const Array<OneD, const int> &zoneindex,
-    //     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
-    //     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
@@ -462,7 +456,8 @@ protected:
         const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> Computephie(
-        const Array<OneD, const NekDouble> &phim);
+        const Array<OneD, const NekDouble> &phim,
+        const NekDouble extFieldStr = 1.0);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,

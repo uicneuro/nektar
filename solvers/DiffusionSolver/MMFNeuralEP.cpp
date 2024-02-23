@@ -104,6 +104,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
     m_session->LoadParameter("diameter", m_diameter, 0.001);
 
+
+    m_session->LoadParameter("ExtFieldStrength", m_extFieldStr, 1.0);
+
     m_session->LoadParameter("FiberLength", m_fiberlen, 0.01);
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
@@ -343,7 +346,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     // myelin are is not considered the external cellular space.
                     if(m_zoneindex[0][i] != -1)
                     {
-                        m_phieAniStrength[j][i] = ( m_Cn/m_Cm ) / m_ratio_re_ri;
+                        m_phieAniStrength[j][i] = ( m_Cn / m_Cm ) / m_ratio_re_ri;
                     }
 
                     for (int k=0; k<m_spacedim; ++k)
@@ -1150,25 +1153,16 @@ void MMFNeuralEP::DoSolveMMFZero()
     NekDouble cpuTime = 0.0;
     NekDouble elapsed = 0.0;
 
-    Array<OneD, NekDouble> tmpc(ncoeffs);
-
-    Array<OneD, NekDouble> velmag(nq, 0.0);
-    Array<OneD, NekDouble> velocity(m_spacedim * nq);
-
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
     Array<OneD, NekDouble> x2(nq);
 
     m_fields[0]->GetCoords(x0, x1, x2);
 
-    // Aligh Moving Frames along the velocit vector
-    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
-    for (int i = 0; i < m_spacedim; ++i)
-    {
-        MF1st[i] = Array<OneD, NekDouble>(m_spacedim * nq);
-        Vmath::Smul(m_spacedim * nq, 1.0, &m_movingframes[i][0], 1,
-                    &MF1st[i][0], 1);
-    }
+    Array<OneD, NekDouble> tmpc(ncoeffs);
+
+    Array<OneD, NekDouble> velmag(nq, 0.0);
+    Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
     Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
@@ -1879,31 +1873,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
                         factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
-
-//    switch(m_fiberType)
-//     {
-//         // Helsolve with pure Neumann boundary condition
-//         case eEmbedBCDirichlet:
-//         case eEmbedBCNeumann:
-//         {
-//             m_fields[0]->HelmSolveEmbed(0, 0, m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//                                 factors, m_varcoeff);
-//             break;
-//         }
-
-//         // Helsolve with Neumann boundary condition and zero Dirichlet boundary condition
-//         case eMonoBCDirichlet:
-//         case eMonoBCNeumann:
-//         default:
-//         {
-//             m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-//                                 factors, m_varcoeff);
-//             break;
-//         }
-//     }
-
-
-
 }
 
 // We Return Y[i] = rhs [i] without no Helomsolver
@@ -2113,7 +2082,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
     if(m_ExtCurrentType == eEphaptic)
     {
-        Array<OneD, NekDouble> phie = Computephie(inarray[0]);
+        Array<OneD, NekDouble> phie = Computephie(inarray[0], m_extFieldStr);
         
         // Compute (1/C_n/r) * \nabla^2 \phi_e
         extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
@@ -2124,7 +2093,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 
     // add divergence of phie to the current
-    // Vmath::Svtvp(nq, 1.0 / (m_Cn * m_Rf), &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     if (m_explicitDiffusion)
@@ -2144,7 +2112,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
 Array<OneD, NekDouble> MMFNeuralEP::Computephie(
-    const Array<OneD, const NekDouble> &phim)
+    const Array<OneD, const NekDouble> &phim,
+    const NekDouble extFieldStr)
 {
     int nq = m_fields[0]->GetNpoints();
 
@@ -2169,9 +2138,8 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-
     Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, phimLaplacian, 1);
-    Vmath::Smul(nq, -1.0, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    Vmath::Smul(nq, -1.0 * extFieldStr, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
 
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
@@ -2440,6 +2408,8 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     // SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
     SolverUtils::AddSummaryItem(s, "Fiber Type", FiberTypeMap[m_fiberType]);
+
+    SolverUtils::AddSummaryItem(s, "ExtFieldStr", m_extFieldStr);
     SolverUtils::AddSummaryItem(s, "Fiber Length", m_fiberlen);
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
