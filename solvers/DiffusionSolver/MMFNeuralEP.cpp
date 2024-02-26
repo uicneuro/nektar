@@ -338,30 +338,37 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
 
             NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
-            NekDouble ekcdoteLj;
+            NekDouble mftmp;
             for (int i = 0; i<nq; ++i)
             {
                 for (int j = 0; j < m_expdim; ++j)
                 {
-                    // myelin are is not considered the external cellular space.
-                    if(m_zoneindex[0][i] != -1)
+                    // AniStrength in the extracellular space
+                    if(m_zoneindex[0][i] == -2)
                     {
                         m_phieAniStrength[j][i] = ( m_Cn / m_Cm ) / m_ratio_re_ri;
                     }
 
-                    for (int k=0; k<m_spacedim; ++k)
+                    // AniStrength in the intracellular space
+                    // a e^1_L + b e^2_L = d^1_Y + d^2_Y
+                    // a = e^1_L \cdot d^1_Y + e^1_L \cdot d^2_Y
+                    else
                     {
-                        ekx = m_movingframes[k][i];
-                        eky = m_movingframes[k][nq+i];
-                        ekz = m_movingframes[k][2*nq+i];
+                        mftmp = 0.0;
+                        for (int k=0; k<m_spacedim; ++k)
+                        {
+                            ekx = m_movingframes[k][i];
+                            eky = m_movingframes[k][nq+i];
+                            ekz = m_movingframes[k][2*nq+i];
 
-                        eLjx = m_phiemovingframes[j][i];
-                        eLjy = m_phiemovingframes[j][nq+i];
-                        eLjz = m_phiemovingframes[j][2*nq+i];
+                            eLjx = m_phiemovingframes[j][i];
+                            eLjy = m_phiemovingframes[j][nq+i];
+                            eLjz = m_phiemovingframes[j][2*nq+i];
 
-                        ekcdoteLj = ekx * eLjx + eky * eLjy + ekz * eLjz;
+                            mftmp += ekx * eLjx + eky * eLjy + ekz * eLjz;
+                        }
 
-                        m_phieAniStrength[j][i] += ekcdoteLj * ekcdoteLj;
+                        m_phieAniStrength[j][i] = mftmp * mftmp * (1.0 + m_ratio_re_ri) / m_ratio_re_ri;
                     }
                 }
             }
