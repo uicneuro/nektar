@@ -389,6 +389,7 @@ MMFCardiacEP::~MMFCardiacEP()
         std::string loadname_old = sessionold + "_timemap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
+        std::cout << "Load old time map ===============================================" << std::endl;
         Array<OneD, NekDouble> ValidTM_old(nq);
         Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
         LoadTimeMap(loadname_old, ValidTM_old, TimeMap_old, AniStrength_old, Velocity_old);
@@ -397,6 +398,7 @@ MMFCardiacEP::~MMFCardiacEP()
         std::string loadname = sessionnew + "_timemap_" +
                         boost::lexical_cast<std::string>(m_TimeMapnstep) + ".chk";
 
+        std::cout << "Load new time map ===============================================" << std::endl;
         Array<OneD, NekDouble> ValidTM_new(nq);
         Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
         LoadTimeMap(loadname, ValidTM_new, TimeMap_new, AniStrength_new, Velocity_new);
@@ -584,7 +586,7 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
                                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                                 Array<OneD, Array<OneD, NekDouble>> &Velocity)
 {
-    int nvar    = 4;
+    int nvar    = 7;
     int nq      = GetNpoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
     std::vector<std::string> variables(nvar);
@@ -644,6 +646,9 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
         m_fields[0]->BwdTrans(tmpc[i+4], Velocity[i]);
     }
 
+    // Print out
+    std::cout << "(Vx, Vy, Vz) = ( " << RootMeanSquare(Velocity[0]) << " , " 
+    << RootMeanSquare(Velocity[1]) << " , " << RootMeanSquare(Velocity[2]) << " ) " << std::endl; 
 
     // Apply the Valid region
     // Vmath::Vmul(nq, ValidTM, 1, TimeMap[0], 1, TimeMap[0], 1);
@@ -680,8 +685,6 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
     << Vmath::Vmax(nq, TimeMap[0], 1) << " ] " << std::endl;
     std::cout << "AniStrength = [ " << Vmath::Vmin(nq, AniStrength[0], 1)  << " , " 
     << Vmath::Vmax(nq, AniStrength[0], 1) << " ] " << std::endl << std::endl;
-    // std::cout << "Velocitymag = [ " << Vmath::Vmin(nq, Velocitymag, 1)  << " , " 
-    // << Vmath::Vmax(nq, Velocitymag, 1) << " ] " << std::endl << std::endl;
 }
 
 void MMFCardiacEP::LoadCardiacFiber(
