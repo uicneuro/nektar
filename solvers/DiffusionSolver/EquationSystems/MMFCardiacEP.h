@@ -273,9 +273,10 @@ protected:
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);
 
-    void ComputeVelocityTimeMap(
+    void ConvertGradtoVel(
         const Array<OneD, const NekDouble> &ValidTimeMap,
-        const Array<OneD, const NekDouble> &inarray,
+        const Array<OneD, const NekDouble> &TimeMap,
+        const Array<OneD, const Array<OneD, NekDouble>> &TmapGrad,
         Array<OneD, Array<OneD, NekDouble>> &outarray);
 
     Array<OneD, NekDouble> ComputeLambDiv(

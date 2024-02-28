@@ -393,7 +393,9 @@ MMFCardiacEP::~MMFCardiacEP()
         Array<OneD, NekDouble> ValidTM_old(nq);
         Array<OneD, Array<OneD, NekDouble>> TMgrad_old(m_spacedim);
         Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
+
         LoadTimeMap(loadname_old, ValidTM_old, TimeMap_old, AniStrength_old, TMgrad_old);
+        ConvertGradtoVel(ValidTM_old, TimeMap_old[0], TMgrad_old, Velocity_old);
  
         // load new timemap                               
         std::string loadname = sessionnew + "_timemap_" +
@@ -405,6 +407,7 @@ MMFCardiacEP::~MMFCardiacEP()
         Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
 
         LoadTimeMap(loadname, ValidTM_new, TimeMap_new, AniStrength_new, TMgrad_new);
+        ConvertGradtoVel(ValidTM_new, TimeMap_new[0], TMgrad_new, Velocity_new);
 
         for (int i=0; i<m_expdim; ++i)
         {
@@ -1869,9 +1872,10 @@ void MMFCardiacEP::PlotTimeMapErr(
 // Compute Velocity field from Time Map
 // flag = 1: Use \vec{v} = \nabla T / \| \nabla T \|^2
 // flag = 0:
-void MMFCardiacEP::ComputeVelocityTimeMap(
+void MMFCardiacEP::ConvertGradtoVel(
     const Array<OneD, const NekDouble> &ValidTimeMap,
-    const Array<OneD, const NekDouble> &inarray,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const Array<OneD, const Array<OneD, NekDouble>> &TmapGrad,
     Array<OneD, Array<OneD, NekDouble>> &outarray)
 {
     int nq = m_fields[0]->GetTotPoints();
@@ -1883,13 +1887,6 @@ void MMFCardiacEP::ComputeVelocityTimeMap(
         outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    Array<OneD, NekDouble> physarray(nq);
-    Vmath::Vcopy(nq, inarray, 1, physarray, 1);
-
-    // TmapGrad = \nabla Tmap
-    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
-    TmapGrad = ComputeCovGrad(physarray, m_movingframes);
-
     Array<OneD, NekDouble> TmapGradMag(nq);
     TmapGradMag = ComputeVelocityMag(TmapGrad);
 
@@ -1900,18 +1897,18 @@ void MMFCardiacEP::ComputeVelocityTimeMap(
     for (int i = 0; i < nq; i++)
     {
         TMgrad = TmapGradMag[i];
-        TM = physarray[i];
+        TM = TimeMap[i];
 
         if( ( TMgrad > TmapTol) && ( TM > TmapTol) )
         {
             TMgradrel = TMgrad / TM ;
-        }
 
-        if (TMgradrel > TmapTol)
-        {
-            for (int k = 0; k < m_spacedim; ++k)
+            if (TMgradrel > TmapTol)
             {
-                outarray[k][i] = TmapGrad[i + k * nq] / (TMgrad * TMgrad);
+                for (int k = 0; k < m_spacedim; ++k)
+                {
+                    outarray[k][i] = TmapGrad[k][i] / (TMgrad * TMgrad);
+                }
             }
         }
 
