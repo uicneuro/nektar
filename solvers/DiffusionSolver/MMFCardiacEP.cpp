@@ -391,8 +391,9 @@ MMFCardiacEP::~MMFCardiacEP()
 
         std::cout << "Load old time map ===============================================" << std::endl;
         Array<OneD, NekDouble> ValidTM_old(nq);
+        Array<OneD, Array<OneD, NekDouble>> TMgrad_old(m_spacedim);
         Array<OneD, Array<OneD, NekDouble>> Velocity_old(m_spacedim);
-        LoadTimeMap(loadname_old, ValidTM_old, TimeMap_old, AniStrength_old, Velocity_old);
+        LoadTimeMap(loadname_old, ValidTM_old, TimeMap_old, AniStrength_old, TMgrad_old);
  
         // load new timemap                               
         std::string loadname = sessionnew + "_timemap_" +
@@ -400,8 +401,10 @@ MMFCardiacEP::~MMFCardiacEP()
 
         std::cout << "Load new time map ===============================================" << std::endl;
         Array<OneD, NekDouble> ValidTM_new(nq);
+        Array<OneD, Array<OneD, NekDouble>> TMgrad_new(m_spacedim);
         Array<OneD, Array<OneD, NekDouble>> Velocity_new(m_spacedim);
-        LoadTimeMap(loadname, ValidTM_new, TimeMap_new, AniStrength_new, Velocity_new);
+
+        LoadTimeMap(loadname, ValidTM_new, TimeMap_new, AniStrength_new, TMgrad_new);
 
         for (int i=0; i<m_expdim; ++i)
         {
@@ -584,7 +587,7 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
                                 Array<OneD, NekDouble> &ValidTM,
                                 Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
-                                Array<OneD, Array<OneD, NekDouble>> &Velocity)
+                                Array<OneD, Array<OneD, NekDouble>> &TMgrad)
 {
     int nvar    = 7;
     int nq      = GetNpoints();
@@ -595,9 +598,9 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
     variables[1] = "ValidTimeMap";
     variables[2] = "AniStrength[0]";
     variables[3] = "AniStrength[1]";
-    variables[4] = "vel_x";
-    variables[5] = "vel_y";
-    variables[6] = "vel_z";
+    variables[4] = "TMgrad_x";
+    variables[5] = "TMgrad_y";
+    variables[6] = "TMgrad_z";
         
     Array<OneD, Array<OneD, NekDouble>> tmpc(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -642,41 +645,13 @@ void MMFCardiacEP::LoadTimeMap(std::string &loadname,
 
     for (int i=0; i<m_spacedim; ++i)
     {
-        Velocity[i] = Array<OneD, NekDouble>(nq);
-        m_fields[0]->BwdTrans(tmpc[i+4], Velocity[i]);
+        TMgrad[i] = Array<OneD, NekDouble>(nq);
+        m_fields[0]->BwdTrans(tmpc[i+4], TMgrad[i]);
     }
 
     // Print out
-    std::cout << "(Vx, Vy, Vz) = ( " << RootMeanSquare(Velocity[0]) << " , " 
-    << RootMeanSquare(Velocity[1]) << " , " << RootMeanSquare(Velocity[2]) << " ) " << std::endl; 
-
-    // Apply the Valid region
-    // Vmath::Vmul(nq, ValidTM, 1, TimeMap[0], 1, TimeMap[0], 1);
-    // Vmath::Vmul(nq, ValidTM, 1, AniStrength[0], 1, AniStrength[0], 1);
-    // Vmath::Vmul(nq, ValidTM, 1, Velocitymag, 1, Velocitymag, 1);
-    // for (int i=0; i<m_spacedim; ++i)
-    // {
-    //     Vmath::Vmul(nq, ValidTM, 1, Velocity[i], 1, Velocity[i], 1);
-    // }
-
-    // Array<OneD, int> m_ValidTimeMap(nq, 1);
-
-    // Array<OneD, NekDouble> veltmp(m_spacedim * nq);
-    // veltmp = ComputeVelocityTimeMap(m_ValidTimeMap, TimeMap[0]);
-
-    // Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
-    // TmapGrad = ComputeCovGrad(TimeMap[0], m_movingframes);
-
-    // Array<OneD, NekDouble> TmapGradMag(nq);
-    // TmapGradMag = ComputeVelocityMag(TmapGrad);
-
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     std::cout << "vx = " << Velocity[0][i] << ", vy = " << Velocity[1][i] 
-    //     << ", gradx = " << TmapGrad[i] << ", grady = " << TmapGrad[i+nq] 
-    //     << ", gradmag = " << TmapGradMag[i] 
-    //     <<", vx_here " << veltmp[i] << ", vy_here = " << veltmp[i+nq] << std::endl;
-    // }
+    std::cout << "(Vx, Vy, Vz) = ( " << RootMeanSquare(TMgrad[0]) << " , " 
+    << RootMeanSquare(TMgrad[1]) << " , " << RootMeanSquare(TMgrad[2]) << " ) " << std::endl; 
 
     std::cout << "TimeMap Mag = " << RootMeanSquare(TimeMap[0]) << std::endl ;
 
@@ -1920,23 +1895,23 @@ void MMFCardiacEP::ComputeVelocityTimeMap(
 
     // Compute VelField \vec{v} = \sum_{i=1}^3 1/(\nabla T \cdot \hat{x}_i)
     // \hat{x}_i
-    NekDouble tmp, TmapGradTol = 0.0001;
+    NekDouble TMgrad, TM, TMgradrel;
+    NekDouble TmapTol = 0.01;
     for (int i = 0; i < nq; i++)
     {
-        tmp = TmapGradMag[i];
-        if (tmp > TmapGradTol)
+        TMgrad = TmapGradMag[i];
+        TM = physarray[i];
+
+        if( ( TMgrad > TmapTol) && ( TM > TmapTol) )
         {
-            for (int k = 0; k < m_spacedim; ++k)
-            {
-                outarray[k][i] = TmapGrad[i + k * nq] / (tmp * tmp);
-            }
+            TMgradrel = TMgrad / TM ;
         }
 
-        else
+        if (TMgradrel > TmapTol)
         {
             for (int k = 0; k < m_spacedim; ++k)
             {
-                outarray[k][i] = TmapGrad[i + k * nq];
+                outarray[k][i] = TmapGrad[i + k * nq] / (TMgrad * TMgrad);
             }
         }
 
@@ -2289,9 +2264,9 @@ void MMFCardiacEP::PlotTimeMap(
     variables[1] = "ValidTimeMap";
     variables[2] = "AniStrength[0]";
     variables[3] = "AniStrength[1]";
-    variables[4] = "vel_x";
-    variables[5] = "vel_y";
-    variables[6] = "vel_z";
+    variables[4] = "TMgrad_x";
+    variables[5] = "TMgrad_y";
+    variables[6] = "TMgrad_z";
 
     // index:0 -> u
     std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
@@ -2317,13 +2292,15 @@ void MMFCardiacEP::PlotTimeMap(
     m_fields[0]->FwdTrans(AniStrength[1], fieldcoeffs[3]);
 
     // Compute the gradient of the time map
-    Array<OneD, Array<OneD, NekDouble>> Velocity(m_spacedim);
-    ComputeVelocityTimeMap(ValidTM, TimeMap, Velocity);
+    // Array<OneD, Array<OneD, NekDouble>> Velocity(m_spacedim);
+    // ComputeVelocityTimeMap(ValidTM, TimeMap, Velocity);
+    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
+    TmapGrad = ComputeCovGrad(TimeMap, m_movingframes);
 
     Array<OneD, NekDouble> tmp(nq);
     for (int k=0; k<m_spacedim; ++k)
     {
-        Vmath::Vcopy(nq, &Velocity[k][0], 1, &tmp[0], 1);
+        Vmath::Vcopy(nq, &TmapGrad[k * nq], 1, &tmp[0], 1);
         m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+4]);
     }
 

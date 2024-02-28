@@ -188,7 +188,7 @@ protected:
                                 Array<OneD, NekDouble> &ValidTM,
                                 Array<OneD, Array<OneD, NekDouble>> &TimeMap,
                                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
-                                Array<OneD, Array<OneD, NekDouble>> &Velocity);
+                                Array<OneD, Array<OneD, NekDouble>> &TMGrad);
 
     void ComputeVelocityDeformed(const Array<OneD, const NekDouble> &AniStrength_old,
                             const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
