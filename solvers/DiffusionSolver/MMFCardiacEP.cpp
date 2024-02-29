@@ -97,7 +97,7 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
 
     // Resting potential
     m_session->LoadParameter("urest", m_urest, 0.0);
-    m_session->LoadParameter("uTol", m_uTol, 0.5);
+    m_session->LoadParameter("uTol", m_uTol, 0.01);
 
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
@@ -2684,7 +2684,9 @@ void MMFCardiacEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMapScheme", m_TimeMapScheme);
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
-
+    SolverUtils::AddSummaryItem(s, "TimeMap urest", m_urest);
+    SolverUtils::AddSummaryItem(s, "TimeMap uTol", m_uTol);
+    
     // if(m_SolverSchemeType==eTimeMapMarch)
     // {
     SolverUtils::AddSummaryItem(s, "TimeMapIapp", m_TimeMapIapp);
