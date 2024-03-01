@@ -346,7 +346,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     // AniStrength in the extracellular space
                     if(m_zoneindex[0][i] == -2)
                     {
-                        m_phieAniStrength[j][i] = ( m_Cn / m_Cm ) / m_ratio_re_ri;
+                        m_phieAniStrength[j][i] = 1.0 / m_ratio_re_ri;
                     }
 
                     // AniStrength in the intracellular space
