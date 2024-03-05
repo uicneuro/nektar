@@ -366,9 +366,9 @@ protected:
     void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        const Array<OneD, const Array<OneD, int>> &NodeZone,
-        const Array<OneD, const NekDouble> &inarray);
+    const Array<OneD, const Array<OneD, int>> &NodeZone,
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, NekDouble>> &phiemovingframes);
 
     void GetFluxVector(
         const Array<OneD, Array<OneD, NekDouble>> &inarray,

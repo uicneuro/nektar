@@ -401,6 +401,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
          break;
     }
 
+    // Check moving frames
+    CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
+
     if (m_explicitDiffusion)
     {
         m_ode.DefineImplicitSolve(&MMFNeuralEP::DoNullSolve, this);
@@ -702,7 +705,6 @@ void MMFNeuralEP::SetUpBiAnisotropy(
         for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Smul(nq, m_Cn, &NeuralCm[0][0], 1, &AniStrength[j][0], 1);
-            // Vmath::Vsqrt(nq, &AniStrength[j][0], 1, &AniStrength[j][0], 1);
         }
     }
 
@@ -828,7 +830,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
         // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
         else if (zoneindex[i] == -2)
         {
-            outarray[i] = 1.0 / m_Cm / m_ratio_re_ri;
+            outarray[i] = 1.0 / m_Cn;
             cnte++;
         }
     }
@@ -841,9 +843,9 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 }
 
 void MMFNeuralEP::CheckNodeZoneMF(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const Array<OneD, int>> &NodeZone,
-    const Array<OneD, const NekDouble> &inarray)
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, NekDouble>> &phiemovingframes)
 {
     boost::ignore_unused(NodeZone);
 
@@ -856,7 +858,9 @@ void MMFNeuralEP::CheckNodeZoneMF(
     m_fields[0]->GetCoords(x0, x1, x2);
 
     int i, j, index, npts;;
-    NekDouble xp, yp, e1mag, e2mag, inarrayavg;
+    NekDouble xp, yp, e1mag, e2mag;
+    NekDouble phie1mag, phie2mag;
+
     for (i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
         npts = m_fields[0]->GetTotPoints(i);
@@ -864,19 +868,29 @@ void MMFNeuralEP::CheckNodeZoneMF(
         yp = 0.0;
         e1mag = 0.0;
         e2mag = 0.0;
-        inarrayavg = 0.0;
+
+        phie1mag = 0.0;
+        phie2mag = 0.0;
         for (j = 0; j < npts; ++j)
         {
             index = m_fields[0]->GetPhys_Offset(i) + j;
-            inarrayavg += inarray[index];
+
             xp += x0[index];
             yp += x1[index];
+
             e1mag = e1mag +
                     (movingframes[0][index] * movingframes[0][index] +
                      movingframes[0][nq + index] * movingframes[0][nq + index]);
             e2mag = e2mag +
                     (movingframes[1][index] * movingframes[1][index] +
                      movingframes[1][nq + index] * movingframes[1][nq + index]);
+
+            phie1mag = phie1mag +
+                    (phiemovingframes[0][index] * phiemovingframes[0][index] +
+                     phiemovingframes[0][nq + index] * phiemovingframes[0][nq + index]);
+            phie2mag = phie2mag +
+                    (phiemovingframes[1][index] * phiemovingframes[1][index] +
+                     phiemovingframes[1][nq + index] * phiemovingframes[1][nq + index]);
         }
 
         // dx = x0[m_fields[0]->GetPhys_Offset(i)] - x0[m_fields[0]->GetPhys_Offset(i)+npts-1];
@@ -885,14 +899,17 @@ void MMFNeuralEP::CheckNodeZoneMF(
 
         e1mag = sqrt(e1mag / npts);
         e2mag = sqrt(e2mag / npts);
+
+        phie1mag = sqrt(phie1mag / npts);
+        phie2mag = sqrt(phie2mag / npts);
+
         xp = (xp / npts);
         yp = (yp / npts);
-        inarrayavg = inarrayavg/npts;
 
-        // std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
-        //         << ", x = " << xp << ", y = " << yp << ", dist = " << dist
-        //         << ", e1mag = " << e1mag << ", e2mag = " << e1mag
-        //         << ", inarray = " << inarrayavg << std::endl;
+        std::cout << "Elemid = " << i << ", Nodeid = " << NodeZone[0][index]
+                << ", x = " << xp << ", y = " << yp 
+                << ", e1mag = " << e1mag << ", e2mag = " << e2mag
+                << ", phie1mag = " << phie1mag << ", phie2mag = " << phie2mag << std::endl;
     }
 }
 
