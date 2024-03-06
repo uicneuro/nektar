@@ -324,7 +324,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         {
             // Set up for m_phiemovingframe Poisson solver
             std::string phieMMFdirStr;
-            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "LOCAL");
+            m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
             SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
             Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
@@ -343,33 +343,55 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 for (int j = 0; j < m_expdim; ++j)
                 {
-                    // AniStrength in the extracellular space
-                    if(m_zoneindex[0][i] == -2)
-                    {
-                        m_phieAniStrength[j][i] = 1.0 / m_ratio_re_ri;
-                    }
+                    m_phieAniStrength[j][i] = 1.0 / m_ratio_re_ri;
 
                     // AniStrength in the intracellular space
-                    // a e^1_L + b e^2_L = d^1_Y + d^2_Y
-                    // a = e^1_L \cdot d^1_Y + e^1_L \cdot d^2_Y
-                    else
+                    // a e^1_L + b e^2_L = d^1_Y
+                    // a = e^1_L \cdot d^1_Y
+                    mftmp = 0.0;
+                    for (int k=0; k<m_mfdim; ++k)
                     {
-                        mftmp = 0.0;
-                        for (int k=0; k<m_spacedim; ++k)
-                        {
-                            ekx = m_movingframes[k][i];
-                            eky = m_movingframes[k][nq+i];
-                            ekz = m_movingframes[k][2*nq+i];
+                        ekx = m_movingframes[k][i];
+                        eky = m_movingframes[k][nq+i];
+                        ekz = m_movingframes[k][2*nq+i];
 
-                            eLjx = m_phiemovingframes[j][i];
-                            eLjy = m_phiemovingframes[j][nq+i];
-                            eLjz = m_phiemovingframes[j][2*nq+i];
+                        eLjx = m_phiemovingframes[j][i];
+                        eLjy = m_phiemovingframes[j][nq+i];
+                        eLjz = m_phiemovingframes[j][2*nq+i];
 
-                            mftmp += ekx * eLjx + eky * eLjy + ekz * eLjz;
-                        }
+                        mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
 
-                        m_phieAniStrength[j][i] = mftmp * mftmp * (1.0 + m_ratio_re_ri) / m_ratio_re_ri;
+                        m_phieAniStrength[j][i] += mftmp * mftmp ;
+
                     }
+
+                    // AniStrength in the extracellular space
+                    // if(m_zoneindex[0][i] == -2)
+                    // {
+                    //     m_phieAniStrength[j][i] = 1.0 / m_ratio_re_ri;
+                    // }
+
+                    // // AniStrength in the intracellular space
+                    // // a e^1_L + b e^2_L = d^1_Y
+                    // // a = e^1_L \cdot d^1_Y
+                    // else
+                    // {
+                    //     mftmp = 0.0;
+                    //     for (int k=0; k<2; ++k)
+                    //     {
+                    //         ekx = m_movingframes[k][i];
+                    //         eky = m_movingframes[k][nq+i];
+                    //         ekz = m_movingframes[k][2*nq+i];
+
+                    //         eLjx = m_phiemovingframes[j][i];
+                    //         eLjy = m_phiemovingframes[j][nq+i];
+                    //         eLjz = m_phiemovingframes[j][2*nq+i];
+
+                    //         mftmp += ekx * eLjx + eky * eLjy + ekz * eLjz;
+                    //     }
+
+                    //     m_phieAniStrength[j][i] = mftmp * mftmp * (1.0 + m_ratio_re_ri) / m_ratio_re_ri;
+                    // }
                 }
             }
 
