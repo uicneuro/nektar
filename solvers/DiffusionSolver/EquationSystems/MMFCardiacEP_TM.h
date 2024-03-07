@@ -67,7 +67,7 @@ enum SolverSchemeType
 };
 
 const char *const SolverSchemeTypeMap[] = {
-    "MMFZero", "MMFFirst", "TimeMapMarch ", "TimeMapDeform",
+    "MMFZero", "MMFFirst", "TimeMapMarch", "TimeMapDeform",
 };
 
 enum MediumType
@@ -78,7 +78,8 @@ enum MediumType
     eHeterogeneousIsotropy,
     eHeterogeneousAnisotropy,
     eRegionalHeterogeneous,
-    eGaussian2D,
+    eRegionalIsotropy,
+    eGaussianHeterogeneous,
     SIZE_MediumType
 };
 
@@ -89,7 +90,8 @@ const char *const MediumTypeMap[] = {
     "HeterogeneousIsotropy",
     "HeterogeneousAnisotropy",
     "RegionalHeterogeneous",
-    "Gaussian2D",
+    "RegionalIsotropy",
+    "GaussianHeterogeneous",
 };
 
 enum InitWaveType
@@ -149,6 +151,7 @@ public:
     /// Desctructor
     virtual ~MMFCardiacEP();
 
+
 protected:
     int m_Convectiven;
     int m_TimeMapnstep;
@@ -164,11 +167,6 @@ protected:
     // Aliev_Panfilov model parameters
     NekDouble m_k, m_a, m_mu1, m_mu2, m_eps;
 
-    // Moving frames for time map
-    SpatialDomains::GeomMMF m_TMMMFdir;
-    Array<OneD, Array<OneD, NekDouble>> m_TMmovingframes;
-    Array<OneD, Array<OneD, NekDouble>> m_TMAniStrength;
-
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
     NekDouble m_TimeMapIapp;
@@ -182,13 +180,13 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_TMvelocity;
     Array<OneD, NekDouble> m_TMvelocitymag;
 
-    void ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
+    Array<OneD, NekDouble> ComputeTimeMapDeform(const std::string &sessionold, const std::string &sessionnew);
 
-    void LoadTimeMap(std::string &loadname,
-                                Array<OneD, NekDouble> &ValidTM,
-                                Array<OneD, Array<OneD, NekDouble>> &TimeMap,
-                                Array<OneD, Array<OneD, NekDouble>> &AniStrength,
-                                Array<OneD, Array<OneD, NekDouble>> &TMGrad);
+    void LoadTimeMap(std::string &loadname, 
+                    Array<OneD, Array<OneD, NekDouble>> &TimeMap,
+                    Array<OneD, Array<OneD, NekDouble>> &AniStrength,
+                    Array<OneD, NekDouble> &TMvelocitymag,
+                    Array<OneD, Array<OneD, NekDouble>> &TMvelocity);
 
     void ComputeVelocityDeformed(const Array<OneD, const NekDouble> &AniStrength_old,
                             const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
@@ -199,10 +197,15 @@ protected:
                             const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
                             Array<OneD, Array<OneD, NekDouble>> &Vdiff);
 
-    Array<OneD, NekDouble> HelmSolveTimeMapDiff(const Array<OneD, const NekDouble> &VdiffDivergence);
+    Array<OneD, NekDouble> HelmSolveTimeMapDiff(
+                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_old,
+                const Array<OneD, const Array<OneD, NekDouble>> &Velocity_deformed,
+                Array<OneD, Array<OneD, NekDouble>> &Vdiff,
+                Array<OneD, NekDouble> &VdiffDivergence,
+                Array<OneD, NekDouble> &VdiffMag);
 
     NekDouble m_Diffbeta, m_Diffeta, m_Diffhe;   // h_e for LDG
-    NekDouble m_urest, m_uTol;
+    NekDouble m_urest;
 
     // Scar tisseu related variables
     NekDouble m_PVcond;
@@ -211,9 +214,8 @@ protected:
 
     // Coefficients for Anisotropy
     int m_AniRegionStart, m_AniRegionEnd;
-    int m_Gaussiantau, m_GaussianXc, m_GaussianYc, m_GaussianZc;
-
-    NekDouble m_Ani1Magnitude, m_Ani2Magnitude;
+    int m_Gaussiantau;
+    NekDouble m_AnisotropyStrength;
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
 
     // Relative divergence related variables
@@ -268,16 +270,13 @@ protected:
 
     void LoadCardiacFiber(
                 const MediumType CardiacMediumType,
-                const NekDouble Ani1Magnitude,
-                const NekDouble Ani2Magnitude,
+                const NekDouble AnisotropyStrength, 
                 Array<OneD, Array<OneD, NekDouble>> &AniStrength,
                 Array<OneD, NekDouble> &CardiacFibre = NullNekDouble1DArray);
 
-    void ConvertGradtoVel(
-        const Array<OneD, const NekDouble> &ValidTimeMap,
-        const Array<OneD, const NekDouble> &TimeMap,
-        const Array<OneD, const Array<OneD, NekDouble>> &TmapGrad,
-        Array<OneD, Array<OneD, NekDouble>> &outarray);
+    Array<OneD, NekDouble> ComputeVelocityTimeMap(
+    const Array<OneD, const int> &ValidTimeMap,
+    const Array<OneD, const NekDouble> &inarray, const int DividebyVelmag = 1);
 
     Array<OneD, NekDouble> ComputeLambDiv(
         const Array<OneD, const int> &ValidTimeMap,
@@ -302,13 +301,12 @@ protected:
     const int nstep);
 
     void PlotDeformedTimeMap(
-        const std::string &outname,
-        const Array<OneD, const Array<OneD, NekDouble>> &AniStrength_diff,
-        const Array<OneD, const NekDouble> &TimeMap_old,
-        const Array<OneD, const NekDouble> &TimeMap_new,
-        const Array<OneD, const NekDouble> &TimeMapDiff,
-        const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
-        const Array<OneD, const NekDouble> &VdiffDiv);
+    const Array<OneD, const NekDouble> &TimeMap_old,
+    const Array<OneD, const NekDouble> &TimeMap_new,
+    const Array<OneD, const NekDouble> &TimeMapDiff,
+    const Array<OneD, const Array<OneD, NekDouble>> &Vdiff,
+    const Array<OneD, const NekDouble> &VdiffMag,
+    const Array<OneD, const NekDouble> &VdiffDivergence);
 
     void PlotTimeMapMF(
         const Array<OneD, const NekDouble> &NoboundaryZone,
