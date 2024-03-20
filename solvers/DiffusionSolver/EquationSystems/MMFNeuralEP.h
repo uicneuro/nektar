@@ -350,6 +350,7 @@ protected:
     
     // Coefficients for Anisotropy
     int m_AnisotropyRegion;
+    int m_InnerboxEnd;
     NekDouble m_AnisotropyStrength;
     
     void CheckOutZoneAni();

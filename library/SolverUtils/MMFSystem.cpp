@@ -4643,19 +4643,13 @@ void MMFSystem::MMFDirectionalDeriv(const Array<OneD, const NekDouble> &movingfr
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> Dtmp(m_spacedim);
+    Array<OneD, NekDouble> tmp(nq);
 
-    for (int k=0; k<m_spacedim; ++k)
-    {
-        Dtmp[k] = Array<OneD, NekDouble>(nq);
-        m_fields[0]->PhysDeriv(MultiRegions::DirCartesianMap[k], inarray, Dtmp[k]);
-    }
-
-    // \nabla_v f = \nabla f \cdot \mathbf{v}
     outarray = Array<OneD, NekDouble>(nq, 0.0);
     for (int k=0; k<m_spacedim; ++k)
     {
-        Vmath::Vvtvp(nq, &movingframe[k*nq], 1, &Dtmp[k][0], 1, &outarray[0], 1, &outarray[0], 1);
+        m_fields[0]->PhysDeriv(MultiRegions::DirCartesianMap[k], inarray, tmp);
+        Vmath::Vvtvp(nq, &movingframe[k*nq], 1, &tmp[0], 1, &outarray[0], 1, &outarray[0], 1);
     }
 }
 
