@@ -1,0 +1,155 @@
+Anisotropy = [ 3 , 4 ] 
+
+MMFInitObejct Starts: ==============================================
+MMFActivation = 14196 /  14196 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.96595 *** 
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.96595 , 0 , 0 ) 
+*** MF 1 = ( 0 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ==============================================
+
+k = 0, m_varcoeff = ( 1.96595 , 0 , 0 , 0.0154991 , 3.87446 ) 
+k = 1, m_varcoeff = ( 0 , 1 , 0 , 8.31529e-15 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: CardiacTimeMapLineGauX1
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 6
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 100000
+	 Checkpoints (steps): 10000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	              MMFdir: TangentX
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	      AniRegionStart: 0
+	        AniRegionEnd: 1000000
+	  AnisotropyStrength: 1
+	               urest: 0
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+Writing: "CardiacTimeMapLineGauX1_initialcondition.chk"
+ (0.004519s, XML)
+ValidTimeMap = 2184 / 14196 ( 15.3846 % ) is De-Acitvated
+Initial: u = 1.2867, max u = 4.3515
+Writing: "CardiacTimeMapLineGauX1_initial.chk"
+ (0.003875s, XML)
+xmax = 40, xmin = -40, ymax = 1, ymin = -1
+Steps: 10000    Time: 10          
+ CPU Time: 1.62279 min.
+u_max = 0.996354 at x = -8.86721, y = -0.730728, z = 0
+u_min = 6.15468e-19 at x = 40, y = -1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_1.chk"
+ (0.019905s, XML)
+Time Map: Max = 10, Min = 0, vel mag max = 1032.55
+Writing: "CardiacTimeMapLineGauX1_1.chk"
+ (0.004052s, XML)
+Steps: 20000    Time: 20          
+ CPU Time: 1.61934 min.
+u_max = 0.996265 at x = 17.4151, y = -0.00542665, z = 0
+u_min = 9.04983e-07 at x = 40, y = -1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_2.chk"
+ (0.021496s, XML)
+Time Map: Max = 19.9975, Min = 0, vel mag max = 1984.2
+Writing: "CardiacTimeMapLineGauX1_2.chk"
+ (0.004112s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 1.619 min.
+u_max = 0.994858 at x = 40, y = -1, z = 0
+u_min = 0.00294559 at x = -24.7543, y = -0.00965398, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_3.chk"
+ (0.020341s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_3.chk"
+ (0.004168s, XML)
+Steps: 40000    Time: 40          
+ CPU Time: 1.61943 min.
+u_max = 0.953612 at x = 40, y = -1, z = 0
+u_min = 5.73065e-09 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_4.chk"
+ (0.023116s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_4.chk"
+ (0.004111s, XML)
+Steps: 50000    Time: 50          
+ CPU Time: 1.61977 min.
+u_max = 0.00948623 at x = 40, y = -1, z = 0
+u_min = 2.75279e-13 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_5.chk"
+ (0.020267s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_5.chk"
+ (0.004034s, XML)
+Steps: 60000    Time: 60          
+ CPU Time: 1.61879 min.
+u_max = 2.02974e-09 at x = 40, y = -1, z = 0
+u_min = 5.51728e-17 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_6.chk"
+ (0.020283s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_6.chk"
+ (0.004138s, XML)
+Steps: 70000    Time: 70          
+ CPU Time: 1.61914 min.
+u_max = 4.4103e-15 at x = 40, y = -1, z = 0
+u_min = 1.09103e-20 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_7.chk"
+ (0.023078s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_7.chk"
+ (0.003971s, XML)
+Steps: 80000    Time: 80          
+ CPU Time: 1.61969 min.
+u_max = 1.42548e-20 at x = 40, y = -1, z = 0
+u_min = 1.18473e-24 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_8.chk"
+ (0.02106s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_8.chk"
+ (0.003957s, XML)
+Steps: 90000    Time: 90          
+ CPU Time: 1.62113 min.
+u_max = 5.49208e-26 at x = 40, y = -1, z = 0
+u_min = 4.36882e-29 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_9.chk"
+ (0.020245s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_9.chk"
+ (0.004003s, XML)
+Steps: 100000   Time: 100         
+ CPU Time: 1.62079 min.
+u_max = 2.33966e-31 at x = 40, y = -1, z = 0
+u_min = 8.01177e-34 at x = -40, y = 1, z = 0
+Writing: "CardiacTimeMapLineGauX1_TimeMap_10.chk"
+ (0.020214s, XML)
+Time Map: Max = 24.6753, Min = 0, vel mag max = 1.50851
+Writing: "CardiacTimeMapLineGauX1_10.chk"
+ (0.004143s, XML)
+Time-integration  : 971.993s
+Writing: "CardiacTimeMapLineGauX1.fld"
+ (0.004036s, XML)
+-------------------------------------------
+Total Computation Time = 9806.51s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 2.33966e-31

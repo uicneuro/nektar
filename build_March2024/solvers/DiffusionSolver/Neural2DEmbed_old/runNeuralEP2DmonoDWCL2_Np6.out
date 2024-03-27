@@ -1,0 +1,80 @@
+Zone start = 0, end = 447, Excite zone = 448, Node zone = 2688, intra zone = 10528, extra zone = 2688 / nq = 10528
+v_InitObject: Node = 7840, Myelin = 2688, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 10528 /  10528 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.1937 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.1937 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.1937 , 0 ) 
+*** MF 1 = ( 11.1937 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.708203 , 0.706009 , 0 ) 
+*** MF 1 = ( 0.706009 , 0.708203 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.00155 , 0.998447 , 0 ) 
+*** MF 1 = ( 0.998447 , 1.00155 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.00155 , 0.998447 , 0 ) 
+*** MF 1 = ( 0.998447 , 1.00155 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.1937 , 0 , 1.20403e-11 , 144.902 ) 
+k = 1, m_varcoeff = ( 11.1937 , 0 , 0 , 3.18609e-11 , 144.902 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 1.00155 , 0.998447 , 0 , 1.7297e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.998447 , 1.00155 , 0 , 4.94203e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: NeuralEP2DmonoDWCL2_Np6
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 7
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 1e-07
+	        No. of Steps: 10000000
+	 Checkpoints (steps): 1000000
+	    Integration Type: IMEX
+	             Surface: Line
+	           DerivType: Euclidean
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2Dbi
+	      ExtCurrentType: WithCurrent
+	       GlobalSysSoln: DirectMultiLevelStaticCond
+	       TimeMapScheme: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	          Fiber Type: MonoBCNeumann
+	        Fiber Length: 0.01
+	         Node Length: 0.01
+	       Myelin Length: 0.2
+	               Nnode: 10
+	         Temperature: 24
+	            diameter: 0.01
+	             Helmtau: 1
+=======================================================================
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Writing: "NeuralEP2DmonoDWCL2_Np6_initial.chk"
+ (0.000811251s, XML)
+Fatal   : Level 0 assertion violation
+ERROR: The leading minor of order 2 is not positive definite from dpptrf

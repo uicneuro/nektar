@@ -1,0 +1,175 @@
+Anisotropy = [ 1 , 4 ], [ 1 , 1 ] 
+
+MMFInitObejct Starts: ==============================================
+MMFActivation = 6720 /  6720 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.32288 *** 
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.32288 , 0 , 0 ) 
+*** MF 1 = ( 0 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ==============================================
+
+================== SetUP Time Map moving frames ==================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 1 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 1.32288 , 0 , 0 , 7.49794e-15 , 2.17945 ) 
+k = 1, m_varcoeff = ( 0 , 1 , 0 , 1.13358e-14 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: FHNLineX4
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 6
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 100000
+	 Checkpoints (steps): 10000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	              MMFdir: TangentX
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         TimeMapIapp: 0
+	      m_TimeMapDelay: 0
+	      AniRegionStart: 60
+	        AniRegionEnd: 100
+	       Ani1Magnitude: 4
+	       Ani2Magnitude: 1
+	               urest: 0
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+Writing: "FHNLineX4_initialcondition.chk"
+ (0.00357s, XML)
+ValidTimeMap = 1008 / 6720 ( 15 % ) is De-Acitvated
+Initial: u = 1.40138, max u = 4.35157
+Writing: "FHNLineX4_initial.chk"
+ (0.002242s, XML)
+xmax = 40, xmin = -40, ymax = 0.5, ymin = -0.5
+Steps: 10000    Time: 10          
+ CPU Time: 1.02377 min.
+u_max = 0.996266 at x = -18.8755, y = -0.132788, z = 0
+u_min = 4.43923e-40 at x = 40, y = 0.5, z = 0
+Time Map: Max = 9.987, Min = 0
+(Vx, Vy, Vz) = ( 0.590513 , 0.0139398 , 0 ) 
+Writing: "FHNLineX4_timemap_1.chk"
+ (0.014234s, XML)
+Writing: "FHNLineX4_1.chk"
+ (0.001913s, XML)
+Steps: 20000    Time: 20          
+ CPU Time: 1.02221 min.
+u_max = 0.996244 at x = -1.22049, y = -0.132788, z = 0
+u_min = 2.71094e-27 at x = 40, y = -0.5, z = 0
+Time Map: Max = 19.997, Min = 0
+(Vx, Vy, Vz) = ( 0.73437 , 0.0152275 , 0 ) 
+Writing: "FHNLineX4_timemap_2.chk"
+ (0.012131s, XML)
+Writing: "FHNLineX4_2.chk"
+ (0.00208s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 1.02311 min.
+u_max = 0.996267 at x = 18.7344, y = 0.132788, z = 0
+u_min = 1.95317e-15 at x = 40, y = -0.5, z = 0
+Time Map: Max = 29.9825, Min = 0
+(Vx, Vy, Vz) = ( 0.937399 , 0.0197488 , 0 ) 
+Writing: "FHNLineX4_timemap_3.chk"
+ (0.010388s, XML)
+Writing: "FHNLineX4_3.chk"
+ (0.002006s, XML)
+Steps: 40000    Time: 40          
+ CPU Time: 1.028 min.
+u_max = 0.996267 at x = 32.6557, y = 0.367212, z = 0
+u_min = 9.27562e-09 at x = -34.2403, y = 0.457556, z = 0
+Time Map: Max = 39.996, Min = 0
+(Vx, Vy, Vz) = ( 1.1052 , 0.0236748 , 0 ) 
+Writing: "FHNLineX4_timemap_4.chk"
+ (0.015273s, XML)
+Writing: "FHNLineX4_4.chk"
+ (0.002326s, XML)
+Steps: 50000    Time: 50          
+ CPU Time: 1.02427 min.
+u_max = 0.989865 at x = 40, y = -0.234424, z = 0
+u_min = 2.81257e-14 at x = -40, y = 0.5, z = 0
+Time Map: Max = 42.0943, Min = 0
+(Vx, Vy, Vz) = ( 5.2124 , 0.807702 , 0 ) 
+Writing: "FHNLineX4_timemap_5.chk"
+ (0.011944s, XML)
+Writing: "FHNLineX4_5.chk"
+ (0.001812s, XML)
+Steps: 60000    Time: 60          
+ CPU Time: 1.02708 min.
+u_max = 0.913321 at x = 40, y = -0.234424, z = 0
+u_min = 2.26803e-18 at x = -40, y = 0.5, z = 0
+Time Map: Max = 42.0943, Min = 0
+(Vx, Vy, Vz) = ( 5.2124 , 0.807702 , 0 ) 
+Writing: "FHNLineX4_timemap_6.chk"
+ (0.014831s, XML)
+Writing: "FHNLineX4_6.chk"
+ (0.002857s, XML)
+Steps: 70000    Time: 70          
+ CPU Time: 1.02966 min.
+u_max = 5.33587e-05 at x = 40, y = -0.234424, z = 0
+u_min = 6.04141e-22 at x = -40, y = 0.5, z = 0
+Time Map: Max = 42.0943, Min = 0
+(Vx, Vy, Vz) = ( 5.2124 , 0.807702 , 0 ) 
+Writing: "FHNLineX4_timemap_7.chk"
+ (0.011561s, XML)
+Writing: "FHNLineX4_7.chk"
+ (0.001756s, XML)
+Steps: 80000    Time: 80          
+ CPU Time: 1.02848 min.
+u_max = 4.58314e-11 at x = 40, y = -0.234424, z = 0
+u_min = 9.36822e-26 at x = -40, y = -0.5, z = 0
+Time Map: Max = 42.0943, Min = 0
+(Vx, Vy, Vz) = ( 5.2124 , 0.807702 , 0 ) 
+Writing: "FHNLineX4_timemap_8.chk"
+ (0.015599s, XML)
+Writing: "FHNLineX4_8.chk"
+ (0.002282s, XML)
+Steps: 90000    Time: 90          
+ CPU Time: 1.04077 min.
+u_max = 1.16576e-16 at x = 40, y = -0.234424, z = 0
+u_min = 1.58795e-29 at x = -40, y = 0.5, z = 0
+Time Map: Max = 42.0943, Min = 0
+(Vx, Vy, Vz) = ( 5.2124 , 0.807702 , 0 ) 
+Writing: "FHNLineX4_timemap_9.chk"
+ (0.012798s, XML)
+Writing: "FHNLineX4_9.chk"
+ (0.002751s, XML)
+Steps: 100000   Time: 100         
+ CPU Time: 1.00911 min.
+u_max = 4.00968e-22 at x = 40, y = -0.234424, z = 0
+u_min = 3.20017e-33 at x = -40, y = -0.5, z = 0
+Time Map: Max = 42.0943, Min = 0
+(Vx, Vy, Vz) = ( 5.2124 , 0.807702 , 0 ) 
+Writing: "FHNLineX4_timemap_10.chk"
+ (0.011523s, XML)
+Writing: "FHNLineX4_10.chk"
+ (0.002013s, XML)
+Time-integration  : 615.387s
+Writing: "FHNLineX4.fld"
+ (0.001744s, XML)
+-------------------------------------------
+Total Computation Time = 6247.71s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 4.00968e-22

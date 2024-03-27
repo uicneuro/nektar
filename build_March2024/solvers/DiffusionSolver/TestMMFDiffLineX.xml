@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <GEOMETRY DIM="1" SPACE="3">
+        <VERTEX>
+            <V ID="0">-1.00000000e+00 0.00000000e+00 0.00000000e+00</V>
+            <V ID="1">-9.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="2">-8.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="3">-7.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="4">-5.99999999e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="5">-4.99999999e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="6">-3.99999999e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="7">-2.99999998e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="8">-1.99999998e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="9">-9.99999979e-02 0.00000000e+00 0.00000000e+00</V>
+            <V ID="10">2.38931036e-09 0.00000000e+00 0.00000000e+00</V>
+            <V ID="11">1.00000002e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="12">2.00000002e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="13">3.00000001e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="14">4.00000001e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="15">5.00000001e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="16">6.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="17">7.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="18">8.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="19">9.00000000e-01 0.00000000e+00 0.00000000e+00</V>
+            <V ID="20">1.00000000e+00 0.00000000e+00 0.00000000e+00</V>
+        </VERTEX>
+        <ELEMENT>
+            <S ID="0">0 1</S>
+            <S ID="1">1 2</S>
+            <S ID="2">2 3</S>
+            <S ID="3">3 4</S>
+            <S ID="4">4 5</S>
+            <S ID="5">5 6</S>
+            <S ID="6">6 7</S>
+            <S ID="7">7 8</S>
+            <S ID="8">8 9</S>
+            <S ID="9">9 10</S>
+            <S ID="10">10 11</S>
+            <S ID="11">11 12</S>
+            <S ID="12">12 13</S>
+            <S ID="13">13 14</S>
+            <S ID="14">14 15</S>
+            <S ID="15">15 16</S>
+            <S ID="16">16 17</S>
+            <S ID="17">17 18</S>
+            <S ID="18">18 19</S>
+            <S ID="19">19 20</S>
+        </ELEMENT>
+        <CURVED />
+        <COMPOSITE>
+            <C ID="0"> S[0-19] </C>
+            <C ID="1"> V[0] </C>
+            <C ID="2"> V[20] </C>
+        </COMPOSITE>
+        <DOMAIN>
+            <D ID="0"> C[0] </D>
+        </DOMAIN>
+    </GEOMETRY>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>d4a33f1264ce054f52fcf5757fc1979106a19854</GitSHA1>
+            <Hostname>apple.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>17-Mar-2023 11:36:43</Timestamp>
+        </Provenance>
+        <NekMeshCommandLine>OneDxline.msh OneDxline.xml:xml:uncompress </NekMeshCommandLine>
+    </Metadata>
+  <EXPANSIONS>
+    <E COMPOSITE="C[0]" NUMMODES="6" TYPE="MODIFIED" FIELDS="u" />
+  </EXPANSIONS>
+
+  <CONDITIONS>
+
+    <SOLVERINFO>
+      <I PROPERTY="EQTYPE" VALUE="MMFDiffusion" />
+      <I PROPERTY="Projection" VALUE="DisContinuous"/>
+        <I PROPERTY="DiffusionAdvancement" VALUE="Implicit" />
+        <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXdirk_3_4_3" />
+      <I PROPERTY="TestType" VALUE="TestLineX" />
+      <I PROPERTY="SurfaceType" VALUE="Line" />
+    </SOLVERINFO>
+
+    <PARAMETERS>
+      <P> TimeStep       = 0.001             </P>
+      <P> NumSteps       = 1000             </P>
+      <P> FinTime        = TimeStep*NumSteps </P>
+      <P> IO_CheckSteps  = 200             </P>
+      <P> IO_InfoSteps   = 200            </P>
+      <P> AniStrength = 1.0            </P>
+      <P> epsilon0   = 1.0            </P>
+    </PARAMETERS>
+
+    <VARIABLES>
+      <V ID="0"> u </V>
+    </VARIABLES>
+
+    <BOUNDARYREGIONS>
+      <B ID="0"> C[1]  </B>
+      <B ID="1"> C[2]  </B>
+    </BOUNDARYREGIONS>
+
+    <BOUNDARYCONDITIONS>
+      <REGION REF="0">
+        <D VAR="u" USERDEFINEDTYPE="TimeDependent" 
+            VALUE="exp(-1.0*t)*cos(PI*x)" />
+      </REGION>
+      <REGION REF="1">
+        <N VAR="u" VALUE="0.0" />
+        </REGION>
+    </BOUNDARYCONDITIONS>
+
+  </CONDITIONS>
+
+</NEKTAR>
+

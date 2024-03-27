@@ -1,0 +1,137 @@
+Anisotropy = [ 1 , 3.9997 ], [ 1 , 1 ] 
+
+MMFInitObejct Starts: ==============================================
+MMFActivation = 66024 /  66024 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.04902 *** 
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.04902 , 0 , 0 ) 
+*** MF 1 = ( 0 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ==============================================
+
+================== SetUP Time Map moving frames ==================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.710233 , 0.703966 , 0 ) 
+*** MF 1 = ( 0.703966 , 0.710233 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 1.04902 , 0 , 0 , 0.0238666 , 1.1628 ) 
+k = 1, m_varcoeff = ( 0 , 1 , 0 , 3.47439e-15 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: FHNPlaneh30PointX3G4_1
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 6
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.002
+	        No. of Steps: 50000
+	 Checkpoints (steps): 5000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	              MMFdir: TangentX
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         TimeMapIapp: 0
+	      m_TimeMapDelay: 0
+	      AniRegionStart: 0
+	        AniRegionEnd: 182
+	       Ani1Magnitude: 4
+	       Ani2Magnitude: 1
+	               urest: 0
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+Writing: "FHNPlaneh30PointX3G4_1_initialcondition.chk"
+ (0.026s, XML)
+ValidTimeMap = 1386 / 66024 ( 2.09924 % ) is De-Acitvated
+Initial: u = 0.788545, max u = 9.97508
+Writing: "FHNPlaneh30PointX3G4_1_initial.chk"
+ (0.025101s, XML)
+xmax = 40, xmin = -40, ymax = 40, ymin = -40
+Steps: 5000     Time: 10          
+ CPU Time: 4.70264 min.
+u_max = 0.996894 at x = -19.5433, y = -0.130244, z = 0
+u_min = -0.000698055 at x = -33.3775, y = -15.1017, z = 0
+Time Map: Max = 10, Min = 0
+(Vx, Vy, Vz) = ( 0.388493 , 0.362153 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_1.chk"
+ (0.173731s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_1.chk"
+ (0.02427s, XML)
+Steps: 10000    Time: 20          
+ CPU Time: 4.71268 min.
+u_max = 0.998905 at x = -35.7494, y = -22.0451, z = 0
+u_min = -0.00250303 at x = -27.1119, y = -33.2502, z = 0
+Time Map: Max = 20, Min = 0
+(Vx, Vy, Vz) = ( 1.14708 , 1.05413 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_2.chk"
+ (0.184016s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_2.chk"
+ (0.027104s, XML)
+Steps: 15000    Time: 30          
+ CPU Time: 3.71116 min.
+u_max = 0.999058 at x = 3.37428, y = 33.1736, z = 0
+u_min = -0.00092281 at x = 7.79993, y = -39.6851, z = 0
+Time Map: Max = 29.997, Min = 0
+(Vx, Vy, Vz) = ( 1.86904 , 2.14255 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_3.chk"
+ (0.145661s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_3.chk"
+ (0.020428s, XML)
+Steps: 20000    Time: 40          
+ CPU Time: 3.66803 min.
+u_max = 0.999328 at x = 22.1471, y = -36.504, z = 0
+u_min = -0.00288693 at x = 35.9512, y = 30.3086, z = 0
+Time Map: Max = 39.994, Min = 0
+(Vx, Vy, Vz) = ( 2.03838 , 2.20563 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_4.chk"
+ (0.145341s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_4.chk"
+ (0.020753s, XML)
+Steps: 25000    Time: 50          
+ CPU Time: 3.69582 min.
+u_max = 0.998186 at x = 40, y = -40, z = 0
+u_min = 5.4828e-12 at x = -20.5878, y = 0.0507646, z = 0
+Time Map: Max = 47.989, Min = 0
+(Vx, Vy, Vz) = ( 2.07685 , 2.46756 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_5.chk"
+ (0.147191s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_5.chk"
+ (0.020695s, XML)
+Steps: 30000    Time: 60          
+ CPU Time: 3.74464 min.
+u_max = 0.977449 at x = 40, y = -40, z = 0
+u_min = 9.68675e-16 at x = -21.7292, y = 0.0967554, z = 0
+Time Map: Max = 47.989, Min = 0
+(Vx, Vy, Vz) = ( 2.07685 , 2.46756 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_6.chk"
+ (0.131207s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_6.chk"
+ (0.020448s, XML)
+Steps: 35000    Time: 70          
+ CPU Time: 3.73079 min.
+u_max = 0.763196 at x = 40, y = -40, z = 0
+u_min = 1.77419e-19 at x = -23.014, y = -0.0919068, z = 0
+Time Map: Max = 47.989, Min = 0
+(Vx, Vy, Vz) = ( 2.07685 , 2.46756 , 0 ) 
+Writing: "FHNPlaneh30PointX3G4_1_timemap_7.chk"
+ (0.128262s, XML)
+Writing: "FHNPlaneh30PointX3G4_1_7.chk"
+ (0.020489s, XML)

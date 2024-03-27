@@ -1,0 +1,160 @@
+Anisotropy = [ 1 , 4 ] 
+MMFActivation = 6720 /  6720 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.95244 *** 
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.95244 , 0 , 0 ) 
+*** MF 1 = ( 0 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+================== SetUP Time Map moving frames ==================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 1 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 1.95244 , 0 , 0 , 0.0765604 , 3.85938 ) 
+k = 1, m_varcoeff = ( 0 , 1 , 0 , 1.16285e-14 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: CardiacTimeMapDeformGaussX3
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 6
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.001
+	        No. of Steps: 100000
+	 Checkpoints (steps): 10000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	              MMFdir: TangentX
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         TimeMapIapp: 0
+	      m_TimeMapDelay: 0
+	      AniRegionStart: 0
+	        AniRegionEnd: 1000000
+	  AnisotropyStrength: 3
+	               urest: 0
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0 (default)
+Writing: "CardiacTimeMapDeformGaussX3_initialcondition.chk"
+ (0.000907331s, XML)
+ValidTimeMap = 1008 / 6720 ( 15 % ) is De-Acitvated
+Initial: u = 1.40138, max u = 4.35157
+Writing: "CardiacTimeMapDeformGaussX3_initial.chk"
+ (0.00070403s, XML)
+xmax = 40, xmin = -40, ymax = 0.5, ymin = -0.5
+Steps: 10000    Time: 10          
+ CPU Time: 0.555442 min.
+u_max = 0.996404 at x = -8.57095, y = 0.457556, z = 0
+u_min = 7.087e-20 at x = 40, y = 0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_1.chk"
+ (0.00488348s, XML)
+Time Map: Max = 9.98091, Min = 0, vel mag max = 8.3975
+Writing: "CardiacTimeMapDeformGaussX3_1.chk"
+ (0.000731151s, XML)
+Steps: 20000    Time: 20          
+ CPU Time: 0.556065 min.
+u_max = 0.996265 at x = 15.0705, y = -0.042444, z = 0
+u_min = 8.78541e-08 at x = 40, y = 0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_2.chk"
+ (0.00499151s, XML)
+Time Map: Max = 19.9955, Min = 0, vel mag max = 9.9689
+Writing: "CardiacTimeMapDeformGaussX3_2.chk"
+ (0.000767069s, XML)
+Steps: 30000    Time: 30          
+ CPU Time: 0.557355 min.
+u_max = 0.995877 at x = 40, y = -0.5, z = 0
+u_min = 0.00319792 at x = -24.3903, y = 0.367212, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_3.chk"
+ (0.00504698s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_3.chk"
+ (0.000787908s, XML)
+Steps: 40000    Time: 40          
+ CPU Time: 0.558237 min.
+u_max = 0.96113 at x = 40, y = -0.5, z = 0
+u_min = 7.06723e-09 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_4.chk"
+ (0.00506977s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_4.chk"
+ (0.00075171s, XML)
+Steps: 50000    Time: 50          
+ CPU Time: 0.557815 min.
+u_max = 0.0729645 at x = 40, y = 0.5, z = 0
+u_min = 2.29252e-13 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_5.chk"
+ (0.00505013s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_5.chk"
+ (0.000728036s, XML)
+Steps: 60000    Time: 60          
+ CPU Time: 0.558232 min.
+u_max = 6.27447e-09 at x = 40, y = -0.5, z = 0
+u_min = 5.33994e-17 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_6.chk"
+ (0.00583327s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_6.chk"
+ (0.000777458s, XML)
+Steps: 70000    Time: 70          
+ CPU Time: 0.557429 min.
+u_max = 1.28629e-14 at x = 40, y = -0.5, z = 0
+u_min = 1.11961e-20 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_7.chk"
+ (0.00504893s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_7.chk"
+ (0.000793097s, XML)
+Steps: 80000    Time: 80          
+ CPU Time: 0.557862 min.
+u_max = 4.0712e-20 at x = 40, y = -0.5, z = 0
+u_min = 1.44683e-24 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_8.chk"
+ (0.00580515s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_8.chk"
+ (0.000802104s, XML)
+Steps: 90000    Time: 90          
+ CPU Time: 0.558696 min.
+u_max = 1.55163e-25 at x = 40, y = -0.5, z = 0
+u_min = 6.42927e-29 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_9.chk"
+ (0.00506293s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_9.chk"
+ (0.000802865s, XML)
+Steps: 100000   Time: 100         
+ CPU Time: 0.557926 min.
+u_max = 6.569e-31 at x = 40, y = -0.5, z = 0
+u_min = 1.33585e-33 at x = -40, y = -0.5, z = 0
+Writing: "CardiacTimeMapDeformGaussX3_TimeMap_10.chk"
+ (0.00496099s, XML)
+Time Map: Max = 25.512, Min = 0, vel mag max = 9.72246
+Writing: "CardiacTimeMapDeformGaussX3_10.chk"
+ (0.000793809s, XML)
+Time-integration  : 334.504s
+Writing: "CardiacTimeMapDeformGaussX3.fld"
+ (0.000787076s, XML)
+-------------------------------------------
+Total Computation Time = 2248.94s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 6.569e-31

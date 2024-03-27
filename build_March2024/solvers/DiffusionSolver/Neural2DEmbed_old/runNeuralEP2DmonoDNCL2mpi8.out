@@ -1,0 +1,4401 @@
+Zone start = 0, end = 239, Excite zone = 240, Node zone = 300, intra zone = 720, extra zone = 300 / nq = 720
+v_InitObject: Node = 420, Myelin = 300, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 120, intra zone = 690, extra zone = 120 / nq = 690
+v_InitObject: Node = 570, Myelin = 120, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 690 /  690 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 120, intra zone = 720, extra zone = 120 / nq = 720
+v_InitObject: Node = 600, Myelin = 120, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 720 /  720 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 240, intra zone = 690, extra zone = 240 / nq = 690
+v_InitObject: Node = 450, Myelin = 240, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 690 /  690 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 120, intra zone = 720, extra zone = 120 / nq = 720
+v_InitObject: Node = 600, Myelin = 120, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 240, intra zone = 690, extra zone = 240 / nq = 690
+v_InitObject: Node = 450, Myelin = 240, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 690 /  690 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 120, intra zone = 720, extra zone = 120 / nq = 720
+v_InitObject: Node = 600, Myelin = 120, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 720 /  720 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 180, intra zone = 690, extra zone = 180 / nq = 690
+v_InitObject: Node = 510, Myelin = 180, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 690 /  690 ( 100 % ) 
+MMFActivation = 720 /  720 ( 100 % ) 
+MMFActivation = 720 /  720 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.1522 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.1522 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.1522 , 0 ) 
+*** MF 1 = ( 11.1522 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.698391 , 0.715716 , 0 ) 
+*** MF 1 = ( 0.715716 , 0.698391 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.987675 , 1.01218 , 0 ) 
+*** MF 1 = ( 1.01218 , 0.987675 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.987675 , 1.01218 , 0 ) 
+*** MF 1 = ( 1.01218 , 0.987675 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.1522 , 0 , 1.63777e-12 , 144.361 ) 
+k = 1, m_varcoeff = ( 11.1522 , 0 , 0 , 4.78292e-12 , 144.361 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 0.987675 , 1.01218 , 0 , 1.48835e-07 , 2 ) 
+k = 1, m_varcoeff = ( 1.01218 , 0.987675 , 0 , 4.25241e-07 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: NeuralEP2DmonoDNCL2mpi8
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Num. Processes: 8
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 1e-07
+	        No. of Steps: 10000000
+	 Checkpoints (steps): 1000000
+	    Integration Type: IMEX
+	             Surface: Plane
+	           DerivType: Euclidean
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2Dbi
+	      ExtCurrentType: NoCurrent
+	       GlobalSysSoln: XxtMultiLevelStaticCond
+	       TimeMapScheme: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	        Fiber Length: 0.01
+	         Node Length: 0.01
+	       Myelin Length: 0.2
+	               Nnode: 10
+	         Temperature: 24
+	            diameter: 0.01
+	             Helmtau: 1
+=======================================================================
+Initial Conditions:
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.785 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.785 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.785 , 0 ) 
+*** MF 1 = ( 11.785 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.732102 , 0.681195 , 0 ) 
+*** MF 1 = ( 0.681195 , 0.732102 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.03535 , 0.963355 , 0 ) 
+*** MF 1 = ( 0.963355 , 1.03535 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.03535 , 0.963355 , 0 ) 
+*** MF 1 = ( 0.963355 , 1.03535 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.785 , 0 , 1.68577e-12 , 152.617 ) 
+k = 1, m_varcoeff = ( 11.785 , 0 , 0 , 5.09213e-12 , 152.617 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 1.03535 , 0.963355 , 0 , 2.10487e-07 , 2 ) 
+k = 1, m_varcoeff = ( 0.963355 , 1.03535 , 0 , 6.01382e-07 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.8362 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.8362 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.8362 , 0 ) 
+*** MF 1 = ( 11.8362 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.719853 , 0.694126 , 0 ) 
+*** MF 1 = ( 0.694126 , 0.719853 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.01803 , 0.981643 , 0 ) 
+*** MF 1 = ( 0.981643 , 1.01803 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.01803 , 0.981643 , 0 ) 
+*** MF 1 = ( 0.981643 , 1.01803 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.8362 , 0 , 1.67291e-12 , 153.285 ) 
+k = 1, m_varcoeff = ( 11.8362 , 0 , 0 , 5.0927e-12 , 153.285 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 1.01803 , 0.981643 , 0 , 2.06051e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.981643 , 1.01803 , 0 , 5.8872e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** 1st Moving frames are NOT in unit length, Avg mag. = 10.4813 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 10.4813 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 10.4813 , 0 ) 
+*** MF 1 = ( 10.4813 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.633083 , 0.774084 , 0 ) 
+*** MF 1 = ( 0.774084 , 0.633083 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.895315 , 1.09472 , 0 ) 
+*** MF 1 = ( 1.09472 , 0.895315 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.895315 , 1.09472 , 0 ) 
+*** MF 1 = ( 1.09472 , 0.895315 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 10.4813 , 0 , 1.62587e-12 , 135.604 ) 
+k = 1, m_varcoeff = ( 10.4813 , 0 , 0 , 4.34785e-12 , 135.604 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 0.895315 , 1.09472 , 0 , 2.10484e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.09472 , 0.895315 , 0 , 6.01382e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** 1st Moving frames are NOT in unit length, Avg mag. = 9.918 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 9.918 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 9.918 , 0 ) 
+*** MF 1 = ( 9.918 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.683687 , 0.729776 , 0 ) 
+*** MF 1 = ( 0.729776 , 0.683687 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.966879 , 1.03206 , 0 ) 
+*** MF 1 = ( 1.03206 , 0.966879 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.966879 , 1.03206 , 0 ) 
+*** MF 1 = ( 1.03206 , 0.966879 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 9.918 , 0 , 1.51839e-12 , 128.248 ) 
+k = 1, m_varcoeff = ( 9.918 , 0 , 0 , 4.23956e-12 , 128.248 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 0.966879 , 1.03206 , 0 , 1.45702e-07 , 2 ) 
+k = 1, m_varcoeff = ( 1.03206 , 0.966879 , 0 , 4.16289e-07 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** 1st Moving frames are NOT in unit length, Avg mag. = 10.4813 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 10.4813 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 10.4813 , 0 ) 
+*** MF 1 = ( 10.4813 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.735336 , 0.677703 , 0 ) 
+*** MF 1 = ( 0.677703 , 0.735336 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.03992 , 0.958417 , 0 ) 
+*** MF 1 = ( 0.958417 , 1.03992 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.03992 , 0.958417 , 0 ) 
+*** MF 1 = ( 0.958417 , 1.03992 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 10.4813 , 0 , 1.51388e-12 , 135.604 ) 
+k = 1, m_varcoeff = ( 10.4813 , 0 , 0 , 4.54702e-12 , 135.604 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 1.03992 , 0.958417 , 0 , 2.57788e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.958417 , 1.03992 , 0 , 7.36541e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.8362 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.8362 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.8362 , 0 ) 
+*** MF 1 = ( 11.8362 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.748235 , 0.663434 , 0 ) 
+*** MF 1 = ( 0.663434 , 0.748235 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.05816 , 0.938237 , 0 ) 
+*** MF 1 = ( 0.938237 , 1.05816 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.05816 , 0.938237 , 0 ) 
+*** MF 1 = ( 0.938237 , 1.05816 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.8362 , 0 , 1.67524e-12 , 153.285 ) 
+k = 1, m_varcoeff = ( 11.8362 , 0 , 0 , 5.13265e-12 , 153.285 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 1.05816 , 0.938237 , 0 , 2.91401e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.938237 , 1.05816 , 0 , 8.32576e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.8362 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.8362 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.8362 , 0 ) 
+*** MF 1 = ( 11.8362 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 1 = ( 0.707107 , 0.707107 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1 , 1 , 0 ) 
+*** MF 1 = ( 1 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1 , 1 , 0 ) 
+*** MF 1 = ( 1 , 1 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.8362 , 0 , 1.7811e-12 , 153.285 ) 
+k = 1, m_varcoeff = ( 11.8362 , 0 , 0 , 5.06947e-12 , 153.285 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 1 , 1 , 0 , 1.02884e-09 , 2 ) 
+k = 1, m_varcoeff = ( 1 , 1 , 0 , 1.80455e-09 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+  - Field um: 0
+  - Field ue: 0
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Writing: "NeuralEP2DmonoDNCL2mpi8_initial.chk"
+ (0.00050637s, XML)
+phi_m, max: -0.002836 at y = 1.585925
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+Steps: 1000000  Time: 0.1         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_1.chk"
+ (0.000668414s, XML)
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Steps: 2000000  Time: 0.2         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_2.chk"
+ (0.00063429s, XML)
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Steps: 3000000  Time: 0.3         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_3.chk"
+ (0.00065037s, XML)
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Steps: 4000000  Time: 0.4         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_4.chk"
+ (0.000680586s, XML)
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+Steps: 5000000  Time: 0.5         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_5.chk"
+ (0.000625833s, XML)
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+Steps: 6000000  Time: 0.6         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_6.chk"
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+ (0.000632426s, XML)
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+Steps: 7000000  Time: 0.7         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_7.chk"
+ (0.000611888s, XML)
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 219.839752 at y = 2.120000
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 219.839752 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 2.829805 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 2.829805 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 0.272900 ) ( 1 , 0.268557 ) ( 2 , 0.252957 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 171.052407 at y = 1.896644
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 171.052407 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 67.406270 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 67.406270 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 33.491238 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 33.491238 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 115.529422 at y = 1.308571
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 115.529422 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Steps: 8000000  Time: 0.8         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.800000
+CPU Time: 12.751752 min.
+phi_m, max: 11.171671 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.800000
+CPU Time: 12.751752 min.
+phi_m, max: 11.171671 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_8.chk"
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 141.764684 at y = 1.604286
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 141.764684 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+ (0.000624601s, XML)
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 141.764684 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 97.611138 at y = 1.604286
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 141.764684 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 97.611138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 115.529422 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 70.684497 at y = 1.308571
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 115.529422 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 70.684497 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 219.839752 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 168.715852 at y = 2.120000
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 219.839752 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 168.715852 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 2.829805 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 0.272900 ) ( 1 , 0.268557 ) ( 2 , 0.252957 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: -0.303270 at y = 0.230000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 2.829805 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 0.272900 ) ( 1 , 0.268557 ) ( 2 , 0.252957 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: -0.303270 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , -0.173238 ) ( 1 , -0.189722 ) ( 2 , -0.099101 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 171.052407 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 122.985669 at y = 1.896644
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 171.052407 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 122.985669 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 67.406270 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 15.619347 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 67.406270 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 15.619347 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 33.491238 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.148484 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 33.491238 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.148484 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Steps: 9000000  Time: 0.9         
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.800000
+CPU Time: 12.751752 min.
+phi_m, max: 11.171671 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.900000
+CPU Time: 12.744298 min.
+phi_m, max: 0.714669 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.800000
+CPU Time: 12.751752 min.
+phi_m, max: 11.171671 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.900000
+CPU Time: 12.744298 min.
+phi_m, max: 0.714669 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_9.chk"
+ (0.000627407s, XML)
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 171.052407 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 122.985669 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 79.169134 at y = 1.896644
+
+
+
+phi_m, max: -0.002836 at y = 1.585925
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: -0.002513 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -inf )  
+phi_m, max: 0.253859 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 177.747134 at y = 1.579071
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 292.240949 at y = 1.698376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 266.529910 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 221.726109 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 171.052407 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 122.985669 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+phi_m, max: 79.169134 at y = 1.896644
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , inf )  
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 67.406270 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 15.619347 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 1.280555 at y = 1.060000
+
+
+
+phi_m, max: 1.218969 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 277.485405 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 288.851272 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 257.376147 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 210.340159 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 159.526610 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 112.996395 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 67.406270 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 15.619347 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 1.280555 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , inf ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Steps: 10000000 Time: 1           
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.800000
+CPU Time: 12.751752 min.
+phi_m, max: 11.171671 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.900000
+CPU Time: 12.744298 min.
+phi_m, max: 0.714669 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 1.000000
+CPU Time: 12.721309 min.
+phi_m, max: -0.622560 at y = 0.497143
+
+
+
+
+Time: 0.100000
+CPU Time: 12.640690 min.
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.200000
+CPU Time: 12.734421 min.
+phi_m, max: 286.048647 at y = 0.439413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.300000
+CPU Time: 12.737049 min.
+phi_m, max: 249.825608 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.400000
+CPU Time: 12.668578 min.
+phi_m, max: 201.739453 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.500000
+CPU Time: 12.720978 min.
+phi_m, max: 151.240407 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.600000
+CPU Time: 12.719707 min.
+phi_m, max: 105.926078 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.700000
+CPU Time: 12.738625 min.
+phi_m, max: 58.261300 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.800000
+CPU Time: 12.751752 min.
+phi_m, max: 11.171671 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 0.900000
+CPU Time: 12.744298 min.
+phi_m, max: 0.714669 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 33.491238 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.148484 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.136226 at y = 0.764286
+
+
+
+phi_m, max: 57.190620 at y = 0.471928
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.096062 at y = 0.646426
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 272.458459 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 230.091702 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 180.000877 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 131.008764 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 87.581393 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 33.491238 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.148484 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.136226 at y = 0.764286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -inf ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 141.764684 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 97.611138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 46.681836 at y = 1.604286
+
+
+
+phi_m, max: -0.002818 at y = 1.362358
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -inf ) ( 9 , -nan )  
+phi_m, max: 0.013349 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 12.024487 at y = 1.283356
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 292.754731 at y = 1.481624
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 280.151746 at y = 1.489413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 240.930138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 191.744096 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 141.764684 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 97.611138 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+phi_m, max: 46.681836 at y = 1.604286
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , inf ) ( 9 , -nan )  
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 115.529422 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 70.684497 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 17.717545 at y = 1.308571
+
+
+
+phi_m, max: 0.022642 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , -inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 18.755337 at y = 1.060000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 292.967872 at y = 1.063633
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 290.677129 at y = 1.278376
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 259.658738 at y = 1.279413
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 213.141239 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 162.412444 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 115.529422 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 70.684497 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 17.717545 at y = 1.308571
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , inf ) ( 7 , inf ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 219.839752 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 168.715852 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 120.715384 at y = 2.120000
+
+
+
+phi_m, max: -0.002839 at y = 2.007513
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: -0.002857 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 0.002545 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 4.202623 at y = 1.874785
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 291.283968 at y = 1.900587
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 293.194866 at y = 2.118825
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 265.713518 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 219.839752 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 168.715852 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+phi_m, max: 120.715384 at y = 2.120000
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -nan ) ( 3 , -nan ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 2.829805 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 0.272900 ) ( 1 , 0.268557 ) ( 2 , 0.252957 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: -0.303270 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , -0.173238 ) ( 1 , -0.189722 ) ( 2 , -0.099101 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: -0.851722 at y = 0.000000
+
+
+
+phi_m, max: 292.849552 at y = 0.227458
+
+ 
+(Nodeid,phim): ( 0 , 112.582494 ) ( 1 , 112.596026 ) ( 2 , 57.278449 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 268.090411 at y = 0.229413
+
+ 
+(Nodeid,phim): ( 0 , 97.502633 ) ( 1 , 97.587677 ) ( 2 , 50.862893 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 223.615787 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 78.116092 ) ( 1 , 78.215390 ) ( 2 , 41.473000 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 172.995334 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 58.170218 ) ( 1 , 58.264242 ) ( 2 , 31.398126 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 124.686701 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 40.497122 ) ( 1 , 40.581734 ) ( 2 , 22.211290 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 81.030452 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 20.957620 ) ( 1 , 21.224270 ) ( 2 , 13.122524 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 26.115141 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 3.478360 ) ( 1 , 3.617869 ) ( 2 , 3.005254 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: 2.829805 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , 0.272900 ) ( 1 , 0.268557 ) ( 2 , 0.252957 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: -0.303270 at y = 0.230000
+
+ 
+(Nodeid,phim): ( 0 , -0.173238 ) ( 1 , -0.189722 ) ( 2 , -0.099101 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+phi_m, max: -0.851722 at y = 0.000000
+
+ 
+(Nodeid,phim): ( 0 , -0.338216 ) ( 1 , -0.351218 ) ( 2 , -0.187007 ) ( 3 , 0.000000 ) ( 4 , 0.000000 ) ( 5 , 0.000000 ) ( 6 , 0.000000 ) ( 7 , 0.000000 ) ( 8 , 0.000000 ) ( 9 , 0.000000 )  
+
+
+) ( 1 , -nan ) ( 2 , -inf ) ( 3 , inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+Time: 1.000000
+CPU Time: 12.721309 min.
+phi_m, max: -0.622560 at y = 0.497143
+
+ 
+(Nodeid,phim): ( 0 , -nan ) ( 1 , -nan ) ( 2 , -inf ) ( 3 , -inf ) ( 4 , -nan ) ( 5 , -nan ) ( 6 , -nan ) ( 7 , -nan ) ( 8 , -nan ) ( 9 , -nan )  
+
+
+Writing: "NeuralEP2DmonoDNCL2mpi8_10.chk"
+ (0.000615584s, XML)
+Time-integration  : 7630.64s
+Writing: "NeuralEP2DmonoDNCL2mpi8.fld"
+ (0.000371116s, XML)
+-------------------------------------------
+Total Computation Time = 7631.56s
+-------------------------------------------
+L 2 error (variable um) : 2.52652
+L inf error (variable um) : 47.7598
+L 2 error (variable ue) : 0
+L inf error (variable ue) : 0

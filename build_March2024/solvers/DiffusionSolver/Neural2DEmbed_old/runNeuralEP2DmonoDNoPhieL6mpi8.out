@@ -1,0 +1,1597 @@
+Zone start = 0, end = 239, Excite zone = 240, Node zone = 600, intra zone = 2070, extra zone = 600 / nq = 2070
+v_InitObject: Node = 1470, Myelin = 600, extracell = 0
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 480, intra zone = 2040, extra zone = 480 / nq = 2040
+v_InitObject: Node = 1560, Myelin = 480, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 480, intra zone = 2070, extra zone = 480 / nq = 2070
+v_InitObject: Node = 1590, Myelin = 480, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 480, intra zone = 2040, extra zone = 480 / nq = 2040
+v_InitObject: Node = 1560, Myelin = 480, extracell = 0
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 480, intra zone = 2070, extra zone = 480 / nq = 2070
+v_InitObject: Node = 1590, Myelin = 480, extracell = 0
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 360, intra zone = 2040, extra zone = 360 / nq = 2040
+v_InitObject: Node = 1680, Myelin = 360, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 480, intra zone = 2070, extra zone = 480 / nq = 2070
+v_InitObject: Node = 1590, Myelin = 480, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 480, intra zone = 2040, extra zone = 480 / nq = 2040
+v_InitObject: Node = 1560, Myelin = 480, extracell = 0
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 2040 /  2040 ( 100 % ) 
+MMFActivation = 2070 /  2070 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 2070 /  2070 ( 100 % ) 
+MMFActivation = 2040 /  2040 ( 100 % ) 
+MMFActivation = 2070 /  2070 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 2040 /  2040 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 2040 /  2040 ( 100 % ) 
+MMFActivation = 2070 /  2070 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.7669 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.7669 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 10.9331 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 10.9331 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.367 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.367 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.342 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.367 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.367 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 10.9331 , 0 ) 
+*** MF 1 = ( 10.9331 , 0 , 0 ) 
+*** MF 1 = ( 11.342 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** MF 0 = ( 0 , 11.342 , 0 ) 
+*** MF 1 = ( 11.342 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** MF 0 = ( 0 , 11.367 , 0 ) 
+*** MF 0 = ( 0 , 11.7669 , 0 ) 
+*** MF 1 = ( 11.7669 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0 , 11.342 , 0 ) 
+*** MF 1 = ( 11.342 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.367 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.367 *** 
+*** Moving frames are Orthogonal
+*** MF 1 = ( 11.367 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+MMFInitObject is done ===========================
+*** MF 0 = ( 0 , 11.367 , 0 ) 
+*** MF 1 = ( 11.367 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** MF 0 = ( 0 , 11.367 , 0 ) 
+*** MF 1 = ( 11.367 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+MMFInitObject is done ===========================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.695289 , 0.71873 , 0 ) 
+*** MF 1 = ( 0.71873 , 0.695289 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.704648 , 0.709557 , 0 ) 
+*** MF 1 = ( 0.709557 , 0.704648 , 0 ) 
+*** MF 0 = ( 0.716128 , 0.697969 , 0 ) 
+*** MF 1 = ( 0.697969 , 0.716128 , 0 ) 
+*** MF 0 = ( 0.703508 , 0.710687 , 0 ) 
+*** MF 1 = ( 0.710687 , 0.703508 , 0 ) 
+*** MF 0 = ( 0.691377 , 0.722494 , 0 ) 
+*** MF 1 = ( 0.722494 , 0.691377 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.667723 , 0.74441 , 0 ) 
+*** MF 1 = ( 0.74441 , 0.667723 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.69252 , 0.721398 , 0 ) 
+*** MF 1 = ( 0.721398 , 0.69252 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.698391 , 0.715716 , 0 ) 
+*** MF 1 = ( 0.715716 , 0.698391 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.983288 , 1.01644 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 1 = ( 1.01644 , 0.983288 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.983288 , 1.01644 , 0 ) 
+*** MF 0 = ( 1.01276 , 0.987078 , 0 ) 
+*** MF 0 = ( 0.99491 , 1.00506 , 0 ) 
+*** MF 1 = ( 1.00506 , 0.99491 , 0 ) 
+*** MF 0 = ( 0.996522 , 1.00347 , 0 ) 
+*** MF 1 = ( 1.00347 , 0.996522 , 0 ) 
+*** MF 1 = ( 1.01644 , 0.983288 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 0.987078 , 1.01276 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.979371 , 1.02021 , 0 ) 
+*** MF 1 = ( 1.02021 , 0.979371 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.944303 , 1.05275 , 0 ) 
+*** MF 1 = ( 1.05275 , 0.944303 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.977755 , 1.02176 , 0 ) 
+*** MF 1 = ( 1.02176 , 0.977755 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.99491 , 1.00506 , 0 ) 
+*** MF 1 = ( 1.00506 , 0.99491 , 0 ) 
+*** MF 0 = ( 1.01276 , 0.987078 , 0 ) 
+*** MF 0 = ( 0.996522 , 1.00347 , 0 ) 
+*** MF 1 = ( 1.00347 , 0.996522 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 0.987078 , 1.01276 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.979371 , 1.02021 , 0 ) 
+*** MF 0 = ( 0.977755 , 1.02176 , 0 ) 
+*** MF 1 = ( 1.02176 , 0.977755 , 0 ) 
+*** MF 0 = ( 0.944303 , 1.05275 , 0 ) 
+*** MF 1 = ( 1.05275 , 0.944303 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 1.02021 , 0.979371 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+k = 0, m_varcoeff = ( 0 , 11.342 , 0 , 1.67032e-12 , 146.838 ) 
+*** MF 0 = ( 0.987675 , 1.01218 , 0 ) 
+*** MF 1 = ( 1.01218 , 0.987675 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+k = 0, m_varcoeff = ( 0 , 11.342 , 0 , 1.68168e-12 , 146.838 ) 
+k = 0, m_varcoeff = ( 0 , 11.7669 , 0 , 1.70508e-12 , 152.38 ) 
+k = 0, m_varcoeff = ( 0 , 11.342 , 0 , 1.65663e-12 , 146.838 ) 
+k = 1, m_varcoeff = ( 11.342 , 0 , 0 , 4.79484e-12 , 146.838 ) 
+*** MF 0 = ( 0.987675 , 1.01218 , 0 ) 
+*** MF 1 = ( 1.01218 , 0.987675 , 0 ) 
+k = 0, m_varcoeff = ( 0 , 10.9331 , 0 , 1.61548e-12 , 141.503 ) 
+k = 0, m_varcoeff = ( 0 , 11.367 , 0 , 1.69276e-12 , 147.165 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 11.367 , 0 , 1.65474e-12 , 147.165 ) 
+k = 1, m_varcoeff = ( 11.342 , 0 , 0 , 4.8678e-12 , 146.838 ) 
+k = 1, m_varcoeff = ( 11.342 , 0 , 0 , 4.81851e-12 , 146.838 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 1, m_varcoeff = ( 11.7669 , 0 , 0 , 5.04102e-12 , 152.38 ) 
+k = 1, m_varcoeff = ( 11.367 , 0 , 0 , 4.78698e-12 , 147.165 ) 
+k = 1, m_varcoeff = ( 10.9331 , 0 , 0 , 4.63119e-12 , 141.503 ) 
+k = 1, m_varcoeff = ( 11.367 , 0 , 0 , 4.83359e-12 , 147.165 ) 
+k = 0, m_varcoeff = ( 0.983288 , 1.01644 , 0 , 1.93554e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 0 , 11.367 , 0 , 1.68543e-12 , 147.165 ) 
+k = 1, m_varcoeff = ( 1.01644 , 0.983288 , 0 , 5.53008e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.99491 , 1.00506 , 0 , 1.73118e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.996522 , 1.00347 , 0 , 2.12026e-06 , 2 ) 
+k = 0, m_varcoeff = ( 1.01276 , 0.987078 , 0 , 2.44826e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.977755 , 1.02176 , 0 , 2.10483e-07 , 2 ) 
+k = 0, m_varcoeff = ( 0.979371 , 1.02021 , 0 , 2.71734e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.944303 , 1.05275 , 0 , 2.2735e-06 , 2 ) 
+k = 1, m_varcoeff = ( 11.367 , 0 , 0 , 4.83979e-12 , 147.165 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 1, m_varcoeff = ( 1.00506 , 0.99491 , 0 , 4.94624e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.00347 , 0.996522 , 0 , 6.05788e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.987078 , 1.01276 , 0 , 6.99505e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.02176 , 0.977755 , 0 , 6.01383e-07 , 2 ) 
+k = 1, m_varcoeff = ( 1.05275 , 0.944303 , 0 , 6.49566e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.02021 , 0.979371 , 0 , 7.76381e-06 , 2 ) 
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: NeuralEP2DmonoDNoPhieL6mpi8
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+	      Num. Processes: 8
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 1e-07
+	        No. of Steps: 20000000
+	 Checkpoints (steps): 2000000
+	    Integration Type: IMEX
+	             Surface: Line
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+	           DerivType: Euclidean
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2Dbi
+	      ExtCurrentType: NoCurrent
+	       GlobalSysSoln: XxtMultiLevelStaticCond
+	       TimeMapScheme: DeActivated
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	          Fiber Type: MonoBCDirichlet
+	k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+        Fiber Length: 0.01
+	         Node Length: 0.01
+	       Myelin Length: 0.2
+	               Nnode: 30
+	         Temperature: 24
+	            diameter: 0.01
+	             Helmtau: 1
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+k = 0, m_varcoeff = ( 0.987675 , 1.01218 , 0 , 1.92144e-06 , 2 ) 
+Initial Conditions:
+k = 1, m_varcoeff = ( 1.01218 , 0.987675 , 0 , 5.48986e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+  - Field um: 0
+  - Field ue: 0
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_initial.chk"
+ (0.000637195s, XML)
+phi_m, max: 0.002937 at y = 3.165168
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+
+
+Steps: 2000000  Time: 0.2         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_1.chk"
+ (0.000900789s, XML)
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+
+
+Steps: 4000000  Time: 0.4         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_2.chk"
+ (0.00083209s, XML)
+Steps: 6000000  Time: 0.6         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_3.chk"
+ (0.000850505s, XML)
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+
+
+Steps: 8000000  Time: 0.8         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_4.chk"
+ (0.000855094s, XML)
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+phi_m, max: 208.211880 at y = 2.750000
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+phi_m, max: 101.796818 at y = 1.963787
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+phi_m, max: 0.046481 at y = 4.366213
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+phi_m, max: 0.966032 at y = 0.221624
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+phi_m, max: 292.408372 at y = 3.588213
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+phi_m, max: 282.028309 at y = 3.580000
+
+
+
+Steps: 10000000 Time: 1           
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+Time: 1.000000
+CPU Time: 79.607212 min.
+phi_m, max: 5.506790 at y = 1.184286
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+phi_m, max: 0.002782 at y = 5.895168
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_5.chk"
+ (0.000896071s, XML)
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+phi_m, max: 101.796818 at y = 1.963787
+
+phi_m, max: 9.010960 at y = 1.963787
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+phi_m, max: 0.046481 at y = 4.366213
+
+phi_m, max: 293.013894 at y = 4.425168
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+phi_m, max: 0.966032 at y = 0.221624
+
+phi_m, max: 1.287602 at y = 0.223741
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+phi_m, max: 292.408372 at y = 3.588213
+
+phi_m, max: 286.933760 at y = 4.219413
+
+
+
+Steps: 12000000 Time: 1.2         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+Time: 1.000000
+CPU Time: 79.607212 min.
+phi_m, max: 5.506790 at y = 1.184286
+
+
+Time: 1.200000
+CPU Time: 74.230326 min.
+phi_m, max: 1.100661 at y = 0.739071
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+phi_m, max: 0.002782 at y = 5.895168
+
+phi_m, max: 0.008252 at y = 5.145714
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+phi_m, max: 282.028309 at y = 3.580000
+
+phi_m, max: 194.680239 at y = 3.580000
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+phi_m, max: 208.211880 at y = 2.750000
+
+phi_m, max: 111.192707 at y = 2.750000
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_6.chk"
+ (0.000838613s, XML)
+Steps: 14000000 Time: 1.4         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+Time: 1.000000
+CPU Time: 79.607212 min.
+phi_m, max: 5.506790 at y = 1.184286
+
+
+Time: 1.200000
+CPU Time: 74.230326 min.
+phi_m, max: 1.100661 at y = 0.739071
+
+
+Time: 1.400000
+CPU Time: 72.393279 min.
+phi_m, max: 1.309475 at y = 0.853574
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+phi_m, max: 208.211880 at y = 2.750000
+
+phi_m, max: 111.192707 at y = 2.750000
+
+phi_m, max: 14.319491 at y = 2.750000
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+phi_m, max: 0.002782 at y = 5.895168
+
+phi_m, max: 0.008252 at y = 5.145714
+
+phi_m, max: 292.437386 at y = 5.261787
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+phi_m, max: 282.028309 at y = 3.580000
+
+phi_m, max: 194.680239 at y = 3.580000
+
+phi_m, max: 99.845568 at y = 3.580000
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+phi_m, max: 292.408372 at y = 3.588213
+
+phi_m, max: 286.933760 at y = 4.219413
+
+phi_m, max: 205.608385 at y = 4.391429
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+phi_m, max: 101.796818 at y = 1.963787
+
+phi_m, max: 9.010960 at y = 1.963787
+
+phi_m, max: 1.235934 at y = 1.270587
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+phi_m, max: 0.046481 at y = 4.366213
+
+phi_m, max: 293.013894 at y = 4.425168
+
+phi_m, max: 291.272484 at y = 5.058376
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+phi_m, max: 0.966032 at y = 0.221624
+
+phi_m, max: 1.287602 at y = 0.223741
+
+phi_m, max: 1.315989 at y = 0.644832
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_7.chk"
+ (0.000772569s, XML)
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+phi_m, max: 0.002782 at y = 5.895168
+
+phi_m, max: 0.008252 at y = 5.145714
+
+phi_m, max: 292.437386 at y = 5.261787
+
+phi_m, max: 292.967473 at y = 5.896426
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+phi_m, max: 282.028309 at y = 3.580000
+
+phi_m, max: 194.680239 at y = 3.580000
+
+phi_m, max: 99.845568 at y = 3.580000
+
+phi_m, max: 8.015064 at y = 3.580000
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+phi_m, max: 292.408372 at y = 3.588213
+
+phi_m, max: 286.933760 at y = 4.219413
+
+phi_m, max: 205.608385 at y = 4.391429
+
+phi_m, max: 109.097630 at y = 4.391429
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+phi_m, max: 101.796818 at y = 1.963787
+
+phi_m, max: 9.010960 at y = 1.963787
+
+phi_m, max: 1.235934 at y = 1.270587
+
+phi_m, max: 1.315061 at y = 1.483741
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+phi_m, max: 0.046481 at y = 4.366213
+
+phi_m, max: 293.013894 at y = 4.425168
+
+phi_m, max: 291.272484 at y = 5.058376
+
+phi_m, max: 215.865764 at y = 5.170929
+
+
+
+Steps: 16000000 Time: 1.6         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+Time: 1.000000
+CPU Time: 79.607212 min.
+phi_m, max: 5.506790 at y = 1.184286
+
+
+Time: 1.200000
+CPU Time: 74.230326 min.
+phi_m, max: 1.100661 at y = 0.739071
+
+
+Time: 1.400000
+CPU Time: 72.393279 min.
+phi_m, max: 1.309475 at y = 0.853574
+
+
+Time: 1.600000
+CPU Time: 72.272587 min.
+phi_m, max: 285.511539 at y = 5.957143
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+phi_m, max: 0.966032 at y = 0.221624
+
+phi_m, max: 1.287602 at y = 0.223741
+
+phi_m, max: 1.315989 at y = 0.644832
+
+phi_m, max: 1.220632 at y = 0.647458
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+phi_m, max: 208.211880 at y = 2.750000
+
+phi_m, max: 111.192707 at y = 2.750000
+
+phi_m, max: 14.319491 at y = 2.750000
+
+phi_m, max: 1.209170 at y = 1.941928
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_8.chk"
+ (0.00082679s, XML)
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+phi_m, max: 208.211880 at y = 2.750000
+
+phi_m, max: 111.192707 at y = 2.750000
+
+phi_m, max: 14.319491 at y = 2.750000
+
+phi_m, max: 1.209170 at y = 1.941928
+
+phi_m, max: 1.314961 at y = 2.115168
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+phi_m, max: 0.966032 at y = 0.221624
+
+phi_m, max: 1.287602 at y = 0.223741
+
+phi_m, max: 1.315989 at y = 0.644832
+
+phi_m, max: 1.220632 at y = 0.647458
+
+phi_m, max: 1.025009 at y = 0.648213
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+phi_m, max: 0.046481 at y = 4.366213
+
+phi_m, max: 293.013894 at y = 4.425168
+
+phi_m, max: 291.272484 at y = 5.058376
+
+phi_m, max: 215.865764 at y = 5.170929
+
+phi_m, max: 118.025466 at y = 5.170929
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+phi_m, max: 0.002782 at y = 5.895168
+
+phi_m, max: 0.008252 at y = 5.145714
+
+phi_m, max: 292.437386 at y = 5.261787
+
+phi_m, max: 292.967473 at y = 5.896426
+
+phi_m, max: 226.511499 at y = 5.957143
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+phi_m, max: 282.028309 at y = 3.580000
+
+phi_m, max: 194.680239 at y = 3.580000
+
+phi_m, max: 99.845568 at y = 3.580000
+
+phi_m, max: 8.015064 at y = 3.580000
+
+phi_m, max: 1.181385 at y = 2.750000
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+phi_m, max: 292.408372 at y = 3.588213
+
+phi_m, max: 286.933760 at y = 4.219413
+
+phi_m, max: 205.608385 at y = 4.391429
+
+phi_m, max: 109.097630 at y = 4.391429
+
+phi_m, max: 13.036215 at y = 4.391429
+
+
+
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+phi_m, max: 101.796818 at y = 1.963787
+
+phi_m, max: 9.010960 at y = 1.963787
+
+phi_m, max: 1.235934 at y = 1.270587
+
+phi_m, max: 1.315061 at y = 1.483741
+
+phi_m, max: 1.302772 at y = 1.906426
+
+
+
+Steps: 18000000 Time: 1.8         
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+Time: 1.000000
+CPU Time: 79.607212 min.
+phi_m, max: 5.506790 at y = 1.184286
+
+
+Time: 1.200000
+CPU Time: 74.230326 min.
+phi_m, max: 1.100661 at y = 0.739071
+
+
+Time: 1.400000
+CPU Time: 72.393279 min.
+phi_m, max: 1.309475 at y = 0.853574
+
+
+Time: 1.600000
+CPU Time: 72.272587 min.
+phi_m, max: 285.511539 at y = 5.957143
+
+
+Time: 1.800000
+CPU Time: 72.377576 min.
+phi_m, max: 271.572528 at y = 6.320000
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_9.chk"
+ (0.000812313s, XML)
+phi_m, max: 0.567618 at y = 1.159071
+
+phi_m, max: 292.754731 at y = 1.481624
+
+phi_m, max: 283.522631 at y = 1.909413
+
+phi_m, max: 196.801729 at y = 1.963787
+
+phi_m, max: 101.796818 at y = 1.963787
+
+phi_m, max: 9.010960 at y = 1.963787
+
+phi_m, max: 1.235934 at y = 1.270587
+
+phi_m, max: 1.315061 at y = 1.483741
+
+phi_m, max: 1.302772 at y = 1.906426
+
+phi_m, max: 1.162157 at y = 1.908213
+
+
+
+phi_m, max: 0.002937 at y = 2.745168
+
+phi_m, max: 0.131271 at y = 1.941928
+
+phi_m, max: 292.905243 at y = 2.117458
+
+phi_m, max: 288.987008 at y = 2.749413
+
+phi_m, max: 208.211880 at y = 2.750000
+
+phi_m, max: 111.192707 at y = 2.750000
+
+phi_m, max: 14.319491 at y = 2.750000
+
+phi_m, max: 1.209170 at y = 1.941928
+
+phi_m, max: 1.314961 at y = 2.115168
+
+phi_m, max: 1.309475 at y = 2.746426
+
+
+
+phi_m, max: 293.096062 at y = 0.646426
+
+phi_m, max: 230.091702 at y = 0.764286
+
+phi_m, max: 131.008764 at y = 0.764286
+
+phi_m, max: 33.491238 at y = 0.764286
+
+phi_m, max: 0.966032 at y = 0.221624
+
+phi_m, max: 1.287602 at y = 0.223741
+
+phi_m, max: 1.315989 at y = 0.644832
+
+phi_m, max: 1.220632 at y = 0.647458
+
+phi_m, max: 1.025009 at y = 0.648213
+
+phi_m, max: 0.813829 at y = 0.648376
+
+
+
+phi_m, max: 0.002937 at y = 5.055168
+
+phi_m, max: 0.002889 at y = 5.055168
+
+phi_m, max: 0.002843 at y = 5.055168
+
+phi_m, max: 0.002808 at y = 5.055168
+
+phi_m, max: 0.046481 at y = 4.366213
+
+phi_m, max: 293.013894 at y = 4.425168
+
+phi_m, max: 291.272484 at y = 5.058376
+
+phi_m, max: 215.865764 at y = 5.170929
+
+phi_m, max: 118.025466 at y = 5.170929
+
+phi_m, max: 19.997504 at y = 5.170929
+
+
+
+phi_m, max: 0.002937 at y = 5.895168
+
+phi_m, max: 0.002889 at y = 5.895168
+
+phi_m, max: 0.002843 at y = 5.895168
+
+phi_m, max: 0.002808 at y = 5.895168
+
+phi_m, max: 0.002782 at y = 5.895168
+
+phi_m, max: 0.008252 at y = 5.145714
+
+phi_m, max: 292.437386 at y = 5.261787
+
+phi_m, max: 292.967473 at y = 5.896426
+
+phi_m, max: 226.511499 at y = 5.957143
+
+phi_m, max: 127.587371 at y = 5.957143
+
+
+
+phi_m, max: 0.002937 at y = 3.165168
+
+phi_m, max: 0.002889 at y = 3.375168
+
+phi_m, max: 0.029257 at y = 2.750000
+
+phi_m, max: 292.944819 at y = 2.952542
+
+phi_m, max: 282.028309 at y = 3.580000
+
+phi_m, max: 194.680239 at y = 3.580000
+
+phi_m, max: 99.845568 at y = 3.580000
+
+phi_m, max: 8.015064 at y = 3.580000
+
+phi_m, max: 1.181385 at y = 2.750000
+
+phi_m, max: 1.315321 at y = 2.954490
+
+
+
+phi_m, max: 0.002937 at y = 4.004832
+
+phi_m, max: 0.002889 at y = 4.004832
+
+phi_m, max: 0.002843 at y = 4.215168
+
+phi_m, max: 0.180312 at y = 3.580000
+
+phi_m, max: 292.408372 at y = 3.588213
+
+phi_m, max: 286.933760 at y = 4.219413
+
+phi_m, max: 205.608385 at y = 4.391429
+
+phi_m, max: 109.097630 at y = 4.391429
+
+phi_m, max: 13.036215 at y = 4.391429
+
+phi_m, max: 1.219734 at y = 3.580587
+
+
+
+Steps: 20000000 Time: 2           
+
+Time: 0.200000
+CPU Time: 79.659424 min.
+phi_m, max: 278.483884 at y = 0.739071
+
+
+Time: 0.400000
+CPU Time: 79.685994 min.
+phi_m, max: 276.440054 at y = 1.069413
+
+
+Time: 0.600000
+CPU Time: 79.719712 min.
+phi_m, max: 185.872334 at y = 1.184286
+
+
+Time: 0.800000
+CPU Time: 79.711254 min.
+phi_m, max: 92.656030 at y = 1.184286
+
+
+Time: 1.000000
+CPU Time: 79.607212 min.
+phi_m, max: 5.506790 at y = 1.184286
+
+
+Time: 1.200000
+CPU Time: 74.230326 min.
+phi_m, max: 1.100661 at y = 0.739071
+
+
+Time: 1.400000
+CPU Time: 72.393279 min.
+phi_m, max: 1.309475 at y = 0.853574
+
+
+Time: 1.600000
+CPU Time: 72.272587 min.
+phi_m, max: 285.511539 at y = 5.957143
+
+
+Time: 1.800000
+CPU Time: 72.377576 min.
+phi_m, max: 271.572528 at y = 6.320000
+
+
+Time: 2.000000
+CPU Time: 68.214651 min.
+phi_m, max: 176.514567 at y = 6.320000
+
+
+
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8_10.chk"
+ (0.000817142s, XML)
+Time-integration  : 45472.3s
+Writing: "NeuralEP2DmonoDNoPhieL6mpi8.fld"
+ (0.000555451s, XML)
+-------------------------------------------
+Total Computation Time = 45475.6s
+-------------------------------------------
+L 2 error (variable um) : 4.48321
+L inf error (variable um) : 69.8362
+L 2 error (variable ue) : 0
+L inf error (variable ue) : 0

@@ -1096,7 +1096,7 @@ void MMFSystem::SetUpMovingFrames(
         }
     }
 
-    CheckMovingFrames(movingframes);
+   // CheckMovingFrames(movingframes);
 }
 
 SpatialDomains::GeomMMF MMFSystem::FindMMFdir(std::string MMFdirStr)

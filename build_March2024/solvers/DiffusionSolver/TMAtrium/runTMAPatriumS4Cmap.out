@@ -1,0 +1,167 @@
+nohup: ignoring input
+Loading Anisotropic Fibre map ===========
+Writing: "TMAPatriumS4Cmap_CardiacFibre.chk"
+ (0.805443s, XML)
+Loading Isotropic Conductivity map.
+vTemp: Max = 32.1, min =-102
+Anisotropy = [ 0.4 , 4 ], [ 1 , 1 ] 
+MMFActivation = 787760 /  787760 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.80383 *** 
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.12967 , 0.949656 , 1.03721 ) 
+*** MF 1 = ( 0.624394 , 0.524934 , 0.578425 ) 
+*** MF 2 = ( 0.468689 , 0.672139 , 0.573202 ) 
+MMFInitObject is done ===========================
+================== SetUP Time Map moving frames ==================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.62487 , 0.522181 , 0.5804 ) 
+*** MF 1 = ( 0.624394 , 0.524934 , 0.578425 ) 
+*** MF 2 = ( 0.468689 , 0.672139 , 0.573202 ) 
+k = 0, m_varcoeff = ( 1.12967 , 0.949656 , 1.03721 , 0.0830411 , 3.31388 ) 
+k = 1, m_varcoeff = ( 0.624394 , 0.524934 , 0.578425 , 3.13706e-15 , 1 ) 
+k = 2, m_varcoeff = ( 0.468689 , 0.672139 , 0.573202 , 1.1649e-15 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: TMAPatriumS4Cmap
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 4
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.01
+	        No. of Steps: 10000
+	 Checkpoints (steps): 1000
+	    Integration Type: IMEX
+	             Surface: Atrium
+	           DerivType: Euclidean
+	              MMFdir: LOCAL
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         TimeMapIapp: 0
+	      m_TimeMapDelay: 0
+	      AniRegionStart: 0
+	        AniRegionEnd: 1000000
+	  AnisotropyStrength: 4
+	               urest: 0
+	          Cell model: Aliev-Panfilov
+	                   k: 8
+	                   a: 0.15
+	                 eps: 0.002
+	                 mu1: 0.2
+	                 mu2: 0.3
+=======================================================================
+Initial Conditions:
+  - Field u: 0
+Writing: "TMAPatriumS4Cmap_initialcondition.chk"
+ (0.0132772s, XML)
+ValidTimeMap = 0 / 787760 ( 0 % ) is De-Acitvated
+Initial: u = 0, max u = 0
+Writing: "TMAPatriumS4Cmap_initial.chk"
+ (0.0160375s, XML)
+xmax = 33.5879, xmin = -76.6759, ymax = 42.5444, ymin = -24.806
+Steps: 1000     Time: 10          
+ CPU Time: 16.9409 min.
+u_max = 1.37364e-06 at x = -15.2097, y = 15.1476, z = 7.20695
+u_min = 3.33068e-49 at x = -45.6983, y = -3.76123, z = -36.0984
+Writing: "TMAPatriumS4Cmap_timemap_1.chk"
+ (0.46455s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_1.chk"
+ (0.16654s, XML)
+Steps: 2000     Time: 20          
+ CPU Time: 15.2096 min.
+u_max = 3.92425e-12 at x = -15.2158, y = 15.241, z = 7.13454
+u_min = 2.97326e-34 at x = -44.9612, y = -4.2733, z = -35.6554
+Writing: "TMAPatriumS4Cmap_timemap_2.chk"
+ (0.467574s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_2.chk"
+ (0.174936s, XML)
+Steps: 3000     Time: 30          
+ CPU Time: 15.0758 min.
+u_max = 1.55154e-17 at x = -15.2158, y = 15.241, z = 7.13454
+u_min = 2.03712e-32 at x = -43.9479, y = -5.38326, z = -34.0007
+Writing: "TMAPatriumS4Cmap_timemap_3.chk"
+ (0.46668s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_3.chk"
+ (0.1789s, XML)
+Steps: 4000     Time: 40          
+ CPU Time: 14.3303 min.
+u_max = 6.97955e-23 at x = -15.2158, y = 15.241, z = 7.13454
+u_min = 5.26997e-34 at x = -43.9479, y = -5.38326, z = -34.0007
+Writing: "TMAPatriumS4Cmap_timemap_4.chk"
+ (0.383646s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_4.chk"
+ (0.152555s, XML)
+Steps: 5000     Time: 50          
+ CPU Time: 13.3525 min.
+u_max = 3.36949e-28 at x = -15.1557, y = 15.3701, z = 7.03081
+u_min = 5.08255e-37 at x = -43.9479, y = -5.38326, z = -34.0007
+Writing: "TMAPatriumS4Cmap_timemap_5.chk"
+ (0.383128s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_5.chk"
+ (0.154961s, XML)
+Steps: 6000     Time: 60          
+ CPU Time: 13.4272 min.
+u_max = 1.70135e-33 at x = -15.2914, y = 15.5312, z = 6.9022
+u_min = 9.1032e-41 at x = -43.9479, y = -5.38326, z = -34.0007
+Writing: "TMAPatriumS4Cmap_timemap_6.chk"
+ (0.384657s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_6.chk"
+ (0.155107s, XML)
+Steps: 7000     Time: 70          
+ CPU Time: 13.4267 min.
+u_max = 8.86182e-39 at x = -15.3603, y = 15.5469, z = 6.89048
+u_min = 6.16034e-45 at x = -44.1019, y = -5.58566, z = -33.4467
+Writing: "TMAPatriumS4Cmap_timemap_7.chk"
+ (0.382261s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_7.chk"
+ (0.160117s, XML)
+Steps: 8000     Time: 80          
+ CPU Time: 13.6105 min.
+u_max = 4.7222e-44 at x = -15.5102, y = 15.8375, z = 6.6547
+u_min = 2.25921e-49 at x = -44.1019, y = -5.58566, z = -33.4467
+Writing: "TMAPatriumS4Cmap_timemap_8.chk"
+ (0.384065s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_8.chk"
+ (0.161477s, XML)
+Steps: 9000     Time: 90          
+ CPU Time: 13.493 min.
+u_max = 2.5601e-49 at x = -15.6101, y = 15.9218, z = 6.58534
+u_min = 5.51461e-54 at x = -44.022, y = -5.68414, z = -33.266
+Writing: "TMAPatriumS4Cmap_timemap_9.chk"
+ (0.384546s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_9.chk"
+ (0.162248s, XML)
+Steps: 10000    Time: 100         
+ CPU Time: 13.5011 min.
+u_max = 1.40678e-54 at x = -15.8781, y = 15.9533, z = 6.56364
+u_min = 1.01058e-58 at x = -43.9908, y = -5.84628, z = -32.9034
+Writing: "TMAPatriumS4Cmap_timemap_10.chk"
+ (0.381777s, XML)
+Time Map: Max = 0.719784, Min = 0
+Writing: "TMAPatriumS4Cmap_10.chk"
+ (0.15999s, XML)
+Time-integration  : 8542.05s
+Writing: "TMAPatriumS4Cmap.fld"
+ (0.159367s, XML)
+-------------------------------------------
+Total Computation Time = 33149.8s
+-------------------------------------------
+L 2 error (variable u) : 0
+L inf error (variable u) : 1.40678e-54

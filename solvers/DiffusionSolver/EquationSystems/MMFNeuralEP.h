@@ -231,6 +231,8 @@ protected:
     int m_totNode, m_elemperNode, m_elemperMyel;
     int m_zonestart, m_zoneend;
 
+    NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
+
     NekDouble m_extFieldStr, m_fiberlen, m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;

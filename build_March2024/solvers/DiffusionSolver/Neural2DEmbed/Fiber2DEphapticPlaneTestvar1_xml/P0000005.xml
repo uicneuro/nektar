@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NEKTAR>
+    <GEOMETRY DIM="2" SPACE="3" PARTITION="5">
+        <VERTEX>
+            <V ID="97">-1.50000000e-02 6.11428571e-01 0.00000000e+00</V>
+            <V ID="98">-5.00000000e-03 6.40000000e-01 0.00000000e+00</V>
+            <V ID="99">-1.50000000e-02 6.40000000e-01 0.00000000e+00</V>
+            <V ID="100">-5.00000000e-03 6.11428571e-01 0.00000000e+00</V>
+            <V ID="101">-1.50000000e-02 4.97142857e-01 0.00000000e+00</V>
+            <V ID="103">-1.50000000e-02 5.25714286e-01 0.00000000e+00</V>
+            <V ID="104">-5.00000000e-03 5.25714286e-01 0.00000000e+00</V>
+            <V ID="105">-1.50000000e-02 5.54285714e-01 0.00000000e+00</V>
+            <V ID="106">-1.50000000e-02 5.82857143e-01 0.00000000e+00</V>
+            <V ID="107">-5.00000000e-03 5.82857143e-01 0.00000000e+00</V>
+            <V ID="108">-5.00000000e-03 5.54285714e-01 0.00000000e+00</V>
+            <V ID="110">5.00000000e-03 6.11428571e-01 0.00000000e+00</V>
+            <V ID="112">5.00000000e-03 4.97142857e-01 0.00000000e+00</V>
+            <V ID="113">5.00000000e-03 5.25714286e-01 0.00000000e+00</V>
+            <V ID="114">5.00000000e-03 5.82857143e-01 0.00000000e+00</V>
+            <V ID="115">5.00000000e-03 5.54285714e-01 0.00000000e+00</V>
+            <V ID="117">1.50000000e-02 6.11428571e-01 0.00000000e+00</V>
+            <V ID="119">1.50000000e-02 4.97142857e-01 0.00000000e+00</V>
+            <V ID="120">1.50000000e-02 5.54285714e-01 0.00000000e+00</V>
+            <V ID="121">1.50000000e-02 5.25714286e-01 0.00000000e+00</V>
+            <V ID="122">1.50000000e-02 5.82857143e-01 0.00000000e+00</V>
+            <V ID="124">-1.00000000e-02 6.45000000e-01 0.00000000e+00</V>
+        </VERTEX>
+        <EDGE>
+            <E ID="242">97 98</E>
+            <E ID="243">98 99</E>
+            <E ID="244">99 97</E>
+            <E ID="245">97 100</E>
+            <E ID="246">100 98</E>
+            <E ID="251">103 101</E>
+            <E ID="252">101 104</E>
+            <E ID="253">104 103</E>
+            <E ID="255">105 103</E>
+            <E ID="256">104 105</E>
+            <E ID="257">106 105</E>
+            <E ID="258">105 107</E>
+            <E ID="259">107 106</E>
+            <E ID="260">104 108</E>
+            <E ID="261">108 105</E>
+            <E ID="262">108 107</E>
+            <E ID="263">97 106</E>
+            <E ID="264">106 100</E>
+            <E ID="265">107 100</E>
+            <E ID="269">98 110</E>
+            <E ID="272">100 110</E>
+            <E ID="276">112 104</E>
+            <E ID="277">113 108</E>
+            <E ID="278">104 113</E>
+            <E ID="279">112 113</E>
+            <E ID="280">108 114</E>
+            <E ID="281">114 107</E>
+            <E ID="282">113 115</E>
+            <E ID="283">115 108</E>
+            <E ID="284">115 114</E>
+            <E ID="285">107 110</E>
+            <E ID="286">114 110</E>
+            <E ID="293">110 117</E>
+            <E ID="295">119 112</E>
+            <E ID="297">119 113</E>
+            <E ID="298">113 120</E>
+            <E ID="299">120 115</E>
+            <E ID="300">119 121</E>
+            <E ID="301">121 113</E>
+            <E ID="302">121 120</E>
+            <E ID="303">115 122</E>
+            <E ID="304">122 114</E>
+            <E ID="305">120 122</E>
+            <E ID="306">114 117</E>
+            <E ID="307">122 117</E>
+            <E ID="309">99 124</E>
+            <E ID="313">124 98</E>
+        </EDGE>
+        <ELEMENT>
+            <T ID="146">242 243 244</T>
+            <T ID="147">242 245 246</T>
+            <T ID="150">251 252 253</T>
+            <T ID="152">255 253 256</T>
+            <T ID="153">257 258 259</T>
+            <T ID="154">256 260 261</T>
+            <T ID="155">258 261 262</T>
+            <T ID="156">263 264 245</T>
+            <T ID="157">264 259 265</T>
+            <T ID="161">246 272 269</T>
+            <T ID="165">277 260 278</T>
+            <T ID="166">279 278 276</T>
+            <T ID="167">262 280 281</T>
+            <T ID="168">277 282 283</T>
+            <T ID="169">280 283 284</T>
+            <T ID="170">265 285 272</T>
+            <T ID="171">285 281 286</T>
+            <T ID="178">279 295 297</T>
+            <T ID="179">282 298 299</T>
+            <T ID="180">297 300 301</T>
+            <T ID="181">298 301 302</T>
+            <T ID="182">284 303 304</T>
+            <T ID="183">303 299 305</T>
+            <T ID="184">286 306 293</T>
+            <T ID="185">306 304 307</T>
+            <T ID="188">243 313 309</T>
+        </ELEMENT>
+        <CURVED>
+            <E ID="0" EDGEID="313" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.00000000e-02 6.45000000e-01 0.00000000e+00   -7.50000000e-03 6.42500000e-01 0.00000000e+00   -5.00000000e-03 6.40000000e-01 0.00000000e+00   </E>
+            <E ID="1" EDGEID="301" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 5.25714286e-01 0.00000000e+00   1.00000000e-02 5.25714286e-01 0.00000000e+00   5.00000000e-03 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="2" EDGEID="297" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 4.97142857e-01 0.00000000e+00   1.00000000e-02 5.11428571e-01 0.00000000e+00   5.00000000e-03 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="3" EDGEID="295" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 4.97142857e-01 0.00000000e+00   1.00000000e-02 4.97142857e-01 0.00000000e+00   5.00000000e-03 4.97142857e-01 0.00000000e+00   </E>
+            <E ID="4" EDGEID="286" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.82857143e-01 0.00000000e+00   5.00000000e-03 5.97142857e-01 0.00000000e+00   5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="5" EDGEID="285" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.82857143e-01 0.00000000e+00   0.00000000e+00 5.97142857e-01 0.00000000e+00   5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="6" EDGEID="284" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.54285714e-01 0.00000000e+00   5.00000000e-03 5.68571429e-01 0.00000000e+00   5.00000000e-03 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="7" EDGEID="283" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.54285714e-01 0.00000000e+00   0.00000000e+00 5.54285714e-01 0.00000000e+00   -5.00000000e-03 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="8" EDGEID="282" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.25714286e-01 0.00000000e+00   5.00000000e-03 5.40000000e-01 0.00000000e+00   5.00000000e-03 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="9" EDGEID="281" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.82857143e-01 0.00000000e+00   0.00000000e+00 5.82857143e-01 0.00000000e+00   -5.00000000e-03 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="10" EDGEID="280" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.54285714e-01 0.00000000e+00   0.00000000e+00 5.68571429e-01 0.00000000e+00   5.00000000e-03 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="11" EDGEID="279" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 4.97142857e-01 0.00000000e+00   5.00000000e-03 5.11428571e-01 0.00000000e+00   5.00000000e-03 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="12" EDGEID="278" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.25714286e-01 0.00000000e+00   0.00000000e+00 5.25714286e-01 0.00000000e+00   5.00000000e-03 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="13" EDGEID="277" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.25714286e-01 0.00000000e+00   0.00000000e+00 5.40000000e-01 0.00000000e+00   -5.00000000e-03 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="14" EDGEID="272" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 6.11428571e-01 0.00000000e+00   0.00000000e+00 6.11428571e-01 0.00000000e+00   5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="15" EDGEID="264" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 5.82857143e-01 0.00000000e+00   -1.00000000e-02 5.97142857e-01 0.00000000e+00   -5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="16" EDGEID="263" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 6.11428571e-01 0.00000000e+00   -1.50000000e-02 5.97142857e-01 0.00000000e+00   -1.50000000e-02 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="17" EDGEID="309" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 6.40000000e-01 0.00000000e+00   -1.25000000e-02 6.42500000e-01 0.00000000e+00   -1.00000000e-02 6.45000000e-01 0.00000000e+00   </E>
+            <E ID="18" EDGEID="262" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.54285714e-01 0.00000000e+00   -5.00000000e-03 5.68571429e-01 0.00000000e+00   -5.00000000e-03 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="19" EDGEID="261" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.54285714e-01 0.00000000e+00   -1.00000000e-02 5.54285714e-01 0.00000000e+00   -1.50000000e-02 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="20" EDGEID="307" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 5.82857143e-01 0.00000000e+00   1.50000000e-02 5.97142857e-01 0.00000000e+00   1.50000000e-02 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="21" EDGEID="260" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.25714286e-01 0.00000000e+00   -5.00000000e-03 5.40000000e-01 0.00000000e+00   -5.00000000e-03 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="22" EDGEID="306" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.82857143e-01 0.00000000e+00   1.00000000e-02 5.97142857e-01 0.00000000e+00   1.50000000e-02 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="23" EDGEID="259" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.82857143e-01 0.00000000e+00   -1.00000000e-02 5.82857143e-01 0.00000000e+00   -1.50000000e-02 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="24" EDGEID="305" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 5.54285714e-01 0.00000000e+00   1.50000000e-02 5.68571429e-01 0.00000000e+00   1.50000000e-02 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="25" EDGEID="258" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 5.54285714e-01 0.00000000e+00   -1.00000000e-02 5.68571429e-01 0.00000000e+00   -5.00000000e-03 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="26" EDGEID="299" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 5.54285714e-01 0.00000000e+00   1.00000000e-02 5.54285714e-01 0.00000000e+00   5.00000000e-03 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="27" EDGEID="252" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 4.97142857e-01 0.00000000e+00   -1.00000000e-02 5.11428571e-01 0.00000000e+00   -5.00000000e-03 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="28" EDGEID="298" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.25714286e-01 0.00000000e+00   1.00000000e-02 5.40000000e-01 0.00000000e+00   1.50000000e-02 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="29" EDGEID="251" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 5.25714286e-01 0.00000000e+00   -1.50000000e-02 5.11428571e-01 0.00000000e+00   -1.50000000e-02 4.97142857e-01 0.00000000e+00   </E>
+            <E ID="30" EDGEID="304" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 5.82857143e-01 0.00000000e+00   1.00000000e-02 5.82857143e-01 0.00000000e+00   5.00000000e-03 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="31" EDGEID="257" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 5.82857143e-01 0.00000000e+00   -1.50000000e-02 5.68571429e-01 0.00000000e+00   -1.50000000e-02 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="32" EDGEID="269" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 6.40000000e-01 0.00000000e+00   0.00000000e+00 6.25714286e-01 0.00000000e+00   5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="33" EDGEID="293" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 6.11428571e-01 0.00000000e+00   1.00000000e-02 6.11428571e-01 0.00000000e+00   1.50000000e-02 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="34" EDGEID="246" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 6.11428571e-01 0.00000000e+00   -5.00000000e-03 6.25714286e-01 0.00000000e+00   -5.00000000e-03 6.40000000e-01 0.00000000e+00   </E>
+            <E ID="35" EDGEID="303" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 5.54285714e-01 0.00000000e+00   1.00000000e-02 5.68571429e-01 0.00000000e+00   1.50000000e-02 5.82857143e-01 0.00000000e+00   </E>
+            <E ID="36" EDGEID="256" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.25714286e-01 0.00000000e+00   -1.00000000e-02 5.40000000e-01 0.00000000e+00   -1.50000000e-02 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="37" EDGEID="245" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 6.11428571e-01 0.00000000e+00   -1.00000000e-02 6.11428571e-01 0.00000000e+00   -5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="38" EDGEID="302" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 5.25714286e-01 0.00000000e+00   1.50000000e-02 5.40000000e-01 0.00000000e+00   1.50000000e-02 5.54285714e-01 0.00000000e+00   </E>
+            <E ID="39" EDGEID="255" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 5.54285714e-01 0.00000000e+00   -1.50000000e-02 5.40000000e-01 0.00000000e+00   -1.50000000e-02 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="40" EDGEID="244" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 6.40000000e-01 0.00000000e+00   -1.50000000e-02 6.25714286e-01 0.00000000e+00   -1.50000000e-02 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="41" EDGEID="243" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 6.40000000e-01 0.00000000e+00   -1.00000000e-02 6.40000000e-01 0.00000000e+00   -1.50000000e-02 6.40000000e-01 0.00000000e+00   </E>
+            <E ID="42" EDGEID="276" NUMPOINTS="3" TYPE="PolyEvenlySpaced">5.00000000e-03 4.97142857e-01 0.00000000e+00   0.00000000e+00 5.11428571e-01 0.00000000e+00   -5.00000000e-03 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="43" EDGEID="300" NUMPOINTS="3" TYPE="PolyEvenlySpaced">1.50000000e-02 4.97142857e-01 0.00000000e+00   1.50000000e-02 5.11428571e-01 0.00000000e+00   1.50000000e-02 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="44" EDGEID="253" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.25714286e-01 0.00000000e+00   -1.00000000e-02 5.25714286e-01 0.00000000e+00   -1.50000000e-02 5.25714286e-01 0.00000000e+00   </E>
+            <E ID="45" EDGEID="265" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-5.00000000e-03 5.82857143e-01 0.00000000e+00   -5.00000000e-03 5.97142857e-01 0.00000000e+00   -5.00000000e-03 6.11428571e-01 0.00000000e+00   </E>
+            <E ID="46" EDGEID="242" NUMPOINTS="3" TYPE="PolyEvenlySpaced">-1.50000000e-02 6.11428571e-01 0.00000000e+00   -1.00000000e-02 6.25714286e-01 0.00000000e+00   -5.00000000e-03 6.40000000e-01 0.00000000e+00   </E>
+        </CURVED>
+        <COMPOSITE>
+            <C ID="0"> T[146-147,150,152-157,161,165-171,178-185,188] </C>
+            <C ID="2"> E[251,255,257,263,244] </C>
+            <C ID="4"> E[279,282,284,286] </C>
+        </COMPOSITE>
+        <DOMAIN>
+            <D ID="0"> C[0] </D>
+        </DOMAIN>
+    </GEOMETRY>
+    <CONDITIONS>
+        <SOLVERINFO>
+            <I PROPERTY="EQTYPE" VALUE="MMFNeuralEP" />
+            <I PROPERTY="Projection" VALUE="Continuous" />
+            <I PROPERTY="DiffusionAdvancement" VALUE="Implicit" />
+            <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXdirk_3_4_3" />
+            <I PROPERTY="NeuralEPType" VALUE="NeuralEP2Dmono" />
+            <I PROPERTY="FiberType" VALUE="SingleLinear" />
+            <I PROPERTY="ExtCurrentType" VALUE="Ephaptic" />
+            <I PROPERTY="SolverSchemeType" VALUE="MMFZero" />
+            <I PROPERTY="NeuronModel" VALUE="FrankenHuxley" />
+            <I PROPERTY="MEDIUMTYPE" VALUE="Anisotropy" />
+            <I PROPERTY="MMFDir" VALUE="TangentY" />
+            <I PROPERTY="GlobalSysSoln" VALUE="XxtMultiLevelStaticCond" />
+        </SOLVERINFO>
+        <PARAMETERS>
+            <P>TimeStep = 1e-7</P>
+            <P>NumSteps = 1e7</P>
+            <P>IO_CheckSteps = 1e3</P>
+            <P>IO_InfoSteps = 1e3</P>
+            <P>Temperature = 24.0</P>
+            <P>ratio_re_ri = 1.0</P>
+            <P>diameter = 0.01</P>
+            <P>Helmtau = 1.0</P>
+            <P>Total_Number_Node = 3</P>
+            <P>Element_per_Node = 4</P>
+            <P>Element_per_Myelin = 14</P>
+            <P>FiberLength = 0.01</P>
+            <P>NodeLength = 0.01</P>
+            <P>MyelinLength = 0.2</P>
+        </PARAMETERS>
+        <FUNCTION NAME="InitialConditions">
+            <E VAR="um" VALUE="0" />
+        </FUNCTION>
+        <VARIABLES>
+            <V ID="0">um</V>
+        </VARIABLES>
+        <BOUNDARYREGIONS>
+            <B ID="1">C[2]</B>
+            <B ID="3">C[4]</B>
+        </BOUNDARYREGIONS>
+        <BOUNDARYCONDITIONS>
+            <REGION REF="1">
+                <N VAR="um" VALUE="0" />
+            </REGION>
+            <REGION REF="3">
+                <N VAR="um" VALUE="0" />
+            </REGION>
+        </BOUNDARYCONDITIONS>
+    </CONDITIONS>
+    <COLLECTIONS>
+        <OPERATOR TYPE="BwdTrans">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="StdMat" />
+        </OPERATOR>
+        <OPERATOR TYPE="Helmholtz">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="MatrixFree" />
+        </OPERATOR>
+        <OPERATOR TYPE="IProductWRTBase">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="StdMat" />
+        </OPERATOR>
+        <OPERATOR TYPE="IProductWRTDerivBase">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="StdMat" />
+        </OPERATOR>
+        <OPERATOR TYPE="PhysDeriv">
+            <ELEMENT TYPE="T" ORDER="*" IMPTYPE="MatrixFree" />
+        </OPERATOR>
+    </COLLECTIONS>
+    <Metadata>
+        <Provenance>
+            <GitBranch>refs/heads/feat/neuro</GitBranch>
+            <GitSHA1>5f3095a1a778f804fba1cbc2da40479b3b6c0246</GitSHA1>
+            <Hostname>palmtree.local</Hostname>
+            <NektarVersion>5.3.0</NektarVersion>
+            <Timestamp>12-Dec-2023 12:40:59</Timestamp>
+        </Provenance>
+        <NekMeshCommandLine>Fiber2DRanvierDomain.msh Fiber2DRanvierDomain.xml:xml:uncompress</NekMeshCommandLine>
+    </Metadata>
+    <EXPANSIONS>
+        <E COMPOSITE="C[0]" NUMMODES="5" TYPE="MODIFIED" FIELDS="um" />
+    </EXPANSIONS>
+    <STIMULI>
+        <STIMULUS ID="0" TYPE="NeuralStimulusRegion">
+            <p_x1>-0.02</p_x1>
+            <p_y1>-0.04</p_y1>
+            <p_z1>0.0</p_z1>
+            <p_x2>0.02</p_x2>
+            <p_y2>0.04</p_y2>
+            <p_z2>0.0</p_z2>
+            <p_is>100.0</p_is>
+            <p_strength>0.1</p_strength>
+            <PROTOCOL TYPE="ProtocolS1">
+                <START>0.0</START>
+                <DURATION>0.01</DURATION>
+                <S1CYCLELENGTH>100.0</S1CYCLELENGTH>
+                <NUM_S1>1.0</NUM_S1>
+            </PROTOCOL>
+        </STIMULUS>
+    </STIMULI>
+</NEKTAR>

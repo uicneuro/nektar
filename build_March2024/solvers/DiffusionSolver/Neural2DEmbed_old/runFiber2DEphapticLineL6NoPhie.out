@@ -1,0 +1,2996 @@
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 35, external elem. = 0, total elem = 35
+v_InitObject: Node = 1050, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1050 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1050 /  1050 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 240, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 2, Myelin elem. = 1, intra elem. = 35, external elem. = 8, total elem = 35
+v_InitObject: Node = 810, Myelin = 240, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1050 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 240, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 2, Myelin elem. = 1, intra elem. = 35, external elem. = 8, total elem = 35
+v_InitObject: Node = 810, Myelin = 240, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1050 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 1050 /  1050 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 35, external elem. = 0, total elem = 35
+v_InitObject: Node = 1050, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1050 ( 0 % ) are removed
+ =======================================================================
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 120, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 1, Myelin elem. = 2, intra elem. = 34, external elem. = 4, total elem = 34
+v_InitObject: Node = 900, Myelin = 120, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 240, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 2, Myelin elem. = 1, intra elem. = 34, external elem. = 8, total elem = 34
+v_InitObject: Node = 780, Myelin = 240, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Zone start = 0, end = 239, Excite zone = 240, Node zone = 360, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 2, Node elem. = 3, Myelin elem. = 1, intra elem. = 34, external elem. = 12, total elem = 34
+v_InitObject: Node = 660, Myelin = 360, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 240, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 2, Myelin elem. = 1, intra elem. = 34, external elem. = 8, total elem = 34
+v_InitObject: Node = 780, Myelin = 240, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Zone start = 0, end = 0, Excite zone = 0, Node zone = 0, intra zone = 1 %, extra zone = 0 % 
+npts = 30, Excite node elem. = 0, Node elem. = 0, Myelin elem. = 2, intra elem. = 34, external elem. = 0, total elem = 34
+v_InitObject: Node = 1020, Myelin = 0, extracell = 0
+ =======================================================================
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1020 /  1020 ( 100 % ) 
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1020 /  1020 ( 100 % ) 
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1050 /  1050 ( 100 % ) 
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1020 /  1020 ( 100 % ) 
+ Moving frames 0 / 1020 ( 0 % ) are removed
+ =======================================================================
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 12.9582, Anistrength 2 = 12.9582
+MMFActivation = 1020 /  1020 ( 100 % ) 
+Max Anistrength_1  = 12.9582, Anistrength_2 = 12.9582, Min Anistrength 1 = 1, Anistrength 2 = 1
+MMFActivation = 1020 /  1020 ( 100 % ) 
+MMFActivation = 1020 /  1020 ( 100 % ) 
+MMFActivation = 1050 /  1050 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.3913 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.3913 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.3913 , 0 ) 
+*** MF 1 = ( 11.3913 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.3913 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.3913 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0 , 11.3913 , 0 ) 
+*** MF 1 = ( 11.3913 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.1769 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.1769 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.1769 , 0 ) 
+*** MF 1 = ( 12.1769 , 0 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 10.4405 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 10.4405 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 10.4405 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.342 , 0 ) 
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 11.342 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 11.342 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 11.342 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 10.4405 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 12.9582 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0 , 12.9582 , 0 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 11.342 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 12.9582 , 0 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.703611 , 0.710585 , 0 ) 
+*** MF 1 = ( 0.710585 , 0.703611 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.683006 , 0.730413 , 0 ) 
+*** MF 1 = ( 0.730413 , 0.683006 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.697594 , 0.716494 , 0 ) 
+*** MF 0 = ( 0.690657 , 0.723182 , 0 ) 
+*** MF 1 = ( 0.723182 , 0.690657 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 0.716494 , 0.697594 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.703611 , 0.710585 , 0 ) 
+*** MF 1 = ( 0.710585 , 0.703611 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** MF 0 = ( 0.995056 , 1.00492 , 0 ) 
+*** MF 1 = ( 1.00492 , 0.995056 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.965916 , 1.03296 , 0 ) 
+*** MF 1 = ( 1.03296 , 0.965916 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.986546 , 1.01327 , 0 ) 
+*** MF 1 = ( 1.01327 , 0.986546 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.976737 , 1.02273 , 0 ) 
+*** MF 1 = ( 1.02273 , 0.976737 , 0 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.678554 , 0.734551 , 0 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.673807 , 0.738908 , 0 ) 
+*** MF 1 = ( 0.738908 , 0.673807 , 0 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.690657 , 0.723182 , 0 ) 
+*** MF 1 = ( 0.723182 , 0.690657 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.716128 , 0.697969 , 0 ) 
+*** MF 1 = ( 0.697969 , 0.716128 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.70218 , 0.712 , 0 ) 
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.976737 , 1.02273 , 0 ) 
+*** MF 1 = ( 1.02273 , 0.976737 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.995056 , 1.00492 , 0 ) 
+*** MF 1 = ( 1.00492 , 0.995056 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.718365 , 0.695666 , 0 ) 
+*** MF 1 = ( 0.695666 , 0.718365 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.713883 , 0.700265 , 0 ) 
+*** MF 1 = ( 0.700265 , 0.713883 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 0.734551 , 0.678554 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.685285 , 0.728275 , 0 ) 
+*** MF 1 = ( 0.728275 , 0.685285 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.697594 , 0.716494 , 0 ) 
+*** MF 1 = ( 0.716494 , 0.697594 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.995056 , 1.00492 , 0 ) 
+*** MF 1 = ( 1.00492 , 0.995056 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.965916 , 1.03296 , 0 ) 
+*** MF 1 = ( 1.03296 , 0.965916 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.986546 , 1.01327 , 0 ) 
+*** MF 1 = ( 1.01327 , 0.986546 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.711632 , 0.702553 , 0 ) 
+*** MF 1 = ( 0.702553 , 0.711632 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 1 = ( 0.712 , 0.70218 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.671421 , 0.741076 , 0 ) 
+*** MF 1 = ( 0.741076 , 0.671421 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.995056 , 1.00492 , 0 ) 
+*** MF 1 = ( 1.00492 , 0.995056 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.64751e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 11.3913 , 0 , 1.7174e-12 , 147.482 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.67291e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.3326e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 11.3913 , 0 , 1.68399e-12 , 147.482 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.83525e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 11.3913 , 0 , 0 , 4.7617e-12 , 147.482 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.84492e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.75193e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 11.3913 , 0 , 0 , 4.87476e-12 , 147.482 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 0.995056 , 1.00492 , 0 , 2.08971e-06 , 2 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+k = 0, m_varcoeff = ( 0.965916 , 1.03296 , 0 , 1.70627e-06 , 2 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+k = 0, m_varcoeff = ( 0.986546 , 1.01327 , 0 , 2.73725e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.976737 , 1.02273 , 0 , 1.73121e-06 , 2 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.976737 , 1.02273 , 0 ) 
+*** MF 0 = ( 0.95962 , 1.03881 , 0 ) 
+*** MF 1 = ( 1.03881 , 0.95962 , 0 ) 
+k = 0, m_varcoeff = ( 0.995056 , 1.00492 , 0 , 2.08977e-06 , 2 ) 
+*** MF 1 = ( 1.02273 , 0.976737 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.00958 , 0.990324 , 0 ) 
+*** MF 1 = ( 0.990324 , 1.00958 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+k = 1, m_varcoeff = ( 1.01327 , 0.986546 , 0 , 7.82069e-06 , 2 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.01276 , 0.987078 , 0 ) 
+*** MF 1 = ( 0.987078 , 1.01276 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.0064 , 0.99356 , 0 ) 
+*** MF 1 = ( 0.99356 , 1.0064 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.95962 , 1.03881 , 0 ) 
+*** MF 0 = ( 0.986546 , 1.01327 , 0 ) 
+*** MF 1 = ( 1.01327 , 0.986546 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.01592 , 0.98382 , 0 ) 
+*** MF 1 = ( 0.98382 , 1.01592 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+k = 1, m_varcoeff = ( 1.00492 , 0.995056 , 0 , 5.97073e-06 , 2 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.969139 , 1.02994 , 0 ) 
+*** MF 0 = ( 0.952907 , 1.04497 , 0 ) 
+*** MF 1 = ( 1.04497 , 0.952907 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.993032 , 1.00692 , 0 ) 
+*** MF 1 = ( 1.00692 , 0.993032 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.949532 , 1.04804 , 0 ) 
+*** MF 1 = ( 1.04804 , 0.949532 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.0064 , 0.99356 , 0 ) 
+*** MF 1 = ( 1.03881 , 0.95962 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.986546 , 1.01327 , 0 ) 
+*** MF 1 = ( 1.01327 , 0.986546 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 1.01592 , 0.98382 , 0 ) 
+*** MF 1 = ( 0.98382 , 1.01592 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 1, m_varcoeff = ( 1.02273 , 0.976737 , 0 , 4.94623e-06 , 2 ) 
+*** MF 1 = ( 1.02994 , 0.969139 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+k = 1, m_varcoeff = ( 1.00492 , 0.995056 , 0 , 5.97071e-06 , 2 ) 
+*** MF 0 = ( 0.976737 , 1.02273 , 0 ) 
+*** MF 1 = ( 1.02273 , 0.976737 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 1.00958 , 0.990324 , 0 ) 
+*** MF 1 = ( 0.990324 , 1.00958 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.952907 , 1.04497 , 0 ) 
+*** MF 1 = ( 1.04497 , 0.952907 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 1, m_varcoeff = ( 1.03296 , 0.965916 , 0 , 4.87507e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** MF 1 = ( 0.99356 , 1.0064 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 0 = ( 0.969139 , 1.02994 , 0 ) 
+*** MF 1 = ( 1.02994 , 0.969139 , 0 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** MF 0 = ( 1.01276 , 0.987078 , 0 ) 
+*** MF 1 = ( 0.987078 , 1.01276 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.993032 , 1.00692 , 0 ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 1.41421 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.949532 , 1.04804 , 0 ) 
+*** MF 1 = ( 1.00692 , 0.993032 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+*** MF 1 = ( 1.04804 , 0.949532 , 0 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+*** MF 2 = ( 0 , 0 , 1 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.67013e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.31358e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 10.4405 , 0 , 1.58868e-12 , 135.072 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.66252e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 12.1769 , 0 , 2.8677e-12 , 157.729 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.67494e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 11.342 , 0 , 1.65355e-12 , 146.838 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.67974e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.69284e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 12.9582 , 0 , 3.63662e-12 , 167.914 ) 
+k = 0, m_varcoeff = ( 0 , 11.342 , 0 , 1.62578e-12 , 146.838 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.75193e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.80587e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 10.4405 , 0 , 0 , 4.41807e-12 , 135.072 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.88372e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.86954e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 12.1769 , 0 , 0 , 5.25961e-12 , 157.729 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.86954e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 11.342 , 0 , 0 , 4.8678e-12 , 146.838 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.83898e-12 , 167.914 ) 
+k = 1, m_varcoeff = ( 11.342 , 0 , 0 , 4.82084e-12 , 146.838 ) 
+k = 1, m_varcoeff = ( 12.9582 , 0 , 0 , 5.7915e-12 , 167.914 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 0, m_varcoeff = ( 0.986546 , 1.01327 , 0 , 2.44824e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.952907 , 1.04497 , 0 , 1.73119e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.95962 , 1.03881 , 0 , 2.9985e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.976737 , 1.02273 , 0 , 1.22446e-07 , 2 ) 
+k = 0, m_varcoeff = ( 1.00958 , 0.990324 , 0 , 1.73122e-06 , 2 ) 
+k = 0, m_varcoeff = ( 1.01592 , 0.98382 , 0 , 2.73726e-06 , 2 ) 
+k = 0, m_varcoeff = ( 1.0064 , 0.99356 , 0 , 1.22414e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.969139 , 1.02994 , 0 , 2.41306e-06 , 2 ) 
+k = 0, m_varcoeff = ( 1.01276 , 0.987078 , 0 , 2.12026e-06 , 2 ) 
+k = 0, m_varcoeff = ( 0.993032 , 1.00692 , 0 , 2.73738e-07 , 2 ) 
+k = 1, m_varcoeff = ( 1.02273 , 0.976737 , 0 , 3.49752e-07 , 2 ) 
+k = 0, m_varcoeff = ( 0.949532 , 1.04804 , 0 , 2.12032e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.01327 , 0.986546 , 0 , 6.99506e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.03881 , 0.95962 , 0 , 8.56713e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.04497 , 0.952907 , 0 , 4.94626e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.98382 , 1.01592 , 0 , 7.8207e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.990324 , 1.00958 , 0 , 4.94625e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.99356 , 1.0064 , 0 , 3.49753e-06 , 2 ) 
+k = 1, m_varcoeff = ( 1.02994 , 0.969139 , 0 , 6.89438e-06 , 2 ) 
+k = 1, m_varcoeff = ( 0.987078 , 1.01276 , 0 , 6.05788e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 1, m_varcoeff = ( 1.00692 , 0.993032 , 0 , 7.82069e-07 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 1, m_varcoeff = ( 1.04804 , 0.949532 , 0 , 6.05786e-06 , 2 ) 
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+k = 2, m_varcoeff = ( 0 , 0 , 1 , 0 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFNeuralEP
+	        Session Name: Fiber2DEphapticLineL6NoPhie
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 5
+	      Num. Processes: 16
+	      Expansion Dim.: 2
+	     Projection Type: Continuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 1e-07
+	        No. of Steps: 20000000
+	 Checkpoints (steps): 2000000
+	    Integration Type: IMEX
+	             Surface: Line
+	           DerivType: Euclidean
+	              MMFdir: TangentY
+	        NeuralEPType: NeuralEP2Dbi
+	      ExtCurrentType: NoPhie
+	       GlobalSysSoln: XxtMultiLevelStaticCond
+	          Fiber Type: MonoBCDirichlet
+	        Fiber Length: 0.01
+	         Node Length: 0.01
+	       Myelin Length: 0.2
+	               Nnode: 10
+	         Temperature: 24
+	            diameter: 0.01
+	             Helmtau: 1
+	                  nq: 1020
+	                npts: 30
+=======================================================================
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Initial Conditions:
+  - Field um: 0
+  - Field ue: 0
+Writing: "Fiber2DEphapticLineL6NoPhie_initial.chk"
+ (0.000937248s, XML)
+phi_m, max: 0.000132 at y = 5.890000
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+
+
+Steps: 2000000  Time: 0.2         
+phi_m, max: 0.001828 at y = 2.291429
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+
+
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_1.chk"
+ (0.00105849s, XML)
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+
+
+Steps: 4000000  Time: 0.4         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_2.chk"
+ (0.00104866s, XML)
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+
+
+Steps: 6000000  Time: 0.6         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_3.chk"
+ (0.00108365s, XML)
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+
+
+Steps: 8000000  Time: 0.8         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_4.chk"
+ (0.00123034s, XML)
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+phi_m, max: 96.405620 at y = 2.291429
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+phi_m, max: 123.988056 at y = 2.117458
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+phi_m, max: 14.079009 at y = 4.668571
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+phi_m, max: 19.389367 at y = 4.248571
+
+
+
+Steps: 10000000 Time: 1           
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+Time: 1.000000
+CPU Time: 69.558064 min.
+phi_m, max: 84.686690 at y = 1.900000
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+phi_m, max: 69.612642 at y = 2.682857
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+phi_m, max: 0.817992 at y = 0.344286
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+phi_m, max: 26.416644 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+phi_m, max: 52.572125 at y = 1.547143
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+phi_m, max: 10.713796 at y = 5.060000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+phi_m, max: 50.177346 at y = 3.077642
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+phi_m, max: 7.089332 at y = 1.155714
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+phi_m, max: 0.978817 at y = 0.019413
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+phi_m, max: 8.421863 at y = 5.470000
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+phi_m, max: 7.105380 at y = 5.890000
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+phi_m, max: 36.340038 at y = 3.469071
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_5.chk"
+ (0.00121369s, XML)
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+phi_m, max: 8.421863 at y = 5.470000
+
+phi_m, max: 1.382643 at y = 5.470000
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+phi_m, max: 123.988056 at y = 2.117458
+
+phi_m, max: 20.018237 at y = 2.116787
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+phi_m, max: 14.079009 at y = 4.668571
+
+phi_m, max: 2.259694 at y = 4.668571
+
+
+
+Steps: 12000000 Time: 1.2         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+Time: 1.000000
+CPU Time: 69.558064 min.
+phi_m, max: 84.686690 at y = 1.900000
+
+
+Time: 1.200000
+CPU Time: 52.597423 min.
+phi_m, max: 3.467726 at y = 1.900000
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+phi_m, max: 36.340038 at y = 3.469071
+
+phi_m, max: 5.643034 at y = 3.469071
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+phi_m, max: 69.612642 at y = 2.682857
+
+phi_m, max: 10.593298 at y = 2.682857
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+phi_m, max: 0.817992 at y = 0.344286
+
+phi_m, max: 1.248053 at y = 0.431175
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+phi_m, max: 26.416644 at y = 3.860499
+
+phi_m, max: 4.144985 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+phi_m, max: 52.572125 at y = 1.547143
+
+phi_m, max: 0.728562 at y = 1.130499
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+phi_m, max: 0.978817 at y = 0.019413
+
+phi_m, max: 1.288075 at y = 0.222542
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+phi_m, max: 7.105380 at y = 5.890000
+
+phi_m, max: 1.176909 at y = 5.890000
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+phi_m, max: 10.713796 at y = 5.060000
+
+phi_m, max: 1.739227 at y = 5.060000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+phi_m, max: 50.177346 at y = 3.077642
+
+phi_m, max: 7.713060 at y = 3.077642
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+phi_m, max: 7.089332 at y = 1.155714
+
+phi_m, max: 1.076827 at y = 0.735714
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+phi_m, max: 19.389367 at y = 4.248571
+
+phi_m, max: 3.074961 at y = 4.248571
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+phi_m, max: 96.405620 at y = 2.291429
+
+phi_m, max: 14.525998 at y = 2.291429
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_6.chk"
+ (0.0010305s, XML)
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+phi_m, max: 0.817992 at y = 0.344286
+
+phi_m, max: 1.248053 at y = 0.431175
+
+phi_m, max: 1.316025 at y = 0.644490
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+phi_m, max: 26.416644 at y = 3.860499
+
+phi_m, max: 4.144985 at y = 3.860499
+
+phi_m, max: 0.131181 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+phi_m, max: 52.572125 at y = 1.547143
+
+phi_m, max: 0.728562 at y = 1.130499
+
+phi_m, max: 1.222689 at y = 1.270587
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+phi_m, max: 0.978817 at y = 0.019413
+
+phi_m, max: 1.288075 at y = 0.222542
+
+phi_m, max: 1.288580 at y = 0.226426
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+phi_m, max: 7.105380 at y = 5.890000
+
+phi_m, max: 1.176909 at y = 5.890000
+
+phi_m, max: 0.033763 at y = 5.890000
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+phi_m, max: 10.713796 at y = 5.060000
+
+phi_m, max: 1.739227 at y = 5.060000
+
+phi_m, max: 0.051774 at y = 5.060000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+phi_m, max: 50.177346 at y = 3.077642
+
+phi_m, max: 7.713060 at y = 3.077642
+
+phi_m, max: 0.253148 at y = 3.077642
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+phi_m, max: 7.089332 at y = 1.155714
+
+phi_m, max: 1.076827 at y = 0.735714
+
+phi_m, max: 1.306107 at y = 0.852542
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+phi_m, max: 19.389367 at y = 4.248571
+
+phi_m, max: 3.074961 at y = 4.248571
+
+phi_m, max: 0.095480 at y = 4.248571
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+phi_m, max: 14.079009 at y = 4.668571
+
+phi_m, max: 2.259694 at y = 4.668571
+
+phi_m, max: 0.068669 at y = 4.668571
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+phi_m, max: 8.421863 at y = 5.470000
+
+phi_m, max: 1.382643 at y = 5.470000
+
+phi_m, max: 0.040320 at y = 5.470000
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+phi_m, max: 123.988056 at y = 2.117458
+
+phi_m, max: 20.018237 at y = 2.116787
+
+phi_m, max: 0.848863 at y = 1.874785
+
+
+
+Steps: 14000000 Time: 1.4         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+Time: 1.000000
+CPU Time: 69.558064 min.
+phi_m, max: 84.686690 at y = 1.900000
+
+
+Time: 1.200000
+CPU Time: 52.597423 min.
+phi_m, max: 3.467726 at y = 1.900000
+
+
+Time: 1.400000
+CPU Time: 42.964976 min.
+phi_m, max: 1.028324 at y = 1.521928
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+phi_m, max: 96.405620 at y = 2.291429
+
+phi_m, max: 14.525998 at y = 2.291429
+
+phi_m, max: 0.493706 at y = 2.291429
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+phi_m, max: 36.340038 at y = 3.469071
+
+phi_m, max: 5.643034 at y = 3.469071
+
+phi_m, max: 0.181921 at y = 3.469071
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+phi_m, max: 69.612642 at y = 2.682857
+
+phi_m, max: 10.593298 at y = 2.682857
+
+phi_m, max: 0.353879 at y = 2.682857
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_7.chk"
+ (0.00104355s, XML)
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+phi_m, max: 10.713796 at y = 5.060000
+
+phi_m, max: 1.739227 at y = 5.060000
+
+phi_m, max: 0.051774 at y = 5.060000
+
+phi_m, max: 0.093810 at y = 5.060000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+phi_m, max: 50.177346 at y = 3.077642
+
+phi_m, max: 7.713060 at y = 3.077642
+
+phi_m, max: 0.253148 at y = 3.077642
+
+phi_m, max: 0.445675 at y = 3.077642
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+phi_m, max: 7.089332 at y = 1.155714
+
+phi_m, max: 1.076827 at y = 0.735714
+
+phi_m, max: 1.306107 at y = 0.852542
+
+phi_m, max: 1.298570 at y = 1.066426
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+phi_m, max: 19.389367 at y = 4.248571
+
+phi_m, max: 3.074961 at y = 4.248571
+
+phi_m, max: 0.095480 at y = 4.248571
+
+phi_m, max: 0.170821 at y = 4.248571
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+phi_m, max: 14.079009 at y = 4.668571
+
+phi_m, max: 2.259694 at y = 4.668571
+
+phi_m, max: 0.068669 at y = 4.668571
+
+phi_m, max: 0.123647 at y = 4.668571
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+phi_m, max: 8.421863 at y = 5.470000
+
+phi_m, max: 1.382643 at y = 5.470000
+
+phi_m, max: 0.040320 at y = 5.470000
+
+phi_m, max: 0.073521 at y = 5.470000
+
+
+
+Steps: 16000000 Time: 1.6         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+Time: 1.000000
+CPU Time: 69.558064 min.
+phi_m, max: 84.686690 at y = 1.900000
+
+
+Time: 1.200000
+CPU Time: 52.597423 min.
+phi_m, max: 3.467726 at y = 1.900000
+
+
+Time: 1.400000
+CPU Time: 42.964976 min.
+phi_m, max: 1.028324 at y = 1.521928
+
+
+Time: 1.600000
+CPU Time: 43.045354 min.
+phi_m, max: 1.296038 at y = 1.692542
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+phi_m, max: 69.612642 at y = 2.682857
+
+phi_m, max: 10.593298 at y = 2.682857
+
+phi_m, max: 0.353879 at y = 2.682857
+
+phi_m, max: 0.619914 at y = 2.682857
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+phi_m, max: 96.405620 at y = 2.291429
+
+phi_m, max: 14.525998 at y = 2.291429
+
+phi_m, max: 0.493706 at y = 2.291429
+
+phi_m, max: 0.860709 at y = 2.291429
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+phi_m, max: 36.340038 at y = 3.469071
+
+phi_m, max: 5.643034 at y = 3.469071
+
+phi_m, max: 0.181921 at y = 3.469071
+
+phi_m, max: 0.321922 at y = 3.469071
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+phi_m, max: 123.988056 at y = 2.117458
+
+phi_m, max: 20.018237 at y = 2.116787
+
+phi_m, max: 0.848863 at y = 1.874785
+
+phi_m, max: 1.256611 at y = 1.901175
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+phi_m, max: 0.817992 at y = 0.344286
+
+phi_m, max: 1.248053 at y = 0.431175
+
+phi_m, max: 1.316025 at y = 0.644490
+
+phi_m, max: 1.229963 at y = 0.647458
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+phi_m, max: 26.416644 at y = 3.860499
+
+phi_m, max: 4.144985 at y = 3.860499
+
+phi_m, max: 0.131181 at y = 3.860499
+
+phi_m, max: 0.233381 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+phi_m, max: 52.572125 at y = 1.547143
+
+phi_m, max: 0.728562 at y = 1.130499
+
+phi_m, max: 1.222689 at y = 1.270587
+
+phi_m, max: 1.313861 at y = 1.275449
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+phi_m, max: 0.978817 at y = 0.019413
+
+phi_m, max: 1.288075 at y = 0.222542
+
+phi_m, max: 1.288580 at y = 0.226426
+
+phi_m, max: 1.129447 at y = 0.228213
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+phi_m, max: 7.105380 at y = 5.890000
+
+phi_m, max: 1.176909 at y = 5.890000
+
+phi_m, max: 0.033763 at y = 5.890000
+
+phi_m, max: 0.061880 at y = 5.890000
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_8.chk"
+ (0.00091711s, XML)
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+phi_m, max: 123.988056 at y = 2.117458
+
+phi_m, max: 20.018237 at y = 2.116787
+
+phi_m, max: 0.848863 at y = 1.874785
+
+phi_m, max: 1.256611 at y = 1.901175
+
+phi_m, max: 1.304456 at y = 1.905587
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+phi_m, max: 0.817992 at y = 0.344286
+
+phi_m, max: 1.248053 at y = 0.431175
+
+phi_m, max: 1.316025 at y = 0.644490
+
+phi_m, max: 1.229963 at y = 0.647458
+
+phi_m, max: 1.037307 at y = 0.648213
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+phi_m, max: 26.416644 at y = 3.860499
+
+phi_m, max: 4.144985 at y = 3.860499
+
+phi_m, max: 0.131181 at y = 3.860499
+
+phi_m, max: 0.233381 at y = 3.860499
+
+phi_m, max: 0.241263 at y = 3.860499
+
+
+
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+phi_m, max: 52.572125 at y = 1.547143
+
+phi_m, max: 0.728562 at y = 1.130499
+
+phi_m, max: 1.222689 at y = 1.270587
+
+phi_m, max: 1.313861 at y = 1.275449
+
+phi_m, max: 1.247317 at y = 1.487458
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+phi_m, max: 0.978817 at y = 0.019413
+
+phi_m, max: 1.288075 at y = 0.222542
+
+phi_m, max: 1.288580 at y = 0.226426
+
+phi_m, max: 1.129447 at y = 0.228213
+
+phi_m, max: 0.918756 at y = 0.228376
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+phi_m, max: 8.421863 at y = 5.470000
+
+phi_m, max: 1.382643 at y = 5.470000
+
+phi_m, max: 0.040320 at y = 5.470000
+
+phi_m, max: 0.073521 at y = 5.470000
+
+phi_m, max: 0.076227 at y = 5.470000
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+phi_m, max: 10.713796 at y = 5.060000
+
+phi_m, max: 1.739227 at y = 5.060000
+
+phi_m, max: 0.051774 at y = 5.060000
+
+phi_m, max: 0.093810 at y = 5.060000
+
+phi_m, max: 0.097191 at y = 5.060000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+phi_m, max: 50.177346 at y = 3.077642
+
+phi_m, max: 7.713060 at y = 3.077642
+
+phi_m, max: 0.253148 at y = 3.077642
+
+phi_m, max: 0.445675 at y = 3.077642
+
+phi_m, max: 0.460126 at y = 3.077642
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+phi_m, max: 7.089332 at y = 1.155714
+
+phi_m, max: 1.076827 at y = 0.735714
+
+phi_m, max: 1.306107 at y = 0.852542
+
+phi_m, max: 1.298570 at y = 1.066426
+
+phi_m, max: 1.151306 at y = 1.068213
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+phi_m, max: 19.389367 at y = 4.248571
+
+phi_m, max: 3.074961 at y = 4.248571
+
+phi_m, max: 0.095480 at y = 4.248571
+
+phi_m, max: 0.170821 at y = 4.248571
+
+phi_m, max: 0.176711 at y = 4.248571
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+phi_m, max: 14.079009 at y = 4.668571
+
+phi_m, max: 2.259694 at y = 4.668571
+
+phi_m, max: 0.068669 at y = 4.668571
+
+phi_m, max: 0.123647 at y = 4.668571
+
+phi_m, max: 0.128009 at y = 4.668571
+
+
+
+Steps: 18000000 Time: 1.8         
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+Time: 1.000000
+CPU Time: 69.558064 min.
+phi_m, max: 84.686690 at y = 1.900000
+
+
+Time: 1.200000
+CPU Time: 52.597423 min.
+phi_m, max: 3.467726 at y = 1.900000
+
+
+Time: 1.400000
+CPU Time: 42.964976 min.
+phi_m, max: 1.028324 at y = 1.521928
+
+
+Time: 1.600000
+CPU Time: 43.045354 min.
+phi_m, max: 1.296038 at y = 1.692542
+
+
+Time: 1.800000
+CPU Time: 42.964543 min.
+phi_m, max: 1.282636 at y = 1.696787
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+phi_m, max: 7.105380 at y = 5.890000
+
+phi_m, max: 1.176909 at y = 5.890000
+
+phi_m, max: 0.033763 at y = 5.890000
+
+phi_m, max: 0.061880 at y = 5.890000
+
+phi_m, max: 0.064196 at y = 5.890000
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+phi_m, max: 69.612642 at y = 2.682857
+
+phi_m, max: 10.593298 at y = 2.682857
+
+phi_m, max: 0.353879 at y = 2.682857
+
+phi_m, max: 0.619914 at y = 2.682857
+
+phi_m, max: 0.639609 at y = 2.682857
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+phi_m, max: 96.405620 at y = 2.291429
+
+phi_m, max: 14.525998 at y = 2.291429
+
+phi_m, max: 0.493706 at y = 2.291429
+
+phi_m, max: 0.860709 at y = 2.291429
+
+phi_m, max: 0.887503 at y = 2.291429
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+phi_m, max: 36.340038 at y = 3.469071
+
+phi_m, max: 5.643034 at y = 3.469071
+
+phi_m, max: 0.181921 at y = 3.469071
+
+phi_m, max: 0.321922 at y = 3.469071
+
+phi_m, max: 0.332574 at y = 3.469071
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_9.chk"
+ (0.00101626s, XML)
+phi_m, max: 0.266068 at y = 1.130499
+
+phi_m, max: 292.244848 at y = 1.278376
+
+phi_m, max: 245.541959 at y = 1.547143
+
+phi_m, max: 146.557425 at y = 1.547143
+
+phi_m, max: 52.572125 at y = 1.547143
+
+phi_m, max: 0.728562 at y = 1.130499
+
+phi_m, max: 1.222689 at y = 1.270587
+
+phi_m, max: 1.313861 at y = 1.275449
+
+phi_m, max: 1.247317 at y = 1.487458
+
+phi_m, max: 1.061553 at y = 1.488213
+
+
+
+phi_m, max: 272.478587 at y = 0.344286
+
+phi_m, max: 180.031148 at y = 0.344286
+
+phi_m, max: 87.614434 at y = 0.344286
+
+phi_m, max: 4.159871 at y = 0.344286
+
+phi_m, max: 0.978817 at y = 0.019413
+
+phi_m, max: 1.288075 at y = 0.222542
+
+phi_m, max: 1.288580 at y = 0.226426
+
+phi_m, max: 1.129447 at y = 0.228213
+
+phi_m, max: 0.918756 at y = 0.228376
+
+phi_m, max: 0.716467 at y = 0.228376
+
+
+
+phi_m, max: 0.000157 at y = 5.470000
+
+phi_m, max: 0.000040 at y = 5.470000
+
+phi_m, max: 19.345939 at y = 5.470000
+
+phi_m, max: 15.410163 at y = 5.470000
+
+phi_m, max: 8.421863 at y = 5.470000
+
+phi_m, max: 1.382643 at y = 5.470000
+
+phi_m, max: 0.040320 at y = 5.470000
+
+phi_m, max: 0.073521 at y = 5.470000
+
+phi_m, max: 0.076227 at y = 5.470000
+
+phi_m, max: 0.067577 at y = 5.470000
+
+
+
+phi_m, max: 0.000200 at y = 5.060000
+
+phi_m, max: 0.000044 at y = 5.060000
+
+phi_m, max: 24.725010 at y = 5.060000
+
+phi_m, max: 19.623138 at y = 5.060000
+
+phi_m, max: 10.713796 at y = 5.060000
+
+phi_m, max: 1.739227 at y = 5.060000
+
+phi_m, max: 0.051774 at y = 5.060000
+
+phi_m, max: 0.093810 at y = 5.060000
+
+phi_m, max: 0.097191 at y = 5.060000
+
+phi_m, max: 0.086131 at y = 5.060000
+
+
+
+phi_m, max: 0.000947 at y = 3.077642
+
+phi_m, max: 0.000058 at y = 3.494286
+
+phi_m, max: 118.211482 at y = 3.077642
+
+phi_m, max: 92.334536 at y = 3.077642
+
+phi_m, max: 50.177346 at y = 3.077642
+
+phi_m, max: 7.713060 at y = 3.077642
+
+phi_m, max: 0.253148 at y = 3.077642
+
+phi_m, max: 0.445675 at y = 3.077642
+
+phi_m, max: 0.460126 at y = 3.077642
+
+phi_m, max: 0.407079 at y = 3.077642
+
+
+
+phi_m, max: 245.063056 at y = 0.735714
+
+phi_m, max: 280.164360 at y = 1.069413
+
+phi_m, max: 191.321800 at y = 1.155714
+
+phi_m, max: 97.259025 at y = 1.155714
+
+phi_m, max: 7.089332 at y = 1.155714
+
+phi_m, max: 1.076827 at y = 0.735714
+
+phi_m, max: 1.306107 at y = 0.852542
+
+phi_m, max: 1.298570 at y = 1.066426
+
+phi_m, max: 1.151306 at y = 1.068213
+
+phi_m, max: 0.942642 at y = 1.068376
+
+
+
+phi_m, max: 0.000364 at y = 4.248571
+
+phi_m, max: 0.000055 at y = 4.248571
+
+phi_m, max: 45.160041 at y = 4.248571
+
+phi_m, max: 35.584686 at y = 4.248571
+
+phi_m, max: 19.389367 at y = 4.248571
+
+phi_m, max: 3.074961 at y = 4.248571
+
+phi_m, max: 0.095480 at y = 4.248571
+
+phi_m, max: 0.170821 at y = 4.248571
+
+phi_m, max: 0.176711 at y = 4.248571
+
+phi_m, max: 0.156488 at y = 4.248571
+
+
+
+Steps: 20000000 Time: 2           
+
+Time: 0.200000
+CPU Time: 70.973005 min.
+phi_m, max: 0.002919 at y = 1.696367
+
+
+Time: 0.400000
+CPU Time: 70.437093 min.
+phi_m, max: 111.325103 at y = 1.521928
+
+
+Time: 0.600000
+CPU Time: 70.549786 min.
+phi_m, max: 270.928181 at y = 1.900000
+
+
+Time: 0.800000
+CPU Time: 70.072866 min.
+phi_m, max: 177.030530 at y = 1.900000
+
+
+Time: 1.000000
+CPU Time: 69.558064 min.
+phi_m, max: 84.686690 at y = 1.900000
+
+
+Time: 1.200000
+CPU Time: 52.597423 min.
+phi_m, max: 3.467726 at y = 1.900000
+
+
+Time: 1.400000
+CPU Time: 42.964976 min.
+phi_m, max: 1.028324 at y = 1.521928
+
+
+Time: 1.600000
+CPU Time: 43.045354 min.
+phi_m, max: 1.296038 at y = 1.692542
+
+
+Time: 1.800000
+CPU Time: 42.964543 min.
+phi_m, max: 1.282636 at y = 1.696787
+
+
+Time: 2.000000
+CPU Time: 43.040788 min.
+phi_m, max: 1.118874 at y = 1.698213
+
+
+
+phi_m, max: 0.000685 at y = 3.469071
+
+phi_m, max: 0.000059 at y = 3.720489
+
+phi_m, max: 85.304417 at y = 3.469071
+
+phi_m, max: 66.813903 at y = 3.469071
+
+phi_m, max: 36.340038 at y = 3.469071
+
+phi_m, max: 5.643034 at y = 3.469071
+
+phi_m, max: 0.181921 at y = 3.469071
+
+phi_m, max: 0.321922 at y = 3.469071
+
+phi_m, max: 0.332574 at y = 3.469071
+
+phi_m, max: 0.294323 at y = 3.469071
+
+
+
+phi_m, max: 0.000132 at y = 5.890000
+
+phi_m, max: 0.000037 at y = 5.890000
+
+phi_m, max: 16.261038 at y = 5.890000
+
+phi_m, max: 12.991165 at y = 5.890000
+
+phi_m, max: 7.105380 at y = 5.890000
+
+phi_m, max: 1.176909 at y = 5.890000
+
+phi_m, max: 0.033763 at y = 5.890000
+
+phi_m, max: 0.061880 at y = 5.890000
+
+phi_m, max: 0.064196 at y = 5.890000
+
+phi_m, max: 0.056927 at y = 5.890000
+
+
+
+phi_m, max: 0.001317 at y = 2.682857
+
+phi_m, max: 0.000048 at y = 3.102857
+
+phi_m, max: 164.570677 at y = 2.682857
+
+phi_m, max: 128.208211 at y = 2.682857
+
+phi_m, max: 69.612642 at y = 2.682857
+
+phi_m, max: 10.593298 at y = 2.682857
+
+phi_m, max: 0.353879 at y = 2.682857
+
+phi_m, max: 0.619914 at y = 2.682857
+
+phi_m, max: 0.639609 at y = 2.682857
+
+phi_m, max: 0.565697 at y = 2.682857
+
+
+
+phi_m, max: 0.001828 at y = 2.291429
+
+phi_m, max: 0.000037 at y = 2.291429
+
+phi_m, max: 228.672865 at y = 2.291429
+
+phi_m, max: 177.702624 at y = 2.291429
+
+phi_m, max: 96.405620 at y = 2.291429
+
+phi_m, max: 14.525998 at y = 2.291429
+
+phi_m, max: 0.493706 at y = 2.291429
+
+phi_m, max: 0.860709 at y = 2.291429
+
+phi_m, max: 0.887503 at y = 2.291429
+
+phi_m, max: 0.784710 at y = 2.291429
+
+
+
+phi_m, max: 0.000263 at y = 4.668571
+
+phi_m, max: 0.000050 at y = 4.668571
+
+phi_m, max: 32.639375 at y = 4.668571
+
+phi_m, max: 25.812152 at y = 4.668571
+
+phi_m, max: 14.079009 at y = 4.668571
+
+phi_m, max: 2.259694 at y = 4.668571
+
+phi_m, max: 0.068669 at y = 4.668571
+
+phi_m, max: 0.123647 at y = 4.668571
+
+phi_m, max: 0.128009 at y = 4.668571
+
+phi_m, max: 0.113401 at y = 4.668571
+
+
+
+phi_m, max: 0.002934 at y = 1.904832
+
+phi_m, max: 2.131009 at y = 1.874785
+
+phi_m, max: 294.074883 at y = 2.116426
+
+phi_m, max: 224.571280 at y = 2.117458
+
+phi_m, max: 123.988056 at y = 2.117458
+
+phi_m, max: 20.018237 at y = 2.116787
+
+phi_m, max: 0.848863 at y = 1.874785
+
+phi_m, max: 1.256611 at y = 1.901175
+
+phi_m, max: 1.304456 at y = 1.905587
+
+phi_m, max: 1.175815 at y = 2.112542
+
+
+
+phi_m, max: 292.967764 at y = 0.643633
+
+phi_m, max: 235.175707 at y = 0.735714
+
+phi_m, max: 135.947180 at y = 0.735714
+
+phi_m, max: 39.431328 at y = 0.735714
+
+phi_m, max: 0.817992 at y = 0.344286
+
+phi_m, max: 1.248053 at y = 0.431175
+
+phi_m, max: 1.316025 at y = 0.644490
+
+phi_m, max: 1.229963 at y = 0.647458
+
+phi_m, max: 1.037307 at y = 0.648213
+
+phi_m, max: 0.825610 at y = 0.648376
+
+
+
+phi_m, max: 0.000496 at y = 3.860499
+
+phi_m, max: 0.000059 at y = 3.860499
+
+phi_m, max: 61.774920 at y = 3.860499
+
+phi_m, max: 48.525901 at y = 3.860499
+
+phi_m, max: 26.416644 at y = 3.860499
+
+phi_m, max: 4.144985 at y = 3.860499
+
+phi_m, max: 0.131181 at y = 3.860499
+
+phi_m, max: 0.233381 at y = 3.860499
+
+phi_m, max: 0.241263 at y = 3.860499
+
+phi_m, max: 0.213582 at y = 3.860499
+
+
+
+Writing: "Fiber2DEphapticLineL6NoPhie_10.chk"
+ (0.00100326s, XML)
+Time-integration  : 34572.2s
+Writing: "Fiber2DEphapticLineL6NoPhie.fld"
+ (0.000685025s, XML)
+-------------------------------------------
+Total Computation Time = 34577s
+-------------------------------------------
+L 2 error (variable um) : 0.0601467
+L inf error (variable um) : 0.465199
+L 2 error (variable ue) : 0
+L inf error (variable ue) : 0

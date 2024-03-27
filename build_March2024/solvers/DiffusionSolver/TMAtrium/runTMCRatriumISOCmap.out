@@ -1,0 +1,158 @@
+nohup: ignoring input
+Loading Isotropic Conductivity map.
+vTemp: Max = 32.1, min =-102
+Anisotropy = [ 0.1 , 1 ], [ 0.1 , 1 ] 
+MMFActivation = 787760 /  787760 ( 100 % ) 
+*** 1st Moving frames are NOT in unit length, Avg mag. = 0.901917 *** 
+*** 2nd Moving frames are NOT in unit length, Avg mag. = 0.901917 *** 
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.564837 , 0.474828 , 0.518605 ) 
+*** MF 1 = ( 0.56369 , 0.477542 , 0.517361 ) 
+*** MF 2 = ( 0.468689 , 0.672139 , 0.573202 ) 
+MMFInitObject is done ===========================
+================== SetUP Time Map moving frames ==================
+*** 1st Moving frames are in unit length ***
+*** 2nd Moving frames are in unit length ***
+*** Moving frames are Orthogonal
+*** MF 0 = ( 0.62487 , 0.522181 , 0.5804 ) 
+*** MF 1 = ( 0.624394 , 0.524934 , 0.578425 ) 
+*** MF 2 = ( 0.468689 , 0.672139 , 0.573202 ) 
+k = 0, m_varcoeff = ( 0.564837 , 0.474828 , 0.518605 , 0.0415206 , 0.828469 ) 
+k = 1, m_varcoeff = ( 0.56369 , 0.477542 , 0.517361 , 0.0454918 , 0.828469 ) 
+k = 2, m_varcoeff = ( 0.468689 , 0.672139 , 0.573202 , 1.1649e-15 , 1 ) 
+ ::::: 2D Varcoeff is Successfully Created ::::: 
+
+=======================================================================
+	        EquationType: MMFCardiacEP
+	        Session Name: TMCRatriumISOCmap
+	        Spatial Dim.: 3
+	  Max SEM Exp. Order: 4
+	      Expansion Dim.: 2
+	     Projection Type: Discontinuous Galerkin
+	 Advect. advancement: explicit
+	Diffuse. advancement: implicit
+	           Time Step: 0.002
+	        No. of Steps: 50000
+	 Checkpoints (steps): 5000
+	    Integration Type: IMEX
+	             Surface: Atrium
+	           DerivType: Euclidean
+	              MMFdir: LOCAL
+	    SolverSchemeType: MMFZero
+	       TimeMapScheme: 0
+	        TimeMapStart: 0
+	          TimeMapEnd: 10000
+	         TimeMapIapp: 0
+	      m_TimeMapDelay: 0
+	      AniRegionStart: 0
+	        AniRegionEnd: 1000000
+	  AnisotropyStrength: 4
+	               urest: -81
+	          Cell model: CourtemancheRamirezNattel98
+	     Cell model var.: Original
+=======================================================================
+Initial Conditions:
+  - Field u: -81.0
+renaming "TMCRatriumISOCmap_initialcondition.chk" -> "TMCRatriumISOCmap_initialcondition.bak0.chk"
+Writing: "TMCRatriumISOCmap_initialcondition.chk"
+ (0.139411s, XML)
+ValidTimeMap = 0 / 787760 ( 0 % ) is De-Acitvated
+Initial: u = 81, max u = -81
+rSteps: 5000     Time: 10          
+ CPU Time: 386.496 min.
+u_max = -63.0796 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.9151 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_1.chk"
+ (0.498373s, XML)
+Time Map: Max = 10, Min = 0
+Writing: "TMCRatriumISOCmap_1.chk"
+ (0.208717s, XML)
+Steps: 10000    Time: 20          
+ CPU Time: 340.771 min.
+u_max = -62.6232 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.7063 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_2.chk"
+ (0.504998s, XML)
+Time Map: Max = 19.8374, Min = 0
+Writing: "TMCRatriumISOCmap_2.chk"
+ (0.205152s, XML)
+Steps: 15000    Time: 30          
+ CPU Time: 329.321 min.
+u_max = -62.4473 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.6292 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_3.chk"
+ (0.490744s, XML)
+Time Map: Max = 29.9309, Min = 0
+Writing: "TMCRatriumISOCmap_3.chk"
+ (0.202113s, XML)
+Steps: 20000    Time: 40          
+ CPU Time: 326.295 min.
+u_max = -62.3733 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.594 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_4.chk"
+ (0.495943s, XML)
+Time Map: Max = 38.1108, Min = 0
+Writing: "TMCRatriumISOCmap_4.chk"
+ (0.199783s, XML)
+Steps: 25000    Time: 50          
+ CPU Time: 324.202 min.
+u_max = -62.3405 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.5683 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_5.chk"
+ (0.495707s, XML)
+Time Map: Max = 49.9855, Min = 0
+Writing: "TMCRatriumISOCmap_5.chk"
+ (0.196918s, XML)
+Steps: 30000    Time: 60          
+ CPU Time: 323.131 min.
+u_max = -62.3254 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.5661 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_6.chk"
+ (0.488816s, XML)
+Time Map: Max = 57.188, Min = 0
+Writing: "TMCRatriumISOCmap_6.chk"
+ (0.200026s, XML)
+Steps: 35000    Time: 70          
+ CPU Time: 326.324 min.
+u_max = -62.3181 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.5617 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_7.chk"
+ (0.489642s, XML)
+Time Map: Max = 68.914, Min = 0
+Writing: "TMCRatriumISOCmap_7.chk"
+ (0.196357s, XML)
+Steps: 40000    Time: 80          
+ CPU Time: 323.431 min.
+u_max = -62.3145 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.5589 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_8.chk"
+ (0.491321s, XML)
+Time Map: Max = 74.3294, Min = 0
+Writing: "TMCRatriumISOCmap_8.chk"
+ (0.197196s, XML)
+Steps: 45000    Time: 90          
+ CPU Time: 324.208 min.
+u_max = -62.3126 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.5563 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_9.chk"
+ (0.496528s, XML)
+Time Map: Max = 85.512, Min = 0
+Writing: "TMCRatriumISOCmap_9.chk"
+ (0.197326s, XML)
+Steps: 50000    Time: 100         
+ CPU Time: 323.122 min.
+u_max = -62.3116 at x = -22.6618, y = -15.1752, z = 2.67099
+u_min = -91.5568 at x = -60.2808, y = -14.0456, z = 11.3076
+Writing: "TMCRatriumISOCmap_timemap_10.chk"
+ (0.489438s, XML)
+Time Map: Max = 98.3, Min = 0
+Writing: "TMCRatriumISOCmap_10.chk"
+ (0.195612s, XML)
+Time-integration  : 199642s
+Writing: "TMCRatriumISOCmap.fld"
+ (0.198411s, XML)
+-------------------------------------------
+Total Computation Time = 308842s
+-------------------------------------------
+L 2 error (variable u) : 10631.6
+L inf error (variable u) : 91.5565
