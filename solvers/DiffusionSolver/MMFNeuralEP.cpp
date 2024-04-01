@@ -426,23 +426,48 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
-            
+
             NekDouble axoncrossA = m_pi*m_radiusaxon*m_radiusaxon;
+            // NekDouble axoncrossA = 1.0;
 
             m_phieAniStrength[0] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri);
             m_phieAniStrength[1] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri/axoncrossA);
-            for (int i = 0; i < nq; ++i)
+
+            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction, axoncrossA = " << axoncrossA << " ===============" << std::endl;
+
+            SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
+
+            NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
+            NekDouble mftmp;
+            for (int i = 0; i<nq; ++i)
             {
-                if(m_zoneindex[0][i]>=0)
+                for (int j = 0; j < m_expdim; ++j)
                 {
-                    m_phieAniStrength[0][i] += 1.0;
-                    m_phieAniStrength[1][i] += 1.0;
+                    // AniStrength in the intracellular space
+                    // a e^1_L + b e^2_L = d^1_Y
+                    // a = e^1_L \cdot d^1_Y
+                    mftmp = 0.0;
+                    for (int k=0; k<m_mfdim; ++k)
+                    {
+                        ekx = m_movingframes[k][i];
+                        eky = m_movingframes[k][nq+i];
+                        ekz = m_movingframes[k][2*nq+i];
+
+                        eLjx = m_phiemovingframes[j][i];
+                        eLjy = m_phiemovingframes[j][nq+i];
+                        eLjz = m_phiemovingframes[j][2*nq+i];
+
+                        mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
+
+                        m_phieAniStrength[j][i] += mftmp * mftmp ;
+
+                    }
                 }
             }
 
             // Multiplication factor for fiber bundle of radius R = (a^2/(\rho g^2 R^2))
             NekDouble PhieMultFactor = m_radiusaxon*m_radiusaxon/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
-            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction, Fiber bundle mag factor = " << PhieMultFactor << std::endl;
+            std::cout << "Fiber bundle mag factor = " << PhieMultFactor << std::endl;
 
             Vmath::Smul(nq, PhieMultFactor, &m_phieAniStrength[1][0], 1, &m_phieAniStrength[1][0], 1);
 
@@ -457,8 +482,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     }
                 }
             }
-            
-            CheckMovingFrames(m_phiemovingframes);
+
+            std::cout << "================================================ " << std::endl;
 
             std::cout << "Max phieAnistrength_1  = "
                         << Vmath::Vmax(nq, m_phieAniStrength[0], 1)
@@ -469,102 +494,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                         << ", phieAnistrength 2 = "
                         << Vmath::Vmin(nq, m_phieAniStrength[1], 1) << std::endl;
 
+            std::cout << "================================================ " << std::endl;
+
             break;
-
-
-            // // Set up for m_phiemovingframe Poisson solver
-            // std::string phieMMFdirStr;
-            // m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
-            // SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
-
-            // Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
-
-            // // NekDouble axoncrossA = m_pi*m_radiusaxon*m_radiusaxon;
-
-            // NekDouble axoncrossA = 1.0;
-
-            // // m_phieAniStrength[0] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri);
-            // // m_phieAniStrength[1] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri/axoncrossA);
-            // m_phieAniStrength[0] = Array<OneD, NekDouble>(nq, 1.0);
-            // m_phieAniStrength[1] = Array<OneD, NekDouble>(nq, 1.0);
-
-            // std::cout << "HERE" << std::endl;
-
-            // int index;
-            // for (int i = 0; i < m_InnerboxEnd; ++i)
-            // {
-            //     for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-            //         {
-            //             index = m_fields[0]->GetPhys_Offset(i) + j;
-            //             m_phieAniStrength[0][index] += 1.0;
-            //             m_phieAniStrength[1][index] += 1.0;
-            //         }
-            // }
-
-            // std::cout << "phiAniStr = " << RootMeanSquare(m_phieAniStrength[0]) << ", " << RootMeanSquare(m_phieAniStrength[1]) << std::endl;
-
-            // // Multiplication factor for fiber bundle of radius R = (a^2/(\rho g^2 R^2))
-            // NekDouble PhieMultFactor = m_radiusaxon*m_radiusaxon/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
-
-            // // Vmath::Smul(nq, PhieMultFactor, &m_phieAniStrength[1][0], 1, &m_phieAniStrength[1][0], 1);
-
-            // std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction, Fiber bundle mag factor = " << PhieMultFactor << std::endl;
-
-            // SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
-
-            // std::cout << "phieMF = ( " << RootMeanSquare(m_phiemovingframes[0]) << " , " << RootMeanSquare(m_phiemovingframes[1]) << std::endl;
-
-            // // NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz, mftmp;
-            // // for (int i = 0; i<nq; ++i)
-            // // {
-            // //     for (int j = 0; j < m_expdim; ++j)
-            // //     {
-            // //         m_phieAniStrength[j][i] = 1.0 / m_ratio_re_ri;
-
-            // //         // AniStrength in the intracellular space
-            // //         // a e^1_L + b e^2_L = d^1_Y
-            // //         // a = e^1_L \cdot d^1_Y
-            // //         mftmp = 0.0;
-            // //         for (int k=0; k<m_mfdim; ++k)
-            // //         {
-            // //             ekx = m_movingframes[k][i];
-            // //             eky = m_movingframes[k][nq+i];
-            // //             ekz = m_movingframes[k][2*nq+i];
-
-            // //             eLjx = m_phiemovingframes[j][i];
-            // //             eLjy = m_phiemovingframes[j][nq+i];
-            // //             eLjz = m_phiemovingframes[j][2*nq+i];
-
-            // //             mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
-
-            // //             m_phieAniStrength[j][i] += mftmp * mftmp ;
-
-            // //         }
-            // //     }
-            // // }
-
-            // // m_phieMF = \sigma_i + \sigma_e
-            // // for (int i = 0; i < nq; ++i)
-            // // {
-            // //     for (int j = 0; j < m_expdim; ++j)
-            // //     {
-            // //         for (int k = 0; k < m_spacedim; ++k)
-            // //         {
-            // //                 m_phiemovingframes[j][k * nq + i] = sqrt(m_phieAniStrength[j][i]) * m_phiemovingframes[j][k * nq + i];
-            // //         }
-            // //     }
-            // // }
-
-            // std::cout << "Max phieAnistrength_1  = "
-            //             << Vmath::Vmax(nq, m_phieAniStrength[0], 1)
-            //             << ", phieAnistrength_2 = "
-            //             << Vmath::Vmax(nq, m_phieAniStrength[1], 1)
-            //             << ", Min phieAnistrength 1 = "
-            //             << Vmath::Vmin(nq, m_phieAniStrength[0], 1)
-            //             << ", phieAnistrength 2 = "
-            //             << Vmath::Vmin(nq, m_phieAniStrength[1], 1) << std::endl;
-
-            // break;
         }
 
         default:
@@ -572,7 +504,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     // Check moving frames
-    // CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
+    CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
 
     if (m_explicitDiffusion)
     {
@@ -658,7 +590,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
         }
 
-        NekDouble coeffe;
+        // NekDouble coeffe;
         for (int i = m_InnerboxEnd; i < m_fields[0]->GetExpSize(); ++i)
         {
             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
