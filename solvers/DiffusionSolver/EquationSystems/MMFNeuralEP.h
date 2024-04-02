@@ -233,7 +233,8 @@ protected:
 
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
 
-    NekDouble m_extFieldStr, m_fiberlen, m_nodelen, m_myelinlen;
+    NekDouble m_fiberwidth, m_fibergap, m_fiberheightdiff;
+    NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
     NekDouble m_urest;
@@ -459,8 +460,7 @@ protected:
         const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> Computephie(
-        const Array<OneD, const NekDouble> &phim,
-        const NekDouble extFieldStr = 1.0);
+        const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,
@@ -510,34 +510,31 @@ protected:
 
     Array<OneD, NekDouble> PlanePhiWave();
 
-    // Array<OneD, int> DeriveNodeZone(const int Rnodelength, const int
-    // Rnodegap);
-    // Array<OneD, int> IndexNodeZone1D(
-    //     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-    //     const int ElemMyelenEnd);
-
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
 
     Array<OneD, int> IndexNodeZone2D(
-        const NekDouble fiberlen, 
+        const FiberType fiber);
+
+    Array<OneD, int> SingleLinearIndex(
+        const NekDouble fiberwidth, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
         const int Nnode);
-        
-    // Array<OneD, int> IndexNodeZone2D(
-    //     const MultiRegions::ExpListSharedPtr &field);
 
-    // Array<OneD, int> IndexNodeZone2DNodefirst(
-    //     const MultiRegions::ExpListSharedPtr &field, const int ElemNodeEnd,
-    //     const int ElemMyelenEnd);
+    Array<OneD, int> DoubleLinearIndex(
+        const NekDouble fiberwidth, 
+        const NekDouble fibergap, 
+        const NekDouble fiberheightdiff, 
+        const NekDouble nodelen, 
+        const NekDouble myelinlen,
+        const int Nnode);
 
-    // Array<OneD, int> IndexNodeZone2DSequential(
-    //     const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
-    //     const int NumelemNode, const int NumelemMyel);
-        
-    // Array<OneD, int> ImportIndexNodeZone2D(const std::string &zoneindexfile);
+    void Getcellavg(
+        Array<OneD, NekDouble> &xcell, 
+        Array<OneD, NekDouble> &ycell, 
+        Array<OneD, NekDouble> &zcell);
 
     void SetUpBiAnisotropy(
             const Array<OneD, const int> &zoneindex,
