@@ -1477,6 +1477,8 @@ void MMFNeuralEP::DoSolveMMFZero()
             {
                 // phi_e is defined at the node and extracellular space
                 Array<OneD, NekDouble> phi_e = Computephie(fields[0]);
+
+                Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
                 
                 NekDouble phieMax = Vmath::Vmax(nq, phi_e, 1);
                 NekDouble phieMin = Vmath::Vmin(nq, phi_e, 1);
