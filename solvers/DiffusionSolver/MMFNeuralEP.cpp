@@ -1425,9 +1425,19 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, NekDouble> velmag(nq, 0.0);
     Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
+    Array<OneD, NekDouble> TimeMap(nq, 0.0);
+    Array<OneD, NekDouble> dudtval(nq);
+    Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
+
     Array<OneD, int> phimhistory(nq, 0.0);
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
+        // Save fields into fieldsold
+        for (i = 0; i < 1; ++i)
+        {
+            Vmath::Vcopy(nq, &fields[i][0], 1, &fields_old[i][0], 1);
+        }
+
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
@@ -1436,6 +1446,17 @@ void MMFNeuralEP::DoSolveMMFZero()
         elapsed = timer.TimePerTest(1);
         intTime += elapsed;
         cpuTime += elapsed;
+
+       // Compute TimeMap
+       // dudtsign: wavefront = -1.0, waveback = 1.0
+        Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudtval, 1);
+        Vmath::Smul(nq, 1.0 / m_timestep, dudtval, 1, dudtval, 1);
+
+        if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
+        {
+            ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
+                           dudtvalHistory, TimeMap);
+        }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
@@ -1490,8 +1511,6 @@ void MMFNeuralEP::DoSolveMMFZero()
                 fulltext.append(", phi_e, min: " + std::to_string(phieMin) + " at y = " + std::to_string(x1[phieMinid]) );
 
                 fulltext.append("\n");
-
-               //  PlotFields(phi_m, phi_e, nchk);
             }
 
             // if(m_NeuralEPType==eNeuralEP2Dbi)
@@ -1501,6 +1520,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
+            PlotTimeMap(m_ValidTimeMap, m_AniStrength, TimeMap, nchk);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
@@ -2446,6 +2466,8 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                 Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
+
+            m_ValidTimeMap = Array<OneD, int>(nq, 0);
         }
 
         default:

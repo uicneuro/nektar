@@ -1551,6 +1551,20 @@ protected:
         const NekDouble &v_amp, const NekDouble &m_pis, const NekDouble &m_px,
         const NekDouble &m_pr);
 
+    SOLVER_UTILS_EXPORT void ComputeTimeMap(const NekDouble time,
+                               const NekDouble urest,
+                               const Array<OneD, const NekDouble> &field,
+                               const Array<OneD, const NekDouble> &dudt,
+                               const Array<OneD, const int> &ValidTimeMap,
+                               Array<OneD, NekDouble> &dudtHistory,
+                               Array<OneD, NekDouble> &TimeMap);
+
+    SOLVER_UTILS_EXPORT void PlotTimeMap(
+                            const Array<OneD, const int> &ValidTimeMap,
+                            const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
+                            const Array<OneD, const NekDouble> &TimeMap,
+                            const int nstep);
+
     SOLVER_UTILS_EXPORT void Checkpoint_Output_Error(
         const int n, const Array<OneD, const NekDouble> &field,
         const Array<OneD, const NekDouble> &exactsoln);

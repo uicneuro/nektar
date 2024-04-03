@@ -251,17 +251,6 @@ protected:
     Array<OneD, int> ComputeTimeMapInitialZone(
     const NekDouble urest,
     const Array<OneD, const NekDouble> &inarray);
-    
-    void ComputeTimeMap(const NekDouble time,
-                               const NekDouble urest,
-                               const Array<OneD, const NekDouble> &field,
-                               const Array<OneD, const NekDouble> &dudt,
-                               const Array<OneD, const int> &ValidTimeMap,
-                               Array<OneD, NekDouble> &dudtHistory,
-                               Array<OneD, NekDouble> &dudtMax,
-                               Array<OneD, NekDouble> &IappMap,
-                               Array<OneD, NekDouble> &TimeMap,
-                               const int TimeMapScheme = 0);
 
     void ComputeTimeMapError(
         const int TMnstep, 
@@ -311,12 +300,6 @@ protected:
                                 const Array<OneD, const NekDouble> &VelVector,
                                 const Array<OneD, const NekDouble> &LambDiv,
                                 const Array<OneD, const NekDouble> &IonE);
-
-    void PlotTimeMap(
-    const Array<OneD, const int> &ValidTimeMap,
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
-    const Array<OneD, const NekDouble> &TimeMap,
-    const int nstep);
 
     void PlotDeformedTimeMap(
         const std::string &outname,

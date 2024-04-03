@@ -1373,7 +1373,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
             ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
-                           dudtvalHistory, dudtMax, IappMap, TimeMap, m_TimeMapScheme);
+                           dudtvalHistory, TimeMap);
         }
 
         // Aligning moving frames along the velocity vector
@@ -1632,7 +1632,7 @@ void MMFCardiacEP::DoSolveMMF()
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
             ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
-                        dudtvalHistory, dudtMax, IappMap, TimeMap, m_TimeMapScheme);
+                           dudtvalHistory, TimeMap);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2342,128 +2342,6 @@ void MMFCardiacEP::PlotTimeEnergyMap(
     Array<OneD, NekDouble> TotalE(nq);
     Vmath::Vadd(nq, KineticE, 1, IonE, 1, TotalE, 1);
     m_fields[0]->FwdTrans(TotalE, fieldcoeffs[7]);
-
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
-
-
-void MMFCardiacEP::ComputeTimeMap(const NekDouble time,
-                               const NekDouble urest,
-                               const Array<OneD, const NekDouble> &field,
-                               const Array<OneD, const NekDouble> &dudt,
-                               const Array<OneD, const int> &ValidTimeMap,
-                               Array<OneD, NekDouble> &dudtHistory,
-                               Array<OneD, NekDouble> &dudtMax,
-                               Array<OneD, NekDouble> &IappMap,
-                               Array<OneD, NekDouble> &TimeMap,
-                               const int TimeMapScheme)
-{
-    boost::ignore_unused(dudtMax, TimeMapScheme);
-
-    int nq = GetTotPoints();
-
-    NekDouble fnewsum;
-    // NekDouble uTol = 0.01;
-    NekDouble dudtTol = 0.01;
-
-    // Compute WeakDGLaplacian
-    Array<OneD, NekDouble> Lapu = ComputeCovariantDiffusion(m_movingframes, field);
-
-    NekDouble udiff;
-    for (int i = 0; i < nq; ++i)
-    {
-        udiff = field[i] - urest;
-        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((udiff > m_uTol) && (dudt[i] > dudtTol))
-        {
-            // Gradient as the main weight
-            fnewsum = dudt[i] + dudtHistory[i];
-
-            if(fabs(fnewsum)>dudtTol)
-            {
-                TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
-                IappMap[i] = (dudt[i] * Lapu[i] + dudtHistory[i] * IappMap[i]) / fnewsum;
-            }
-
-            dudtHistory[i] += dudt[i];
-        }
-    }
-
-    NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
-    for (int i = 0; i < nq; ++i)
-    {
-        if (ValidTimeMap[i] == 0)
-        {
-            TimeMap[i] = TimeMapMin;
-        }
-    }
-}
-
-void MMFCardiacEP::PlotTimeMap(
-    const Array<OneD, const int> &ValidTimeMap,
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
-    const Array<OneD, const NekDouble> &TimeMap,
-    const int nstep)
-{
-    boost::ignore_unused(ValidTimeMap);
-
-    int nvar    = 7;
-    int nq      = m_fields[0]->GetTotPoints();
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname1 = m_sessionName + "_timemap_" +
-                           boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "TimeMap";
-    variables[1] = "ValidTimeMap";
-    variables[2] = "AniStrength[0]";
-    variables[3] = "AniStrength[1]";
-    variables[4] = "TMgrad_x";
-    variables[5] = "TMgrad_y";
-    variables[6] = "TMgrad_z";
-
-    // index:0 -> u
-    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
-                << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
-
-    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
-
-    Array<OneD, NekDouble> ValidTM(nq, 1.0);
-    for (int i=0; i<nq; ++i)
-    {
-        ValidTM[i] = 1.0 * ValidTimeMap[i];
-    }
-    m_fields[0]->FwdTrans(ValidTM, fieldcoeffs[1]);
-
-    Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
-    for (int k=0; k<m_spacedim; ++k)
-    {
-        TimeMapMF[k] = Array<OneD, NekDouble>(nq, 0.0);
-    }
-
-    // Compute the gradient of the time map
-    m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[2]);
-    m_fields[0]->FwdTrans(AniStrength[1], fieldcoeffs[3]);
-
-    // Compute the gradient of the time map
-    // Array<OneD, Array<OneD, NekDouble>> Velocity(m_spacedim);
-    // ComputeVelocityTimeMap(ValidTM, TimeMap, Velocity);
-    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
-    TmapGrad = ComputeCovGrad(TimeMap, m_movingframes);
-
-    Array<OneD, NekDouble> tmp(nq);
-    for (int k=0; k<m_spacedim; ++k)
-    {
-        Vmath::Vcopy(nq, &TmapGrad[k * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+4]);
-    }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
