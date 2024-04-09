@@ -2414,13 +2414,13 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
     Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-    // Vmath::Smul(nq, -1.0 * extFieldStr, phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-    m_fields[1]->SetPhysState(true);
 
     outarray = m_fields[1]->GetPhys();
+
+    Vmath::Sadd(nq, -1.0 * AvgInt(outarray), outarray, 1, m_fields[1]->UpdatePhys(), 1);
+    m_fields[1]->SetPhysState(true);
 
     return outarray;
 }
