@@ -429,42 +429,35 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
 
             NekDouble axoncrossA = m_pi*m_radiusaxon*m_radiusaxon;
-            // NekDouble axoncrossA = 1.0;
 
-            m_phieAniStrength[0] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri);
-            m_phieAniStrength[1] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri/axoncrossA);
+            // m_phieAniStrength[0] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri);
+            // m_phieAniStrength[1] = Array<OneD, NekDouble>(nq, 1.0/m_ratio_re_ri/axoncrossA);
+            for (int i = 0; i<nq; ++i)
+            {
+                // Node zone
+                if(m_zoneindex[0][i]>=0)
+                {
+                    m_phieAniStrength[0][i] = 1.0 + 1.0/m_ratio_re_ri;
+                    m_phieAniStrength[1][i] = 1.0;
+                }
+
+                // Myelin zone
+                else if(m_zoneindex[0][i]==-1)
+                {
+                    m_phieAniStrength[0][i] = m_AnisotropyStrength;
+                    m_phieAniStrength[1][i] = 0.0;
+                }
+
+                else if(m_zoneindex[0][i]==-2)
+                {
+                    m_phieAniStrength[0][i] = 0.0;
+                    m_phieAniStrength[1][i] = 1.0/(m_ratio_re_ri*axoncrossA);
+                }
+            }
 
             std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction, axoncrossA = " << axoncrossA << " ===============" << std::endl;
 
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
-
-            NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
-            NekDouble mftmp;
-            for (int i = 0; i<nq; ++i)
-            {
-                for (int j = 0; j < m_expdim; ++j)
-                {
-                    // AniStrength in the intracellular space
-                    // a e^1_L + b e^2_L = d^1_Y
-                    // a = e^1_L \cdot d^1_Y
-                    mftmp = 0.0;
-                    for (int k=0; k<m_mfdim; ++k)
-                    {
-                        ekx = m_movingframes[k][i];
-                        eky = m_movingframes[k][nq+i];
-                        ekz = m_movingframes[k][2*nq+i];
-
-                        eLjx = m_phiemovingframes[j][i];
-                        eLjy = m_phiemovingframes[j][nq+i];
-                        eLjz = m_phiemovingframes[j][2*nq+i];
-
-                        mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
-
-                        m_phieAniStrength[j][i] += mftmp * mftmp ;
-
-                    }
-                }
-            }
 
             // Multiplication factor for fiber bundle of radius R = (a^2/(\rho g^2 R^2))
             NekDouble PhieMultFactor = m_radiusaxon*m_radiusaxon/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
