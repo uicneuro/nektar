@@ -13576,7 +13576,7 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
 
     NekDouble fnewsum;
     // NekDouble uTol = 0.01;
-    NekDouble dudtTol = 0.01;
+    NekDouble dudtTol = 0.1;
 
     NekDouble udiff;
     for (int i = 0; i < nq; ++i)
