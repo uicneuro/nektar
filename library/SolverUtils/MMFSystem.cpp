@@ -13597,12 +13597,12 @@ void MMFSystem::ComputeTimeMap(const NekDouble time,
         }
     }
 
-    NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
+    // NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
     for (int i = 0; i < nq; ++i)
     {
         if (ValidTimeMap[i] == 0)
         {
-            TimeMap[i] = TimeMapMin;
+            TimeMap[i] = 0.0;
         }
     }
 }

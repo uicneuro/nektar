@@ -327,6 +327,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
 
+            // Let the excite zone to be ValidTimeMap = 0
+            for (int i = 0; i < nq; ++i) 
+            {
+                if(m_excitezone[i]>0)
+                {
+                    m_ValidTimeMap[i] = 0;
+                }
+            }
+
             if(m_MediumType==eAllNode)
             {
                 m_zoneindex[0]  = Array<OneD, int>(nq, 1);
@@ -521,12 +530,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 Vmath::Vadd(nq, sigma_i[j], 1, sigma_e[j], 1, m_phieAniStrength[j], 1);
             }
-
-        //    // for (int j = 0; j < m_expdim; ++j)
-        //     {
-        //        Vmath::Smul(nq, PhieMultFactor, &m_phieAniStrength[1][0], 1, &m_phieAniStrength[1][0], 1);
-        //     }
-
+            
             // m_phieMF = \sigma_i + \sigma_e
             for (int i = 0; i < nq; ++i)
             {
@@ -2522,7 +2526,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                 m_fields[0]->SetPhys(tmp[0]);
             }
 
-            m_ValidTimeMap = Array<OneD, int>(nq, 0);
+            m_ValidTimeMap = Array<OneD, int>(nq, 1);
         }
 
         default:
