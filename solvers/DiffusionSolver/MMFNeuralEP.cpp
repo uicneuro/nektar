@@ -443,8 +443,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Array<OneD, Array<OneD, NekDouble>> sigma_e(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
             {
-                sigma_i[j] = Array<OneD, NekDouble>(nq);
-                sigma_e[j] = Array<OneD, NekDouble>(nq);
+                sigma_i[j] = Array<OneD, NekDouble>(nq,0.0);
+                sigma_e[j] = Array<OneD, NekDouble>(nq,0.0);
             }
 
             // Compute sigma_i
@@ -458,23 +458,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     // AniStrength in the intracellular space: \Sigma_i
                     // a e^1_L + b e^2_L = d^1_Y
                     // a = e^1_L \cdot d^1_Y
-                    mfsum=0;
-                    for (int k=0; k<m_mfdim; ++k)
+                    // mfsum=0;
+                    // for (int k=0; k<m_mfdim; ++k)
+                    // {
+                    //     ekx = m_movingframes[k][i];
+                    //     eky = m_movingframes[k][nq+i];
+                    //     ekz = m_movingframes[k][2*nq+i];
+
+                    //     eLjx = m_phiemovingframes[j][i];
+                    //     eLjy = m_phiemovingframes[j][nq+i];
+                    //     eLjz = m_phiemovingframes[j][2*nq+i];
+
+                    //     mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
+
+                    //     mfsum = mfsum + mftmp * mftmp ;
+                    // }
+                    if(m_zoneindex[0][i]>=-1)
                     {
-                        ekx = m_movingframes[k][i];
-                        eky = m_movingframes[k][nq+i];
-                        ekz = m_movingframes[k][2*nq+i];
-
-                        eLjx = m_phiemovingframes[j][i];
-                        eLjy = m_phiemovingframes[j][nq+i];
-                        eLjz = m_phiemovingframes[j][2*nq+i];
-
-                        mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
-
-                        mfsum = mfsum + mftmp * mftmp ;
+                        sigma_i[j][i] = 1.0;
                     }
-
-                    sigma_i[j][i] = mfsum;
                 }
             }
 
@@ -564,7 +566,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     // Check moving frames
-    // CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
+    CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
 
     if (m_explicitDiffusion)
     {
