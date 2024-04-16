@@ -434,7 +434,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
 
-            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr << " direction ===============" << std::endl;
+            std::cout << "Phie Moving frames are generated with " << phieMMFdirStr 
+            << " direction ===============" << std::endl;
 
             SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
             CheckMovingFrames(m_phiemovingframes);
@@ -443,8 +444,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Array<OneD, Array<OneD, NekDouble>> sigma_e(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
             {
-                sigma_i[j] = Array<OneD, NekDouble>(nq,0.0);
-                sigma_e[j] = Array<OneD, NekDouble>(nq,0.0);
+                sigma_i[j] = Array<OneD, NekDouble>(nq, 0.0);
+                sigma_e[j] = Array<OneD, NekDouble>(nq, 0.0);
             }
 
             // Compute sigma_i
@@ -496,25 +497,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             for (int i = 0; i<nq; ++i)
             {
-                for (int j = 0; j < m_expdim; ++j)
-                {
-                        // Node zone
-                        if(m_zoneindex[0][i]>=0)
-                        {
-                            sigma_e[j][i] = 1.0/m_ratio_re_ri;
-                        }
+                    // Node zone
+                    if(m_zoneindex[0][i]>=0)
+                    {
+                        sigma_e[0][i] = 1.0/m_ratio_re_ri;
+                        sigma_e[1][i] = 1.0/m_ratio_re_ri;
+                    }
 
-                        // Myelin zone
-                        else if(m_zoneindex[0][i]==-1)
-                        {
-                            sigma_e[j][i] = m_AnisotropyStrength * 1.0/m_ratio_re_ri;
-                        }
+                    // Myelin zone
+                    else if(m_zoneindex[0][i]==-1)
+                    {
+                        sigma_e[0][i] = m_AnisotropyStrength * 1.0/m_ratio_re_ri;
+                        sigma_e[1][i] = m_AnisotropyStrength * 1.0/m_ratio_re_ri;
+                    }
 
-                        else if(m_zoneindex[0][i]==-2)
-                        {
-                            sigma_e[j][i] = PhieMultFactor * 1.0/(m_ratio_re_ri*axoncrossA);
-                        }
-                }
+                    else if(m_zoneindex[0][i]==-2)
+                    {
+                        sigma_e[0][i] = PhieMultFactor * 1.0/(m_ratio_re_ri*axoncrossA);
+                        sigma_e[1][i] = 1.0;
+                    }
             }
 
             std::cout << "Max sigma_e_1  = "
