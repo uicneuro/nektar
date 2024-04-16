@@ -1117,23 +1117,6 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &Relacc,
         Array<OneD, NekDouble> &NoBoundaryZone, const int nstep);
 
-    // SOLVER_UTILS_EXPORT void PlotRelacc2D(
-    //     const Array<OneD, const int> &ActivatedHistory,
-    //     const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>>
-    //     &MFConnection, const Array<OneD, const Array<OneD, NekDouble>>
-    //     MFCurvature, const Array<OneD, const Array<OneD, NekDouble>> &Relacc,
-    //     const Array<OneD, const Array<OneD, NekDouble>> &RelaccOmega,
-    //     const int nstep);
-
-    // SOLVER_UTILS_EXPORT void TimeMapforInitZone(
-    //     const Array<OneD, const int> &ValidTimeMap,
-    //     const Array<OneD, const NekDouble> &dudtHistory,
-    //     Array<OneD, NekDouble> &TimeMap);
-
-    // SOLVER_UTILS_EXPORT Array<OneD, int> ComputeTimeMapInitialZone(
-    //     const NekDouble urest,
-    //     const Array<OneD, const NekDouble> &inarray);
-
     SOLVER_UTILS_EXPORT Array<OneD, NekDouble> ComputeLaplacianDiff(
         const Array<OneD, const NekDouble> &Laplacian,
         const Array<OneD, const NekDouble> &LaplacianNew);

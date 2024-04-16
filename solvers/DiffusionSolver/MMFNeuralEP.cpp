@@ -1489,6 +1489,7 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
 
     Array<OneD, int> phimhistory(nq, 0.0);
+    NekDouble Maxphim;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save fields into fieldsold
@@ -1508,8 +1509,9 @@ void MMFNeuralEP::DoSolveMMFZero()
 
        // Compute TimeMap
        // dudtsign: wavefront = -1.0, waveback = 1.0
+        Maxphim = Vmath::Vamax(nq, fields[0], 1);
         Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudtval, 1);
-        Vmath::Smul(nq, 1.0 / m_timestep, dudtval, 1, dudtval, 1);
+        Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudtval, 1, dudtval, 1);
 
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
@@ -2482,11 +2484,11 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    m_fields[1]->SetPhysState(true);
 
     outarray = m_fields[1]->GetPhys();
 
-    Vmath::Sadd(nq, -1.0 * AvgInt(outarray), outarray, 1, m_fields[1]->UpdatePhys(), 1);
-    m_fields[1]->SetPhysState(true);
+    // Vmath::Sadd(nq, -1.0 * AvgInt(outarray), outarray, 1, m_fields[1]->UpdatePhys(), 1);
 
     return outarray;
 }
