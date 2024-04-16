@@ -458,25 +458,23 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     // AniStrength in the intracellular space: \Sigma_i
                     // a e^1_L + b e^2_L = d^1_Y
                     // a = e^1_L \cdot d^1_Y
-                    // mfsum=0;
-                    // for (int k=0; k<m_mfdim; ++k)
-                    // {
-                    //     ekx = m_movingframes[k][i];
-                    //     eky = m_movingframes[k][nq+i];
-                    //     ekz = m_movingframes[k][2*nq+i];
-
-                    //     eLjx = m_phiemovingframes[j][i];
-                    //     eLjy = m_phiemovingframes[j][nq+i];
-                    //     eLjz = m_phiemovingframes[j][2*nq+i];
-
-                    //     mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
-
-                    //     mfsum = mfsum + mftmp * mftmp ;
-                    // }
-                    if(m_zoneindex[0][i]>=-1)
+                    mfsum=0;
+                    for (int k=0; k<m_mfdim; ++k)
                     {
-                        sigma_i[j][i] = 1.0;
+                        ekx = m_movingframes[k][i];
+                        eky = m_movingframes[k][nq+i];
+                        ekz = m_movingframes[k][2*nq+i];
+
+                        eLjx = m_phiemovingframes[j][i];
+                        eLjy = m_phiemovingframes[j][nq+i];
+                        eLjz = m_phiemovingframes[j][2*nq+i];
+
+                        mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
+
+                        mfsum = mfsum + mftmp * mftmp ;
                     }
+
+                    sigma_i[j][i] = mfsum;
                 }
             }
 
@@ -509,7 +507,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                         // Myelin zone
                         else if(m_zoneindex[0][i]==-1)
                         {
-                            sigma_e[j][i] = 1.0/m_ratio_re_ri;
+                            sigma_e[j][i] = m_AnisotropyStrength * 1.0/m_ratio_re_ri;
                         }
 
                         else if(m_zoneindex[0][i]==-2)
