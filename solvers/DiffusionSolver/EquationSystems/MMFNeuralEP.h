@@ -53,6 +53,7 @@ namespace Nektar
 enum NeuralEPType
 {
     eNeuralHelmTest,
+    eTestRanvierNode,
     eNeuralEPPT,
     eNeuralEP1D,
     eNeuralEP2Dmono,
@@ -62,6 +63,7 @@ enum NeuralEPType
 
 const char *const NeuralEPTypeMap[] = {
     "NeuralHelmTest",
+    "TestRanvierNode",
     "NeuralEPPT",
     "NeuralEP1D",
     "NeuralEP2Dmono",
@@ -245,8 +247,6 @@ protected:
 
     TimeMapType m_TimeMapScheme;
     
-    void savezoneindex(const Array<OneD, const int> &zoneindex);
-
     Array<OneD, NekDouble> ComputeConductivity(
                  const Array<OneD, const int> &zoneindex);
 
@@ -359,6 +359,9 @@ protected:
     void CheckOutZoneAni();
 
     Array<OneD, int> GetInternalBoundaryPoints();
+
+    void PlotHelmSolve(const Array<OneD, const NekDouble> &forcing,
+                       const Array<OneD, const NekDouble> &solution);
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
@@ -509,6 +512,8 @@ protected:
     void PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0);
 
     Array<OneD, NekDouble> PlanePhiWave();
+    
+    Array<OneD, int> TestRanvierIndex();
 
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 

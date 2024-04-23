@@ -313,6 +313,8 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     {
         TestPhysDirectionalDeriv(m_movingframes);
         TestHelmholtzSolver();
+
+        wait_on_enter();
     }
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
@@ -981,13 +983,13 @@ void MMFDiffusion::TestHelmholtzProblem(const int type,
         // Helmholtz forcing
         if(type==0)
         {
-            outfield[k] = -1.0 * (d00[k] + d11[k]) * m_frequency * m_frequency * cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
+            outfield[k] = -1.0 * (d00[k] + d11[k]) * m_frequency * m_frequency * sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
         }
 
         // Helmholtz solution
         else if(type==1)
         {
-            outfield[k] = cos(m_frequency * x[k]) * cos(m_frequency * y[k]);
+            outfield[k] = sin(m_frequency * x[k]) * cos(m_frequency * y[k]);
         }
     }
 }
@@ -1569,14 +1571,10 @@ void MMFDiffusion::TestHelmholtzSolver()
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), HelmSolve);
     std::cout << "HelmsolveMMF done ..................." << std::endl;
 
-    Array<OneD, NekDouble> ErrorXYZ(nq,0.0);
     Array<OneD, NekDouble> Error(nq,0.0);
-
-    Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmXYZSolve[0], 1, &ErrorXYZ[0], 1);
     Vmath::Vsub(nq, &ExactSoln[0][0], 1, &HelmSolve[0], 1, &Error[0], 1);
 
-    std::cout << "Error: HelmSolveXYZ = " << RootMeanSquare(ErrorXYZ) 
-    << ", HelmSolve = " << RootMeanSquare(Error) << std::endl;
+    std::cout << "HelmSolve Error = " << RootMeanSquare(Error) << std::endl;
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> D2tmp(nq);

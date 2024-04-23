@@ -59,7 +59,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneEmbed", "TestPlaneNeumann",
+    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneEmbed", "TestPlaneNeumann", "TestRanvierNode",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
