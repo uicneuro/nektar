@@ -530,7 +530,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     else if(m_zoneindex[0][i]==-2)
                     {
                         sigma_e[0][i] = PhieMultFactor * 1.0/(m_ratio_re_ri*axoncrossA);
-                        sigma_e[1][i] = 1.0;
+                        sigma_e[1][i] = PhieMultFactor * 1.0/(m_ratio_re_ri*axoncrossA);
                     }
             }
 
