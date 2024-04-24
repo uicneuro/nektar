@@ -884,6 +884,47 @@ MMFNeuralEP::~MMFNeuralEP()
 {
 }
 
+void MMFNeuralEP::DoOdeProjection(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+{
+    int i;
+    int nvariables = inarray.size();
+    SetBoundaryConditions(time);
+
+    switch (m_projectionType)
+    {
+        case MultiRegions::eDiscontinuous:
+        {
+            // Just copy over array
+            int npoints = GetNpoints();
+
+            for (i = 0; i < nvariables; ++i)
+            {
+                Vmath::Vcopy(npoints, inarray[i], 1, outarray[i], 1);
+            }
+            break;
+        }
+        case MultiRegions::eGalerkin:
+        case MultiRegions::eMixed_CG_Discontinuous:
+        {
+            Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
+
+            for (i = 0; i < nvariables; ++i)
+            {
+                m_fields[i]->FwdTrans(inarray[i], coeffs);
+                m_fields[i]->BwdTrans(coeffs, outarray[i]);
+            }
+            break;
+        }
+        default:
+        {
+            ASSERTL0(false, "Unknown projection scheme");
+            break;
+        }
+    }
+}
+
 Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     const FiberType fiber)
     {
@@ -1515,56 +1556,8 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone1D(
     }
 
     std::cout << "cntn = " << cntn << ", cntm = " << cntm << ", cnte = " << (nq-cntn-cntm) << std::endl;
-
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     std::cout << "i = " << i << ", y = " << x1[i] << ", zoneindex = " << outarray[i] << std::endl;
-    // }
-
+    
     return outarray;
-}
-
-void MMFNeuralEP::DoOdeProjection(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
-{
-    // Counter variable
-    int i;
-    int nq    = GetNpoints();
-    int nvar = inarray.size();
-
-    // Set the boundary conditions
-    SetBoundaryConditions(time);
-
-    switch (m_projectionType)
-    {
-        case MultiRegions::eDiscontinuous:
-        {
-            // Just copy over array
-            for (i = 0; i < nvar; ++i)
-            {
-                Vmath::Vcopy(nq, inarray[i], 1, outarray[i], 1);
-            }
-            break;
-        }
-        case MultiRegions::eGalerkin:
-        case MultiRegions::eMixed_CG_Discontinuous:
-        {
-            Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
-
-            for (i = 0; i < nvar; ++i)
-            {
-                m_fields[i]->FwdTrans(inarray[i], coeffs);
-                m_fields[i]->BwdTrans(coeffs, outarray[i]);
-            }
-            break;
-        }
-        default:
-        {
-            ASSERTL0(false, "Unknown projection scheme");
-            break;
-        }
-    }
 }
 
 void MMFNeuralEP::v_DoSolve()
