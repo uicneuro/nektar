@@ -2515,8 +2515,6 @@ void MMFNeuralEP::GetFluxVector(
     {
         for (unsigned int i = 0; i < nConvectiveFields; ++i)
         {
-            // Vmath::Smul(nPts, m_epsilon[j], qfield[j][i], 1, viscousTensor[j][i],
-            //             1);
             Vmath::Vcopy(nPts, qfield[j][i], 1, viscousTensor[j][i], 1);
         }
     }

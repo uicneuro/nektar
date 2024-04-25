@@ -1717,11 +1717,10 @@ void MMFCardiacEP::DoImplicitSolveCardiacEP(
 
     // Solve a system of equations with Helmholtz solver and transform
     // back into physical space.
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                           factors, m_varcoeff);
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    //                        factors, m_varcoeff);
 
-        // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-        //                    factors);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),factors);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
 

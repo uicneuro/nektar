@@ -412,9 +412,6 @@ void MMFDiffusion::DoImplicitSolve(
         m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
                                   m_varcoeff);
 
-                // m_fields[i]->HelmSolve(F[i], m_fields[i]->UpdateCoeffs(), factors,
-                //                   m_varcoeffXYZ);
-
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(), outarray[i]);
     }
 }
