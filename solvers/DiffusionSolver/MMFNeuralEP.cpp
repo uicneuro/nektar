@@ -1745,7 +1745,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
-            // PlotTimeMap(m_ValidTimeMap, m_AniStrength, TimeMap, nchk);
+            PlotTimeMap(m_ValidTimeMap, m_AniStrength, TimeMap, nchk);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
