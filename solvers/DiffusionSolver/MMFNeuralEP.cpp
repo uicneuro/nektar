@@ -459,8 +459,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Array<OneD, Array<OneD, NekDouble>> sigma_e(m_expdim);
             for (int j = 0; j < m_expdim; ++j)
             {
-                sigma_i[j] = Array<OneD, NekDouble>(nq, 0.0);
-                sigma_e[j] = Array<OneD, NekDouble>(nq, 0.0);
+                sigma_i[j] = Array<OneD, NekDouble>(nq, 1.0);
+                sigma_e[j] = Array<OneD, NekDouble>(nq, 1.0);
             }
 
             // Compute sigma_i
@@ -470,30 +470,41 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             for (int i = 0; i<nq; ++i)
             {
-                for (int j = 0; j < m_expdim; ++j)
-                {
-                    // AniStrength in the intracellular space: \Sigma_i
-                    // a e^1_L + b e^2_L = d^1_Y
-                    // a = e^1_L \cdot d^1_Y
-                    mfsum=0;
-                    for (int k=0; k<m_mfdim; ++k)
+                 for (int j = 0; j < m_expdim; ++j)
+                 {
+                    if(m_zoneindex[0][i]==-2)
                     {
-                        ekx = m_movingframes[k][i];
-                        eky = m_movingframes[k][nq+i];
-                        ekz = m_movingframes[k][2*nq+i];
-
-                        eLjx = m_phiemovingframes[j][i];
-                        eLjy = m_phiemovingframes[j][nq+i];
-                        eLjz = m_phiemovingframes[j][2*nq+i];
-
-                        mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
-
-                        mfsum = mfsum + mftmp * mftmp ;
+                        sigma_i[j][i] = 0.0;
                     }
-
-                    sigma_i[j][i] = mfsum;
-                }
+                 }
             }
+
+            // for (int i = 0; i<nq; ++i)
+            // {
+            //     for (int j = 0; j < m_expdim; ++j)
+            //     { 
+            //         // AniStrength in the intracellular space: \Sigma_i
+            //         // a e^1_L + b e^2_L = d^1_Y
+            //         // a = e^1_L \cdot d^1_Y
+            //         mfsum=0;
+            //         for (int k=0; k<m_mfdim; ++k)
+            //         {
+            //             ekx = m_movingframes[k][i];
+            //             eky = m_movingframes[k][nq+i];
+            //             ekz = m_movingframes[k][2*nq+i];
+
+            //             eLjx = m_phiemovingframes[j][i];
+            //             eLjy = m_phiemovingframes[j][nq+i];
+            //             eLjz = m_phiemovingframes[j][2*nq+i];
+
+            //             mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
+
+            //             mfsum = mfsum + mftmp * mftmp ;
+            //         }
+
+            //         sigma_i[j][i] = mfsum;
+            //     }
+            // }
 
             std::cout << "Max sigma_i_1  = "
                         << Vmath::Vmax(nq, sigma_i[0], 1)
@@ -523,8 +534,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     // Myelin zone
                     else if(m_zoneindex[0][i]==-1)
                     {
-                        sigma_e[0][i] = m_AnisotropyStrength * 1.0/m_ratio_re_ri;
-                        sigma_e[1][i] = m_AnisotropyStrength * 1.0/m_ratio_re_ri;
+                        sigma_e[0][i] = 1.0/m_ratio_re_ri;
+                        sigma_e[1][i] = 1.0/m_ratio_re_ri;
                     }
 
                     else if(m_zoneindex[0][i]==-2)
@@ -572,6 +583,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                         << Vmath::Vmin(nq, m_phieAniStrength[1], 1) << std::endl;
 
             std::cout << "================================================ " << std::endl;
+            
+            PlotPhieMF(sigma_i, sigma_e, m_phieAniStrength);
 
             break;
         }
@@ -2844,6 +2857,44 @@ void MMFNeuralEP::MembraneBoundary2D(
                         ->GetBndCondExpansions()[bcRegion]
                         ->UpdatePhys())[id1], 1);
     }
+}
+
+void MMFNeuralEP::PlotPhieMF(
+    const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,
+    const Array<OneD, const Array<OneD, NekDouble>> &sigma_e,
+    const Array<OneD, const Array<OneD, NekDouble>> &PhieAniStrength)
+{
+    int nvar    = 6;
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_phieMF.chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "sigma_i[0]";
+    variables[1] = "sigma_i[1]";
+    variables[2] = "sigma_e[0]";
+    variables[3] = "sigma_e[1]";
+    variables[4] = "PhieAniStrength[0]";
+    variables[5] = "PhieAniStrength[1]";
+
+    // Compute the gradient of the time map
+    m_fields[0]->FwdTrans(sigma_i[0], fieldcoeffs[0]);
+    m_fields[0]->FwdTrans(sigma_i[1], fieldcoeffs[1]);
+
+    m_fields[0]->FwdTrans(sigma_e[0], fieldcoeffs[2]);
+    m_fields[0]->FwdTrans(sigma_e[1], fieldcoeffs[3]);
+
+    m_fields[0]->FwdTrans(PhieAniStrength[0], fieldcoeffs[4]);
+    m_fields[0]->FwdTrans(PhieAniStrength[1], fieldcoeffs[5]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
 void MMFNeuralEP::v_EvaluateExactSolution(unsigned int field,

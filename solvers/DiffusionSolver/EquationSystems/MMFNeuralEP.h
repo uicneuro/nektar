@@ -369,6 +369,11 @@ protected:
                                    const Array<OneD, const NekDouble> &phi_e,
                                    const int nstep);
 
+    void PlotPhieMF(
+    const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,
+    const Array<OneD, const Array<OneD, NekDouble>> &sigma_e,
+    const Array<OneD, const Array<OneD, NekDouble>> &PhieAniStrength);
+
     // void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
     void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
