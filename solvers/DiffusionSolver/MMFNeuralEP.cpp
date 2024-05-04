@@ -99,9 +99,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     
     // Resting potential     NekDouble m_phimrest, m_phimTol, m_dudtTol;
 
-    m_session->LoadParameter("phimrest", m_phimrest, 0.0);
-    m_session->LoadParameter("phimTol", m_phimTol, 1.0);
-    m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 1.0);
+    m_session->LoadParameter("phimrest", m_phimrest, 80.0);
+    m_session->LoadParameter("phimTol", m_phimTol, 10.0);
+    m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 0.01);
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
@@ -1682,6 +1682,8 @@ void MMFNeuralEP::DoSolveMMFZero()
        // dudtsign: wavefront = -1.0, waveback = 1.0
         Maxphim = Vmath::Vamax(nq, fields[0], 1);
         Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudtval, 1);
+        Vmath::Vmul(nq, m_intrazone, 1, dudtval, 1, dudtval, 1);
+
         Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudtval, 1, dudtval, 1);
 
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
@@ -1783,9 +1785,9 @@ void MMFNeuralEP::DoSolveMMFZero()
 
 // ComputeNeuralTimeMap(m_time, m_urest, m_uTol, m_dudtTol, m_zoneindex[0], dudtval, dudtvalHistory, fields[0], TimeMap);
 void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
-                                    const NekDouble urest,
-                                    const NekDouble uTol,
-                                    const NekDouble dudtTol,
+                                    const NekDouble phimrest,
+                                    const NekDouble phimTol,
+                                    const NekDouble dphimdtTol,
                                     const Array<OneD, const int> &zoneindex,
                                     const Array<OneD, const NekDouble> &dudt,
                                     Array<OneD, NekDouble> &dudtHistory,
@@ -1796,19 +1798,19 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
     NekDouble fnewsum;
 
-    NekDouble udiff;
+    NekDouble phimdiff;
     for (int i = 0; i < nq; ++i)
     {
         if(zoneindex[i]>-2)
         {
-            udiff = field[i] - urest;
+            phimdiff = field[i] - phimrest;
             // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-            if ((udiff > uTol) && (dudt[i] > dudtTol))
+            if ((phimdiff > phimTol) && (dudt[i] > dphimdtTol))
             {
                 // Gradient as the main weight
                 fnewsum = dudt[i] + dudtHistory[i];
 
-                if(fabs(fnewsum)>dudtTol)
+                if(fabs(fnewsum)>dphimdtTol)
                 {
                     TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
                 }
@@ -1816,11 +1818,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
                 dudtHistory[i] += dudt[i];
             }
         }
-    }
 
-    // NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
-    for (int i = 0; i < nq; ++i)
-    {
         if ( (zoneindex[i] == 0) || (zoneindex[i] == 1))
         {
             TimeMap[i] = 0.0;
@@ -1850,7 +1848,6 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     std::vector<std::string> variables(nvar);
     variables[0] = "phim";
     variables[1] = "TimeMap";
-
 
     m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
 
