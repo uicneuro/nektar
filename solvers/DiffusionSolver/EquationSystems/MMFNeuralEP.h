@@ -146,16 +146,14 @@ const char *const FluxTypeMap[] = {
 
 enum TimeMapType
 {
-    eDeActivated,
     eActivated,
-    eProcessing,
+    eDeActivated,
     SIZE_TimeMapType ///< Length of enum list
 };
 
 const char *const TimeMapTypeMap[] = {
-    "DeActivated",
     "Activated",
-    "Processing",
+    "DeActivated",
 };
 
 enum ExtCurrentType
@@ -239,7 +237,7 @@ protected:
     NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
-    NekDouble m_urest;
+    NekDouble m_phimrest, m_phimTol, m_dphimdtTol;
 
     std::string m_zoneindexfile;
 
@@ -557,6 +555,21 @@ protected:
         Array<OneD, NekDouble> &nodezone,
         Array<OneD, NekDouble> &intrazone,
         Array<OneD, NekDouble> &extrazone);
+
+    void ComputeNeuralTimeMap(const NekDouble time,
+                                const NekDouble urest,
+                                const NekDouble uTol,
+                                const NekDouble dudtTol,
+                                const Array<OneD, const int> &zoneindex,
+                                const Array<OneD, const NekDouble> &dudt,
+                                Array<OneD, NekDouble> &dudtHistory,
+                                const Array<OneD, const NekDouble> &field,
+                                Array<OneD, NekDouble> &TimeMap);
+                                
+    void PlotNeuralTimeMap(
+        const Array<OneD, const NekDouble> &phim,
+        const Array<OneD, const NekDouble> &TimeMap,
+        const int nstep);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,

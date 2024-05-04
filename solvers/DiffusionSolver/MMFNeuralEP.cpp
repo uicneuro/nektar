@@ -97,8 +97,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     // Helmsolver parameter
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
     
-    // Resting potential
-    m_session->LoadParameter("urest", m_urest, 100.0);
+    // Resting potential     NekDouble m_phimrest, m_phimTol, m_dudtTol;
+
+    m_session->LoadParameter("phimrest", m_phimrest, 0.0);
+    m_session->LoadParameter("phimTol", m_phimTol, 1.0);
+    m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 1.0);
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
@@ -334,15 +337,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
-
-            // Let the excite zone to be ValidTimeMap = 0
-            for (int i = 0; i < nq; ++i) 
-            {
-                if(m_excitezone[i]>0)
-                {
-                    m_ValidTimeMap[i] = 0;
-                }
-            }
 
             if(m_MediumType==eAllNode)
             {
@@ -1692,8 +1686,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeTimeMap(m_time, m_urest, fields[0], dudtval, m_ValidTimeMap,
-                           dudtvalHistory, TimeMap);
+            ComputeNeuralTimeMap(m_time, m_phimrest, m_phimTol, m_dphimdtTol, m_zoneindex[0], dudtval, dudtvalHistory, fields[0], TimeMap);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -1758,7 +1751,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
-            PlotTimeMap(m_ValidTimeMap, m_AniStrength, TimeMap, nchk);
+            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
@@ -1787,149 +1780,90 @@ void MMFNeuralEP::DoSolveMMFZero()
 } 
 // namespace Nektar
 
-// void MMFNeuralEP::PrintRegionalAvgMax(const Array<OneD, const NekDouble> &field0)
-// {
-//     int index;
-//     int Nodeid, Myelid, Extid;
-//     int nq               = GetTotPoints();
 
-//     NekDouble NodeMaxm, MyelineMaxm, ExtMaxm;
-//     NekDouble NodeMaxe, MyelineMaxe, ExtMaxe;
+// ComputeNeuralTimeMap(m_time, m_urest, m_uTol, m_dudtTol, m_zoneindex[0], dudtval, dudtvalHistory, fields[0], TimeMap);
+void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
+                                    const NekDouble urest,
+                                    const NekDouble uTol,
+                                    const NekDouble dudtTol,
+                                    const Array<OneD, const int> &zoneindex,
+                                    const Array<OneD, const NekDouble> &dudt,
+                                    Array<OneD, NekDouble> &dudtHistory,
+                                    const Array<OneD, const NekDouble> &field,
+                                    Array<OneD, NekDouble> &TimeMap)
+{
+    int nq = GetTotPoints();
 
-//     NekDouble ue, um, elemavgm, elemavge;
+    NekDouble fnewsum;
 
-//     NekDouble yavgindex, yavg;
+    NekDouble udiff;
+    for (int i = 0; i < nq; ++i)
+    {
+        if(zoneindex[i]>-2)
+        {
+            udiff = field[i] - urest;
+            // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
+            if ((udiff > uTol) && (dudt[i] > dudtTol))
+            {
+                // Gradient as the main weight
+                fnewsum = dudt[i] + dudtHistory[i];
 
-//     Array<OneD, NekDouble> x0(nq);
-//     Array<OneD, NekDouble> x1(nq);
-//     Array<OneD, NekDouble> x2(nq);
+                if(fabs(fnewsum)>dudtTol)
+                {
+                    TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
+                }
 
-//     m_fields[0]->GetCoords(x0, x1, x2);
-    
-//     std::cout << " ========================================================================================== " << std::endl;
+                dudtHistory[i] += dudt[i];
+            }
+        }
+    }
 
-//     // Max um and ue at Node
-//     NodeMaxm = 0.0;
-//     NodeMaxe = 0.0;
+    // NekDouble TimeMapMin = Vmath::Vmin(nq, TimeMap, 1);
+    for (int i = 0; i < nq; ++i)
+    {
+        if ( (zoneindex[i] == 0) || (zoneindex[i] == 1))
+        {
+            TimeMap[i] = 0.0;
+        }
+    }
+}
 
-//     Nodeid = 0;
-//     yavg = 0.0;
-//     for (int i = 0; i < m_ElemNodeEnd; ++i)
-//     {
-//         elemavgm = 0.0;
-//         elemavge = 0.0;
-//         yavg = 0.0;
-//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-//         {
-//             index = m_fields[0]->GetPhys_Offset(i) + j;
-//             um = field0[index];
-//             ue = (m_fields[1]->GetPhys())[index];
 
-//             elemavgm += um;
-//             elemavge += ue;
-//             yavg += x1[index];
-//         }
-//         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
-//         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
-//         yavg = yavg/m_fields[0]->GetTotPoints(i);
+void MMFNeuralEP::PlotNeuralTimeMap(
+    const Array<OneD, const NekDouble> &phim,
+    const Array<OneD, const NekDouble> &TimeMap,
+    const int nstep)
+{
+    int nvar    = 2;
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
 
-//         if(elemavgm>NodeMaxm)
-//         {
-//             NodeMaxm = elemavgm;
-//             yavgindex = yavg;
-//             Nodeid = i;
-//         }
+    std::string outname1 = m_sessionName + "_timemap_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
 
-//         if(elemavge>NodeMaxe)
-//         {
-//             NodeMaxe = elemavge;
-//         }
-//     }
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
 
-//     std::cout << "Node id = " << Nodeid << ", : um_max = " << NodeMaxm << " at y = " << yavgindex << ", ue_max = " << NodeMaxe << std::endl;
+    std::vector<std::string> variables(nvar);
+    variables[0] = "phim";
+    variables[1] = "TimeMap";
 
-//     // Max um and ue at Myelin
-//     MyelineMaxm = 0.0;
-//     MyelineMaxe = 0.0;
-    
-//     Myelid = m_ElemNodeEnd;
-//     yavg = 0.0;
-//     for (int i = m_ElemNodeEnd; i < m_ElemMyelenEnd ; ++i)
-//     {
-//         elemavgm = 0.0;
-//         elemavge = 0.0;
-//         yavg = 0.0;
-//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-//         {
-//             index = m_fields[0]->GetPhys_Offset(i) + j;
-//             um = field0[index];
-//             ue = (m_fields[1]->GetPhys())[index];
 
-//             elemavgm += um;
-//             elemavge += ue;
-//             yavg += x1[index];
-//         }
-//         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
-//         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
-//         yavg = yavg/m_fields[0]->GetTotPoints(i);
+    m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
 
-//         if(elemavgm>MyelineMaxm)
-//         {
-//             MyelineMaxm = elemavgm;
-//             yavgindex = yavg;
-//             Myelid = i;
-//         }
+    // index:0 -> u
+    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1)
+                << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
+    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+                << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 
-//         if(elemavge>MyelineMaxe)
-//         {
-//             MyelineMaxe = elemavge;
-//         }
-//     }
+    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[1]);
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
 
-//     std::cout << "Myelid id = " << Myelid << ", : um_max = " << MyelineMaxm << " at y = " << yavgindex << ", ue_max = " << MyelineMaxe << std::endl;
-
-//     // Max um and ue at Exterial space
-//     ExtMaxm = 0.0;
-//     ExtMaxe = 0.0;
-
-//     Extid = m_ElemMyelenEnd;
-//     yavg = 0.0;
-//     for (int i = m_ElemMyelenEnd; i < m_fields[0]->GetExpSize() ; ++i)
-//     {
-//         elemavgm = 0.0;
-//         elemavge = 0.0;
-//         yavg = 0.0;
-//         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-//         {
-//             index = m_fields[0]->GetPhys_Offset(i) + j;
-//             um = field0[index];
-//             ue = (m_fields[1]->GetPhys())[index];
-
-//             elemavgm += um;
-//             elemavge += ue;
-//             yavg += x1[index];
-//         }
-//         elemavgm = elemavgm/m_fields[0]->GetTotPoints(i);
-//         elemavge = elemavge/m_fields[0]->GetTotPoints(i);
-//         yavg = yavg/m_fields[0]->GetTotPoints(i);
-
-//         if(elemavgm>ExtMaxm)
-//         {
-//             ExtMaxm = elemavgm;
-//             yavgindex = yavg;
-//             Extid = i;
-//         }
-
-//         if(elemavge>ExtMaxe)
-//         {
-//             ExtMaxe = elemavge;
-//         }
-//     }
-
-//     std::cout << "Extid id = " << Extid << ", : um_max = " << ExtMaxm << " at y = " << yavgindex << ", ue_max = " << ExtMaxe << std::endl;
-
-//     std::cout << " ========================================================================================== " << std::endl;
-// }
 
 void MMFNeuralEP::DoSolvePoint()
 {
@@ -2695,8 +2629,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                 Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
-
-            m_ValidTimeMap = Array<OneD, int>(nq, 1);
         }
 
         default:
@@ -2915,9 +2847,9 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
                                 NeuralEPTypeMap[m_NeuralEPType]);
     SolverUtils::AddSummaryItem(s, "ExtCurrentType", ExtCurrentTypeMap[m_ExtCurrentType]);
     SolverUtils::AddSummaryItem(s, "GlobalSysSoln", m_session->GetSolverInfo("GlobalSysSoln"));
-    // SolverUtils::AddSummaryItem(s, "TimeMapScheme", TimeMapTypeMap[m_TimeMapScheme]);
-    // SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
-    // SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
+    SolverUtils::AddSummaryItem(s, "TimeMapScheme", TimeMapTypeMap[m_TimeMapScheme]);
+    SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
+    SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
     SolverUtils::AddSummaryItem(s, "Fiber Type", FiberTypeMap[m_fiberType]);
 
@@ -2932,7 +2864,10 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Element_per_Node", m_elemperNode);
     SolverUtils::AddSummaryItem(s, "Element_per_Myelin", m_elemperMyel);
 
-    SolverUtils::AddSummaryItem(s, "urest", m_urest);
+    SolverUtils::AddSummaryItem(s, "phimrest", m_phimrest);
+    SolverUtils::AddSummaryItem(s, "phimTol", m_phimTol);
+    SolverUtils::AddSummaryItem(s, "dphimdtTol", m_dphimdtTol);
+
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "diameter", m_diameter);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
