@@ -363,6 +363,21 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     
     CheckMovingFrames(m_movingframes);
 
+    // Construct unitmovingframes
+    std::string MMFdirStr;
+    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
+    m_MMFdir = FindMMFdir(MMFdirStr);
+
+    Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+    }
+
+    std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction ===============" << std::endl;
+
+    SetUpMovingFrames(m_MMFdir, unitAniStrength, m_unitmovingframes);
+
     // Construct phiemovingframes 
     std::string phieMMFdirStr;
     m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
@@ -459,8 +474,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Compute sigma_i
             // Node: 1.0, Myelin: m_Cn / m_Cm, Extraspace: 0.0
-            NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
-            NekDouble mftmp, mfsum;
+
 
             for (int i = 0; i<nq; ++i)
             {
@@ -478,6 +492,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                  }
             }
 
+            // NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
+            // NekDouble mftmp, mfsum;
             // for (int i = 0; i<nq; ++i)
             // {
             //     for (int j = 0; j < m_expdim; ++j)
@@ -977,7 +993,7 @@ Array<OneD, int> MMFNeuralEP::TestRanvierIndex()
 
     Array<OneD, int> outarray(nq, -1);
 
-    NekDouble nodestart, nodeend;
+    // NekDouble nodestart, nodeend;
     NekDouble fiberleft = -0.25;
     NekDouble fiberright = 0.25;
 
@@ -1717,44 +1733,7 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            // phim should be only defined in the intracellular space
-            Array<OneD, NekDouble> phi_m(nq);
-            Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
-
-            NekDouble phimMax = Vmath::Vmax(nq, phi_m, 1);
-            NekDouble phimMin = Vmath::Vmin(nq, phi_m, 1);
-
-            int phimMaxid = Vmath::Imax(nq, phi_m, 1);
-            int phimMinid = Vmath::Imin(nq, phi_m, 1);
-
-            fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
-            fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
-
-            fulltext.append("\n");
-
-            if( (nvariables==2) && (m_ExtCurrentType == eEphaptic) )
-            {
-                // phi_e is defined at the node and extracellular space
-                Array<OneD, NekDouble> phi_e = Computephie(fields[0]);
-
-                Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
-                
-                NekDouble phieMax = Vmath::Vmax(nq, phi_e, 1);
-                NekDouble phieMin = Vmath::Vmin(nq, phi_e, 1);
-
-                int phieMaxid = Vmath::Imax(nq, phi_e, 1);
-                int phieMinid = Vmath::Imin(nq, phi_e, 1);
-
-                fulltext.append("phi_e, max: " + std::to_string(phieMax) + " at y = " + std::to_string(x1[phieMaxid]) );
-                fulltext.append(", phi_e, min: " + std::to_string(phieMin) + " at y = " + std::to_string(x1[phieMinid]) );
-
-                fulltext.append("\n");
-            }
-
-            // if(m_NeuralEPType==eNeuralEP2Dbi)
-            // {
-            //     DisplayNode2D(fulltext, fields);
-            // }
+            PrintoutFields(nvariables, fields[0], fulltext);
 
             std::cout << fulltext << "\n" << std::endl;
 
@@ -1787,6 +1766,92 @@ void MMFNeuralEP::DoSolveMMFZero()
 } 
 // namespace Nektar
 
+
+void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const NekDouble> &field, std::string &fulltext)
+{
+    int nq = GetTotPoints();
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
+
+    // phim should be only defined in the intracellular space
+    Array<OneD, NekDouble> phi_m; // = m_fields[0]->GetPhys();
+    Vmath::Vmul(nq, m_intrazone, 1, field, 1, phi_m, 1);
+
+    NekDouble phimMax = Vmath::Vmax(nq, phi_m, 1);
+    NekDouble phimMin = Vmath::Vmin(nq, phi_m, 1);
+
+    int phimMaxid = Vmath::Imax(nq, phi_m, 1);
+    int phimMinid = Vmath::Imin(nq, phi_m, 1);
+
+    fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
+    fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
+
+    fulltext.append("\n");
+
+    if(nvar==2) 
+    {
+        // phi_e is defined at the node and extracellular space
+        Array<OneD, NekDouble> phi_e = m_fields[1]->GetPhys();
+        // Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
+        
+        NekDouble phieMax = Vmath::Vmax(nq, phi_e, 1);
+        NekDouble phieMin = Vmath::Vmin(nq, phi_e, 1);
+
+        int phieMaxid = Vmath::Imax(nq, phi_e, 1);
+        int phieMinid = Vmath::Imin(nq, phi_e, 1);
+
+        fulltext.append("phi_e, max: " + std::to_string(phieMax) + " at y = " + std::to_string(x1[phieMaxid]) );
+        fulltext.append(", phi_e, min: " + std::to_string(phieMin) + " at y = " + std::to_string(x1[phieMinid]) );
+        fulltext.append("\n");
+
+        // Compute (1/C_n/r) * \nabla^2 \phi_e
+        Array<OneD, NekDouble> intcurrent = ComputeMMFDiffusion(m_movingframes, phi_m);
+
+        // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
+        Vmath::Vmul(nq, m_intrazone, 1, intcurrent, 1, intcurrent, 1);
+        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), intcurrent, 1, intcurrent, 1);
+
+        NekDouble intcurrentMax = Vmath::Vmax(nq, intcurrent, 1);
+        NekDouble intcurrentMin = Vmath::Vmin(nq, intcurrent, 1);
+
+        int intcurrentMaxid = Vmath::Imax(nq, intcurrent, 1);
+        int intcurrentMinid = Vmath::Imin(nq, intcurrent, 1);
+
+        fulltext.append("intcurrent, max: " + std::to_string(intcurrentMax) + " at y = " + std::to_string(x1[intcurrentMaxid]) );
+        fulltext.append(", intcurrent, min: " + std::to_string(intcurrentMin) + " at y = " + std::to_string(x1[intcurrentMinid]) );
+        fulltext.append("\n");
+
+        Array<OneD, NekDouble> extcurrent = ComputeMMFDiffusion(m_movingframes, phi_e);
+
+        Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
+        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+
+        NekDouble extcurrentMax = Vmath::Vmax(nq, extcurrent, 1);
+        NekDouble extcurrentMin = Vmath::Vmin(nq, extcurrent, 1);
+
+        int extcurrentMaxid = Vmath::Imax(nq, extcurrent, 1);
+        int extcurrentMinid = Vmath::Imin(nq, extcurrent, 1);
+
+        fulltext.append("extcurrent, max: " + std::to_string(extcurrentMax) + " at y = " + std::to_string(x1[extcurrentMaxid]) );
+        fulltext.append(", extcurrent, min: " + std::to_string(extcurrentMin) + " at y = " + std::to_string(x1[extcurrentMinid]) );
+
+        NekDouble currentperc = 100.0 * extcurrentMin / intcurrentMax ;
+        fulltext.append("Current ratio: Int (+) vs. Ext(-) = " + std::to_string(currentperc));
+
+        fulltext.append("\n");
+
+        // if(m_NeuralEPType==eNeuralEP2Dbi)
+        // {
+        //     DisplayNode2D(fulltext, fields);
+        // }
+
+    }
+
+}
 
 // ComputeNeuralTimeMap(m_time, m_urest, m_uTol, m_dudtTol, m_zoneindex[0], dudtval, dudtvalHistory, fields[0], TimeMap);
 void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
@@ -1857,9 +1922,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
 
     // index:0 -> u
-    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1)
-                << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
-    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
+    std::cout << "PlotTimeMap: phim: Max = " << Vmath::Vmax(nq, phim, 1)
+                << ", Min = " << Vmath::Vmin(nq, phim, 1) << ", Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
                 << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 
     m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[1]);
@@ -2096,7 +2160,7 @@ void MMFNeuralEP::PlotHelmSolve(const Array<OneD, const NekDouble> &forcing,
 {
     int nvar = 2;
     int ncoeffs = m_fields[0]->GetNcoeffs();
-    int nq      = m_fields[0]->GetTotPoints();
+    // int nq      = m_fields[0]->GetTotPoints();
 
     std::string outname;
     outname = m_sessionName + "_helm.chk";
@@ -2799,7 +2863,7 @@ void MMFNeuralEP::PlotPhieMF(
     const Array<OneD, const Array<OneD, NekDouble>> &PhieAniStrength)
 {
     int nvar    = 6;
-    int nq      = m_fields[0]->GetTotPoints();
+    // int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
     std::string outname1 = m_sessionName + "_phieMF.chk";

@@ -253,7 +253,8 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 
-    // variables for phie-Poisson solver
+    // other moving frames neede for NeuralEP
+    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
 
     // Elements for fiber 2D: Start and End index
@@ -570,6 +571,8 @@ protected:
         const Array<OneD, const NekDouble> &phim,
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
+        
+    void PrintoutFields(const int nvar, const Array<OneD, const NekDouble> &field, std::string &fulltext);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
