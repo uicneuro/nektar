@@ -410,8 +410,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
                     else if(m_zoneindex[0][i]==-2)
                     {
-                        sigma_e[0][i] = 1.0/(m_ratio_re_ri*axoncrossA);
-                        sigma_e[1][i] = 1.0/(m_ratio_re_ri*axoncrossA);
+                        sigma_e[0][i] = 1.0/axoncrossA;
+                        sigma_e[1][i] = 1.0/axoncrossA;
                     }
             }
 
@@ -469,6 +469,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     if(m_zoneindex[0][i]==-2)
                     {
                         sigma_i[j][i] = 0.0;
+                    }
+
+                    else if (m_zoneindex[0][i]==-1)
+                    {
+                        sigma_i[j][i] = m_AnisotropyStrength;
                     }
                  }
             }
@@ -528,14 +533,14 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     // Myelin zone
                     else if(m_zoneindex[0][i]==-1)
                     {
-                        sigma_e[0][i] = 1.0/m_ratio_re_ri;
-                        sigma_e[1][i] = 1.0/m_ratio_re_ri;
+                        sigma_e[0][i] = m_AnisotropyStrength/m_ratio_re_ri;
+                        sigma_e[1][i] = m_AnisotropyStrength/m_ratio_re_ri;
                     }
 
                     else if(m_zoneindex[0][i]==-2)
                     {
-                        sigma_e[0][i] = PhieMultFactor * 1.0/(m_ratio_re_ri*axoncrossA);
-                        sigma_e[1][i] = PhieMultFactor * 1.0/(m_ratio_re_ri*axoncrossA);
+                        sigma_e[0][i] = PhieMultFactor / axoncrossA;
+                        sigma_e[1][i] = PhieMultFactor / axoncrossA;
                     }
             }
 
