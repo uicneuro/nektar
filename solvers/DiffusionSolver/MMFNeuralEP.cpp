@@ -1615,7 +1615,6 @@ void MMFNeuralEP::DoSolveMMFZero()
 
     int i, nchk = 1;
     int nq               = GetTotPoints();
-    int ncoeffs          = GetNcoeffs();
     int nvariables       = 0;
     int nfields          = m_fields.size();
     std::string fulltext = ""; // initiate fulltext
@@ -1726,8 +1725,8 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
-            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
-            Checkpoint_Output(nchk++);
+            // PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            // Checkpoint_Output(nchk++);
 
             doCheckTime = false;
         }
@@ -1807,13 +1806,6 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<O
         NekDouble intcurrentMax = Vmath::Vmax(nq, intcurrent, 1);
         NekDouble intcurrentMin = Vmath::Vmin(nq, intcurrent, 1);
 
-        int intcurrentMaxid = Vmath::Imax(nq, intcurrent, 1);
-        int intcurrentMinid = Vmath::Imin(nq, intcurrent, 1);
-
-        fulltext.append("intcurrent, max: " + std::to_string(intcurrentMax) + " at y = " + std::to_string(x1[intcurrentMaxid]) );
-        fulltext.append(", intcurrent, min: " + std::to_string(intcurrentMin) + " at y = " + std::to_string(x1[intcurrentMinid]) );
-        fulltext.append("\n");
-
         Array<OneD, NekDouble> extcurrent = ComputeMMFDiffusion(m_movingframes, phi_e);
 
         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
@@ -1822,29 +1814,21 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<O
         NekDouble extcurrentMax = Vmath::Vmax(nq, extcurrent, 1);
         NekDouble extcurrentMin = Vmath::Vmin(nq, extcurrent, 1);
 
-        int extcurrentMaxid = Vmath::Imax(nq, extcurrent, 1);
-        int extcurrentMinid = Vmath::Imin(nq, extcurrent, 1);
+        Array<OneD, NekDouble> totcurrent(nq);
 
-        fulltext.append("extcurrent, max: " + std::to_string(extcurrentMax) + " at y = " + std::to_string(x1[extcurrentMaxid]) );
-        fulltext.append(", extcurrent, min: " + std::to_string(extcurrentMin) + " at y = " + std::to_string(x1[extcurrentMinid]) );
-        fulltext.append("\n");
+        Vmath::Vadd(nq, extcurrent, 1, intcurrent, 1, totcurrent, 1);
 
-        NekDouble currentperc = 100.0 * fabs(extcurrentMin) / fabs(intcurrentMax) ;
-        fulltext.append("Current ratio: Int (+) vs. Ext(-) = " + std::to_string(currentperc));
-        fulltext.append("\n");
+        NekDouble totcurrentMax = Vmath::Vmax(nq, totcurrent, 1);
+        NekDouble totcurrentMin = Vmath::Vmin(nq, totcurrent, 1);
 
-        Vmath::Vadd(nq, extcurrent, 1, intcurrent, 1, intcurrent, 1);
+        NekDouble totcurrentMaxid = Vmath::Imax(nq, totcurrent, 1);
+        NekDouble totcurrentMinid = Vmath::Imin(nq, totcurrent, 1);
 
-         intcurrentMax = Vmath::Vmax(nq, intcurrent, 1);
-         intcurrentMin = Vmath::Vmin(nq, intcurrent, 1);
+        NekDouble Maxratio = 100.0 * fabs(totcurrentMax) / fabs(intcurrentMax) ;
+        NekDouble Minratio = 100.0 * fabs(totcurrentMin) / fabs(intcurrentMin) ;
 
-         intcurrentMaxid = Vmath::Imax(nq, intcurrent, 1);
-         intcurrentMinid = Vmath::Imin(nq, intcurrent, 1);
-
-        fulltext.append("Modified intcurrent, max: " + std::to_string(intcurrentMax) + " at y = " + std::to_string(x1[intcurrentMaxid]) );
-        fulltext.append(", intcurrent, min: " + std::to_string(intcurrentMin) + " at y = " + std::to_string(x1[intcurrentMinid]) );
-        fulltext.append("\n");
-
+        fulltext.append("Modified intcurrent, max: " + std::to_string(extcurrentMax) + " ( " + std::to_string(Maxratio) + " %) at y = " + std::to_string(x1[totcurrentMaxid]) );
+        fulltext.append("Modified intcurrent, min: " + std::to_string(extcurrentMin) + " ( " + std::to_string(Minratio) + " %) at y = " + std::to_string(x1[totcurrentMinid]) );
         fulltext.append("\n");
 
         DisplayNode2D(fulltext, fields);
