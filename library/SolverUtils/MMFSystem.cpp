@@ -6727,13 +6727,13 @@ void MMFSystem::PlotMovingFrames(
         for (int j = 0; j < m_spacedim; ++j)
         {
             Vmath::Vcopy(nq, &movingframes[i][j * nq], 1, &tmp[0], 1);
-            m_fields[0]->FwdTrans(tmp, fieldcoeffs[i * 3 + j]);
+            m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i * 3 + j]);
 
             Vmath::Vvtvp(nq, tmp, 1, tmp, 1, mag, 1, mag, 1);
         }
 
         Vmath::Vsqrt(nq, mag, 1, mag, 1);
-        m_fields[0]->FwdTrans(mag, fieldcoeffs[9 + i]);
+        m_fields[0]->FwdTransLocalElmt(mag, fieldcoeffs[9 + i]);
     }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
@@ -6775,14 +6775,14 @@ void MMFSystem::PlotTrajectoryMF(
     variables[8] = "CondBlock";
 
     // index:0 -> u
-    m_fields[0]->FwdTrans(fieldu, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(fieldu, fieldcoeffs[0]);
 
     // index:[1, 2, 3] -> ex1, ey1, ez1
     Array<OneD, NekDouble> tmp(nq);
     for (int j = 0; j < m_spacedim; ++j)
     {
         Vmath::Vcopy(nq, &MF[0][j * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[j + 1]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[j + 1]);
     }
 
     // Angle between MF and fibre
@@ -6794,7 +6794,7 @@ void MMFSystem::PlotTrajectoryMF(
             Acttmp[i] = 1.0;
         }
     }
-    m_fields[0]->FwdTrans(Acttmp, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(Acttmp, fieldcoeffs[4]);
 
     Array<OneD, NekDouble> w211(nq);
     Array<OneD, NekDouble> w212(nq);
@@ -6844,10 +6844,10 @@ void MMFSystem::PlotTrajectoryMF(
     Vmath::Vmul(nq, NoBoundaryZone, 1, w212, 1, w212, 1);
 
     // Connection form w211
-    m_fields[0]->FwdTrans(w211, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(w211, fieldcoeffs[5]);
 
     // Connection form w212
-    m_fields[0]->FwdTrans(w212, fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(w212, fieldcoeffs[6]);
 
     // Relative Acceleration (I)
     Array<OneD, NekDouble> RelAccetmp(nq);
@@ -6856,7 +6856,7 @@ void MMFSystem::PlotTrajectoryMF(
     Vmath::Vmul(nq, &NoBoundaryZone[0], 1, &RelAccetmp[0], 1, &RelAccetmp[0],
                 1);
 
-    m_fields[0]->FwdTrans(RelAccetmp, fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(RelAccetmp, fieldcoeffs[7]);
 
     // Compute Conduction block
     // Array<OneD, NekDouble> CBlock(nq,0.0);
@@ -6878,7 +6878,7 @@ void MMFSystem::PlotTrajectoryMF(
         }
     }
 
-    m_fields[0]->FwdTrans(CBlock, fieldcoeffs[8]);
+    m_fields[0]->FwdTransLocalElmt(CBlock, fieldcoeffs[8]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -7520,77 +7520,47 @@ void MMFSystem::PlotHHD(const Array<OneD, const NekDouble> &MFvec,
     for (int k = 0; k < m_spacedim; ++k)
     {
         Vmath::Vcopy(nq, &MFvec[k * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k + 18]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[k + 18]);
 
         Vmath::Vcopy(nq, &irrotational[k * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[k]);
 
         Vmath::Vcopy(nq, &incompressible[k * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k + 6]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[k + 6]);
 
         Vmath::Vcopy(nq, &harmonic[k * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k + 12]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[k + 12]);
     }
 
     // Irrotational
     Vmath::Vcopy(nq, &irrotational[3 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[3]);
 
     Vmath::Vcopy(nq, &irrotational[4 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[4]);
 
     Vmath::Vcopy(nq, &irrotational[5 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[5]);
 
     // Incompressible
     Vmath::Vcopy(nq, &incompressible[3 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[9]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[9]);
 
     Vmath::Vcopy(nq, &incompressible[4 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[10]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[10]);
 
     Vmath::Vcopy(nq, &incompressible[5 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[11]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[11]);
 
     // Harmonic
     Vmath::Vcopy(nq, &harmonic[3 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[15]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[15]);
 
     Vmath::Vcopy(nq, &harmonic[4 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[16]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[16]);
 
     Vmath::Vcopy(nq, &harmonic[5 * nq], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[17]);
-
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
-
-void MMFSystem::Plotphie(const Array<OneD, const NekDouble> &phimdist,
-                         const Array<OneD, const NekDouble> &phie,
-                         const Array<OneD, const NekDouble> &extcurrent,
-                         const int nstep)
-{
-    int nvar    = 3;
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname1;
-    outname1 = m_sessionName + "_phie_" +
-               boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "phimdist";
-    variables[1] = "phie";
-    variables[2] = "extcurrent";
-
-    m_fields[0]->FwdTrans(phimdist, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(phie, fieldcoeffs[1]);
-    m_fields[0]->FwdTrans(extcurrent, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[17]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -7621,12 +7591,12 @@ void MMFSystem::PlotCardiacFibre(const Array<OneD, const NekDouble> &fibre)
     for (int j = 0; j < m_spacedim; ++j)
     {
         Vmath::Vcopy(nq, &fibre[j * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[j]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[j]);
 
         Vmath::Vvtvp(nq, &tmp[0], 1, &tmp[0], 1, &mag[0], 1, &mag[0], 1);
     }
     Vmath::Vsqrt(nq, &mag[0], 1, &mag[0], 1);
-    m_fields[0]->FwdTrans(mag, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(mag, fieldcoeffs[3]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -7660,15 +7630,15 @@ void MMFSystem::PlotProcessedCardiacFibre(
     for (int j = 0; j < m_spacedim; ++j)
     {
         Vmath::Vcopy(nq, &fibre[j * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[j]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[j]);
 
         Vmath::Vvtvp(nq, &tmp[0], 1, &tmp[0], 1, &mag[0], 1, &mag[0], 1);
     }
     Vmath::Vsqrt(nq, &mag[0], 1, &mag[0], 1);
-    m_fields[0]->FwdTrans(mag, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(mag, fieldcoeffs[3]);
 
-    m_fields[0]->FwdTrans(fcdotk, fieldcoeffs[4]);
-    m_fields[0]->FwdTrans(AniConstruction, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(fcdotk, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(AniConstruction, fieldcoeffs[5]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -7700,77 +7670,10 @@ void MMFSystem::PlotMovingFrames(
     for (int j = 0; j < m_spacedim; ++j)
     {
         Vmath::Vcopy(nq, &movingframes[dir][j * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[j]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[j]);
     }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
-
-void MMFSystem::PlotBiDomain(const int nstep)
-{
-    int nvar    = 3;
-    int nq      = m_fields[0]->GetTotPoints();
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname;
-    outname = m_sessionName + "_Bid_" +
-              boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "u";
-    variables[1] = "ue";
-    variables[2] = "ui";
-
-    Array<OneD, NekDouble> tmp(nq);
-    for (int i = 0; i < nvar - 1; ++i)
-    {
-        Vmath::Vcopy(nq, &m_fields[i]->GetPhys()[0], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i]);
-    }
-
-    // u = ui - ue -->  ui = u + ue
-    Vmath::Vadd(nq, &m_fields[0]->GetPhys()[0], 1, &m_fields[1]->GetPhys()[0],
-                1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[2]);
-
-    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
-}
-
-void MMFSystem::PlotTotal2Field(
-    const Array<OneD, const Array<OneD, NekDouble>> &totfield, const int nstep)
-{
-    int nvar    = 2;
-    int nq      = m_fields[0]->GetTotPoints();
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname;
-    outname = m_sessionName + "_Totfield_" +
-              boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "u";
-    variables[1] = "v";
-
-    Array<OneD, NekDouble> tmp(nq);
-    for (int i = 0; i < nvar; ++i)
-    {
-        Vmath::Vcopy(nq, &totfield[i][0], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i]);
-    }
-
-    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
 
 void MMFSystem::PlotFieldVector(const Array<OneD, const NekDouble> &field,
@@ -7797,13 +7700,13 @@ void MMFSystem::PlotFieldVector(const Array<OneD, const NekDouble> &field,
     variables[2] = "vy";
     variables[3] = "vz";
 
-    m_fields[0]->FwdTrans(field, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(field, fieldcoeffs[0]);
 
     Array<OneD, NekDouble> tmp(nq);
     for (int i = 0; i < m_spacedim; ++i)
     {
         Vmath::Vcopy(nq, &velocity[i * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i + 1]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i + 1]);
     }
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
@@ -7833,13 +7736,13 @@ void MMFSystem::PlotFieldVector(
     variables[2] = "vy";
     variables[3] = "vz";
 
-    m_fields[0]->FwdTrans(field, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(field, fieldcoeffs[0]);
 
     Array<OneD, NekDouble> tmp(nq);
     for (int i = 0; i < nvar - 1; ++i)
     {
         Vmath::Vcopy(nq, &velocity[i][0], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i + 1]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i + 1]);
     }
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
@@ -7864,8 +7767,8 @@ void MMFSystem::PlotJacobian(const Array<OneD, const NekDouble> &Jacobian,
     variables[0] = "Jac";
     variables[1] = "JacGradMag";
 
-    m_fields[0]->FwdTrans(Jacobian, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(JacGradMag, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(Jacobian, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(JacGradMag, fieldcoeffs[1]);
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
@@ -7894,63 +7797,10 @@ void MMFSystem::PlotAnisotropyFiber(
     for (int i = 0; i < m_spacedim; ++i)
     {
         Vmath::Vcopy(nq, &anifibre[i * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i]);
     }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
-
-void MMFSystem::Plot2DDivCurlMF(
-    const Array<OneD, const Array<OneD, NekDouble>> &DivMF,
-    const Array<OneD, const Array<OneD, NekDouble>> &CurlMF, const int nstep)
-{
-    int nvar    = 7;
-    int nq      = m_fields[0]->GetTotPoints();
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname;
-    outname = m_sessionName + "_DivCurlMF_" +
-              boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "DivMF1";
-    variables[1] = "DivMF2";
-    variables[2] = "DivMF3";
-    variables[3] = "e3dotCurle1";
-    variables[4] = "e3dotCurle2";
-    variables[5] = "e1dotCurle3";
-    variables[6] = "e2dotCurle3";
-
-    Array<OneD, NekDouble> tmp(nq);
-
-    Vmath::Vcopy(nq, &DivMF[0][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[0]);
-
-    Vmath::Vcopy(nq, &DivMF[1][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[1]);
-
-    Vmath::Vcopy(nq, &DivMF[2][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[2]);
-
-    Vmath::Vcopy(nq, &CurlMF[0][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[3]);
-
-    Vmath::Vcopy(nq, &CurlMF[1][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[4]);
-
-    Vmath::Vcopy(nq, &CurlMF[2][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[5]);
-
-    Vmath::Vcopy(nq, &CurlMF[3][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[6]);
-
-    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
 
 void MMFSystem::PlotDivMF(const Array<OneD, const NekDouble> &DivMF1,
@@ -7980,13 +7830,13 @@ void MMFSystem::PlotDivMF(const Array<OneD, const NekDouble> &DivMF1,
     Array<OneD, NekDouble> tmp(nq);
 
     Vmath::Vcopy(nq, &DivMF1[0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[0]);
 
     Vmath::Vcopy(nq, &DivMF2[0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[1]);
 
     Vmath::Vcopy(nq, &DivMF3[0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[2]);
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
@@ -8029,7 +7879,7 @@ void MMFSystem::PlotConnectionForm(
         {
             index = m_spacedim * i + j;
             Vmath::Vcopy(nq, &connectionform[i][j][0], 1, &tmp[0], 1);
-            m_fields[0]->FwdTrans(tmp, fieldcoeffs[index]);
+            m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
         }
     }
 
@@ -8082,7 +7932,7 @@ void MMFSystem::Plot2DConnectionForm(
         {
             index = m_shapedim * i + j;
             Vmath::Vcopy(nq, &connectionform[i][j][0], 1, &tmp[0], 1);
-            m_fields[0]->FwdTrans(tmp, fieldcoeffs[index]);
+            m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
         }
     }
 
@@ -8124,7 +7974,7 @@ void MMFSystem::Plot2DMeanGaussCurv(
     Vmath::Vadd(nq, &connectionform[1][0][0], 1, &connectionform[2][1][0], 1,
                 &Mean[0], 1);
     Vmath::Smul(nq, 0.5, &Mean[0], 1, &Mean[0], 1);
-    m_fields[0]->FwdTrans(Mean, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(Mean, fieldcoeffs[0]);
 
     // K = w311 * w322 - w312 * w321
     Array<OneD, NekDouble> Gauss(nq);
@@ -8136,7 +7986,7 @@ void MMFSystem::Plot2DMeanGaussCurv(
     Vmath::Neg(nq, tmp, 1);
     Vmath::Vadd(nq, tmp, 1, Gauss, 1, Gauss, 1);
 
-    m_fields[0]->FwdTrans(Gauss, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(Gauss, fieldcoeffs[1]);
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
@@ -8161,10 +8011,12 @@ void MMFSystem::PlotConnectionError(const Array<OneD, const NekDouble> &Werror,
     std::vector<std::string> variables(nvar);
     variables[0] = "w122_error";
 
-    m_fields[0]->FwdTrans(Werror, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(Werror, fieldcoeffs[0]);
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
+
+
 void MMFSystem::Plot2DRiemanTensor(
     const Array<OneD, const Array<OneD, NekDouble>> &curvatureform,
     const int nstep)
@@ -8193,7 +8045,7 @@ void MMFSystem::Plot2DRiemanTensor(
     for (int i = 0; i < m_mfdim; ++i)
     {
         Vmath::Vcopy(nq, &curvatureform[i][0], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i]);
     }
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
@@ -8268,7 +8120,7 @@ void MMFSystem::PlotRiemannTensor(
             {
                 index = m_mfdim * m_mfdim * i + m_mfdim * j + k;
                 Vmath::Vcopy(nq, &curvatureform[i][j][k][0], 1, &tmp[0], 1);
-                m_fields[0]->FwdTrans(tmp, fieldcoeffs[index]);
+                m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
             }
         }
     }
@@ -8307,7 +8159,7 @@ void MMFSystem::PlotRicciTensor(
     index = 0;
     Vmath::Vadd(nq, &curvatureform[0][1][0][0], 1, &curvatureform[1][2][0][0],
                 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[index]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
 
     // R12 = R^2_{122} + R^3_{132}
     // R12 = RootMeanSquare(Curvatureform[0][1][1], Ntot) +
@@ -8315,13 +8167,13 @@ void MMFSystem::PlotRicciTensor(
     index = 1;
     Vmath::Vadd(nq, &curvatureform[0][1][1][0], 1, &curvatureform[1][2][1][0],
                 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[index]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
 
     // R22 = R^3_{232}
     // R22 = RootMeanSquare(Curvatureform[2][2][1], Ntot);
     index = 2;
     Vmath::Vcopy(nq, &curvatureform[2][2][1][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[index]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
@@ -13413,9 +13265,9 @@ void MMFSystem::Checkpoint_Output_1D(
     variables[2] = "TimeMap";
 
     // Normalized Time Vector
-    m_fields[0]->FwdTrans(seglength, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(field, fieldcoeffs[1]);
-    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(seglength, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(field, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[2]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -13443,12 +13295,12 @@ void MMFSystem::Checkpoint_Output_Error(
     variables[2] = "Error";
 
     // Normalized Time Vector
-    m_fields[0]->FwdTrans(field, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(exactsoln, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(field, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(exactsoln, fieldcoeffs[1]);
 
     Array<OneD, NekDouble> Error(nq);
     Vmath::Vsub(nq, field, 1, exactsoln, 1, Error, 1);
-    m_fields[0]->FwdTrans(Error, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(Error, fieldcoeffs[2]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -13641,14 +13493,14 @@ void MMFSystem::PlotTimeMap(
     std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
                 << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 
-    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
 
     Array<OneD, NekDouble> ValidTM(nq, 1.0);
     for (int i=0; i<nq; ++i)
     {
         ValidTM[i] = 1.0 * ValidTimeMap[i];
     }
-    m_fields[0]->FwdTrans(ValidTM, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(ValidTM, fieldcoeffs[1]);
 
     Array<OneD, Array<OneD, NekDouble>> TimeMapMF(m_spacedim);
     for (int k=0; k<m_spacedim; ++k)
@@ -13657,8 +13509,8 @@ void MMFSystem::PlotTimeMap(
     }
 
     // Compute the gradient of the time map
-    m_fields[0]->FwdTrans(AniStrength[0], fieldcoeffs[2]);
-    m_fields[0]->FwdTrans(AniStrength[1], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(AniStrength[0], fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(AniStrength[1], fieldcoeffs[3]);
 
     // Compute the gradient of the time map
     // Array<OneD, Array<OneD, NekDouble>> Velocity(m_spacedim);
@@ -13670,7 +13522,7 @@ void MMFSystem::PlotTimeMap(
     for (int k=0; k<m_spacedim; ++k)
     {
         Vmath::Vcopy(nq, &TmapGrad[k * nq], 1, &tmp[0], 1);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[k+4]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[k+4]);
     }
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);

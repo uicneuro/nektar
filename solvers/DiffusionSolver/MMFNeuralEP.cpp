@@ -474,8 +474,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Compute sigma_i
             // Node: 1.0, Myelin: m_Cn / m_Cm, Extraspace: 0.0
-
-
             for (int i = 0; i<nq; ++i)
             {
                  for (int j = 0; j < m_expdim; ++j)
@@ -1665,14 +1663,6 @@ void MMFNeuralEP::DoSolveMMFZero()
     NekDouble cpuTime = 0.0;
     NekDouble elapsed = 0.0;
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
-
-    m_fields[0]->GetCoords(x0, x1, x2);
-
-    Array<OneD, NekDouble> tmpc(ncoeffs);
-
     Array<OneD, NekDouble> velmag(nq, 0.0);
     Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
@@ -1680,7 +1670,6 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, NekDouble> dudtval(nq);
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
 
-    Array<OneD, int> phimhistory(nq, 0.0);
     NekDouble Maxphim;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
@@ -1737,7 +1726,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 
             std::cout << fulltext << "\n" << std::endl;
 
-            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            // PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;

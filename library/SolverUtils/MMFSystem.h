@@ -1084,17 +1084,6 @@ protected:
     SOLVER_UTILS_EXPORT void BubbleSort(Array<OneD, NekDouble> &refarray,
                                         Array<OneD, NekDouble> &sortarray);
 
-    SOLVER_UTILS_EXPORT void PlotBiDomain(const int nstep);
-
-    SOLVER_UTILS_EXPORT void Plotphie(
-        const Array<OneD, const NekDouble> &phimdist,
-        const Array<OneD, const NekDouble> &phie,
-        const Array<OneD, const NekDouble> &extcurrent, const int nstep);
-
-    SOLVER_UTILS_EXPORT void PlotTotal2Field(
-        const Array<OneD, const Array<OneD, NekDouble>> &totfield,
-        const int nstep);
-
     SOLVER_UTILS_EXPORT void PlotCardiacFibre(
         const Array<OneD, const NekDouble> &fibre);
 
@@ -1168,11 +1157,6 @@ protected:
     SOLVER_UTILS_EXPORT void PlotJacobian(
         const Array<OneD, const NekDouble> &Jacobian,
         const Array<OneD, const NekDouble> &JacGradMag);
-
-    SOLVER_UTILS_EXPORT void Plot2DDivCurlMF(
-        const Array<OneD, const Array<OneD, NekDouble>> &DivMF,
-        const Array<OneD, const Array<OneD, NekDouble>> &CurlMF,
-        const int nstep = 0);
 
     SOLVER_UTILS_EXPORT
     void PlotDivMF(const Array<OneD, const NekDouble> &DivMF1,
