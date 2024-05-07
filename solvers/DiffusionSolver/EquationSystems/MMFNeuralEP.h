@@ -364,10 +364,6 @@ protected:
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
-    void PlotFields(const Array<OneD, const NekDouble> &phi_m,
-                                   const Array<OneD, const NekDouble> &phi_e,
-                                   const int nstep);
-
     void PlotPhieMF(
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_e,

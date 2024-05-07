@@ -893,10 +893,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
         Vmath::Vadd(nq, phieInerr, 1, phieOuterr, 1, phieerr, 1);
 
-        m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
-        m_fields[0]->FwdTrans(outarray, fieldcoeffs[1]);
-        m_fields[0]->FwdTrans(phieexact, fieldcoeffs[2]);
-        m_fields[0]->FwdTrans(phieerr, fieldcoeffs[3]);
+        m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[0]);
+        m_fields[0]->FwdTransLocalElmt(outarray, fieldcoeffs[1]);
+        m_fields[0]->FwdTransLocalElmt(phieexact, fieldcoeffs[2]);
+        m_fields[0]->FwdTransLocalElmt(phieerr, fieldcoeffs[3]);
 
         WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 
@@ -1838,8 +1838,9 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const NekDoub
 
         fulltext.append("extcurrent, max: " + std::to_string(extcurrentMax) + " at y = " + std::to_string(x1[extcurrentMaxid]) );
         fulltext.append(", extcurrent, min: " + std::to_string(extcurrentMin) + " at y = " + std::to_string(x1[extcurrentMinid]) );
+        fulltext.append("\n");
 
-        NekDouble currentperc = 100.0 * extcurrentMin / intcurrentMax ;
+        NekDouble currentperc = 100.0 * fabs(extcurrentMin) / fabs(intcurrentMax) ;
         fulltext.append("Current ratio: Int (+) vs. Ext(-) = " + std::to_string(currentperc));
 
         fulltext.append("\n");
@@ -1919,14 +1920,15 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[0] = "phim";
     variables[1] = "TimeMap";
 
-    m_fields[0]->FwdTrans(phim, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[0]);
 
     // index:0 -> u
     std::cout << "PlotTimeMap: phim: Max = " << Vmath::Vmax(nq, phim, 1)
                 << ", Min = " << Vmath::Vmin(nq, phim, 1) << ", Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
                 << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 
-    m_fields[0]->FwdTrans(TimeMap, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[1]);
+
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
@@ -2175,55 +2177,8 @@ void MMFNeuralEP::PlotHelmSolve(const Array<OneD, const NekDouble> &forcing,
     variables[0] = "forcing";
     variables[1] = "solution";
 
-    m_fields[0]->FwdTrans(forcing, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(solution, fieldcoeffs[1]);
-
-    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
-}
-
-void MMFNeuralEP::PlotFields(const Array<OneD, const NekDouble> &phi_m,
-                                   const Array<OneD, const NekDouble> &phi_e,
-                                   const int nstep)
-{
-    int nvar = 4;
-    int ncoeffs = m_fields[0]->GetNcoeffs();
-    int nq      = m_fields[0]->GetTotPoints();
-
-    std::string outname;
-    outname = m_sessionName + "_field_" +
-              boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "phi_m";
-    variables[1] = "phi_e";
-    variables[2] = "phi_i";
-    variables[3] = "phieforcing";
-
-    m_fields[0]->FwdTrans(phi_m, fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(phi_e, fieldcoeffs[1]);
-
-    // phi_m = phi_i - phi_e
-    Array<OneD, NekDouble> phi_i(nq);
-    Vmath::Vadd(nq, phi_m, 1, phi_e, 1, phi_i, 1);
-    Vmath::Vmul(nq, m_intrazone, 1, phi_i, 1, phi_i, 1);
-
-    m_fields[0]->FwdTrans(phi_i, fieldcoeffs[2]);
-
-    // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
-    // phi_e. This is equivalently achieved by removing all the point sources in
-    // myelinnated fiber region.
-    Array<OneD, NekDouble> phieforcing = ComputeMMFDiffusion(m_phiemovingframes, phi_m);
-
-    // Only nonzero for node.
-    Vmath::Vmul(nq, m_nodezone, 1, phieforcing, 1, phieforcing, 1);
-
-    m_fields[0]->FwdTrans(phieforcing, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(forcing, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(solution, fieldcoeffs[1]);
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
 }
@@ -2255,12 +2210,12 @@ void MMFNeuralEP::PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray,
 
     Array<OneD, NekDouble> tmp(nq);
     Vmath::Vcopy(nq, &inarray[0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTrans(tmp, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[0]);
 
     for (int i = 1; i < nvar; ++i)
     {
         tmp = m_neuron->GetNeuronSolution(i);
-        m_fields[0]->FwdTrans(tmp, fieldcoeffs[i]);
+        m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i]);
     }
 
     WriteFld(outname, m_fields[0], fieldcoeffs, variables);
@@ -2883,14 +2838,14 @@ void MMFNeuralEP::PlotPhieMF(
     variables[5] = "PhieAniStrength[1]";
 
     // Compute the gradient of the time map
-    m_fields[0]->FwdTrans(sigma_i[0], fieldcoeffs[0]);
-    m_fields[0]->FwdTrans(sigma_i[1], fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(sigma_i[0], fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(sigma_i[1], fieldcoeffs[1]);
 
-    m_fields[0]->FwdTrans(sigma_e[0], fieldcoeffs[2]);
-    m_fields[0]->FwdTrans(sigma_e[1], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(sigma_e[0], fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(sigma_e[1], fieldcoeffs[3]);
 
-    m_fields[0]->FwdTrans(PhieAniStrength[0], fieldcoeffs[4]);
-    m_fields[0]->FwdTrans(PhieAniStrength[1], fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(PhieAniStrength[0], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(PhieAniStrength[1], fieldcoeffs[5]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
