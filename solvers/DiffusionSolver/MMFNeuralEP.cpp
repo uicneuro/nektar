@@ -1722,11 +1722,11 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PrintoutFields(nvariables, fields[0], fulltext);
+            PrintoutFields(nvariables, fields, fulltext);
 
             std::cout << fulltext << "\n" << std::endl;
 
-            // PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
@@ -1756,7 +1756,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 // namespace Nektar
 
 
-void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const NekDouble> &field, std::string &fulltext)
+void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields, std::string &fulltext)
 {
     int nq = GetTotPoints();
 
@@ -1768,7 +1768,7 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const NekDoub
 
     // phim should be only defined in the intracellular space
     Array<OneD, NekDouble> phi_m; // = m_fields[0]->GetPhys();
-    Vmath::Vmul(nq, m_intrazone, 1, field, 1, phi_m, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
 
     NekDouble phimMax = Vmath::Vmax(nq, phi_m, 1);
     NekDouble phimMin = Vmath::Vmin(nq, phi_m, 1);
@@ -1831,14 +1831,23 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const NekDoub
 
         NekDouble currentperc = 100.0 * fabs(extcurrentMin) / fabs(intcurrentMax) ;
         fulltext.append("Current ratio: Int (+) vs. Ext(-) = " + std::to_string(currentperc));
+        fulltext.append("\n");
+
+        Vmath::Vadd(nq, extcurrent, 1, intcurrent, 1, intcurrent, 1);
+
+         intcurrentMax = Vmath::Vmax(nq, intcurrent, 1);
+         intcurrentMin = Vmath::Vmin(nq, intcurrent, 1);
+
+         intcurrentMaxid = Vmath::Imax(nq, intcurrent, 1);
+         intcurrentMinid = Vmath::Imin(nq, intcurrent, 1);
+
+        fulltext.append("Modified intcurrent, max: " + std::to_string(intcurrentMax) + " at y = " + std::to_string(x1[intcurrentMaxid]) );
+        fulltext.append(", intcurrent, min: " + std::to_string(intcurrentMin) + " at y = " + std::to_string(x1[intcurrentMinid]) );
+        fulltext.append("\n");
 
         fulltext.append("\n");
 
-        // if(m_NeuralEPType==eNeuralEP2Dbi)
-        // {
-        //     DisplayNode2D(fulltext, fields);
-        // }
-
+        DisplayNode2D(fulltext, fields);
     }
 
 }
@@ -2587,6 +2596,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     // Only nonzero for node.
     Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    Vmath::Neg(nq, phimLaplacian, 1);
 
     // Compute phie distribution
     // SetBoundaryConditions(0.0);
