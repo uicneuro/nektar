@@ -1673,10 +1673,7 @@ void MMFNeuralEP::DoSolveMMFZero()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save fields into fieldsold
-        for (i = 0; i < 1; ++i)
-        {
-            Vmath::Vcopy(nq, &fields[i][0], 1, &fields_old[i][0], 1);
-        }
+        Vmath::Vcopy(nq, &fields[0][0], 1, &fields_old[0][0], 1);
 
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
@@ -2538,7 +2535,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
         // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
-        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+        Vmath::Smul(nq, -1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
     }
 
     // add divergence of phie to the current
@@ -2580,7 +2577,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     // Only nonzero for node.
     Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
-    Vmath::Neg(nq, phimLaplacian, 1);
 
     // Compute phie distribution
     // SetBoundaryConditions(0.0);
