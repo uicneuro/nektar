@@ -1831,7 +1831,7 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<O
         fulltext.append("Modified intcurrent, min: " + std::to_string(extcurrentMin) + " ( " + std::to_string(Minratio) + " %) at y = " + std::to_string(x1[totcurrentMinid]) );
         fulltext.append("\n");
 
-        DisplayNode2D(fulltext, fields);
+        // DisplayNode2D(fulltext, fields);
     }
 
 }
@@ -2593,9 +2593,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     m_fields[1]->SetPhysState(true);
 
     outarray = m_fields[1]->GetPhys();
-
-    // Vmath::Sadd(nq, -1.0 * AvgInt(outarray), outarray, 1, m_fields[1]->UpdatePhys(), 1);
-
+    
     return outarray;
 }
 
