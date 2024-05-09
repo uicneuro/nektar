@@ -1852,7 +1852,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 2;
+    int nvar    = 3;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -1882,24 +1882,26 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     Array<OneD, NekDouble> phieextra(nq);
     Vmath::Vmul(nq, m_intrazone, 1, phie, 1, phieintra, 1);
     Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    
+    Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
     std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
     std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
 
-    Array<OneD, NekDouble> phimcurrent(nq);
-    Vmath::Vsub(nq, phim, 1, phie, 1, phimcurrent, 1);
-    Vmath::Vmul(nq, m_intrazone, 1, phimcurrent, 1, phimcurrent, 1);
+    Array<OneD, NekDouble> totcurrent(nq);
+    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent, 1);
 
     // index:0 -> u
-    NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, phimcurrent, 1) / Vmath::Vmax(nq, phim, 1);
-    NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, phimcurrent, 1) / Vmath::Vmin(nq, phim, 1);
+    NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, totcurrent, 1) / Vmath::Vmax(nq, phimcurrent, 1);
+    NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, totcurrent, 1) / Vmath::Vmin(nq, phimcurrent, 1);
 
     std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
     << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
 
-    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
+    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl << std::endl;
 
-    m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[2]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
