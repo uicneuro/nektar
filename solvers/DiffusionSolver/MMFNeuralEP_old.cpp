@@ -374,21 +374,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    for (int i=0; i<nq; ++i)
-    {
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            if(m_zoneindex[0][i] == -2)
-            {
-                unitAniStrength[j][i] = 0.0;
-            }
-        }
-    }
-
     std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction ===============" << std::endl;
+
     SetUpMovingFrames(m_MMFdir, unitAniStrength, m_unitmovingframes);
-    
-    CheckMovingFrames(m_unitmovingframes);
 
     // Construct phiemovingframes 
     std::string phieMMFdirStr;
@@ -501,6 +489,35 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     }
                  }
             }
+
+            // NekDouble ekx, eky, ekz, eLjx, eLjy, eLjz;
+            // NekDouble mftmp, mfsum;
+            // for (int i = 0; i<nq; ++i)
+            // {
+            //     for (int j = 0; j < m_expdim; ++j)
+            //     { 
+            //         // AniStrength in the intracellular space: \Sigma_i
+            //         // a e^1_L + b e^2_L = d^1_Y
+            //         // a = e^1_L \cdot d^1_Y
+            //         mfsum=0;
+            //         for (int k=0; k<m_mfdim; ++k)
+            //         {
+            //             ekx = m_movingframes[k][i];
+            //             eky = m_movingframes[k][nq+i];
+            //             ekz = m_movingframes[k][2*nq+i];
+
+            //             eLjx = m_phiemovingframes[j][i];
+            //             eLjy = m_phiemovingframes[j][nq+i];
+            //             eLjz = m_phiemovingframes[j][2*nq+i];
+
+            //             mftmp = ekx * eLjx + eky * eLjy + ekz * eLjz;
+
+            //             mfsum = mfsum + mftmp * mftmp ;
+            //         }
+
+            //         sigma_i[j][i] = mfsum;
+            //     }
+            // }
 
             std::cout << "Max sigma_i_1  = "
                         << Vmath::Vmax(nq, sigma_i[0], 1)
@@ -1701,8 +1718,8 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PrintoutFields(nvariables, fields, fulltext);
-            std::cout << fulltext << "\n" << std::endl;
+            // PrintoutFields(nvariables, fields, fulltext);
+            // std::cout << fulltext << "\n" << std::endl;
 
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             Checkpoint_Output(nchk++);
@@ -1757,20 +1774,6 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<O
     fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
     fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
 
-    fulltext.append("\n");
-
-
-    Array<OneD, NekDouble> phimLap1 = ComputeMMFDiffusion(m_unitmovingframes, phi_m);
-    Array<OneD, NekDouble> phimLap2 = ComputeMMFDiffusion(m_movingframes, phi_m);
-
-    // Only nonzero for node.
-    Vmath::Vmul(nq, m_nodezone, 1, phimLap1, 1, phimLap1, 1);
-    Vmath::Vmul(nq, m_nodezone, 1, phimLap2, 1, phimLap2, 1);
-
-    Array<OneD, NekDouble> phimLapdiff(nq);
-    Vmath::Vsub(nq, phimLap1, 1, phimLap2, 1, phimLapdiff, 1);
-
-   fulltext.append("Lap of phim Diff: Max = " + std::to_string(Vmath::Vmax(nq, phimLapdiff, 1)) + ", Min = " + std::to_string(Vmath::Vmin(nq, phimLapdiff, 1)) );
     fulltext.append("\n");
 
     if(nvar==2) 
@@ -2522,22 +2525,20 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
-    Array<OneD, NekDouble> tmp(nq);    
     if(m_ExtCurrentType == eEphaptic)
     {
-        Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
-        Array<OneD, NekDouble> phie = Computephie(tmp);
+        Array<OneD, NekDouble> phie = Computephie(inarray[0]);
         
         // Compute (1/C_n/r) * \nabla^2 \phi_e
         extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
         // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
-        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+        Vmath::Smul(nq, -1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
     }
 
-    // subtract the current from the divergence of phie
-    Vmath::Vadd(nq, &outarray[0][0], 1, &extcurrent[0], 1, &outarray[0][0], 1);
+    // add divergence of phie to the current
+    Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     if (m_explicitDiffusion)
     {
@@ -2571,7 +2572,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
+    Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_movingframes, phim);
 
     // Only nonzero for node.
     Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
