@@ -1723,86 +1723,85 @@ void MMFNeuralEP::DoSolveMMFZero()
 // namespace Nektar
 
 
-void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields)
-{
-    int nq = GetTotPoints();
+// void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields)
+// {
+//     int nq = GetTotPoints();
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
+//     Array<OneD, NekDouble> x0(nq);
+//     Array<OneD, NekDouble> x1(nq);
+//     Array<OneD, NekDouble> x2(nq);
 
-    m_fields[0]->GetCoords(x0, x1, x2);
+//     m_fields[0]->GetCoords(x0, x1, x2);
 
-    // phim should be only defined in the intracellular space
-    Array<OneD, NekDouble> phi_m; // = m_fields[0]->GetPhys();
-    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
+//     // phim should be only defined in the intracellular space
+//     Array<OneD, NekDouble> phi_m; // = m_fields[0]->GetPhys();
+//     Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
 
-    NekDouble phimMax = Vmath::Vmax(nq, phi_m, 1);
-    NekDouble phimMin = Vmath::Vmin(nq, phi_m, 1);
+//     NekDouble phimMax = Vmath::Vmax(nq, phi_m, 1);
+//     NekDouble phimMin = Vmath::Vmin(nq, phi_m, 1);
 
-    int phimMaxid = Vmath::Imax(nq, phi_m, 1);
-    int phimMinid = Vmath::Imin(nq, phi_m, 1);
+//     int phimMaxid = Vmath::Imax(nq, phi_m, 1);
+//     int phimMinid = Vmath::Imin(nq, phi_m, 1);
 
-    fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
-    fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
+//     fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
+//     fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
 
-    fulltext.append("\n");
+//     fulltext.append("\n");
 
-    if(nvar==2) 
-    {
-        // phi_e is defined at the node and extracellular space
-        Array<OneD, NekDouble> phi_e = m_fields[1]->GetPhys();
-        // Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
+//     if(nvar==2) 
+//     {
+//         // phi_e is defined at the node and extracellular space
+//         Array<OneD, NekDouble> phi_e = m_fields[1]->GetPhys();
+//         // Vmath::Vmul(nq, m_extrazone, 1, phi_e, 1, phi_e, 1);
         
-        NekDouble phieMax = Vmath::Vmax(nq, phi_e, 1);
-        NekDouble phieMin = Vmath::Vmin(nq, phi_e, 1);
+//         NekDouble phieMax = Vmath::Vmax(nq, phi_e, 1);
+//         NekDouble phieMin = Vmath::Vmin(nq, phi_e, 1);
 
-        int phieMaxid = Vmath::Imax(nq, phi_e, 1);
-        int phieMinid = Vmath::Imin(nq, phi_e, 1);
+//         int phieMaxid = Vmath::Imax(nq, phi_e, 1);
+//         int phieMinid = Vmath::Imin(nq, phi_e, 1);
 
-        fulltext.append("phi_e, max: " + std::to_string(phieMax) + " at y = " + std::to_string(x1[phieMaxid]) );
-        fulltext.append(", phi_e, min: " + std::to_string(phieMin) + " at y = " + std::to_string(x1[phieMinid]) );
-        fulltext.append("\n");
+//         fulltext.append("phi_e, max: " + std::to_string(phieMax) + " at y = " + std::to_string(x1[phieMaxid]) );
+//         fulltext.append(", phi_e, min: " + std::to_string(phieMin) + " at y = " + std::to_string(x1[phieMinid]) );
+//         fulltext.append("\n");
 
-        // Compute (1/C_n/r) * \nabla^2 \phi_e
-        Array<OneD, NekDouble> intcurrent = ComputeMMFDiffusion(m_movingframes, phi_m);
+//         // Compute (1/C_n/r) * \nabla^2 \phi_e
+//         Array<OneD, NekDouble> intcurrent = ComputeMMFDiffusion(m_movingframes, phi_m);
 
-        // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
-        Vmath::Vmul(nq, m_intrazone, 1, intcurrent, 1, intcurrent, 1);
-        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), intcurrent, 1, intcurrent, 1);
+//         // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
+//         Vmath::Vmul(nq, m_intrazone, 1, intcurrent, 1, intcurrent, 1);
+//         Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), intcurrent, 1, intcurrent, 1);
 
-        NekDouble intcurrentMax = Vmath::Vmax(nq, intcurrent, 1);
-        NekDouble intcurrentMin = Vmath::Vmin(nq, intcurrent, 1);
+//         NekDouble intcurrentMax = Vmath::Vmax(nq, intcurrent, 1);
+//         NekDouble intcurrentMin = Vmath::Vmin(nq, intcurrent, 1);
 
-        Array<OneD, NekDouble> extcurrent = ComputeMMFDiffusion(m_movingframes, phi_e);
+//         Array<OneD, NekDouble> extcurrent = ComputeMMFDiffusion(m_movingframes, phi_e);
 
-        Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
-        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+//         Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
+//         Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
 
-        NekDouble extcurrentMax = Vmath::Vmax(nq, extcurrent, 1);
-        NekDouble extcurrentMin = Vmath::Vmin(nq, extcurrent, 1);
+//         NekDouble extcurrentMax = Vmath::Vmax(nq, extcurrent, 1);
+//         NekDouble extcurrentMin = Vmath::Vmin(nq, extcurrent, 1);
 
-        Array<OneD, NekDouble> totcurrent(nq);
+//         Array<OneD, NekDouble> totcurrent(nq);
 
-        Vmath::Vadd(nq, extcurrent, 1, intcurrent, 1, totcurrent, 1);
+//         Vmath::Vadd(nq, extcurrent, 1, intcurrent, 1, totcurrent, 1);
 
-        NekDouble totcurrentMax = Vmath::Vmax(nq, totcurrent, 1);
-        NekDouble totcurrentMin = Vmath::Vmin(nq, totcurrent, 1);
+//         NekDouble totcurrentMax = Vmath::Vmax(nq, totcurrent, 1);
+//         NekDouble totcurrentMin = Vmath::Vmin(nq, totcurrent, 1);
 
-        NekDouble totcurrentMaxid = Vmath::Imax(nq, totcurrent, 1);
-        NekDouble totcurrentMinid = Vmath::Imin(nq, totcurrent, 1);
+//         NekDouble totcurrentMaxid = Vmath::Imax(nq, totcurrent, 1);
+//         NekDouble totcurrentMinid = Vmath::Imin(nq, totcurrent, 1);
 
-        NekDouble Maxratio = 100.0 * fabs(totcurrentMax) / fabs(intcurrentMax) ;
-        NekDouble Minratio = 100.0 * fabs(totcurrentMin) / fabs(intcurrentMin) ;
+//         NekDouble Maxratio = 100.0 * fabs(totcurrentMax) / fabs(intcurrentMax) ;
+//         NekDouble Minratio = 100.0 * fabs(totcurrentMin) / fabs(intcurrentMin) ;
 
-        fulltext.append("Modified intcurrent, max: " + std::to_string(extcurrentMax) + " ( " + std::to_string(Maxratio) + " %) at y = " + std::to_string(x1[totcurrentMaxid]) );
-        fulltext.append("Modified intcurrent, min: " + std::to_string(extcurrentMin) + " ( " + std::to_string(Minratio) + " %) at y = " + std::to_string(x1[totcurrentMinid]) );
-        fulltext.append("\n");
+//         fulltext.append("Modified intcurrent, max: " + std::to_string(extcurrentMax) + " ( " + std::to_string(Maxratio) + " %) at y = " + std::to_string(x1[totcurrentMaxid]) );
+//         fulltext.append("Modified intcurrent, min: " + std::to_string(extcurrentMin) + " ( " + std::to_string(Minratio) + " %) at y = " + std::to_string(x1[totcurrentMinid]) );
+//         fulltext.append("\n");
 
-        // DisplayNode2D(fulltext, fields);
-    }
-
-}
+//         // DisplayNode2D(fulltext, fields);
+//     }
+// }
 
 // ComputeNeuralTimeMap(m_time, m_urest, m_uTol, m_dudtTol, m_zoneindex[0], dudtval, dudtvalHistory, fields[0], TimeMap);
 void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
@@ -1871,23 +1870,32 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[1] = "phie";
     variables[2] = "TimeMap";
 
+    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
+
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
     m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[0]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[1]);
 
+    Array<OneD, NekDouble> phieintra(nq);
+    Array<OneD, NekDouble> phieextra(nq);
+    Vmath::Vmul(nq, m_intrazone, 1, phie, 1, phieintra, 1);
+    Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+
+    std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
+    std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
+
     Array<OneD, NekDouble> phimcurrent(nq);
     Vmath::Vsub(nq, phim, 1, phie, 1, phimcurrent, 1);
     Vmath::Vmul(nq, m_intrazone, 1, phimcurrent, 1, phimcurrent, 1);
 
-
-
     // index:0 -> u
-    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
-    std::cout << "phie: Max = " << Vmath::Vmax(nq, phie, 1) << ", Min = " << Vmath::Vmin(nq, phie, 1) << std::endl;
-    
+    NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, phimcurrent, 1) / Vmath::Vmax(nq, phim, 1);
+    NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, phimcurrent, 1) / Vmath::Vmin(nq, phim, 1);
 
+    std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
+    << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
 
     std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 

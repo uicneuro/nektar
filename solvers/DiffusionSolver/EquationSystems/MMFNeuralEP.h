@@ -568,7 +568,7 @@ protected:
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
         
-    void PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields, std::string &fulltext);
+    // void PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields, std::string &fulltext);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
