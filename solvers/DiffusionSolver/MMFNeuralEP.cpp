@@ -98,7 +98,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
     
     // Resting potential     NekDouble m_phimrest, m_phimTol, m_dudtTol;
-
     m_session->LoadParameter("phimrest", m_phimrest, 80.0);
     m_session->LoadParameter("phimTol", m_phimTol, 10.0);
     m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 0.01);
@@ -568,7 +567,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             std::cout << "================================================ " << std::endl;
-
             std::cout << "Max phieAnistrength_1  = "
                         << Vmath::Vmax(nq, m_phieAniStrength[0], 1)
                         << ", phieAnistrength_2 = "
@@ -577,7 +575,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                         << Vmath::Vmin(nq, m_phieAniStrength[0], 1)
                         << ", phieAnistrength 2 = "
                         << Vmath::Vmin(nq, m_phieAniStrength[1], 1) << std::endl;
-
             std::cout << "================================================ " << std::endl;
             
             PlotPhieMF(sigma_i, sigma_e, m_phieAniStrength);
@@ -1620,7 +1617,7 @@ void MMFNeuralEP::DoSolveMMFZero()
     Array<OneD, Array<OneD, NekDouble>> fields_old(nvariables);
 
     // Order storage to list time-integrated fields first.
-    for (i = 0; i < 1; ++i)
+    for (i = 0; i < nvariables; ++i)
     {
         fields[i] = m_fields[m_intVariables[i]]->GetPhys();
         m_fields[m_intVariables[i]]->SetPhysState(false);
@@ -1704,8 +1701,8 @@ void MMFNeuralEP::DoSolveMMFZero()
             // PrintoutFields(nvariables, fields, fulltext);
             std::cout << fulltext << "\n" << std::endl;
 
-            // PlotNeuralTimeMap(fields[0], TimeMap, nchk);
-            // Checkpoint_Output(nchk++);
+            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            Checkpoint_Output(nchk++);
 
             doCheckTime = false;
         }

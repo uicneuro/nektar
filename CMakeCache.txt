@@ -24,9 +24,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=/Users/schun/nektar
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=17
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=24
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=4
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=/opt/local/bin/cmake
 //Path to cpack program executable.
@@ -34,5 +34,5 @@ CMAKE_CPACK_COMMAND:INTERNAL=/opt/local/bin/cpack
 //Path to ctest program executable.
 CMAKE_CTEST_COMMAND:INTERNAL=/opt/local/bin/ctest
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=/opt/local/share/cmake-3.17
+CMAKE_ROOT:INTERNAL=/opt/local/share/cmake-3.24
 
