@@ -1682,14 +1682,7 @@ void MMFNeuralEP::DoSolveMMFZero()
             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
                       << " "
                       << "Time: " << std::setw(12) << std::left << m_time
-                      << std::endl;
-
-            fulltext.append("\n");
-            fulltext.append("Time: " + std::to_string(m_time));
-            fulltext.append("\n");
-
-            fulltext.append("CPU Time: " + std::to_string(cpuTime / 60.0) + " min.");
-            fulltext.append("\n");
+                      << ", CPU Time = " << cpuTime / 60.0 << " min." << std::endl << std::endl;
 
             cpuTime = 0.0;
         }
@@ -1699,7 +1692,6 @@ void MMFNeuralEP::DoSolveMMFZero()
             doCheckTime)
         {
             // PrintoutFields(nvariables, fields, fulltext);
-            std::cout << fulltext << "\n" << std::endl;
 
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             Checkpoint_Output(nchk++);
@@ -1731,7 +1723,7 @@ void MMFNeuralEP::DoSolveMMFZero()
 // namespace Nektar
 
 
-void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields, std::string &fulltext)
+void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
     int nq = GetTotPoints();
 
@@ -1754,20 +1746,6 @@ void MMFNeuralEP::PrintoutFields(const int nvar, const Array<OneD, const Array<O
     fulltext.append("phi_m, max: " + std::to_string(phimMax) + " at y = " + std::to_string(x1[phimMaxid]) );
     fulltext.append("./ phi_m, min: " + std::to_string(phimMin) + " at y = " + std::to_string(x1[phimMinid]) );
 
-    fulltext.append("\n");
-
-
-    Array<OneD, NekDouble> phimLap1 = ComputeMMFDiffusion(m_unitmovingframes, phi_m);
-    Array<OneD, NekDouble> phimLap2 = ComputeMMFDiffusion(m_movingframes, phi_m);
-
-    // Only nonzero for node.
-    Vmath::Vmul(nq, m_nodezone, 1, phimLap1, 1, phimLap1, 1);
-    Vmath::Vmul(nq, m_nodezone, 1, phimLap2, 1, phimLap2, 1);
-
-    Array<OneD, NekDouble> phimLapdiff(nq);
-    Vmath::Vsub(nq, phimLap1, 1, phimLap2, 1, phimLapdiff, 1);
-
-   fulltext.append("Lap of phim Diff: Max = " + std::to_string(Vmath::Vmax(nq, phimLapdiff, 1)) + ", Min = " + std::to_string(Vmath::Vmin(nq, phimLapdiff, 1)) );
     fulltext.append("\n");
 
     if(nvar==2) 
@@ -1890,14 +1868,28 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     std::vector<std::string> variables(nvar);
     variables[0] = "phim";
-    variables[1] = "TimeMap";
+    variables[1] = "phie";
+    variables[2] = "TimeMap";
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
     m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[1]);
+
+    Array<OneD, NekDouble> phimcurrent(nq);
+    Vmath::Vsub(nq, phim, 1, phie, 1, phimcurrent, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phimcurrent, 1, phimcurrent, 1);
+
+
 
     // index:0 -> u
-    std::cout << "PlotTimeMap: phim: Max = " << Vmath::Vmax(nq, phim, 1)
-                << ", Min = " << Vmath::Vmin(nq, phim, 1) << ", Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1)
-                << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
+    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
+    std::cout << "phie: Max = " << Vmath::Vmax(nq, phie, 1) << ", Min = " << Vmath::Vmin(nq, phie, 1) << std::endl;
+    
+
+
+    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl;
 
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[1]);
 
