@@ -483,7 +483,7 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void SetMembraneBoundaryCondition(const NekDouble time = 0.0);
+    // void SetMembraneBoundaryCondition(const NekDouble time = 0.0);
 
     void PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray,
                           const int nstep);
@@ -554,13 +554,10 @@ protected:
         Array<OneD, NekDouble> &extrazone);
 
     void ComputeNeuralTimeMap(const NekDouble time,
-                                const NekDouble urest,
-                                const NekDouble uTol,
-                                const NekDouble dudtTol,
                                 const Array<OneD, const int> &zoneindex,
-                                const Array<OneD, const NekDouble> &dudt,
-                                Array<OneD, NekDouble> &dudtHistory,
+                                const Array<OneD, const NekDouble> &field_old,
                                 const Array<OneD, const NekDouble> &field,
+                                Array<OneD, NekDouble> &dudtHistory,
                                 Array<OneD, NekDouble> &TimeMap);
                                 
     void PlotNeuralTimeMap(
@@ -568,7 +565,10 @@ protected:
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
         
-    // void PrintoutFields(const int nvar, const Array<OneD, const Array<OneD, NekDouble>> &fields, std::string &fulltext);
+    Array<OneD, NekDouble> ConvertTMtoVel(
+        const Array<OneD, const NekDouble> &TimeMap,
+        const Array<OneD, const Array<OneD, NekDouble>> &TmapGrad,
+        const Array<OneD, const NekDouble> &TmapGradMag);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
