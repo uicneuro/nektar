@@ -1793,7 +1793,14 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     Array<OneD, Array<OneD, NekDouble>> TmapGrad(m_expdim);
     ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
-    Array<OneD, NekDouble> TmapGradMag = ComputeVelocityMag(TmapGrad);
+    // Array<OneD, NekDouble> TmapGradMag = ComputeVelocityMag(TmapGrad);
+
+    Array<OneD, NekDouble> TmapGradMag(nq, 0.0);
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        Vmath::Vvtvp(nq, &TmapGrad[k][0], 1, &TmapGrad[k][0], 1, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
+    }
+    Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
 
     Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
 
