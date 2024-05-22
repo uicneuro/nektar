@@ -1806,7 +1806,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     }
     Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
 
-    Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
+    // Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
 
     m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
 
