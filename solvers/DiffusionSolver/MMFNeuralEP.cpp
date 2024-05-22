@@ -1764,7 +1764,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 9;
+    int nvar    = 8;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -1782,37 +1782,38 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[1] = "VelMag";
     variables[2] = "Velx";
     variables[3] = "Vely";
-    variables[4] = "Velz";
-    variables[5] = "phim";
-    variables[6] = "phie";
-    variables[7] = "phimcurrent";
-    variables[8] = "phiecurrent";
+    variables[4] = "phim";
+    variables[5] = "phie";
+    variables[6] = "phimcurrent";
+    variables[7] = "phiecurrent";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
 
-    Array<OneD, Array<OneD, NekDouble>> TmapGrad(m_expdim);
-    for (int k = 0; k < m_expdim; ++k)
-    {
-        TmapGrad[k] = Array<OneD, NekDouble>(nq,0.0);
-    }
+    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
+    TmapGrad = ComputeEuclideanGradient(TimeMap);
 
     // ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
 
     Array<OneD, NekDouble> TmapGradMag(nq, 0.0);
     for (int k = 0; k < m_spacedim; ++k)
     {
-        Vmath::Vvtvp(nq, &TmapGrad[k][0], 1, &TmapGrad[k][0], 1, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
+        Vmath::Vvtvp(nq, &TmapGrad[k * nq], 1, &TmapGrad[k * nq], 1, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
     }
     Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
 
-    // Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
+    Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
 
     m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
 
-    m_fields[0]->FwdTransLocalElmt(TmapGrad[0], fieldcoeffs[2]);
-    m_fields[0]->FwdTransLocalElmt(TmapGrad[1], fieldcoeffs[3]);
-    m_fields[0]->FwdTransLocalElmt(TmapGrad[2], fieldcoeffs[4]);
+    Array<OneD, NekDouble> tmpx(nq);
+    Array<OneD, NekDouble> tmpy(nq);
+
+    Vmath::Vcopy(nq, &Velocity[0], 1, &tmpx[0], 1);
+    Vmath::Vcopy(nq, &Velocity[nq], 1, &tmpy[0], 1);
+
+    m_fields[0]->FwdTransLocalElmt(tmpx, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(tmpy, fieldcoeffs[3]);
 
     // std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
 
@@ -2598,7 +2599,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 // Change TimeMap to Velocity
     Array<OneD, NekDouble> MMFNeuralEP::ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
-        const Array<OneD, const Array<OneD, NekDouble>> &TmapGrad,
+        const Array<OneD, const NekDouble> &TmapGrad,
         const Array<OneD, const NekDouble> &TmapGradMag)
 {
     int nq = m_fields[0]->GetTotPoints();
@@ -2623,7 +2624,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             {
                 for (int k = 0; k < m_spacedim; ++k)
                 {
-                    outarray[k*nq + i] = TmapGrad[k][i] / (TMgradmag * TMgradmag);
+                    outarray[k*nq + i] = TmapGrad[ k* nq + i] / (TMgradmag * TMgradmag);
                 }
             }
         }

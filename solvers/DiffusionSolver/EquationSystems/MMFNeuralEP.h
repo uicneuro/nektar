@@ -567,7 +567,7 @@ protected:
         
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
-        const Array<OneD, const Array<OneD, NekDouble>> &TmapGrad,
+        const Array<OneD, const NekDouble> &TmapGrad,
         const Array<OneD, const NekDouble> &TmapGradMag);
 
     /// Sets a custom initial condition.
