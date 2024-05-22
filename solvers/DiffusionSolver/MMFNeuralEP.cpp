@@ -1683,7 +1683,7 @@ void MMFNeuralEP::DoSolveMMFZero()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            // PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
@@ -1797,60 +1797,58 @@ void MMFNeuralEP::PlotNeuralTimeMap(
         TmapGrad[k] = Array<OneD, NekDouble>(nq,0.0);
     }
 
-    // ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
-    // Array<OneD, NekDouble> TmapGradMag = ComputeVelocityMag(TmapGrad);
+    ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
 
     Array<OneD, NekDouble> TmapGradMag(nq, 0.0);
-    // for (int k = 0; k < m_spacedim; ++k)
-    // {
-    //     Vmath::Vvtvp(nq, &TmapGrad[k][0], 1, &TmapGrad[k][0], 1, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
-    // }
-    // Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
+    for (int k = 0; k < m_spacedim; ++k)
+    {
+        Vmath::Vvtvp(nq, &TmapGrad[k][0], 1, &TmapGrad[k][0], 1, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
+    }
+    Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
 
-    // Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
+    Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
 
-    // m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
 
     m_fields[0]->FwdTransLocalElmt(TmapGrad[0], fieldcoeffs[2]);
     m_fields[0]->FwdTransLocalElmt(TmapGrad[1], fieldcoeffs[3]);
     m_fields[0]->FwdTransLocalElmt(TmapGrad[2], fieldcoeffs[4]);
 
+    // std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
 
-    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
+    // Array<OneD, NekDouble> phie(nq);
+    // Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-    Array<OneD, NekDouble> phie(nq);
-    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+    // m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[5]);
+    // m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[6]);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[5]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[6]);
-
-    Array<OneD, NekDouble> phieintra(nq);
-    Array<OneD, NekDouble> phieextra(nq);
-    Vmath::Vmul(nq, m_intrazone, 1, phie, 1, phieintra, 1);
-    Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    // Array<OneD, NekDouble> phieintra(nq);
+    // Array<OneD, NekDouble> phieextra(nq);
+    // Vmath::Vmul(nq, m_intrazone, 1, phie, 1, phieintra, 1);
+    // Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
     
-    Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
-    Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
+    // Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    // Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-    m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[7]);
-    m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[8]);
+    // m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[7]);
+    // m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[8]);
 
-    std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
-    std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
+    // std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
+    // std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
 
-    Array<OneD, NekDouble> totcurrent(nq);
-    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent, 1);
+    // Array<OneD, NekDouble> totcurrent(nq);
+    // Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent, 1);
 
-    // index:0 -> u
-    NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, totcurrent, 1) / Vmath::Vmax(nq, phimcurrent, 1);
-    NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, totcurrent, 1) / Vmath::Vmin(nq, phimcurrent, 1);
+    // // index:0 -> u
+    // NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, totcurrent, 1) / Vmath::Vmax(nq, phimcurrent, 1);
+    // NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, totcurrent, 1) / Vmath::Vmin(nq, phimcurrent, 1);
 
-    std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
-    << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
+    // std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
+    // << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
 
-    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl << std::endl;
+    // std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl << std::endl;
 
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+    // WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
 
@@ -2610,22 +2608,22 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
     // Compute VelField \vec{v} = \sum_{i=1}^3 1/(\nabla T \cdot \hat{x}_i)
     // \hat{x}_i
-    NekDouble TMgrad, TM, TMgradrel;
+    NekDouble TMgradmag, TM, TMgradrel;
     NekDouble TmapTol = 0.1;
     for (int i = 0; i < nq; i++)
     {
-        TMgrad = TmapGradMag[i];
+        TMgradmag = TmapGradMag[i];
         TM = TimeMap[i];
 
-        if( ( TMgrad > TmapTol) && ( TM > TmapTol) )
+        if( ( TMgradmag > TmapTol) && ( TM > TmapTol) )
         {
-            TMgradrel = TMgrad / TM ;
+            TMgradrel = TMgradmag / TM ;
 
             if (TMgradrel > TmapTol)
             {
                 for (int k = 0; k < m_spacedim; ++k)
                 {
-                    outarray[k*nq + i] = TmapGrad[k][i] / (TMgrad * TMgrad);
+                    outarray[k*nq + i] = TmapGrad[k][i] / (TMgradmag * TMgradmag);
                 }
             }
         }
