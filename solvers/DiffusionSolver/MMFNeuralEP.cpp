@@ -1797,7 +1797,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
         TmapGrad[k] = Array<OneD, NekDouble>(nq,0.0);
     }
 
-    ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
+    // ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
 
     Array<OneD, NekDouble> TmapGradMag(nq, 0.0);
     for (int k = 0; k < m_spacedim; ++k)
