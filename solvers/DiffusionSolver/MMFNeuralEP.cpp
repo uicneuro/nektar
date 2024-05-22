@@ -1574,7 +1574,7 @@ void MMFNeuralEP::v_DoSolve()
         case eMMFFirst:
         case eTimeMap:
         {
-            DoSolveMMFZero();
+            DoSolveMMF();
             break;
         }
 
@@ -1589,7 +1589,7 @@ void MMFNeuralEP::v_DoSolve()
     }
 }
 
-void MMFNeuralEP::DoSolveMMFZero()
+void MMFNeuralEP::DoSolveMMF()
 {
     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
 
@@ -1641,9 +1641,6 @@ void MMFNeuralEP::DoSolveMMFZero()
     NekDouble intTime = 0.0;
     NekDouble cpuTime = 0.0;
     NekDouble elapsed = 0.0;
-
-    Array<OneD, NekDouble> velmag(nq, 0.0);
-    Array<OneD, NekDouble> velocity(m_spacedim * nq);
 
     Array<OneD, NekDouble> TimeMap(nq, 0.0);
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
@@ -2262,9 +2259,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                         factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
-
-    // phi_m is only defined in the intracellular area
-    Vmath::Vmul(nq, m_intrazone, 1, outarray[0], 1, outarray[0], 1);
 
     m_fields[0]->SetPhysState(true);
 }

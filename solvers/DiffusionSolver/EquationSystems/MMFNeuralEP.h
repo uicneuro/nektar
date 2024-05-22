@@ -347,7 +347,7 @@ protected:
     InitWaveType m_InitWaveType;
 
     // void DoSolveMMFFirst();
-    void DoSolveMMFZero();
+    void DoSolveMMF();
     void DoSolvePoint();
     
     // Coefficients for Anisotropy
