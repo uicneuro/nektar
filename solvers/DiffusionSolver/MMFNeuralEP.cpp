@@ -1815,6 +1815,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     m_fields[0]->FwdTransLocalElmt(tmpx, fieldcoeffs[2]);
     m_fields[0]->FwdTransLocalElmt(tmpy, fieldcoeffs[3]);
 
+
     std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
 
     Array<OneD, NekDouble> phie(nq);
