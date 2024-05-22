@@ -1821,8 +1821,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[5]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[5]);
 
     Array<OneD, NekDouble> phieintra(nq);
     Array<OneD, NekDouble> phieextra(nq);
@@ -1832,8 +1832,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-    m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[7]);
-    m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[8]);
+    m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[7]);
 
     std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
     std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
