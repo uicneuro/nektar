@@ -52,8 +52,7 @@ namespace Nektar
 
 enum NeuralEPType
 {
-    eNeuralHelmTest,
-    eTestRanvierNode,
+    eNeuralHelmSolve,
     eNeuralEPPT,
     eNeuralEP1D,
     eNeuralEP2Dmono,
@@ -62,8 +61,7 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
-    "NeuralHelmTest",
-    "TestRanvierNode",
+    "NeuralHelmSolve",
     "NeuralEPPT",
     "NeuralEP1D",
     "NeuralEP2Dmono",
@@ -358,9 +356,6 @@ protected:
     void CheckOutZoneAni();
 
     Array<OneD, int> GetInternalBoundaryPoints();
-
-    void PlotHelmSolve(const Array<OneD, const NekDouble> &forcing,
-                       const Array<OneD, const NekDouble> &solution);
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
