@@ -52,7 +52,8 @@ namespace Nektar
 
 enum NeuralEPType
 {
-    eNeuralHelmSolve,
+    eNeuralHelmSolveSingle,
+    eNeuralHelmSolveDuo,
     eNeuralEPPT,
     eNeuralEP1D,
     eNeuralEP2Dmono,
@@ -61,7 +62,8 @@ enum NeuralEPType
 };
 
 const char *const NeuralEPTypeMap[] = {
-    "NeuralHelmSolve",
+    "NeuralHelmSolveSingle",
+    "NeuralHelmSolveDuo",
     "NeuralEPPT",
     "NeuralEP1D",
     "NeuralEP2Dmono",
@@ -508,7 +510,8 @@ protected:
 
     Array<OneD, NekDouble> PlanePhiWave();
     
-    Array<OneD, int> TestRanvierIndex();
+    Array<OneD, int> TestRanvierSingleIndex();
+    Array<OneD, int> TestRanvierDuoIndex();
 
     Array<OneD, int> IndexNodeZone1D(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
