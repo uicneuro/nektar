@@ -1987,7 +1987,6 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     m_fields[0]->FwdTransLocalElmt(tmpx, fieldcoeffs[2]);
     m_fields[0]->FwdTransLocalElmt(tmpy, fieldcoeffs[3]);
 
-
     std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
 
     Array<OneD, NekDouble> phie(nq);
@@ -2211,7 +2210,7 @@ void MMFNeuralEP::DisplayNode2D(std::string &fulltext, const Array<OneD, const A
     Array<OneD, NekDouble> phi_m(nq);
     Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phi_m, 1);
     
-    Array<OneD, NekDouble> phi_e = Computephie(fields[0]);
+    Array<OneD, NekDouble> phi_e = Computephie(m_ExtCurrentType, fields[0]);
 
     Array<OneD, NekDouble> phimavg(m_totNode+2,0.0);
     Array<OneD, NekDouble> phieavg(m_totNode+2,0.0);
@@ -2642,18 +2641,16 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
     Array<OneD, NekDouble> tmp(nq);    
-    if(m_ExtCurrentType == eEphaptic)
-    {
-        Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
-        Array<OneD, NekDouble> phie = Computephie(tmp);
-        
-        // Compute (1/C_n/r) * \nabla^2 \phi_e
-        extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-        // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
-        Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
-        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
-    }
+    Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
+    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, tmp);
+    
+    // Compute (1/C_n/r) * \nabla^2 \phi_e
+    extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
+
+    // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
+    Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
+    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
 
     // subtract the current from the divergence of phie
     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
@@ -2675,6 +2672,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
 Array<OneD, NekDouble> MMFNeuralEP::Computephie(
+    ExtCurrentType extcurrent,
     const Array<OneD, const NekDouble> &phim)
 {
     int nq = m_fields[0]->GetNpoints();
@@ -2693,7 +2691,19 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
 
     // Only nonzero for node.
-    Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    if(extcurrent==eEphapticNode)
+    {
+        Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    }
+
+    else if(extcurrent==eEphapticIntra)
+    {
+        Vmath::Vmul(nq, m_intrazone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    }
+
+    else{
+        phimLaplacian = Array<OneD, NekDouble>(nq, 0.0);
+    }
 
     // Compute phie distribution
     // SetBoundaryConditions(0.0);
@@ -2706,7 +2716,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     outarray = m_fields[1]->GetPhys();
 
-    Vmath::Vmul(nq, m_extrazone, 1, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
+    // Vmath::Vmul(nq, m_extrazone, 1, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
 
     m_fields[1]->SetPhysState(true);
     

@@ -158,13 +158,15 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eEphaptic,
+    eEphapticNode,
+    eEphapticIntra,
     eIsolated,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "Ephaptic",
+    "EphapticNode",
+    "EphapticIntra",
     "Isolated",
 };
 
@@ -454,12 +456,9 @@ protected:
     void DoOdeRhsNeuralEP2DEmbbi(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-        
-    Array<OneD, NekDouble> Computephie(
-        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-        const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> Computephie(
+        ExtCurrentType extcurrent,
         const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
