@@ -137,6 +137,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
 
     // Retrieve coordinates of quadrature points
     int nq = m_field->GetNpoints();
+    
     Array<OneD, NekDouble> x0(nq);
     Array<OneD, NekDouble> x1(nq);
     Array<OneD, NekDouble> x2(nq);
