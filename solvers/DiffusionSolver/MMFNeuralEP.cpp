@@ -807,6 +807,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 {
                     fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
                 }
+                
+                Array<OneD, Array<OneD, NekDouble>> mfmag(m_spacedim);
+                Array<OneD, Array<OneD, NekDouble>> phiemfmag(m_spacedim);
+
+                for (int j=0; j<m_spacedim; ++j)
+                {
+                    mfmag[j] = Array<OneD, NekDouble>(nq, 0.0);
+                    phiemfmag[j] = Array<OneD, NekDouble>(nq, 0.0);
+
+                    for (int k=0; k<m_spacedim; ++k)
+                    {
+                        Vmath::Vvtvp(nq, &m_movingframes[j][k*nq], 1, &m_movingframes[j][k*nq], 1, &mfmag[j][0], 1, &mfmag[j][0], 1);
+                        Vmath::Vvtvp(nq, &m_phiemovingframes[j][k*nq], 1, &m_phiemovingframes[j][k*nq], 1, &phiemfmag[j][0], 1, &phiemfmag[j][0], 1);
+                    }
+
+                    Vmath::Vsqrt(nq, &mfmag[j][0], 1, &mfmag[j][0], 1);
+                    Vmath::Vsqrt(nq, &phiemfmag[j][0], 1, &mfmag[j][0], 1);
+                }
+
 
                 std::vector<std::string> variables(nvar);
                 variables[0] = "phim";
@@ -1943,7 +1962,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 8;
+    int nvar    = 6;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -1958,13 +1977,11 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMap";
-    variables[1] = "VelMag";
-    variables[2] = "Velx";
-    variables[3] = "Vely";
-    variables[4] = "phim";
-    variables[5] = "phie";
-    variables[6] = "phimcurrent";
-    variables[7] = "phiecurrent";
+    variables[1] = "TmapGradMag";
+    variables[2] = "phim";
+    variables[3] = "phie";
+    variables[4] = "phimcurrent";
+    variables[5] = "phiecurrent";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
@@ -1981,26 +1998,26 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     }
     Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
 
-    Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
+    // Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
 
-    m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
+    // m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
 
-    Array<OneD, NekDouble> tmpx(nq);
-    Array<OneD, NekDouble> tmpy(nq);
+    // Array<OneD, NekDouble> tmpx(nq);
+    // Array<OneD, NekDouble> tmpy(nq);
 
-    Vmath::Vcopy(nq, &Velocity[0], 1, &tmpx[0], 1);
-    Vmath::Vcopy(nq, &Velocity[nq], 1, &tmpy[0], 1);
+    // Vmath::Vcopy(nq, &Velocity[0], 1, &tmpx[0], 1);
+    // Vmath::Vcopy(nq, &Velocity[nq], 1, &tmpy[0], 1);
 
-    m_fields[0]->FwdTransLocalElmt(tmpx, fieldcoeffs[2]);
-    m_fields[0]->FwdTransLocalElmt(tmpy, fieldcoeffs[3]);
+    // m_fields[0]->FwdTransLocalElmt(tmpx, fieldcoeffs[2]);
+    // m_fields[0]->FwdTransLocalElmt(tmpy, fieldcoeffs[3]);
 
     std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
 
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[4]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
 
     Array<OneD, NekDouble> phieintra(nq);
     Array<OneD, NekDouble> phieextra(nq);
@@ -2010,8 +2027,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-    m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[6]);
-    m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[5]);
 
     std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
     std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
