@@ -1977,11 +1977,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMap";
-    variables[1] = "TmapGradMag";
-    variables[2] = "phim";
-    variables[3] = "phie";
-    variables[4] = "phimcurrent";
-    variables[5] = "phiecurrent";
+    variables[1] = "phim";
+    variables[2] = "phie";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
@@ -2016,8 +2013,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[2]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
 
     Array<OneD, NekDouble> phieintra(nq);
     Array<OneD, NekDouble> phieextra(nq);
