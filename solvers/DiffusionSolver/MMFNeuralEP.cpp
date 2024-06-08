@@ -1978,6 +1978,16 @@ void MMFNeuralEP::DoSolveMMF()
             doCheckTime)
         {
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            if(m_fiberType==eSingleLinear)
+            {
+                PrintSingleCurrent(fields[0]);
+            }
+
+            else if(m_fiberType==eDoubleLinear)
+            {
+                PrintDuoCurrent(fields[0]);
+            }
+
             Checkpoint_Output(nchk++);
 
             doCheckTime = false;
@@ -2112,6 +2122,16 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
 
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
+void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
+{
+    int nq      = m_fields[0]->GetTotPoints();
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+
     Array<OneD, NekDouble> phieintra(nq);
     Array<OneD, NekDouble> phieextra(nq);
     Vmath::Vmul(nq, m_intrazone, 1, phie, 1, phieintra, 1);
@@ -2119,12 +2139,6 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
-
-    // m_fields[0]->FwdTransLocalElmt(phimcurrent, fieldcoeffs[4]);
-    // m_fields[0]->FwdTransLocalElmt(phiecurrent, fieldcoeffs[5]);
-
-    std::cout << "phie: INTRAZONE: Max = " << Vmath::Vmax(nq, phieintra, 1) << ", Min = " << Vmath::Vmin(nq, phieintra, 1) << std::endl;
-    std::cout << "phie: EXTRAZONE: Max = " << Vmath::Vmax(nq, phieextra, 1) << ", Min = " << Vmath::Vmin(nq, phieextra, 1) << std::endl;
 
     Array<OneD, NekDouble> totcurrent(nq);
     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent, 1);
@@ -2135,10 +2149,53 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
     << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
+}
 
-    std::cout << "Time Map: Max = " << Vmath::Vmax(nq, TimeMap, 1) << ", Min = " << Vmath::Vmin(nq, TimeMap, 1) << std::endl << std::endl;
 
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
+{
+    int nq      = m_fields[0]->GetTotPoints();
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+
+    Array<OneD, NekDouble> phieintra1(nq);
+    Array<OneD, NekDouble> phieintra2(nq);
+
+    Array<OneD, NekDouble> phieextra(nq);
+    Vmath::Vmul(nq, m_intrazone1, 1, phie, 1, phieintra1, 1);
+    Vmath::Vmul(nq, m_intrazone2, 1, phie, 1, phieintra2, 1);
+
+    Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    
+    Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
+
+    Array<OneD, NekDouble> totcurrent1(nq);
+    Array<OneD, NekDouble> totcurrent2(nq);
+
+    Array<OneD, NekDouble> phimcurrent1(nq);
+    Array<OneD, NekDouble> phimcurrent2(nq);
+
+    Vmath::Vmul(nq, m_intrazone1, 1, phimcurrent, 1, phimcurrent1, 1);
+    Vmath::Vmul(nq, m_intrazone2, 1, phimcurrent, 1, phimcurrent2, 1);
+
+    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
+    Vmath::Vmul(nq, m_intrazone1, 1, totcurrent1, 1, totcurrent1, 1);
+
+    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent2, 1);
+    Vmath::Vmul(nq, m_intrazone2, 1, totcurrent2, 1, totcurrent2, 1);
+
+    // index:0 -> u
+    NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
+    NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
+
+    NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
+    NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
+
+    std::cout << "phimcurret1: Max = " phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+    std::cout << "phimcurret2: Max = " phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+
 }
 
 
@@ -2751,7 +2808,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     if(m_fiberType==eDoubleLinear)
     {
         m_stimulus[0]->Update(m_excitezone1, outarray, time);
-        m_stimulus[1]->Update(m_excitezone2, outarray, time);
+       // m_stimulus[1]->Update(m_excitezone2, outarray, time);
     }
 
     else

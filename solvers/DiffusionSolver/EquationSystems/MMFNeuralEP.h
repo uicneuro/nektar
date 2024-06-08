@@ -581,7 +581,10 @@ protected:
         const Array<OneD, const NekDouble> &phim,
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
-        
+
+    void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
+    void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim);
+
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
         const Array<OneD, const NekDouble> &TmapGrad,
