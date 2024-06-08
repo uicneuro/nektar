@@ -356,10 +356,23 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_npts = m_fields[0]->GetTotPoints(0);
             m_zoneindex[0] = IndexNodeZone2D(m_fiberType);
 
+                m_excitezone1 = Array<OneD, NekDouble>(nq) ;
+                m_excitezone2 = Array<OneD, NekDouble>(nq)  ;
+
+                m_nodezone = Array<OneD, NekDouble>(nq) ;
+                m_nodezone1 = Array<OneD, NekDouble>(nq);
+                m_nodezone2 = Array<OneD, NekDouble>(nq);
+
+                m_intrazone = Array<OneD, NekDouble> (nq);
+                m_intrazone1 = Array<OneD, NekDouble> (nq);
+                m_intrazone2 = Array<OneD, NekDouble>(nq);
+
+                m_extrazone = Array<OneD, NekDouble>(nq) ;
+
             // Get the first and last index of the excitation zone [1,2]
             if(m_fiberType==eDoubleLinear)
             {
-                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone1, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
+                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
@@ -368,6 +381,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             }
+            
+            PlotZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
 
             if(m_MediumType==eAllNode)
             {
@@ -1548,43 +1563,46 @@ void MMFNeuralEP::SetUpDomainDuoZone(
     intrazone2 = Array<OneD, NekDouble>(nq, 0.0);
 
     extrazone = Array<OneD, NekDouble>(nq, 0.0);
+    int index;
     for (int i=0; i<nq; ++i)
     {
+        index = zoneindex[i];
+
         // first node excitation zone
-        if( (zoneindex[i]==0) || (zoneindex[i]==1) )
+        if( (index==0) || (index==1) )
         {
             excitezone1[i] = 1.0 / m_Cn;
             extcnt1++;
         }
 
         // second node excitation zone
-        if( (zoneindex[i]==100) || (zoneindex[i]==101) )
+        if( (index==100) || (index==101) )
         {
             excitezone2[i] = 1.0 / m_Cn;
             extcnt2++;
         }
 
-        if( (zoneindex[i] >= 0) && (zoneindex[i] < 100) )
+        if( (index >= 0) && (index < 100) )
         {
             nodezone1[i] = 1.0;
             nodecnt1++;
         }
 
-        if( (zoneindex[i] >= 100) && (zoneindex[i] < 200) )
+        if( (index >= 100) && (index < 200) )
         {
             nodezone2[i] = 1.0;
             nodecnt2++;
         }
 
         // first fiber inside
-        if( (zoneindex[i] == -1) || ( (zoneindex[i] >= 0) && (zoneindex[i] < 100) ) )
+        if( (index == -1) || ( (index >= 0) && (index < 100) ) )
         {
             intrazone1[i] = 1.0 ;
             intracnt1++;
         }
 
         // second fiber inside
-        if( (zoneindex[i] == -101) || ( (zoneindex[i] >= 100) && (zoneindex[i] < 200) ) )
+        if( (index == -101) || ( (index >= 100) && (index < 200) ) )
         {
             intrazone2[i] = 1.0 ;
             intracnt2++;
@@ -1990,6 +2008,7 @@ void MMFNeuralEP::DoSolveMMF()
             doCheckTime)
         {
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            
             if(m_fiberType==eSingleLinear)
             {
                 PrintSingleCurrent(fields[0]);
@@ -2080,7 +2099,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 5;
+    int nvar    = 3;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2097,8 +2116,6 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[0] = "TimeMap";
     variables[1] = "phim";
     variables[2] = "phie";
-    variables[3] = "excite1";
-    variables[4] = "excite2";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
@@ -2136,8 +2153,57 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
 
-    m_fields[0]->FwdTransLocalElmt(m_excitezone1, fieldcoeffs[3]);
-    m_fields[0]->FwdTransLocalElmt(m_excitezone2, fieldcoeffs[4]);
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
+
+void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
+Array<OneD, NekDouble> &excitezone1, Array<OneD, NekDouble> &excitezone2, 
+Array<OneD, NekDouble> &nodezone1, 
+Array<OneD, NekDouble> &nodezone2, 
+Array<OneD, NekDouble> &intrazone1, 
+Array<OneD, NekDouble> &intrazone2, 
+Array<OneD, NekDouble> &extrazone)
+{
+    int nvar    = 8;
+    int nq      = m_fields[0]->GetTotPoints();
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_zone.chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "zoneindex";
+    variables[1] = "excite1";
+    variables[2] = "excite2";
+    variables[3] = "node1";
+    variables[4] = "node2";
+    variables[5] = "intra1";
+    variables[6] = "intra2";
+    variables[7] = "extra";
+
+    Array<OneD, NekDouble> indexzone(nq);
+    for (int i=0; i<nq; ++i)
+    {
+        indexzone[i] = 1.0 * zoneindex[i];
+    }
+
+    m_fields[0]->FwdTransLocalElmt(indexzone, fieldcoeffs[0]);
+
+    m_fields[0]->FwdTransLocalElmt(excitezone1, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(excitezone2, fieldcoeffs[2]);
+
+    m_fields[0]->FwdTransLocalElmt(nodezone1, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(nodezone2, fieldcoeffs[4]);
+
+    m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(intrazone2, fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[7]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -2830,7 +2896,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     if(m_fiberType==eDoubleLinear)
     {
        m_stimulus[0]->Update(m_excitezone1, outarray, time);
-       // m_stimulus[1]->Update(m_excitezone2, outarray, time);
+       m_stimulus[1]->Update(m_excitezone2, outarray, time);
     }
 
     else
