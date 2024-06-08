@@ -290,10 +290,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 m_zoneindex[0] = TestRanvierDuoIndex();
             }
 
-            SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             if(m_fiberType==eDoubleLinear)
             {
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
+                Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
+                Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
+            }
+
+            else
+            {
+                SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             }
 
             // m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
@@ -351,10 +357,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_zoneindex[0] = IndexNodeZone2D(m_fiberType);
 
             // Get the first and last index of the excitation zone [1,2]
-            SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             if(m_fiberType==eDoubleLinear)
             {
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone1, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
+                Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
+                Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
+            }
+
+            else
+            {
+                SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             }
 
             if(m_MediumType==eAllNode)
@@ -2068,7 +2080,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 3;
+    int nvar    = 5;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2085,6 +2097,8 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[0] = "TimeMap";
     variables[1] = "phim";
     variables[2] = "phie";
+    variables[3] = "excite1";
+    variables[4] = "excite2";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
@@ -2121,6 +2135,9 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
+    m_fields[0]->FwdTransLocalElmt(m_excitezone1, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(m_excitezone2, fieldcoeffs[4]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -2166,6 +2183,11 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     Vmath::Vmul(nq, m_intrazone1, 1, phie, 1, phieintra1, 1);
     Vmath::Vmul(nq, m_intrazone2, 1, phie, 1, phieintra2, 1);
 
+    Array<OneD, NekDouble> phimintra1(nq);
+    Array<OneD, NekDouble> phimintra2(nq);
+    Vmath::Vmul(nq, m_intrazone1, 1, phim, 1, phimintra1, 1);
+    Vmath::Vmul(nq, m_intrazone2, 1, phim, 1, phimintra2, 1);
+
     Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
     
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
@@ -2193,8 +2215,8 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
     NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
 
-    std::cout << "phimcurret1: Max = " phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
-    std::cout << "phimcurret2: Max = " phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+    std::cout << "phim: Max = " << Vmath::Vmax(nq, phimintra1, 1) << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+    std::cout << "phim: Max = " <<  Vmath::Vmax(nq, phimintra2, 1)  << ", phimcurret2: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
 
 }
 
@@ -2807,7 +2829,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Add Stimulus
     if(m_fiberType==eDoubleLinear)
     {
-        m_stimulus[0]->Update(m_excitezone1, outarray, time);
+       m_stimulus[0]->Update(m_excitezone1, outarray, time);
        // m_stimulus[1]->Update(m_excitezone2, outarray, time);
     }
 
@@ -2815,8 +2837,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     {
         m_stimulus[0]->Update(m_excitezone, outarray, time);
     }
-
-
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
@@ -2946,7 +2966,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                     m_stimulus[0]->Update(m_excitezone, tmp, initialtime);
                 }
 
-                Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
+                // Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
                 m_fields[0]->SetPhys(tmp[0]);
             }
         }
@@ -3229,7 +3249,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
-    SolverUtils::AddSummaryItem(s, "Fiber Type", FiberTypeMap[m_fiberType]);
+    SolverUtils::AddSummaryItem(s, "FiberType", FiberTypeMap[m_fiberType]);
 
     SolverUtils::AddSummaryItem(s, "FiberWidth", m_fiberwidth);
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
