@@ -293,11 +293,19 @@ protected:
     Array<OneD, int> m_ValidTimeMap;
 
     Array<OneD, Array<OneD, int>> m_zoneindex;
+
+    Array<OneD, NekDouble> m_excitezone;
     Array<OneD, NekDouble> m_excitezone1;
     Array<OneD, NekDouble> m_excitezone2;
 
     Array<OneD, NekDouble> m_nodezone;
+    Array<OneD, NekDouble> m_nodezone1;
+    Array<OneD, NekDouble> m_nodezone2;
+
     Array<OneD, NekDouble> m_intrazone;
+    Array<OneD, NekDouble> m_intrazone1;
+    Array<OneD, NekDouble> m_intrazone2;
+
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
@@ -547,10 +555,19 @@ protected:
 
     void SetUpDomainZone(
         const Array<OneD, const int> &zoneindex,
-        Array<OneD, NekDouble> &excitezone1,
-        Array<OneD, NekDouble> &excitezone2,
+        Array<OneD, NekDouble> &excitezone,
         Array<OneD, NekDouble> &nodezone,
         Array<OneD, NekDouble> &intrazone,
+        Array<OneD, NekDouble> &extrazone);
+
+    void SetUpDomainDuoZone(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, NekDouble> &excitezone1,
+        Array<OneD, NekDouble> &excitezone2,
+        Array<OneD, NekDouble> &nodezone1,
+        Array<OneD, NekDouble> &nodezone2,
+        Array<OneD, NekDouble> &intrazone1,
+        Array<OneD, NekDouble> &intrazone2,
         Array<OneD, NekDouble> &extrazone);
 
     void ComputeNeuralTimeMap(const NekDouble time,
