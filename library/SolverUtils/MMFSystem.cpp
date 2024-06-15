@@ -255,7 +255,6 @@ void MMFSystem::MMFInitObject(
     {
         // GenerateMFbyAniDirection(AniDreiction, m_movingframes);
     }
-    std::cout << "HERE 4" << std::endl;
 
     switch (m_projectionType)
     {
