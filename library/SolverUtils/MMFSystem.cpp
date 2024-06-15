@@ -1084,6 +1084,7 @@ void MMFSystem::SetUpMovingFrames(
 
         default:
         {
+            std::cout << "SetUpMovingFrames: GetMF " << std::endl;
             m_fields[0]->GetMovingFrames(MMFdir, m_MMFfactors, movingframes);
         }
         break;
