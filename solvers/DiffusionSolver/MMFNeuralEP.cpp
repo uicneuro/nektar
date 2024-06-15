@@ -386,7 +386,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             }
             
-            PlotZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_nodezone, m_intrazone1, m_intrazone2, m_intrazone, m_extrazone);
+            // PlotZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_nodezone, m_intrazone1, m_intrazone2, m_intrazone, m_extrazone);
 
             if(m_MediumType==eAllNode)
             {
@@ -2343,7 +2343,7 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
 
     int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
     int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
-    
+
     NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
     NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
 
