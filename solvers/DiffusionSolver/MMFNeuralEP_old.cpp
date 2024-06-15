@@ -401,7 +401,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
-
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
@@ -1293,7 +1292,6 @@ Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
                     outarray[i] = k+2;
                 }
             }
-
             // last intrazone
             nodeend = 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
             if(ycell[i]>nodeend)
@@ -1367,7 +1365,6 @@ Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
                     outarray[i] = k+2;
                 }
             }
-
             // last intrazone
             nodeend = 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
             if(ycell[i]>nodeend)
@@ -1379,13 +1376,11 @@ Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
         else if((xcell[i]>fiber2left) && (xcell[i]<fiber2right))
         {
             outarray[i] = -101;  // Default of the second fiber = myelin
-
             // 1st intrazone
             if(ycell[i]<fiberheightdiff)
             {
                 outarray[i] = -2;
             }
-
             for (int k=0; k<2; ++k)
             {
                 nodebottom = fiberheightdiff + k*nodelen;
@@ -1405,7 +1400,6 @@ Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
                     outarray[i] = 100+k+2;
                 }
             }
-
             // last intrazone
             nodeend = fiberheightdiff + 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
             if(ycell[i]>nodeend)

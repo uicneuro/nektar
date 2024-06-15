@@ -397,8 +397,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
-
-
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
@@ -2025,7 +2023,7 @@ void MMFNeuralEP::DoSolveMMF()
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeNeuralTimeMap(m_time, m_zoneindex[0], fields_old[0], fields[0], dudtvalHistory, TimeMap);
+            ComputeNeuralTimeMap(m_time, m_zoneindex[0], m_intrazone, fields_old[0], fields[0], dudtvalHistory, TimeMap);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2084,6 +2082,7 @@ void MMFNeuralEP::DoSolveMMF()
 
 void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
                                     const Array<OneD, const int> &zoneindex,
+                                    const Array<OneD, const NekDouble> &intrazone,
                                     const Array<OneD, const NekDouble> &field_old,
                                     const Array<OneD, const NekDouble> &field,
                                     Array<OneD, NekDouble> &dudtHistory,
@@ -2097,14 +2096,14 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
     NekDouble Maxphim = Vmath::Vamax(nq, field, 1);
     Vmath::Vsub(nq, field, 1, field_old, 1, dudt, 1);
-    Vmath::Vmul(nq, m_intrazone, 1, dudt, 1, dudt, 1);
+    Vmath::Vmul(nq, intrazone, 1, dudt, 1, dudt, 1);
 
     Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudt, 1, dudt, 1);
 
     for (int i = 0; i < nq; ++i)
     {
-        if(zoneindex[i]>-2)
-        {
+     //   if(zoneindex[i]>-2)
+     //   {
             phimdiff = field[i] - m_phimrest;
             // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
             if ((phimdiff > m_phimTol) && (dudt[i] > m_dphimdtTol))
@@ -2119,9 +2118,14 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
                 dudtHistory[i] += dudt[i];
             }
-        }
+      //  }
 
         if ( (zoneindex[i] == 0) || (zoneindex[i] == 1))
+        {
+            TimeMap[i] = 0.0;
+        }
+
+        if ( (zoneindex[i] == 100) || (zoneindex[i] == 101))
         {
             TimeMap[i] = 0.0;
         }
@@ -2274,6 +2278,11 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
 {
     int nq      = m_fields[0]->GetTotPoints();
 
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
@@ -2310,15 +2319,21 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     Vmath::Vmul(nq, m_intrazone2, 1, totcurrent2, 1, totcurrent2, 1);
 
     // index:0 -> u
+
+    NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
+    NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
+
+    int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
+    int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
+
     NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
     NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
 
     NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
     NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
 
-    std::cout << "phim: Max = " << Vmath::Vmax(nq, phimintra1, 1) << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
-    std::cout << "phim: Max = " <<  Vmath::Vmax(nq, phimintra2, 1)  << ", phimcurret2: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
-
+    std::cout << "fiber1: phim: Max = " << Vmath::Vmax(nq, phimintra1, 1) << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+    std::cout << "fiber2: phim: Max = " << Vmath::Vmax(nq, phimintra2, 1) << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
 }
 
 

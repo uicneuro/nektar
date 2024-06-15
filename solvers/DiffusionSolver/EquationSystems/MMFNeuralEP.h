@@ -573,6 +573,7 @@ protected:
 
     void ComputeNeuralTimeMap(const NekDouble time,
                                 const Array<OneD, const int> &zoneindex,
+                                const Array<OneD, const NekDouble> &intrazone,
                                 const Array<OneD, const NekDouble> &field_old,
                                 const Array<OneD, const NekDouble> &field,
                                 Array<OneD, NekDouble> &dudtHistory,
