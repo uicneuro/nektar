@@ -241,20 +241,26 @@ void MMFSystem::MMFInitObject(
         break;
     }    
 
+    std::cout << "HERE 1" << std::endl;
+
     // SetUpMovingFrames: To generate m_movingframes
     if(AniDirection == NullNekDouble1DArray)
     {
         std::string MMFdirStr;
         m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
         m_MMFdir = FindMMFdir(MMFdirStr);
+    std::cout << "HERE 2" << std::endl;
 
         SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes); 
+            std::cout << "HERE 3" << std::endl;
+
     }
 
     else
     {
         // GenerateMFbyAniDirection(AniDreiction, m_movingframes);
     }
+    std::cout << "HERE 4" << std::endl;
 
     switch (m_projectionType)
     {
