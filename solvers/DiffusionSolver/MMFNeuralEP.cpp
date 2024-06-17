@@ -598,7 +598,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             NekDouble PhieMultFactor = m_radiusaxon*m_radiusaxon/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
 
             // Multiplication factor for fiber bundle of radius R = (a^2/(\rho g^2 R^2))
-            std::cout << "Fiber bundle mag factor = " << PhieMultFactor << std::endl;
+            std::cout << "Fiber bundle mag factor = " << PhieMultFactor / axoncrossA << std::endl;
 
             for (int i = 0; i<nq; ++i)
             {
@@ -2332,8 +2332,12 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
     NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
 
+    NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
+    NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
+
     std::cout << "fiber1: phim: Max = " << Vmath::Vmax(nq, phimintra1, 1) << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
     std::cout << "fiber2: phim: Max = " << Vmath::Vmax(nq, phimintra2, 1) << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+    std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
 }
 
 
@@ -3370,6 +3374,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "FiberWidth", m_fiberwidth);
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
     SolverUtils::AddSummaryItem(s, "FiberHeightDiff", m_fiberheightdiff);
+    SolverUtils::AddSummaryItem(s, "Radiusfiberbundle", m_radiusfiberbundle);
 
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
