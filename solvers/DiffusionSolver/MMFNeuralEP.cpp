@@ -1683,22 +1683,36 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
     Array<OneD, NekDouble> outarray(nq);
 
-    int cntm = 0, cntn = 0, cnte = 0;
+    int cntmf1 = 0, cntnf1 = 0, cntmf2 = 0, cntnf2 = 0, cnte = 0;
     for (int i = 0; i < nq; ++i)
     {
         // Ranvier node zone
-        if (zoneindex[i] >= 0)
+        if ( (zoneindex[i] >= 0) && (zoneindex[i] < 100) )
 
         {
             outarray[i] = 1.0 / m_Cn;
-            cntm++;
+            cntnf1++;
+        }
+
+        if ( (zoneindex[i] >= 100) && (zoneindex[i] < 200) )
+
+        {
+            outarray[i] = 1.0 / m_Cn;
+            cntnf2++;
         }
 
         // Myelin zone
-        else if ( (zoneindex[i] == -1) || (zoneindex[i] == -101) )
+        if (zoneindex[i] == -1) 
         {
             outarray[i] = 1.0 / m_Cm;
-            cntn++;
+            cntmf1++;
+        }
+
+        // Myelin zone
+        if (zoneindex[i] == -101) 
+        {
+            outarray[i] = 1.0 / m_Cm;
+            cntmf2++;
         }
 
         // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
@@ -1709,8 +1723,8 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
         }
     }
 
-    std::cout << "v_InitObject: Node = " << cntn
-    << ", Myelin = " << cntm << ", extracell = " << cnte
+    std::cout << "v_InitObject: Node_f1 = " << cntnf1/m_npts << ", Node_f2 = " << cntnf2/m_npts
+    << ", Myelinf1 = " << cntmf1/m_npts << ", Myelinf2 = " << cntmf2/m_npts << ", extracell = " << cnte/m_npts
     << std::endl;
 
     return outarray;
