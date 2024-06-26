@@ -100,7 +100,7 @@ NekDouble ProtocolS1::v_GetAmplitude(const NekDouble time)
     // Time since start of most recent S1 interval
     NekDouble time1 = time - a * m_s1cyclelength - m_start;
 
-    if ((time1 > 0) && (a < m_num_s1) && (time1 < m_dur))
+    if ((time1 > 0) && (a>=0) && (a < m_num_s1) && (time1 < m_dur))
     {
         return 1.0;
     }
