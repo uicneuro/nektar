@@ -594,8 +594,7 @@ Array<OneD, NekDouble> &intrazone2,
 Array<OneD, NekDouble> &extrazone);
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
-    void PrintDuoCurrent(const int step, const Array<OneD, const NekDouble> &phim,
-                        NekDouble &Maxpositf1step, NekDouble &Maxpositf2step);
+    void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,

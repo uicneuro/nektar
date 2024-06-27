@@ -1683,36 +1683,22 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
     Array<OneD, NekDouble> outarray(nq);
 
-    int cntmf1 = 0, cntnf1 = 0, cntmf2 = 0, cntnf2 = 0, cnte = 0;
+    int cntm = 0, cntn = 0, cnte = 0;
     for (int i = 0; i < nq; ++i)
     {
         // Ranvier node zone
-        if ( (zoneindex[i] >= 0) && (zoneindex[i] < 100) )
+        if (zoneindex[i] >= 0)
 
         {
             outarray[i] = 1.0 / m_Cn;
-            cntnf1++;
-        }
-
-        if ( (zoneindex[i] >= 100) && (zoneindex[i] < 200) )
-
-        {
-            outarray[i] = 1.0 / m_Cn;
-            cntnf2++;
+            cntm++;
         }
 
         // Myelin zone
-        if (zoneindex[i] == -1) 
+        else if ( (zoneindex[i] == -1) || (zoneindex[i] == -101) )
         {
             outarray[i] = 1.0 / m_Cm;
-            cntmf1++;
-        }
-
-        // Myelin zone
-        if (zoneindex[i] == -101) 
-        {
-            outarray[i] = 1.0 / m_Cm;
-            cntmf2++;
+            cntn++;
         }
 
         // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
@@ -1723,8 +1709,8 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
         }
     }
 
-    std::cout << "v_InitObject: Node_f1 = " << cntnf1/m_npts << ", Node_f2 = " << cntnf2/m_npts
-    << ", Myelinf1 = " << cntmf1/m_npts << ", Myelinf2 = " << cntmf2/m_npts << ", extracell = " << cnte/m_npts
+    std::cout << "v_InitObject: Node = " << cntn
+    << ", Myelin = " << cntm << ", extracell = " << cnte
     << std::endl;
 
     return outarray;
@@ -2019,10 +2005,6 @@ void MMFNeuralEP::DoSolveMMF()
     Array<OneD, NekDouble> TimeMap(nq, 0.0);
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
 
-    int totsteps = (m_steps + 1) / m_checksteps;
-    Array<OneD, NekDouble> Maxpositf1(totsteps, 0.0);
-    Array<OneD, NekDouble> Maxpositf2(totsteps, 0.0);
-
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save fields into fieldsold
@@ -2067,7 +2049,7 @@ void MMFNeuralEP::DoSolveMMF()
 
             else if(m_fiberType==eDoubleLinear)
             {
-                PrintDuoCurrent(nchk, fields[0], Maxpositf1[nchk], Maxpositf2[nchk]);
+                PrintDuoCurrent(fields[0]);
             }
 
             Checkpoint_Output(nchk++);
@@ -2083,23 +2065,6 @@ void MMFNeuralEP::DoSolveMMF()
     {
         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
     }
-
-    // Print max position for fibers
-    std::cout << "================================================= " <<std::endl;
-    std::cout << " Maxpositf1: ";
-    for (int i=0; i<totsteps; ++i)
-    {
-        std::cout << Maxpositf1[i] << ", ";
-    }
-    std::cout << std::endl;
-
-    std::cout <<  "Maxpositf2: ";
-    for (int i=0; i<totsteps; ++i)
-    {
-        std::cout << Maxpositf2[i] << ", ";
-    }
-    std::cout << std::endl;
-    std::cout << "================================================= " <<std::endl;
 
     for (i = 0; i < 1; ++i)
     {
@@ -2309,8 +2274,7 @@ void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
 }
 
 
-void MMFNeuralEP::PrintDuoCurrent(const int step, const Array<OneD, const NekDouble> &phim,
-                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step)
+void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
 {
     int nq      = m_fields[0]->GetTotPoints();
 
@@ -2370,9 +2334,6 @@ void MMFNeuralEP::PrintDuoCurrent(const int step, const Array<OneD, const NekDou
 
     NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
     NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
-
-    Maxpositf1step = x1[Maxphim1index];
-    Maxpositf2step = x1[Maxphim2index];
 
     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
