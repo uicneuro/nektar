@@ -32,8 +32,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_PROTOCOL
-#define NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_PROTOCOL
+#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOL
+#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOL
 
 #include <LibUtilities/BasicUtils/NekFactory.hpp>
 #include <LibUtilities/BasicUtils/SessionReader.h>

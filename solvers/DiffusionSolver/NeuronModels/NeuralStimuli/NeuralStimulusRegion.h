@@ -33,8 +33,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_NEURALSTIMULUSREGION
-#define NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_NEURALSTIMULUSREGION
+#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUSREGION
+#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUSREGION
 
 #include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulus.h>
 #include <LibUtilities/BasicUtils/NekFactory.hpp>

@@ -32,7 +32,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <CardiacEPSolver/Stimuli/ProtocolS1.h>
+#include <DiffusionSolver/NeuronModels/NeuralStimuli/ProtocolS1.h>
 #include <tinyxml.h>
 
 namespace Nektar
@@ -99,6 +99,8 @@ NekDouble ProtocolS1::v_GetAmplitude(const NekDouble time)
 
     // Time since start of most recent S1 interval
     NekDouble time1 = time - a * m_s1cyclelength - m_start;
+
+    // std::cout << "time1 = " << time1 << ", a = " << a << ", time = " << time << ", m_start = " << m_start << std::endl;
 
     if ((time1 > 0) && (a>=0) && (a < m_num_s1) && (time1 < m_dur))
     {

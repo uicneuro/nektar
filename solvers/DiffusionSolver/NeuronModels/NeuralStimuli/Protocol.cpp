@@ -32,7 +32,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <CardiacEPSolver/Stimuli/Protocol.h>
+#include <DiffusionSolver/NeuronModels/NeuralStimuli/Protocol.h>
 
 namespace Nektar
 {

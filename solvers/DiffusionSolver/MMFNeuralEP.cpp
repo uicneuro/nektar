@@ -2046,6 +2046,22 @@ void MMFNeuralEP::DoSolveMMF()
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
+            // Array<OneD, Array<OneD, NekDouble>> stim1(nvariables);
+            // Array<OneD, Array<OneD, NekDouble>> stim2(nvariables);
+
+            // for (int i=0; i<nvariables; ++i)
+            // {
+            //     stim1[i] = Array<OneD, NekDouble>(nq,0.0);
+            //     stim2[i] = Array<OneD, NekDouble>(nq,0.0);
+            // }
+
+            // m_stimulus[0]->Update(m_excitezone1, stim1, m_time);
+            // m_stimulus[1]->Update(m_excitezone2, stim2, m_time);
+
+            // std::cout << " =====================================================================================" << std::endl;
+            // std::cout << " time = " << m_time << ", stim1_Max = " << Vmath::Vmax(nq, stim1[0], 1) << ", stim2_Max = " << Vmath::Vmax(nq, stim2[0], 1) << std::endl;
+            // std::cout << " =====================================================================================" << std::endl;
+
             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
                       << " "
                       << "Time: " << std::setw(12) << std::left << m_time
@@ -2946,7 +2962,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     // Compute the reaction function divided by Cm or Cn.
      m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
-    // // Add Stimulus
     if(m_fiberType==eDoubleLinear)
     {
         m_stimulus[0]->Update(m_excitezone1, outarray, time);

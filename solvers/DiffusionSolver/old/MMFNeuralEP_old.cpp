@@ -293,8 +293,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             if(m_fiberType==eDoubleLinear)
             {
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
-                
-                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
@@ -358,25 +356,23 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_npts = m_fields[0]->GetTotPoints(0);
             m_zoneindex[0] = IndexNodeZone2D(m_fiberType);
 
-            m_excitezone1 = Array<OneD, NekDouble>(nq) ;
-            m_excitezone2 = Array<OneD, NekDouble>(nq)  ;
+                m_excitezone1 = Array<OneD, NekDouble>(nq) ;
+                m_excitezone2 = Array<OneD, NekDouble>(nq)  ;
 
-            m_nodezone = Array<OneD, NekDouble>(nq) ;
-            m_nodezone1 = Array<OneD, NekDouble>(nq);
-            m_nodezone2 = Array<OneD, NekDouble>(nq);
+                m_nodezone = Array<OneD, NekDouble>(nq) ;
+                m_nodezone1 = Array<OneD, NekDouble>(nq);
+                m_nodezone2 = Array<OneD, NekDouble>(nq);
 
-            m_intrazone = Array<OneD, NekDouble> (nq);
-            m_intrazone1 = Array<OneD, NekDouble> (nq);
-            m_intrazone2 = Array<OneD, NekDouble>(nq);
+                m_intrazone = Array<OneD, NekDouble> (nq);
+                m_intrazone1 = Array<OneD, NekDouble> (nq);
+                m_intrazone2 = Array<OneD, NekDouble>(nq);
 
-            m_extrazone = Array<OneD, NekDouble>(nq) ;
+                m_extrazone = Array<OneD, NekDouble>(nq) ;
 
             // Get the first and last index of the excitation zone [1,2]
             if(m_fiberType==eDoubleLinear)
             {
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
-
-                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
@@ -386,7 +382,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
             }
             
-            // PlotZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_nodezone, m_intrazone1, m_intrazone2, m_intrazone, m_extrazone);
+            PlotZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
 
             if(m_MediumType==eAllNode)
             {
@@ -602,7 +598,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             NekDouble PhieMultFactor = m_radiusaxon*m_radiusaxon/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
 
             // Multiplication factor for fiber bundle of radius R = (a^2/(\rho g^2 R^2))
-            std::cout << "Fiber bundle mag factor = " << PhieMultFactor << std::endl;
+            std::cout << "Fiber bundle mag factor = " << PhieMultFactor / axoncrossA << std::endl;
 
             for (int i = 0; i<nq; ++i)
             {
@@ -1293,7 +1289,7 @@ Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
                 }
             }
             // last intrazone
-            nodeend = 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
+           nodeend = 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
             if(ycell[i]>nodeend)
             {
                 outarray[i] = -2;
@@ -2106,8 +2102,8 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
     for (int i = 0; i < nq; ++i)
     {
-        // if(zoneindex[i] > -2)
-        // {
+     //   if(zoneindex[i]>-2)
+     //   {
             phimdiff = field[i] - m_phimrest;
             // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
             if ((phimdiff > m_phimTol) && (dudt[i] > m_dphimdtTol))
@@ -2122,7 +2118,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
                 dudtHistory[i] += dudt[i];
             }
-     //   }
+      //  }
 
         if ( (zoneindex[i] == 0) || (zoneindex[i] == 1))
         {
@@ -2204,13 +2200,11 @@ void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
 Array<OneD, NekDouble> &excitezone1, Array<OneD, NekDouble> &excitezone2, 
 Array<OneD, NekDouble> &nodezone1, 
 Array<OneD, NekDouble> &nodezone2, 
-Array<OneD, NekDouble> &nodezone, 
 Array<OneD, NekDouble> &intrazone1, 
 Array<OneD, NekDouble> &intrazone2, 
-Array<OneD, NekDouble> &intrazone, 
 Array<OneD, NekDouble> &extrazone)
 {
-    int nvar    = 10;
+    int nvar    = 8;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2228,11 +2222,9 @@ Array<OneD, NekDouble> &extrazone)
     variables[2] = "excite2";
     variables[3] = "node1";
     variables[4] = "node2";
-    variables[5] = "node";
-    variables[6] = "intra1";
-    variables[7] = "intra2";
-    variables[8] = "intra";
-    variables[9] = "extra";
+    variables[5] = "intra1";
+    variables[6] = "intra2";
+    variables[7] = "extra";
 
     Array<OneD, NekDouble> indexzone(nq);
     for (int i=0; i<nq; ++i)
@@ -2247,13 +2239,10 @@ Array<OneD, NekDouble> &extrazone)
 
     m_fields[0]->FwdTransLocalElmt(nodezone1, fieldcoeffs[3]);
     m_fields[0]->FwdTransLocalElmt(nodezone2, fieldcoeffs[4]);
-    m_fields[0]->FwdTransLocalElmt(nodezone, fieldcoeffs[5]);
 
-    m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[6]);
-    m_fields[0]->FwdTransLocalElmt(intrazone2, fieldcoeffs[7]);
-    m_fields[0]->FwdTransLocalElmt(intrazone, fieldcoeffs[8]);
-
-    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[9]);
+    m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(intrazone2, fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[7]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -2294,7 +2283,6 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     Array<OneD, NekDouble> x2(nq);
 
     m_fields[0]->GetCoords(x0, x1, x2);
-
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
@@ -2331,7 +2319,7 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     Vmath::Vmul(nq, m_intrazone2, 1, totcurrent2, 1, totcurrent2, 1);
 
     // index:0 -> u
-    
+
     NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
     NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
 
@@ -2344,8 +2332,12 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim)
     NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
     NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
 
-    std::cout << "fiber1: phim: Max = " << Vmath::Vmax(nq, phimintra1, 1) << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
-    std::cout << "fiber2: phim: Max = " << Vmath::Vmax(nq, phimintra2, 1) << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+    NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
+    NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
+
+    std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+    std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+    std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
 }
 
 
@@ -3382,6 +3374,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "FiberWidth", m_fiberwidth);
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
     SolverUtils::AddSummaryItem(s, "FiberHeightDiff", m_fiberheightdiff);
+    SolverUtils::AddSummaryItem(s, "Radiusfiberbundle", m_radiusfiberbundle);
 
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);

@@ -1,10 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: ProtocolS1.h
+// File: NeuralStimulusZone.h
 //
 // For more information, please see: http://www.nektar.info
 //
 // The MIT License
+//
 //
 // Copyright (c) 2006 Division of Applied Mathematics, Brown University (USA),
 // Department of Aeronautics, Imperial College London (UK), and Scientific
@@ -28,61 +29,62 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Protocol S1 stimulus header.
+// Description: Rectangular stimulus header file
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLS1
-#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLS1
+#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUSZONE
+#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUSZONE
 
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/Protocol.h>
+#include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulus.h>
+#include <LibUtilities/BasicUtils/NekFactory.hpp>
+#include <LibUtilities/BasicUtils/SessionReader.h>
+#include <LibUtilities/BasicUtils/SharedArray.hpp>
+#include <MultiRegions/ExpList.h>
 
 namespace Nektar
 {
-// Forward declaration
-class ProtocolS1;
 
 /// Protocol base class.
-class ProtocolS1 : public Protocol
+class NeuralStimulusZone : public NeuralStimulus
 {
 public:
     /// Creates an instance of this class
-    static ProtocolSharedPtr create(
+    static NeuralStimulusSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
-        const TiXmlElement *pXml)
+        const MultiRegions::ExpListSharedPtr &pField, const TiXmlElement *pXml)
     {
-        return MemoryManager<ProtocolS1>::AllocateSharedPtr(pSession, pXml);
+        return MemoryManager<NeuralStimulusZone>::AllocateSharedPtr(pSession, pField,
+                                                              pXml);
     }
 
     /// Name of class
     static std::string className;
 
-    friend class MemoryManager<ProtocolS1>;
+    friend class MemoryManager<NeuralStimulusZone>;
 
-    virtual ~ProtocolS1()
+    virtual ~NeuralStimulusZone()
     {
     }
 
-    /// Initialise the protocol storage and set initial conditions
+    /// Initialise the stimulus storage and set initial conditions
     void Initialise();
 
 protected:
-    NekDouble m_start;
-    NekDouble m_dur;
-    NekDouble m_num_s1;
-    NekDouble m_s1cyclelength;
+    NekDouble m_strength;
+    NekDouble m_chiCapMembrane;
 
-    virtual NekDouble v_GetAmplitude(const NekDouble time) override;
+    virtual void v_Update(const Array<OneD, const NekDouble> &excitezone,
+                          Array<OneD, Array<OneD, NekDouble>> &outarray,
+                                const NekDouble time) override;
 
     virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
 
-    virtual void v_SetInitialConditions();
-
 private:
-    ProtocolS1(const LibUtilities::SessionReaderSharedPtr &pSession,
-               const TiXmlElement *pXml);
+    NeuralStimulusZone(const LibUtilities::SessionReaderSharedPtr &pSession,
+                 const MultiRegions::ExpListSharedPtr &pField,
+                 const TiXmlElement *pXml);
 };
-
 } // namespace Nektar
 
-#endif /* ProtocolS1_H_ */
+#endif

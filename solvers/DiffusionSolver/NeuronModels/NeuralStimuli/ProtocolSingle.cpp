@@ -32,7 +32,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <CardiacEPSolver/Stimuli/ProtocolSingle.h>
+#include <DiffusionSolver/NeuronModels/NeuralStimuli/ProtocolSingle.h>
 #include <tinyxml.h>
 
 namespace Nektar
@@ -88,7 +88,9 @@ void ProtocolSingle::Initialise()
  */
 NekDouble ProtocolSingle::v_GetAmplitude(const NekDouble time)
 {
-    if (time > m_start && time < (m_start + m_dur))
+   // std::cout << ", time = " << time << ", m_start = " << m_start << std::endl;
+
+    if (time >= m_start && time < (m_start + m_dur))
     {
         return 1.0;
     }

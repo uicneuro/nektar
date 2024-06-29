@@ -33,8 +33,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_NEURALSTIMULUS
-#define NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_NEURALSTIMULUS
+#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUS
+#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUS
 
 #include <DiffusionSolver/NeuronModels/NeuralStimuli/Protocol.h>
 #include <LibUtilities/BasicUtils/NekFactory.hpp>

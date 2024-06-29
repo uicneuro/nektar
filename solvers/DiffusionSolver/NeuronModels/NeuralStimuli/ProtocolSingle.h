@@ -32,10 +32,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_PROTOCOLSINGLE
-#define NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_PROTOCOLSINGLE
+#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLSINGLE
+#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLSINGLE
 
-#include <CardiacEPSolver/Stimuli/Protocol.h>
+#include <DiffusionSolver/NeuronModels/NeuralStimuli/Protocol.h>
 
 namespace Nektar
 {
