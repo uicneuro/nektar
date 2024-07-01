@@ -665,6 +665,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
 
+        default:
+         break;
+    }
+
+    PlotAnisotropy(m_AniStrength, m_phieAniStrength);
+
         // case eNeuralHelmTest:
         // {
         //     // Set up for m_phiemovingframe Poisson solver
@@ -723,10 +729,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
         //     break;
         // }
-
-        default:
-         break;
-    }
 
     // Check moving frames
     CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
@@ -2023,6 +2025,9 @@ void MMFNeuralEP::DoSolveMMF()
     Array<OneD, NekDouble> Maxpositf1(totsteps, 0.0);
     Array<OneD, NekDouble> Maxpositf2(totsteps, 0.0);
 
+    Array<OneD, NekDouble> Gradpositf1(totsteps, 0.0);
+    Array<OneD, NekDouble> Gradpositf2(totsteps, 0.0);
+
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save fields into fieldsold
@@ -2083,7 +2088,7 @@ void MMFNeuralEP::DoSolveMMF()
 
             else if(m_fiberType==eDoubleLinear)
             {
-                PrintDuoCurrent(nchk, fields[0], Maxpositf1[nchk], Maxpositf2[nchk]);
+                PrintDuoCurrent(fields[0], Maxpositf1[nchk], Maxpositf2[nchk], Gradpositf1[nchk], Gradpositf2[nchk]);
             }
 
             Checkpoint_Output(nchk++);
@@ -2114,6 +2119,20 @@ void MMFNeuralEP::DoSolveMMF()
     {
         std::cout << Maxpositf2[i] << ", ";
     }
+
+    std::cout << " Gradpositf1: ";
+    for (int i=0; i<totsteps; ++i)
+    {
+        std::cout << Gradpositf1[i] << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout <<  "Gradpositf2: ";
+    for (int i=0; i<totsteps; ++i)
+    {
+        std::cout << Gradpositf2[i] << ", ";
+    }
+
     std::cout << std::endl;
     std::cout << "================================================= " <<std::endl;
 
@@ -2246,6 +2265,37 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
+void MMFNeuralEP::PlotAnisotropy(
+    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
+    const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrength)
+{
+    int nvar    = 4;
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_Anisotropy.chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "AniStrength1";
+    variables[1] = "AniStrength2";
+    variables[2] = "phieAniStrength1";
+    variables[3] = "phieAniStrength2";
+
+    // Compute the gradient of the time map
+    m_fields[0]->FwdTransLocalElmt(AniStrength[0], fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(AniStrength[1], fieldcoeffs[1]);
+
+    m_fields[0]->FwdTransLocalElmt(phieAniStrength[0], fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(phieAniStrength[1], fieldcoeffs[3]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
 
 void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
 Array<OneD, NekDouble> &excitezone1, Array<OneD, NekDouble> &excitezone2, 
@@ -2325,8 +2375,9 @@ void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
 }
 
 
-void MMFNeuralEP::PrintDuoCurrent(const int step, const Array<OneD, const NekDouble> &phim,
-                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step)
+void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
+                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step,
+                                  NekDouble &Gradpositf1step, NekDouble &Gradpositf2step)
 {
     int nq      = m_fields[0]->GetTotPoints();
 
@@ -2393,6 +2444,27 @@ void MMFNeuralEP::PrintDuoCurrent(const int step, const Array<OneD, const NekDou
     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
     std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
+
+    NekDouble tmp1, tmp2;
+    NekDouble x1loc=0.0, x2loc=0.0;
+    for (int i=0;i<nq;++i)
+    {
+        tmp1 = phimintra1[i];
+        tmp2 = phimintra2[i];
+
+        if( (tmp1>m_phimrest) && (x1loc>x1[i]) )
+        {
+            x1loc = x1[i];
+        }
+
+        if( (tmp2>m_phimrest) && (x2loc>x1[i]) )
+        {
+            x2loc = x1[i];
+        }
+    }
+
+    Gradpositf1step = x1loc;
+    Gradpositf2step = x2loc;
 }
 
 
@@ -3091,9 +3163,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
 
     outarray = m_fields[1]->GetPhys();
-
-    // Vmath::Vmul(nq, m_extrazone, 1, m_fields[1]->GetPhys(), 1, m_fields[1]->UpdatePhys(), 1);
-
     m_fields[1]->SetPhysState(true);
     
     return outarray;

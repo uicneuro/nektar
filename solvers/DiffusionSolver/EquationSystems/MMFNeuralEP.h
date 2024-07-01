@@ -373,6 +373,10 @@ protected:
 
     void PlotAnisotropyFiber(const Array<OneD, const NekDouble> &anifibre);
     
+    void PlotAnisotropy(
+    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
+    const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrength);
+
     void PlotPhieMF(
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_e,
@@ -594,8 +598,9 @@ Array<OneD, NekDouble> &intrazone2,
 Array<OneD, NekDouble> &extrazone);
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
-    void PrintDuoCurrent(const int step, const Array<OneD, const NekDouble> &phim,
-                        NekDouble &Maxpositf1step, NekDouble &Maxpositf2step);
+    void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
+                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step,
+                                  NekDouble &Gradpositf1step, NekDouble &Gradpositf2step);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
