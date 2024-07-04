@@ -540,9 +540,6 @@ protected:
         const int Nnode);
 
     Array<OneD, int> DoubleLinearIndex(
-        const NekDouble fiberwidth, 
-        const NekDouble fibergap, 
-        const NekDouble fiberheightdiff, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
         const int Nnode);

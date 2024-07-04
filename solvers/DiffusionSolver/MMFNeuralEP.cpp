@@ -332,7 +332,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
 
-        case eNeuralEP1D:
+        case eNeuralEP1D: 
         {
             // Ranvier node zone: 0: Myelin, 1: node
             m_nfibers  = 1;
@@ -1126,7 +1126,7 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
 
             case eDoubleLinear:
             {
-                outarray = DoubleLinearIndex(m_fiberwidth, m_fibergap, m_fiberheightdiff, m_nodelen, m_myelinlen, m_totNode);
+                outarray = DoubleLinearIndex(m_nodelen, m_myelinlen, m_totNode);
                 break;
             }
 
@@ -1303,9 +1303,6 @@ Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
 }
 
 Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
-    const NekDouble fiberwidth, 
-    const NekDouble fibergap, 
-    const NekDouble fiberheightdiff, 
     const NekDouble nodelen, 
     const NekDouble myelinlen,
     const int Nnode)
@@ -1322,14 +1319,18 @@ Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
 
     Array<OneD, int> outarray(nq, -2);
 
-    NekDouble fiber1left =  fiberwidth;
-    NekDouble fiber1right = 2.0*fiberwidth;
+    NekDouble fiber1left, fiber1right, fiber2left, fiber2right;
 
-    NekDouble fiber2left =  2.0*fiberwidth + fibergap;
-    NekDouble fiber2right = 3.0*fiberwidth + fibergap;
+    m_session->LoadParameter("fiber1left", fiber1left, 0.01);
+    m_session->LoadParameter("fiber1right", fiber1right, 0.02);
 
-    NekDouble nodestart, nodeend;
-    NekDouble nodebottom, nodetop;
+    m_session->LoadParameter("fiber2left", fiber2left, 0.03);
+    m_session->LoadParameter("fiber2right", fiber2right, 0.04);
+
+    NekDouble nodeinitdown, nodeinitup, nodestart, nodeend;
+
+    m_session->LoadParameter("nodeinitdown", nodeinitdown, 0.01);
+    m_session->LoadParameter("nodeinitup", nodeinitup, 0.02);
 
     for (int i=0; i<nq; ++i)
     {
@@ -1339,31 +1340,29 @@ Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
             outarray[i] = -1;  // Default of the first fiber = myelin
 
             // 1st intrazone
-            if(ycell[i]<0)
+            if(ycell[i]<nodeinitdown)
             {
                 outarray[i] = -2;
             }
 
             // Excitezone
-            nodebottom = nodelen;
-            nodetop = 3*nodelen;
-            if( (ycell[i]>=nodebottom) && (ycell[i]<=nodetop) )
+            if( (ycell[i]>=nodeinitdown) && (ycell[i]<=nodeinitup) )
             {
                 outarray[i] = 0;
             }
 
             for (int k=0; k<Nnode; ++k)
             {
-                nodestart = 3.0*nodelen + myelinlen + k * (myelinlen + nodelen);
-                nodeend = 3.0*nodelen + (k+1) * (myelinlen + nodelen);
+                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
                 if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
                 {
                     outarray[i] = k+1;
                 }
             }
             // last intrazone
-            nodeend = 3.0*nodelen + (Nnode) * (myelinlen + nodelen);
-            if( (ycell[i]<nodebottom) || (ycell[i]>nodeend) )
+            nodeend = nodeinitup + (Nnode) * (myelinlen + nodelen);
+            if(ycell[i]>nodeend)
             {
                 outarray[i] = -2;
             }
@@ -1373,31 +1372,29 @@ Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
         {
             outarray[i] = -101;  // Default of the second fiber = myelin
             // 1st intrazone
-            if(ycell[i]<fiberheightdiff)
+            if(ycell[i]<nodeinitdown)
             {
                 outarray[i] = -2;
             }
 
             // Excitezone
-            nodebottom = nodelen;
-            nodetop = 3*nodelen;
-            if( (ycell[i]>=nodebottom) && (ycell[i]<=nodetop) )
+            if( (ycell[i]>=nodeinitdown) && (ycell[i]<=nodeinitup) )
             {
                 outarray[i] = 100;
             }
 
             for (int k=0; k<Nnode+1; ++k)
             {
-                nodestart = fiberheightdiff + 3.0*nodelen + myelinlen + k * (myelinlen + nodelen);
-                nodeend = fiberheightdiff + 3.0*nodelen + (k+1) * (myelinlen + nodelen);
+                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
                 if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
                 {
                     outarray[i] = 100+k+1;
                 }
             }
             // last intrazone
-            nodeend = fiberheightdiff + 3.0*nodelen + (Nnode) * (myelinlen + nodelen);
-            if( (ycell[i]<nodebottom) || (ycell[i]>nodeend) )
+            nodeend = nodeinitup + (Nnode) * (myelinlen + nodelen);
+            if(ycell[i]>nodeend)
             {
                 outarray[i] = -2;
             }
