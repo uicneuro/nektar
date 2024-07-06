@@ -1460,13 +1460,10 @@ void MMFNeuralEP::SetUpBiAnisotropy(
         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    // if (m_MediumType == eAnisotropy)
-    // {
     for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Smul(nq, m_Cn, &NeuralCm[0][0], 1, &AniStrength[j][0], 1);
     }
-    // }
 
     // Let the lenght of moving frames outside the fiber to be zero.
     int cnt = 0;
@@ -1474,8 +1471,8 @@ void MMFNeuralEP::SetUpBiAnisotropy(
     {
         if(zoneindex[i] == -2)
         {
-            AniStrength[0][i] = 0.0;
-            AniStrength[1][i] = 0.0; 
+            AniStrength[0][i] = 0.01;
+            AniStrength[1][i] = 0.01; 
             cnt++;
         }
     }
