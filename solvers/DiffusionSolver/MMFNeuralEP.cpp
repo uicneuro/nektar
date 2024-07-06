@@ -359,8 +359,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_npts = m_fields[0]->GetTotPoints(0);
             m_zoneindex[0] = IndexNodeZone2D(m_fiberType);
 
-            m_excitezone1 = Array<OneD, NekDouble>(nq) ;
-            m_excitezone2 = Array<OneD, NekDouble>(nq)  ;
+            m_excitezone = Array<OneD, NekDouble>(nq);
+            m_excitezone1 = Array<OneD, NekDouble>(nq);
+            m_excitezone2 = Array<OneD, NekDouble>(nq);
 
             m_nodezone = Array<OneD, NekDouble>(nq) ;
             m_nodezone1 = Array<OneD, NekDouble>(nq);
@@ -369,6 +370,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_myelinzone1 = Array<OneD, NekDouble> (nq);
             m_myelinzone2 = Array<OneD, NekDouble>(nq);
 
+            m_intrazone = Array<OneD, NekDouble> (nq);
             m_intrazone1 = Array<OneD, NekDouble> (nq);
             m_intrazone2 = Array<OneD, NekDouble>(nq);
 
@@ -2323,7 +2325,6 @@ void MMFNeuralEP::PlotAnisotropy(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-
 void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
 Array<OneD, NekDouble> &excitezone1, 
 Array<OneD, NekDouble> &excitezone2, 
@@ -2371,6 +2372,7 @@ Array<OneD, NekDouble> &extrazone)
 
     m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[5]);
     m_fields[0]->FwdTransLocalElmt(intrazone2, fieldcoeffs[6]);
+    
     m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[7]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
