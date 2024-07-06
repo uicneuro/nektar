@@ -123,11 +123,16 @@ void NeuralStimulusZone::v_Update(const Array<OneD, const NekDouble> &excitezone
         return;
     }
 
+    const NekDouble var_membrane__cnd = 3.14e-9; 
+
+    //  Myelinated capacitance per unit axon length (F/cm)
+    // const NekDouble var_membrane__cml = 1.87e-11; 
+
     // Retrieve coordinates of quadrature points
     int nq = m_field->GetNpoints();
     
     // Get the protocol amplitude
-    NekDouble v_amp = 2.0 * m_Protocol->GetAmplitude(time) * m_strength / m_chiCapMembrane;
+    NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / ( m_chiCapMembrane * var_membrane__cnd );
 
     Array<OneD, NekDouble> tmp(nq);
     Vmath::Smul(nq, v_amp, &excitezone[0], 1, &tmp[0], 1);

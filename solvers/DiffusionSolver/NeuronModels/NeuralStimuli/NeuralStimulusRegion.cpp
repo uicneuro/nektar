@@ -135,6 +135,9 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
         }
     }
 
+    // const NekDouble var_membrane__cml = 1.87e-11; 
+    const NekDouble var_membrane__cnd = 3.14e-9;  // (F/cm) Waxman 1978, Same
+
     // Retrieve coordinates of quadrature points
     int nq = m_field->GetNpoints();
     
@@ -144,7 +147,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
     m_field->GetCoords(x0, x1, x2);
 
     // Get the protocol amplitude
-    NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / m_chiCapMembrane;
+    NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / ( m_chiCapMembrane * var_membrane__cnd );
 
     Array<OneD, NekDouble> vampzone(nq);
     Vmath::Smul(nq, v_amp, excitezone, 1, vampzone, 1);

@@ -306,7 +306,6 @@ protected:
     Array<OneD, NekDouble> m_intrazone1;
     Array<OneD, NekDouble> m_intrazone2;
 
-
     Array<OneD, NekDouble> m_myelinzone1;
     Array<OneD, NekDouble> m_myelinzone2;
 
@@ -589,13 +588,13 @@ protected:
         const int nstep);
         
     void PlotZone(const Array<OneD, const int> &zoneindex,
-Array<OneD, NekDouble> &excitezone1, 
-Array<OneD, NekDouble> &excitezone2, 
-Array<OneD, NekDouble> &nodezone1, 
-Array<OneD, NekDouble> &nodezone2, 
-Array<OneD, NekDouble> &intrazone1, 
-Array<OneD, NekDouble> &intrazone2, 
-Array<OneD, NekDouble> &extrazone);
+        Array<OneD, NekDouble> &excitezone1, 
+        Array<OneD, NekDouble> &excitezone2, 
+        Array<OneD, NekDouble> &nodezone1, 
+        Array<OneD, NekDouble> &nodezone2, 
+        Array<OneD, NekDouble> &intrazone1, 
+        Array<OneD, NekDouble> &intrazone2, 
+        Array<OneD, NekDouble> &extrazone);
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
     void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,

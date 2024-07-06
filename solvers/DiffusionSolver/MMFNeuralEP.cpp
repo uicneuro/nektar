@@ -378,6 +378,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             if(m_fiberType==eDoubleLinear)
             {
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_myelinzone1, m_myelinzone2, m_extrazone);
+
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
 
@@ -1647,14 +1648,14 @@ void MMFNeuralEP::SetUpDomainDuoZone(
         // first node excitation zone
         if(index==1)
         {
-            excitezone1[i] = 1.0 / m_Cn;
+            excitezone1[i] = 1.0;
             extcnt1++;
         }
 
         // second node excitation zone
         if(index==101)
         {
-            excitezone2[i] = 1.0 / m_Cn;
+            excitezone2[i] = 1.0;
             extcnt2++;
         }
 
@@ -2091,22 +2092,6 @@ void MMFNeuralEP::DoSolveMMF()
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
-            // Array<OneD, Array<OneD, NekDouble>> stim1(nvariables);
-            // Array<OneD, Array<OneD, NekDouble>> stim2(nvariables);
-
-            // for (int i=0; i<nvariables; ++i)
-            // {
-            //     stim1[i] = Array<OneD, NekDouble>(nq,0.0);
-            //     stim2[i] = Array<OneD, NekDouble>(nq,0.0);
-            // }
-
-            // m_stimulus[0]->Update(m_excitezone1, stim1, m_time);
-            // m_stimulus[1]->Update(m_excitezone2, stim2, m_time);
-
-            // std::cout << " =====================================================================================" << std::endl;
-            // std::cout << " time = " << m_time << ", stim1_Max = " << Vmath::Vmax(nq, stim1[0], 1) << ", stim2_Max = " << Vmath::Vmax(nq, stim2[0], 1) << std::endl;
-            // std::cout << " =====================================================================================" << std::endl;
-
             std::cout << "Steps: " << std::setw(8) << std::left << step + 1
                       << " "
                       << "Time: " << std::setw(12) << std::left << m_time
@@ -2340,7 +2325,8 @@ void MMFNeuralEP::PlotAnisotropy(
 
 
 void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
-Array<OneD, NekDouble> &excitezone1, Array<OneD, NekDouble> &excitezone2, 
+Array<OneD, NekDouble> &excitezone1, 
+Array<OneD, NekDouble> &excitezone2, 
 Array<OneD, NekDouble> &nodezone1, 
 Array<OneD, NekDouble> &nodezone2, 
 Array<OneD, NekDouble> &intrazone1, 
@@ -3118,27 +3104,23 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
     // Add Stimulus
-    m_stimulus[0]->Update(m_excitezone, outarray, time);
+    if(m_fiberType==eDoubleLinear)
+    {
+       m_stimulus[0]->Update(m_excitezone1, outarray, time);
+       m_stimulus[1]->Update(m_excitezone2, outarray, time);
+    }
 
-    // if(m_fiberType==eDoubleLinear)
-    // {
-    //    m_stimulus[0]->Update(m_excitezone1, outarray, time);
-    //    m_stimulus[1]->Update(m_excitezone2, outarray, time);
-    // }
-
-    // else
-    // {
-    //     m_stimulus[0]->Update(m_excitezone, outarray, time);
-    // }
+    else
+    {
+        m_stimulus[0]->Update(m_excitezone, outarray, time);
+    }
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    Array<OneD, NekDouble> extcurrent(nq,0.0);    
-    Array<OneD, NekDouble> tmp(nq);    
-
-    Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
-    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, tmp);
+    Array<OneD, NekDouble> extcurrent(nq, 0.0);    
+    Vmath::Smul(nq, -1.0, inarray[0], 1, extcurrent, 1);
+    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, extcurrent);
     
     // Compute (1/C_n/r) * \nabla^2 \phi_e
     extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
@@ -3183,21 +3165,19 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
+    Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
 
     // Only nonzero for node.
     if(extcurrent==eEphapticNode)
     {
+        phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
         Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
     }
 
     else if(extcurrent==eEphapticIntra)
     {
+        phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
         Vmath::Vmul(nq, m_intrazone, 1, phimLaplacian, 1, phimLaplacian, 1);
-    }
-
-    else{
-        phimLaplacian = Array<OneD, NekDouble>(nq, 0.0);
     }
 
     // Compute phie distribution
@@ -3242,23 +3222,24 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Array<OneD, NekDouble> initialcondition(nq);
             Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
             // Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
+            m_fields[0]->SetPhys(tmp[0]);
 
-            for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-            {
-                if(m_fiberType==eDoubleLinear)
-                {
-                    m_stimulus[0]->Update(m_excitezone1, tmp, initialtime);
-                    m_stimulus[1]->Update(m_excitezone2, tmp, initialtime);
-                }
+            // for (unsigned int i = 0; i < m_stimulus.size(); ++i)
+            // {
+            //     if(m_fiberType==eDoubleLinear)
+            //     {
+            //         m_stimulus[0]->Update(m_excitezone1, tmp, initialtime);
+            //         m_stimulus[1]->Update(m_excitezone2, tmp, initialtime);
+            //     }
 
-                else
-                {
-                    m_stimulus[0]->Update(m_excitezone, tmp, initialtime);
-                }
+            //     else
+            //     {
+            //         m_stimulus[0]->Update(m_excitezone, tmp, initialtime);
+            //     }
 
-                // Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
-                m_fields[0]->SetPhys(tmp[0]);
-            }
+            //     // Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
+            //     m_fields[0]->SetPhys(tmp[0]);
+            // }
         }
 
         default:
