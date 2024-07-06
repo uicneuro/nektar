@@ -306,6 +306,10 @@ protected:
     Array<OneD, NekDouble> m_intrazone1;
     Array<OneD, NekDouble> m_intrazone2;
 
+
+    Array<OneD, NekDouble> m_myelinzone1;
+    Array<OneD, NekDouble> m_myelinzone2;
+
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
@@ -551,7 +555,6 @@ protected:
 
     void SetUpBiAnisotropy(
             const Array<OneD, const int> &zoneindex,
-            const Array<OneD, const Array<OneD, NekDouble>> NeuralCm,
             Array<OneD, Array<OneD, NekDouble>> &AniStrength);
 
     void SetUpDomainZone(
@@ -567,8 +570,8 @@ protected:
         Array<OneD, NekDouble> &excitezone2,
         Array<OneD, NekDouble> &nodezone1,
         Array<OneD, NekDouble> &nodezone2,
-        Array<OneD, NekDouble> &intrazone1,
-        Array<OneD, NekDouble> &intrazone2,
+        Array<OneD, NekDouble> &myelinzone1,
+        Array<OneD, NekDouble> &myelinzone2,
         Array<OneD, NekDouble> &extrazone);
 
 
