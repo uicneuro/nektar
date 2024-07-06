@@ -294,6 +294,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_myelinzone1, m_myelinzone2, m_extrazone);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
+                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
 
                 Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
                 Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
@@ -376,9 +377,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Get the first and last index of the excitation zone [1,2]
             if(m_fiberType==eDoubleLinear)
             {
-                std::cout << "SetUpDomainDuoZone: eDoubleLinear" << std::endl;
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_myelinzone1, m_myelinzone2, m_extrazone);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
+                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
 
                 Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
                 Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
@@ -1497,6 +1498,12 @@ void MMFNeuralEP::SetUpBiAnisotropy(
     {
         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
+
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
 
     // Let the lenght of moving frames outside the fiber to be zero.
     int cnt = 0;
@@ -3111,16 +3118,18 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
 
     // Add Stimulus
-    if(m_fiberType==eDoubleLinear)
-    {
-       m_stimulus[0]->Update(m_excitezone1, outarray, time);
-       m_stimulus[1]->Update(m_excitezone2, outarray, time);
-    }
+    m_stimulus[0]->Update(m_excitezone, outarray, time);
 
-    else
-    {
-        m_stimulus[0]->Update(m_excitezone, outarray, time);
-    }
+    // if(m_fiberType==eDoubleLinear)
+    // {
+    //    m_stimulus[0]->Update(m_excitezone1, outarray, time);
+    //    m_stimulus[1]->Update(m_excitezone2, outarray, time);
+    // }
+
+    // else
+    // {
+    //     m_stimulus[0]->Update(m_excitezone, outarray, time);
+    // }
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
