@@ -3120,19 +3120,23 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    Array<OneD, NekDouble> extcurrent(nq, 0.0);    
-    Vmath::Smul(nq, -1.0, inarray[0], 1, extcurrent, 1);
-    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, extcurrent);
-    
-    // Compute (1/C_n/r) * \nabla^2 \phi_e
-    extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
+    if( (m_ExtCurrentType == eEphapticNode) || (m_ExtCurrentType == eEphapticIntra))
+    {
+        Array<OneD, NekDouble> extcurrent(nq, 0.0);    
 
-    // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
-    Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
-    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+        Vmath::Smul(nq, -1.0, inarray[0], 1, extcurrent, 1);
+        Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, extcurrent);
+        
+        // Compute (1/C_n/r) * \nabla^2 \phi_e
+        extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-    // subtract the current from the divergence of phie
-    Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+        // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
+        Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
+        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+
+        // subtract the current from the divergence of phie
+        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    }
 
     if (m_explicitDiffusion)
     {
