@@ -2065,11 +2065,10 @@ void MMFNeuralEP::DoSolveMMF()
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
 
     int totsteps = (m_steps + 1) / m_checksteps;
-    Array<OneD, NekDouble> Maxpositf1(totsteps, 0.0);
-    Array<OneD, NekDouble> Maxpositf2(totsteps, 0.0);
+    Array<OneD, NekDouble> timevec(totsteps, 0.0);
 
-    Array<OneD, NekDouble> Gradpositf1(totsteps, 0.0);
-    Array<OneD, NekDouble> Gradpositf2(totsteps, 0.0);
+    Array<OneD, NekDouble> thredlocf1(totsteps, 0.0);
+    Array<OneD, NekDouble> thredlocf2(totsteps, 0.0);
 
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
@@ -2108,6 +2107,8 @@ void MMFNeuralEP::DoSolveMMF()
         {
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             
+            timevec[nchk] = m_time; 
+
             if(m_fiberType==eSingleLinear)
             {
                 PrintSingleCurrent(fields[0]);
@@ -2115,7 +2116,7 @@ void MMFNeuralEP::DoSolveMMF()
 
             else if(m_fiberType==eDoubleLinear)
             {
-                PrintDuoCurrent(fields[0], Maxpositf1[nchk], Maxpositf2[nchk], Gradpositf1[nchk], Gradpositf2[nchk]);
+                PrintDuoCurrent(fields[0], thredlocf1[nchk], thredlocf2[nchk]);
             }
 
             Checkpoint_Output(nchk++);
@@ -2132,34 +2133,24 @@ void MMFNeuralEP::DoSolveMMF()
         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
     }
 
-    // Print max position for fibers
-    std::cout << "================================================= " <<std::endl;
-    std::cout << " Maxpositf1: ";
+    std::cout << " timevec: ";
     for (int i=0; i<totsteps; ++i)
     {
-        std::cout << Maxpositf1[i] << ", ";
+        std::cout << timevec[i] << ", ";
     }
     std::cout << std::endl;
 
-    std::cout <<  "Maxpositf2: ";
+    std::cout << " thredlocf1: ";
     for (int i=0; i<totsteps; ++i)
     {
-        std::cout << Maxpositf2[i] << ", ";
-    }
-
-    std::cout << std::endl;
-
-    std::cout << " Gradpositf1: ";
-    for (int i=0; i<totsteps; ++i)
-    {
-        std::cout << Gradpositf1[i] << ", ";
+        std::cout << thredlocf1[i] << ", ";
     }
     std::cout << std::endl;
 
-    std::cout <<  "Gradpositf2: ";
+    std::cout <<  "thredlocf2: ";
     for (int i=0; i<totsteps; ++i)
     {
-        std::cout << Gradpositf2[i] << ", ";
+        std::cout << thredlocf2[i] << ", ";
     }
 
     std::cout << std::endl;
@@ -2406,8 +2397,7 @@ void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
 
 
 void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step,
-                                  NekDouble &Gradpositf1step, NekDouble &Gradpositf2step)
+                                  NekDouble &thredlocf1, NekDouble &thredlocf2)
 {
     int nq      = m_fields[0]->GetTotPoints();
 
@@ -2468,8 +2458,8 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
     NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
 
-    Maxpositf1step = x1[Maxphim1index];
-    Maxpositf2step = x1[Maxphim2index];
+    NekDouble Maxpositf1step = x1[Maxphim1index];
+    NekDouble Maxpositf2step = x1[Maxphim2index];
 
     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
@@ -2493,11 +2483,11 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
         }
     }
 
-    Gradpositf1step = x1loc;
-    Gradpositf2step = x2loc;
+    thredlocf1 = x1loc;
+    thredlocf2 = x2loc;
 
-    std::cout << "fiber1: phim: GradMax at y = " << x1loc << std::endl;
-    std::cout << "fiber2: phim: GradMax at y = " << x2loc << std::endl;
+    std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << std::endl;
+    std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << std::endl;
 }
 
 

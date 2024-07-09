@@ -598,7 +598,6 @@ protected:
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
     void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step,
                                   NekDouble &Gradpositf1step, NekDouble &Gradpositf2step);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
