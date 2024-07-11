@@ -307,6 +307,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
                 Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
                 Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
+
+                Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
 
             else
@@ -395,6 +397,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
                 Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
                 Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
+
+                Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
 
             else
@@ -3195,23 +3199,21 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    if( (m_ExtCurrentType == eEphapticNode) || (m_ExtCurrentType == eEphapticIntra))
-    {
-        Array<OneD, NekDouble> extcurrent(nq, 0.0);    
+    Array<OneD, NekDouble> extcurrent(nq,0.0);    
+    Array<OneD, NekDouble> tmp(nq);    
 
-        Vmath::Smul(nq, -1.0, inarray[0], 1, extcurrent, 1);
-        Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, extcurrent);
-        
-        // Compute (1/C_n/r) * \nabla^2 \phi_e
-        extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
+    Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
+    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, tmp);
+    
+    // Compute (1/C_n/r) * \nabla^2 \phi_e
+    extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-        // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
-        Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
-        Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+    // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
+    Vmath::Vmul(nq, m_intrazone, 1, extcurrent, 1, extcurrent, 1);
+    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
 
-        // subtract the current from the divergence of phie
-        Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
-    }
+    // subtract the current from the divergence of phie
+    Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     if (m_explicitDiffusion)
     {
@@ -3246,19 +3248,23 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
+    Array<OneD, NekDouble> phimLaplacian(nq);
+
+    phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
 
     // Only nonzero for node.
     if(extcurrent==eEphapticNode)
     {
-        phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
         Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
     }
 
     else if(extcurrent==eEphapticIntra)
     {
-        phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
         Vmath::Vmul(nq, m_intrazone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    }
+
+    else{
+        phimLaplacian = Array<OneD, NekDouble>(nq, 0.0);
     }
 
     // Compute phie distribution
