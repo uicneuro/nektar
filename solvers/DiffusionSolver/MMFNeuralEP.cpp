@@ -3201,9 +3201,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
     Array<OneD, NekDouble> tmp(nq);    
+    Array<OneD, NekDouble> phie(nq);
 
     Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
-    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, tmp);
+    phie = Computephie(m_ExtCurrentType, tmp);
     
     // Compute (1/C_n/r) * \nabla^2 \phi_e
     extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
@@ -3277,8 +3278,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
 
     outarray = m_fields[1]->GetPhys();
-
-    std::cout << "phimLaplacian = " << RootMeanSquare(phimLaplacian) << ", phie = " << RootMeanSquare(outarray) << std::endl;
     // m_fields[1]->SetPhysState(true);
     
     return outarray;
