@@ -3277,7 +3277,9 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
 
     outarray = m_fields[1]->GetPhys();
-    m_fields[1]->SetPhysState(true);
+
+    std::cout << "phimLaplacian = " << RootMeanSquare(phimLaplacian) << ", phie = " << RootMeanSquare(outarray) << std::endl;
+    // m_fields[1]->SetPhysState(true);
     
     return outarray;
 }
