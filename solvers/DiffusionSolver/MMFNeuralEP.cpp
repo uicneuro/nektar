@@ -3255,12 +3255,12 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // Only nonzero for node.
     if(extcurrent==eEphapticNode)
     {
-        Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
+    //    Vmath::Vmul(nq, m_nodezone, 1, phimLaplacian, 1, phimLaplacian, 1);
     }
 
     else if(extcurrent==eEphapticIntra)
     {
-        Vmath::Vmul(nq, m_intrazone, 1, phimLaplacian, 1, phimLaplacian, 1);
+   //     Vmath::Vmul(nq, m_intrazone, 1, phimLaplacian, 1, phimLaplacian, 1);
     }
 
     else{
