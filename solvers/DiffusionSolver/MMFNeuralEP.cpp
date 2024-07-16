@@ -2518,8 +2518,11 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     Array<OneD, NekDouble> phimcurrent1(nq);
     Array<OneD, NekDouble> phimcurrent2(nq);
 
+    Array<OneD, NekDouble> phimextracurrent(nq);
+
     Vmath::Vmul(nq, m_intrazone1, 1, phimcurrent, 1, phimcurrent1, 1);
     Vmath::Vmul(nq, m_intrazone2, 1, phimcurrent, 1, phimcurrent2, 1);
+    Vmath::Vmul(nq, m_extrazone, 1, phimcurrent, 1, phimextracurrent, 1);
 
     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
     Vmath::Vmul(nq, m_intrazone1, 1, totcurrent1, 1, totcurrent1, 1);
@@ -2531,6 +2534,7 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
 
     NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
     NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
+    NekDouble Maxphimextra = Vmath::Vamax(nq, phimextracurrent, 1);
 
     int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
     int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
@@ -2550,6 +2554,7 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
     std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
+    std::cout << "Extraspace: phim: Max = " << Maxphimextra << ", avg = " << RootMeanSquare(phimextracurrent) << std::endl;
 
     NekDouble tmp1, tmp2;
     NekDouble x1loc=0.0, x2loc=0.0;
