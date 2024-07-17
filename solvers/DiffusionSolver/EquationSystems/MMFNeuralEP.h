@@ -236,6 +236,8 @@ protected:
 
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
 
+    NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_nodeinitdown, m_nodeinitup;
+
     NekDouble m_fiberwidth, m_fibergap, m_fiberheightdiff;
     NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
@@ -306,6 +308,9 @@ protected:
     Array<OneD, NekDouble> m_intrazone;
     Array<OneD, NekDouble> m_intrazone1;
     Array<OneD, NekDouble> m_intrazone2;
+
+    Array<OneD, NekDouble> m_myelinzone1;
+    Array<OneD, NekDouble> m_myelinzone2;
 
     Array<OneD, NekDouble> m_extrazone;
 
@@ -540,10 +545,11 @@ protected:
         const NekDouble myelinlen,
         const int Nnode);
 
-    Array<OneD, int> DoubleLinearIndex(
+    int DoubleLinearIndex(
         const NekDouble nodelen, 
         const NekDouble myelinlen,
-        const int Nnode);
+        const int Nnode,
+        const NekDouble xi, const NekDouble yi);
 
     void Getcellavg(
         Array<OneD, NekDouble> &xcell, 
@@ -574,12 +580,11 @@ protected:
 
 
     void ComputeNeuralTimeMap(const NekDouble time,
-                                const Array<OneD, const int> &zoneindex,
-                                const Array<OneD, const NekDouble> &intrazone,
-                                const Array<OneD, const NekDouble> &field_old,
-                                const Array<OneD, const NekDouble> &field,
-                                Array<OneD, NekDouble> &dudtHistory,
-                                Array<OneD, NekDouble> &TimeMap);
+                            const Array<OneD, const int> &zoneindex,
+                            const Array<OneD, const NekDouble> &field,
+                            const Array<OneD, const NekDouble> &dudt,
+                            Array<OneD, NekDouble> &dudtHistory,
+                            Array<OneD, NekDouble> &TimeMap);
                                 
     void PlotNeuralTimeMap(
         const Array<OneD, const NekDouble> &phim,
@@ -597,8 +602,8 @@ Array<OneD, NekDouble> &extrazone);
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
     void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step,
-                                  NekDouble &Gradpositf1step, NekDouble &Gradpositf2step);
+                        const Array<OneD, const NekDouble> &dudt,
+                        NekDouble &thredlocf1, NekDouble &thredlocf2);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
