@@ -549,7 +549,8 @@ protected:
         const NekDouble nodelen, 
         const NekDouble myelinlen,
         const int Nnode,
-        const NekDouble xi, const NekDouble yi);
+        const NekDouble xi, 
+        const NekDouble yi);
 
     void Getcellavg(
         Array<OneD, NekDouble> &xcell, 
