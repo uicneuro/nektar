@@ -57,7 +57,6 @@ using namespace std;
 using namespace Nektar::SolverUtils;
 using namespace Nektar;
 
-
 namespace Nektar
 {
 string MMFNeuralEP::className =
@@ -124,6 +123,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Element_per_Myelin", m_elemperMyel, 14);
 
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
+
+    m_session->LoadParameter("fiber1left", m_fiber1left, 0.01);
+    m_session->LoadParameter("fiber1right", m_fiber1right, 0.02);
+
+    m_session->LoadParameter("fiber2left", m_fiber2left, 0.03);
+    m_session->LoadParameter("fiber2right", m_fiber2right, 0.04);
+
+    m_session->LoadParameter("nodeinitdown", m_nodeinitdown, 0.01);
+    m_session->LoadParameter("nodeinitup", m_nodeinitup, 0.02);
 
     // Relative Extracellular resistance: 1 < \beta < 10
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
@@ -293,8 +301,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             if(m_fiberType==eDoubleLinear)
             {
-                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
+                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_myelinzone1, m_myelinzone2, m_extrazone);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
+                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
+
+                Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
+                Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
+
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
 
@@ -311,20 +324,20 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             for (int i = 0; i < nq; ++i)
             {
                 // Ranvier node zone
-                if (m_zoneindex[0][i] >= 0)
+                if (m_zoneindex[0][i] > 0)
 
                 {
                     m_NeuralCm[0][i] = 1.0 / m_Cn;
                 }
 
                 // Myelin zone
-                else if (m_zoneindex[0][i] == -1)
+                else if (m_zoneindex[0][i] < 0)
                 {
                     m_NeuralCm[0][i] = 1.0 / m_Cm;
                 }
 
                 // Extracellular space: \sigma_i = m_ratio_re_ri * \sigma_e
-                else if (m_zoneindex[0][i] == -2)
+                else if (m_zoneindex[0][i] == 0)
                 {
                     m_NeuralCm[0][i] = 1.0 / m_Cn;
                 }
@@ -343,8 +356,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
               // Get the first and last index of the excitation zone [1,2]
             SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
 
-            m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(m_nfibers);
-            m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
+            // m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(m_nfibers);
+            // m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
             break;
         }
 
@@ -357,12 +370,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_npts = m_fields[0]->GetTotPoints(0);
             m_zoneindex[0] = IndexNodeZone2D(m_fiberType);
 
-            m_excitezone1 = Array<OneD, NekDouble>(nq) ;
-            m_excitezone2 = Array<OneD, NekDouble>(nq)  ;
+            m_excitezone = Array<OneD, NekDouble>(nq);
+            m_excitezone1 = Array<OneD, NekDouble>(nq);
+            m_excitezone2 = Array<OneD, NekDouble>(nq);
 
             m_nodezone = Array<OneD, NekDouble>(nq) ;
             m_nodezone1 = Array<OneD, NekDouble>(nq);
             m_nodezone2 = Array<OneD, NekDouble>(nq);
+
+            m_myelinzone1 = Array<OneD, NekDouble> (nq);
+            m_myelinzone2 = Array<OneD, NekDouble>(nq);
 
             m_intrazone = Array<OneD, NekDouble> (nq);
             m_intrazone1 = Array<OneD, NekDouble> (nq);
@@ -373,8 +390,14 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Get the first and last index of the excitation zone [1,2]
             if(m_fiberType==eDoubleLinear)
             {
-                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
+                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_myelinzone1, m_myelinzone2, m_extrazone);
+
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
+                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
+
+                Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
+                Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
+
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
 
@@ -389,9 +412,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 m_zoneindex[0]  = Array<OneD, int>(nq, 1);
             }
-
-            m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
-            m_NeuralCm[0] = ComputeConductivity(m_zoneindex[0]);
             break;
         }
 
@@ -402,7 +422,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
     // Derive AnisotropyStrength.
-    SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
+    SetUpBiAnisotropy(m_zoneindex[0], m_AniStrength);
 
     MMFSystem::MMFInitObject(m_AniStrength);
     
@@ -423,7 +443,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     {
         for (int j = 0; j < m_expdim; ++j)
         {
-            if(m_zoneindex[0][i] == -2)
+            if(m_zoneindex[0][i] == 0)
             {
                 unitAniStrength[j][i] = 0.0;
             }
@@ -466,16 +486,20 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             
             // Compute sigma_i
             // Node: 1.0, Myelin: m_Cn / m_Cm, Extraspace: 0.0
+            int index;
             for (int i = 0; i<nq; ++i)
             {
+                index = m_zoneindex[0][i];
                  for (int j = 0; j < m_expdim; ++j)
                  {
-                    if(m_zoneindex[0][i]==-2)
+                    // Extracellular region
+                    if( index == 0)
                     {
                         sigma_i[j][i] = 0.0;
                     }
 
-                    else if ( (m_zoneindex[0][i]==-1) || (m_zoneindex[0][i]==-101) )
+                    // Myelin region
+                    else if ( index < 0 )
                     {
                         sigma_i[j][i] = m_AnisotropyStrength;
                     }
@@ -505,25 +529,28 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             for (int i = 0; i<nq; ++i)
             {
-                    // Node zone
-                    if(m_zoneindex[0][i]>=0)
-                    {
-                        sigma_e[0][i] = 1.0/m_ratio_re_ri;
-                        sigma_e[1][i] = 1.0/m_ratio_re_ri;
-                    }
+                index = m_zoneindex[0][i];
+                
+                // Node zone
+                if( index > 0)
+                {
+                    sigma_e[0][i] = 1.0/m_ratio_re_ri;
+                    sigma_e[1][i] = 1.0/m_ratio_re_ri;
+                }
 
-                    // Myelin zone
-                    else if ( (m_zoneindex[0][i]==-1) || (m_zoneindex[0][i]==-101) )
-                    {
-                        sigma_e[0][i] = m_AnisotropyStrength/m_ratio_re_ri;
-                        sigma_e[1][i] = m_AnisotropyStrength/m_ratio_re_ri;
-                    }
+                // Myelin zone
+                else if ( index < 0 )
+                {
+                    sigma_e[0][i] = m_AnisotropyStrength/m_ratio_re_ri;
+                    sigma_e[1][i] = m_AnisotropyStrength/m_ratio_re_ri;
+                }
 
-                    else if(m_zoneindex[0][i]==-2)
-                    {
-                        sigma_e[0][i] = sigmae_ext;
-                        sigma_e[1][i] = sigmae_ext;
-                    }
+                // Extracellular region
+                else if( index ==0 )
+                {
+                    sigma_e[0][i] = sigmae_ext;
+                    sigma_e[1][i] = sigmae_ext;
+                }
             }
 
             std::cout << "Max sigma_e_1  = "
@@ -569,16 +596,20 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Compute sigma_i
             // Node: 1.0, Myelin: m_Cn / m_Cm, Extraspace: 0.0
+            int index; 
             for (int i = 0; i<nq; ++i)
             {
+                index = m_zoneindex[0][i];
                  for (int j = 0; j < m_expdim; ++j)
                  {
-                    if(m_zoneindex[0][i]==-2)
+                    // Extracellular region
+                    if( index == 0)
                     {
                         sigma_i[j][i] = 0.0;
                     }
 
-                    else if ( (m_zoneindex[0][i]==-1) || (m_zoneindex[0][i]==-101) )
+                    // Myelin region
+                    else if ( index < 0 )
                     {
                         sigma_i[j][i] = m_AnisotropyStrength;
                     }
@@ -603,21 +634,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             for (int i = 0; i<nq; ++i)
             {
+                    index = m_zoneindex[0][i];
+
                     // Node zone
-                    if(m_zoneindex[0][i]>=0)
+                    if( index > 0)
                     {
                         sigma_e[0][i] = 1.0/m_ratio_re_ri;
                         sigma_e[1][i] = 1.0/m_ratio_re_ri;
                     }
 
                     // Myelin zone
-                    else if ( (m_zoneindex[0][i]==-1) || (m_zoneindex[0][i]==-101) )
+                    else if ( index < 0 )
                     {
                         sigma_e[0][i] = m_AnisotropyStrength/m_ratio_re_ri;
                         sigma_e[1][i] = m_AnisotropyStrength/m_ratio_re_ri;
                     }
 
-                    else if(m_zoneindex[0][i]==-2)
+                    // Extracellular region
+                    else if( index == 0)
                     {
                         sigma_e[0][i] = PhieMultFactor / axoncrossA;
                         sigma_e[1][i] = PhieMultFactor / axoncrossA;
@@ -766,7 +800,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                  Array<OneD, NekDouble> forcing(nq,0.0);
                 for (int i=0;i<nq; ++i)
                 {
-                    if(m_zoneindex[0][i]>=0)
+                    if(m_zoneindex[0][i]>0)
                     {
                         forcing[i] = -100.0;
                      }
@@ -804,7 +838,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
                 for (int i=0;i<nq;++i)
                 {
-                    if (m_zoneindex[0][i]==-2)
+                    if (m_zoneindex[0][i]==0)
                     {
                         phimextra[i] = phim[i]/Vmath::Vmax(nq, phim, 1);
                     }
@@ -1116,18 +1150,36 @@ Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(
     {
         int nq   = GetTotPoints();
 
-        Array<OneD, int> outarray(nq);
+        Array<OneD, int> outarray(nq,0);
+
+        // Compute the center of the element as the coordinate of each grid.
+        Array<OneD, NekDouble> xcell(nq);
+        Array<OneD, NekDouble> ycell(nq);
+        Array<OneD, NekDouble> zcell(nq);
+
+        Getcellavg(xcell,ycell,zcell);
+
         switch(fiber)
         {
             case eSingleLinear:
             {
-                outarray = SingleLinearIndex(m_fiberwidth, m_nodelen, m_myelinlen, m_totNode);
+                for (int i=0; i<nq; ++i)
+                {
+                    outarray[i] = SingleLinearIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                                    m_fiber1left, m_fiber1right,
+                                                    m_nodeinitdown, m_nodeinitup, xcell[i], ycell[i]);
+                }
                 break;
             }
 
             case eDoubleLinear:
             {
-                outarray = DoubleLinearIndex(m_nodelen, m_myelinlen, m_totNode);
+                for (int i=0; i<nq; ++i)
+                {
+                    outarray[i] = DoubleLinearIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                                    m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right,
+                                                    m_nodeinitdown, m_nodeinitup, xcell[i], ycell[i]);
+                }
                 break;
             }
 
@@ -1240,169 +1292,213 @@ Array<OneD, int> MMFNeuralEP::TestRanvierDuoIndex()
 }
 
 
-Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
-    const NekDouble fiberwidth, 
-    const NekDouble nodelen, 
-    const NekDouble myelinlen,
-    const int Nnode)
+// Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
+//     const NekDouble fiberwidth, 
+//     const NekDouble nodelen, 
+//     const NekDouble myelinlen,
+//     const int Nnode)
+// {
+//     int nq   = GetTotPoints();
+
+//     // Compute the center of the element as the coordinate of each grid.
+
+//     Array<OneD, NekDouble> xcell(nq);
+//     Array<OneD, NekDouble> ycell(nq);
+//     Array<OneD, NekDouble> zcell(nq);
+
+//     Getcellavg(xcell,ycell,zcell);
+
+//     Array<OneD, int> outarray(nq, -2);
+
+//     NekDouble nodestart, nodeend;
+//     NekDouble fiberleft = -0.5*fiberwidth;
+//     NekDouble fiberright = 0.5*fiberwidth;
+
+//     for (int i=0; i<nq; ++i)
+//     {
+//         if((xcell[i]>fiberleft) && (xcell[i]<fiberright))
+//         {
+//             outarray[i] = -1;  // Default = myelin
+
+//             // 1st intrazone
+//             if(ycell[i]<0)
+//             {
+//                 outarray[i] = -2;
+//             }
+
+//             for (int k=0; k<2; ++k)
+//             {
+//                 if( (ycell[i]>=k*nodelen) && (ycell[i]<=(k+1)*nodelen) )
+//                 {
+//                     outarray[i] = k;
+//                 }
+//             }
+
+//             for (int k=0; k<Nnode; ++k)
+//             {
+//                 nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
+//                 nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
+//                 if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
+//                 {
+//                     outarray[i] = k+2;
+//                 }
+//             }
+//             // last intrazone
+//            nodeend = 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
+//             if(ycell[i]>nodeend)
+//             {
+//                 outarray[i] = -2;
+//             }
+//         }
+//     }
+
+//     return outarray;
+// }
+
+int MMFNeuralEP::SingleLinearIndex(
+    const int totNnode,
+    const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble fiber1left, const NekDouble fiber1right, 
+    const NekDouble nodeinitdown, const NekDouble nodeinitup,
+    const NekDouble xi, const NekDouble yi)
+
 {
-    int nq   = GetTotPoints();
+    // first fiber
+    NekDouble nodestart, nodeend, myelinstarts;
+    int output = 0;
 
-    // Compute the center of the element as the coordinate of each grid.
-
-    Array<OneD, NekDouble> xcell(nq);
-    Array<OneD, NekDouble> ycell(nq);
-    Array<OneD, NekDouble> zcell(nq);
-
-    Getcellavg(xcell,ycell,zcell);
-
-    Array<OneD, int> outarray(nq, -2);
-
-    NekDouble nodestart, nodeend;
-    NekDouble fiberleft = -0.5*fiberwidth;
-    NekDouble fiberright = 0.5*fiberwidth;
-
-    for (int i=0; i<nq; ++i)
+    if((xi > fiber1left) && (xi < fiber1right))
     {
-        if((xcell[i]>fiberleft) && (xcell[i]<fiberright))
+        // 1st intrazone
+        nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+        if( ( yi < nodeinitdown) || ( yi > nodeend) )
         {
-            outarray[i] = -1;  // Default = myelin
+            output = 0;
+        }
 
-            // 1st intrazone
-            if(ycell[i]<0)
+        // Excitezone
+        if( (yi >= nodeinitdown) && ( yi<=nodeinitup ) )
+        {
+            output = 1;
+        }
+
+        for (int k=0; k<totNnode; ++k)
+        {
+            myelinstarts = nodeinitup + k * (myelinlen + nodelen);
+            nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+            nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+
+            if( (yi>=nodestart) && (yi<=nodeend) )
             {
-                outarray[i] = -2;
+                output = k+2;
             }
 
-            for (int k=0; k<2; ++k)
+            else if( (yi>=myelinstarts) && (yi<=nodestart) )
             {
-                if( (ycell[i]>=k*nodelen) && (ycell[i]<=(k+1)*nodelen) )
-                {
-                    outarray[i] = k;
-                }
-            }
-
-            for (int k=0; k<Nnode; ++k)
-            {
-                nodestart = 2.0*nodelen + myelinlen + k * (myelinlen + nodelen);
-                nodeend = 2.0*nodelen + (k+1) * (myelinlen + nodelen);
-                if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
-                {
-                    outarray[i] = k+2;
-                }
-            }
-            // last intrazone
-           nodeend = 2.0*nodelen + (Nnode) * (myelinlen + nodelen);
-            if(ycell[i]>nodeend)
-            {
-                outarray[i] = -2;
+                output = -1 * (k+1);
             }
         }
+
     }
 
-    return outarray;
+    return output;
 }
 
-Array<OneD, int> MMFNeuralEP::DoubleLinearIndex(
-    const NekDouble nodelen, 
-    const NekDouble myelinlen,
-    const int Nnode)
+
+
+// zoneindex
+// 0 : extracellular space
+// 1 ~ 99 : node of the first fiber
+// -1 ~ -99 : myelin of the first fiber
+// 100 ~ 199: nodes of the second fiber
+// -100 ~ -199: myelin of the second fiber
+
+int MMFNeuralEP::DoubleLinearIndex(
+    const int totNnode,
+    const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble fiber1left, const NekDouble fiber1right, 
+    const NekDouble fiber2left, const NekDouble fiber2right,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup,
+    const NekDouble xi, const NekDouble yi)
+
 {
-    int nq   = GetTotPoints();
+    // first fiber
+    NekDouble nodestart, nodeend, myelinstarts;
+    int output = 0;
 
-    // Compute the center of the element as the coordinate of each grid.
-
-    Array<OneD, NekDouble> xcell(nq);
-    Array<OneD, NekDouble> ycell(nq);
-    Array<OneD, NekDouble> zcell(nq);
-
-    Getcellavg(xcell,ycell,zcell);
-
-    Array<OneD, int> outarray(nq, -2);
-
-    NekDouble fiber1left, fiber1right, fiber2left, fiber2right;
-
-    m_session->LoadParameter("fiber1left", fiber1left, 0.01);
-    m_session->LoadParameter("fiber1right", fiber1right, 0.02);
-
-    m_session->LoadParameter("fiber2left", fiber2left, 0.03);
-    m_session->LoadParameter("fiber2right", fiber2right, 0.04);
-
-    NekDouble nodeinitdown, nodeinitup, nodestart, nodeend;
-
-    m_session->LoadParameter("nodeinitdown", nodeinitdown, 0.01);
-    m_session->LoadParameter("nodeinitup", nodeinitup, 0.02);
-
-    for (int i=0; i<nq; ++i)
+    if((xi > fiber1left) && (xi < fiber1right))
     {
-        // first fiber
-        if((xcell[i]>fiber1left) && (xcell[i]<fiber1right))
+        // 1st intrazone
+        nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+        if( ( yi < nodeinitdown) || ( yi > nodeend) )
         {
-            outarray[i] = -1;  // Default of the first fiber = myelin
+            output = 0;
+        }
 
-            // 1st intrazone
-            if(ycell[i]<nodeinitdown)
+        // Excitezone
+        if( (yi >= nodeinitdown) && ( yi<=nodeinitup ) )
+        {
+            output = 1;
+        }
+
+        for (int k=0; k<totNnode; ++k)
+        {
+            myelinstarts = nodeinitup + k * (myelinlen + nodelen);
+            nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+            nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+
+            if( (yi>=nodestart) && (yi<=nodeend) )
             {
-                outarray[i] = -2;
+                output = k+2;
             }
 
-            // Excitezone
-            if( (ycell[i]>=nodeinitdown) && (ycell[i]<=nodeinitup) )
+            else if( (yi>=myelinstarts) && (yi<=nodestart) )
             {
-                outarray[i] = 0;
-            }
-
-            for (int k=0; k<Nnode; ++k)
-            {
-                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
-                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
-                if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
-                {
-                    outarray[i] = k+1;
-                }
-            }
-            // last intrazone
-            nodeend = nodeinitup + (Nnode) * (myelinlen + nodelen);
-            if(ycell[i]>nodeend)
-            {
-                outarray[i] = -2;
+                output = -1 * (k+1);
             }
         }
 
-        else if((xcell[i]>fiber2left) && (xcell[i]<fiber2right))
+    }
+
+    else if((xi>fiber2left) && (xi<fiber2right))
+    {
+        // 1st intrazone
+        nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+        if( (yi<nodeinitdown) || (yi>nodeend) )
         {
-            outarray[i] = -101;  // Default of the second fiber = myelin
-            // 1st intrazone
-            if(ycell[i]<nodeinitdown)
+            output = 0;
+        }
+
+        // Excitezone
+        if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+        {
+            output = 101;
+        }
+
+        if( (yi>=nodeinitup) && (yi<=nodeinitup + myelinlen) )
+        {
+            output = -101;
+        }
+
+        for (int k=0; k<totNnode; ++k)
+        {
+            myelinstarts = nodeinitup + k * (myelinlen + nodelen);
+            nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+            nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+
+            if( (yi>=nodestart) && (yi<=nodeend) )
             {
-                outarray[i] = -2;
+                output = 100 + k+2;
             }
 
-            // Excitezone
-            if( (ycell[i]>=nodeinitdown) && (ycell[i]<=nodeinitup) )
+            else if( (yi>=myelinstarts) && (yi<=nodestart) )
             {
-                outarray[i] = 100;
-            }
-
-            for (int k=0; k<Nnode+1; ++k)
-            {
-                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
-                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
-                if( (ycell[i]>=nodestart) && (ycell[i]<=nodeend) )
-                {
-                    outarray[i] = 100+k+1;
-                }
-            }
-            // last intrazone
-            nodeend = nodeinitup + (Nnode) * (myelinlen + nodelen);
-            if(ycell[i]>nodeend)
-            {
-                outarray[i] = -2;
+                output = -1 * (100 + k+1);
             }
         }
     }
 
-    return outarray;
+    return output;
 }
 
 void MMFNeuralEP::Getcellavg(
@@ -1450,7 +1546,6 @@ void MMFNeuralEP::Getcellavg(
 
 void MMFNeuralEP::SetUpBiAnisotropy(
             const Array<OneD, const int> &zoneindex,
-            const Array<OneD, const Array<OneD, NekDouble>> NeuralCm,
             Array<OneD, Array<OneD, NekDouble>> &AniStrength)
 {
     int nq   = GetTotPoints();
@@ -1461,19 +1556,27 @@ void MMFNeuralEP::SetUpBiAnisotropy(
         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    // if (m_MediumType == eAnisotropy)
-    // {
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        Vmath::Smul(nq, m_Cn, &NeuralCm[0][0], 1, &AniStrength[j][0], 1);
-    }
-    // }
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
+
+    m_fields[0]->GetCoords(x0, x1, x2);
 
     // Let the lenght of moving frames outside the fiber to be zero.
     int cnt = 0;
+    int index;
     for (int i=0; i<nq; ++i)
     {
-        if(zoneindex[i] == -2)
+        index = zoneindex[i];
+        // myelin space
+        if( index < 0 )
+        {
+            AniStrength[0][i] = m_Cn/m_Cm;
+            AniStrength[1][i] = m_Cn/m_Cm;
+        }
+
+        // extracellular space
+        else if(index == 0)
         {
             AniStrength[0][i] = 0.0;
             AniStrength[1][i] = 0.0; 
@@ -1527,7 +1630,7 @@ void MMFNeuralEP::SetUpDomainZone(
         // first node excitation zone
         if( (zoneindex[i]==0) || (zoneindex[i]==1) || (zoneindex[i]==100) || (zoneindex[i]==101) )
         {
-            excitezone[i] = 1.0;
+            excitezone[i] = 1.0 / m_Cn;
             extcnt++;
         }
 
@@ -1575,13 +1678,13 @@ void MMFNeuralEP::SetUpDomainDuoZone(
         Array<OneD, NekDouble> &excitezone2,
         Array<OneD, NekDouble> &nodezone1,
         Array<OneD, NekDouble> &nodezone2,
-        Array<OneD, NekDouble> &intrazone1,
-        Array<OneD, NekDouble> &intrazone2,
+        Array<OneD, NekDouble> &myelinzone1,
+        Array<OneD, NekDouble> &myelinzone2,
         Array<OneD, NekDouble> &extrazone)
 {
     int nq   = GetTotPoints();
 
-    int extcnt1=0, extcnt2=0, nodecnt1=0, nodecnt2=0, intracnt1=0, intracnt2=0, extracnt=0;
+    int extcnt1=0, extcnt2=0, nodecnt1=0, nodecnt2=0, myelcnt1=0, myelcnt2=0, extracnt=0;
 
     excitezone1 = Array<OneD, NekDouble>(nq, 0.0);
     excitezone2 = Array<OneD, NekDouble>(nq, 0.0);
@@ -1589,8 +1692,8 @@ void MMFNeuralEP::SetUpDomainDuoZone(
     nodezone1  = Array<OneD, NekDouble>(nq, 0.0);
     nodezone2  = Array<OneD, NekDouble>(nq, 0.0);
 
-    intrazone1 = Array<OneD, NekDouble>(nq, 0.0);
-    intrazone2 = Array<OneD, NekDouble>(nq, 0.0);
+    myelinzone1 = Array<OneD, NekDouble>(nq, 0.0);
+    myelinzone2 = Array<OneD, NekDouble>(nq, 0.0);
 
     extrazone = Array<OneD, NekDouble>(nq, 0.0);
     int index;
@@ -1599,46 +1702,46 @@ void MMFNeuralEP::SetUpDomainDuoZone(
         index = zoneindex[i];
 
         // first node excitation zone
-        if(index==0)
+        if(index==1)
         {
             excitezone1[i] = 1.0;
             extcnt1++;
         }
 
         // second node excitation zone
-        if(index==100)
+        if(index==101)
         {
             excitezone2[i] = 1.0;
             extcnt2++;
         }
 
-        if( (index >= 0) && (index < 100) )
+        if( (index > 0) && (index < 100) )
         {
             nodezone1[i] = 1.0;
             nodecnt1++;
         }
 
-        if( (index >= 100) && (index < 200) )
+        if( (index > 100) && (index < 200) )
         {
             nodezone2[i] = 1.0;
             nodecnt2++;
         }
 
         // first fiber inside
-        if( (index == -1) || ( (index >= 0) && (index < 100) ) )
+        if( (index<0) && (index>-100) )
         {
-            intrazone1[i] = 1.0 ;
-            intracnt1++;
+            myelinzone1[i] = 1.0 ;
+            myelcnt1++;
         }
 
         // second fiber inside
-        if( (index == -101) || ( (index >= 100) && (index < 200) ) )
+        if( (index<-100) && (index>-200) )
         {
-            intrazone2[i] = 1.0 ;
-            intracnt2++;
+            myelinzone2[i] = 1.0 ;
+            myelcnt2++;
         }
 
-        if(zoneindex[i] == -2)
+        if(zoneindex[i] == 0)
         {
             extrazone[i] = 1.0;
             extracnt++;
@@ -1651,25 +1754,24 @@ void MMFNeuralEP::SetUpDomainDuoZone(
     int nodecntelem1 = nodecnt1/m_npts/m_elemperNode;
     int nodecntelem2 = nodecnt2/m_npts/m_elemperNode;
 
-    int myelcntelem1 = (intracnt1-nodecnt1)/m_npts/m_elemperMyel;
-    int myelcntelem2 = (intracnt2-nodecnt2)/m_npts/m_elemperMyel;
+    int myelcntelem1 = myelcnt1/m_npts/m_elemperMyel;
+    int myelcntelem2 = myelcnt2/m_npts/m_elemperMyel;
 
-    int intraelem1 = intracnt1/m_npts;
-    int intraelem2 = intracnt2/m_npts;
+    int intraelem1 = nodecntelem1 + myelcntelem1;
+    int intraelem2 = nodecntelem2 + myelcntelem2;
 
     int extraelem = extracnt/m_npts;
     int totelem = intraelem1 + intraelem2 + extraelem - (nodecntelem1+nodecntelem2)*m_elemperNode;
     
     std::cout << "Excite zone 1 = " << 100.0*extcnt1/nq << ", Excite zone 2 = " << 100.0*extcnt2/nq 
     << ", Node zone 1 = " << 100.0*nodecntelem1 /nq <<  ", Node zone 2 = " << 100.0*nodecntelem2 /nq 
-    <<  ", intra zone 1 = " << 100.0*intracnt1/nq << ", intra zone 2 = " << 100.0*intracnt2/nq << 
-    " %, extra zone = " << 100.0*extracnt/nq << " % " << std::endl;
+    <<  ", Myeline zone 1 = " << 100.0*myelcnt1/nq << ", Myeline zone 2 = " << 100.0*myelcnt2/nq
+    << " %, extra zone = " << 100.0*extracnt/nq << " % " << std::endl;
 
     std::cout << "npts = " << m_npts << ", Excite node 1 elem. = " << extcntelem1 << ", Excite node 2 elem. = " << extcntelem2
     << ", Node 1 elem. = " << nodecntelem1  << ", Node 2 elem. = " << nodecntelem2 
-    << ", Myelin 1 elem.  = " << myelcntelem1 << ", Myelin 2 elem.  = " << myelcntelem2
-    << ", intra 1 elem. = " << intraelem1 << ", intra 2 elem. = " << intraelem2 <<  
-    ", external elem. = " << extraelem << ", total elem = " << totelem << std::endl;
+    << ", Myelin 1 elem.  = " << myelcntelem1 << ", Myelin 2 elem.  = " << myelcntelem2 
+    << ", external elem. = " << extraelem << ", total elem = " << totelem << std::endl;
 }
 
 
@@ -2017,11 +2119,18 @@ void MMFNeuralEP::DoSolveMMF()
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
 
     int totsteps = (m_steps + 1) / m_checksteps;
-    Array<OneD, NekDouble> Maxpositf1(totsteps, 0.0);
-    Array<OneD, NekDouble> Maxpositf2(totsteps, 0.0);
+    Array<OneD, NekDouble> timevec(totsteps, 0.0);
 
-    Array<OneD, NekDouble> Gradpositf1(totsteps, 0.0);
-    Array<OneD, NekDouble> Gradpositf2(totsteps, 0.0);
+    Array<OneD, NekDouble> thredlocf1(totsteps, 0.0);
+    Array<OneD, NekDouble> thredlocf2(totsteps, 0.0);
+
+    Array<OneD, NekDouble> dudtlocf1(totsteps, 0.0);
+    Array<OneD, NekDouble> dudtlocf2(totsteps, 0.0);
+
+    Array<OneD, int> thredlocf1zone(totsteps, 0);
+    Array<OneD, int> thredlocf2zone(totsteps, 0);
+
+    Array<OneD, NekDouble> dudt(nq);
 
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
@@ -2037,11 +2146,18 @@ void MMFNeuralEP::DoSolveMMF()
         intTime += elapsed;
         cpuTime += elapsed;
 
+        // Compute normalized dudt
+        NekDouble Maxphim = Vmath::Vamax(nq, fields[0], 1);
+        Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudt, 1);
+        Vmath::Vmul(nq, m_intrazone, 1, dudt, 1, dudt, 1);
+
+        Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudt, 1, dudt, 1);
+
        // Compute TimeMap
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeNeuralTimeMap(m_time, m_zoneindex[0], m_intrazone, fields_old[0], fields[0], dudtvalHistory, TimeMap);
+            ComputeNeuralTimeMap(m_time, m_zoneindex[0], fields[0], dudt, dudtvalHistory, TimeMap);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2055,11 +2171,12 @@ void MMFNeuralEP::DoSolveMMF()
         }
 
         // Write out checkpoint files
-        if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
-            doCheckTime)
+        if ((m_checksteps && step && !((step + 1) % m_checksteps)) || doCheckTime)
         {
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             
+            timevec[nchk] = m_time; 
+
             if(m_fiberType==eSingleLinear)
             {
                 PrintSingleCurrent(fields[0]);
@@ -2067,7 +2184,17 @@ void MMFNeuralEP::DoSolveMMF()
 
             else if(m_fiberType==eDoubleLinear)
             {
-                PrintDuoCurrent(fields[0], Maxpositf1[nchk], Maxpositf2[nchk], Gradpositf1[nchk], Gradpositf2[nchk]);
+                PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
+
+                NekDouble fiber1center = 0.5*(m_fiber1left + m_fiber1right);
+                thredlocf1zone[nchk] = DoubleLinearIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                                    m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right,
+                                                    m_nodeinitdown, m_nodeinitup, fiber1center, thredlocf1[nchk]);
+                                                    
+                NekDouble fiber2center = 0.5*(m_fiber2left + m_fiber2right);
+                thredlocf2zone[nchk] = DoubleLinearIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                                    m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right,
+                                                    m_nodeinitdown, m_nodeinitup, fiber2center, thredlocf2[nchk]); 
             }
 
             Checkpoint_Output(nchk++);
@@ -2084,37 +2211,43 @@ void MMFNeuralEP::DoSolveMMF()
         std::cout << "Time-integration  : " << intTime << "s" << std::endl;
     }
 
-    // Print max position for fibers
-    std::cout << "================================================= " <<std::endl;
-    std::cout << " Maxpositf1: ";
+    std::cout << " timevec: ";
     for (int i=0; i<totsteps; ++i)
     {
-        std::cout << Maxpositf1[i] << ", ";
+        std::cout << timevec[i] << ", ";
     }
     std::cout << std::endl;
 
-    std::cout <<  "Maxpositf2: ";
+    std::cout << " thredlocf1: ";
     for (int i=0; i<totsteps; ++i)
     {
-        std::cout << Maxpositf2[i] << ", ";
+        std::cout << thredlocf1[i] << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout << " thredlocf1zone: ";
+    for (int i=0; i<totsteps; ++i)
+    {
+        std::cout << thredlocf1zone[i] << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout <<  "thredlocf2: ";
+    for (int i=0; i<totsteps; ++i)
+    {
+        std::cout << thredlocf2[i] << ", ";
     }
 
     std::cout << std::endl;
 
-    std::cout << " Gradpositf1: ";
+    std::cout <<  "thredlocf2zone: ";
     for (int i=0; i<totsteps; ++i)
     {
-        std::cout << Gradpositf1[i] << ", ";
-    }
-    std::cout << std::endl;
-
-    std::cout <<  "Gradpositf2: ";
-    for (int i=0; i<totsteps; ++i)
-    {
-        std::cout << Gradpositf2[i] << ", ";
+        std::cout << thredlocf2zone[i] << ", ";
     }
 
     std::cout << std::endl;
+
     std::cout << "================================================= " <<std::endl;
 
     for (i = 0; i < 1; ++i)
@@ -2133,9 +2266,8 @@ void MMFNeuralEP::DoSolveMMF()
 
 void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
                                     const Array<OneD, const int> &zoneindex,
-                                    const Array<OneD, const NekDouble> &intrazone,
-                                    const Array<OneD, const NekDouble> &field_old,
                                     const Array<OneD, const NekDouble> &field,
+                                    const Array<OneD, const NekDouble> &dudt,
                                     Array<OneD, NekDouble> &dudtHistory,
                                     Array<OneD, NekDouble> &TimeMap)
 {
@@ -2143,18 +2275,10 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
     NekDouble fnewsum, phimdiff;
 
-    Array<OneD, NekDouble> dudt(nq);
-
-    NekDouble Maxphim = Vmath::Vamax(nq, field, 1);
-    Vmath::Vsub(nq, field, 1, field_old, 1, dudt, 1);
-    Vmath::Vmul(nq, intrazone, 1, dudt, 1, dudt, 1);
-
-    Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudt, 1, dudt, 1);
-
     for (int i = 0; i < nq; ++i)
     {
-     //   if(zoneindex[i]>-2)
-     //   {
+       if(fabs(zoneindex[i]) > 0)
+       {
             phimdiff = field[i] - m_phimrest;
             // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
             if ((phimdiff > m_phimTol) && (dudt[i] > m_dphimdtTol))
@@ -2169,14 +2293,9 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
                 dudtHistory[i] += dudt[i];
             }
-      //  }
-
-        if ( (zoneindex[i] == 0) || (zoneindex[i] == 1))
-        {
-            TimeMap[i] = 0.0;
         }
 
-        if ( (zoneindex[i] == 100) || (zoneindex[i] == 101))
+        if ( (zoneindex[i] == 0) || (zoneindex[i] == 100))
         {
             TimeMap[i] = 0.0;
         }
@@ -2277,9 +2396,9 @@ void MMFNeuralEP::PlotAnisotropy(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-
 void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
-Array<OneD, NekDouble> &excitezone1, Array<OneD, NekDouble> &excitezone2, 
+Array<OneD, NekDouble> &excitezone1, 
+Array<OneD, NekDouble> &excitezone2, 
 Array<OneD, NekDouble> &nodezone1, 
 Array<OneD, NekDouble> &nodezone2, 
 Array<OneD, NekDouble> &intrazone1, 
@@ -2324,6 +2443,7 @@ Array<OneD, NekDouble> &extrazone)
 
     m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[5]);
     m_fields[0]->FwdTransLocalElmt(intrazone2, fieldcoeffs[6]);
+    
     m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[7]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
@@ -2357,8 +2477,8 @@ void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
 
 
 void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                  NekDouble &Maxpositf1step, NekDouble &Maxpositf2step,
-                                  NekDouble &Gradpositf1step, NekDouble &Gradpositf2step)
+                                  const Array<OneD, const NekDouble> &dudt,
+                                  NekDouble &thredlocf1, NekDouble &thredlocf2)
 {
     int nq      = m_fields[0]->GetTotPoints();
 
@@ -2382,6 +2502,11 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     Vmath::Vmul(nq, m_intrazone1, 1, phim, 1, phimintra1, 1);
     Vmath::Vmul(nq, m_intrazone2, 1, phim, 1, phimintra2, 1);
 
+    Array<OneD, NekDouble> dudtintra1(nq);
+    Array<OneD, NekDouble> dudtintra2(nq);
+    Vmath::Vmul(nq, m_intrazone1, 1, dudt, 1, dudtintra1, 1);
+    Vmath::Vmul(nq, m_intrazone2, 1, dudt, 1, dudtintra2, 1);
+
     Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
     
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
@@ -2393,8 +2518,11 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     Array<OneD, NekDouble> phimcurrent1(nq);
     Array<OneD, NekDouble> phimcurrent2(nq);
 
+    Array<OneD, NekDouble> phimextracurrent(nq);
+
     Vmath::Vmul(nq, m_intrazone1, 1, phimcurrent, 1, phimcurrent1, 1);
     Vmath::Vmul(nq, m_intrazone2, 1, phimcurrent, 1, phimcurrent2, 1);
+    Vmath::Vmul(nq, m_extrazone, 1, phimcurrent, 1, phimextracurrent, 1);
 
     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
     Vmath::Vmul(nq, m_intrazone1, 1, totcurrent1, 1, totcurrent1, 1);
@@ -2406,6 +2534,7 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
 
     NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
     NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
+    NekDouble Maxphimextra = Vmath::Vamax(nq, phimextracurrent, 1);
 
     int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
     int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
@@ -2419,15 +2548,17 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
     NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
 
-    Maxpositf1step = x1[Maxphim1index];
-    Maxpositf2step = x1[Maxphim2index];
+    // NekDouble Maxpositf1step = x1[Maxphim1index];
+    // NekDouble Maxpositf2step = x1[Maxphim2index];
 
     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
     std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
+    std::cout << "Extraspace: phim: Max = " << Maxphimextra << ", avg = " << RootMeanSquare(phimextracurrent) << std::endl;
 
     NekDouble tmp1, tmp2;
     NekDouble x1loc=0.0, x2loc=0.0;
+    NekDouble dudtf1=0.0, dudtf2=0.0;
     for (int i=0;i<nq;++i)
     {
         tmp1 = phimintra1[i];
@@ -2436,19 +2567,21 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
         if( (tmp1>m_phimrest) && (x1loc<x1[i]) )
         {
             x1loc = x1[i];
+            dudtf1 = dudt[i];
         }
 
         if( (tmp2>m_phimrest) && (x2loc<x1[i]) )
         {
             x2loc = x1[i];
+            dudtf2 = dudt[i];
         }
     }
 
-    Gradpositf1step = x1loc;
-    Gradpositf2step = x2loc;
+    thredlocf1 = x1loc;
+    thredlocf2 = x2loc;
 
-    std::cout << "fiber1: phim: GradMax at y = " << x1loc << std::endl;
-    std::cout << "fiber2: phim: GradMax at y = " << x2loc << std::endl;
+    std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
+    std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << ", dudt = " << dudtf2 << std::endl;
 }
 
 
@@ -2960,7 +3093,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
         for (int i = 0; i < nvar; ++i)
         {
             Vmath::Smul(nq, 1.0/m_Rf, &outarrayDiff[i][0], 1, &outarrayDiff[i][0], 1);
-            Vmath::Vmul(nq, &m_NeuralCm[0][0], 1, &outarrayDiff[i][0], 1, &outarrayDiff[i][0], 1);
+           //  Vmath::Vmul(nq, &m_NeuralCm[0][0], 1, &outarrayDiff[i][0], 1, &outarrayDiff[i][0], 1);
 
             Vmath::Vadd(nq, &outarrayDiff[i][0], 1, &outarray[i][0], 1, &outarray[i][0], 1);
         }
@@ -3073,9 +3206,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq,0.0);    
     Array<OneD, NekDouble> tmp(nq);    
+    Array<OneD, NekDouble> phie(nq);
 
     Vmath::Smul(nq, -1.0, inarray[0], 1, tmp, 1);
-    Array<OneD, NekDouble> phie = Computephie(m_ExtCurrentType, tmp);
+    phie = Computephie(m_ExtCurrentType, tmp);
     
     // Compute (1/C_n/r) * \nabla^2 \phi_e
     extcurrent = ComputeMMFDiffusion(m_movingframes, phie);
@@ -3120,7 +3254,9 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
-    Array<OneD, NekDouble> phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
+    Array<OneD, NekDouble> phimLaplacian(nq);
+
+    phimLaplacian = ComputeMMFDiffusion(m_unitmovingframes, phim);
 
     // Only nonzero for node.
     if(extcurrent==eEphapticNode)
@@ -3147,7 +3283,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
 
     outarray = m_fields[1]->GetPhys();
-    m_fields[1]->SetPhysState(true);
+    // m_fields[1]->SetPhysState(true);
     
     return outarray;
 }
@@ -3179,23 +3315,24 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Array<OneD, NekDouble> initialcondition(nq);
             Vmath::Vcopy(nq, m_fields[0]->GetPhys(), 1, tmp[0], 1);
             // Vmath::Vcopy(nq, tmp[0], 1, initialcondition, 1);
+            m_fields[0]->SetPhys(tmp[0]);
 
-            for (unsigned int i = 0; i < m_stimulus.size(); ++i)
-            {
-                if(m_fiberType==eDoubleLinear)
-                {
-                    m_stimulus[0]->Update(m_excitezone1, tmp, initialtime);
-                    m_stimulus[1]->Update(m_excitezone2, tmp, initialtime);
-                }
+            // for (unsigned int i = 0; i < m_stimulus.size(); ++i)
+            // {
+            //     if(m_fiberType==eDoubleLinear)
+            //     {
+            //         m_stimulus[0]->Update(m_excitezone1, tmp, initialtime);
+            //         m_stimulus[1]->Update(m_excitezone2, tmp, initialtime);
+            //     }
 
-                else
-                {
-                    m_stimulus[0]->Update(m_excitezone, tmp, initialtime);
-                }
+            //     else
+            //     {
+            //         m_stimulus[0]->Update(m_excitezone, tmp, initialtime);
+            //     }
 
-                // Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
-                m_fields[0]->SetPhys(tmp[0]);
-            }
+            //     // Vmath::Vmul(nq, m_intrazone, 1, tmp[0], 1, tmp[0], 1);
+            //     m_fields[0]->SetPhys(tmp[0]);
+            // }
         }
 
         default:
