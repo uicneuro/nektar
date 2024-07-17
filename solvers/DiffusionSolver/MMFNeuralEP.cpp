@@ -125,6 +125,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
+    m_session->LoadParameter("fiber1left", m_fiber1left, 0.01);
+    m_session->LoadParameter("fiber1right", m_fiber1right, 0.02);
+
+    m_session->LoadParameter("fiber2left", m_fiber2left, 0.03);
+    m_session->LoadParameter("fiber2right", m_fiber2right, 0.04);
+
+    m_session->LoadParameter("nodeinitdown", m_nodeinitdown, 0.01);
+    m_session->LoadParameter("nodeinitup", m_nodeinitup, 0.02);
+
     // Relative Extracellular resistance: 1 < \beta < 10
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
 
@@ -293,13 +302,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             if(m_fiberType==eDoubleLinear)
             {
-               SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
+               SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
 
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
 
-                Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
-                Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
+                // Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
+                // Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
             
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
@@ -382,13 +391,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Get the first and last index of the excitation zone [1,2]
             if(m_fiberType==eDoubleLinear)
             {
-                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
+                SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
 
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
 
-                Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
-                Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
+                // Vmath::Vadd(nq, m_nodezone1, 1, m_myelinzone1, 1, m_intrazone1, 1);
+                // Vmath::Vadd(nq, m_nodezone2, 1, m_myelinzone2, 1, m_intrazone2, 1);
 
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
             }
@@ -1549,6 +1558,10 @@ int MMFNeuralEP::DoubleLinearIndex(
             output = -2;
         }
     }
+
+    else{
+        output = -2;
+    }
     
     return output;
 }
@@ -1808,10 +1821,10 @@ void MMFNeuralEP::SetUpDomainDuoZone(
     int extraelem = extracnt/m_npts;
     int totelem = intraelem1 + intraelem2 + extraelem - (nodecntelem1+nodecntelem2)*m_elemperNode;
     
-    std::cout << "Excite zone 1 = " << 100.0*extcnt1/nq << ", Excite zone 2 = " << 100.0*extcnt2/nq 
-    << ", Node zone 1 = " << 100.0*nodecntelem1 /nq <<  ", Node zone 2 = " << 100.0*nodecntelem2 /nq 
-    <<  ", intra zone 1 = " << 100.0*intracnt1/nq << ", intra zone 2 = " << 100.0*intracnt2/nq << 
-    " %, extra zone = " << 100.0*extracnt/nq << " % " << std::endl;
+    // std::cout << "Excite zone 1 = " << 100.0*extcnt1/nq << ", Excite zone 2 = " << 100.0*extcnt2/nq 
+    // << ", Node zone 1 = " << 100.0*nodecntelem1 /nq <<  ", Node zone 2 = " << 100.0*nodecntelem2 /nq 
+    // <<  ", intra zone 1 = " << 100.0*intracnt1/nq << ", intra zone 2 = " << 100.0*intracnt2/nq << 
+    // " %, extra zone = " << 100.0*extracnt/nq << " % " << std::endl;
 
     std::cout << "npts = " << m_npts << ", Excite node 1 elem. = " << extcntelem1 << ", Excite node 2 elem. = " << extcntelem2
     << ", Node 1 elem. = " << nodecntelem1  << ", Node 2 elem. = " << nodecntelem2 
