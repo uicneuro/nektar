@@ -545,12 +545,20 @@ protected:
         const NekDouble myelinlen,
         const int Nnode);
 
-    int DoubleLinearIndex(
-        const NekDouble nodelen, 
-        const NekDouble myelinlen,
-        const int Nnode,
-        const NekDouble xi, 
-        const NekDouble yi);
+int DoubleLinearIndex(
+    const int totNnode,
+    const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble fiber1left, const NekDouble fiber1right, 
+    const NekDouble fiber2left, const NekDouble fiber2right,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup,
+    const NekDouble xi, const NekDouble yi);
+
+    // int DoubleLinearIndex(
+    //     const NekDouble nodelen, 
+    //     const NekDouble myelinlen,
+    //     const int Nnode,
+    //     const NekDouble xi, 
+    //     const NekDouble yi);
 
     void Getcellavg(
         Array<OneD, NekDouble> &xcell, 
