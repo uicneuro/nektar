@@ -47,6 +47,7 @@
 
 using namespace Nektar::SolverUtils;
 
+
 namespace Nektar
 {
 
@@ -308,6 +309,9 @@ protected:
     Array<OneD, NekDouble> m_intrazone1;
     Array<OneD, NekDouble> m_intrazone2;
 
+    Array<OneD, NekDouble> m_myelinzone1;
+    Array<OneD, NekDouble> m_myelinzone2;
+
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
@@ -360,6 +364,7 @@ protected:
 
     InitWaveType m_InitWaveType;
 
+    // void DoSolveMMFFirst();
     void DoSolveMMF();
     void DoSolvePoint();
     
@@ -540,11 +545,20 @@ protected:
         const NekDouble myelinlen,
         const int Nnode);
 
-    int DoubleLinearIndex(
-    const NekDouble nodelen, 
-    const NekDouble myelinlen,
-    const int Nnode,
+int DoubleLinearIndex(
+    const int totNnode,
+    const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble fiber1left, const NekDouble fiber1right, 
+    const NekDouble fiber2left, const NekDouble fiber2right,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup,
     const NekDouble xi, const NekDouble yi);
+
+    // int DoubleLinearIndex(
+    //     const NekDouble nodelen, 
+    //     const NekDouble myelinlen,
+    //     const int Nnode,
+    //     const NekDouble xi, 
+    //     const NekDouble yi);
 
     void Getcellavg(
         Array<OneD, NekDouble> &xcell, 
@@ -574,7 +588,6 @@ protected:
         Array<OneD, NekDouble> &extrazone);
 
 
-
     void ComputeNeuralTimeMap(const NekDouble time,
                             const Array<OneD, const int> &zoneindex,
                             const Array<OneD, const NekDouble> &field,
@@ -598,8 +611,8 @@ Array<OneD, NekDouble> &extrazone);
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
     void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                    const Array<OneD, const NekDouble> &dudt,
-                                    NekDouble &thredlocf1, NekDouble &thredlocf2);
+                        const Array<OneD, const NekDouble> &dudt,
+                        NekDouble &thredlocf1, NekDouble &thredlocf2);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
