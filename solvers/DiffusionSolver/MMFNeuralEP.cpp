@@ -304,8 +304,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone1, m_intrazone1, m_intrazone2, m_extrazone);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
-                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
-
             }
 
             else
@@ -386,7 +384,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 SetUpDomainDuoZone(m_zoneindex[0], m_excitezone1, m_excitezone2, m_nodezone1, m_nodezone2, m_intrazone1, m_intrazone2, m_extrazone);
                 Vmath::Vadd(nq, m_nodezone1, 1, m_nodezone2, 1, m_nodezone, 1);
                 Vmath::Vadd(nq, m_intrazone1, 1, m_intrazone2, 1, m_intrazone, 1);
-                Vmath::Vadd(nq, m_excitezone1, 1, m_excitezone2, 1, m_excitezone, 1);
             }
 
             else
