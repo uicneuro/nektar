@@ -1378,7 +1378,6 @@ Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
                     output = k+1;
                 }
             }
-
             // last intrazone
             nodeend = nodeinitup + (Nnode) * (myelinlen + nodelen);
             if(yi>nodeend)
@@ -1390,7 +1389,6 @@ Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
         else if((xi>fiber2left) && (xi<fiber2right))
         {
             output = -101;  // Default of the second fiber = myelin
-
             // 1st intrazone
             if(yi<nodeinitdown)
             {
@@ -1412,7 +1410,6 @@ Array<OneD, int> MMFNeuralEP::SingleLinearIndex(
                     output = 100+k+1;
                 }
             }
-
             // last intrazone
             nodeend = nodeinitup + (Nnode) * (myelinlen + nodelen);
             if(yi>nodeend)
@@ -2063,13 +2060,6 @@ void MMFNeuralEP::DoSolveMMF()
         intTime += elapsed;
         cpuTime += elapsed;
 
-        // Compute normalized dudt
-        NekDouble Maxphim = Vmath::Vamax(nq, fields[0], 1);
-        Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudt, 1);
-        Vmath::Vmul(nq, m_intrazone, 1, dudt, 1, dudt, 1);
-
-        Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudt, 1, dudt, 1);
-
        // Compute TimeMap
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
@@ -2166,24 +2156,28 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
     int nq = GetTotPoints();
 
     NekDouble fnewsum, phimdiff;
+
     for (int i = 0; i < nq; ++i)
     {
-        phimdiff = field[i] - m_phimrest;
-        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((phimdiff > m_phimTol) && (dudt[i] > m_dphimdtTol))
-        {
-            // Gradient as the main weight
-            fnewsum = dudt[i] + dudtHistory[i];
-
-            if(fabs(fnewsum) > m_dphimdtTol)
+    //    if(fabs(zoneindex[i]) > 0)
+    //    {
+            phimdiff = field[i] - m_phimrest;
+            // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
+            if ((phimdiff > m_phimTol) && (dudt[i] > m_dphimdtTol))
             {
-                TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
+                // Gradient as the main weight
+                fnewsum = dudt[i] + dudtHistory[i];
+
+                if(fabs(fnewsum) > m_dphimdtTol)
+                {
+                    TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
+                }
+
+                dudtHistory[i] += dudt[i];
             }
+     //   }
 
-            dudtHistory[i] += dudt[i];
-        }
-
-        if ( (zoneindex[i] == 0) || (zoneindex[i] == 100))
+        if ( (zoneindex[i] == 1) || (zoneindex[i] == 101))
         {
             TimeMap[i] = 0.0;
         }
