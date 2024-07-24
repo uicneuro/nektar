@@ -230,12 +230,15 @@ protected:
     int m_npts; // Number of points for each element
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     int m_Convectiven;
-    int m_totNode, m_elemperNode, m_elemperMyel;
+    int m_numfiber, m_totNode, m_elemperNode, m_elemperMyel;
     int m_zonestart, m_zoneend;
 
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
 
-    NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_nodeinitdown, m_nodeinitup;
+    NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right;
+    NekDouble m_nodeinitdown, m_nodeinitup;
+    Array<OneD, NekDouble> m_fiberleft;
+    Array<OneD, NekDouble> m_fiberright;
 
     NekDouble m_fiberwidth, m_fibergap, m_fiberheightdiff;
     NekDouble m_nodelen, m_myelinlen;
@@ -534,25 +537,29 @@ protected:
     Array<OneD, int> IndexNodeZone2D(
         const FiberType fiber);
 
+
+    int LinearFiberIndex(
+        const int numfiber, const int totNnode, 
+        const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup,
+        const Array<OneD, const NekDouble> &fiberleft,
+        const Array<OneD, const NekDouble> &fiberright, 
+        const NekDouble xi, const NekDouble yi);
+
+
     Array<OneD, int> SingleLinearIndex(
         const NekDouble fiberwidth, 
         const NekDouble nodelen, 
         const NekDouble myelinlen,
         const int Nnode);
 
-int DoubleLinearIndex(
-    const int totNnode,
-    const NekDouble nodelen, const NekDouble myelinlen,
-    const NekDouble fiber1left, const NekDouble fiber1right, 
-    const NekDouble fiber2left, const NekDouble fiber2right,
-    const NekDouble nodeinitdown, const NekDouble nodeinitup,
-    const NekDouble xi, const NekDouble yi);
-
-    // int DoubleLinearIndex(
-    // const NekDouble nodelen, 
-    // const NekDouble myelinlen,
-    // const int Nnode,
-    // const NekDouble xi, const NekDouble yi);
+    int DoubleLinearIndex(
+        const int totNnode, 
+        const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble fiber1left, const NekDouble fiber1right, 
+        const NekDouble fiber2left, const NekDouble fiber2right,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup,
+        const NekDouble xi, const NekDouble yi);
 
     void Getcellavg(
         Array<OneD, NekDouble> &xcell, 
@@ -565,6 +572,13 @@ int DoubleLinearIndex(
             Array<OneD, Array<OneD, NekDouble>> &AniStrength);
 
     void SetUpDomainZone(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, NekDouble> &excitezone,
+        Array<OneD, NekDouble> &nodezone,
+        Array<OneD, NekDouble> &intrazone,
+        Array<OneD, NekDouble> &extrazone);
+
+    void SetUpDomainSingleZone(
         const Array<OneD, const int> &zoneindex,
         Array<OneD, NekDouble> &excitezone,
         Array<OneD, NekDouble> &nodezone,
@@ -595,6 +609,12 @@ int DoubleLinearIndex(
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
         
+void PlotZone(const Array<OneD, const int> &zoneindex,
+Array<OneD, NekDouble> &excitezone1, 
+Array<OneD, NekDouble> &nodezone1, 
+Array<OneD, NekDouble> &intrazone1, 
+Array<OneD, NekDouble> &extrazone);
+
     void PlotZone(const Array<OneD, const int> &zoneindex,
 Array<OneD, NekDouble> &excitezone1, 
 Array<OneD, NekDouble> &excitezone2, 
