@@ -115,7 +115,7 @@ void NeuralStimulusZone::Initialise()
  *
  */
 void NeuralStimulusZone::v_Update(const Array<OneD, const NekDouble> &excitezone,
-                                Array<OneD, Array<OneD, NekDouble>> &outarray,
+                                Array<OneD, NekDouble> &outarray,
                                 const NekDouble time)
 {
     if (m_field->GetNumElmts() == 0)
@@ -133,7 +133,7 @@ void NeuralStimulusZone::v_Update(const Array<OneD, const NekDouble> &excitezone
 
     Array<OneD, NekDouble> tmp(nq);
     Vmath::Smul(nq, (v_amp/var_membrane__cnd), &excitezone[0], 1, &tmp[0], 1);
-    Vmath::Vadd(nq, &tmp[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    Vmath::Vadd(nq, &tmp[0], 1, &outarray[0], 1, &outarray[0], 1);
 }
 
 /**

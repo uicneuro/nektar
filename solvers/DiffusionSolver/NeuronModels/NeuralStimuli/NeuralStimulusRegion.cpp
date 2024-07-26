@@ -115,7 +115,7 @@ void NeuralStimulusRegion::Initialise()
  *
  */
 void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezone,
-                                Array<OneD, Array<OneD, NekDouble>> &outarray,
+                                Array<OneD, NekDouble> &outarray,
                                 const NekDouble time)
 {
     if (m_field->GetNumElmts() == 0)
@@ -157,7 +157,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
         case 1:
             for (int j = 0; j < nq; j++)
             {
-                outarray[0][j] += vampzone[j] * ((tanh(m_pis * (x0[j] - m_px1)) -
+                outarray[j] += vampzone[j] * ((tanh(m_pis * (x0[j] - m_px1)) -
                                             tanh(m_pis * (x0[j] - m_px2))) /
                                            2.0);
             }
@@ -166,7 +166,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
         case 2:
             for (int j = 0; j < nq; j++)
             {
-                outarray[0][j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
+                outarray[j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
                                              tanh(m_pis * (x0[j] - m_px2))) *
                                             (tanh(m_pis * (x1[j] - m_py1)) -
                                              tanh(m_pis * (x1[j] - m_py2)))) /
@@ -177,7 +177,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
         case 3:
             for (int j = 0; j < nq; j++)
             {
-                outarray[0][j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
+                outarray[j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
                                              tanh(m_pis * (x0[j] - m_px2))) *
                                             (tanh(m_pis * (x1[j] - m_py1)) -
                                              tanh(m_pis * (x1[j] - m_py2))) *

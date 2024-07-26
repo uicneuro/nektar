@@ -82,7 +82,7 @@ protected:
     NekDouble m_chiCapMembrane;
 
     virtual void v_Update(const Array<OneD, const NekDouble> &excitezone,
-                          Array<OneD, Array<OneD, NekDouble>> &outarray,
+                          Array<OneD, NekDouble> &outarray,
                                 const NekDouble time) override;
 
     virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
