@@ -2140,17 +2140,14 @@ void MMFNeuralEP::DoSolveMMF()
         // Save fields into fieldsold
         Vmath::Vcopy(nq, &fields[0][0], 1, &fields_old[0][0], 1);
 
-        std::cout << "HERE 1" << std::endl;
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
-        std::cout << "HERE 2" << std::endl;
 
         m_time += m_timestep;
         elapsed = timer.TimePerTest(1);
         intTime += elapsed;
         cpuTime += elapsed;
-        std::cout << "HERE 3" << std::endl;
 
         // Compute normalized dudt
         NekDouble Maxphim = Vmath::Vamax(nq, fields[0], 1);
@@ -2164,7 +2161,6 @@ void MMFNeuralEP::DoSolveMMF()
         {
             ComputeNeuralTimeMap(m_time, m_zoneindex[0], fields[0], dudt, dudtvalHistory, TimeMap);
         }
-        std::cout << "HERE 4" << std::endl;
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
