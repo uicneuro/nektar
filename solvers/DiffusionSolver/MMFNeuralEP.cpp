@@ -122,7 +122,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
 
-    m_session->LoadParameter("Number_Fiber", m_numfiber, 1);
+    // m_session->LoadParameter("Number_Fiber", m_numfiber, 1);
     m_session->LoadParameter("Total_Number_Node", m_totNode, 3);
     m_session->LoadParameter("Element_per_Node", m_elemperNode, 4);
     m_session->LoadParameter("Element_per_Myelin", m_elemperMyel, 14);
@@ -133,11 +133,21 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("fiber1left", m_fiber1left, 0.01);
     m_session->LoadParameter("fiber1right", m_fiber1right, 0.02);
 
-    m_session->LoadParameter("fiber2left", m_fiber2left, 0.03);
-    m_session->LoadParameter("fiber2right", m_fiber2right, 0.04);
+    m_session->LoadParameter("fiber2left", m_fiber2left, 0.00);
+    m_session->LoadParameter("fiber2right", m_fiber2right, 0.00);
 
-    m_session->LoadParameter("fiber3left", m_fiber3left, 0.05);
-    m_session->LoadParameter("fiber3right", m_fiber3right, 0.06);
+    if( (fabs(m_fiber2left)>0.0) && (fabs(m_fiber2right)>0.0) )
+    {
+        m_numfiber = 2;
+    }
+
+    m_session->LoadParameter("fiber3left", m_fiber3left, 0.00);
+    m_session->LoadParameter("fiber3right", m_fiber3right, 0.00);
+
+    if( (fabs(m_fiber3left)>0.0) && (fabs(m_fiber3right)>0.0) )
+    {
+        m_numfiber = 3;
+    }
 
     m_fiberleft = Array<OneD, NekDouble>(m_numfiber);
     m_fiberright = Array<OneD, NekDouble>(m_numfiber);
