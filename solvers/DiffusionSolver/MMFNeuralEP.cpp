@@ -157,6 +157,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
        m_fiberright[2] = m_fiber3right;
     }
 
+    std::cout << "number of fiber = " << m_numfiber << std::endl;
 
     if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
     {
@@ -2133,14 +2134,17 @@ void MMFNeuralEP::DoSolveMMF()
         // Save fields into fieldsold
         Vmath::Vcopy(nq, &fields[0][0], 1, &fields_old[0][0], 1);
 
+        std::cout << "HERE 1" << std::endl;
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
         timer.Stop();
+        std::cout << "HERE 2" << std::endl;
 
         m_time += m_timestep;
         elapsed = timer.TimePerTest(1);
         intTime += elapsed;
         cpuTime += elapsed;
+        std::cout << "HERE 3" << std::endl;
 
         // Compute normalized dudt
         NekDouble Maxphim = Vmath::Vamax(nq, fields[0], 1);
@@ -2154,6 +2158,7 @@ void MMFNeuralEP::DoSolveMMF()
         {
             ComputeNeuralTimeMap(m_time, m_zoneindex[0], fields[0], dudt, dudtvalHistory, TimeMap);
         }
+        std::cout << "HERE 4" << std::endl;
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
         {
@@ -3028,6 +3033,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
 
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
+        std::cout << "HERE DoImplicitSolve 1" << std::endl;
 
     // SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition();
@@ -3035,10 +3041,16 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
+        std::cout << "HERE DoImplicitSolve 2" << std::endl;
 
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                         factors, m_varcoeff);
+
+        std::cout << "HERE DoImplicitSolve 3" << std::endl;
+
+
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
+        std::cout << "HERE DoImplicitSolve 4" << std::endl;
 
     m_fields[0]->SetPhysState(true);
 }
@@ -3228,13 +3240,15 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
+        std::cout << "HERE DoOdeRhs 1" << std::endl;
 
     // Add Stimulus
     for (int n=0; n<m_numfiber; ++n)
     {
         m_stimulus[n]->Update(m_excitezone[n], outarray[0], time);
     }
-    
+            std::cout << "HERE DoOdeRhs 2" << std::endl;
+
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
@@ -3257,9 +3271,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
         Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
     }
+        std::cout << "HERE DoOdeRhs 3" << std::endl;
 
     // subtract the current from the divergence of phie
     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+        std::cout << "HERE DoOdeRhs 4" << std::endl;
 
     if (m_explicitDiffusion)
     {
@@ -3634,6 +3650,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
 
+    SolverUtils::AddSummaryItem(s, "Number_Fiber", m_numfiber);
     SolverUtils::AddSummaryItem(s, "Total_Number_Node", m_totNode);
     SolverUtils::AddSummaryItem(s, "Element_per_Node", m_elemperNode);
     SolverUtils::AddSummaryItem(s, "Element_per_Myelin", m_elemperMyel);
