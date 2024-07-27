@@ -357,22 +357,23 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             m_zoneindex = Array<OneD, Array<OneD, int>>(1);
             m_zoneindex[0]  = Array<OneD, int>(nq, 0); 
             
-            std::cout << "zoneindexing starts " << std::endl;
             m_npts = m_fields[0]->GetTotPoints(0);
             m_zoneindex[0] = IndexNodeZone2D(m_numfiber, m_totNode, m_nodelen, 
                                              m_myelinlen, m_nodeinitdown, m_nodeinitup,
                                              m_fiberleft, m_fiberright);
-            std::cout << "zoneindexing ends " << std::endl;
 
             m_excitezone = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
             m_intrazone = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
+            for (int n=0; n<m_numfiber; ++n)
+            {
+                m_excitezone[n] = Array<OneD, NekDouble>(nq, 0.0);
+                m_intrazone[n] = Array<OneD, NekDouble>(nq, 0.0);
+            }
+
             m_extrazone = Array<OneD, NekDouble>(nq) ;
 
             // Get the first and last index of the excitation zone [1,2]
-                        std::cout << "SetUpDomainZone starts " << std::endl;
-
            SetUpDomainZone(m_zoneindex[0], m_excitezone, m_intrazone, m_extrazone);
-                                    std::cout << "SetUpDomainZone ends " << std::endl;
 
             if(m_MediumType==eAllNode)
             {
@@ -1544,8 +1545,8 @@ void MMFNeuralEP::SetUpDomainZone(
 {
     int nq   = GetTotPoints();
 
-    Array<OneD, NekDouble> excitezone(nq,0.0);
-    Array<OneD, NekDouble> intrazone(nq,0.0);
+    Array<OneD, NekDouble> excitezone(nq, 0.0);
+    Array<OneD, NekDouble> intrazone(nq, 0.0);
 
     int index;
     for (int i=0; i<nq; ++i)
@@ -3038,7 +3039,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
 
     // m_ratio_re_ri determines the conductivity only when the variable is one
     factors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
-        std::cout << "HERE DoImplicitSolve 1" << std::endl;
 
     // SetBoundaryConditions(time);
     // SetMembraneBoundaryCondition();
@@ -3046,16 +3046,11 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // Multiply 1.0/timestep
     Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
                 m_fields[0]->UpdatePhys(), 1);
-        std::cout << "HERE DoImplicitSolve 2" << std::endl;
 
     m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
                         factors, m_varcoeff);
 
-        std::cout << "HERE DoImplicitSolve 3" << std::endl;
-
-
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
-        std::cout << "HERE DoImplicitSolve 4" << std::endl;
 
     m_fields[0]->SetPhysState(true);
 }
@@ -3245,14 +3240,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
     // Compute the reaction function divided by Cm or Cn.
     m_neuron->TimeIntegrate(m_zoneindex[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
-        std::cout << "HERE DoOdeRhs 1" << std::endl;
 
     // Add Stimulus
     for (int n=0; n<m_numfiber; ++n)
     {
         m_stimulus[n]->Update(m_excitezone[n], outarray[0], time);
     }
-            std::cout << "HERE DoOdeRhs 2" << std::endl;
 
     // Compute phi_e to satisfy the following equation
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
@@ -3276,11 +3269,9 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
         Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
     }
-        std::cout << "HERE DoOdeRhs 3" << std::endl;
 
     // subtract the current from the divergence of phie
     Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
-        std::cout << "HERE DoOdeRhs 4" << std::endl;
 
     if (m_explicitDiffusion)
     {
