@@ -355,20 +355,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {   
             m_zoneindex = Array<OneD, Array<OneD, int>>(1);
-            m_zoneindex[0]  = Array<OneD, int>(nq, 1); 
-
+            m_zoneindex[0]  = Array<OneD, int>(nq, 0); 
+            
+            std::cout << "zoneindexing starts " << std::endl;
             m_npts = m_fields[0]->GetTotPoints(0);
             m_zoneindex[0] = IndexNodeZone2D(m_numfiber, m_totNode, m_nodelen, 
-                                           m_myelinlen, m_nodeinitdown, m_nodeinitup,
-                                           m_fiberleft, m_fiberright);
+                                             m_myelinlen, m_nodeinitdown, m_nodeinitup,
+                                             m_fiberleft, m_fiberright);
+            std::cout << "zoneindexing ends " << std::endl;
 
             m_excitezone = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
             m_intrazone = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
             m_extrazone = Array<OneD, NekDouble>(nq) ;
 
             // Get the first and last index of the excitation zone [1,2]
+                        std::cout << "SetUpDomainZone starts " << std::endl;
+
            SetUpDomainZone(m_zoneindex[0], m_excitezone, m_intrazone, m_extrazone);
-            
+                                    std::cout << "SetUpDomainZone ends " << std::endl;
+
             if(m_MediumType==eAllNode)
             {
                 m_zoneindex[0]  = Array<OneD, int>(nq, 1);
