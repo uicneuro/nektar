@@ -599,10 +599,10 @@ Array<OneD, NekDouble> &intrazone1,
 Array<OneD, NekDouble> &intrazone2, 
 Array<OneD, NekDouble> &extrazone);
 
-    // void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
-    // void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-    //                                 const Array<OneD, const NekDouble> &dudt,
-    //                                 NekDouble &thredlocf1, NekDouble &thredlocf2);
+    void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
+    void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
+                                    const Array<OneD, const NekDouble> &dudt,
+                                    NekDouble &thredlocf1, NekDouble &thredlocf2);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,

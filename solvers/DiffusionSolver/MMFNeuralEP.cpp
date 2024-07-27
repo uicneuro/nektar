@@ -2189,26 +2189,23 @@ void MMFNeuralEP::DoSolveMMF()
             PlotNeuralTimeMap(fields[0], TimeMap, nchk);
             timevec[nchk] = m_time; 
             
-            // if(m_fiberType==eSingleLinear)
-            // {
-            //     PrintSingleCurrent(fields[0]);
-            // }
+            if(m_numfiber==1)
+            {
+                PrintSingleCurrent(fields[0]);
+            }
 
-            // else if(m_fiberType==eDoubleLinear)
-            // {
+            else if(m_numfiber==2)
+            {
+                PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
 
-            // if(m_numfiber==2)
-            // {
-            //     PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
+                thredlocf1zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
+                                            m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright, 
+                                            fiber1center, thredlocf1[nchk]);
 
-            //     thredlocf1zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
-            //                                 m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright, 
-            //                                 fiber1center, thredlocf1[nchk]);
-
-            //     thredlocf2zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
-            //                                 m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright,
-            //                                 fiber2center, thredlocf2[nchk]);
-            // }
+                thredlocf2zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
+                                            m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright,
+                                            fiber2center, thredlocf2[nchk]);
+            }
 
 
 
@@ -2511,140 +2508,141 @@ Array<OneD, NekDouble> &extrazone)
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-// void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
-// {
-//     int nq      = m_fields[0]->GetTotPoints();
+void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim)
+{
+    int nq      = m_fields[0]->GetTotPoints();
 
-//     Array<OneD, NekDouble> phie(nq);
-//     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-//     Array<OneD, NekDouble> phieintra(nq);
-//     Array<OneD, NekDouble> phieextra(nq);
-//     Vmath::Vmul(nq, m_intrazone, 1, phie, 1, phieintra, 1);
-//     Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    Array<OneD, NekDouble> phieintra(nq);
+    Array<OneD, NekDouble> phieextra(nq);
+
+    Vmath::Vmul(nq, m_intrazone[0], 1, phie, 1, phieintra, 1);
+    Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
     
-//     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
-//     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
+    Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-//     Array<OneD, NekDouble> totcurrent(nq);
-//     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent, 1);
+    Array<OneD, NekDouble> totcurrent(nq);
+    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent, 1);
 
-//     // index:0 -> u
-//     NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, totcurrent, 1) / Vmath::Vmax(nq, phimcurrent, 1);
-//     NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, totcurrent, 1) / Vmath::Vmin(nq, phimcurrent, 1);
+    // index:0 -> u
+    NekDouble phimMaxratio = 100.0 * Vmath::Vmax(nq, totcurrent, 1) / Vmath::Vmax(nq, phimcurrent, 1);
+    NekDouble phimMinratio = 100.0 * Vmath::Vmin(nq, totcurrent, 1) / Vmath::Vmin(nq, phimcurrent, 1);
 
-//     std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
-//     << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
-// }
+    std::cout << "phimcurret: Max = " << Vmath::Vmax(nq, phimcurrent, 1) << " ( " << phimMaxratio 
+    << "  % ), Min = " << Vmath::Vmin(nq, phimcurrent, 1) << " ( " << phimMinratio << " % ) " << std::endl;
+}
 
 
-// void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-//                                   const Array<OneD, const NekDouble> &dudt,
-//                                   NekDouble &thredlocf1, NekDouble &thredlocf2)
-// {
-//     int nq      = m_fields[0]->GetTotPoints();
+void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
+                                  const Array<OneD, const NekDouble> &dudt,
+                                  NekDouble &thredlocf1, NekDouble &thredlocf2)
+{
+    int nq      = m_fields[0]->GetTotPoints();
 
-//     Array<OneD, NekDouble> x0(nq);
-//     Array<OneD, NekDouble> x1(nq);
-//     Array<OneD, NekDouble> x2(nq);
+    Array<OneD, NekDouble> x0(nq);
+    Array<OneD, NekDouble> x1(nq);
+    Array<OneD, NekDouble> x2(nq);
 
-//     m_fields[0]->GetCoords(x0, x1, x2);
-//     Array<OneD, NekDouble> phie(nq);
-//     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+    m_fields[0]->GetCoords(x0, x1, x2);
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-//     Array<OneD, NekDouble> phieintra1(nq);
-//     Array<OneD, NekDouble> phieintra2(nq);
+    Array<OneD, NekDouble> phieintra1(nq);
+    Array<OneD, NekDouble> phieintra2(nq);
 
-//     Array<OneD, NekDouble> phieextra(nq);
-//     Vmath::Vmul(nq, m_intrazone1, 1, phie, 1, phieintra1, 1);
-//     Vmath::Vmul(nq, m_intrazone2, 1, phie, 1, phieintra2, 1);
+    Array<OneD, NekDouble> phieextra(nq);
+    Vmath::Vmul(nq, m_intrazone[0], 1, phie, 1, phieintra1, 1);
+    Vmath::Vmul(nq, m_intrazone[1], 1, phie, 1, phieintra2, 1);
 
-//     Array<OneD, NekDouble> phimintra1(nq);
-//     Array<OneD, NekDouble> phimintra2(nq);
-//     Vmath::Vmul(nq, m_intrazone1, 1, phim, 1, phimintra1, 1);
-//     Vmath::Vmul(nq, m_intrazone2, 1, phim, 1, phimintra2, 1);
+    Array<OneD, NekDouble> phimintra1(nq);
+    Array<OneD, NekDouble> phimintra2(nq);
+    Vmath::Vmul(nq, m_intrazone[0], 1, phim, 1, phimintra1, 1);
+    Vmath::Vmul(nq, m_intrazone[1], 1, phim, 1, phimintra2, 1);
 
-//     Array<OneD, NekDouble> dudtintra1(nq);
-//     Array<OneD, NekDouble> dudtintra2(nq);
-//     Vmath::Vmul(nq, m_intrazone1, 1, dudt, 1, dudtintra1, 1);
-//     Vmath::Vmul(nq, m_intrazone2, 1, dudt, 1, dudtintra2, 1);
+    Array<OneD, NekDouble> dudtintra1(nq);
+    Array<OneD, NekDouble> dudtintra2(nq);
+    Vmath::Vmul(nq, m_intrazone[0], 1, dudt, 1, dudtintra1, 1);
+    Vmath::Vmul(nq, m_intrazone[1], 1, dudt, 1, dudtintra2, 1);
 
-//     Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
     
-//     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
-//     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
+    Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-//     Array<OneD, NekDouble> totcurrent1(nq);
-//     Array<OneD, NekDouble> totcurrent2(nq);
+    Array<OneD, NekDouble> totcurrent1(nq);
+    Array<OneD, NekDouble> totcurrent2(nq);
 
-//     Array<OneD, NekDouble> phimcurrent1(nq);
-//     Array<OneD, NekDouble> phimcurrent2(nq);
+    Array<OneD, NekDouble> phimcurrent1(nq);
+    Array<OneD, NekDouble> phimcurrent2(nq);
 
-//     Array<OneD, NekDouble> phimextracurrent(nq);
+    Array<OneD, NekDouble> phimextracurrent(nq);
 
-//     Vmath::Vmul(nq, m_intrazone1, 1, phimcurrent, 1, phimcurrent1, 1);
-//     Vmath::Vmul(nq, m_intrazone2, 1, phimcurrent, 1, phimcurrent2, 1);
-//     Vmath::Vmul(nq, m_extrazone, 1, phimcurrent, 1, phimextracurrent, 1);
+    Vmath::Vmul(nq, m_intrazone[0], 1, phimcurrent, 1, phimcurrent1, 1);
+    Vmath::Vmul(nq, m_intrazone[1], 1, phimcurrent, 1, phimcurrent2, 1);
+    Vmath::Vmul(nq, m_extrazone, 1, phimcurrent, 1, phimextracurrent, 1);
 
-//     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
-//     Vmath::Vmul(nq, m_intrazone1, 1, totcurrent1, 1, totcurrent1, 1);
+    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
+    Vmath::Vmul(nq, m_intrazone[0], 1, totcurrent1, 1, totcurrent1, 1);
 
-//     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent2, 1);
-//     Vmath::Vmul(nq, m_intrazone2, 1, totcurrent2, 1, totcurrent2, 1);
+    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent2, 1);
+    Vmath::Vmul(nq, m_intrazone[1], 1, totcurrent2, 1, totcurrent2, 1);
 
-//     // index:0 -> u
+    // index:0 -> u
 
-//     NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
-//     NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
-//     NekDouble Maxphimextra = Vmath::Vamax(nq, phimextracurrent, 1);
+    NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
+    NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
+    NekDouble Maxphimextra = Vmath::Vamax(nq, phimextracurrent, 1);
 
-//     int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
-//     int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
+    int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
+    int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
 
-//     NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
-//     NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
+    NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
+    NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
 
-//     NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
-//     NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
+    NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
+    NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
 
-//     NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
-//     NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
+    NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
+    NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
 
-//     // NekDouble Maxpositf1step = x1[Maxphim1index];
-//     // NekDouble Maxpositf2step = x1[Maxphim2index];
+    // NekDouble Maxpositf1step = x1[Maxphim1index];
+    // NekDouble Maxpositf2step = x1[Maxphim2index];
 
-//     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
-//     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
-//     std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
-//     std::cout << "Extraspace: phim: Max = " << Maxphimextra << ", avg = " << RootMeanSquare(phimextracurrent) << std::endl;
+    std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+    std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+    std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
+    std::cout << "Extraspace: phim: Max = " << Maxphimextra << ", avg = " << RootMeanSquare(phimextracurrent) << std::endl;
 
-//     NekDouble tmp1, tmp2;
-//     NekDouble x1loc=0.0, x2loc=0.0;
-//     NekDouble dudtf1=0.0, dudtf2=0.0;
-//     for (int i=0;i<nq;++i)
-//     {
-//         tmp1 = phimintra1[i];
-//         tmp2 = phimintra2[i];
+    NekDouble tmp1, tmp2;
+    NekDouble x1loc=0.0, x2loc=0.0;
+    NekDouble dudtf1=0.0, dudtf2=0.0;
+    for (int i=0;i<nq;++i)
+    {
+        tmp1 = phimintra1[i];
+        tmp2 = phimintra2[i];
 
-//         if( (tmp1>m_phimrest) && (x1loc<x1[i]) )
-//         {
-//             x1loc = x1[i];
-//             dudtf1 = dudt[i];
-//         }
+        if( (tmp1>m_phimrest) && (x1loc<x1[i]) )
+        {
+            x1loc = x1[i];
+            dudtf1 = dudt[i];
+        }
 
-//         if( (tmp2>m_phimrest) && (x2loc<x1[i]) )
-//         {
-//             x2loc = x1[i];
-//             dudtf2 = dudt[i];
-//         }
-//     }
+        if( (tmp2>m_phimrest) && (x2loc<x1[i]) )
+        {
+            x2loc = x1[i];
+            dudtf2 = dudt[i];
+        }
+    }
 
-//     thredlocf1 = x1loc;
-//     thredlocf2 = x2loc;
+    thredlocf1 = x1loc;
+    thredlocf2 = x2loc;
 
-//     std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
-//     std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << ", dudt = " << dudtf2 << std::endl;
-// }
+    std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
+    std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << ", dudt = " << dudtf2 << std::endl;
+}
 
 
 
@@ -3364,6 +3362,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             }
 
             m_fields[0]->SetPhys(initialcondition);
+            break;
         }
 
         default:
