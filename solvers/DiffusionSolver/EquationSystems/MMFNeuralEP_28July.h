@@ -213,7 +213,7 @@ protected:
     StdRegions::VarCoeffMap m_phievarcoeff;
 
     int m_npts; // Number of points for each element
-    int m_nfibers, m_ElemNodeEnd, m_ElemMxyelenEnd, m_ElemExtEnd;
+    int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     int m_Convectiven;
     int m_numfiber, m_totNode, m_elemperNode, m_elemperMyel;
     int m_zonestart, m_zoneend;
@@ -237,8 +237,8 @@ protected:
 
     TimeMapType m_TimeMapScheme;
     
-Array<OneD, NekDouble> ComputeConductivity(
-                 const Array<OneD, const Array<OneD, int>> &zoneindex);
+    Array<OneD, NekDouble> ComputeConductivity(
+                 const Array<OneD, const int> &zoneindex);
 
     void Generatephiemovingframes(
     const NekDouble ratio_re_ri,
@@ -291,7 +291,7 @@ Array<OneD, NekDouble> ComputeConductivity(
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
 
-    Array<OneD, NekDouble> m_NeuralCm;
+    Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
@@ -508,17 +508,20 @@ Array<OneD, NekDouble> ComputeConductivity(
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
 
-    void IndexNodeZone2D(
+    Array<OneD, int> IndexNodeZone2D(
         const int numfiber, const int totNnode, 
         const NekDouble nodelen, const NekDouble myelinlen,
         const NekDouble nodeinitdown, const NekDouble nodeinitup,
         const Array<OneD, const NekDouble> &fiberleft,
-        const Array<OneD, const NekDouble> &fiberright,
-        Array<OneD, Array<OneD, int>> &outarray);
+        const Array<OneD, const NekDouble> &fiberright);
 
     int LinearFiberIndex(
-        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, const NekDouble yi);
+        const int numfiber, const int totNnode, 
+        const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup,
+        const Array<OneD, const NekDouble> &fiberleft,
+        const Array<OneD, const NekDouble> &fiberright, 
+        const NekDouble xi, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 
@@ -539,15 +542,15 @@ Array<OneD, NekDouble> ComputeConductivity(
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-void SetUpBiAnisotropy(
-            const Array<OneD, const Array<OneD, int>> &zoneindex,
-            const Array<OneD, const NekDouble> NeuralCm,
+    void SetUpBiAnisotropy(
+            const Array<OneD, const int> &zoneindex,
+            const Array<OneD, const Array<OneD, NekDouble>> NeuralCm,
             Array<OneD, Array<OneD, NekDouble>> &AniStrength);
 
-void SetUpDomainZone(
-        const Array<OneD, const Array<OneD, int>> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &excitezone,
-        Array<OneD, Array<OneD, NekDouble>> &intrazone,
+      void SetUpDomainZone(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
+        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
         Array<OneD, NekDouble> &extrazone);
 
     void SetUpDomainSingleZone(
