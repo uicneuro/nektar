@@ -129,10 +129,10 @@ void NeuralStimulusZone::v_Update(const Array<OneD, const NekDouble> &excitezone
     int nq = m_field->GetNpoints();
     
     // Get the protocol amplitude
-    NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / m_chiCapMembrane;
+    NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / ( m_chiCapMembrane * var_membrane__cnd );
 
     Array<OneD, NekDouble> tmp(nq);
-    Vmath::Smul(nq, (v_amp/var_membrane__cnd), &excitezone[0], 1, &tmp[0], 1);
+    Vmath::Smul(nq, v_amp, &excitezone[0], 1, &tmp[0], 1);
     Vmath::Vadd(nq, &tmp[0], 1, &outarray[0], 1, &outarray[0], 1);
 }
 

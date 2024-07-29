@@ -167,8 +167,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
        m_fiberright[2] = m_fiber3right;
     }
 
-    std::cout << "number of fiber = " << m_numfiber << std::endl;
-
     if (m_session->DefinesSolverInfo("MEDIUMTYPE"))
     {
         std::string MediumTypeStr;
@@ -384,7 +382,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 m_intrazone[n] = Array<OneD, NekDouble>(nq, 0.0);
             }
 
-            m_extrazone = Array<OneD, NekDouble>(nq) ;
+            m_extrazone = Array<OneD, NekDouble>(nq,1.0) ;
 
             // Get the first and last index of the excitation zone [1,2]
            SetUpDomainZone(m_zoneindex, m_excitezone, m_intrazone, m_extrazone);
@@ -762,7 +760,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         // }
 
     // Check moving frames
-    // CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
+    CheckNodeZoneMF(m_zoneindex, m_movingframes, m_phiemovingframes);
 
     if (m_explicitDiffusion)
     {
@@ -1593,9 +1591,9 @@ void MMFNeuralEP::SetUpDomainZone(
         {
             index = zoneindex[n][i];
 
-            if(index==-2)
+            if(index>-2)
             {
-                extrazone[i] = 1.0;
+                extrazone[i] = 0.0;
             }
 
             // excite zone
@@ -1614,7 +1612,8 @@ void MMFNeuralEP::SetUpDomainZone(
     }
 
     // Plotting
-    int nvar    = m_numfiber*2+1;
+    int nvar    = m_numfiber*3+1;
+    // int nvar = 7;
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
     std::string outname1 = m_sessionName + "_zone.chk";
@@ -1656,11 +1655,12 @@ void MMFNeuralEP::SetUpDomainZone(
     for (int n=0; n<m_numfiber; ++n)
     {
         variables[index] = "intrazone" + boost::lexical_cast<std::string>(n);
-        m_fields[0]->FwdTransLocalElmt(intrazone[n], fieldcoeffs[2]);
+        m_fields[0]->FwdTransLocalElmt(intrazone[n], fieldcoeffs[index]);
         index = index + 1;
     }
 
-    variables[nvar] = "extrazone";
+    variables[index] = "extrazone";
+    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[index]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -1942,7 +1942,8 @@ void MMFNeuralEP::CheckNodeZoneMF(
         xp = (xp / npts);
         yp = (yp / npts);
 
-        std::cout << "Elemid = " << i << ", Nodeid = " << zoneindex[0][index]
+        std::cout << "Elemid = " << i << ", Nodeid 1 = " << zoneindex[0][index]
+                << ", Nodeid 2 = " << zoneindex[1][index]
                 << ", x = " << xp << ", y = " << yp 
                 << ", e1mag = " << e1mag << ", e2mag = " << e2mag
                 << ", phie1mag = " << phie1mag << ", phie2mag = " << phie2mag << std::endl;
@@ -2182,7 +2183,11 @@ void MMFNeuralEP::DoSolveMMF()
 
     Array<OneD, NekDouble> fibercenter(m_numfiber);
     fibercenter[0] = 0.5*(m_fiber1left + m_fiber1right);
-    fibercenter[1] = 0.5*(m_fiber2left + m_fiber2right);
+
+    if(m_numfiber>1)
+    {
+        fibercenter[1] = 0.5*(m_fiber2left + m_fiber2right);
+    }
 
     Array<OneD, NekDouble> dudt(nq);    
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
@@ -2245,12 +2250,12 @@ void MMFNeuralEP::DoSolveMMF()
                     {
                         xi = fibercenter[n];
 
-                        for (int n=0; i<m_numfiber; ++n)
+                        for (int n=0; i<m_numfiber; ++i)
                             {
                                 thredloczone[n][i] = -2;
                                 if((xi>m_fiberleft[n]) && (xi<m_fiberright[n]))
                                     {
-                                        thredloczone[n][i] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                         thredloczone[n][i] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
                                                                         m_nodeinitdown, m_nodeinitup, thredloc[n][nchk]);
                                     }
                             }
@@ -3107,13 +3112,13 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     // SetMembraneBoundaryCondition();
 
     // Multiply 1.0/timestep
-    Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
-                m_fields[0]->UpdatePhys(), 1);
+    // Vmath::Smul(nq, -factors[StdRegions::eFactorLambda], inarray[0], 1,
+    //             m_fields[0]->UpdatePhys(), 1);
 
-    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
-                        factors, m_varcoeff);
+    // m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+    //                     factors, m_varcoeff);
 
-    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
+    // m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
 
     m_fields[0]->SetPhysState(true);
 }
@@ -3298,7 +3303,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
     for (int i=0; i<nvar; ++i)
     {
-        outarray[i] = Array<OneD, NekDouble>(nq);
+        outarray[i] = Array<OneD, NekDouble>(nq,0.0);
     }
 
     // Compute the reaction function divided by Cm or Cn.
@@ -3307,7 +3312,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Add Stimulus
     for (int n=0; n<m_numfiber; ++n)
     {
-        m_stimulus[n]->Update(m_excitezone[n], outarray[0], time);
+       m_stimulus[n]->Update(m_excitezone[n], outarray[0], time);
     }
 
     // Compute phi_e to satisfy the following equation
@@ -3334,7 +3339,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 
     // subtract the current from the divergence of phie
-    Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    // Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     if (m_explicitDiffusion)
     {
@@ -3417,8 +3422,13 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             Array<OneD, NekDouble> initialcondition(nq, 0.0);
             for (int n=0; n<m_numfiber; ++n)
             {
-                m_stimulus[n]->Update(m_excitezone[n], initialcondition, initialtime);
+               Vmath::Svtvp(nq, 100.0, m_excitezone[n], 1, initialcondition, 1, initialcondition, 1);
             }
+
+            // for (int n=0; n<m_numfiber; ++n)
+            // {
+            //    m_stimulus[n]->Update(m_excitezone[n], initialcondition, initialtime);
+            // }
 
             m_fields[0]->SetPhys(initialcondition);
             break;
@@ -3433,6 +3443,8 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
     if (dumpInitialConditions)
     {
+        std::cout << "Initial = " << RootMeanSquare(m_fields[0]->GetPhys()) << std::endl;
+
         std::string outname;
         outname = m_sessionName + "_initial.chk";
 
