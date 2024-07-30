@@ -60,7 +60,7 @@ namespace Nektar
     }
 
     void FrankenHuxley::v_Update(
-                     const Array<OneD, const int> &NodeZone,
+                     const Array<OneD, const int> &zoneindex,
                      const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                            Array<OneD,        Array<OneD, NekDouble> >&outarray,
                                                            const NekDouble time,
@@ -186,13 +186,13 @@ namespace Nektar
             NekDouble var_J_l = var_membrane__gL * ( var_membrane_V - var_membrane__VL);
 
             // Ranvider node: -J_{ion}
-            if(NodeZone[i]>=0)
+            if(zoneindex[i]>=0)
             {
                 outarray[0][i] = -1.0 * m_pi * var_membrane__d * ( var_J_K + var_J_Na + var_J_p + var_J_l ) / var_membrane__cnd;
             }
 
             // Myelin node: - g_m V_k
-            else if(NodeZone[i]==-1)
+            else if(zoneindex[i]==-1)
             {
                 outarray[0][i] = -1.0 * var_membrane__gm * var_membrane_V / var_membrane__cml ;
             }

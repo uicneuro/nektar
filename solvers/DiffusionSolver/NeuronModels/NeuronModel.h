@@ -79,19 +79,19 @@ public:
     /// Initialise the Neuron model storage and set initial conditions
     void Initialise();
 
-    void TimeIntegrate( const Array<OneD, const int> &NodeZone,
+    void TimeIntegrate( const Array<OneD, const int> &zoneindex,
                         const Array<OneD, const NekDouble> &inarray,
                         Array<OneD, NekDouble> &outarray, 
                         const NekDouble time,
                         const NekDouble diameter = 0.001,
                         const NekDouble Tc = 24.0);
 
-    void Update(const Array<OneD, const int> &RvNodeZone,
+    void Update(const Array<OneD, const int> &zoneindex,
                 const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                 Array<OneD, Array<OneD, NekDouble>> &outarray,
                 const NekDouble time, const NekDouble diameter, const NekDouble Tc)
     {
-        v_Update(RvNodeZone, inarray, outarray, time, diameter, Tc);
+        v_Update(zoneindex, inarray, outarray, time, diameter, Tc);
     }
 
     /// Print a summary of the Neuron model
@@ -190,7 +190,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_gates_tau;
 
     virtual void v_Update(
-        const Array<OneD, const int> &RvNodeZone,
+        const Array<OneD, const int> &zoneindex,
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray,
         const NekDouble time, const NekDouble diameter, const NekDouble Tc) = 0;
