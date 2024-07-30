@@ -3731,7 +3731,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq, 0.0);    
-    if(m_ExtCurrentType==eEphapticCoupling)
+    if(m_ExtCurrentType==eEphapticIntra)
     {
         Array<OneD, NekDouble> tmp(nq);    
 
