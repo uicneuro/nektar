@@ -3572,8 +3572,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
     }
 
-    // std::cout << "phie = " << RootMeanSquare(phie) << ", phiecurrent = " 
-    // << RootMeanSquare(phiecurrent) << std::endl;
+    std::cout << "phie = " << RootMeanSquare(phie) << ", phiecurrent = " 
+    << RootMeanSquare(phiecurrent) << std::endl;
 
     // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
     for (int n=0; n<m_numfiber; ++n)
@@ -3623,8 +3623,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Vmath::Neg(nq, phimcurrent, 1);
 
      Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
-    // Vmath::Vcopy(nq, phimcurrent, 1, phimLaplacian, 1);
-
     for (int n=0; n<m_numfiber; ++n)
     {
         Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
@@ -3637,6 +3635,10 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
 
     outarray = m_fields[1]->GetPhys();
+
+    std::cout << "phimcurrent = " << RootMeanSquare(phim) << ", phimcurrent = " 
+    << RootMeanSquare(phimcurrent) << ", outarray = " << RootMeanSquare(outarray) <<  std::endl;
+
     m_fields[1]->SetPhysState(true);
     
     return outarray;
