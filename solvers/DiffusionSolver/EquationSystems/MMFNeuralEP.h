@@ -147,13 +147,15 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eEphaptic,
+    eEphapticIntra,
+    eEphapticNode,
     eIsolated,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "Ephaptic",
+    "EphapticIntra",
+    "EphapticNode",
     "Isolated",
 };
 
@@ -295,14 +297,16 @@ protected:
     Array<OneD, int> m_zoneindexreaction;
     Array<OneD, Array<OneD, std::string>> m_fiberzone;
 
-    Array<OneD, Array<OneD, NekDouble>> m_excitezone;
-    Array<OneD, Array<OneD, NekDouble>> m_intrazone;
+    Array<OneD, Array<OneD, NekDouble>> m_excitezonefiber;
+    Array<OneD, Array<OneD, NekDouble>> m_intrazonefiber;
+
+    Array<OneD, NekDouble> m_nodezone;
+    Array<OneD, NekDouble> m_intrazone;
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
-    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength_new;
-
+\
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, NekDouble> m_NeuralCmfiber;
@@ -570,45 +574,30 @@ protected:
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-//     void SetUpBiAnisotropy(
-//             const Array<OneD, const int> &zoneindex,
-//             const Array<OneD, const Array<OneD, NekDouble>> NeuralCm,
-//             Array<OneD, Array<OneD, NekDouble>> &AniStrength);
-
-// void SetUpBiAnisotropy(
-//             const Array<OneD, const Array<OneD, int>> &zoneindex,
-//             const Array<OneD, const NekDouble> NeuralCm,
-//             Array<OneD, Array<OneD, NekDouble>> &AniStrength);
-
-      void SetUpDomainZone(
-        const Array<OneD, const int> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
-        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
-        Array<OneD, NekDouble> &extrazone);
-
 void SetUpDomainZone(
         const Array<OneD, const Array<OneD, int>> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &excitezone,
-        Array<OneD, Array<OneD, NekDouble>> &intrazone,
-        Array<OneD, NekDouble> &extrazone);
-
-
-    void SetUpDomainSingleZone(
-        const Array<OneD, const int> &zoneindex,
-        Array<OneD, NekDouble> &excitezone,
+        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
+        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
         Array<OneD, NekDouble> &nodezone,
         Array<OneD, NekDouble> &intrazone,
         Array<OneD, NekDouble> &extrazone);
 
-    void SetUpDomainDuoZone(
-        const Array<OneD, const int> &zoneindex,
-        Array<OneD, NekDouble> &excitezone1,
-        Array<OneD, NekDouble> &excitezone2,
-        Array<OneD, NekDouble> &nodezone1,
-        Array<OneD, NekDouble> &nodezone2,
-        Array<OneD, NekDouble> &intrazone1,
-        Array<OneD, NekDouble> &intrazone2,
-        Array<OneD, NekDouble> &extrazone);
+    // void SetUpDomainSingleZone(
+    //     const Array<OneD, const int> &zoneindex,
+    //     Array<OneD, NekDouble> &excitezone,
+    //     Array<OneD, NekDouble> &nodezone,
+    //     Array<OneD, NekDouble> &intrazone,
+    //     Array<OneD, NekDouble> &extrazone);
+
+    // void SetUpDomainDuoZone(
+    //     const Array<OneD, const int> &zoneindex,
+    //     Array<OneD, NekDouble> &excitezone1,
+    //     Array<OneD, NekDouble> &excitezone2,
+    //     Array<OneD, NekDouble> &nodezone1,
+    //     Array<OneD, NekDouble> &nodezone2,
+    //     Array<OneD, NekDouble> &intrazone1,
+    //     Array<OneD, NekDouble> &intrazone2,
+    //     Array<OneD, NekDouble> &extrazone);
 
 
 
@@ -624,20 +613,20 @@ void SetUpDomainZone(
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
         
-void PlotZone(const Array<OneD, const int> &zoneindex,
-Array<OneD, NekDouble> &excitezone1, 
-Array<OneD, NekDouble> &nodezone1, 
-Array<OneD, NekDouble> &intrazone1, 
-Array<OneD, NekDouble> &extrazone);
+// void PlotZone(const Array<OneD, const int> &zoneindex,
+// Array<OneD, NekDouble> &excitezone1, 
+// Array<OneD, NekDouble> &nodezone1, 
+// Array<OneD, NekDouble> &intrazone1, 
+// Array<OneD, NekDouble> &extrazone);
 
-    void PlotZone(const Array<OneD, const int> &zoneindex,
-Array<OneD, NekDouble> &excitezone1, 
-Array<OneD, NekDouble> &excitezone2, 
-Array<OneD, NekDouble> &nodezone1, 
-Array<OneD, NekDouble> &nodezone2, 
-Array<OneD, NekDouble> &intrazone1, 
-Array<OneD, NekDouble> &intrazone2, 
-Array<OneD, NekDouble> &extrazone);
+//     void PlotZone(const Array<OneD, const int> &zoneindex,
+// Array<OneD, NekDouble> &excitezone1, 
+// Array<OneD, NekDouble> &excitezone2, 
+// Array<OneD, NekDouble> &nodezone1, 
+// Array<OneD, NekDouble> &nodezone2, 
+// Array<OneD, NekDouble> &intrazone1, 
+// Array<OneD, NekDouble> &intrazone2, 
+// Array<OneD, NekDouble> &extrazone);
 
     void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
     void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
