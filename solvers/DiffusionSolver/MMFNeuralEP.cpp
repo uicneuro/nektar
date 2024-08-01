@@ -3625,7 +3625,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
      Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
     for (int n=0; n<m_numfiber; ++n)
     {
-        Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
+        // Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
     }
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
