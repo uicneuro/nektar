@@ -3572,8 +3572,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
         phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
     }
 
-    std::cout << "phie = " << RootMeanSquare(phie) << ", phiecurrent = " 
-    << RootMeanSquare(phiecurrent) << std::endl;
+    // std::cout << "phie = " << RootMeanSquare(phie) << ", phiecurrent = " 
+    // << RootMeanSquare(phiecurrent) << std::endl;
 
     // extra current caused by phi_e only occurs in the intracellular space: / (m_Cn * m_Rf)
     for (int n=0; n<m_numfiber; ++n)
@@ -3622,11 +3622,13 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_unitmovingframes, phim);
     Vmath::Neg(nq, phimcurrent, 1);
 
-    Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
-    for (int n=0; n<m_numfiber; ++n)
-    {
-        Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
-    }
+     Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
+    Vmath::Vcopy(nq, phimcurrent, 1, phimLaplacian, 1);
+
+    // for (int n=0; n<m_numfiber; ++n)
+    // {
+    //     Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
+    // }
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
