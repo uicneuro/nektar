@@ -494,24 +494,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     for (int j = 0; j < m_expdim; ++j)
     {
-        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 0.0);
+        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    int index;
-    for (int i=0; i<nq; ++i)
-    {
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            for (int n=0; n<m_numfiber; ++n)
-            {
-                index = m_zoneindexfiber[n][i];
-                if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
-                {
-                    unitAniStrength[j][i] = 1.0;
-                }
-            }
-        }
-    }
+    // int index;
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     for (int j = 0; j < m_expdim; ++j)
+    //     {
+    //         for (int n=0; n<m_numfiber; ++n)
+    //         {
+    //             index = m_zoneindexfiber[n][i];
+    //             if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
+    //             {
+    //                 unitAniStrength[j][i] = 1.0;
+    //             }
+    //         }
+    //     }
+    // }
 
 
     std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction ===============" << std::endl;
@@ -3623,12 +3623,12 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Vmath::Neg(nq, phimcurrent, 1);
 
      Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
-    Vmath::Vcopy(nq, phimcurrent, 1, phimLaplacian, 1);
+    // Vmath::Vcopy(nq, phimcurrent, 1, phimLaplacian, 1);
 
-    // for (int n=0; n<m_numfiber; ++n)
-    // {
-    //     Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
-    // }
+    for (int n=0; n<m_numfiber; ++n)
+    {
+        Vmath::Vvtvp(nq, m_intrazone[n], 1, phimcurrent, 1, phimLaplacian, 1, phimLaplacian, 1);   
+    }
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
