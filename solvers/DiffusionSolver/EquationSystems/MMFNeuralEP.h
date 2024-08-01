@@ -147,13 +147,13 @@ const char *const TimeMapTypeMap[] = {
 
 enum ExtCurrentType
 {
-    eEphapticIntra,
+    eEphaptic,
     eIsolated,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
-    "EphapticIntra",
+    "Ephaptic",
     "Isolated",
 };
 

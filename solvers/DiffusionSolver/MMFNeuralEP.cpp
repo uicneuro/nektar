@@ -405,13 +405,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            for (int i=0; i<nq; ++i)
-            {
-                std::cout << "i = " << i << ", zoneindex 1 = " << m_zoneindexfiber[0][i] 
-                << ", 2 = " << m_zoneindexfiber[1][i] << ", zoneindexreaction = " << m_zoneindexreaction[i] << std::endl;
-            }
-
-
+            // for (int i=0; i<nq; ++i)
+            // {
+            //     std::cout << "i = " << i << ", zoneindex 1 = " << m_zoneindexfiber[0][i] 
+            //     << ", 2 = " << m_zoneindexfiber[1][i] << ", zoneindexreaction = " << m_zoneindexreaction[i] << std::endl;
+            // }
 
             m_excitezone = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
             m_intrazone = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
@@ -3731,7 +3729,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     Array<OneD, NekDouble> extcurrent(nq, 0.0);    
-    if(m_ExtCurrentType==eEphapticIntra)
+    if(m_ExtCurrentType==eEphaptic)
     {
         Array<OneD, NekDouble> tmp(nq);    
 
