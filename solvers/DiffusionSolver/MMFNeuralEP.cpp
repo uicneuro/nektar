@@ -492,24 +492,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     for (int j = 0; j < m_expdim; ++j)
     {
-        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    // int index;
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     for (int j = 0; j < m_expdim; ++j)
-    //     {
-    //         for (int n=0; n<m_numfiber; ++n)
-    //         {
-    //             index = m_zoneindexfiber[n][i];
-    //             if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
-    //             {
-    //                 unitAniStrength[j][i] = 1.0;
-    //             }
-    //         }
-    //     }
-    // }
+    int index;
+    for (int i=0; i<nq; ++i)
+    {
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            for (int n=0; n<m_numfiber; ++n)
+            {
+                index = m_zoneindexfiber[n][i];
+                if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
+                {
+                    unitAniStrength[j][i] = 1.0;
+                }
+            }
+        }
+    }
 
 
     std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction ===============" << std::endl;
@@ -769,7 +769,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     PlotAnisotropy(m_AniStrength, m_phieAniStrength);
 
     // Check moving frames
-    CheckNodeZoneMF(m_zoneindexfiber, m_movingframes, m_phiemovingframes);
+    if(m_numfiber==2)
+    {
+        CheckNodeZoneMF(m_zoneindexfiber, m_movingframes, m_phiemovingframes);
+    }
 
     if (m_explicitDiffusion)
     {
