@@ -1,0 +1,382 @@
+\begin{thebibliography}{10}
+
+\bibitem{C++SharedPtr}
+std::shared\_ptr - cppreference.com.
+\newblock [Accessed 21 March 2018].
+
+\bibitem{BoostPythonWikiEntry}
+boost.python/howto - python wiki, 2015.
+\newblock [Accessed 1st May 2018].
+
+\bibitem{ManualWrappingRationale}
+osgboostpython/manualwrappingrationale.md at wiki · skylark13/osgboostpython
+  · github, 2015.
+\newblock [Accessed 7th May 2018].
+
+\bibitem{OpenStreetGraphCookbook}
+osgboostpython/wrappingcookbook.md at wiki · skylark13/osgboostpython ·
+  github, 2015.
+\newblock [Accessed 7th May 2018].
+
+\bibitem{GitHubExamples}
+Github - tng/boost-python-examples: Some examples for the use of boost::python,
+  2016.
+\newblock [Accessed 7th May 2018].
+
+\bibitem{Ainsworth14}
+Mark Ainsworth.
+\newblock Pyramid algorithms for bernstein-b{\'e}zier finite elements of high,
+  nonuniform order in any dimension.
+\newblock {\em SIAM Journal of Scientific Computing}, 36:A543--A569, 2014.
+
+\bibitem{AinsworthAD11}
+Mark Ainsworth, Gaelle Andriamaro, and Oleg Davydov.
+\newblock Bernstein-b{\'e}zier finite elements of arbitrary order and optimal
+  assembly procedures.
+\newblock {\em SIAM Journal of Scientific Computing}, 33:3087--3109, 2011.
+
+\bibitem{Ar89}
+R.~Aris.
+\newblock {\em Vectors, tensors, and the basic equations of fluid mechanics}.
+\newblock Dover Pubns, 1989.
+
+\bibitem{BaSzKa81}
+Ivo Babuska, Barna~A Szabo, and I~Norman Katz.
+\newblock The p-version of the finite element method.
+\newblock {\em SIAM journal on numerical analysis}, 18(3):515--545, 1981.
+
+\bibitem{BaHaKa07}
+Wolfgang Bangerth, Ralf Hartmann, and Guido Kanschat.
+\newblock deal.{II}--a general-purpose object-oriented finite element library.
+\newblock {\em ACM Transactions on Mathematical Software (TOMS)}, 33(4):24,
+  2007.
+
+\bibitem{BlSh04}
+Hugh~M Blackburn and SJ~Sherwin.
+\newblock Formulation of a galerkin spectral element--fourier method for
+  three-dimensional incompressible flows in cylindrical geometries.
+\newblock {\em Journal of Computational Physics}, 197(2):759--778, 2004.
+
+\bibitem{BolisCKS2014}
+A.~Bolis, C.D. Cantwell, R.M. Kirby, and S.J. Sherwin.
+\newblock h-to-p efficiently: Optimal implementation strategies for explicit
+  time-dependent problems using the spectral/hp element method.
+\newblock {\em International Journal for Numerical Methods in Fluids},
+  75:591--607, 2014.
+
+\bibitem{BorisenkoTS}
+A.I. Borisenko, I.E. Tarapov, and R.A.~Silverman (Translator).
+\newblock {\em Vector and Tensor Analysis with Applications}.
+\newblock Dover Books on Mathematics, 2012.
+
+\bibitem{Bu06}
+J.~C. Butcher.
+\newblock General linear methods.
+\newblock {\em Acta Numerica}, 15:157--256, 2006.
+
+\bibitem{CantwellMCBRMGYLEJXMENVBKS2015}
+C.D. Cantwell, D.~Moxey, A.~Comerford, A.~Bolis, G.~Rocco, G.~Mengaldo,
+  D.~de~Grazia, S.~Yakovlev, J-E Lombard, D.~Ekelschot, B.~Jordi, H.~Xu,
+  Y.~Mohamied, C.~Eskilsson, B.~Nelson, P.~Vos, C.~Biotto, R.M. Kirby, and S.J.
+  Sherwin.
+\newblock Nektar++: An open-source spectral/hp element framework.
+\newblock {\em Computer Physics Communications}, 192:205--219, 2015.
+
+\bibitem{CantwellSKK2011b}
+C.D. Cantwell, S.J. Sherwin, R.M. Kirby, and P.H. Kelly.
+\newblock From h-to-p efficiently: Selecting the optimal spectral/hp
+  discretisation in three dimensions.
+\newblock {\em Math. Model. Nat. Phenom.}, 6(3):84--96, 2011.
+
+\bibitem{CantwellSKK2011a}
+C.D. Cantwell, S.J. Sherwin, R.M. Kirby, and P.H.J. Kelly.
+\newblock From h-to-p efficiently: Strategy selection for operator evaluation
+  on hexahedral and tetrahedral elements.
+\newblock {\em Computers and Fluids}, 43:23--28, 2011.
+
+\bibitem{CantwellYKPS14}
+C.D. Cantwell, S.~Yakovlev, R.M. Kirby, N.S. Peters, and S.J. Sherwin.
+\newblock High-order continuous spectral/hp element discretisation for
+  reaction-diffusion problems on a surface.
+\newblock {\em Journal of Computational Physics}, 257:813--829, 2014.
+
+\bibitem{CanutoHQZ87}
+C.~Canuto, M.Y. Hussaini, A.~Quarteroni, and T.A. Zang.
+\newblock {\em {Spectral Methods in Fluid Mechanics}}.
+\newblock {Springer-Verlag, New York}, 1987.
+
+\bibitem{CockburnKS}
+Bernardo Cockburn, George Karniadakis, and Chi-Wang Shu.
+\newblock {\em Discontinuous Galerkin Methods: Theory, Computation and
+  Applications}.
+\newblock Springer-Verlag, 2000.
+
+\bibitem{CottrellISO}
+J.~Austin Cottrell, Thomas J.~R. Hughes, and Yuri Bazilevs.
+\newblock {\em Isogeometric Analysis: Toward Integration of CAD and FEA}.
+\newblock John Wiley and Sons, 2009.
+
+\bibitem{BoostPythonTutorial}
+Abrahams~D. de~Guzman~J.
+\newblock Boost.python tutorial - 1.67.0, 2018.
+\newblock [Accessed 1st May 2018].
+
+\bibitem{DeKlNoOh11}
+Andreas Dedner, Robert Kl{\"o}fkorn, Martin Nolte, and Mario Ohlberger.
+\newblock A generic interface for parallel and adaptive discretization schemes:
+  abstraction principles and the {DUNE-FEM} module.
+\newblock {\em Computing}, 90(3-4):165--196, 2010.
+
+\bibitem{Demmel97}
+James~W. Demmel.
+\newblock {\em Applied Numerical Linear Algebra}.
+\newblock SIAM, Philadelphia, PA, USA, 1997.
+
+\bibitem{DevilleFM02}
+M.O. Deville, P.F. Fisher, and E.H. Mund.
+\newblock {\em High-Order Methods for Incompressible Fluid Flow}.
+\newblock Cambridge University Press, 2002.
+
+\bibitem{sanchez2016multi}
+Julia Docampo-S{\'a}nchez, Jennifer~K Ryan, Mahsa Mirzargar, and Robert~M
+  Kirby.
+\newblock Multi-dimensional filtering: Reducing the dimension through rotation.
+\newblock {\em SIAM Journal on Scientific Computing}, 39(5):A2179--A2200, 2017.
+
+\bibitem{Dubiner91}
+M.~Dubiner.
+\newblock Spectral methods on triangles and other domains.
+\newblock {\em J. Sci. Comp.}, 6:345, 1991.
+
+\bibitem{Duffy82}
+M.G. Duffy.
+\newblock Quadrature over a pyramid or cube of integrands with a singularity at
+  a vertex.
+\newblock {\em SIAM J. Numer. Anal.}, 19:1260, 1982.
+
+\bibitem{Nek5000}
+Paul Fischer, James Lottes, Stefan Kerkemeier, Oana Marin, Katherine Heisey,
+  Aleks Obabko, Elia Merzari, and Yulia Peet.
+\newblock {\em Nek5000 User Manual}.
+\newblock ANL/MCS-TM-351, 2014.
+
+\bibitem{PythonMemory}
+Python~Software Foundation.
+\newblock Memory management - python 2.7.14 documentation.
+\newblock [Accessed 21 March 2018].
+
+\bibitem{PythonManualMemory}
+Python~Software Foundation.
+\newblock Reference counting - python 2.7.14 documentation.
+\newblock [Accessed 21 March 2018].
+
+\bibitem{Funaro92}
+D.~Funaro.
+\newblock {\em {Polynomial Approximations of Differential Equations: Lecture
+  Notes in Physics, Volume 8}}.
+\newblock {Springer-Verlag, New York}, 1992.
+
+\bibitem{GiraldoKC13}
+F.X. Giraldo, J.F. Kelly, and E.M. Constantinescu.
+\newblock Implicit explicit formulations of a three dimensional non-hydrostatic
+  unified model of the atmosphere {(NUMA)}.
+\newblock {\em SIAM Journal of Scientific Computing}, 35:1162--1194, 2013.
+
+\bibitem{PEP257}
+van Rossum~G. Goodger~D.
+\newblock Pep 257 -- docstring conventions, 2001.
+\newblock [Accessed 16th May 2018].
+
+\bibitem{Heath}
+Michael~T. Heath.
+\newblock {\em Scientific Computing: An Introductory Survey}.
+\newblock McGraw-Hill Companies, 2002.
+
+\bibitem{HGG}
+Jan Hesthaven, Sigal Gottlieb, and David Gottlieb.
+\newblock {\em Spectral Methods for Time-Dependent Problems}.
+\newblock Cambridge University Press, 2007.
+
+\bibitem{HeWa07}
+Jan~S Hesthaven and Tim Warburton.
+\newblock {\em Nodal discontinuous Galerkin methods: algorithms, analysis, and
+  applications}, volume~54.
+\newblock Springer, 2007.
+
+\bibitem{Hesthaven98}
+J.S. Hesthaven.
+\newblock From electrostatics to almost optimal nodal sets for polynomial
+  interpolation in a simplex.
+\newblock {\em SIAM J. Numer. Anal.}, 35(2):655--676, 1998.
+
+\bibitem{HesthavenW08}
+J.S. Hesthaven and T.C. Warburton.
+\newblock {\em Nodal Discontinuous {G}alerkin Methods: Algorithms, Analysis,
+  and Applications}.
+\newblock Springer Texts in Applied Mathematics 54. Springer Verlag: New York,
+  2008.
+
+\bibitem{Hughes87}
+T.~J.~R. Hughes.
+\newblock {\em The Finite Element Method}.
+\newblock Prentice-Hall, Inc., Englewood Cliffs, New Jersey, 1987.
+
+\bibitem{jallepalli2017treatment}
+Ashok Jallepalli, Julia Docampo-S{\'a}nchez, Jennifer~K Ryan, Robert Haimes,
+  and Robert~M Kirby.
+\newblock On the treatment of field quantities and elemental continuity in
+  {FEM} solutions.
+\newblock {\em IEEE Transactions on Visualization and Computer Graphics},
+  24(1):903--912, 2017.
+
+\bibitem{KFN-testing}
+Cem Kaner, Jack Falk, and Hung~Quoc Nguyen.
+\newblock {\em Testing Computer Software}.
+\newblock John Wiley \& Sons, 2010.
+
+\bibitem{KarniadakisK03}
+George~Em Karniadakis and Robert~M. Kirby.
+\newblock {\em Parallel Scientific Computing in C++ and MPI}.
+\newblock Cambridge University Press, New-York, NY, USA, 2003.
+
+\bibitem{KaSh05}
+George~Em Karniadakis and Spencer~J. Sherwin.
+\newblock {\em Spectral/hp element methods for Computational Fluid Dynamics
+  (Second Edition)}.
+\newblock Oxford University Press, 2005.
+
+\bibitem{KirbyS06}
+Robert~M. Kirby and Spencer~J. Sherwin.
+\newblock Aliasing errors due to quadratic non-linearities on triangular
+  spectral/hp element discretisations.
+\newblock {\em Journal of Engineering Mathematics}, 56:273--288, 2006.
+
+\bibitem{knoll_jacobian_free_2004}
+D.~A. Knoll and D.~E. Keyes.
+\newblock Jacobian-free {N}ewton-{K}rylov methods: {A} survey of approaches and
+  applications.
+\newblock {\em Journal of Computational Physics}, 193(2):357--397, January
+  2004.
+
+\bibitem{Kopriva}
+David~A. Kopriva.
+\newblock {\em Implementing Spectral Methods for Partial Differential
+  Equations: Algorithms for Scientists and Engineers}.
+\newblock Springer, 2009.
+
+\bibitem{FEniCS}
+Anders Logg, Kent-Andre Mardal, and Garth~Wells (editors).
+\newblock {\em Automated Solution of Differential Equations by the Finite
+  Element Method}.
+\newblock Springer Lecture Notes in Computational Science and Engineering,
+  Volume 84, 2012.
+
+\bibitem{C++Memory}
+Daconta M.
+\newblock {\em C++ pointers and dynamic memory management}.
+\newblock New York: Wiley, 1995.
+
+\bibitem{C++Api}
+Reddy M.
+\newblock {\em API Design for C++}.
+\newblock Burlington: Elsevier, 2011.
+
+\bibitem{McRaeBMHC}
+A.T.T. McRae, G.-T. Bercea, L.~Mitchell, D.A. Ham, and C.J. Cotter.
+\newblock Automated generation and symbolic manipulation of tensor product
+  finite elements.
+\newblock {\em SIAM Journal on Scientific Computing}, 38(5):S25--S47, 2016.
+
+\bibitem{SMeyers}
+Scott Meyers.
+\newblock {\em Effective C++: 55 Specific Ways to Improve Your Programs and
+  Designs (Third Edition)}.
+\newblock Addison-Wesley Professional, 2005.
+
+\bibitem{moxey2020efficient}
+D.~Moxey, R.~Amici, and M.~Kirby.
+\newblock Efficient matrix-free high-order finite element evaluation for
+  simplicial elements.
+\newblock {\em SIAM Journal on Scientific Computing}, 42(3):C97--C123, 2020.
+
+\bibitem{PythonEnumDocstring}
+Jaroszyński P.
+\newblock Piotr jaroszyński's blog: Boost.python: docstrings in enums, 2007.
+\newblock [Accessed 16th May 2018].
+
+\bibitem{PythonGoogle}
+Jhong E. et~al. Patel~A., Picard~A.
+\newblock Google python style guide.
+\newblock [Accessed 16th May 2018].
+
+\bibitem{saad_gmres:_1986}
+Youcef Saad and Martin~H. Schultz.
+\newblock {GMRES}: {A} generalized minimal residual algorithm for solving
+  nonsymmetric linear systems.
+\newblock {\em SIAM Journal on Scientific and Statistical Computing},
+  7(3):856--869, 1986.
+
+\bibitem{Schwab}
+Ch. Schwab.
+\newblock {\em p-- and hp-- Finite Element Methods: Theory and Applications in
+  Solid and Fluid Mechanics}.
+\newblock Oxford University Press, 1999.
+
+\bibitem{BStroustrup}
+Bjarne Stroustrup.
+\newblock {\em The C++ Programming Language (Fourth Edition)}.
+\newblock Addison-Wesley Professional, 2013.
+
+\bibitem{TaylorW99}
+M.~Taylor and B.A. Wingate.
+\newblock The fekete collocation points for triangular spectral elements.
+\newblock {\em Journal on Numerical Analysis}, 1998.
+
+\bibitem{TaylorWV00}
+M.~Taylor, B.A. Wingate, and R.E. Vincent.
+\newblock An algorithm for computing {F}ekete points in the triangle.
+\newblock {\em SIAM J. Num. Anal.}, 38:1707--1720, 2000.
+
+\bibitem{ClenshawC}
+Lloyd~N. Trefethen.
+\newblock Is gauss quadrature better than clenshaw-curtis?
+\newblock {\em SIAM Review}, 50:67--87, 2008.
+
+\bibitem{TrefethenB97}
+Lloyd~N. Trefethen and III David~Bau.
+\newblock {\em Numerical Linear Algebra}.
+\newblock SIAM, Philadelphia, PA, USA, 1997.
+
+\bibitem{VeSoZi07}
+Tom{\'a}{\v{s}} Vejchodsk{\`y}, Pavel {\v{S}}ol{\'\i}n, and Martin Z{\'\i}tka.
+\newblock Modular $hp$-{FEM} system {HERMES} and its application to
+  {M}axwell’s equations.
+\newblock {\em Mathematics and Computers in Simulation}, 76(1):223--228, 2007.
+
+\bibitem{VosSK2010}
+Peter E.~J. Vos, Spencer~J. Sherwin, and Robert~M. Kirby.
+\newblock h-to-p efficiently: Implementing finite and spectral/hp element
+  methods to achieve optimal performance for low- and high-order
+  discretisations.
+\newblock {\em Journal of Computational Physics}, 229:5161--5181, 2010.
+
+\bibitem{Vostime}
+Peter~E.J. Vos, Sehun Chun, Alessandro Bolis, Claes Eskilsson, Robert~M. Kirby,
+  and Spencer~J. Sherwin.
+\newblock A generic framework for time-stepping pdes: General linear methods,
+  object-oriented implementations and applications to fluid problems.
+\newblock {\em International Journal of Computational Fluid Dynamics},
+  25:107--125, 2011.
+
+\bibitem{WitherdenVJ2016}
+F.D. Witherden, P.E. Vincent, and A.~Jameson.
+\newblock Chapter 10 -- high-order flux reconstruction schemes.
+\newblock {\em Handbook of Numerical Analysis}, 17:227--263, 2016.
+
+\bibitem{WiFaVi14}
+FR~Witherden, AM~Farrington, and PE~Vincent.
+\newblock {PyFR}: An open source framework for solving advection-diffusion type
+  problems on streaming architectures using the flux reconstruction approach.
+\newblock {\em Computer Physics Communications}, 185:3028–3040, 2014.
+
+\end{thebibliography}
