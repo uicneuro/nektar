@@ -299,7 +299,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_intrazonefiber;
 
     Array<OneD, NekDouble> m_nodezone;
-    Array<OneD, NekDouble> m_intrazonephiecurrent;
+    Array<OneD, NekDouble> m_intrazone;
     Array<OneD, NekDouble> m_extrazone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;

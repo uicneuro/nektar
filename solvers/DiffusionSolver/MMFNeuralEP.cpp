@@ -322,7 +322,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Setup: excitezone, intrazone, extrazone, followed by ploting the zones.
            // SetUpDomainZone(m_zoneindex[0], m_excitezonefiber, m_intrazonefiber, m_extrazone);
-           SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, m_nodezone, m_intrazonephiecurrent, m_extrazone);
+           SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, m_nodezone, m_intrazone, m_extrazone);
 
             // m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
             // m_NeuralCm[0] = Array<OneD, NekDouble>(nq, 1.0 / m_Cm);
@@ -406,12 +406,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 }
             }
 
-            // for (int i=0; i<nq; ++i)
-            // {
-            //     std::cout << "i = " << i << ", zoneindex 1 = " << m_zoneindexfiber[0][i] 
-            //     << ", 2 = " << m_zoneindexfiber[1][i] << ", zoneindexreaction = " << m_zoneindexreaction[i] << std::endl;
-            // }
-
             m_excitezonefiber = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
             m_intrazonefiber = Array<OneD, Array<OneD, NekDouble>>(m_numfiber);
             for (int n=0; n<m_numfiber; ++n)
@@ -422,9 +416,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             m_extrazone = Array<OneD, NekDouble>(nq) ;
 
-            // Get the first and last index of the excitation zone [1,2]
+            // Get the first and last index of the excitation zone [1,2]intra
             // SetUpDomainZone(m_zoneindex[0], m_excitezone, m_intrazone, m_extrazone);
-            SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, m_nodezone, m_intrazonephiecurrent, m_extrazone);
+            SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, m_nodezone, m_intrazone, m_extrazone);
 
             if(m_MediumType==eAllNode)
             {
@@ -1728,7 +1722,7 @@ void MMFNeuralEP::SetUpDomainZone(
         Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
         Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
         Array<OneD, NekDouble> &nodezone,
-        Array<OneD, NekDouble> &intrazonephiecurrent,
+        Array<OneD, NekDouble> &intrazone,
         Array<OneD, NekDouble> &extrazone)
 {
     int nq   = GetTotPoints();
@@ -1737,7 +1731,7 @@ void MMFNeuralEP::SetUpDomainZone(
     // Set up the total node zone and intra zone
     extrazone = Array<OneD, NekDouble>(nq, 1.0);           
     nodezone = Array<OneD, NekDouble>(nq, 0.0);           
-    intrazonephiecurrent = Array<OneD, NekDouble>(nq, 0.0);     
+    intrazone = Array<OneD, NekDouble>(nq, 0.0);     
     for (int i=0; i<nq; ++i)
     {
         for (int n=0; n<m_numfiber; ++n)
@@ -1753,8 +1747,8 @@ void MMFNeuralEP::SetUpDomainZone(
             // intra zone = myelin or nodezone 
             if( index > -2) 
             {
-                intrazonefiber[n][i] = 1.0 ;
-                intrazonephiecurrent[i] = 1.0/(m_Cn * m_Rf);
+                intrazonefiber[n][i] = 1.0;
+                intrazone[i] = 1.0;
                 extrazone[i] = 0.0;
             }
 
@@ -1769,7 +1763,7 @@ void MMFNeuralEP::SetUpDomainZone(
     // For Isolated fiber, no current by phie
     if(m_ExtCurrentType==eIsolated)
     {
-        intrazonephiecurrent = Array<OneD, NekDouble>(nq, 0.0);
+        intrazone = Array<OneD, NekDouble>(nq, 0.0);
     }
 
     // Plotting
@@ -3580,10 +3574,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
-    Vmath::Vmul(nq, m_intrazonephiecurrent, 1, phiecurrent, 1, phiecurrent, 1);
-    Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phiecurrent, 1, phiecurrent, 1);
+    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), phiecurrent, 1, phiecurrent, 1);
 
-    // Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), extcurrent, 1, extcurrent, 1);
+    Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     // subtract the current from the divergence of phie
     // Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
@@ -3625,12 +3619,13 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Vmath::Neg(nq, phimcurrent, 1);
 
     // Solve poisson equation where the source term occurs at the node zone. 
-    Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
-    Vmath::Vmul(nq, m_nodezone, 1, phimcurrent, 1, phimLaplacian, 1);
+    // Array<OneD, NekDouble> phimLaplacian(nq, 0.0);
+    // Vmath::Vmul(nq, m_nodezone, 1, phimcurrent, 1, phimLaplacian, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phimcurrent, 1, phimcurrent, 1);
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-    Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
+    Vmath::Sadd(nq, -1.0 * AvgInt(phimcurrent), phimcurrent, 1, m_fields[1]->UpdatePhys(), 1);
     m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
 
