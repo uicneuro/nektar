@@ -1145,34 +1145,34 @@ void MMFNeuralEP::DoOdeProjection(
     }
 }
 
-Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(        
-        const int numfiber, const int totNnode, 
-        const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup,
-        const Array<OneD, const NekDouble> &fiberleft,
-        const Array<OneD, const NekDouble> &fiberright)
-    {
-        int nq   = GetTotPoints();
+// Array<OneD, int> MMFNeuralEP::IndexNodeZone2D(        
+//         const int numfiber, const int totNnode, 
+//         const NekDouble nodelen, const NekDouble myelinlen,
+//         const NekDouble nodeinitdown, const NekDouble nodeinitup,
+//         const Array<OneD, const NekDouble> &fiberleft,
+//         const Array<OneD, const NekDouble> &fiberright)
+//     {
+//         int nq   = GetTotPoints();
 
-        Array<OneD, int> outarray(nq, 0);
+//         Array<OneD, int> outarray(nq, 0);
 
-        // Compute the center of the element as the coordinate of each grid.
-        Array<OneD, NekDouble> xcell(nq);
-        Array<OneD, NekDouble> ycell(nq);
-        Array<OneD, NekDouble> zcell(nq);
+//         // Compute the center of the element as the coordinate of each grid.
+//         Array<OneD, NekDouble> xcell(nq);
+//         Array<OneD, NekDouble> ycell(nq);
+//         Array<OneD, NekDouble> zcell(nq);
 
-        Getcellavg(xcell,ycell,zcell);
+//         Getcellavg(xcell,ycell,zcell);
 
-        for (int i=0; i<nq; ++i)
-        {
-            outarray[i] = LinearFiberIndex(numfiber, totNnode, nodelen, 
-                                           myelinlen, nodeinitdown, nodeinitup,
-                                           fiberleft, fiberright, 
-                                           xcell[i], ycell[i]);
-        }
+//         for (int i=0; i<nq; ++i)
+//         {
+//             outarray[i] = LinearFiberIndex(numfiber, totNnode, nodelen, 
+//                                            myelinlen, nodeinitdown, nodeinitup,
+//                                            fiberleft, fiberright, 
+//                                            xcell[i], ycell[i]);
+//         }
 
-        return outarray;
-    }
+//         return outarray;
+//     }
 
 void MMFNeuralEP::IndexNodeZone2D(        
         const int numfiber, const int totNnode, 
@@ -1374,55 +1374,55 @@ Array<OneD, int> MMFNeuralEP::TestRanvierDuoIndex()
 //     return outarray;
 // }
 
-int MMFNeuralEP::LinearFiberIndex(
-    const int numfiber, const int totNnode, 
-    const NekDouble nodelen, const NekDouble myelinlen,
-    const NekDouble nodeinitdown, const NekDouble nodeinitup,
-    const Array<OneD, const NekDouble> &fiberleft,
-    const Array<OneD, const NekDouble> &fiberright, 
-    const NekDouble xi, const NekDouble yi)
-{
-    int output = -2;
+// int MMFNeuralEP::LinearFiberIndex(
+//     const int numfiber, const int totNnode, 
+//     const NekDouble nodelen, const NekDouble myelinlen,
+//     const NekDouble nodeinitdown, const NekDouble nodeinitup,
+//     const Array<OneD, const NekDouble> &fiberleft,
+//     const Array<OneD, const NekDouble> &fiberright, 
+//     const NekDouble xi, const NekDouble yi)
+// {
+//     int output = -2;
     
-    NekDouble  nodestart, nodeend;
+//     NekDouble  nodestart, nodeend;
 
-    for (int n=0; n<numfiber; ++n)
-    {
-        if((xi>fiberleft[n]) && (xi<fiberright[n]))
-            {
-                output = -1 - 100*n;  // Default of the first fiber = myelin
+//     for (int n=0; n<numfiber; ++n)
+//     {
+//         if((xi>fiberleft[n]) && (xi<fiberright[n]))
+//             {
+//                 output = -1 - 100*n;  // Default of the first fiber = myelin
 
-                // Excitezone
-                if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
-                {
-                    output = 100*n;
-                }
+//                 // Excitezone
+//                 if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+//                 {
+//                     output = 100*n;
+//                 }
 
-                for (int k=0; k<totNnode; ++k)
-                {
-                    nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
-                    nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
-                    if( (yi>=nodestart) && (yi<=nodeend) )
-                    {
-                        output = k + 1 + 100*n;
-                    }
-                }
+//                 for (int k=0; k<totNnode; ++k)
+//                 {
+//                     nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+//                     nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+//                     if( (yi>=nodestart) && (yi<=nodeend) )
+//                     {
+//                         output = k + 1 + 100*n;
+//                     }
+//                 }
 
-                if(yi<nodeinitdown)
-                {
-                    output = -2;
-                }
+//                 if(yi<nodeinitdown)
+//                 {
+//                     output = -2;
+//                 }
 
-                nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
-                if(yi>nodeend)
-                {
-                    output = -2;
-                }
-            }
-    }
+//                 nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+//                 if(yi>nodeend)
+//                 {
+//                     output = -2;
+//                 }
+//             }
+//     }
     
-    return output;
-}
+//     return output;
+// }
 
 int MMFNeuralEP::LinearFiberIndex(
     const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
@@ -2521,13 +2521,19 @@ void MMFNeuralEP::DoSolveMMF()
             {
                 PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
 
-                thredlocf1zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
-                                            m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright, 
-                                            fiber1center, thredlocf1[nchk]);
+                thredlocf1zone[nchk] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                                    m_nodeinitdown, m_nodeinitup, thredlocf1[nchk]);
 
-                thredlocf2zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
-                                            m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright,
-                                            fiber2center, thredlocf2[nchk]);
+                thredlocf2zone[nchk] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
+                                                    m_nodeinitdown, m_nodeinitup, thredlocf2[nchk]);
+
+                // thredlocf1zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
+                //                             m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright, 
+                //                             fiber1center, thredlocf1[nchk]);
+
+                // thredlocf2zone[nchk] = LinearFiberIndex(m_numfiber, m_totNode, m_nodelen, m_myelinlen, 
+                //                             m_nodeinitdown, m_nodeinitup, m_fiberleft, m_fiberright,
+                //                             fiber2center, thredlocf2[nchk]);
             }
 
             Checkpoint_Output(nchk++);
