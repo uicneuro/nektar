@@ -525,20 +525,20 @@ protected:
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
 
-    Array<OneD, int> IndexNodeZone2D(
-        const int numfiber, const int totNnode, 
-        const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup,
-        const Array<OneD, const NekDouble> &fiberleft,
-        const Array<OneD, const NekDouble> &fiberright);
+    // Array<OneD, int> IndexNodeZone2D(
+    //     const int numfiber, const int totNnode, 
+    //     const NekDouble nodelen, const NekDouble myelinlen,
+    //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
+    //     const Array<OneD, const NekDouble> &fiberleft,
+    //     const Array<OneD, const NekDouble> &fiberright);
 
-    int LinearFiberIndex(
-        const int numfiber, const int totNnode, 
-        const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup,
-        const Array<OneD, const NekDouble> &fiberleft,
-        const Array<OneD, const NekDouble> &fiberright, 
-        const NekDouble xi, const NekDouble yi);
+    // int LinearFiberIndex(
+    //     const int numfiber, const int totNnode, 
+    //     const NekDouble nodelen, const NekDouble myelinlen,
+    //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
+    //     const Array<OneD, const NekDouble> &fiberleft,
+    //     const Array<OneD, const NekDouble> &fiberright, 
+    //     const NekDouble xi, const NekDouble yi);
 
     void IndexNodeZone2D(
         const int numfiber, const int totNnode, 
