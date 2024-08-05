@@ -3599,7 +3599,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 }
 
-// Input: phi_m
 // output: phi_e (m_fields[1]->UpdatePhys()) and outarray (1/C_n/r) * \nabla^2 \phi_e
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))

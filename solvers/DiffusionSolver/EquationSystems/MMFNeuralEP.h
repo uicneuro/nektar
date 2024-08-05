@@ -246,7 +246,6 @@ protected:
     Array<OneD, NekDouble> ComputeConductivity(
                  const Array<OneD, const Array<OneD, int>> &zoneindex);
 
-
     void Generatephiemovingframes(
     const NekDouble ratio_re_ri,
     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
