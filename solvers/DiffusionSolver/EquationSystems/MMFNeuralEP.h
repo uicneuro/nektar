@@ -50,7 +50,6 @@ using namespace Nektar::SolverUtils;
 namespace Nektar
 {
 
-
 enum NeuralEPType
 {
     eNeuralHelmSolveSingle,

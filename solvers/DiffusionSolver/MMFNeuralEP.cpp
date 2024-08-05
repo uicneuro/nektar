@@ -73,8 +73,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    
-
     int nq   = GetTotPoints();
 
     // Derive AnisotropyStrength.
