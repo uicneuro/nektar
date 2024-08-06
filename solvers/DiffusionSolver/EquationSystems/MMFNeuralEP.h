@@ -288,11 +288,8 @@ protected:
 
     Array<OneD, int> m_ValidTimeMap;
 
-    Array<OneD, Array<OneD, int>> m_zoneindex;
+    Array<OneD, int> m_zoneindex;
     Array<OneD, Array<OneD, int>> m_zoneindexfiber;
-
-    Array<OneD, int> m_zoneindexreaction;
-    Array<OneD, Array<OneD, std::string>> m_fiberzone;
 
     Array<OneD, Array<OneD, NekDouble>> m_excitezonefiber;
     Array<OneD, Array<OneD, NekDouble>> m_intrazonefiber;
