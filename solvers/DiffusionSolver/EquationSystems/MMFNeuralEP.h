@@ -148,12 +148,14 @@ const char *const TimeMapTypeMap[] = {
 enum ExtCurrentType
 {
     eEphaptic,
+    eEphapticIntra,
     eIsolated,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
     "Ephaptic",
+    "EphapticIntra",
     "Isolated",
 };
 
@@ -300,7 +302,12 @@ protected:
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
-\
+
+    void Getphiemovingframes(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, Array<OneD, NekDouble>> &phieAniStrength,
+        Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
+
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, NekDouble> m_NeuralCmfiber;
