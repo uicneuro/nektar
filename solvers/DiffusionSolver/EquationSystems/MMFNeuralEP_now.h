@@ -248,7 +248,6 @@ protected:
     Array<OneD, NekDouble> ComputeConductivity(
                  const Array<OneD, const Array<OneD, int>> &zoneindex);
 
-
     void Generatephiemovingframes(
     const NekDouble ratio_re_ri,
     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
@@ -303,7 +302,12 @@ protected:
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
-\
+
+    void Getphiemovingframes(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, Array<OneD, NekDouble>> &phieAniStrength,
+        Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
+
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, NekDouble> m_NeuralCmfiber;
