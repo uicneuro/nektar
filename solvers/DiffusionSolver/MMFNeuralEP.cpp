@@ -380,6 +380,21 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                             m_myelinlen, m_nodeinitdown, m_nodeinitup,
                             m_fiberleft, m_fiberright, m_zoneindexfiber);
 
+            // If all node zone = index = 1 for myelin. 
+            if(m_MediumType==eAllNode)
+            {
+                for (int n=0; n<m_numfiber; ++n)
+                {
+                    for (int i=0; i<nq; ++i)
+                    {
+                         if( m_zoneindexfiber[n][i] == -1)
+                         {
+                            m_zoneindexfiber[n][i] = 1;
+                         }
+                    }
+                }
+            }
+
             // Construction ZoneIndex for all fibers;
             int tmp;
             m_zoneindex = Array<OneD, int>(nq, -2);
@@ -407,14 +422,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             // Get the first and last index of the excitation zone [1,2]intra
             SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, m_nodezone, m_intrazone, m_extrazone);
-
-            if(m_MediumType==eAllNode)
-            {
-                for (int n=0; n<m_numfiber; ++n)
-                {
-                    m_zoneindexfiber[n]  = Array<OneD, int>(nq, 1);
-                }
-            }
 
             m_NeuralCmfiber = ComputeConductivity(m_zoneindexfiber);
 
