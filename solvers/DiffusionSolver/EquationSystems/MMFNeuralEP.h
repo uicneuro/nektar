@@ -150,14 +150,14 @@ enum ExtCurrentType
 {
     eEphaptic,
     eEphapticIntra,
-    eIsolated,
+    eNoEph,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
     "Ephaptic",
     "EphapticIntra",
-    "Isolated",
+    "NoEph",
 };
 
 enum NodeIndexType
@@ -225,6 +225,9 @@ protected:
     int m_myeline, m_node, m_external;
 
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
+    
+    int m_fiber1order, m_fiber2order, m_fiber3order;
+    Array<OneD, int> m_fiberorder;
 
     NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right;
     NekDouble m_nodeinitdown, m_nodeinitup;
@@ -529,33 +532,18 @@ protected:
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
 
-    // Array<OneD, int> IndexNodeZone2D(
-    //     const int numfiber, const int totNnode, 
-    //     const NekDouble nodelen, const NekDouble myelinlen,
-    //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
-    //     const Array<OneD, const NekDouble> &fiberleft,
-    //     const Array<OneD, const NekDouble> &fiberright);
-
-    // int LinearFiberIndex(
-    //     const int numfiber, const int totNnode, 
-    //     const NekDouble nodelen, const NekDouble myelinlen,
-    //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
-    //     const Array<OneD, const NekDouble> &fiberleft,
-    //     const Array<OneD, const NekDouble> &fiberright, 
-    //     const NekDouble xi, const NekDouble yi);
-
     void IndexNodeZone2D(
         const int numfiber, const int totNnode, 
         const NekDouble nodelen, const NekDouble myelinlen,
         const NekDouble nodeinitdown, const NekDouble nodeinitup,
         const Array<OneD, const NekDouble> &fiberleft,
         const Array<OneD, const NekDouble> &fiberright,
+        const Array<OneD, const int> &fiberorder,
         Array<OneD, Array<OneD, int>> &outarray);
 
     int LinearFiberIndex(
         const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, const NekDouble yi);
-
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 
