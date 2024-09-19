@@ -150,14 +150,14 @@ enum ExtCurrentType
 {
     eEphaptic,
     eEphapticIntra,
-    eNoEph,
+    eNoEphaptic,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
     "Ephaptic",
     "EphapticIntra",
-    "NoEph",
+    "NoEphaptic",
 };
 
 enum NodeIndexType
@@ -224,11 +224,12 @@ protected:
 
     int m_myeline, m_node, m_external;
 
-    NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
+    NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle;
     
     int m_fiber1order, m_fiber2order, m_fiber3order;
     Array<OneD, int> m_fiberorder;
 
+    NekDouble m_axondiameter;
     NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right;
     NekDouble m_nodeinitdown, m_nodeinitup;
     Array<OneD, NekDouble> m_fiberleft;
@@ -266,7 +267,6 @@ protected:
 
     // Temperature parameter
     NekDouble m_Temperature;
-    NekDouble m_diameter;
 
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;

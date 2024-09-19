@@ -131,7 +131,6 @@ void NeuronModel::TimeIntegrate(
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, 
     const NekDouble time,
-    const NekDouble diameter,
     const NekDouble Tc)
 {
     // int phys_offset = 0;
@@ -145,7 +144,7 @@ void NeuronModel::TimeIntegrate(
 
     // Perform final Neuron model step : m_wsp is the Reaction function from
     // m_NeuronSol[0] of membrane potential.
-    Update(zoneindex, m_NeuronSol, m_wsp, time, diameter, Tc);
+    Update(zoneindex, m_NeuronSol, m_wsp, time, Tc);
 
     // Output dV/dt from last step but integrate remaining Neuron model vars
     // Transform Neuron model I_total from nodal to modal space

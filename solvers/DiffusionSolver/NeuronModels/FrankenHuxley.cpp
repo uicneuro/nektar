@@ -64,7 +64,6 @@ namespace Nektar
                      const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                            Array<OneD,        Array<OneD, NekDouble> >&outarray,
                                                            const NekDouble time,
-                                                           const NekDouble var_membrane__d,
                                                            const NekDouble var_membrane__Tc)
     {
         boost::ignore_unused(time);
@@ -87,7 +86,7 @@ namespace Nektar
         const NekDouble var_membrane__gL = 0.0303; // Leakage-specific conductance (mho/cm2)
         const NekDouble var_membrane__gm = 5.60e-9; // Myelin conductance (F/cm)
 
-        // const NekDouble var_membrane__d = 1.0e-3; // bare Axon diameter(cm)
+        const NekDouble var_membrane__d = 1.0e-2; // bare Axon diameter(cm)
         // const NekDouble var_membrane__D = 1.5e-3; // myelinated Axon diameter(cm)
         // const NekDouble var_membrane__l = 2.5e-4; // Nodal length (cm)
         // const NekDouble var_membrane__L = 2.0e-1; // Internoal length (cm)

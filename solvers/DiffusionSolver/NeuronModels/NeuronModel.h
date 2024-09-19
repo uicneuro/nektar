@@ -83,15 +83,14 @@ public:
                         const Array<OneD, const NekDouble> &inarray,
                         Array<OneD, NekDouble> &outarray, 
                         const NekDouble time,
-                        const NekDouble diameter = 0.001,
                         const NekDouble Tc = 24.0);
 
     void Update(const Array<OneD, const int> &zoneindex,
                 const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                 Array<OneD, Array<OneD, NekDouble>> &outarray,
-                const NekDouble time, const NekDouble diameter, const NekDouble Tc)
+                const NekDouble time, const NekDouble Tc)
     {
-        v_Update(zoneindex, inarray, outarray, time, diameter, Tc);
+        v_Update(zoneindex, inarray, outarray, time, Tc);
     }
 
     /// Print a summary of the Neuron model
@@ -193,7 +192,7 @@ protected:
         const Array<OneD, const int> &zoneindex,
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray,
-        const NekDouble time, const NekDouble diameter, const NekDouble Tc) = 0;
+        const NekDouble time, const NekDouble Tc) = 0;
 
     virtual void v_GenerateSummary(SummaryList &s) = 0;
 

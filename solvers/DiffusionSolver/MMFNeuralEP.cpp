@@ -107,7 +107,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
-    m_session->LoadParameter("diameter", m_diameter, 0.01);
+    m_session->LoadParameter("axondiameter", m_axondiameter, 0.01);
 
    // Relative Extracellular resistance: 1 < \beta < 10
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
@@ -130,12 +130,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_numfiber = 1;
 
     m_session->LoadParameter("fiber1order", m_fiber1order, 1); // 0: down to up, 1: up to down
-
     m_session->LoadParameter("fiber1left", m_fiber1left, 0.01);
     m_session->LoadParameter("fiber1right", m_fiber1right, 0.02);
 
     m_session->LoadParameter("fiber2order", m_fiber2order, 1); // 0: down to up, 1: up to down
-
     m_session->LoadParameter("fiber2left", m_fiber2left, 0.00);
     m_session->LoadParameter("fiber2right", m_fiber2right, 0.00);
 
@@ -145,7 +143,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     m_session->LoadParameter("fiber3order", m_fiber3order, 1); // 0: down to up, 1: up to down
-
     m_session->LoadParameter("fiber3left", m_fiber3left, 0.00);
     m_session->LoadParameter("fiber3right", m_fiber3right, 0.00);
 
@@ -510,7 +507,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
         }
     }
-
 
     std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction ===============" << std::endl;
     SetUpMovingFrames(m_MMFdir, unitAniStrength, m_unitmovingframes);
@@ -890,9 +886,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
 }
 
-/**
- *
- */
 MMFNeuralEP::~MMFNeuralEP()
 {
 }
@@ -951,12 +944,10 @@ void MMFNeuralEP::Getphiemovingframes(
         m_session->LoadParameter("g-ratio", m_gratio, 0.8);
         m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
         m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
-        m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
+        // m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
 
-        NekDouble axoncrossA = m_pi*m_radiusaxon*m_radiusaxon;
-
-        NekDouble PhieMultFactor = m_radiusaxon*m_radiusaxon/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
-
+        NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
+        NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
         NekDouble phiedist = PhieMultFactor / axoncrossA;
 
         for (int i = 0; i<nq; ++i)
@@ -1462,7 +1453,7 @@ void MMFNeuralEP::SetUpDomainZone(
     }
 
     // For Isolated fiber, no current by phie
-    if(m_ExtCurrentType==eNoEph)
+    if(m_ExtCurrentType==eNoEphaptic)
     {
         intrazone = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -3156,7 +3147,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEPPT(
     int nq   = m_fields[0]->GetNpoints();
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_zoneindexfiber[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
+    m_neuron->TimeIntegrate(m_zoneindexfiber[0], inarray[0], outarray[0], time, m_Temperature);
 
     for (int i=1; i < nvar; ++i)
     {
@@ -3179,7 +3170,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP1D(
     }
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_zoneindexfiber[0], inarray[0], outarray[0], time, m_diameter, m_Temperature);
+    m_neuron->TimeIntegrate(m_zoneindexfiber[0], inarray[0], outarray[0], time, m_Temperature);
 
     m_stimulus[0]->Update(m_excitezonefiber[0], outarray[0], time);
 
@@ -3283,7 +3274,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     }
 
     // Compute the reaction function divided by Cm or Cn.
-     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, m_diameter, m_Temperature);
+     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, m_Temperature);
 
     for (int n=0; n<m_numfiber; ++n)
     {
@@ -3315,7 +3306,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     }
 
     // Compute the reaction function divided by Cm or Cn.
-    m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, m_diameter, m_Temperature);
+    m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, m_Temperature);
 
     // Add Stimulus
     for (int n=0; n<m_numfiber; ++n)
@@ -3749,7 +3740,6 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "dphimdtTol", m_dphimdtTol);
 
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
-    SolverUtils::AddSummaryItem(s, "diameter", m_diameter);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
     SolverUtils::AddSummaryItem(s, "nq", nq);
     SolverUtils::AddSummaryItem(s, "npts", m_npts);

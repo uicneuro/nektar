@@ -83,11 +83,9 @@ void FitzhughNagumo::v_Update(
                     const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                         Array<OneD,        Array<OneD, NekDouble> >&outarray,
                                                         const NekDouble time,
-                                                        const NekDouble diameter,
                                                         const NekDouble var_membrane__Tc)
 {
     boost::ignore_unused(RvNodeZone, var_membrane__Tc);
-    boost::ignore_unused(diameter);
 
     NekDouble m_gamma = 0.5;
 
