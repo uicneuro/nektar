@@ -160,17 +160,18 @@ const char *const ExtCurrentTypeMap[] = {
     "NoEphaptic",
 };
 
-enum NodeIndexType
+enum FiberType
 {
-    eSequential,
-    eNodefirst,
-    SIZE_NodeIndexType ///< Length of enum list
+    eLinearAligned,
+    eLinearMisAligned,
+    SIZE_FiberType ///< Length of enum list
 };
 
-const char *const NodeIndexTypeMap[] = {
-    "Sequential",
-    "Nodefirst",
+const char *const FiberTypeMap[] = {
+    "LinearAligned",
+    "LinearMisAligned",
 };
+
 
 /// A model for cardiac conduction.
 class MMFNeuralEP : public SolverUtils::MMFSystem
@@ -195,9 +196,8 @@ public:
     NeuralEPType m_NeuralEPType;
     SolverSchemeType m_SolverSchemeType;
 
+    FiberType m_FiberType;
     ExtCurrentType m_ExtCurrentType;
-
-    NodeIndexType m_NodeIndexType;
 
     NekDouble d_max, d_min;
 
@@ -541,7 +541,16 @@ protected:
         const Array<OneD, const int> &fiberorder,
         Array<OneD, Array<OneD, int>> &outarray);
 
-    int LinearFiberIndex(
+    int FiberIndex(FiberType FiberType, const int fibern,
+    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+    const int fiberorder, const NekDouble yi);
+
+    int LinearAlignedFiberIndex(
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
+
+    int LinearMisAlignedFiberIndex(const int fibern,
         const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
         const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
 

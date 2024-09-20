@@ -7,6 +7,8 @@
 !.gitlab-ci
 # Ignore builds and ThirdParty directories
 build
+build*
+build_20Sept
 buildarchive
 ThirdParty
 build_Dec23

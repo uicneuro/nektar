@@ -270,6 +270,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_ExtCurrentType = (ExtCurrentType)0;
     }
 
+    // Either incorporating external current effect or not.
+    if (m_session->DefinesSolverInfo("FiberType"))
+    {
+        std::string FiberTypeStr;
+        FiberTypeStr = m_session->GetSolverInfo("FiberType");
+        for (int i = 0; i < (int)SIZE_FiberType; ++i)
+        {
+            if (boost::iequals(FiberTypeMap[i], FiberTypeStr))
+            {
+                m_FiberType = (FiberType)i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        m_FiberType = (FiberType)0;
+    }
+
     std::string vNeuronModel;
     m_session->LoadSolverInfo("NEURONMODEL", vNeuronModel,
                                 "FrankenHuxley");
@@ -1083,7 +1102,7 @@ void MMFNeuralEP::IndexNodeZone2D(
                 outarray[n][i] = -2;
                 if((xi>fiberleft[n]) && (xi<fiberright[n]))
                     {
-                        outarray[n][i] = LinearFiberIndex(totNnode, nodelen, myelinlen, 
+                        outarray[n][i] = FiberIndex(m_FiberType, n, totNnode, nodelen, myelinlen, 
                                                           nodeinitdown, nodeinitup, fiberorder[n], yi);
                     }
             }
@@ -1191,7 +1210,36 @@ Array<OneD, int> MMFNeuralEP::TestRanvierDuoIndex()
     return outarray;
 }
 
-int MMFNeuralEP::LinearFiberIndex(
+
+int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
+    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+    const int fiberorder, const NekDouble yi)
+    {
+        int index=0;
+
+        switch(FiberType)
+        {
+            case eLinearAligned:
+            {
+                index = LinearAlignedFiberIndex(totNnode, nodelen, myelinlen, nodeinitdown, nodeinitup, fiberorder, yi);                
+                break;
+            }
+
+            case eLinearMisAligned:
+            {
+                index = LinearMisAlignedFiberIndex(fibern, totNnode, nodelen, myelinlen, nodeinitdown, nodeinitup, fiberorder, yi);                
+                break;
+            }
+
+            default:
+            break;
+        }
+
+        return index;
+    }
+
+int MMFNeuralEP::LinearAlignedFiberIndex(
     const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
     const NekDouble nodeinitdown, const NekDouble nodeinitup, 
     const int fiberorder, const NekDouble yi)
@@ -1245,6 +1293,93 @@ int MMFNeuralEP::LinearFiberIndex(
     
     return output;
 }
+
+
+int MMFNeuralEP::LinearMisAlignedFiberIndex(const int fibern,
+    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+    const int fiberorder, const NekDouble yi)
+{
+    int output = -2;
+    
+    NekDouble  nodestart, nodeend;
+
+    output = -1 ;  // Default of the first fiber = myelin
+
+    // Excitezone
+    if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+    {
+        if(fiberorder==-1)
+        {
+            output = totNnode;
+        }
+
+        else{
+            output = 0;
+        }
+    }
+
+    for (int k=0; k<totNnode; ++k)
+    {
+        if(fibern==0)
+        {
+            nodestart = nodeinitup + 2*myelinlen + nodelen + k * (2*myelinlen + 2*nodelen);
+            nodeend = nodeinitup + (k+1) * (2*myelinlen + 2*nodelen);
+        }
+
+        else if(fibern==1)
+        {
+            nodestart = nodeinitup + myelinlen + k * (2*myelinlen + 2*nodelen);
+            nodeend = nodeinitup + myelinlen + nodelen + k * (2*myelinlen + 2*nodelen);
+        }
+
+        if( (yi>=nodestart) && (yi<=nodeend) )
+        {
+            if(fiberorder==-1)
+            {
+               output = totNnode - 1 - k;
+            }
+
+            else{
+                output = k + 1;
+            }
+        }
+    }
+
+    if(fibern==0)
+    {
+            nodestart = nodeinitup + myelinlen ;
+            nodeend = nodeinitup + myelinlen + nodelen ;
+                if( (yi>=nodestart) && (yi<=nodeend) )
+        {
+            output = totNnode + 1;
+        }
+    }
+
+    if(fibern==1)
+    {
+        nodestart = nodeinitup + 2*myelinlen + nodelen + (totNnode-1) * (2*myelinlen + 2*nodelen);
+        nodeend = nodeinitup + totNnode * (2*myelinlen + 2*nodelen);
+        if( (yi>=nodestart) && (yi<=nodeend) )
+        {
+            output = totNnode + 1;
+        }
+    }
+
+    if(yi<nodeinitdown)
+    {
+        output = -2;
+    }
+
+    nodeend = nodeinitup + totNnode * (2*myelinlen + 2*nodelen);
+    if(yi>nodeend)
+    {
+        output = -2;
+    }
+    
+    return output;
+}
+
 
 void MMFNeuralEP::Getcellavg(
     Array<OneD, NekDouble> &xcell, 
@@ -2208,7 +2343,7 @@ void MMFNeuralEP::DoSolveMMF()
             {
                 PrintSingleCurrent(fields[0], dudt,thredlocf1[nchk] );
 
-                thredlocf1zone[nchk] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
+                thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], thredlocf1[nchk]);
 
             }
@@ -2217,10 +2352,10 @@ void MMFNeuralEP::DoSolveMMF()
             {
                 PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
 
-                thredlocf1zone[nchk] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
+                thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], thredlocf1[nchk]);
 
-                thredlocf2zone[nchk] = LinearFiberIndex(m_totNode, m_nodelen, m_myelinlen, 
+                thredlocf2zone[nchk] = FiberIndex(m_FiberType, 1, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[1], thredlocf2[nchk]);
             }
 
@@ -3722,6 +3857,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
+    SolverUtils::AddSummaryItem(s, "FiberType", FiberTypeMap[m_FiberType]);
     SolverUtils::AddSummaryItem(s, "FiberWidth", m_fiberwidth);
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
     SolverUtils::AddSummaryItem(s, "FiberHeightDiff", m_fiberheightdiff);
