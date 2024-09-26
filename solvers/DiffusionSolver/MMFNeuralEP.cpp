@@ -3411,7 +3411,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
     // Compute the reaction function divided by Cm or Cn.
      m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, m_Temperature);
 
-    for (int n=0; n<m_numfiber; ++n)
+    for (int n=0; n<m_stimulus.size(); ++n)
     {
         m_stimulus[n]->Update(m_excitezonefiber[n], outarray[0], time);
     }
@@ -3444,7 +3444,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, m_Temperature);
 
     // Add Stimulus
-    for (int n=0; n<m_numfiber; ++n)
+    for (int n=0; n<m_stimulus.size(); ++n)
     {
         m_stimulus[n]->Update(m_excitezonefiber[n], outarray[0], time);
     }
