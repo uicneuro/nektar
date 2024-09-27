@@ -121,9 +121,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
 
     m_session->LoadParameter("Total_Number_Node", m_totNode, 3);
-    m_session->LoadParameter("Element_per_Node", m_elemperNode, 4);
-    m_session->LoadParameter("Element_per_Myelin", m_elemperMyel, 14);
-
+    
     m_session->LoadParameter("nodeinitdown", m_nodeinitdown, 0.01);
     m_session->LoadParameter("nodeinitup", m_nodeinitup, 0.02);
 
@@ -382,7 +380,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             // Ranvier node zone: 0: Myelin, 1: node
             m_nfibers  = 1;
             m_zoneindexfiber = Array<OneD, Array<OneD, int>>(m_nfibers);
-            m_zoneindexfiber[0] = IndexNodeZone1D(m_fields[0], m_totNode, m_elemperNode, m_elemperMyel); 
+           // m_zoneindexfiber[0] = IndexNodeZone1D(m_fields[0], m_totNode, m_elemperNode, m_elemperMyel); 
 
               // Get the first and last index of the excitation zone [1,2]
            // SetUpDomainZone(m_zoneindex[0], m_excitezone, m_nodezone, m_intrazone, m_extrazone);
@@ -3868,8 +3866,6 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 
     SolverUtils::AddSummaryItem(s, "Number_Fiber", m_numfiber);
     SolverUtils::AddSummaryItem(s, "Total_Number_Node", m_totNode);
-    SolverUtils::AddSummaryItem(s, "Element_per_Node", m_elemperNode);
-    SolverUtils::AddSummaryItem(s, "Element_per_Myelin", m_elemperMyel);
 
     SolverUtils::AddSummaryItem(s, "phimrest", m_phimrest);
     SolverUtils::AddSummaryItem(s, "phimTol", m_phimTol);
