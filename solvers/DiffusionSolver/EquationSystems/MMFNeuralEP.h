@@ -164,12 +164,14 @@ enum FiberType
 {
     eLinearAligned,
     eLinearMisAligned,
+    eLinearDivergent,
     SIZE_FiberType ///< Length of enum list
 };
 
 const char *const FiberTypeMap[] = {
     "LinearAligned",
     "LinearMisAligned",
+    "LinearDivergent",
 };
 
 
@@ -231,6 +233,7 @@ protected:
 
     NekDouble m_axondiameter;
     NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right;
+    NekDouble m_fiberangle;
     NekDouble m_nodeinitdown, m_nodeinitup;
     Array<OneD, NekDouble> m_fiberleft;
     Array<OneD, NekDouble> m_fiberright;
@@ -542,9 +545,9 @@ protected:
         Array<OneD, Array<OneD, int>> &outarray);
 
     int FiberIndex(FiberType FiberType, const int fibern,
-    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-    const NekDouble nodeinitdown, const NekDouble nodeinitup, 
-    const int fiberorder, const NekDouble yi);
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+        const int fiberorder, const NekDouble xi, const NekDouble yi);
 
     int LinearAlignedFiberIndex(
         const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
@@ -553,6 +556,11 @@ protected:
     int LinearMisAlignedFiberIndex(const int fibern,
         const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
         const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
+
+    int LinearDivergentFiberIndex(const int fibern,
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+        const int fiberorder, const NekDouble xi, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 

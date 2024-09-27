@@ -113,6 +113,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
+    m_session->LoadParameter("FiberAngle", m_fiberangle, 0.0);
     m_session->LoadParameter("FiberWidth", m_fiberwidth, 0.01);
     m_session->LoadParameter("FiberGap", m_fibergap, 0.01);
     m_session->LoadParameter("FiberHeightDiff", m_fiberheightdiff, 0.0);
@@ -965,6 +966,8 @@ void MMFNeuralEP::Getphiemovingframes(
 
         NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
         NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
+
+        // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
         NekDouble phiedist = PhieMultFactor / axoncrossA;
 
         for (int i = 0; i<nq; ++i)
@@ -1101,7 +1104,7 @@ void MMFNeuralEP::IndexNodeZone2D(
                 if((xi>fiberleft[n]) && (xi<fiberright[n]))
                     {
                         outarray[n][i] = FiberIndex(m_FiberType, n, totNnode, nodelen, myelinlen, 
-                                                          nodeinitdown, nodeinitup, fiberorder[n], yi);
+                                                          nodeinitdown, nodeinitup, fiberorder[n], xi, yi);
                     }
             }
         }
@@ -1212,7 +1215,7 @@ Array<OneD, int> MMFNeuralEP::TestRanvierDuoIndex()
 int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
     const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
     const NekDouble nodeinitdown, const NekDouble nodeinitup, 
-    const int fiberorder, const NekDouble yi)
+    const int fiberorder, const NekDouble xi, const NekDouble yi)
     {
         int index=0;
 
@@ -1227,6 +1230,12 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
             case eLinearMisAligned:
             {
                 index = LinearMisAlignedFiberIndex(fibern, totNnode, nodelen, myelinlen, nodeinitdown, nodeinitup, fiberorder, yi);                
+                break;
+            }
+
+            case eLinearDivergent:
+            {
+                index = LinearDivergentFiberIndex(fibern, totNnode, nodelen, myelinlen, nodeinitdown, nodeinitup, fiberorder, xi, yi);                
                 break;
             }
 
@@ -1378,6 +1387,113 @@ int MMFNeuralEP::LinearMisAlignedFiberIndex(const int fibern,
     return output;
 }
 
+int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern,
+    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+    const int fiberorder, const NekDouble xi, const NekDouble yi)
+{
+    int output = -2;
+    
+    NekDouble  nodestart, nodeend;
+
+    output = -1 ;  // Default of the first fiber = myelin
+
+    // Excitezone
+    if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+    {
+        output = 0;
+    }
+
+    for (int k=0; k<2; ++k)
+    {
+        nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+        nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+        if( (yi>=nodestart) && (yi<=nodeend) )
+        {
+            output = k + 1;
+        }
+    }
+
+    NekDouble uppeval, loweval;
+    NekDouble x1 = 0.01;
+    NekDouble x2 = 0.02;
+    NekDouble x6 = 0.05;
+    NekDouble x7 = 0.06;
+    NekDouble y1 = 0.44;
+    if(fibern==0)
+    {
+        // upper line
+        uppeval = yi + tan(m_fiberangle)*xi + (y1 + tan(m_fiberangle)*x1);
+        loweval = yi + tan(m_fiberangle)*xi + (y1 + tan(m_fiberangle)*x2);
+
+        if(uppeval*loweval<0)
+        {
+            output = -1;
+
+            for (int k=0; k<2; ++k)
+            {
+                nodestart = nodeinitup - (myelinlen + k * (myelinlen + nodelen))*sin(m_fiberangle);
+                nodeend = nodeinitup - ((k+1) * (myelinlen + nodelen))*sin(m_fiberangle);
+                if( (yi>=nodestart) && (yi<=nodeend) )
+                {
+                    output = k + 3;
+                }
+            }
+        }
+    }
+
+    if(fibern==1)
+    {
+        if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
+        {
+            output = -1;
+
+            for (int k=0; k<2; ++k)
+            {
+                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+                if( (yi>=nodestart) && (yi<=nodeend) )
+                {
+                    output = k + 3;
+                }
+            }
+        }
+    }
+
+    if(fibern==2)
+    {
+        uppeval = yi - tan(m_fiberangle)*xi + (y1 - tan(m_fiberangle)*x6);
+        loweval = yi - tan(m_fiberangle)*xi + (y1 - tan(m_fiberangle)*x7);
+
+        if(uppeval*loweval<0)
+        {
+            output = -1;
+
+            for (int k=0; k<2; ++k)
+            {
+                nodestart = nodeinitup + (myelinlen + k * (myelinlen + nodelen))*sin(m_fiberangle);
+                nodeend = nodeinitup + ((k+1) * (myelinlen + nodelen))*sin(m_fiberangle);
+                if( (yi>=nodestart) && (yi<=nodeend) )
+                {
+                    output = k + 3;
+                }
+            }
+        }
+    }
+
+    if(yi<nodeinitdown)
+    {
+        output = -2;
+    }
+
+    nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+    if(yi>nodeend)
+    {
+        output = -2;
+    }
+    
+    return output;
+}
 
 void MMFNeuralEP::Getcellavg(
     Array<OneD, NekDouble> &xcell, 
@@ -2342,7 +2458,7 @@ void MMFNeuralEP::DoSolveMMF()
                 PrintSingleCurrent(fields[0], dudt,thredlocf1[nchk] );
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
-                                                    m_nodeinitdown, m_nodeinitup, m_fiberorder[0], thredlocf1[nchk]);
+                                                    m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
 
             }
 
@@ -2351,10 +2467,10 @@ void MMFNeuralEP::DoSolveMMF()
                 PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
-                                                    m_nodeinitdown, m_nodeinitup, m_fiberorder[0], thredlocf1[nchk]);
+                                                    m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
 
                 thredlocf2zone[nchk] = FiberIndex(m_FiberType, 1, m_totNode, m_nodelen, m_myelinlen, 
-                                                    m_nodeinitdown, m_nodeinitup, m_fiberorder[1], thredlocf2[nchk]);
+                                                    m_nodeinitdown, m_nodeinitup, m_fiberorder[1], 0.0, thredlocf2[nchk]);
             }
 
             Checkpoint_Output(nchk++);
