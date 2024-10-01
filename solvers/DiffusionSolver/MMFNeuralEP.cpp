@@ -1101,11 +1101,19 @@ void MMFNeuralEP::IndexNodeZone2D(
             for (int n=0; n<numfiber; ++n)
             {
                 outarray[n][i] = -2;
-                if((xi>fiberleft[n]) && (xi<fiberright[n]))
-                    {
-                        outarray[n][i] = FiberIndex(m_FiberType, n, totNnode, nodelen, myelinlen, 
-                                                          nodeinitdown, nodeinitup, fiberorder[n], xi, yi);
-                    }
+                if( (m_FiberType==eLinearAligned) || (m_FiberType==eLinearMisAligned) )
+                {
+                    if((xi>fiberleft[n]) && (xi<fiberright[n]))
+                        {
+                            outarray[n][i] = FiberIndex(m_FiberType, n, totNnode, nodelen, myelinlen, 
+                                                            nodeinitdown, nodeinitup, fiberorder[n], xi, yi);
+                        }
+                }
+
+                else{
+                    outarray[n][i] = FiberIndex(m_FiberType, n, totNnode, nodelen, myelinlen, 
+                                                            nodeinitdown, nodeinitup, fiberorder[n], xi, yi);
+                }
             }
         }
     }
@@ -1396,21 +1404,23 @@ int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern,
     
     NekDouble  nodestart, nodeend;
 
-    output = -1 ;  // Default of the first fiber = myelin
-
-    // Excitezone
-    if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+    if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
     {
-        output = 0;
-    }
-
-    for (int k=0; k<2; ++k)
-    {
-        nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
-        nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
-        if( (yi>=nodestart) && (yi<=nodeend) )
+        // Excitezone
+        if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
         {
-            output = k + 1;
+            output = 0;
+        }
+
+        for (int k=0; k<2; ++k)
+        {
+
+                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+                if( (yi>=nodestart) && (yi<=nodeend) )
+                {
+                    output = k + 1;
+                }
         }
     }
 
@@ -1420,64 +1430,140 @@ int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern,
     NekDouble x6 = 0.05;
     NekDouble x7 = 0.06;
     NekDouble y1 = 0.44;
+
+    // First fiber
     if(fibern==0)
     {
-        // upper line
-        uppeval = yi + tan(m_fiberangle)*xi + (y1 + tan(m_fiberangle)*x1);
-        loweval = yi + tan(m_fiberangle)*xi + (y1 + tan(m_fiberangle)*x2);
-
-        if(uppeval*loweval<0)
+        if(yi<=y1)
         {
-            output = -1;
-
-            for (int k=0; k<2; ++k)
+            if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
             {
-                nodestart = nodeinitup - (myelinlen + k * (myelinlen + nodelen))*sin(m_fiberangle);
-                nodeend = nodeinitup - ((k+1) * (myelinlen + nodelen))*sin(m_fiberangle);
-                if( (yi>=nodestart) && (yi<=nodeend) )
+                output = -1;
+                for (int k=0; k<2; ++k)
                 {
-                    output = k + 3;
+                    nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                    nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+                    if( (yi>=nodestart) && (yi<=nodeend) )
+                    {
+                        output = k + 1;
+                    }
                 }
+
+                if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+                {
+                    output = 0;
+                }  
             }
+        }
+
+        else{
+            // upper line
+            uppeval = -tan(m_fiberangle)*xi + (y1 + tan(m_fiberangle)*x2);
+            loweval = -tan(m_fiberangle)*xi + (y1 + tan(m_fiberangle)*x1);
+
+           if( (yi<uppeval) && (yi>loweval) )
+            {
+                std::cout << "m_fiberangle = " << m_fiberangle <<", tan(m_fiberangle) = " <<  tan(m_fiberangle) 
+                << ", fibern = " << fibern << ", xi = " << xi << ", yi = " << yi 
+                << ", uppeval = " << uppeval << ", loweval = " << loweval << std::endl;
+
+                output = -1;
+
+                for (int k=0; k<2; ++k)
+                {
+                    nodestart = nodeinitup + 2 * (myelinlen + nodelen) - nodelen +(2-k) * (myelinlen + nodelen)*sin(m_fiberangle);
+                    nodeend = nodeinitup + 2 * (myelinlen + nodelen) + ((2-k) * (myelinlen + nodelen))*sin(m_fiberangle);
+
+                    if( yi<nodestart)
+                    {
+                        output = -1;
+                    }
+
+                    else if( (yi>=nodestart) && (yi<=nodeend) )
+                    {
+                        output = totNnode - k - 1;
+                    }
+                }
+             }
         }
     }
 
+    // Second fiber
     if(fibern==1)
     {
         if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
         {
             output = -1;
 
-            for (int k=0; k<2; ++k)
+            for (int k=0; k<totNnode; ++k)
             {
                 nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
                 nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
                 if( (yi>=nodestart) && (yi<=nodeend) )
                 {
-                    output = k + 3;
+                    output = k + 1;
                 }
             }
+
+            if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+            {
+                output = 0;
+            }  
         }
     }
 
     if(fibern==2)
     {
-        uppeval = yi - tan(m_fiberangle)*xi + (y1 - tan(m_fiberangle)*x6);
-        loweval = yi - tan(m_fiberangle)*xi + (y1 - tan(m_fiberangle)*x7);
-
-        if(uppeval*loweval<0)
+        if(yi<=y1)
         {
-            output = -1;
-
-            for (int k=0; k<2; ++k)
+            if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
             {
-                nodestart = nodeinitup + (myelinlen + k * (myelinlen + nodelen))*sin(m_fiberangle);
-                nodeend = nodeinitup + ((k+1) * (myelinlen + nodelen))*sin(m_fiberangle);
-                if( (yi>=nodestart) && (yi<=nodeend) )
+                output = -1;
+                for (int k=0; k<2; ++k)
                 {
-                    output = k + 3;
+                    nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                    nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+                    if( (yi>=nodestart) && (yi<=nodeend) )
+                    {
+                        output = k + 1;
+                    }
                 }
+
+                if( (yi>=nodeinitdown) && (yi<=nodeinitup) )
+                {
+                    output = 0;
+                }  
             }
+        }
+
+        else{
+            uppeval =  tan(m_fiberangle)*xi + (y1 - tan(m_fiberangle)*x6);
+            loweval =  tan(m_fiberangle)*xi + (y1 - tan(m_fiberangle)*x7);
+
+           if( (yi<uppeval) && (yi>loweval) )
+            {
+                std::cout << "m_fiberangle = " << m_fiberangle <<", tan(m_fiberangle) = " <<  tan(m_fiberangle) 
+                << ", fibern = " << fibern << ", xi = " << xi << ", yi = " << yi 
+                << ", uppeval = " << uppeval << ", loweval = " << loweval << std::endl;
+
+                output = -1;
+
+                for (int k=0; k<2; ++k)
+                {
+                    nodestart = nodeinitup + 2 * (myelinlen + nodelen) - nodelen +(2-k) * (myelinlen + nodelen)*sin(m_fiberangle);
+                    nodeend = nodeinitup + 2 * (myelinlen + nodelen) + ((2-k) * (myelinlen + nodelen))*sin(m_fiberangle);
+
+                    if( yi<nodestart)
+                    {
+                        output = -1;
+                    }
+
+                    else if( (yi>=nodestart) && (yi<=nodeend) )
+                    {
+                        output = totNnode - k - 1;
+                    }
+                }
+             }
         }
     }
 
@@ -1486,7 +1572,7 @@ int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern,
         output = -2;
     }
 
-    nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+    nodeend = nodeinitup + (totNnode-1) * (myelinlen + nodelen);
     if(yi>nodeend)
     {
         output = -2;
@@ -3972,6 +4058,8 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
     SolverUtils::AddSummaryItem(s, "FiberType", FiberTypeMap[m_FiberType]);
+
+    SolverUtils::AddSummaryItem(s, "FiberAngle", m_fiberangle);
     SolverUtils::AddSummaryItem(s, "FiberWidth", m_fiberwidth);
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
     SolverUtils::AddSummaryItem(s, "FiberHeightDiff", m_fiberheightdiff);
