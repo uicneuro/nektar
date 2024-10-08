@@ -165,6 +165,7 @@ enum FiberType
     eLinearAligned,
     eLinearMisAligned,
     eLinearDivergent,
+    eConstantCurved,
     SIZE_FiberType ///< Length of enum list
 };
 
@@ -172,6 +173,7 @@ const char *const FiberTypeMap[] = {
     "LinearAligned",
     "LinearMisAligned",
     "LinearDivergent",
+    "ConstantCurved",
 };
 
 
@@ -226,6 +228,7 @@ protected:
 
     int m_myeline, m_node, m_external;
 
+    NekDouble m_pi;
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle;
     
     int m_fiber1order, m_fiber2order, m_fiber3order;
@@ -561,6 +564,10 @@ protected:
         const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
         const NekDouble nodeinitdown, const NekDouble nodeinitup, 
         const int fiberorder, const NekDouble xi, const NekDouble yi);
+
+    int ConstantCurvedFiberIndex(const int fibern,
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble xi, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 

@@ -73,7 +73,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    
+    m_pi       = 3.14159265358979323846;
 
     int nq   = GetTotPoints();
 
@@ -122,7 +122,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
 
     m_session->LoadParameter("Total_Number_Node", m_totNode, 3);
-    
     m_session->LoadParameter("nodeinitdown", m_nodeinitdown, 0.01);
     m_session->LoadParameter("nodeinitup", m_nodeinitup, 0.02);
 
@@ -1247,12 +1246,72 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
                 break;
             }
 
+            case eConstantCurved:
+            {
+                index = ConstantCurvedFiberIndex(fibern, totNnode, nodelen, myelinlen, xi, yi);                
+                break;
+            }
+
             default:
             break;
         }
 
         return index;
     }
+
+
+int MMFNeuralEP::ConstantCurvedFiberIndex(const int fibern,
+    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+    const NekDouble xi, const NekDouble yi)
+
+{
+    int output = -2;
+    
+    NekDouble angle0, rad0, nodetheta, myelintheta;
+    NekDouble rad, theta, thetatop, thetabottom;
+    NekDouble radbottom, radtop;
+    NekDouble fiberstart, fiberend;
+
+    angle0 = m_pi/72.0;
+    rad0 = 0.8;
+
+    nodetheta = nodelen/rad0;
+    myelintheta = myelinlen/rad0;
+
+    fiberstart = angle0 + nodetheta;
+    fiberend = angle0 + 3*nodetheta + totNnode*(nodetheta+myelintheta);
+
+    rad = sqrt(xi*xi + yi*yi);
+    theta = atan2(yi/rad,xi/rad);
+
+    radbottom = rad0 + (fibern+1)*0.01;
+    radtop = radbottom + 0.01;
+
+    std::cout << "fibern = " << fibern << ", radbottom = " << radbottom << std::endl;
+    if( (rad>radbottom) && (rad<radtop) )
+    {
+        if ( (theta > fiberstart ) && (theta < fiberend)  )
+        {
+            output = -1;
+
+            for (int k=0; k<totNnode; ++k)
+            {
+                thetabottom = angle0 + nodetheta + k*(nodetheta+myelintheta);
+                thetatop = thetabottom + nodetheta;
+
+                std::cout << "k = " << k << ", thetabottom = " << thetabottom << ", thetatop = " << thetatop << std::endl;
+
+                if ( (theta > thetabottom) && (theta < thetatop) )
+                {
+                    output = k;
+                }
+            }
+        }
+    }
+    
+    return output;
+}
+
 
 int MMFNeuralEP::LinearAlignedFiberIndex(
     const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
@@ -1400,6 +1459,8 @@ int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern,
     const NekDouble nodeinitdown, const NekDouble nodeinitup, 
     const int fiberorder, const NekDouble xi, const NekDouble yi)
 {
+    boost::ignore_unused(fiberorder);
+
     int output = -2;
     
     NekDouble  nodestart, nodeend;
