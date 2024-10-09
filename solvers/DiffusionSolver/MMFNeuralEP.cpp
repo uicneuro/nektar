@@ -1284,7 +1284,7 @@ int MMFNeuralEP::ConstantCurvedFiberIndex(const int fibern,
     rad = sqrt(xi*xi + yi*yi);
     theta = atan2(yi/rad,xi/rad);
 
-    radbottom = rad0 + (fibern+1)*0.01;
+    radbottom = rad0 + (2*fibern+1)*0.01;
     radtop = radbottom + 0.01;
 
     std::cout << "fibern = " << fibern << ", radbottom = " << radbottom << std::endl;
@@ -1294,12 +1294,10 @@ int MMFNeuralEP::ConstantCurvedFiberIndex(const int fibern,
         {
             output = -1;
 
-            for (int k=0; k<totNnode; ++k)
+            for (int k=0; k<(totNnode+1); ++k)
             {
-                thetabottom = angle0 + nodetheta + k*(nodetheta+myelintheta);
+                thetabottom = angle0 + 2*nodetheta + k*(nodetheta+myelintheta);
                 thetatop = thetabottom + nodetheta;
-
-                std::cout << "k = " << k << ", thetabottom = " << thetabottom << ", thetatop = " << thetatop << std::endl;
 
                 if ( (theta > thetabottom) && (theta < thetatop) )
                 {
