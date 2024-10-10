@@ -588,13 +588,14 @@ protected:
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-void SetUpDomainZone(
-        const Array<OneD, const Array<OneD, int>> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
-        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
-        Array<OneD, NekDouble> &nodezone,
-        Array<OneD, NekDouble> &intrazone,
-        Array<OneD, NekDouble> &extrazone);
+    void SetUpDomainZone(
+            const Array<OneD, int> &zoneindex, 
+            const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+            Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
+            Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
+            Array<OneD, NekDouble> &nodezone,
+            Array<OneD, NekDouble> &intrazone,
+            Array<OneD, NekDouble> &extrazone);
 
     // void SetUpDomainSingleZone(
     //     const Array<OneD, const int> &zoneindex,
