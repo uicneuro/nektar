@@ -508,26 +508,27 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     for (int j = 0; j < m_expdim; ++j)
     {
-        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 0.0);
+        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    int index;
-    for (int i=0; i<nq; ++i)
-    {
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            for (int n=0; n<m_numfiber; ++n)
-            {
-                index = m_zoneindexfiber[n][i];
-                if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
-                {
-                    unitAniStrength[j][i] = 1.0;
-                }
-            }
-        }
-    }
+    int index, unitcn=0;
+    // for (int i=0; i<nq; ++i)
+    // {
+    //     for (int j = 0; j < m_expdim; ++j)
+    //     {
+    //         for (int n=0; n<m_numfiber; ++n)
+    //         {
+    //             index = m_zoneindexfiber[n][i];
+    //             if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
+    //             {
+    //                 unitAniStrength[j][i] = 1.0;
+    //                 unitcn++;
+    //             }
+    //         }
+    //     }
+    // }
 
-    std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction ===============" << std::endl;
+    std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction =============== for " << unitcn << " / " << nq <<  std::endl;
     SetUpMovingFrames(m_MMFdir, unitAniStrength, m_unitmovingframes);
     
     CheckMovingFrames(m_unitmovingframes);
@@ -1374,6 +1375,8 @@ int MMFNeuralEP::LinearMisAlignedFiberIndex(const int fibern,
     const NekDouble nodeinitdown, const NekDouble nodeinitup, 
     const int fiberorder, const NekDouble yi)
 {
+    boost::ignore_unused(fiberorder);
+
     int output = -2;
     
     NekDouble  nodestart, nodeend;
@@ -2318,11 +2321,11 @@ void MMFNeuralEP::CheckNodeZoneMF(
         xp = (xp / npts);
         yp = (yp / npts);
 
-        std::cout << "Elemid = " << i << ", Nodeid 1 = " << zoneindex[0][index] 
-                << ", Nodeid 2 = " << zoneindex[1][index]
-                << ", x = " << xp << ", y = " << yp 
-                << ", e1mag = " << e1mag << ", e2mag = " << e2mag
-                << ", phie1mag = " << phie1mag << ", phie2mag = " << phie2mag << std::endl;
+        // std::cout << "Elemid = " << i << ", Nodeid 1 = " << zoneindex[0][index] 
+        //         << ", Nodeid 2 = " << zoneindex[1][index]
+        //         << ", x = " << xp << ", y = " << yp 
+        //         << ", e1mag = " << e1mag << ", e2mag = " << e2mag
+        //         << ", phie1mag = " << phie1mag << ", phie2mag = " << phie2mag << std::endl;
     }
 }
 
@@ -2738,7 +2741,7 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 3;
+    int nvar    = 5;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2755,34 +2758,11 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[0] = "TimeMap";
     variables[1] = "phim";
     variables[2] = "phie";
+    variables[3] = "CSDm";
+    variables[4] = "CSDe";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
-
-    Array<OneD, NekDouble> TmapGrad(m_spacedim * nq);
-    TmapGrad = ComputeEuclideanGradient(TimeMap);
-
-    // ComputeGradientDirect(m_unitmovingframes, TimeMap, TmapGrad);
-
-    Array<OneD, NekDouble> TmapGradMag(nq, 0.0);
-    for (int k = 0; k < m_spacedim; ++k)
-    {
-        Vmath::Vvtvp(nq, &TmapGrad[k * nq], 1, &TmapGrad[k * nq], 1, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
-    }
-    Vmath::Vsqrt(nq, &TmapGradMag[0], 1, &TmapGradMag[0], 1);
-
-    // Array<OneD, NekDouble> Velocity = ConvertTMtoVel(TimeMap, TmapGrad, TmapGradMag);
-
-    // m_fields[0]->FwdTransLocalElmt(TmapGradMag, fieldcoeffs[1]);
-
-    // Array<OneD, NekDouble> tmpx(nq);
-    // Array<OneD, NekDouble> tmpy(nq);
-
-    // Vmath::Vcopy(nq, &Velocity[0], 1, &tmpx[0], 1);
-    // Vmath::Vcopy(nq, &Velocity[nq], 1, &tmpy[0], 1);
-
-    // m_fields[0]->FwdTransLocalElmt(tmpx, fieldcoeffs[2]);
-    // m_fields[0]->FwdTransLocalElmt(tmpy, fieldcoeffs[3]);
 
     std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
 
@@ -2791,6 +2771,12 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
+    Array<OneD, NekDouble> CSDm = ComputeMMFDiffusion(m_movingframes, phim);
+    Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_unitmovingframes, phie);
+
+    m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[4]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
