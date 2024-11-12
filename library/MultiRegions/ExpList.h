@@ -343,18 +343,6 @@ public:
         const Array<OneD, const NekDouble> &dirForcing = NullNekDouble1DArray,
         const bool PhysSpaceForcing                    = true);
 
-    inline void HelmSolveEmbed(
-        const int bdryStart,
-        const int bdryEnd,
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &outarray,
-        const StdRegions::ConstFactorMap &factors,
-        const StdRegions::VarCoeffMap &varcoeff = StdRegions::NullVarCoeffMap,
-        const MultiRegions::VarFactorsMap &varfactors =
-            MultiRegions::NullVarFactorsMap,
-        const Array<OneD, const NekDouble> &dirForcing = NullNekDouble1DArray,
-        const bool PhysSpaceForcing                    = true);
-
     /// Solve Advection Diffusion Reaction
     inline void LinearAdvectionDiffusionReactionSolve(
         const Array<OneD, Array<OneD, NekDouble>> &velocity,
@@ -1406,16 +1394,6 @@ NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
                              const Array<OneD, const NekDouble> &dirForcing,
                              const bool PhysSpaceForcing);
 
-    virtual void v_HelmSolveEmbed(const int bdryStart,
-                             const int bdryEnd,
-                             const Array<OneD, const NekDouble> &inarray,
-                             Array<OneD, NekDouble> &outarray,
-                             const StdRegions::ConstFactorMap &factors,
-                             const StdRegions::VarCoeffMap &varcoeff,
-                             const MultiRegions::VarFactorsMap &varfactors,
-                             const Array<OneD, const NekDouble> &dirForcing,
-                             const bool PhysSpaceForcing);
-
     virtual void v_LinearAdvectionDiffusionReactionSolve(
         const Array<OneD, Array<OneD, NekDouble>> &velocity,
         const Array<OneD, const NekDouble> &inarray,
@@ -1947,21 +1925,6 @@ inline void ExpList::HelmSolve(const Array<OneD, const NekDouble> &inarray,
 
 {
     v_HelmSolve(inarray, outarray, factors, varcoeff, varfactors, dirForcing,
-                PhysSpaceForcing);
-}
-
-inline void ExpList::HelmSolveEmbed(const int bdryStart, 
-                               const int bdryEnd, 
-                               const Array<OneD, const NekDouble> &inarray,
-                               Array<OneD, NekDouble> &outarray,
-                               const StdRegions::ConstFactorMap &factors,
-                               const StdRegions::VarCoeffMap &varcoeff,
-                               const MultiRegions::VarFactorsMap &varfactors,
-                               const Array<OneD, const NekDouble> &dirForcing,
-                               const bool PhysSpaceForcing)
-
-{
-    v_HelmSolveEmbed(bdryStart, bdryEnd, inarray, outarray, factors, varcoeff, varfactors, dirForcing,
                 PhysSpaceForcing);
 }
 

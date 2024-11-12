@@ -4683,21 +4683,6 @@ void ExpList::v_HelmSolve(const Array<OneD, const NekDouble> &inarray,
     NEKERROR(ErrorUtil::efatal, "HelmSolve not implemented.");
 }
 
-void ExpList::v_HelmSolveEmbed(const int bdryStart,
-                          const int bdryEnd,
-                          const Array<OneD, const NekDouble> &inarray,
-                          Array<OneD, NekDouble> &outarray,
-                          const StdRegions::ConstFactorMap &factors,
-                          const StdRegions::VarCoeffMap &varcoeff,
-                          const MultiRegions::VarFactorsMap &varfactors,
-                          const Array<OneD, const NekDouble> &dirForcing,
-                          const bool PhysSpaceForcing)
-{
-    boost::ignore_unused(bdryStart, bdryEnd, inarray, outarray, factors, varcoeff, varfactors,
-                         dirForcing, PhysSpaceForcing);
-    NEKERROR(ErrorUtil::efatal, "HelmSolve not implemented.");
-}
-
 void ExpList::v_LinearAdvectionDiffusionReactionSolve(
     const Array<OneD, Array<OneD, NekDouble>> &velocity,
     const Array<OneD, const NekDouble> &inarray,
