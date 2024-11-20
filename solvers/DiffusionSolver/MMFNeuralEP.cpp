@@ -1034,7 +1034,6 @@ void MMFNeuralEP::Getphiemovingframes(
         std::cout << "================================================ " << std::endl;
 }
 
-
 void MMFNeuralEP::DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
@@ -2308,10 +2307,6 @@ void MMFNeuralEP::CheckNodeZoneMF(
                      phiemovingframes[1][nq + index] * phiemovingframes[1][nq + index]);
         }
 
-        // dx = x0[m_fields[0]->GetPhys_Offset(i)] - x0[m_fields[0]->GetPhys_Offset(i)+npts-1];
-        // dy = x1[m_fields[0]->GetPhys_Offset(i)] - x1[m_fields[0]->GetPhys_Offset(i)+npts-1];
-        // dist = sqrt(dx*dx+dy*dy);
-
         e1mag = sqrt(e1mag / npts);
         e2mag = sqrt(e2mag / npts);
 
@@ -2320,12 +2315,6 @@ void MMFNeuralEP::CheckNodeZoneMF(
 
         xp = (xp / npts);
         yp = (yp / npts);
-
-        // std::cout << "Elemid = " << i << ", Nodeid 1 = " << zoneindex[0][index] 
-        //         << ", Nodeid 2 = " << zoneindex[1][index]
-        //         << ", x = " << xp << ", y = " << yp 
-        //         << ", e1mag = " << e1mag << ", e2mag = " << e2mag
-        //         << ", phie1mag = " << phie1mag << ", phie2mag = " << phie2mag << std::endl;
     }
 }
 
