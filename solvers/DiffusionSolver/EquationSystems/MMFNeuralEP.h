@@ -149,14 +149,12 @@ const char *const TimeMapTypeMap[] = {
 enum ExtCurrentType
 {
     eEphaptic,
-    eEphapticIntra,
     eNoEphaptic,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
     "Ephaptic",
-    "EphapticIntra",
     "NoEphaptic",
 };
 
@@ -621,10 +619,12 @@ protected:
                             const Array<OneD, const NekDouble> &field,
                             const Array<OneD, const NekDouble> &dudt,
                             Array<OneD, NekDouble> &dudtHistory,
+                            Array<OneD, NekDouble> &Thresholdtime,
                             Array<OneD, NekDouble> &TimeMap);
                                 
     void PlotNeuralTimeMap(
         const Array<OneD, const NekDouble> &phim,
+        const Array<OneD, const NekDouble> &Thresholdtime,
         const Array<OneD, const NekDouble> &TimeMap,
         const int nstep);
 

@@ -2534,6 +2534,7 @@ void MMFNeuralEP::DoSolveMMF()
     NekDouble elapsed = 0.0;
 
     Array<OneD, NekDouble> TimeMap(nq, 0.0);
+    Array<OneD, NekDouble> Thresholdtime(nq, 0.0);
     Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
 
     int totsteps = (m_steps + 1) / m_checksteps;
@@ -2576,7 +2577,7 @@ void MMFNeuralEP::DoSolveMMF()
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeNeuralTimeMap(m_time, m_zoneindexfiber, fields[0], dudt, dudtvalHistory, TimeMap);
+            ComputeNeuralTimeMap(m_time, m_zoneindexfiber, fields[0], dudt, dudtvalHistory, Thresholdtime, TimeMap);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2593,7 +2594,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralTimeMap(fields[0], TimeMap, nchk);
+            PlotNeuralTimeMap(fields[0], Thresholdtime, TimeMap, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
@@ -2691,9 +2692,11 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
                                     const Array<OneD, const NekDouble> &field,
                                     const Array<OneD, const NekDouble> &dudt,
                                     Array<OneD, NekDouble> &dudtHistory,
+                                    Array<OneD, NekDouble> &Thresholdtime,
                                     Array<OneD, NekDouble> &TimeMap)
 {
     int nq = GetTotPoints();
+    NekDouble thresholdphim = 70.0;
 
     NekDouble fnewsum, phimdiff;
     for (int i = 0; i < nq; ++i)
@@ -2713,6 +2716,11 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
             dudtHistory[i] += dudt[i];
         }
 
+        if( (field[i]>=thresholdphim) && (Thresholdtime[i]<=0.0) )
+        {
+            Thresholdtime[i] = time;
+        }
+
         for (int n=0; n<m_numfiber; ++n)
         {
             if ( zoneindex[n][i] == 0 )
@@ -2727,10 +2735,11 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
 void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &phim,
+    const Array<OneD, const NekDouble> &Thresholdtime,
     const Array<OneD, const NekDouble> &TimeMap,
     const int nstep)
 {
-    int nvar    = 5;
+    int nvar    = 6;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2745,27 +2754,27 @@ void MMFNeuralEP::PlotNeuralTimeMap(
 
     std::vector<std::string> variables(nvar);
     variables[0] = "TimeMap";
-    variables[1] = "phim";
-    variables[2] = "phie";
-    variables[3] = "CSDm";
-    variables[4] = "CSDe";
+    variables[1] = "Thresholdtime";
+    variables[2] = "phim";
+    variables[3] = "phie";
+    variables[4] = "CSDm";
+    variables[5] = "CSDe";
 
     // Time Map and its velocity
     m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
-
-    std::cout << "phim: Max = " << Vmath::Vmax(nq, phim, 1) << ", Min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
+    m_fields[0]->FwdTransLocalElmt(Thresholdtime, fieldcoeffs[1]);
 
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
 
     Array<OneD, NekDouble> CSDm = ComputeMMFDiffusion(m_movingframes, phim);
     Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_unitmovingframes, phie);
 
-    m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[3]);
-    m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[5]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -3742,19 +3751,13 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     Vmath::Neg(nq, phimcurrent, 1);
 
     // Solve poisson equation where the source term occurs at the node zone. 
-    Array<OneD, NekDouble> phimLaplacian(nq);
+    Array<OneD, NekDouble> phimLaplacian(nq,0.0);
 
     switch(m_ExtCurrentType)
     {
         case eEphaptic:
         {
             Vmath::Vmul(nq, m_nodezone, 1, phimcurrent, 1, phimLaplacian, 1);
-            break;
-        }
-
-        case eEphapticIntra:
-        {
-            Vmath::Vmul(nq, m_intrazone, 1, phimcurrent, 1, phimLaplacian, 1);
             break;
         }
 
