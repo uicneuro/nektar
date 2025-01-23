@@ -117,6 +117,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("FiberWidth", m_fiberwidth, 0.01);
     m_session->LoadParameter("FiberGap", m_fibergap, 0.01);
     m_session->LoadParameter("FiberHeightDiff", m_fiberheightdiff, 0.0);
+    m_session->LoadParameter("FiberCurvature", m_fibercurvature, 0.8);
 
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
@@ -1250,7 +1251,7 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
 
             case eConstantCurved:
             {
-                index = ConstantCurvedFiberIndex(fibern, totNnode, nodelen, myelinlen, xi, yi);                
+                index = ConstantCurvedFiberIndex(fibern, m_fibercurvature, totNnode, nodelen, myelinlen, xi, yi);                
                 break;
             }
 
@@ -1262,31 +1263,29 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
     }
 
 
-int MMFNeuralEP::ConstantCurvedFiberIndex(const int fibern,
-    const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-    const NekDouble xi, const NekDouble yi)
-
+int MMFNeuralEP::ConstantCurvedFiberIndex(const int fibern, 
+    const NekDouble fibercurvature, const int totNnode, const NekDouble nodelen, 
+    const NekDouble myelinlen, const NekDouble xi, const NekDouble yi)
 {
     int output = -2;
     
-    NekDouble angle0, rad0, nodetheta, myelintheta;
+    NekDouble angle0, nodetheta, myelintheta;
     NekDouble rad, theta, thetatop, thetabottom;
     NekDouble radbottom, radtop;
     NekDouble fiberstart, fiberend;
 
     angle0 = m_pi/72.0;
-    rad0 = 0.8;
 
-    nodetheta = nodelen/rad0;
-    myelintheta = myelinlen/rad0;
+    nodetheta = nodelen/fibercurvature;
+    myelintheta = myelinlen/fibercurvature;
 
     fiberstart = angle0 + nodetheta;
     fiberend = angle0 + 3*nodetheta + totNnode*(nodetheta+myelintheta);
 
     rad = sqrt(xi*xi + yi*yi);
-    theta = atan2(yi/rad,xi/rad);
+    theta = atan2(yi/rad,xi/fibercurvature);
 
-    radbottom = rad0 + (2*fibern+1)*0.01;
+    radbottom = fibercurvature + (2*fibern+1)*0.01;
     radtop = radbottom + 0.01;
 
     std::cout << "fibern = " << fibern << ", radbottom = " << radbottom << std::endl;

@@ -228,6 +228,8 @@ protected:
 
     NekDouble m_pi;
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle;
+
+    NekDouble m_fibercurvature;
     
     int m_fiber1order, m_fiber2order, m_fiber3order;
     Array<OneD, int> m_fiberorder;
@@ -563,9 +565,9 @@ protected:
         const NekDouble nodeinitdown, const NekDouble nodeinitup, 
         const int fiberorder, const NekDouble xi, const NekDouble yi);
 
-    int ConstantCurvedFiberIndex(const int fibern,
-        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble xi, const NekDouble yi);
+    int ConstantCurvedFiberIndex(const int fibern,  
+        const NekDouble fibercurvature, const int totNnode, const NekDouble nodelen, 
+        const NekDouble myelinlen, const NekDouble xi, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 
