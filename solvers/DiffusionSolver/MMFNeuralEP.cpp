@@ -76,7 +76,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_pi       = 3.14159265358979323846;
 
     int nq   = GetTotPoints();
-    int nvar = m_intVariables.size();
 
     // Derive AnisotropyStrength.
     m_AniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
@@ -86,12 +85,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     {
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-    }
-
-    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        m_TimeMap[i] = Array<OneD, NekDouble>(nq,0.0);
     }
 
     // Conductance parameters
@@ -2539,6 +2532,13 @@ void MMFNeuralEP::DoSolveMMF()
     // Array<OneD, NekDouble> TimeMap(nq, 0.0);
     // Array<OneD, NekDouble> Thresholdtime(nq, 0.0);
 
+
+    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvariables);
+    for (int i = 0; i < nvariables; ++i)
+    {
+        m_TimeMap[i] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
     Array<OneD, Array<OneD, NekDouble>> dphidt(nvariables);
     Array<OneD, Array<OneD, NekDouble>> dphidtint(nvariables);    
     for (int n=0; n<nvariables; ++n)
@@ -2592,7 +2592,7 @@ void MMFNeuralEP::DoSolveMMF()
         {
             for (int n=0; n<nvariables; ++n)
             {
-                ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
+               ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
             }
         }
 
@@ -2610,7 +2610,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralTimeMap(fields[0], m_TimeMap, nchk);
+            // PlotNeuralTimeMap(fields[0], m_TimeMap, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
