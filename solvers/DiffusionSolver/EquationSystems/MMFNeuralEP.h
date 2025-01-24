@@ -245,7 +245,9 @@ protected:
     NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
-    NekDouble m_phimrest, m_phimTol, m_dphimdtTol;
+    NekDouble m_phimrest;
+    
+    // , m_phimTol, m_dphimdtTol;
 
     std::string m_zoneindexfile;
 
@@ -395,7 +397,6 @@ protected:
     // void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
-    const Array<OneD, const Array<OneD, int>> &NodeZone,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const Array<OneD, NekDouble>> &phiemovingframes);
 
@@ -616,18 +617,16 @@ protected:
 
 
 
-    void ComputeNeuralTimeMap(const NekDouble time,
+    void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
                             const Array<OneD, const Array<OneD, int>> &zoneindex,
                             const Array<OneD, const NekDouble> &field,
-                            const Array<OneD, const NekDouble> &dudt,
-                            Array<OneD, NekDouble> &dudtHistory,
-                            Array<OneD, NekDouble> &Thresholdtime,
+                            const Array<OneD, const NekDouble> &dphidt,
+                            Array<OneD, NekDouble> &dphidtint,
                             Array<OneD, NekDouble> &TimeMap);
                                 
     void PlotNeuralTimeMap(
         const Array<OneD, const NekDouble> &phim,
-        const Array<OneD, const NekDouble> &Thresholdtime,
-        const Array<OneD, const NekDouble> &TimeMap,
+        const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
         const int nstep);
 
 void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,

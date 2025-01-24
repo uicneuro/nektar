@@ -76,6 +76,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_pi       = 3.14159265358979323846;
 
     int nq   = GetTotPoints();
+    int nvar = m_intVariables.size();
 
     // Derive AnisotropyStrength.
     m_AniStrength = Array<OneD, Array<OneD, NekDouble>> (m_expdim);
@@ -87,8 +88,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(1);
-    for (int i = 0; i < 1; ++i)
+    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvar);
+    for (int i = 0; i < nvar; ++i)
     {
         m_TimeMap[i] = Array<OneD, NekDouble>(nq,0.0);
     }
@@ -102,8 +103,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     
     // Resting potential     NekDouble m_phimrest, m_phimTol, m_dudtTol;
     m_session->LoadParameter("phimrest", m_phimrest, 80.0);
-    m_session->LoadParameter("phimTol", m_phimTol, 10.0);
-    m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 1.0);
+    // m_session->LoadParameter("phimTol", m_phimTol, 10.0);
+    // m_session->LoadParameter("phieTol", m_phieTol, 10.0);
+    // m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 1.0);
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
@@ -511,7 +513,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
-    int index, unitcn=0;
+    // int index, unitcn=0;
     // for (int i=0; i<nq; ++i)
     // {
     //     for (int j = 0; j < m_expdim; ++j)
@@ -528,7 +530,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     //     }
     // }
 
-    std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction =============== for " << unitcn << " / " << nq <<  std::endl;
+    // std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction =============== for " << unitcn << " / " << nq <<  std::endl;
     SetUpMovingFrames(m_MMFdir, unitAniStrength, m_unitmovingframes);
     
     CheckMovingFrames(m_unitmovingframes);
@@ -574,7 +576,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     // Check moving frames
     if(m_numfiber==2)
     {
-        CheckNodeZoneMF(m_zoneindexfiber, m_movingframes, m_phiemovingframes);
+        CheckNodeZoneMF(m_movingframes, m_phiemovingframes);
     }
 
     if (m_explicitDiffusion)
@@ -2261,7 +2263,6 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 }
 
 void MMFNeuralEP::CheckNodeZoneMF(
-    const Array<OneD, const Array<OneD, int>> &zoneindex,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const Array<OneD, NekDouble>> &phiemovingframes)
 {
@@ -2535,9 +2536,16 @@ void MMFNeuralEP::DoSolveMMF()
     NekDouble cpuTime = 0.0;
     NekDouble elapsed = 0.0;
 
-    Array<OneD, NekDouble> TimeMap(nq, 0.0);
-    Array<OneD, NekDouble> Thresholdtime(nq, 0.0);
-    Array<OneD, NekDouble> dudtvalHistory(nq, 0.0);
+    // Array<OneD, NekDouble> TimeMap(nq, 0.0);
+    // Array<OneD, NekDouble> Thresholdtime(nq, 0.0);
+
+    Array<OneD, Array<OneD, NekDouble>> dphidt(nvariables);
+    Array<OneD, Array<OneD, NekDouble>> dphidtint(nvariables);    
+    for (int n=0; n<nvariables; ++n)
+    {
+        dphidt[n] = Array<OneD, NekDouble>(nq, 0.0);
+        dphidtint[n] = Array<OneD, NekDouble>(nq, 0.0);
+    } 
 
     int totsteps = (m_steps + 1) / m_checksteps;
     Array<OneD, NekDouble> timevec(totsteps, 0.0);
@@ -2554,7 +2562,6 @@ void MMFNeuralEP::DoSolveMMF()
     // NekDouble fiber1center = 0.5*(m_fiber1left + m_fiber1right);
     // NekDouble fiber2center = 0.5*(m_fiber2left + m_fiber2right);
 
-    Array<OneD, NekDouble> dudt(nq);    
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save fields into fieldsold
@@ -2572,14 +2579,21 @@ void MMFNeuralEP::DoSolveMMF()
         // Compute normalized dudt
         NekDouble Maxphim = Vmath::Vamax(nq, fields[0], 1);
         Array<OneD, NekDouble> tmp(nq);
-        Vmath::Vsub(nq, fields[0], 1, fields_old[0], 1, dudt, 1);
-        Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dudt, 1, dudt, 1);
+
+        for (int n=0; n<nvariables; ++n)
+        {
+            Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
+            Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dphidt[n], 1, dphidt[n], 1);
+        }
 
        // Compute TimeMap
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            ComputeNeuralTimeMap(m_time, m_zoneindexfiber, fields[0], dudt, dudtvalHistory, Thresholdtime, TimeMap);
+            for (int n=0; n<nvariables; ++n)
+            {
+                ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
+            }
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2596,12 +2610,12 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralTimeMap(fields[0], Thresholdtime, TimeMap, nchk);
+            PlotNeuralTimeMap(fields[0], m_TimeMap, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
             {
-                PrintSingleCurrent(fields[0], dudt,thredlocf1[nchk] );
+                PrintSingleCurrent(fields[0], dphidt[0],thredlocf1[nchk] );
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
@@ -2610,7 +2624,7 @@ void MMFNeuralEP::DoSolveMMF()
 
             else if(m_numfiber==2)
             {
-                PrintDuoCurrent(fields[0], dudt, thredlocf1[nchk], thredlocf2[nchk]);
+                PrintDuoCurrent(fields[0], dphidt[0], thredlocf1[nchk], thredlocf2[nchk]);
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
@@ -2689,43 +2703,55 @@ void MMFNeuralEP::DoSolveMMF()
 } 
 // namespace Nektar
 
-void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
+void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
+                                    const NekDouble time,
                                     const Array<OneD, const Array<OneD, int>> &zoneindex,
                                     const Array<OneD, const NekDouble> &field,
-                                    const Array<OneD, const NekDouble> &dudt,
-                                    Array<OneD, NekDouble> &dudtHistory,
-                                    Array<OneD, NekDouble> &Thresholdtime,
+                                    const Array<OneD, const NekDouble> &dphidt,
+                                    Array<OneD, NekDouble> &dphidtint,
                                     Array<OneD, NekDouble> &TimeMap)
 {
     int nq = GetTotPoints();
-    NekDouble thresholdphim = 70.0;
 
-    NekDouble fnewsum, phimdiff;
+    int phiTol, phirest;
+    int dphidtTol = 1.0;
+
+    if (nvar==0)
+    {
+        phiTol = 10.0;
+        phirest = 80.0;
+        dphidtTol = 1.0;
+    }
+
+    else if(nvar==1)
+    {
+        phiTol = 1.0;
+        phirest = 0.0;
+        dphidtTol = 0.1;
+    }
+
+    // NekDouble thresholdphim = 70.0;
+    NekDouble fnewsum, phidiff;
     for (int i = 0; i < nq; ++i)
     {
-        phimdiff = field[i] - m_phimrest;
+        phidiff = field[i] - phirest;
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((phimdiff > m_phimTol) && (dudt[i] > m_dphimdtTol))
+        if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
         {
             // Gradient as the main weight
-            fnewsum = dudt[i] + dudtHistory[i];
+            fnewsum = dphidt[i] + dphidtint[i];
 
-            if(fabs(fnewsum) > m_dphimdtTol)
+            if(fabs(fnewsum) > dphidtTol)
             {
-                TimeMap[i] = (dudt[i] * time + dudtHistory[i] * TimeMap[i]) / fnewsum;
+                TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
             }
 
-            dudtHistory[i] += dudt[i];
-        }
-
-        if( (field[i]>=thresholdphim) && (Thresholdtime[i]<=0.0) )
-        {
-            Thresholdtime[i] = time;
+            dphidtint[i] += dphidt[i];
         }
 
         for (int n=0; n<m_numfiber; ++n)
         {
-            if ( zoneindex[n][i] == 0 )
+            if (zoneindex[n][i] == 0)
             {
                 TimeMap[i] = 0.0;
             }
@@ -2737,8 +2763,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 
 void MMFNeuralEP::PlotNeuralTimeMap(
     const Array<OneD, const NekDouble> &phim,
-    const Array<OneD, const NekDouble> &Thresholdtime,
-    const Array<OneD, const NekDouble> &TimeMap,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
     int nvar    = 6;
@@ -2755,16 +2780,16 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "TimeMap";
-    variables[1] = "Thresholdtime";
+    variables[0] = "TimeMap_phim";
+    variables[1] = "TimeMap_phie";
     variables[2] = "phim";
     variables[3] = "phie";
     variables[4] = "CSDm";
     variables[5] = "CSDe";
 
     // Time Map and its velocity
-    m_fields[0]->FwdTransLocalElmt(TimeMap, fieldcoeffs[0]);
-    m_fields[0]->FwdTransLocalElmt(Thresholdtime, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[1]);
 
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
@@ -4116,9 +4141,9 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Number_Fiber", m_numfiber);
     SolverUtils::AddSummaryItem(s, "Total_Number_Node", m_totNode);
 
-    SolverUtils::AddSummaryItem(s, "phimrest", m_phimrest);
-    SolverUtils::AddSummaryItem(s, "phimTol", m_phimTol);
-    SolverUtils::AddSummaryItem(s, "dphimdtTol", m_dphimdtTol);
+    // SolverUtils::AddSummaryItem(s, "phimrest", m_phimrest);
+    // SolverUtils::AddSummaryItem(s, "phimTol", m_phimTol);
+    // SolverUtils::AddSummaryItem(s, "dphimdtTol", m_dphimdtTol);
 
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
