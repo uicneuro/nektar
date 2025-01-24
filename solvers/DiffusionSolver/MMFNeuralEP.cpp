@@ -116,7 +116,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("FiberAngle", m_fiberangle, 0.0);
     m_session->LoadParameter("FiberWidth", m_fiberwidth, 0.01);
     m_session->LoadParameter("FiberGap", m_fibergap, 0.01);
-    m_session->LoadParameter("FiberHeightDiff", m_fiberheightdiff, 0.0);
     m_session->LoadParameter("FiberCurvature", m_fibercurvature, 0.8);
 
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
@@ -1283,12 +1282,16 @@ int MMFNeuralEP::ConstantCurvedFiberIndex(const int fibern,
     fiberend = angle0 + 3*nodetheta + totNnode*(nodetheta+myelintheta);
 
     rad = sqrt(xi*xi + yi*yi);
-    theta = atan2(yi/rad,xi/fibercurvature);
+    theta = atan2(yi/rad,xi/rad);
+
+    if(theta<0)
+    {
+        theta = theta + 2*m_pi;
+    }
 
     radbottom = fibercurvature + (2*fibern+1)*0.01;
     radtop = radbottom + 0.01;
 
-    std::cout << "fibern = " << fibern << ", radbottom = " << radbottom << std::endl;
     if( (rad>radbottom) && (rad<radtop) )
     {
         if ( (theta > fiberstart ) && (theta < fiberend)  )
@@ -4104,8 +4107,8 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "FiberAngle", m_fiberangle);
     SolverUtils::AddSummaryItem(s, "FiberWidth", m_fiberwidth);
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
-    SolverUtils::AddSummaryItem(s, "FiberHeightDiff", m_fiberheightdiff);
     SolverUtils::AddSummaryItem(s, "Radiusfiberbundle", m_radiusfiberbundle);
+    SolverUtils::AddSummaryItem(s, "FiberCurvature", m_fibercurvature);
 
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);

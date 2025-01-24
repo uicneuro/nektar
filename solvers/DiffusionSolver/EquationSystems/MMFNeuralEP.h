@@ -241,7 +241,7 @@ protected:
     Array<OneD, NekDouble> m_fiberleft;
     Array<OneD, NekDouble> m_fiberright;
 
-    NekDouble m_fiberwidth, m_fibergap, m_fiberheightdiff;
+    NekDouble m_fiberwidth, m_fibergap;
     NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
