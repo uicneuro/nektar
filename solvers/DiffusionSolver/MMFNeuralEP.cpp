@@ -2610,7 +2610,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            // PlotNeuralTimeMap(fields[0], m_TimeMap, nchk);
+            PlotNeuralTimeMap(fields, m_TimeMap, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
@@ -2762,7 +2762,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 
 
 void MMFNeuralEP::PlotNeuralTimeMap(
-    const Array<OneD, const NekDouble> &phim,
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
@@ -2794,10 +2794,10 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[2]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
 
-    Array<OneD, NekDouble> CSDm = ComputeMMFDiffusion(m_movingframes, phim);
+    Array<OneD, NekDouble> CSDm = ComputeMMFDiffusion(m_movingframes, fields[0]);
     Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_unitmovingframes, phie);
 
     m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[4]);

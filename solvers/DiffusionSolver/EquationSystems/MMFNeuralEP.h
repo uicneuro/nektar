@@ -624,10 +624,11 @@ protected:
                             Array<OneD, NekDouble> &dphidtint,
                             Array<OneD, NekDouble> &TimeMap);
                                 
-    void PlotNeuralTimeMap(
-        const Array<OneD, const NekDouble> &phim,
-        const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
-        const int nstep);
+void PlotNeuralTimeMap(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep);
+
 
 void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   const Array<OneD, const NekDouble> &dudt,
