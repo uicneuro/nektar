@@ -2562,10 +2562,14 @@ void MMFNeuralEP::DoSolveMMF()
     // NekDouble fiber1center = 0.5*(m_fiber1left + m_fiber1right);
     // NekDouble fiber2center = 0.5*(m_fiber2left + m_fiber2right);
 
+    NekDouble Maxphi;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save fields into fieldsold
-        Vmath::Vcopy(nq, &fields[0][0], 1, &fields_old[0][0], 1);
+        for (int n=0; n<nvariables; ++n)
+        {
+            Vmath::Vcopy(nq, &fields[n][0], 1, &fields_old[n][0], 1);
+        }
 
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
@@ -2577,13 +2581,14 @@ void MMFNeuralEP::DoSolveMMF()
         cpuTime += elapsed;
 
         // Compute normalized dudt
-        NekDouble Maxphim = Vmath::Vamax(nq, fields[0], 1);
-        Array<OneD, NekDouble> tmp(nq);
+        Vmath::Vcopy(nq, &(m_fields[1]->GetPhys())[0], 1, &fields[1][0], 1);
 
         for (int n=0; n<nvariables; ++n)
         {
+            Maxphi = Vmath::Vamax(nq, fields[n], 1);
+
             Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
-            Vmath::Smul(nq, 1.0 / (m_timestep * Maxphim), dphidt[n], 1, dphidt[n], 1);
+            Vmath::Smul(nq, 1.0 / (m_timestep * Maxphi), dphidt[n], 1, dphidt[n], 1);
         }
 
        // Compute TimeMap
@@ -2788,6 +2793,9 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[5] = "CSDe";
 
     // Time Map and its velocity
+    std::cout << "TimeMap Max: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) << ", phie = " 
+    << Vmath::Vmax(nq, TimeMap[1], 1) << std::endl;
+
     m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[0]);
     m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[1]);
 
