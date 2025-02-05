@@ -2793,14 +2793,17 @@ void MMFNeuralEP::PlotNeuralTimeMap(
     variables[5] = "CSDe";
 
     // Time Map and its velocity
-    std::cout << "TimeMap Max: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) << ", phie = " 
-    << Vmath::Vmax(nq, TimeMap[1], 1) << std::endl;
-
+    std::cout << "phim: TimeMap Max = " << Vmath::Vmax(nq, TimeMap[0], 1) 
+    << " for Max = " << Vmath::Vmax(nq, fields[0], 1) << std::endl;
+    
     m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[0]);
     m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[1]);
 
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+
+    std::cout << "phie: TimeMap Max = " << Vmath::Vmax(nq, TimeMap[1], 1) 
+    << " for Max = " << Vmath::Vmax(nq, phie, 1) << std::endl;
 
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[2]);
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
