@@ -327,6 +327,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
+    Array<OneD, Array<OneD, NekDouble>> m_PhieCurrent;
 
     Array<OneD, int> m_InternalBoundary;
 
@@ -617,16 +618,21 @@ protected:
 
 
 
-    void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
-                            const Array<OneD, const Array<OneD, int>> &zoneindex,
-                            const Array<OneD, const NekDouble> &field,
-                            const Array<OneD, const NekDouble> &dphidt,
-                            Array<OneD, NekDouble> &dphidtint,
-                            Array<OneD, NekDouble> &TimeMap);
-                                
-void PlotNeuralTimeMap(
-    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
+                        const Array<OneD, const Array<OneD, int>> &zoneindex,
+                        const Array<OneD, const NekDouble> &field,
+                        const Array<OneD, const NekDouble> &dphidt,
+                        Array<OneD, NekDouble> &dphidtint,
+                        Array<OneD, NekDouble> &TimeMap);
+
+void ComputeNeuralPhieCurrent(const NekDouble timestep,
+                                const NekDouble time,
+                                const Array<OneD, const Array<OneD, NekDouble>> &field,
+                                Array<OneD, Array<OneD, NekDouble>> &PhieCurrent);
+
+void PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
     const int nstep);
 
 
