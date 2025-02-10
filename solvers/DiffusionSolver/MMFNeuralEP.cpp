@@ -2732,8 +2732,9 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 {
     int nq = GetTotPoints();
 
-    int phiTol, phirest;
-    int dphidtTol = 1.0;
+    NekDouble phiTol = 1.0;
+    NekDouble phirest = 0.0;
+    NekDouble dphidtTol = 1.0;
 
     if (nvar==0)
     {
