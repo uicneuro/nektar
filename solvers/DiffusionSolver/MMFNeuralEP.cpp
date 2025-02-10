@@ -2612,7 +2612,7 @@ void MMFNeuralEP::DoSolveMMF()
                ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
             }
 
-            ComputeNeuralPhieCurrent(m_timestep, m_time, fields, m_PhieCurrent);
+            ComputeNeuralPhieCurrent(m_time, fields, m_PhieCurrent);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2782,8 +2782,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 // PhieCurrent[1] = \int CSD_e dt
 // PhieCurrent[2] = \int \phim CSD_e dt / \int \phi_m dt
 // PhieCurrent[3] = \int t CSD_e dt / \int CSD_e dt
-void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble timestep,
-                                    const NekDouble time,
+void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble time,
                                     const Array<OneD, const Array<OneD, NekDouble>> &field,
                                     Array<OneD, Array<OneD, NekDouble>> &PhieCurrent)
 {
@@ -2797,33 +2796,29 @@ void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble timestep,
     Vmath::Vcopy(nq, &field[0][0], 1, &phim[0], 1);
     Vmath::Vcopy(nq, &field[1][0], 1, &phie[0], 1);
 
+    // CSDe is negative such that it diminishes the total currenty by phi_m
     Array<OneD, NekDouble> CSDe;
     CSDe = ComputeMMFDiffusion(m_movingframes, phie);
-
-    Vmath::Smul(nq, timestep, CSDe, 1, CSDe, 1);
+    Vmath::Smul(nq, -1.0, CSDe, 1, CSDe, 1);
 
     NekDouble phiesum, phiecurrentsum;
     for (int i = 0; i < nq; ++i)
     {
-        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        // if (phim[i] > phiTol)
-        // {
-            // PhieCurrent[0] = \int \phi_m dt
-        phiesum = phim[i] + timestep * PhieCurrent[0][i];
-        phiecurrentsum = CSDe[i] + timestep * PhieCurrent[1][i];
-
-        if( phiesum > Tol)
+        // If phi_m is positive, compute phie_weighted_current
+        if (phim[i] > Tol)
         {
+            phiesum = phim[i] + PhieCurrent[0][i];
             PhieCurrent[2][i] = (phim[i] * CSDe[i] + PhieCurrent[0][i] * PhieCurrent[1][i]) / phiesum;
+            PhieCurrent[0][i] = phiesum;
         }
 
-        if( phiecurrentsum > Tol)
+        // If CSD_e is positive, compute phie_current
+        if( CSDe[i] > Tol )
         {
-            PhieCurrent[3][i] = (time * CSDe[i] + PhieCurrent[3][i] * PhieCurrent[1][i]) / phiecurrentsum;
+            phiecurrentsum = CSDe[i] + PhieCurrent[1][i];
+            PhieCurrent[3][i] = (time * CSDe[i] + PhieCurrent[3][i] * PhieCurrent[1][i]) / phiecurrentsum;            
+            PhieCurrent[1][i] = phiecurrentsum;
         }
-
-        PhieCurrent[0][i] = phiesum;
-        PhieCurrent[1][i] = phiecurrentsum;
     }
 }
 
