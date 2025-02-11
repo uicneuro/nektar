@@ -625,11 +625,13 @@ void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
                         Array<OneD, NekDouble> &dphidtint,
                         Array<OneD, NekDouble> &TimeMap);
 
-void ComputeNeuralPhieCurrent(const NekDouble time,
-                                const Array<OneD, const Array<OneD, NekDouble>> &field,
-                                Array<OneD, Array<OneD, NekDouble>> &PhieCurrent);
+void ComputePhieCurrent(const NekDouble time,
+                        const NekDouble timestep,
+                        const Array<OneD, const Array<OneD, NekDouble>> &field,
+                        Array<OneD, Array<OneD, NekDouble>> &PhieCurrent);
 
 void PlotNeuralEP(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
     const int nstep);

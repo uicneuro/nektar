@@ -2612,7 +2612,7 @@ void MMFNeuralEP::DoSolveMMF()
                ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
             }
 
-            ComputeNeuralPhieCurrent(m_time, fields, m_PhieCurrent);
+            ComputePhieCurrent(m_time, m_timestep, fields, m_PhieCurrent);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2629,7 +2629,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralEP(m_TimeMap, m_PhieCurrent, nchk);
+            PlotNeuralEP(fields, m_TimeMap, m_PhieCurrent, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
@@ -2783,7 +2783,8 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 // PhieCurrent[1] = \int CSD_e dt
 // PhieCurrent[2] = \int \phim CSD_e dt / \int \phi_m dt
 // PhieCurrent[3] = \int t CSD_e dt / \int CSD_e dt
-void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble time,
+void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
+                                    const NekDouble timestep,
                                     const Array<OneD, const Array<OneD, NekDouble>> &field,
                                     Array<OneD, Array<OneD, NekDouble>> &PhieCurrent)
 {
@@ -2808,7 +2809,7 @@ void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble time,
         // If phi_m is positive, compute phie_weighted_current
         if (phim[i] > Tol)
         {
-            phiesum = phim[i] + PhieCurrent[0][i];
+            phiesum = timestep * phim[i] + PhieCurrent[0][i];
             PhieCurrent[2][i] = (phim[i] * CSDe[i] + PhieCurrent[0][i] * PhieCurrent[1][i]) / phiesum;
             PhieCurrent[0][i] = phiesum;
         }
@@ -2816,7 +2817,7 @@ void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble time,
         // If CSD_e is positive, compute phie_current
         if( CSDe[i] > Tol )
         {
-            phiecurrentsum = CSDe[i] + PhieCurrent[1][i];
+            phiecurrentsum = timestep * CSDe[i] + PhieCurrent[1][i];
             PhieCurrent[3][i] = (time * CSDe[i] + PhieCurrent[3][i] * PhieCurrent[1][i]) / phiecurrentsum;            
             PhieCurrent[1][i] = phiecurrentsum;
         }
@@ -2825,11 +2826,12 @@ void MMFNeuralEP::ComputeNeuralPhieCurrent(const NekDouble time,
 
 
 void MMFNeuralEP::PlotNeuralEP(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
     const int nstep)
 {
-    int nvar    = 6;
+    int nvar    = 8;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2849,6 +2851,8 @@ void MMFNeuralEP::PlotNeuralEP(
     variables[3] = "phieCurr_int";
     variables[4] = "PhieCurrWTphim_int";
     variables[5] = "PhieCurrWTtime_int";
+    variables[6] = "CSDm";
+    variables[7] = "CSDe";
 
     // Time Map and its velocity
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) 
@@ -2869,20 +2873,14 @@ void MMFNeuralEP::PlotNeuralEP(
         m_fields[0]->FwdTransLocalElmt(PhieCurrent[i], fieldcoeffs[2+i]);
     }
 
-    // Array<OneD, NekDouble> phie(nq);
-    // Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+    Array<OneD, NekDouble> CSDm;
+    Array<OneD, NekDouble> CSDe;
 
-    // std::cout << "phie: TimeMap Max = " << Vmath::Vmax(nq, TimeMap[1], 1) 
-    // << " for Max = " << Vmath::Vmax(nq, phie, 1) << std::endl;
+    CSDm = ComputeMMFDiffusion(m_movingframes, fields[0]);
+    CSDe = ComputeMMFDiffusion(m_movingframes, fields[1]);
 
-    // m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[2]);
-    // m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
-
-    // Array<OneD, NekDouble> CSDm = ComputeMMFDiffusion(m_movingframes, fields[0]);
-    // Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_unitmovingframes, phie);
-
-    // m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[4]);
-    // m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[7]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
