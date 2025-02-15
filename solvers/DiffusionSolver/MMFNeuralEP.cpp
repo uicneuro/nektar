@@ -2612,7 +2612,7 @@ void MMFNeuralEP::DoSolveMMF()
                ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
             }
 
-            ComputePhieCurrent(m_time, m_timestep, fields, m_PhieCurrent);
+            ComputePhieCurrent(m_time, fields, m_PhieCurrent);
         }
 
         if (m_session->GetComm()->GetRank() == 0 && !((step + 1) % m_infosteps))
@@ -2629,7 +2629,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralEP(fields, m_TimeMap, m_PhieCurrent, nchk);
+            PlotNeuralEP(m_timestep, fields, m_TimeMap, m_PhieCurrent, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
@@ -2784,7 +2784,6 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 // PhieCurrent[2] = \int \phim CSD_e dt / \int \phi_m dt
 // PhieCurrent[3] = \int t CSD_e dt / \int CSD_e dt
 void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
-                                    const NekDouble timestep,
                                     const Array<OneD, const Array<OneD, NekDouble>> &field,
                                     Array<OneD, Array<OneD, NekDouble>> &PhieCurrent)
 {
@@ -2799,25 +2798,26 @@ void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
     Vmath::Vcopy(nq, &field[1][0], 1, &phie[0], 1);
 
     // CSDe is negative such that it diminishes the total currenty by phi_m
-    Array<OneD, NekDouble> CSDe;
-    CSDe = ComputeMMFDiffusion(m_movingframes, phie);
-    Vmath::Smul(nq, -1.0, CSDe, 1, CSDe, 1);
+    Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_movingframes, phie);
 
-    NekDouble phiesum, phiecurrentsum;
+    Vmath::Vmul(nq, m_intrazone, 1, CSDe, 1, CSDe, 1);
+    Vmath::Smul(nq, -1.0/(m_Cn * m_Rf), CSDe, 1, CSDe, 1);
+
+    NekDouble phimsum, phiecurrentsum;
     for (int i = 0; i < nq; ++i)
     {
         // If phi_m is positive, compute phie_weighted_current
         if (phim[i] > Tol)
         {
-            phiesum = timestep * phim[i] + PhieCurrent[0][i];
-            PhieCurrent[2][i] = (phim[i] * CSDe[i] + PhieCurrent[0][i] * PhieCurrent[1][i]) / phiesum;
-            PhieCurrent[0][i] = phiesum;
+            phimsum = phim[i] + PhieCurrent[0][i];
+            PhieCurrent[2][i] = (phim[i] * CSDe[i] + PhieCurrent[0][i] * PhieCurrent[1][i]) / phimsum;
+            PhieCurrent[0][i] = phimsum;
         }
 
         // If CSD_e is positive, compute phie_current
         if( CSDe[i] > Tol )
         {
-            phiecurrentsum = timestep * CSDe[i] + PhieCurrent[1][i];
+            phiecurrentsum = CSDe[i] + PhieCurrent[1][i];
             PhieCurrent[3][i] = (time * CSDe[i] + PhieCurrent[3][i] * PhieCurrent[1][i]) / phiecurrentsum;            
             PhieCurrent[1][i] = phiecurrentsum;
         }
@@ -2826,6 +2826,7 @@ void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
 
 
 void MMFNeuralEP::PlotNeuralEP(
+    const NekDouble timestep,
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
@@ -2868,10 +2869,17 @@ void MMFNeuralEP::PlotNeuralEP(
     << ", PhieCurrWTphim_int = " << Vmath::Vmax(nq, PhieCurrent[2], 1)
     << ", PhieCurrWTtime_int = " << Vmath::Vmax(nq, PhieCurrent[3], 1) << std::endl;
 
-    for (int i=0; i<4; ++i)
-    {
-        m_fields[0]->FwdTransLocalElmt(PhieCurrent[i], fieldcoeffs[2+i]);
-    }
+    // phi_m_int
+    Array<OneD, NekDouble> tmp(nq);
+
+    Vmath::Smul(nq, timestep, &PhieCurrent[0][0], 1, &tmp[0], 1);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[2]);
+
+    Vmath::Smul(nq, timestep, &PhieCurrent[1][0], 1, &tmp[0], 1);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[3]);
+
+    Vmath::Smul(nq, timestep, &PhieCurrent[2][0], 1, &tmp[0], 1);
+    Vmath::Smul(nq, timestep, &PhieCurrent[3][0], 1, &tmp[0], 1);
 
     Array<OneD, NekDouble> CSDm;
     Array<OneD, NekDouble> CSDe;
