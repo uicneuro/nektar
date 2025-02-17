@@ -626,6 +626,7 @@ void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
                         Array<OneD, NekDouble> &TimeMap);
 
 void ComputePhieCurrent(const NekDouble time,
+                        const NekDouble timestep,
                         const Array<OneD, const Array<OneD, NekDouble>> &field,
                         Array<OneD, Array<OneD, NekDouble>> &PhieCurrent);
 
