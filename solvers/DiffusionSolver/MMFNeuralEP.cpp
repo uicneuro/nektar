@@ -2629,7 +2629,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralEP(m_timestep, fields, m_TimeMap, m_PhieCurrent, nchk);
+            PlotNeuralEP(fields, m_TimeMap, m_PhieCurrent, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
@@ -2809,7 +2809,7 @@ void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
     for (int i = 0; i < nq; ++i)
     {
         dtphim = timestep * phim[i];
-        dtCSDe = timestep * CSDe[i];
+        dtCSDe = timestep * (timestep * CSDe[i]);
 
         // If phi_m is positive, compute phie_weighted_current
         if (phim[i] > Tol)
@@ -2831,7 +2831,6 @@ void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
 
 
 void MMFNeuralEP::PlotNeuralEP(
-    const NekDouble timestep,
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
@@ -2880,14 +2879,10 @@ void MMFNeuralEP::PlotNeuralEP(
     // phi_m_int
     Array<OneD, NekDouble> tmp(nq);
 
-    Vmath::Smul(nq, timestep, &PhieCurrent[0][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[4]);
-
-    Vmath::Smul(nq, timestep, &PhieCurrent[1][0], 1, &tmp[0], 1);
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[5]);
-
-    m_fields[0]->FwdTransLocalElmt(PhieCurrent[2], fieldcoeffs[6]);
-    m_fields[0]->FwdTransLocalElmt(PhieCurrent[3], fieldcoeffs[7]);
+    for (int i=0; i<4; ++i)
+    {
+        m_fields[0]->FwdTransLocalElmt(PhieCurrent[i], fieldcoeffs[4+i]);
+    }
 
     // Array<OneD, NekDouble> CSDm;
     // Array<OneD, NekDouble> CSDe;
