@@ -401,6 +401,32 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                             m_myelinlen, m_nodeinitdown, m_nodeinitup,
                             m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
 
+            // Display zoneindex distribution
+            int cntout, cntmyel, cntnode;
+            for (int n=0; n<m_numfiber; ++n)
+            {
+                cntout=0; cntmyel=0; cntnode=0;
+                for (int i=0; i<nq; ++i)
+                {
+                    if(m_zoneindexfiber[n][i]==-2)
+                    {
+                        cntout++;
+                    }
+                    
+                    else if(m_zoneindexfiber[n][i]==-1)
+                    {
+                        cntmyel++;
+                    }
+
+                    else if(m_zoneindexfiber[n][i]>=0)
+                    {
+                        cntnode++;
+                    }
+                }
+                std::cout << "fiber " << n << ": extspace = " << 100.0*cntout/nq 
+                << ", myelin = " << 100.0*cntmyel/nq << ", node = " << 100.0*cntnode/nq << std::endl;
+            }
+
             // If all node zone = index = 1 for myelin. 
             if(m_MediumType==eAllNode)
             {
@@ -1089,13 +1115,13 @@ void MMFNeuralEP::IndexNodeZone2D(
         Getcellavg(xcell,ycell,zcell);
 
         NekDouble xi, yi;
-        for (int i=0; i<nq; ++i)
-        {
-            xi = xcell[i];
-            yi = ycell[i];
-
-            for (int n=0; n<numfiber; ++n)
+        for (int n=0; n<numfiber; ++n)
+         {
+            for (int i=0; i<nq; ++i)
             {
+                xi = xcell[i];
+                yi = ycell[i];
+
                 outarray[n][i] = -2;
                 if( (m_FiberType==eLinearAligned) || (m_FiberType==eLinearMisAligned) )
                 {
@@ -1221,8 +1247,7 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
     const NekDouble nodeinitdown, const NekDouble nodeinitup, 
     const int fiberorder, const NekDouble xi, const NekDouble yi)
     {
-        int index=0;
-
+        int index = -2;
         switch(FiberType)
         {
             case eLinearAligned:
