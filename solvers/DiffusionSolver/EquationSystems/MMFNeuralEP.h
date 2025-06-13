@@ -633,7 +633,6 @@ void ComputePhieCurrent(const NekDouble time,
 void PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
-    const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
     const int nstep);
 
 

@@ -474,59 +474,38 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
     m_MMFdir = FindMMFdir(MMFdirStr);
 
-    Array<OneD, Array<OneD, NekDouble>> unitAniStrength(m_expdim);
-    // for (int j = 0; j < m_expdim; ++j)
-    // {
-    //     unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-    // }
-    
-    // int index;
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     for (int j = 0; j < m_expdim; ++j)
-    //     {
-    //         if(m_zoneindex[0][i] == -2)
-    //         {
-    //             unitAniStrength[j][i] = 0.0;
-    //         }
-
-    //         for (int n=0; n<m_numfiber; ++n)
-    //         {
-    //             index = m_zoneindexfiber[n][i];
-    //             if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
-    //             {
-    //                 unitAniStrength[j][i] = 1.0;
-    //             }
-    //         }
-
-    //     }
-    // }
-
+    Array<OneD, Array<OneD, NekDouble>> phieAniStr(m_expdim);
     for (int j = 0; j < m_expdim; ++j)
     {
-        unitAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+        phieAniStr[j] = Array<OneD, NekDouble>(nq, 1.0);
+    }
+    
+    int index;
+    for (int i = 0; i<nq; ++i)
+    {
+        index = m_zoneindex[i];
+        // Node zone
+        for (int j = 0; j < m_expdim; ++j)
+        {
+            if(index>=0)
+            {
+               phieAniStr[j][i] = 1.0/m_ratio_re_ri;
+            }
+
+            // Myelin zone
+            else if (index==-1)
+            {
+                phieAniStr[j][i] = m_AnisotropyStrength/m_ratio_re_ri;
+            }
+
+            else if (index==-2)
+            {
+                phieAniStr[j][i] = 1.0/m_ratio_re_ri;
+            }
+        }
     }
 
-    // int index, unitcn=0;
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     for (int j = 0; j < m_expdim; ++j)
-    //     {
-    //         for (int n=0; n<m_numfiber; ++n)
-    //         {
-    //             index = m_zoneindexfiber[n][i];
-    //             if( index > -2)  // either node or myeline. it's strength is zero at index = -2;
-    //             {
-    //                 unitAniStrength[j][i] = 1.0;
-    //                 unitcn++;
-    //             }
-    //         }
-    //     }
-    // }
-
-    // std::cout << "Unit Moving frames are generated with " << MMFdirStr << " direction =============== for " << unitcn << " / " << nq <<  std::endl;
-    SetUpMovingFrames(m_MMFdir, unitAniStrength, m_unitmovingframes);
-    
+    SetUpMovingFrames(m_MMFdir, phieAniStr, m_unitmovingframes);
     CheckMovingFrames(m_unitmovingframes);
 
     // Construct phiemovingframes 
@@ -2630,7 +2609,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)) ||
             doCheckTime)
         {
-            PlotNeuralEP(fields, m_TimeMap, m_PhieCurrent, nchk);
+            PlotNeuralEP(fields, m_TimeMap, nchk);
             timevec[nchk] = m_time; 
             
             if(m_numfiber==1)
@@ -2834,10 +2813,9 @@ void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
 void MMFNeuralEP::PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
-    const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
     const int nstep)
 {
-    int nvar    = 8;
+    int nvar    = 6;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2853,37 +2831,38 @@ void MMFNeuralEP::PlotNeuralEP(
     std::vector<std::string> variables(nvar);
     variables[0] = "phi_m";
     variables[1] = "phi_e";
-    variables[2] = "TimeMap_phim";
-    variables[3] = "TimeMap_phie";
-    variables[4] = "Integrated phim";
-    variables[5] = "phieCurr";
-    variables[6] = "PhieCurr_WeighteT_phim";
-    variables[7] = "Time_for_PhieCurr";
+    variables[2] = "phi_e2";
+    variables[3] = "TimeMap_phim";
+    variables[4] = "TimeMap_phie";
+    variables[5] = "TimeMap_phie2";
 
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
     m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[2]);
 
     // Time Map and its velocity
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) 
-    << ", phie = " << Vmath::Vmax(nq, TimeMap[1], 1) << std::endl;
+    << ", phie = " << Vmath::Vmax(nq, TimeMap[1], 1) 
+    << ", phie2 = " << Vmath::Vmax(nq, TimeMap[2], 1) 
+    << std::endl;
     
-    for (int i=0; i<2; ++i)
+    for (int i=0; i<3; ++i)
     {
-        m_fields[0]->FwdTransLocalElmt(TimeMap[i], fieldcoeffs[2+i]);
+        m_fields[0]->FwdTransLocalElmt(TimeMap[i], fieldcoeffs[3+i]);
     }
 
-    std::cout << "Current: phim_int Max = " << Vmath::Vmax(nq, PhieCurrent[0], 1) 
-    << ", phieCurr_int = " << Vmath::Vmax(nq, PhieCurrent[1], 1)
-    << ", PhieCurrWTphim_int = " << Vmath::Vmax(nq, PhieCurrent[2], 1)
-    << ", PhieCurrWTtime_int = " << Vmath::Vmax(nq, PhieCurrent[3], 1) << std::endl;
+    // std::cout << "Current: phim_int Max = " << Vmath::Vmax(nq, PhieCurrent[0], 1) 
+    // << ", phieCurr_int = " << Vmath::Vmax(nq, PhieCurrent[1], 1)
+    // << ", PhieCurrWTphim_int = " << Vmath::Vmax(nq, PhieCurrent[2], 1)
+    // << ", PhieCurrWTtime_int = " << Vmath::Vmax(nq, PhieCurrent[3], 1) << std::endl;
 
-    // phi_m_int
-    Array<OneD, NekDouble> tmp(nq);
+    // // phi_m_int
+    // Array<OneD, NekDouble> tmp(nq);
 
-    for (int i=0; i<4; ++i)
-    {
-        m_fields[0]->FwdTransLocalElmt(PhieCurrent[i], fieldcoeffs[4+i]);
-    }
+    // for (int i=0; i<4; ++i)
+    // {
+    //     m_fields[0]->FwdTransLocalElmt(PhieCurrent[i], fieldcoeffs[4+i]);
+    // }
 
     // Array<OneD, NekDouble> CSDm;
     // Array<OneD, NekDouble> CSDe;
@@ -2927,99 +2906,6 @@ void MMFNeuralEP::PlotAnisotropy(
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
-
-
-// void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
-// Array<OneD, NekDouble> &excitezone1, 
-// Array<OneD, NekDouble> &nodezone1, 
-// Array<OneD, NekDouble> &intrazone1, 
-// Array<OneD, NekDouble> &extrazone)
-// {
-//     int nvar    = 5;
-//     int nq      = m_fields[0]->GetTotPoints();
-//     int ncoeffs = m_fields[0]->GetNcoeffs();
-
-//     std::string outname1 = m_sessionName + "_zone.chk";
-
-//     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-//     for (int i = 0; i < nvar; ++i)
-//     {
-//         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-//     }
-
-//     std::vector<std::string> variables(nvar);
-//     variables[0] = "zoneindex";
-//     variables[1] = "excite1";
-//     variables[2] = "node1";
-//     variables[3] = "intra1";
-//     variables[4] = "extra";
-
-//     Array<OneD, NekDouble> indexzone(nq);
-//     for (int i=0; i<nq; ++i)
-//     {
-//         indexzone[i] = 1.0 * zoneindex[i];
-//     }
-
-//     m_fields[0]->FwdTransLocalElmt(indexzone, fieldcoeffs[0]);
-//     m_fields[0]->FwdTransLocalElmt(excitezone1, fieldcoeffs[1]);
-//     m_fields[0]->FwdTransLocalElmt(nodezone1, fieldcoeffs[2]);
-//     m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[3]);
-//     m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[4]);
-
-//     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-// }
-
-// void MMFNeuralEP::PlotZone(const Array<OneD, const int> &zoneindex,
-// Array<OneD, NekDouble> &excitezone1, 
-// Array<OneD, NekDouble> &excitezone2, 
-// Array<OneD, NekDouble> &nodezone1, 
-// Array<OneD, NekDouble> &nodezone2, 
-// Array<OneD, NekDouble> &intrazone1, 
-// Array<OneD, NekDouble> &intrazone2, 
-// Array<OneD, NekDouble> &extrazone)
-// {
-//     int nvar    = 8;
-//     int nq      = m_fields[0]->GetTotPoints();
-//     int ncoeffs = m_fields[0]->GetNcoeffs();
-
-//     std::string outname1 = m_sessionName + "_zone.chk";
-
-//     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-//     for (int i = 0; i < nvar; ++i)
-//     {
-//         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-//     }
-
-//     std::vector<std::string> variables(nvar);
-//     variables[0] = "zoneindex";
-//     variables[1] = "excite1";
-//     variables[2] = "excite2";
-//     variables[3] = "node1";
-//     variables[4] = "node2";
-//     variables[5] = "intra1";
-//     variables[6] = "intra2";
-//     variables[7] = "extra";
-
-//     Array<OneD, NekDouble> indexzone(nq);
-//     for (int i=0; i<nq; ++i)
-//     {
-//         indexzone[i] = 1.0 * zoneindex[i];
-//     }
-
-//     m_fields[0]->FwdTransLocalElmt(indexzone, fieldcoeffs[0]);
-
-//     m_fields[0]->FwdTransLocalElmt(excitezone1, fieldcoeffs[1]);
-//     m_fields[0]->FwdTransLocalElmt(excitezone2, fieldcoeffs[2]);
-
-//     m_fields[0]->FwdTransLocalElmt(nodezone1, fieldcoeffs[3]);
-//     m_fields[0]->FwdTransLocalElmt(nodezone2, fieldcoeffs[4]);
-
-//     m_fields[0]->FwdTransLocalElmt(intrazone1, fieldcoeffs[5]);
-//     m_fields[0]->FwdTransLocalElmt(intrazone2, fieldcoeffs[6]);
-//     m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[7]);
-
-//     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-// }
 
 void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   const Array<OneD, const NekDouble> &dudt,
@@ -3829,8 +3715,14 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
     Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
-    // subtract the current from the divergence of phie
-    // Vmath::Vadd(nq, &extcurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
+    // Time marching for phie 
+    Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_unitmovingframes, phie);
+ 
+    Vmath::Vmul(nq, m_extrazone, 1, phiediffusion, 1, phiediffusion, 1);
+    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), phiediffusion, 1, phiediffusion, 1);
+ 
+    Vmath::Vadd(nq, &phiediffusion[0], 1, &outarray[1][0], 1, &outarray[1][0], 1);
+ 
 
     if (m_explicitDiffusion)
     {
@@ -3885,13 +3777,13 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-    Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, m_fields[1]->UpdatePhys(), 1);
-    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
+    Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, m_fields[2]->UpdatePhys(), 1);
+    m_fields[1]->HelmSolve(m_fields[2]->GetPhys(), m_fields[2]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    m_fields[1]->BwdTrans(m_fields[2]->GetCoeffs(), m_fields[2]->UpdatePhys());
 
-    outarray = m_fields[1]->GetPhys();
+    outarray = m_fields[2]->GetPhys();
 
-    m_fields[1]->SetPhysState(true);
+    m_fields[2]->SetPhysState(true);
     
     return outarray;
 }
@@ -4012,100 +3904,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
     return outarray;
 }
-
-
-// void MMFNeuralEP::SetMembraneBoundaryCondition(const NekDouble time)
-// {
-//     std::string varName;
-//     int cnt        = 0;
-//     int nvariables = m_fields.size();
-//     int nTracePts  = GetTraceTotPoints();
-//     int nq         = GetTotPoints();
-
-//     // Extract trace for boundaries. Needs to be done on all processors to avoid
-//     // deadlock.
-//     Array<OneD, Array<OneD, NekDouble>> inarray(nvariables);
-//     Array<OneD, Array<OneD, NekDouble>> Fwd(nvariables);
-//     for (int i = 0; i < 1; ++i)
-//     {
-//         inarray[i] = Array<OneD, NekDouble>(nq);
-//         Fwd[i]     = Array<OneD, NekDouble>(nTracePts);
-
-//         Vmath::Vcopy(nq, &m_fields[i]->GetPhys()[0], 1, &inarray[i][0], 1);
-//         m_fields[i]->ExtractTracePhys(inarray[i], Fwd[i]);
-//     }
-
-//     Array<OneD, NekDouble> x0(nq);
-//     Array<OneD, NekDouble> x1(nq);
-//     Array<OneD, NekDouble> x2(nq);
-
-//     m_fields[0]->GetCoords(x0, x1, x2);
-
-//     Array<OneD, NekDouble> x0Fwd(nTracePts);
-//     Array<OneD, NekDouble> x1Fwd(nTracePts);
-//     Array<OneD, NekDouble> x2Fwd(nTracePts);
-
-//     m_fields[0]->ExtractTracePhys(x0, x0Fwd);
-//     m_fields[0]->ExtractTracePhys(x1, x1Fwd);
-//     m_fields[0]->ExtractTracePhys(x2, x2Fwd);
-
-//     Array<OneD, NekDouble> NodeZoneFwd(nTracePts);
-
-//     Array<OneD, NekDouble> NodeZoneDouble(nq);
-
-//     for (int i=0; i<nq; ++i)
-//     {
-//         NodeZoneDouble[i] = 1.0 * m_zoneindex[0][i];
-//     }
-
-//     m_fields[0]->ExtractTracePhys(NodeZoneDouble, NodeZoneFwd);
-
-//     // loop over Boundary Regions
-//     for (int n = 0; n < m_fields[0]->GetBndConditions().size(); ++n)
-//     {
-//         // Wall Boundary Condition
-//         if (boost::iequals(m_fields[0]->GetBndConditions()[n]->GetUserDefined(), "Membrane"))
-//         {
-//             int id1, id2, index, npts;
-
-//             const Array<OneD, const int> &traceBndMap = m_fields[0]->GetTraceBndMap();
-
-//             for (int e = 0; e < m_fields[0]->GetBndCondExpansions()[n]->GetExpSize(); ++e)
-//             {
-//                 npts = m_fields[0]
-//                                 ->GetBndCondExpansions()[n]
-//                                 ->GetExp(e)
-//                                 ->GetTotPoints();
-//                 id1 = m_fields[0]->GetBndCondExpansions()[n]->GetPhys_Offset(e);
-//                 id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
-
-//                 for (int i=0;i<npts;++i)
-//                 {
-//                     index = id2+i;
-//                     std::cout << "n = " << n << ", e = " << e << ", id2 = " << index << ", Zone = " << NodeZoneFwd[index] 
-//                     << " at x = " << x0Fwd[index] << ", y = " << x1Fwd[index] << std::endl;
-//                 }
-
-//                 // Pure Neumann boundary condtiion
-//                 Vmath::Vcopy(npts, &Fwd[0][id2], 1,
-//                             &(m_fields[0]
-//                                 ->GetBndCondExpansions()[n]
-//                                 ->UpdatePhys())[id1], 1);
-//             }
-//         }
-
-//         else
-//         {
-//             for (int i = 0; i < nvariables; ++i)
-//             {
-//                 varName = m_session->GetVariable(i);
-//                 m_fields[i]->EvaluateBoundaryConditions(time, varName);
-//             }
-//         }
-
-//         cnt += m_fields[0]->GetBndCondExpansions()[n]->GetExpSize();
-//     }
-// }
 
 // TO DO: IMPLEMENT Nonhomogeneous Neurann boundary conditions
 //----------------------------------------------------
