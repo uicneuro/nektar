@@ -2680,7 +2680,7 @@ void MMFSystem::ComputeCovDeriv(
                  &tmp[0], 1);
     Vmath::Vcopy(nq, &tmp[0], 1, &outarray[1][0], 1);
 
-    // j=1:  \nabla_{e_2} \vec{u} \cdot e_2 = \nabla u^2 \cdot e_2 - \omega_{21}
+    // j=1:  \nabla_{e_2} \vec{u} \cdot e_2 = \nabla u^2 \cdot e_2 + \omega_{21}
     // (e_2) u^2
     MMFDirectionalDeriv(movingframes[1], u2, duide);
     Vmath::Vvtvp(nq, &MFConnection[0][1][0], 1, &u1[0], 1, &duide[0], 1,

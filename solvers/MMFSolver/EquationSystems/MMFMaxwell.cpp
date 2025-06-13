@@ -1211,7 +1211,6 @@ void MMFMaxwell::WeakDGMaxwellDirDeriv(
             Vmath::Vadd(ncoeffs, &SpuriousDiv[0], 1, &OutField[i][0], 1, &OutField[i][0], 1);
         }
     }
-
 }
 
 

@@ -867,8 +867,6 @@ void MMFStaticDiffOp::CheckErrorRelAcc(
     <<  RootMeanSquare(RelAccCNT[1],m_MMFActivation) <<  ") " << std::endl;
 
 
-    wait_on_enter();
-
     // Array<OneD, NekDouble> ExactCovDerivTheta(nq);
     // Array<OneD, NekDouble> ExactCovDerivPhi(nq);
 
