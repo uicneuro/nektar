@@ -2513,8 +2513,8 @@ void MMFNeuralEP::DoSolveMMF()
     // Array<OneD, NekDouble> Thresholdtime(nq, 0.0);
 
 
-    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvariables);
-    for (int i = 0; i < nvariables; ++i)
+    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(2);
+    for (int i = 0; i < 2; ++i)
     {
         m_TimeMap[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -2587,7 +2587,7 @@ void MMFNeuralEP::DoSolveMMF()
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            for (int n=0; n<nvariables; ++n)
+            for (int n=0; n<2; ++n)
             {
                ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
             }
@@ -2688,7 +2688,7 @@ void MMFNeuralEP::DoSolveMMF()
 
     std::cout << "================================================= " <<std::endl;
 
-    for (i = 0; i < 1; ++i)
+    for (i = 0; i < nvariables; ++i)
     {
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
         m_fields[m_intVariables[i]]->SetPhysState(true);
@@ -2815,7 +2815,7 @@ void MMFNeuralEP::PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
-    int nvar    = 6;
+    int nvar    = 5;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2834,7 +2834,6 @@ void MMFNeuralEP::PlotNeuralEP(
     variables[2] = "phi_e2";
     variables[3] = "TimeMap_phim";
     variables[4] = "TimeMap_phie";
-    variables[5] = "TimeMap_phie2";
 
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
     m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[1]);
@@ -2846,11 +2845,13 @@ void MMFNeuralEP::PlotNeuralEP(
     << ", phie2 = " << Vmath::Vmax(nq, TimeMap[2], 1) 
     << std::endl;
     
-    for (int i=0; i<3; ++i)
+    for (int i=0; i<2; ++i)
     {
         m_fields[0]->FwdTransLocalElmt(TimeMap[i], fieldcoeffs[3+i]);
     }
 
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
     // std::cout << "Current: phim_int Max = " << Vmath::Vmax(nq, PhieCurrent[0], 1) 
     // << ", phieCurr_int = " << Vmath::Vmax(nq, PhieCurrent[1], 1)
     // << ", PhieCurrWTphim_int = " << Vmath::Vmax(nq, PhieCurrent[2], 1)
@@ -2873,8 +2874,6 @@ void MMFNeuralEP::PlotNeuralEP(
     // m_fields[0]->FwdTransLocalElmt(CSDm, fieldcoeffs[6]);
     // m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[7]);
 
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
 
 void MMFNeuralEP::PlotAnisotropy(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
