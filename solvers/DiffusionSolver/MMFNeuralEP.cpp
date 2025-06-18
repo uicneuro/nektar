@@ -2531,9 +2531,9 @@ void MMFNeuralEP::DoSolveMMF()
         m_PhieCurrent[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> dphidt(nvariables);
-    Array<OneD, Array<OneD, NekDouble>> dphidtint(nvariables);    
-    for (int n=0; n<nvariables; ++n)
+    Array<OneD, Array<OneD, NekDouble>> dphidt(2);
+    Array<OneD, Array<OneD, NekDouble>> dphidtint(2);    
+    for (int n=0; n<2; ++n)
     {
         dphidt[n] = Array<OneD, NekDouble>(nq, 0.0);
         dphidtint[n] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2573,9 +2573,9 @@ void MMFNeuralEP::DoSolveMMF()
         cpuTime += elapsed;
 
         // Compute normalized dudt
-        Vmath::Vcopy(nq, &(m_fields[1]->GetPhys())[0], 1, &fields[1][0], 1);
+        Vmath::Vcopy(nq, &(m_fields[2]->GetPhys())[0], 1, &fields[2][0], 1);
 
-        for (int n=0; n<nvariables; ++n)
+        for (int n=0; n<2; ++n)
         {
             Maxphi = Vmath::Vamax(nq, fields[n], 1);
 
@@ -2623,7 +2623,8 @@ void MMFNeuralEP::DoSolveMMF()
 
             else if(m_numfiber==2)
             {
-                PrintDuoCurrent(fields[0], dphidt[0], thredlocf1[nchk], thredlocf2[nchk]);
+               // PrintDuoCurrent(fields, dphidt[0], thredlocf1[nchk], thredlocf2[nchk]);
+               PrintDuoCurrent(fields);
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
@@ -2725,16 +2726,16 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 
     else if(nvar==1)
     {
-        phiTol = 1.0;
+        phiTol = 0.00001;
         phirest = 0.0;
-        dphidtTol = 0.1;
+        dphidtTol = -1000.0;
     }
 
     // NekDouble thresholdphim = 70.0;
     NekDouble fnewsum, phidiff;
     for (int i = 0; i < nq; ++i)
     {
-        phidiff = field[i] - phirest;
+        phidiff = fabs(field[i] - phirest);
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
         if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
         {
@@ -2743,7 +2744,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 
             if(fabs(fnewsum) > dphidtTol)
             {
-                TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
+                TimeMap[i] = (fabs(dphidt[i]) * time + dphidtint[i] * TimeMap[i]) / fnewsum;
             }
 
             dphidtint[i] += dphidt[i];
@@ -2984,10 +2985,7 @@ void MMFNeuralEP::PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
     std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
 }
 
-
-void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                  const Array<OneD, const NekDouble> &dudt,
-                                  NekDouble &thredlocf1, NekDouble &thredlocf2)
+void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const Array<OneD, NekDouble>> &field)
 {
     int nq      = m_fields[0]->GetTotPoints();
 
@@ -2996,103 +2994,232 @@ void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
     Array<OneD, NekDouble> x2(nq);
 
     m_fields[0]->GetCoords(x0, x1, x2);
+    Array<OneD, NekDouble> phim(nq);
     Array<OneD, NekDouble> phie(nq);
-    Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+    Array<OneD, NekDouble> phie2(nq);
 
-    Array<OneD, NekDouble> phieintra1(nq);
-    Array<OneD, NekDouble> phieintra2(nq);
+    Vmath::Vmul(nq, &m_intrazone[0], 1, &field[0][0], 1, &phim[0], 1);
+    Vmath::Vmul(nq, &m_extrazone[0], 1, &field[1][0], 1, &phie[0], 1);
+    Vmath::Vmul(nq, &m_extrazone[0], 1, &field[2][0], 1, &phie2[0], 1);
 
-    Array<OneD, NekDouble> phieextra(nq);
-    Vmath::Vmul(nq, m_intrazonefiber[0], 1, phie, 1, phieintra1, 1);
-    Vmath::Vmul(nq, m_intrazonefiber[1], 1, phie, 1, phieintra2, 1);
+    NekDouble Maxphim = Vmath::Vmax(nq, phim, 1);
+    int Maxphimid = Vmath::Imax(nq, phim, 1);
 
-    Array<OneD, NekDouble> phimintra1(nq);
-    Array<OneD, NekDouble> phimintra2(nq);
-    Array<OneD, NekDouble> phimextra(nq);
+    NekDouble Maxphie = Vmath::Vmax(nq, phie, 1);
+    int Maxphieid = Vmath::Imax(nq, phie, 1);
 
-    Vmath::Vmul(nq, m_intrazonefiber[0], 1, phim, 1, phimintra1, 1);
-    Vmath::Vmul(nq, m_intrazonefiber[1], 1, phim, 1, phimintra2, 1);
-    Vmath::Vmul(nq, m_extrazone, 1, phim, 1, phimextra, 1);
+    NekDouble Maxphie2 = Vmath::Vmax(nq, phie2, 1);
+    int Maxphie2id = Vmath::Imax(nq, phie2, 1);
 
-    Array<OneD, NekDouble> dudtintra1(nq);
-    Array<OneD, NekDouble> dudtintra2(nq);
-    Vmath::Vmul(nq, m_intrazonefiber[0], 1, dudt, 1, dudtintra1, 1);
-    Vmath::Vmul(nq, m_intrazonefiber[1], 1, dudt, 1, dudtintra2, 1);
+   std::cout << "phim: Max = " << Maxphim << " at x = " << x0[Maxphimid] << ", y = " << x1[Maxphimid] << std::endl;
+   std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << std::endl;
+   std::cout << "phie2: Max = " << Maxphie2 << " at x = " << x0[Maxphie2id] << ", y = " << x1[Maxphie2id] << std::endl;
+}
 
-    Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    // Array<OneD, NekDouble> phieintra1(nq);
+    // Array<OneD, NekDouble> phieintra2(nq);
+
+    // Array<OneD, NekDouble> phieextra(nq);
+    // Vmath::Vmul(nq, m_intrazonefiber[0], 1, phie, 1, phieintra1, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[1], 1, phie, 1, phieintra2, 1);
+
+    // Array<OneD, NekDouble> phimintra1(nq);
+    // Array<OneD, NekDouble> phimintra2(nq);
+    // Array<OneD, NekDouble> phimextra(nq);
+
+    // Vmath::Vmul(nq, m_intrazonefiber[0], 1, phim, 1, phimintra1, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[1], 1, phim, 1, phimintra2, 1);
+    // Vmath::Vmul(nq, m_extrazone, 1, phim, 1, phimextra, 1);
+
+    // Array<OneD, NekDouble> dudtintra1(nq);
+    // Array<OneD, NekDouble> dudtintra2(nq);
+    // Vmath::Vmul(nq, m_intrazonefiber[0], 1, dudt, 1, dudtintra1, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[1], 1, dudt, 1, dudtintra2, 1);
+
+    // Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
     
-    Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
-    Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
+    // Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    // Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
-    Array<OneD, NekDouble> totcurrent1(nq);
-    Array<OneD, NekDouble> totcurrent2(nq);
+    // Array<OneD, NekDouble> totcurrent1(nq);
+    // Array<OneD, NekDouble> totcurrent2(nq);
 
-    Array<OneD, NekDouble> phimcurrent1(nq);
-    Array<OneD, NekDouble> phimcurrent2(nq);
+    // Array<OneD, NekDouble> phimcurrent1(nq);
+    // Array<OneD, NekDouble> phimcurrent2(nq);
 
-    Vmath::Vmul(nq, m_intrazonefiber[0], 1, phimcurrent, 1, phimcurrent1, 1);
-    Vmath::Vmul(nq, m_intrazonefiber[1], 1, phimcurrent, 1, phimcurrent2, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[0], 1, phimcurrent, 1, phimcurrent1, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[1], 1, phimcurrent, 1, phimcurrent2, 1);
 
-    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
-    Vmath::Vmul(nq, m_intrazonefiber[0], 1, totcurrent1, 1, totcurrent1, 1);
+    // Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[0], 1, totcurrent1, 1, totcurrent1, 1);
 
-    Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent2, 1);
-    Vmath::Vmul(nq, m_intrazonefiber[1], 1, totcurrent2, 1, totcurrent2, 1);
+    // Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent2, 1);
+    // Vmath::Vmul(nq, m_intrazonefiber[1], 1, totcurrent2, 1, totcurrent2, 1);
 
-    // index:0 -> u
+    // // index:0 -> u
 
-    NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
-    NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
-    NekDouble Maxphimextra = Vmath::Vmax(nq, phimextra, 1);
+    // NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
+    // NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
+    // NekDouble Maxphimextra = Vmath::Vmax(nq, phimextra, 1);
 
-    int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
-    int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
-    int Maxphiextraindex = Vmath::Imax(nq, phimextra, 1);
+    // int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
+    // int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
+    // int Maxphiextraindex = Vmath::Imax(nq, phimextra, 1);
 
-    NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
-    NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
+    // NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
+    // NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
 
-    NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
-    NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
+    // NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
+    // NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
 
-    NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
-    NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
+    // NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
+    // NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
 
     // NekDouble Maxpositf1step = x1[Maxphim1index];
     // NekDouble Maxpositf2step = x1[Maxphim2index];
 
-    std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
-    std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
-    std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
-    std::cout << "Extraspace: phim: Max = " << Maxphimextra << " at x = " << x0[Maxphiextraindex] << std::endl;
+    // std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+    // std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+    // std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
+    // std::cout << "Extraspace: phim: Max = " << Maxphimextra << " at x = " << x0[Maxphiextraindex] << std::endl;
 
-    NekDouble tmp1, tmp2;
-    NekDouble x1loc=0.0, x2loc=0.0;
-    NekDouble dudtf1=0.0, dudtf2=0.0;
-    for (int i=0;i<nq;++i)
-    {
-        tmp1 = phimintra1[i];
-        tmp2 = phimintra2[i];
+    // NekDouble tmp1, tmp2;
+    // NekDouble x1loc=0.0, x2loc=0.0;
+    // NekDouble dudtf1=0.0, dudtf2=0.0;
+    // for (int i=0;i<nq;++i)
+    // {
+    //     tmp1 = phimintra1[i];
+    //     tmp2 = phimintra2[i];
 
-        if( (tmp1>m_phimrest) && (x1loc<x1[i]) )
-        {
-            x1loc = x1[i];
-            dudtf1 = dudt[i];
-        }
+    //     if( (tmp1>m_phimrest) && (x1loc<x1[i]) )
+    //     {
+    //         x1loc = x1[i];
+    //         dudtf1 = dudt[i];
+    //     }
 
-        if( (tmp2>m_phimrest) && (x2loc<x1[i]) )
-        {
-            x2loc = x1[i];
-            dudtf2 = dudt[i];
-        }
-    }
+    //     if( (tmp2>m_phimrest) && (x2loc<x1[i]) )
+    //     {
+    //         x2loc = x1[i];
+    //         dudtf2 = dudt[i];
+    //     }
+    // }
 
-    thredlocf1 = x1loc;
-    thredlocf2 = x2loc;
+    // thredlocf1 = x1loc;
+    // thredlocf2 = x2loc;
 
-    std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
-    std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << ", dudt = " << dudtf2 << std::endl;
-}
+    // std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
+    // std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << ", dudt = " << dudtf2 << std::endl;
+// }
+
+
+// void MMFNeuralEP::PrintDuoCurrent(const Array<OneD, const <OneD, NekDouble>> &phim,
+//                                   const Array<OneD, const NekDouble> &dudt,
+//                                   NekDouble &thredlocf1, NekDouble &thredlocf2)
+// {
+//     int nq      = m_fields[0]->GetTotPoints();
+
+//     Array<OneD, NekDouble> x0(nq);
+//     Array<OneD, NekDouble> x1(nq);
+//     Array<OneD, NekDouble> x2(nq);
+
+//     m_fields[0]->GetCoords(x0, x1, x2);
+//     Array<OneD, NekDouble> phie(nq);
+//     Vmath::Vcopy(nq, m_fields[1]->GetPhys(), 1, phie, 1);
+
+//     Array<OneD, NekDouble> phieintra1(nq);
+//     Array<OneD, NekDouble> phieintra2(nq);
+
+//     Array<OneD, NekDouble> phieextra(nq);
+//     Vmath::Vmul(nq, m_intrazonefiber[0], 1, phie, 1, phieintra1, 1);
+//     Vmath::Vmul(nq, m_intrazonefiber[1], 1, phie, 1, phieintra2, 1);
+
+//     Array<OneD, NekDouble> phimintra1(nq);
+//     Array<OneD, NekDouble> phimintra2(nq);
+//     Array<OneD, NekDouble> phimextra(nq);
+
+//     Vmath::Vmul(nq, m_intrazonefiber[0], 1, phim, 1, phimintra1, 1);
+//     Vmath::Vmul(nq, m_intrazonefiber[1], 1, phim, 1, phimintra2, 1);
+//     Vmath::Vmul(nq, m_extrazone, 1, phim, 1, phimextra, 1);
+
+//     Array<OneD, NekDouble> dudtintra1(nq);
+//     Array<OneD, NekDouble> dudtintra2(nq);
+//     Vmath::Vmul(nq, m_intrazonefiber[0], 1, dudt, 1, dudtintra1, 1);
+//     Vmath::Vmul(nq, m_intrazonefiber[1], 1, dudt, 1, dudtintra2, 1);
+
+//     Vmath::Vmul(nq, m_extrazone, 1, phie, 1, phieextra, 1);
+    
+//     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+//     Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
+
+//     Array<OneD, NekDouble> totcurrent1(nq);
+//     Array<OneD, NekDouble> totcurrent2(nq);
+
+//     Array<OneD, NekDouble> phimcurrent1(nq);
+//     Array<OneD, NekDouble> phimcurrent2(nq);
+
+//     Vmath::Vmul(nq, m_intrazonefiber[0], 1, phimcurrent, 1, phimcurrent1, 1);
+//     Vmath::Vmul(nq, m_intrazonefiber[1], 1, phimcurrent, 1, phimcurrent2, 1);
+
+//     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent1, 1);
+//     Vmath::Vmul(nq, m_intrazonefiber[0], 1, totcurrent1, 1, totcurrent1, 1);
+
+//     Vmath::Vadd(nq, phimcurrent, 1, phiecurrent, 1, totcurrent2, 1);
+//     Vmath::Vmul(nq, m_intrazonefiber[1], 1, totcurrent2, 1, totcurrent2, 1);
+
+//     // index:0 -> u
+
+//     NekDouble Maxphim1 = Vmath::Vmax(nq, phimintra1, 1);
+//     NekDouble Maxphim2 = Vmath::Vmax(nq, phimintra2, 1);
+//     NekDouble Maxphimextra = Vmath::Vmax(nq, phimextra, 1);
+
+//     int Maxphim1index = Vmath::Imax(nq, phimintra1, 1);
+//     int Maxphim2index = Vmath::Imax(nq, phimintra2, 1);
+//     int Maxphiextraindex = Vmath::Imax(nq, phimextra, 1);
+
+//     NekDouble phimMaxratio1 = 100.0 * Vmath::Vmax(nq, totcurrent1, 1) / Vmath::Vmax(nq, phimcurrent1, 1);
+//     NekDouble phimMinratio1 = 100.0 * Vmath::Vmin(nq, totcurrent1, 1) / Vmath::Vmin(nq, phimcurrent1, 1);
+
+//     NekDouble phimMaxratio2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, phimcurrent2, 1);
+//     NekDouble phimMinratio2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, phimcurrent2, 1);
+
+//     NekDouble phimMaxf1f2 = 100.0 * Vmath::Vmax(nq, totcurrent2, 1) / Vmath::Vmax(nq, totcurrent1, 1);
+//     NekDouble phimMinf1f2 = 100.0 * Vmath::Vmin(nq, totcurrent2, 1) / Vmath::Vmin(nq, totcurrent1, 1);
+
+//     // NekDouble Maxpositf1step = x1[Maxphim1index];
+//     // NekDouble Maxpositf2step = x1[Maxphim2index];
+
+//     std::cout << "fiber1: phim: Max = " << Maxphim1 << " at y = " << x1[Maxphim1index] << ", phimcurret1: Max = " << phimMaxratio1 << "  % , Min = " << phimMinratio1 << " % " << std::endl;
+//     std::cout << "fiber2: phim: Max = " << Maxphim2 << " at y = " << x1[Maxphim2index] << ", phimcurret1: Max = " << phimMaxratio2 << "  % , Min = " << phimMinratio2 << " % " << std::endl;
+//     std::cout << "Currentratio f1/f2:, Max = " << phimMaxf1f2 << ", Min = " << phimMinf1f2 << std::endl;
+//     std::cout << "Extraspace: phim: Max = " << Maxphimextra << " at x = " << x0[Maxphiextraindex] << std::endl;
+
+//     NekDouble tmp1, tmp2;
+//     NekDouble x1loc=0.0, x2loc=0.0;
+//     NekDouble dudtf1=0.0, dudtf2=0.0;
+//     for (int i=0;i<nq;++i)
+//     {
+//         tmp1 = phimintra1[i];
+//         tmp2 = phimintra2[i];
+
+//         if( (tmp1>m_phimrest) && (x1loc<x1[i]) )
+//         {
+//             x1loc = x1[i];
+//             dudtf1 = dudt[i];
+//         }
+
+//         if( (tmp2>m_phimrest) && (x2loc<x1[i]) )
+//         {
+//             x2loc = x1[i];
+//             dudtf2 = dudt[i];
+//         }
+//     }
+
+//     thredlocf1 = x1loc;
+//     thredlocf2 = x2loc;
+
+//     std::cout << "fiber1: phim: thredloc at y = " << thredlocf1 << ", dudt = " << dudtf1 << std::endl;
+//     std::cout << "fiber2: phim: thredloc at y = " << thredlocf2 << ", dudt = " << dudtf2 << std::endl;
+// }
 
 
 
@@ -3718,11 +3845,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_unitmovingframes, phie);
  
     Vmath::Vmul(nq, m_extrazone, 1, phiediffusion, 1, phiediffusion, 1);
-    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), phiediffusion, 1, phiediffusion, 1);
- 
-    Vmath::Vadd(nq, &phiediffusion[0], 1, &outarray[1][0], 1, &outarray[1][0], 1);
- 
-
+    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), &phiediffusion[0], 1, &outarray[1][0], 1);
+    
     if (m_explicitDiffusion)
     {
         // Laplacian only to the first variable
@@ -3777,8 +3901,8 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
     Vmath::Sadd(nq, -1.0 * AvgInt(phimLaplacian), phimLaplacian, 1, m_fields[2]->UpdatePhys(), 1);
-    m_fields[1]->HelmSolve(m_fields[2]->GetPhys(), m_fields[2]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    m_fields[1]->BwdTrans(m_fields[2]->GetCoeffs(), m_fields[2]->UpdatePhys());
+    m_fields[2]->HelmSolve(m_fields[2]->GetPhys(), m_fields[2]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    m_fields[2]->BwdTrans(m_fields[2]->GetCoeffs(), m_fields[2]->UpdatePhys());
 
     outarray = m_fields[2]->GetPhys();
 

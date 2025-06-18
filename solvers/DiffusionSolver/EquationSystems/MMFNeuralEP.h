@@ -640,9 +640,11 @@ void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   const Array<OneD, const NekDouble> &dudt,
                                   NekDouble &thredlocf1);
                                   
-void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
-                                    const Array<OneD, const NekDouble> &dudt,
-                                    NekDouble &thredlocf1, NekDouble &thredlocf2);
+void PrintDuoCurrent(const Array<OneD, const Array<OneD, NekDouble>> &field);
+
+// void PrintDuoCurrent(const Array<OneD, const <OneD, NekDouble>> &field),
+//                                     const Array<OneD, const NekDouble> &dudt,
+//                                     NekDouble &thredlocf1, NekDouble &thredlocf2);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
