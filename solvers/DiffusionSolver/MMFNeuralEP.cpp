@@ -500,7 +500,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
             else if (index==-2)
             {
-                phieAniStr[j][i] = 1.0/m_ratio_re_ri;
+                phieAniStr[j][i] = m_phiefactor;
             }
         }
     }
@@ -945,7 +945,7 @@ void MMFNeuralEP::Getphiemovingframes(
         NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
 
         // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
-        NekDouble phiedist = PhieMultFactor / axoncrossA;
+        NekDouble m_phiefactor = PhieMultFactor / axoncrossA;
 
         for (int i = 0; i<nq; ++i)
         {
@@ -966,7 +966,7 @@ void MMFNeuralEP::Getphiemovingframes(
 
                 else if (index==-2)
                 {
-                    sigma_e[j][i] = phiedist;
+                    sigma_e[j][i] = m_phiefactor;
                 }
             }
         }
@@ -2614,7 +2614,7 @@ void MMFNeuralEP::DoSolveMMF()
             
             if(m_numfiber==1)
             {
-                PrintSingleCurrent(fields[0], dphidt[0],thredlocf1[nchk] );
+                PrintSingleCurrent(fields[0], dphidt[0], thredlocf1[nchk] );
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
@@ -2624,7 +2624,7 @@ void MMFNeuralEP::DoSolveMMF()
             else if(m_numfiber==2)
             {
                // PrintDuoCurrent(fields, dphidt[0], thredlocf1[nchk], thredlocf2[nchk]);
-               PrintDuoCurrent(fields);
+                PrintDuoCurrent(fields);
 
                 thredlocf1zone[nchk] = FiberIndex(m_FiberType, 0, m_totNode, m_nodelen, m_myelinlen, 
                                                     m_nodeinitdown, m_nodeinitup, m_fiberorder[0], 0.0, thredlocf1[nchk]);
@@ -2689,7 +2689,7 @@ void MMFNeuralEP::DoSolveMMF()
 
     std::cout << "================================================= " <<std::endl;
 
-    for (i = 0; i < nvariables; ++i)
+    for (i = 0; i < 2; ++i)
     {
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
         m_fields[m_intVariables[i]]->SetPhysState(true);
@@ -2726,16 +2726,16 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 
     else if(nvar==1)
     {
-        phiTol = 0.00001;
+        phiTol = 0.000001;
         phirest = 0.0;
-        dphidtTol = -1000.0;
+        dphidtTol = 1.0;
     }
 
     // NekDouble thresholdphim = 70.0;
     NekDouble fnewsum, phidiff;
     for (int i = 0; i < nq; ++i)
     {
-        phidiff = fabs(field[i] - phirest);
+        phidiff = field[i] - phirest;
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
         if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
         {
@@ -2744,7 +2744,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 
             if(fabs(fnewsum) > dphidtTol)
             {
-                TimeMap[i] = (fabs(dphidt[i]) * time + dphidtint[i] * TimeMap[i]) / fnewsum;
+                TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
             }
 
             dphidtint[i] += dphidt[i];

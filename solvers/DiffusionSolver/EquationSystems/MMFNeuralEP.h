@@ -230,6 +230,8 @@ protected:
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle;
 
     NekDouble m_fibercurvature;
+
+    NekDouble m_phiefactor;
     
     int m_fiber1order, m_fiber2order, m_fiber3order;
     Array<OneD, int> m_fiberorder;
