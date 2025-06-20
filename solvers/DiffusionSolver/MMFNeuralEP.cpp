@@ -105,6 +105,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
     m_session->LoadParameter("axondiameter", m_axondiameter, 0.01);
 
+    m_session->LoadParameter("g-ratio", m_gratio, 0.8);
+    m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
+    m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
+    // m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
+
+    NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
+    NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
+
+    // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
+    NekDouble m_phiefactor = PhieMultFactor / axoncrossA;
+
    // Relative Extracellular resistance: 1 < \beta < 10
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
@@ -537,6 +548,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {
             Getphiemovingframes(m_zoneindex, m_phieAniStrength, m_phiemovingframes);
+            CheckMovingFrames(m_phiemovingframes);
             break;
         }
 
@@ -935,17 +947,6 @@ void MMFNeuralEP::Getphiemovingframes(
         {
             sigma_e[j] = Array<OneD, NekDouble>(nq, 0.0);
         }
-
-        m_session->LoadParameter("g-ratio", m_gratio, 0.8);
-        m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
-        m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
-        // m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
-
-        NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
-        NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
-
-        // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
-        NekDouble m_phiefactor = PhieMultFactor / axoncrossA;
 
         for (int i = 0; i<nq; ++i)
         {
