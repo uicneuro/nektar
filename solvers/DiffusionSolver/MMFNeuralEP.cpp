@@ -105,17 +105,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
     m_session->LoadParameter("axondiameter", m_axondiameter, 0.01);
 
-    m_session->LoadParameter("g-ratio", m_gratio, 0.8);
-    m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
-    m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
-    // m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
-
-    NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
-    NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
-
-    // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
-    NekDouble m_phiefactor = PhieMultFactor / axoncrossA;
-
    // Relative Extracellular resistance: 1 < \beta < 10
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
@@ -477,47 +466,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
 
     MMFSystem::MMFInitObject(m_AniStrength);
-    
     CheckMovingFrames(m_movingframes);
-
-    // Construct unitmovingframes
-    std::string MMFdirStr;
-    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
-    m_MMFdir = FindMMFdir(MMFdirStr);
-
-    Array<OneD, Array<OneD, NekDouble>> phieAniStr(m_expdim);
-    for (int j = 0; j < m_expdim; ++j)
-    {
-        phieAniStr[j] = Array<OneD, NekDouble>(nq, 1.0);
-    }
-    
-    int index;
-    for (int i = 0; i<nq; ++i)
-    {
-        index = m_zoneindex[i];
-        // Node zone
-        for (int j = 0; j < m_expdim; ++j)
-        {
-            if(index>=0)
-            {
-               phieAniStr[j][i] = 1.0/m_ratio_re_ri;
-            }
-
-            // Myelin zone
-            else if (index==-1)
-            {
-                phieAniStr[j][i] = m_AnisotropyStrength/m_ratio_re_ri;
-            }
-
-            else if (index==-2)
-            {
-                phieAniStr[j][i] = m_phiefactor;
-            }
-        }
-    }
-
-    SetUpMovingFrames(m_MMFdir, phieAniStr, m_unitmovingframes);
-    CheckMovingFrames(m_unitmovingframes);
 
     // Construct phiemovingframes 
     std::string phieMMFdirStr;
@@ -948,6 +897,17 @@ void MMFNeuralEP::Getphiemovingframes(
             sigma_e[j] = Array<OneD, NekDouble>(nq, 0.0);
         }
 
+        m_session->LoadParameter("g-ratio", m_gratio, 0.8);
+        m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
+        m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
+        // m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
+
+        NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
+        NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
+
+        // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
+        NekDouble m_phiefactor = PhieMultFactor / axoncrossA;
+
         for (int i = 0; i<nq; ++i)
         {
             index = zoneindex[i];
@@ -980,6 +940,14 @@ void MMFNeuralEP::Getphiemovingframes(
                     << Vmath::Vmin(nq, sigma_e[0], 1)
                     << ", sigma_e_2 = "
                     << Vmath::Vmin(nq, sigma_e[1], 1) << std::endl;
+
+    // Construct unitmovingframes
+        std::string MMFdirStr;
+        m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
+        m_MMFdir = FindMMFdir(MMFdirStr);
+
+        SetUpMovingFrames(m_MMFdir, sigma_e, m_phiediffmovingframes);
+        CheckMovingFrames(m_phiediffmovingframes);
 
         for (int j = 0; j < m_expdim; ++j)
         {
@@ -3843,7 +3811,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     // Time marching for phie 
-    Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_unitmovingframes, phie);
+    Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
  
     Vmath::Vmul(nq, m_extrazone, 1, phiediffusion, 1, phiediffusion, 1);
     Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), &phiediffusion[0], 1, &outarray[1][0], 1);
@@ -3880,7 +3848,6 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
     // phi_e. This is equivalently achieved by removing all the point sources in
     // myelinnated fiber region.
     
-    // Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_unitmovingframes, phim);
     Array<OneD, NekDouble> phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
     Vmath::Neg(nq, phimcurrent, 1);
 

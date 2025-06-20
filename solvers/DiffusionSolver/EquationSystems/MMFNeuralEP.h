@@ -269,7 +269,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 
     // other moving frames neede for NeuralEP
-    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_phiediffmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
 
     // Elements for fiber 2D: Start and End index
