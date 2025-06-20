@@ -484,6 +484,25 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     SetUpMovingFrames(phieMMFdir, phieAniStrength, m_phiemovingframes);
 
+    // Construct phiediffmovingframes
+    std::string MMFdirStr;
+    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
+    m_MMFdir = FindMMFdir(MMFdirStr);
+
+    Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(m_expdim);
+    NekDouble sqrtratio = sqrt(m_ratio_re_ri);
+    for (int j = 0; j < m_expdim; ++j)
+    {
+        phiediffAniStrength[j] = Array<OneD, NekDouble>(nq, sqrtratio);
+    }
+
+    std::cout << std::endl;
+    std::cout << "Constructing phiediffmovingframes" << std::endl;
+    SetUpMovingFrames(m_MMFdir, phiediffAniStrength, m_phiediffmovingframes);
+    CheckMovingFrames(m_phiediffmovingframes);
+
+    std::cout << std::endl;
+    std::cout << "Constructing phiemovingframes" << std::endl;
     switch (m_NeuralEPType)
     {
         case eNeuralHelmSolveSingle:
@@ -940,14 +959,6 @@ void MMFNeuralEP::Getphiemovingframes(
                     << Vmath::Vmin(nq, sigma_e[0], 1)
                     << ", sigma_e_2 = "
                     << Vmath::Vmin(nq, sigma_e[1], 1) << std::endl;
-
-    // Construct unitmovingframes
-        std::string MMFdirStr;
-        m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
-        m_MMFdir = FindMMFdir(MMFdirStr);
-
-        SetUpMovingFrames(m_MMFdir, sigma_e, m_phiediffmovingframes);
-        CheckMovingFrames(m_phiediffmovingframes);
 
         for (int j = 0; j < m_expdim; ++j)
         {
