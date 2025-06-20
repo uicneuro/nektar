@@ -2706,7 +2706,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
 
     else if(nvar==1)
     {
-        phiTol = 0.000001;
+        phiTol = 0.00001;
         phirest = 0.0;
         dphidtTol = 1.0;
     }
@@ -2715,7 +2715,16 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
     NekDouble fnewsum, phidiff;
     for (int i = 0; i < nq; ++i)
     {
-        phidiff = field[i] - phirest;
+        if (nvar==0)
+        {
+            phidiff = field[i] - phirest;
+        }
+
+        else if(nvar==1)
+        {
+            phidiff = fabs(field[i] - phirest);   
+        }
+
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
         if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
         {
