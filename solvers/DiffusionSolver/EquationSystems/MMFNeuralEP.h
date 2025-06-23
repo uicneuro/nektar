@@ -621,12 +621,19 @@ protected:
 
 
 
-void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
+void ComputeNeuralTimeMap(const NekDouble time,
                         const Array<OneD, const Array<OneD, int>> &zoneindex,
                         const Array<OneD, const NekDouble> &field,
                         const Array<OneD, const NekDouble> &dphidt,
                         Array<OneD, NekDouble> &dphidtint,
                         Array<OneD, NekDouble> &TimeMap);
+
+void ComputephieNeuralTimeMap(const NekDouble time,
+                                    const Array<OneD, const NekDouble> &field_old,
+                                    const Array<OneD, const NekDouble> &field,
+                                    const Array<OneD, const NekDouble> &dphidt,
+                                    Array<OneD, NekDouble> &dphidtint,
+                                    Array<OneD, NekDouble> &TimeMap);
 
 void ComputePhieCurrent(const NekDouble time,
                         const NekDouble timestep,

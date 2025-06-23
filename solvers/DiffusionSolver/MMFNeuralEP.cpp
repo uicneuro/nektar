@@ -2606,10 +2606,8 @@ void MMFNeuralEP::DoSolveMMF()
        // dudtsign: wavefront = -1.0, waveback = 1.0
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
-            for (int n=0; n<2; ++n)
-            {
-               ComputeNeuralTimeMap(n, m_time, m_zoneindexfiber, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
-            }
+            ComputeNeuralTimeMap(m_time, m_zoneindexfiber, fields[0], dphidt[0], dphidtint[0], m_TimeMap[0]);
+            ComputephieNeuralTimeMap(m_time, fields_old[1], fields[1], dphidt[1], dphidtint[2], m_TimeMap[1]);
 
             ComputePhieCurrent(m_time, m_timestep, fields, m_PhieCurrent);
         }
@@ -2722,8 +2720,7 @@ void MMFNeuralEP::DoSolveMMF()
 } 
 // namespace Nektar
 
-void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
-                                    const NekDouble time,
+void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
                                     const Array<OneD, const Array<OneD, int>> &zoneindex,
                                     const Array<OneD, const NekDouble> &field,
                                     const Array<OneD, const NekDouble> &dphidt,
@@ -2736,33 +2733,15 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
     NekDouble phirest = 0.0;
     NekDouble dphidtTol = 1.0;
 
-    if (nvar==0)
-    {
-        phiTol = 10.0;
-        phirest = 80.0;
-        dphidtTol = 1.0;
-    }
-
-    else if(nvar==1)
-    {
-        phiTol = 0.00001;
-        phirest = 0.0;
-        dphidtTol = 1.0;
-    }
+    phiTol = 10.0;
+    phirest = 80.0;
+    dphidtTol = 1.0;
 
     // NekDouble thresholdphim = 70.0;
     NekDouble fnewsum, phidiff;
     for (int i = 0; i < nq; ++i)
     {
-        if (nvar==0)
-        {
-            phidiff = field[i] - phirest;
-        }
-
-        else if(nvar==1)
-        {
-            phidiff = fabs(field[i] - phirest);   
-        }
+        phidiff = field[i] - phirest;
 
         // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
         if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
@@ -2770,7 +2749,7 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
             // Gradient as the main weight
             fnewsum = dphidt[i] + dphidtint[i];
 
-            if(fabs(fnewsum) > dphidtTol)
+            if(fnewsum > dphidtTol)
             {
                 TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
             }
@@ -2787,6 +2766,29 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const int nvar,
         }
     }
 }
+
+void MMFNeuralEP::ComputephieNeuralTimeMap(const NekDouble time,
+                                    const Array<OneD, const NekDouble> &field_old,
+                                    const Array<OneD, const NekDouble> &field,
+                                    const Array<OneD, const NekDouble> &dphidt,
+                                    Array<OneD, NekDouble> &dphidtint,
+                                    Array<OneD, NekDouble> &TimeMap)
+{
+    int nq = GetTotPoints();
+
+    NekDouble fnewsum;
+    for (int i = 0; i < nq; ++i)
+    {
+        if( (field_old[i]<0) && (field[i]>0) )
+        {
+            // Gradient as the main weight
+            fnewsum = dphidt[i] + dphidtint[i];
+            TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
+            dphidtint[i] += dphidt[i];          
+        }
+    }
+}
+
 
 // PhieCurrent[0] = \int \phi_m dt
 // PhieCurrent[1] = \int CSD_e dt
@@ -2871,7 +2873,6 @@ void MMFNeuralEP::PlotNeuralEP(
     // Time Map and its velocity
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) 
     << ", phie = " << Vmath::Vmax(nq, TimeMap[1], 1) 
-    << ", phie2 = " << Vmath::Vmax(nq, TimeMap[2], 1) 
     << std::endl;
     
     for (int i=0; i<2; ++i)
