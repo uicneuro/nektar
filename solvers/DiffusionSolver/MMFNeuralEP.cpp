@@ -2528,12 +2528,8 @@ void MMFNeuralEP::DoSolveMMF()
     NekDouble cpuTime = 0.0;
     NekDouble elapsed = 0.0;
 
-    // Array<OneD, NekDouble> TimeMap(nq, 0.0);
-    // Array<OneD, NekDouble> Thresholdtime(nq, 0.0);
-
-
-    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(2);
-    for (int i = 0; i < 2; ++i)
+    m_TimeMap = Array<OneD, Array<OneD, NekDouble>>(nvariables);
+    for (int i = 0; i < nvariables; ++i)
     {
         m_TimeMap[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -2550,9 +2546,9 @@ void MMFNeuralEP::DoSolveMMF()
         m_PhieCurrent[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> dphidt(2);
-    Array<OneD, Array<OneD, NekDouble>> dphidtint(2);    
-    for (int n=0; n<2; ++n)
+    Array<OneD, Array<OneD, NekDouble>> dphidt(nvariables);
+    Array<OneD, Array<OneD, NekDouble>> dphidtint(nvariables);    
+    for (int n=0; n<nvariables; ++n)
     {
         dphidt[n] = Array<OneD, NekDouble>(nq, 0.0);
         dphidtint[n] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2607,7 +2603,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_TimeMapStart <= m_time) && (m_TimeMapEnd >= m_time))
         {
             ComputeNeuralTimeMap(m_time, m_zoneindexfiber, fields[0], dphidt[0], dphidtint[0], m_TimeMap[0]);
-            ComputephieNeuralTimeMap(m_time, fields_old[1], fields[1], dphidt[1], dphidtint[2], m_TimeMap[1]);
+            ComputephieNeuralTimeMap(m_time, fields_old[1], fields[1], dphidt[1], dphidtint[1], dphidtint[2], m_TimeMap[1], m_TimeMap[2]);
 
             ComputePhieCurrent(m_time, m_timestep, fields, m_PhieCurrent);
         }
@@ -2772,20 +2768,38 @@ void MMFNeuralEP::ComputephieNeuralTimeMap(const NekDouble time,
                                     const Array<OneD, const NekDouble> &field,
                                     const Array<OneD, const NekDouble> &dphidt,
                                     Array<OneD, NekDouble> &dphidtint,
-                                    Array<OneD, NekDouble> &TimeMap)
+                                    Array<OneD, NekDouble> &fieldint,
+                                    Array<OneD, NekDouble> &TimeMap1,
+                                    Array<OneD, NekDouble> &TimeMap2)
 {
     int nq = GetTotPoints();
 
     NekDouble fnewsum;
+    NekDouble dphidtTol = 0.01;
     for (int i = 0; i < nq; ++i)
     {
         if( (field_old[i]<0) && (field[i]>0) )
         {
             // Gradient as the main weight
             fnewsum = dphidt[i] + dphidtint[i];
-            TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
+            TimeMap1[i] = (dphidt[i] * time + dphidtint[i] * TimeMap1[i]) / fnewsum;
             dphidtint[i] += dphidt[i];          
         }
+
+        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
+        if ( (field[i]>0) && (dphidt[i] > dphidtTol))
+        {
+            // Gradient as the main weight
+            fnewsum = field[i] + fieldint[i];
+
+            if(fnewsum > dphidtTol)
+            {
+                TimeMap2[i] = (field[i] * time + fieldint[i] * TimeMap2[i]) / fnewsum;
+            }
+
+            fieldint[i] += field[i];
+        }
+
     }
 }
 
@@ -2846,7 +2860,7 @@ void MMFNeuralEP::PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
-    int nvar    = 5;
+    int nvar    = 6;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2865,6 +2879,7 @@ void MMFNeuralEP::PlotNeuralEP(
     variables[2] = "phi_e2";
     variables[3] = "TimeMap_phim";
     variables[4] = "TimeMap_phie";
+    variables[5] = "TimeMap2_phie";
 
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
     m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[1]);
@@ -2873,9 +2888,10 @@ void MMFNeuralEP::PlotNeuralEP(
     // Time Map and its velocity
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) 
     << ", phie = " << Vmath::Vmax(nq, TimeMap[1], 1) 
+    << ", phie2 = " << Vmath::Vmax(nq, TimeMap[2], 1) 
     << std::endl;
     
-    for (int i=0; i<2; ++i)
+    for (int i=0; i<3; ++i)
     {
         m_fields[0]->FwdTransLocalElmt(TimeMap[i], fieldcoeffs[3+i]);
     }
