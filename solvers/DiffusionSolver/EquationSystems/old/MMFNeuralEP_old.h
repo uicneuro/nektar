@@ -71,6 +71,7 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP2Dbi",
 };
 
+
 enum SolverSchemeType
 {
     eMMFZero,
@@ -148,28 +149,31 @@ const char *const TimeMapTypeMap[] = {
 enum ExtCurrentType
 {
     eEphaptic,
-    eEphapticIntra,
-    eIsolated,
+    eNoEphaptic,
     SIZE_ExtCurrentType ///< Length of enum list
 };
 
 const char *const ExtCurrentTypeMap[] = {
     "Ephaptic",
-    "EphapticIntra",
-    "Isolated",
+    "NoEphaptic",
 };
 
-enum NodeIndexType
+enum FiberType
 {
-    eSequential,
-    eNodefirst,
-    SIZE_NodeIndexType ///< Length of enum list
+    eLinearAligned,
+    eLinearMisAligned,
+    eLinearDivergent,
+    eConstantCurved,
+    SIZE_FiberType ///< Length of enum list
 };
 
-const char *const NodeIndexTypeMap[] = {
-    "Sequential",
-    "Nodefirst",
+const char *const FiberTypeMap[] = {
+    "LinearAligned",
+    "LinearMisAligned",
+    "LinearDivergent",
+    "ConstantCurved",
 };
+
 
 /// A model for cardiac conduction.
 class MMFNeuralEP : public SolverUtils::MMFSystem
@@ -194,9 +198,8 @@ public:
     NeuralEPType m_NeuralEPType;
     SolverSchemeType m_SolverSchemeType;
 
+    FiberType m_FiberType;
     ExtCurrentType m_ExtCurrentType;
-
-    NodeIndexType m_NodeIndexType;
 
     NekDouble d_max, d_min;
 
@@ -218,23 +221,33 @@ protected:
     int m_npts; // Number of points for each element
     int m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd;
     int m_Convectiven;
-    int m_numfiber, m_totNode, m_elemperNode, m_elemperMyel;
+    int m_numfiber, m_totNode;
     int m_zonestart, m_zoneend;
 
     int m_myeline, m_node, m_external;
 
-    NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_radiusaxon;
+    NekDouble m_pi;
+    NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle;
 
+    NekDouble m_fibercurvature;
+    
+    int m_fiber1order, m_fiber2order, m_fiber3order;
+    Array<OneD, int> m_fiberorder;
+
+    NekDouble m_axondiameter;
     NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right;
+    NekDouble m_fiberangle;
     NekDouble m_nodeinitdown, m_nodeinitup;
     Array<OneD, NekDouble> m_fiberleft;
     Array<OneD, NekDouble> m_fiberright;
 
-    NekDouble m_fiberwidth, m_fibergap, m_fiberheightdiff;
+    NekDouble m_fiberwidth, m_fibergap;
     NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
-    NekDouble m_phimrest, m_phimTol, m_dphimdtTol;
+    NekDouble m_phimrest;
+    
+    // , m_phimTol, m_dphimdtTol;
 
     std::string m_zoneindexfile;
 
@@ -248,14 +261,13 @@ protected:
     Array<OneD, NekDouble> ComputeConductivity(
                  const Array<OneD, const Array<OneD, int>> &zoneindex);
 
-
     void Generatephiemovingframes(
     const NekDouble ratio_re_ri,
     Array<OneD, Array<OneD, NekDouble>> &helmfmovingframes, 
     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
 
     // other moving frames neede for NeuralEP
-    Array<OneD, Array<OneD, NekDouble>> m_unitmovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_helmmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
 
     // Elements for fiber 2D: Start and End index
@@ -263,7 +275,6 @@ protected:
 
     // Temperature parameter
     NekDouble m_Temperature;
-    NekDouble m_diameter;
 
     NekDouble m_TimeMapStart;
     NekDouble m_TimeMapEnd;
@@ -303,7 +314,12 @@ protected:
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
-\
+
+    void Getphiemovingframes(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, Array<OneD, NekDouble>> &phieAniStrength,
+        Array<OneD, Array<OneD, NekDouble>> &phiemovingframes);
+
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
     Array<OneD, NekDouble> m_NeuralCmfiber;
@@ -311,6 +327,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_phieNeuralCm;
 
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
+    Array<OneD, Array<OneD, NekDouble>> m_PhieCurrent;
 
     Array<OneD, int> m_InternalBoundary;
 
@@ -381,7 +398,6 @@ protected:
     // void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
-    const Array<OneD, const Array<OneD, int>> &NodeZone,
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const Array<OneD, NekDouble>> &phiemovingframes);
 
@@ -524,33 +540,36 @@ protected:
         const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
         const int NumelemNode, const int NumelemMyel);
 
-    // Array<OneD, int> IndexNodeZone2D(
-    //     const int numfiber, const int totNnode, 
-    //     const NekDouble nodelen, const NekDouble myelinlen,
-    //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
-    //     const Array<OneD, const NekDouble> &fiberleft,
-    //     const Array<OneD, const NekDouble> &fiberright);
-
-    // int LinearFiberIndex(
-    //     const int numfiber, const int totNnode, 
-    //     const NekDouble nodelen, const NekDouble myelinlen,
-    //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
-    //     const Array<OneD, const NekDouble> &fiberleft,
-    //     const Array<OneD, const NekDouble> &fiberright, 
-    //     const NekDouble xi, const NekDouble yi);
-
     void IndexNodeZone2D(
         const int numfiber, const int totNnode, 
         const NekDouble nodelen, const NekDouble myelinlen,
         const NekDouble nodeinitdown, const NekDouble nodeinitup,
         const Array<OneD, const NekDouble> &fiberleft,
         const Array<OneD, const NekDouble> &fiberright,
+        const Array<OneD, const int> &fiberorder,
         Array<OneD, Array<OneD, int>> &outarray);
 
-    int LinearFiberIndex(
+    int FiberIndex(FiberType FiberType, const int fibern,
         const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, const NekDouble yi);
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+        const int fiberorder, const NekDouble xi, const NekDouble yi);
 
+    int LinearAlignedFiberIndex(
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
+
+    int LinearMisAlignedFiberIndex(const int fibern,
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
+
+    int LinearDivergentFiberIndex(const int fibern,
+        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
+        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+        const int fiberorder, const NekDouble xi, const NekDouble yi);
+
+    int ConstantCurvedFiberIndex(const int fibern,  
+        const NekDouble fibercurvature, const int totNnode, const NekDouble nodelen, 
+        const NekDouble myelinlen, const NekDouble xi, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 
@@ -571,13 +590,14 @@ protected:
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-void SetUpDomainZone(
-        const Array<OneD, const Array<OneD, int>> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
-        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
-        Array<OneD, NekDouble> &nodezone,
-        Array<OneD, NekDouble> &intrazone,
-        Array<OneD, NekDouble> &extrazone);
+    void SetUpDomainZone(
+            const Array<OneD, int> &zoneindex, 
+            const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+            Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
+            Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
+            Array<OneD, NekDouble> &nodezone,
+            Array<OneD, NekDouble> &intrazone,
+            Array<OneD, NekDouble> &extrazone);
 
     // void SetUpDomainSingleZone(
     //     const Array<OneD, const int> &zoneindex,
@@ -598,35 +618,30 @@ void SetUpDomainZone(
 
 
 
-    void ComputeNeuralTimeMap(const NekDouble time,
-                            const Array<OneD, const Array<OneD, int>> &zoneindex,
-                            const Array<OneD, const NekDouble> &field,
-                            const Array<OneD, const NekDouble> &dudt,
-                            Array<OneD, NekDouble> &dudtHistory,
-                            Array<OneD, NekDouble> &TimeMap);
-                                
-    void PlotNeuralTimeMap(
-        const Array<OneD, const NekDouble> &phim,
-        const Array<OneD, const NekDouble> &TimeMap,
-        const int nstep);
-        
-// void PlotZone(const Array<OneD, const int> &zoneindex,
-// Array<OneD, NekDouble> &excitezone1, 
-// Array<OneD, NekDouble> &nodezone1, 
-// Array<OneD, NekDouble> &intrazone1, 
-// Array<OneD, NekDouble> &extrazone);
+void ComputeNeuralTimeMap(const int nvar, const NekDouble time,
+                        const Array<OneD, const Array<OneD, int>> &zoneindex,
+                        const Array<OneD, const NekDouble> &field,
+                        const Array<OneD, const NekDouble> &dphidt,
+                        Array<OneD, NekDouble> &dphidtint,
+                        Array<OneD, NekDouble> &TimeMap);
 
-//     void PlotZone(const Array<OneD, const int> &zoneindex,
-// Array<OneD, NekDouble> &excitezone1, 
-// Array<OneD, NekDouble> &excitezone2, 
-// Array<OneD, NekDouble> &nodezone1, 
-// Array<OneD, NekDouble> &nodezone2, 
-// Array<OneD, NekDouble> &intrazone1, 
-// Array<OneD, NekDouble> &intrazone2, 
-// Array<OneD, NekDouble> &extrazone);
+void ComputePhieCurrent(const NekDouble time,
+                        const NekDouble timestep,
+                        const Array<OneD, const Array<OneD, NekDouble>> &field,
+                        Array<OneD, Array<OneD, NekDouble>> &PhieCurrent);
 
-    void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim);
-    void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
+void PlotNeuralEP(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const Array<OneD, const Array<OneD, NekDouble>> &PhieCurrent,
+    const int nstep);
+
+
+void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
+                                  const Array<OneD, const NekDouble> &dudt,
+                                  NekDouble &thredlocf1);
+                                  
+void PrintDuoCurrent(const Array<OneD, const NekDouble> &phim,
                                     const Array<OneD, const NekDouble> &dudt,
                                     NekDouble &thredlocf1, NekDouble &thredlocf2);
 

@@ -311,8 +311,10 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_intrazonefiber;
 
     Array<OneD, NekDouble> m_nodezone;
+    Array<OneD, NekDouble> m_myelinzone;
     Array<OneD, NekDouble> m_intrazone;
     Array<OneD, NekDouble> m_extrazone;
+    Array<OneD, NekDouble> m_outerzone;
 
     Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
@@ -593,33 +595,13 @@ protected:
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-    void SetUpDomainZone(
-            const Array<OneD, int> &zoneindex, 
-            const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
-            Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
-            Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
-            Array<OneD, NekDouble> &nodezone,
-            Array<OneD, NekDouble> &intrazone,
-            Array<OneD, NekDouble> &extrazone);
-
-    // void SetUpDomainSingleZone(
-    //     const Array<OneD, const int> &zoneindex,
-    //     Array<OneD, NekDouble> &excitezone,
-    //     Array<OneD, NekDouble> &nodezone,
-    //     Array<OneD, NekDouble> &intrazone,
-    //     Array<OneD, NekDouble> &extrazone);
-
-    // void SetUpDomainDuoZone(
-    //     const Array<OneD, const int> &zoneindex,
-    //     Array<OneD, NekDouble> &excitezone1,
-    //     Array<OneD, NekDouble> &excitezone2,
-    //     Array<OneD, NekDouble> &nodezone1,
-    //     Array<OneD, NekDouble> &nodezone2,
-    //     Array<OneD, NekDouble> &intrazone1,
-    //     Array<OneD, NekDouble> &intrazone2,
-    //     Array<OneD, NekDouble> &extrazone);
-
-
+void SetUpDomainZone(
+        const Array<OneD, int> &zoneindex, 
+        const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
+        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
+        Array<OneD, NekDouble> &nodezone,
+        Array<OneD, NekDouble> &myelinzone);
 
 void ComputeNeuralTimeMap(const NekDouble time,
                         const Array<OneD, const Array<OneD, int>> &zoneindex,
