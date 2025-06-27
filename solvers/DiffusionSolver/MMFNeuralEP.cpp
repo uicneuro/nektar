@@ -3629,8 +3629,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     // Time marching for phie 
-    Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_phiediffmovingframes, inarray[0]);
-    Vmath::Neg(nq, phiediffusion, 1);
+    Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
  
     Vmath::Vmul(nq, m_extrazone, 1, phiediffusion, 1, phiediffusion, 1);
     Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), &phiediffusion[0], 1, &outarray[1][0], 1);
