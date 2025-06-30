@@ -467,6 +467,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Vmath::Vadd(nq, m_nodezone, 1, m_myelinzone, 1, m_intrazone, 1);
             Array<OneD, NekDouble> allone(nq, 1.0);
             Vmath::Vsub(nq, allone, 1, m_myelinzone, 1, m_extrazone, 1);
+            Vmath::Vsub(nq, allone, 1, m_intrazone, 1, m_outerzone, 1);
 
         // Plotting
             int nvar    = 2;
@@ -2606,9 +2607,14 @@ void MMFNeuralEP::PlotNeuralEP(
     variables[4] = "TimeMap_phie";
     variables[5] = "TimeMap2_phie";
 
+    Array<OneD, NekDouble> tmp(nq);
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
-    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[1]);
-    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[2]);
+
+    Vmath::Vmul(nq, m_outerzone, 1, fields[1], 1, tmp, 1);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[1]);
+
+    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, tmp, 1);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[2]);
 
     // Time Map and its velocity
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) 
@@ -3631,8 +3637,9 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // Time marching for phie 
     Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
  
-    Vmath::Vmul(nq, m_extrazone, 1, phiediffusion, 1, phiediffusion, 1);
-    Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), &phiediffusion[0], 1, &outarray[1][0], 1);
+    NekDouble Deff = 0.5e-6;
+    Vmath::Vmul(nq, m_outerzone, 1, phiediffusion, 1, phiediffusion, 1);
+    Vmath::Smul(nq, 1.0/Deff, &phiediffusion[0], 1, &outarray[1][0], 1);
     
     if (m_explicitDiffusion)
     {
