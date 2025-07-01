@@ -349,7 +349,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             // Setup: excitezone, intrazone, extrazone, followed by ploting the zones.
-            SetUpDomainZone(m_zoneindex, m_zoneindexfiber, m_excitezonefiber, 
+            SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, 
                             m_intrazonefiber, m_nodezone, m_myelinzone);
 
             m_extrazone = Array<OneD, NekDouble>(nq) ;
@@ -458,11 +458,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
             // Get the first and last index of the excitation zone [1,2]intra
-            SetUpDomainZone(m_zoneindex, m_zoneindexfiber, m_excitezonefiber, 
+            SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, 
                             m_intrazonefiber, m_nodezone, m_myelinzone);
 
             m_extrazone = Array<OneD, NekDouble>(nq) ;
             m_intrazone = Array<OneD, NekDouble>(nq) ;
+            m_outerzone = Array<OneD, NekDouble>(nq) ;
 
             Vmath::Vadd(nq, m_nodezone, 1, m_myelinzone, 1, m_intrazone, 1);
             Array<OneD, NekDouble> allone(nq, 1.0);
@@ -572,14 +573,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     {
         Vmath::Vcopy(nq, sigma_e[j], 1, phiediffAniStrength[j], 1);
     }
-
-    // Array<OneD, NekDouble> tmp(nq);
-    // for (int j = 0; j < m_expdim; ++j)
-    // {
-    //     Vmath::Vmul(nq, sigma_i[j], 1, sigma_eM[j], 1, phiediffAniStrength[j], 1);
-    //     Vmath::Vadd(nq, sigma_i[j], 1, sigma_e[j], 1, tmp, 1);
-    //     Vmath::Vdiv(nq, phiediffAniStrength[j], 1, tmp, 1, phiediffAniStrength[j], 1);
-    // }
     
     std::cout << "================================================ " << std::endl;
     std::cout << "Max phieAnistrength_1  = "
@@ -1832,7 +1825,6 @@ void MMFNeuralEP::Getcellavg(
 // }
 
 void MMFNeuralEP::SetUpDomainZone(
-        const Array<OneD, int> &zoneindex, 
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
         Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
         Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
@@ -3635,11 +3627,14 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 
     // Time marching for phie 
-    Array<OneD, NekDouble> phiediffusion = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
- 
-    NekDouble Deff = 0.5e-6;
-    Vmath::Vmul(nq, m_outerzone, 1, phiediffusion, 1, phiediffusion, 1);
-    Vmath::Smul(nq, 1.0/Deff, &phiediffusion[0], 1, &outarray[1][0], 1);
+    Array<OneD, NekDouble> phiediff = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
+    Array<OneD, NekDouble> phiediff2 = ComputeMMFDiffusion(m_phiediffmovingframes, phiediff);
+
+    // Regular diffusivity value for the extracellular space
+    // Physiological Review by Syková & Nicholson (2008)
+    NekDouble Deff = 0.5e-8;   // (cm^2/ms)
+    Vmath::Vmul(nq, m_outerzone, 1, phiediff2, 1, phiediff2, 1);
+    Vmath::Smul(nq, Deff, &phiediff2[0], 1, &outarray[1][0], 1);
     
     if (m_explicitDiffusion)
     {

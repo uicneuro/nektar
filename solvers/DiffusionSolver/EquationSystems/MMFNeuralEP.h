@@ -596,7 +596,6 @@ protected:
         Array<OneD, NekDouble> &zcell);
 
 void SetUpDomainZone(
-        const Array<OneD, int> &zoneindex, 
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
         Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
         Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
