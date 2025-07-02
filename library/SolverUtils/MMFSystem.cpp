@@ -4619,11 +4619,17 @@ Array<OneD, NekDouble> MMFSystem::ComputeMMFDiffusion(
     const Array<OneD, const NekDouble> &inarray)
 {
     int nq = m_fields[0]->GetNpoints();
-
-    Array<OneD, NekDouble> tmp(nq);
-    Array<OneD, NekDouble> Dtmp(nq);
-
     Array<OneD, NekDouble> outarray(nq, 0.0);
+
+    static thread_local Array<OneD, NekDouble> tmp;
+    static thread_local Array<OneD, NekDouble> Dtmp;
+
+    if (tmp.size() != nq)
+    {
+        tmp  = Array<OneD, NekDouble>(nq);
+        Dtmp = Array<OneD, NekDouble>(nq);
+    }
+
     for (int i = 0; i < m_expdim; ++i)
     {
         // Dtmp = \nabla u \cdot e^i
@@ -4631,7 +4637,12 @@ Array<OneD, NekDouble> MMFSystem::ComputeMMFDiffusion(
         MMFDirectionalDeriv(movingframes[i], inarray, tmp);
         MMFDirectionalDeriv(movingframes[i], tmp, Dtmp);
 
-        Vmath::Vadd(nq, Dtmp, 1, outarray, 1, outarray, 1);
+        // Parallel accumulate
+        #pragma omp parallel for
+        for (int j = 0; j < nq; ++j)
+        {
+            outarray[j] += Dtmp[j];
+        }
     }
 
     return outarray;
@@ -4643,9 +4654,15 @@ void MMFSystem::MMFDirectionalDeriv(const Array<OneD, const NekDouble> &movingfr
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, NekDouble> tmp(nq);
+    // Reuse memory for tmp
+    static thread_local Array<OneD, NekDouble> tmp;
+    if (tmp.size() != nq)
+    {
+        tmp = Array<OneD, NekDouble>(nq);
+    }
 
-    outarray = Array<OneD, NekDouble>(nq, 0.0);
+    Vmath::Zero(nq, outarray, 1);
+
     for (int k=0; k<m_spacedim; ++k)
     {
         m_fields[0]->PhysDeriv(MultiRegions::DirCartesianMap[k], inarray, tmp);
