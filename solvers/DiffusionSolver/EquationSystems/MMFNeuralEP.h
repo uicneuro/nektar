@@ -611,13 +611,9 @@ void ComputeNeuralTimeMap(const NekDouble time,
 
 
 void ComputephieNeuralTimeMap(const NekDouble time,
-                                    const Array<OneD, const NekDouble> &field_old,
                                     const Array<OneD, const NekDouble> &field,
-                                    const Array<OneD, const NekDouble> &dphidt,
-                                    Array<OneD, NekDouble> &dphidtint,
                                     Array<OneD, NekDouble> &fieldint,
-                                    Array<OneD, NekDouble> &TimeMap1,
-                                    Array<OneD, NekDouble> &TimeMap2);
+                                    Array<OneD, NekDouble> &TimeMap);
 
 void ComputePhieCurrent(const NekDouble time,
                         const NekDouble timestep,
