@@ -2368,21 +2368,13 @@ void MMFNeuralEP::DoSolveMMF()
         std::cout << std::endl;
     }
 
-    std::cout << "================================================= " <<std::endl;
-
-    m_fields[m_intVariables[0]]->SetPhys(fields[0]);
-    m_fields[m_intVariables[0]]->SetPhysState(true);
-
-    m_fields[m_intVariables[1]]->SetPhys(fields[1]);
-    m_fields[m_intVariables[1]]->SetPhysState(true);
-
-    m_fields[m_intVariables[2]]->SetPhys(fields[2]);
-    m_fields[m_intVariables[2]]->SetPhysState(true);
-
     for (int i = 0; i < nvariables; ++i)
     {
-        m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
-                              m_fields[m_intVariables[i]]->UpdateCoeffs());
+        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+        m_fields[m_intVariables[i]]->SetPhysState(true);
+
+        m_fields[m_intVariables[i]]->FwdTrans(m_fields[i]->GetPhys(),
+                                   m_fields[m_intVariables[i]]->UpdateCoeffs());
     }
 } 
 // namespace Nektar
@@ -2441,35 +2433,20 @@ void MMFNeuralEP::ComputephieNeuralTimeMap(const NekDouble time,
 {
     int nq = GetTotPoints();
 
-    NekDouble fnewsum;
+    NekDouble fnewsum, phie_a;
     NekDouble Tol = 0.01;
     for (int i = 0; i < nq; ++i)
     {
-        if( fabs(field[i])>Tol ) 
+        phie_a = fabs(field[i]);
+        if( phie_a >Tol ) 
         {
             // Gradient as the main weight
-            fnewsum = field[i] + fieldint[i];
-            TimeMap[i] = ( fabs(field[i]) * time + fieldint[i] * TimeMap[i]) / fnewsum;
-            fieldint[i] += fabs(field[i]);
+            fnewsum = phie_a + fieldint[i];
+            TimeMap[i] = ( phie_a * time + fieldint[i] * TimeMap[i]) / fnewsum;
+            fieldint[i] += phie_a;
         }
     }
 }
-
-        // // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        // if ( (field[i]>0) && (dphidt[i] > dphidtTol))
-        // {
-        //     // Gradient as the main weight
-        //     fnewsum = field[i] + fieldint[i];
-
-        //     if(fnewsum > dphidtTol)
-        //     {
-        //         TimeMap2[i] = (field[i] * time + fieldint[i] * TimeMap2[i]) / fnewsum;
-        //     }
-
-        //     fieldint[i] += field[i];
-        // }
-
-
 
 
 // void MMFNeuralEP::DoSolveMMF()
