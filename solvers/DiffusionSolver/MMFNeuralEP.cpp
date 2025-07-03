@@ -2255,6 +2255,7 @@ void MMFNeuralEP::DoSolveMMF()
     Array<OneD, int> thredlocf1zone(totsteps, 0), thredlocf2zone(totsteps, 0);
 
     LibUtilities::Timer timer;
+    Array<OneD, NekDouble> CSD;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save current solution
@@ -2285,7 +2286,10 @@ void MMFNeuralEP::DoSolveMMF()
        if (m_time >= m_TimeMapStart && m_time <= m_TimeMapEnd)
         {
             ComputeNeuralTimeMap(m_time, m_zoneindexfiber, fields[0], dphidt[0], dphidtint[0], m_TimeMap[0]);
-            ComputephieNeuralTimeMap(m_time, fields[1], dphidtint[1], m_TimeMap[1]);
+            
+            CSD = ComputeMMFDiffusion(m_movingframes, fields[1]);
+
+            ComputephieNeuralTimeMap(m_time, CSD, dphidtint[1], m_TimeMap[1]);
             ComputephieNeuralTimeMap(m_time, fields[2], dphidtint[2], m_TimeMap[2]);
         }
 
@@ -2434,11 +2438,12 @@ void MMFNeuralEP::ComputephieNeuralTimeMap(
     Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 0.01;
+    constexpr NekDouble Tol = 1e-5;
 
+    #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble phie_a = std::abs(field[i]);
+        const NekDouble phie_a = field[i];
         if (phie_a > Tol)
         {
             const NekDouble fint = fieldint[i];
@@ -2847,21 +2852,19 @@ void MMFNeuralEP::PlotNeuralEP(
     Array<OneD, NekDouble> tmp(nq);
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
 
-    Vmath::Vmul(nq, m_outerzone, 1, fields[1], 1, tmp, 1);
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[1]);
+    Array<OneD, NekDouble> phim(nq), phie(nq), rho(nq);
+    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[1], 1, phie, 1);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, rho, 1);
+
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[1]);
 
     const NekDouble Diff_e = 1e-6; //  cm^2 / s
     Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
     Vmath::Smul(nq, -Diff_e, CSD, 1, CSD, 1);
     m_fields[0]->FwdTransLocalElmt(CSD, fieldcoeffs[2]);
 
-    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, tmp, 1);
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[3]);
-
-    Array<OneD, NekDouble> phim(nq), phie(nq), rho(nq);
-    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
-    Vmath::Vmul(nq, m_outerzone, 1, fields[1], 1, phie, 1);
-    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, rho, 1);
+    m_fields[0]->FwdTransLocalElmt(rho, fieldcoeffs[3]);
 
     // Max values and indices
     const NekDouble Maxphim  = Vmath::Vmax(nq, phim, 1);
@@ -3688,11 +3691,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
     // Regular diffusivity value for the extracellular space
     // Physiological Review by Syková & Nicholson (2008)
-    const NekDouble Deff = 0.005; // μm²/ms
+    const NekDouble Deff = -5e-3; // \mum²/ms
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        outarray[2][i] = m_outerzone[i] * Deff * phiediff2[i];
+        outarray[2][i] = Deff * phiediff2[i];
     }
 
     if (m_explicitDiffusion)
