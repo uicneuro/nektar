@@ -2388,65 +2388,119 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 {
     int nq = GetTotPoints();
 
-    NekDouble phiTol = 1.0;
-    NekDouble phirest = 0.0;
-    NekDouble dphidtTol = 1.0;
+    const NekDouble phiTol = 10.0;
+    const NekDouble phirest = 80.0;
+    const NekDouble dphidtTol = 1.0;
 
-    phiTol = 10.0;
-    phirest = 80.0;
-    dphidtTol = 1.0;
-
-    // NekDouble thresholdphim = 70.0;
-    NekDouble fnewsum, phidiff;
+    #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        phidiff = field[i] - phirest;
-
-        // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
-        if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
-        {
-            // Gradient as the main weight
-            fnewsum = dphidt[i] + dphidtint[i];
-
-            if(fnewsum > dphidtTol)
-            {
-                TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
-            }
-
-            dphidtint[i] += dphidt[i];
-        }
-
-        for (int n=0; n<m_numfiber; ++n)
+        bool inZeroZone = false;
+        for (int n = 0; n < m_numfiber; ++n)
         {
             if (zoneindex[n][i] == 0)
             {
                 TimeMap[i] = 0.0;
+                inZeroZone = true;
+                break;
             }
+        }
+        if (inZeroZone)
+        {
+            continue;
+        }
+
+        const NekDouble phidiff = field[i] - phirest;
+        const NekDouble dphi = dphidt[i];
+        const NekDouble dint = dphidtint[i];
+
+        if (phidiff > phiTol && dphi > dphidtTol)
+        {
+            const NekDouble fnewsum = dphi + dint;
+            if (fnewsum > dphidtTol)
+            {
+                TimeMap[i] = (dphi * time + dint * TimeMap[i]) / fnewsum;
+            }
+
+            dphidtint[i] += dphi;
         }
     }
 }
 
-void MMFNeuralEP::ComputephieNeuralTimeMap(const NekDouble time,
-                                    const Array<OneD, const NekDouble> &field,
-                                    Array<OneD, NekDouble> &fieldint,
-                                    Array<OneD, NekDouble> &TimeMap)
+void MMFNeuralEP::ComputephieNeuralTimeMap(
+    const NekDouble time,
+    const Array<OneD, const NekDouble> &field,
+    Array<OneD, NekDouble> &fieldint,
+    Array<OneD, NekDouble> &TimeMap)
 {
-    int nq = GetTotPoints();
+    const int nq = GetTotPoints();
+    constexpr NekDouble Tol = 0.01;
 
-    NekDouble fnewsum, phie_a;
-    NekDouble Tol = 0.01;
     for (int i = 0; i < nq; ++i)
     {
-        phie_a = fabs(field[i]);
-        if( phie_a >Tol ) 
+        const NekDouble phie_a = std::abs(field[i]);
+        if (phie_a > Tol)
         {
-            // Gradient as the main weight
-            fnewsum = phie_a + fieldint[i];
-            TimeMap[i] = ( phie_a * time + fieldint[i] * TimeMap[i]) / fnewsum;
+            const NekDouble fint = fieldint[i];
+            const NekDouble fnewsum = phie_a + fint;
+
+            TimeMap[i] = (phie_a * time + fint * TimeMap[i]) / fnewsum;
             fieldint[i] += phie_a;
         }
     }
 }
+
+// void MMFNeuralEP::ComputephieNeuralTimeMap(const NekDouble time,
+//                                     const Array<OneD, const NekDouble> &field,
+//                                     Array<OneD, NekDouble> &fieldint,
+//                                     Array<OneD, NekDouble> &TimeMap)
+// {
+//     int nq = GetTotPoints();
+
+//     NekDouble fnewsum, phie_a;
+//     NekDouble Tol = 0.01;
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         phie_a = fabs(field[i]);
+//         if( phie_a >Tol ) 
+//         {
+//             // Gradient as the main weight
+//             fnewsum = phie_a + fieldint[i];
+//             TimeMap[i] = ( phie_a * time + fieldint[i] * TimeMap[i]) / fnewsum;
+//             fieldint[i] += phie_a;
+//         }
+//     }
+// }
+
+
+    // NekDouble fnewsum, phidiff;
+    // for (int i = 0; i < nq; ++i)
+    // {
+    //     phidiff = field[i] - phirest;
+
+    //     // Only integrate of time if u > Tol, gradu > Tol, du/dt > 0
+    //     if ((phidiff > phiTol) && (dphidt[i] > dphidtTol))
+    //     {
+    //         // Gradient as the main weight
+    //         fnewsum = dphidt[i] + dphidtint[i];
+
+    //         if(fnewsum > dphidtTol)
+    //         {
+    //             TimeMap[i] = (dphidt[i] * time + dphidtint[i] * TimeMap[i]) / fnewsum;
+    //         }
+
+    //         dphidtint[i] += dphidt[i];
+    //     }
+
+    //     for (int n=0; n<m_numfiber; ++n)
+    //     {
+    //         if (zoneindex[n][i] == 0)
+    //         {
+    //             TimeMap[i] = 0.0;
+    //         }
+    //     }
+    // }
+
 
 
 // void MMFNeuralEP::DoSolveMMF()
@@ -2768,11 +2822,11 @@ void MMFNeuralEP::PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
-    int nvar    = 7;
-    int nq      = m_fields[0]->GetTotPoints();
-    int ncoeffs = m_fields[0]->GetNcoeffs();
+    const int nvar    = 7;
+    const int nq      = m_fields[0]->GetTotPoints();
+    const int ncoeffs = m_fields[0]->GetNcoeffs();
 
-    std::string outname1 = m_sessionName + "_timemap_" +
+    std::string outname1 = m_sessionName + "_field_" +
                            boost::lexical_cast<std::string>(nstep) + ".chk";
 
     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
@@ -2784,7 +2838,7 @@ void MMFNeuralEP::PlotNeuralEP(
     std::vector<std::string> variables(nvar);
     variables[0] = "phi_m";
     variables[1] = "phi_e";
-    variables[2] = "CSDe";
+    variables[2] = "CSD";
     variables[3] = "rho";
     variables[4] = "TimeMap_phim";
     variables[5] = "TimeMap_phie";
@@ -2796,50 +2850,42 @@ void MMFNeuralEP::PlotNeuralEP(
     Vmath::Vmul(nq, m_outerzone, 1, fields[1], 1, tmp, 1);
     m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[1]);
 
-    NekDouble Diff_e = 1e-6; //  cm^2 / s
-    Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
-    Vmath::Smul(nq, Diff_e, CSDe, 1, CSDe, 1);
-    Vmath::Vmul(nq, m_outerzone, 1, CSDe, 1, CSDe, 1);
-    m_fields[0]->FwdTransLocalElmt(CSDe, fieldcoeffs[2]);
+    const NekDouble Diff_e = 1e-6; //  cm^2 / s
+    Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
+    Vmath::Smul(nq, -Diff_e, CSD, 1, CSD, 1);
+    m_fields[0]->FwdTransLocalElmt(CSD, fieldcoeffs[2]);
 
     Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, tmp, 1);
     m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[3]);
 
-    Array<OneD, NekDouble> x0(nq);
-    Array<OneD, NekDouble> x1(nq);
-    Array<OneD, NekDouble> x2(nq);
+    Array<OneD, NekDouble> phim(nq), phie(nq), rho(nq);
+    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[1], 1, phie, 1);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, rho, 1);
 
+    // Max values and indices
+    const NekDouble Maxphim  = Vmath::Vmax(nq, phim, 1);
+    const int       Maxphimid = Vmath::Imax(nq, phim, 1);
+    const NekDouble Maxphie  = Vmath::Vmax(nq, phie, 1);
+    const int       Maxphieid = Vmath::Imax(nq, phie, 1);
+    const NekDouble MaxCSD   = Vmath::Vmax(nq, CSD, 1);
+    const int       MaxCSDid  = Vmath::Imax(nq, CSD, 1);
+    const NekDouble Maxrho   = Vmath::Vmax(nq, rho, 1);
+    const int       Maxrhoid  = Vmath::Imax(nq, rho, 1);
+
+    // Coordinates
+    Array<OneD, NekDouble> x0(nq), x1(nq), x2(nq);
     m_fields[0]->GetCoords(x0, x1, x2);
-    Array<OneD, NekDouble> phim(nq);
-    Array<OneD, NekDouble> phie(nq);
-    Array<OneD, NekDouble> rho(nq);
 
-    Vmath::Vmul(nq, &m_intrazone[0], 1, &fields[0][0], 1, &phim[0], 1);
-    Vmath::Vmul(nq, &m_outerzone[0], 1, &fields[1][0], 1, &phie[0], 1);
-    Vmath::Vmul(nq, &m_outerzone[0], 1, &fields[2][0], 1, &rho[0], 1);
+    std::cout << "phim: Max = " << Maxphim << " at x = " << x0[Maxphimid] << ", y = " << x1[Maxphimid] << '\n';
+    std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << '\n';
+    std::cout << "CSD: Max = " << MaxCSD << " at x = " << x0[MaxCSDid] << ", y = " << x1[MaxCSDid] << '\n';
+    std::cout << "rho : Max = " << Maxrho  << " at x = " << x0[Maxrhoid]  << ", y = " << x1[Maxrhoid]  << "\n\n";
 
-    NekDouble Maxphim = Vmath::Vmax(nq, phim, 1);
-    int Maxphimid = Vmath::Imax(nq, phim, 1);
-
-    NekDouble Maxphie = Vmath::Vmax(nq, phie, 1);
-    int Maxphieid = Vmath::Imax(nq, phie, 1);
-
-    NekDouble MaxCSDe = Vmath::Vmax(nq, CSDe, 1);
-    int MaxCSDeid = Vmath::Imax(nq, CSDe, 1);
-
-    NekDouble Maxrho = Vmath::Vmax(nq, rho, 1);
-    int Maxrhoid = Vmath::Imax(nq, rho, 1);
-
-   std::cout << "phim: Max = " << Maxphim << " at x = " << x0[Maxphimid] << ", y = " << x1[Maxphimid] << std::endl;
-   std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << std::endl;
-   std::cout << "CSDe: Max = " << MaxCSDe << " at x = " << x0[MaxCSDeid] << ", y = " << x1[MaxCSDeid] << std::endl;
-   std::cout << "rho: Max = " << Maxrho << " at x = " << x0[Maxrhoid] << ", y = " << x1[Maxrhoid] << std::endl << std::endl;
-
-    // Time Map and its velocity
-    std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1) 
-    << ", phie = " << Vmath::Vmax(nq, TimeMap[1], 1) 
-    << ", rho = " << Vmath::Vmax(nq, TimeMap[2], 1) 
-    << std::endl;
+    // TimeMap maxima
+    std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1)
+              << ", phie = " << Vmath::Vmax(nq, TimeMap[1], 1)
+              << ", rho = "  << Vmath::Vmax(nq, TimeMap[2], 1) << '\n';
     
     for (int i=0; i<3; ++i)
     {
@@ -3613,7 +3659,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     const Array<OneD, NekDouble> &phie = m_fields[1]->GetPhys();
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
-    // Array<OneD, NekDouble> phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
     static thread_local Array<OneD, NekDouble> phiecurrent;
     if (phiecurrent.size() != nq)
         phiecurrent = Array<OneD, NekDouble>(nq);
@@ -3621,11 +3666,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
-    // Vmath::Vmul(nq, m_intrazone, 1, phiecurrent, 1, phiecurrent, 1);
-    // Vmath::Smul(nq, 1.0/(m_Cn * m_Rf), phiecurrent, 1, phiecurrent, 1);
-
-    // Vmath::Vadd(nq, &phiecurrent[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
-
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
@@ -3634,10 +3674,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
             outarray[0][i] += phiecurrent[i] / (m_Cn * m_Rf);
         }
     }
-
-    // Time marching for phie 
-    // Array<OneD, NekDouble> phiediff = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
-    // Array<OneD, NekDouble> phiediff2 = ComputeMMFDiffusion(m_phiediffmovingframes, phiediff);
 
     // 5. Compute \nabla^2 (\nabla^2 \phi_e) = diffusion of extracellular field
     static thread_local Array<OneD, NekDouble> phiediff, phiediff2;
@@ -3652,9 +3688,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
     // Regular diffusivity value for the extracellular space
     // Physiological Review by Syková & Nicholson (2008)
-    // NekDouble Deff = 0.005;   // (\mu m^2/ms)
-    // Vmath::Vmul(nq, m_outerzone, 1, phiediff2, 1, phiediff2, 1);
-    // Vmath::Smul(nq, Deff, &phiediff2[0], 1, &outarray[2][0], 1);
     const NekDouble Deff = 0.005; // μm²/ms
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
@@ -3678,12 +3711,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
             outarray[0][i] += Laplacian[i] / (m_Cn * m_Rf);
         }
     }
-        // // Laplacian only to the first variable
-        // Array<OneD, NekDouble> Laplacian(nq);
-        // WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
-
-        // Vmath::Smul(nq, 1.0 / (m_Cn * m_Rf), Laplacian, 1, Laplacian, 1);
-        // Vmath::Vadd(nq, &Laplacian[0], 1, &outarray[0][0], 1, &outarray[0][0], 1);
 }
 
 // output: phi_e (m_fields[1]->UpdatePhys()) and outarray (1/C_n/r) * \nabla^2 \phi_e
