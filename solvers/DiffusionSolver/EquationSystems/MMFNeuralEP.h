@@ -236,18 +236,18 @@ protected:
     int m_fiber1order, m_fiber2order, m_fiber3order;
     Array<OneD, int> m_fiberorder;
 
-    NekDouble m_axondiameter;
+    NekDouble m_axondiameter, m_fiberangle, m_nodeinitdown, m_nodeinitup, m_fiberwidth, m_fibergap;
     NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right;
-    NekDouble m_fiberangle;
-    NekDouble m_nodeinitdown, m_nodeinitup;
+    NekDouble m_bundleleft, m_bundleright;
+
     Array<OneD, NekDouble> m_fiberleft;
     Array<OneD, NekDouble> m_fiberright;
 
-    NekDouble m_fiberwidth, m_fibergap;
     NekDouble m_nodelen, m_myelinlen;
     NekDouble m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm;
     NekDouble m_phimrest;
+    NekDouble m_Diffext;
     
     // , m_phimTol, m_dphimdtTol;
 
@@ -398,6 +398,12 @@ protected:
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_e,
     const Array<OneD, const Array<OneD, NekDouble>> &PhieAniStrength);
+
+    NekDouble DisplayAtNodes(const int fibern, const int nodeindex, 
+                                const NekDouble nodelen, const NekDouble myelinlen,
+                                const NekDouble nodeinitdown, const NekDouble nodeinitup, 
+                                const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+                                const Array<OneD, const NekDouble> &inarray);
 
     // void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
     // void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
@@ -609,10 +615,16 @@ void ComputeNeuralTimeMap(const NekDouble time,
                         Array<OneD, NekDouble> &TimeMap);
 
 
-void ComputephieNeuralTimeMap(const NekDouble time,
-                                    const Array<OneD, const NekDouble> &field,
-                                    Array<OneD, NekDouble> &fieldint,
-                                    Array<OneD, NekDouble> &TimeMap);
+void ComputephieTimeMap(const NekDouble time,
+                        const Array<OneD, const NekDouble> &field,
+                        Array<OneD, NekDouble> &fieldint,
+                        Array<OneD, NekDouble> &TimeMap);
+
+void ComputerhoTimeMap(const NekDouble time,
+                        const Array<OneD, const NekDouble> &field,
+                        Array<OneD, NekDouble> &fieldint,
+                        Array<OneD, NekDouble> &TimeMap);                        
+
 
 void ComputePhieCurrent(const NekDouble time,
                         const NekDouble timestep,
