@@ -2259,11 +2259,11 @@ void MMFNeuralEP::DoSolveMMF()
     Array<OneD, NekDouble> timevec(totsteps, 0.0);
     Array<OneD, NekDouble> thredlocf1(totsteps, 0.0), thredlocf2(totsteps, 0.0);
     Array<OneD, int> thredlocf1zone(totsteps, 0), thredlocf2zone(totsteps, 0);
-    Array<OneD, NekDouble> CSDvecatnode1(totsteps, 0.0), rhovecatnode1(totsteps, 0.0);
-    Array<OneD, NekDouble> CSDvecatnode2(totsteps, 0.0), rhovecatnode2(totsteps, 0.0);
-    Array<OneD, NekDouble> CSDvecatnode3(totsteps, 0.0), rhovecatnode3(totsteps, 0.0);
-    Array<OneD, NekDouble> CSDvecatnode4(totsteps, 0.0), rhovecatnode4(totsteps, 0.0);
-    Array<OneD, NekDouble> CSDvecatnode5(totsteps, 0.0), rhovecatnode5(totsteps, 0.0);
+    Array<OneD, NekDouble> phimvecatnode1(totsteps, 0.0), phievecatnode1(totsteps, 0.0), CSDvecatnode1(totsteps, 0.0), rhovecatnode1(totsteps, 0.0);
+    Array<OneD, NekDouble> phimvecatnode2(totsteps, 0.0), phievecatnode2(totsteps, 0.0), CSDvecatnode2(totsteps, 0.0), rhovecatnode2(totsteps, 0.0);
+    Array<OneD, NekDouble> phimvecatnode3(totsteps, 0.0), phievecatnode3(totsteps, 0.0), CSDvecatnode3(totsteps, 0.0), rhovecatnode3(totsteps, 0.0);
+    Array<OneD, NekDouble> phimvecatnode4(totsteps, 0.0), phievecatnode4(totsteps, 0.0), CSDvecatnode4(totsteps, 0.0), rhovecatnode4(totsteps, 0.0);
+    Array<OneD, NekDouble> phimvecatnode5(totsteps, 0.0), phievecatnode5(totsteps, 0.0), CSDvecatnode5(totsteps, 0.0), rhovecatnode5(totsteps, 0.0);
 
     LibUtilities::Timer timer;
     Array<OneD, NekDouble> CSD;
@@ -2321,23 +2321,40 @@ void MMFNeuralEP::DoSolveMMF()
             Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
             Vmath::Smul(nq, -m_Diffext, CSD, 1, CSD, 1);
 
+            phimvecatnode1[nchk] = DisplayAtNodes(0, 1, m_zoneindexfiber, fields[0]);
+            phievecatnode1[nchk] = DisplayAtNodes(0, 1, m_zoneindexfiber, fields[1]);
             CSDvecatnode1[nchk] = DisplayAtNodes(0, 1, m_zoneindexfiber, CSD);
             rhovecatnode1[nchk] = DisplayAtNodes(0, 1, m_zoneindexfiber, fields[2]);
 
+            phimvecatnode2[nchk] = DisplayAtNodes(0, 2, m_zoneindexfiber, fields[0]);
+            phievecatnode2[nchk] = DisplayAtNodes(0, 2, m_zoneindexfiber, fields[1]);
             CSDvecatnode2[nchk] = DisplayAtNodes(0, 2, m_zoneindexfiber, CSD);
             rhovecatnode2[nchk] = DisplayAtNodes(0, 2, m_zoneindexfiber, fields[2]);
 
+            phimvecatnode3[nchk] = DisplayAtNodes(0, 3, m_zoneindexfiber, fields[0]);
+            phievecatnode3[nchk] = DisplayAtNodes(0, 3, m_zoneindexfiber, fields[1]);
             CSDvecatnode3[nchk] = DisplayAtNodes(0, 3, m_zoneindexfiber, CSD);
             rhovecatnode3[nchk] = DisplayAtNodes(0, 3, m_zoneindexfiber, fields[2]);
 
+            phimvecatnode4[nchk] = DisplayAtNodes(0, 4, m_zoneindexfiber, fields[0]);
+            phievecatnode4[nchk] = DisplayAtNodes(0, 4, m_zoneindexfiber, fields[1]);
             CSDvecatnode4[nchk] = DisplayAtNodes(0, 4, m_zoneindexfiber, CSD);
             rhovecatnode4[nchk] = DisplayAtNodes(0, 4, m_zoneindexfiber, fields[2]);
 
+            phimvecatnode5[nchk] = DisplayAtNodes(0, 5, m_zoneindexfiber, fields[0]);
+            phievecatnode5[nchk] = DisplayAtNodes(0, 5, m_zoneindexfiber, fields[1]);
             CSDvecatnode5[nchk] = DisplayAtNodes(0, 5, m_zoneindexfiber, CSD);
             rhovecatnode5[nchk] = DisplayAtNodes(0, 5, m_zoneindexfiber, fields[2]);
 
+            std::cout << "phim at node 1 = " << phimvecatnode1[nchk]  << ", at node 2 = " << phimvecatnode2[nchk] << ", at node 3 = " << phimvecatnode3[nchk] 
+           << ", at node 4 = " << phimvecatnode4[nchk] << ", at node 5 = " << phimvecatnode5[nchk] << std::endl;
+
+            std::cout << "phie at node 1 = " << phievecatnode1[nchk]  << ", at node 2 = " << phievecatnode2[nchk] << ", at node 3 = " << phievecatnode3[nchk] 
+           << ", at node 4 = " << phievecatnode4[nchk] << ", at node 5 = " << phievecatnode5[nchk] << std::endl;
+
            std::cout << "CSD at node 1 = " << CSDvecatnode1[nchk]  << ", at node 2 = " << CSDvecatnode2[nchk] << ", at node 3 = " << CSDvecatnode3[nchk] 
            << ", at node 4 = " << CSDvecatnode4[nchk] << ", at node 5 = " << CSDvecatnode5[nchk] << std::endl;
+
            std::cout << "rho at node 1 = " << rhovecatnode1[nchk]  << ", at node 2 = " << rhovecatnode2[nchk] << ", at node 3 = " << rhovecatnode3[nchk] 
            << ", at node 4 = " << rhovecatnode4[nchk] << ", at node 5 = " << rhovecatnode5[nchk] << std::endl;
 
