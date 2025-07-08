@@ -2521,12 +2521,12 @@ void MMFNeuralEP::ComputephieTimeMap(
     Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 10.0 + 0.1;
+    constexpr NekDouble Tol = 0.1;
 
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble phie = field[i] + 10.0;
+        const NekDouble phie = field[i] + 3.0;
         if (phie > Tol)
         {
             const NekDouble fint = fieldint[i];
@@ -2545,12 +2545,12 @@ void MMFNeuralEP::ComputerhoTimeMap(
     Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 0.000001;
+    constexpr NekDouble Tol = 0.001;
 
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble rho = field[i] + 0.002;
+        const NekDouble rho = field[i] + 0.005;
         if (rho > Tol)
         {
             const NekDouble fint = fieldint[i];
