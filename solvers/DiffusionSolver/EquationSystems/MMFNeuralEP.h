@@ -400,8 +400,6 @@ protected:
     const Array<OneD, const Array<OneD, NekDouble>> &PhieAniStrength);
 
     NekDouble DisplayAtNodes(const int fibern, const int nodeindex, 
-                                const NekDouble nodelen, const NekDouble myelinlen,
-                                const NekDouble nodeinitdown, const NekDouble nodeinitup, 
                                 const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
                                 const Array<OneD, const NekDouble> &inarray);
 

@@ -2321,20 +2321,20 @@ void MMFNeuralEP::DoSolveMMF()
             Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
             Vmath::Smul(nq, -m_Diffext, CSD, 1, CSD, 1);
 
-            CSDvecatnode1[nchk] = DisplayAtNodes(0, 1, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, CSD);
-            rhovecatnode1[nchk] = DisplayAtNodes(0, 1, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, fields[2]);
+            CSDvecatnode1[nchk] = DisplayAtNodes(0, 1, m_zoneindexfiber, CSD);
+            rhovecatnode1[nchk] = DisplayAtNodes(0, 1, m_zoneindexfiber, fields[2]);
 
-            CSDvecatnode2[nchk] = DisplayAtNodes(0, 2, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, CSD);
-            rhovecatnode2[nchk] = DisplayAtNodes(0, 2, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, fields[2]);
+            CSDvecatnode2[nchk] = DisplayAtNodes(0, 2, m_zoneindexfiber, CSD);
+            rhovecatnode2[nchk] = DisplayAtNodes(0, 2, m_zoneindexfiber, fields[2]);
 
-            CSDvecatnode3[nchk] = DisplayAtNodes(0, 3, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, CSD);
-            rhovecatnode3[nchk] = DisplayAtNodes(0, 3, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, fields[2]);
+            CSDvecatnode3[nchk] = DisplayAtNodes(0, 3, m_zoneindexfiber, CSD);
+            rhovecatnode3[nchk] = DisplayAtNodes(0, 3, m_zoneindexfiber, fields[2]);
 
-            CSDvecatnode4[nchk] = DisplayAtNodes(0, 4, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, CSD);
-            rhovecatnode4[nchk] = DisplayAtNodes(0, 4, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, fields[2]);
+            CSDvecatnode4[nchk] = DisplayAtNodes(0, 4, m_zoneindexfiber, CSD);
+            rhovecatnode4[nchk] = DisplayAtNodes(0, 4, m_zoneindexfiber, fields[2]);
 
-            CSDvecatnode5[nchk] = DisplayAtNodes(0, 5, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, CSD);
-            rhovecatnode5[nchk] = DisplayAtNodes(0, 5, m_nodelen, m_myelinlen, m_nodeinitdown, m_nodeinitup, m_zoneindexfiber, fields[2]);
+            CSDvecatnode5[nchk] = DisplayAtNodes(0, 5, m_zoneindexfiber, CSD);
+            rhovecatnode5[nchk] = DisplayAtNodes(0, 5, m_zoneindexfiber, fields[2]);
 
            std::cout << "CSD at node 1 = " << CSDvecatnode1[nchk]  << ", at node 2 = " << CSDvecatnode2[nchk] << ", at node 3 = " << CSDvecatnode3[nchk] 
            << ", at node 4 = " << CSDvecatnode4[nchk] << ", at node 5 = " << CSDvecatnode5[nchk] << std::endl;
@@ -2430,22 +2430,16 @@ void MMFNeuralEP::DoSolveMMF()
 } 
 // namespace Nektar
 NekDouble MMFNeuralEP::DisplayAtNodes(const int fibern, const int nodeindex, 
-        const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
         const Array<OneD, const NekDouble> &inarray)
 {
     int nq = GetTotPoints();
-
-    NekDouble nodestart, nodeend;
 
     NekDouble output=0.0;
 
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        nodestart = nodeinitup + myelinlen + nodeindex * (myelinlen + nodelen);
-        nodeend = nodeinitup + (nodeindex+1) * (myelinlen + nodelen);
         if( zoneindexfiber[fibern][i] == nodeindex )
         {
             output += inarray[i];
