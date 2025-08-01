@@ -141,6 +141,6 @@ void NeuralStimulusZone::v_Update(const Array<OneD, const NekDouble> &excitezone
  */
 void NeuralStimulusZone::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
-    boost::ignore_unused(s);
+    static_cast<void>(s);
 }
 } // namespace Nektar

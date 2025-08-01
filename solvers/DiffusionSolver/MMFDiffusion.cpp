@@ -135,7 +135,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         m_varcoeffXYZ[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
         m_d00vec = Array<OneD, NekDouble>(nq);
 
-        int index;
+        int index = 0;
 
             for (int i=0; i<nq; ++i)
             {

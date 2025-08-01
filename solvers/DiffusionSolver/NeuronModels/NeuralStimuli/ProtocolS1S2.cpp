@@ -120,8 +120,7 @@ NekDouble ProtocolS1S2::v_GetAmplitude(const NekDouble time)
 
 void ProtocolS1S2::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
-   // boost::ignore_unused(s);
-       static_cast<void>(s);
+    static_cast<void>(s);
 }
 
 void ProtocolS1S2::v_SetInitialConditions()
