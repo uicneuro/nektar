@@ -35,15 +35,17 @@
 
 #include <CompressibleFlowSolver/EquationSystems/EulerImplicitCFE.h>
 
-using namespace std;
-
 namespace Nektar
 {
-string EulerImplicitCFE::className =
+
+std::string EulerImplicitCFE::className =
     SolverUtils::GetEquationSystemFactory().RegisterCreatorFunction(
         "EulerImplicitCFE", EulerImplicitCFE::create,
         "Euler Implicit equations in conservative variables.");
 
+/**
+ *
+ */
 EulerImplicitCFE::EulerImplicitCFE(
     const LibUtilities::SessionReaderSharedPtr &pSession,
     const SpatialDomains::MeshGraphSharedPtr &pGraph)
@@ -52,6 +54,9 @@ EulerImplicitCFE::EulerImplicitCFE(
 {
 }
 
+/**
+ *
+ */
 void EulerImplicitCFE::v_InitObject(bool DeclareFields)
 {
     CFSImplicit::v_InitObject(DeclareFields);
@@ -59,21 +64,11 @@ void EulerImplicitCFE::v_InitObject(bool DeclareFields)
 }
 
 /**
- * @brief Destructor for Euler Implicit CFE class.
+ *
  */
-EulerImplicitCFE::~EulerImplicitCFE()
-{
-}
-
 bool EulerImplicitCFE::v_SupportsShockCaptType(const std::string type) const
 {
-    if (type == "Off")
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return type == "Off";
 }
+
 } // namespace Nektar

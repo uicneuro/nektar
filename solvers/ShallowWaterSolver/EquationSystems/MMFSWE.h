@@ -296,7 +296,7 @@ protected:
 
     virtual void v_DoSolve() override;
 
-    virtual void v_DoInitialise() override;
+    void v_DoInitialise(bool dumpInitialConditions = false) override;
 
     /// Print Summary
     virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;

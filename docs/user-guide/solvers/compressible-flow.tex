@@ -139,17 +139,15 @@ the Sutherland's law and $k$ is the thermal conductivity.
 \subsection{Numerical discretisation}
 In Nektar++ the spatial discretisation of the Euler and of the Navier-Stokes
 equations is projected in the polynomial space via a discontinuous projection.
-Specifically we make use either of the discontinuous Galerkin (DG) method
-or the Flux Reconstruction (FR) approach.
-In both the approaches the physical domain $\Omega$ is divided into a mesh
+Specifically we make use of the discontinuous Galerkin (DG) method.
+The physical domain $\Omega$ is divided into a mesh
 of $N$ non-overlapping elements $\Omega_{e}$ and the solution is allowed
 to be discontinuous at the boundary between two adjacent elements.
 Since the Euler as well as the Navier-Stokes equations are defined locally
 (on each element of the computational domain), it is necessary to define
 a term to couple the elements of the spatial discretisation in order to allow
 information to propagate across the domain. This term, called numerical
-interface flux, naturally arises from the discontinuous Galerkin formulation
-as well as from the Flux Reconstruction approach.
+interface flux, naturally arises from the discontinuous Galerkin formulation.
 
 For the advection term it is common to solve a Riemann problem at each
 interface of the computational domain through exact or approximated Riemann
@@ -168,8 +166,7 @@ Newton method, the accuracy of the method may come at high computational
 cost. The approximated Riemann solvers are simplifications of the exact solver.
 
 Concerning the diffusion term, the coupling between the elements can be achieved
-by using local discontinuous Galerkin (LDG) approach, interior penalty method or
-five different FR diffusion terms.
+by using local discontinuous Galerkin (LDG) approach or interior penalty method.
 
 The boundary conditions are also implemented by exploiting the numerical
 interface fluxes just mentioned.
@@ -294,7 +291,6 @@ Under this section it is possible to set the solver information.
 <SOLVERINFO>
   <I PROPERTY="EQTYPE"                        VALUE="NavierStokesImplicitCFE" />
   <I PROPERTY="Projection"                    VALUE="DisContinuous"           />
-  <I PROPERTY="TimeIntegrationMethod"         VALUE="DIRKOrder2"              />
   <I PROPERTY="AdvectioType"                  VALUE="WeakDG"                  />
   <I PROPERTY="DiffusionType"                 VALUE="InteriorPenalty"         />
   <I PROPERTY="UpwindType"                    VALUE="Roe"                     />
@@ -311,8 +307,6 @@ Under this section it is possible to set the solver information.
     \begin{itemize}
       \item \inltt{NavierStokesCFE} (Compressible Navier-Stokes equations).
       \item \inltt{EulerCFE} (Compressible Euler equations).
-      \item \inltt{IsentropicVortex} (Isentropic vortex test case).
-      \item \inltt{RinglebFlow} (Ringleb flow test case).
     \end{itemize}
 
     Implicit discretization in time:
@@ -328,11 +322,6 @@ Under this section it is possible to set the solver information.
   \item \inltt{AdvectionType} is the advection operator we want to use.
     \begin{itemize}
       \item \inltt{WeakDG} (classical DG in weak form).
-      \item \inltt{FRDG} (Flux-Reconstruction recovering nodal DG scheme).
-      \item \inltt{FRSD} (Flux-Reconstruction recovering a spectral difference (SD) scheme).
-      \item \inltt{FRHU} (Flux-Reconstruction recovering Huynh (G2) scheme).
-      \item \inltt{FRcmin} (Flux-Reconstruction with $c = c_{min}$).
-      \item \inltt{FRcinf} (Flux-Reconstruction with $c = \infty$).
     \end{itemize}
     Note that only \inltt{WeakDG} is fully supported, the other operators work
     only with quadrilateral elements ($2D$ or $2.5D$).
@@ -345,11 +334,6 @@ Under this section it is possible to set the solver information.
       and proportional to an optional parameter \inltt{LDGNSc11} which is by default
       set to one; proportionality to polynomial order can be manually imposed by setting
       the parameter \inltt{LDGNSc11} equal to $p^2$).
-      \item \inltt{LFRDGNS} (Flux-Reconstruction recovering nodal DG scheme).
-      \item \inltt{LFRSDNS} (Flux-Reconstruction recovering a spectral difference (SD) scheme).
-      \item \inltt{LFRHUNS} (Flux-Reconstruction recovering Huynh (G2) scheme).
-      \item \inltt{LFRcminNS} (Flux-Reconstruction with $c = c_{min}$).
-      \item \inltt{LFRcinfNS} (Flux-Reconstruction with $c = \infty$).
       \item \inltt{InteriorPenalty} (Symmetric interior penalty method).
     \end{itemize}
     Note that only \inltt{LDGNS} and \inltt{InteriorPenalty} are fully supported, the other operators work only
@@ -539,6 +523,86 @@ $A$, frequency $f$, and in the range of $[x_0, x_0+len]$ on a flat plate.
 </BOUNDARYCONDITIONS>
 \end{lstlisting}
 where \inltt{pOut} is the target static pressure at the boundary.
+
+\item Stagnation inflow boundary condition:
+\begin{lstlisting}[style=XmlStyle]
+<BOUNDARYCONDITIONS>
+  <REGION REF="0">
+    <D VAR="rho"  USERDEFINEDTYPE="StagnationInflow" VALUE="rho0" />
+    <D VAR="rhou" USERDEFINEDTYPE="StagnationInflow" VALUE="nx" />
+    <D VAR="rhov" USERDEFINEDTYPE="StagnationInflow" VALUE="ny" />
+    <D VAR="rhov" USERDEFINEDTYPE="StagnationInflow" VALUE="nz" />
+    <D VAR="E"    USERDEFINEDTYPE="StagnationInflow" VALUE="p0/(Gamma-1)" />
+  </REGION>
+</BOUNDARYCONDITIONS>
+\end{lstlisting}
+where \inltt{rho0} and \inltt{p0} are the stagnation density and stagnation pressure, respectively.
+The values \inltt{nx}, \inltt{ny}, and \inltt{nz} further define the direction of the flow. Note that 
+it is not necessary to normalize the vector \inltt{(nx, ny, nz)}, it will be done automatically by the 
+solver. If the flow direction isn't specified, the flow will enter in the boundary-normal direction.
+The stagnation inflow boundary condition imposes a constant stagnation density and stagnation pressure 
+on the boundary. These quantities are related to the stagnation temperature through the relation
+\inltt{T0 = p0/(rho0 * GasConstant)}. This boundary condition is useful in situations when stagnation
+quantities are known at the inlet, rather than the actual density and pressure. In addition to this, the
+standard boundary condition where 5 quantities (the conservative variables) are imposed on the boundary
+is not suitable in many situations because in a subsonic compressible flow, only 4 out of 5 variables
+can be imposed at an inlet boundary. In contrast, the stagnation inflow boundary condition only imposes
+4 quantities (2 stagnation quantities, and the direction of the flow). The last quantitity at the inlet
+will instead be determined by the solution inside the domain. If you have a good estimate of one additional 
+quantitity at the inlet, such as the magnitude of the velocity or the static pressure, you can estimate 
+all remaining quantities at the inlet for the isentropic compressible flow relations. In fact, at each 
+iteration, the solver uses the isentropic flow relations combined with the quantities imposed by the
+boundary + one quantity from the interior solution to compute all remaining quantities at the boundary.
+Once this has been done, the flux over the boundary at that iteration can be computed.
+
+\item Subsonic boundary condition enforcing entropy and pressure:
+\begin{lstlisting}[style=XmlStyle]
+<BOUNDARYCONDITIONS>
+  <REGION REF="0">
+    <D VAR="rho"  USERDEFINEDTYPE="EnforceEntropyPressure" VALUE="rhoInf" />
+    <D VAR="rhou" USERDEFINEDTYPE="EnforceEntropyPressure" VALUE="rhoInf*uInf" />
+    <D VAR="rhov" USERDEFINEDTYPE="EnforceEntropyPressure" VALUE="rhoInf*vInf" />
+    <D VAR="rhov" USERDEFINEDTYPE="EnforceEntropyPressure" VALUE="rhoInf*wInf" />
+    <D VAR="E"    USERDEFINEDTYPE="EnforceEntropyPressure" VALUE="pInf/(Gamma-1) + 0.5*rhoInf*(uInf*uInf + vInf*vInf)" />
+  </REGION>
+</BOUNDARYCONDITIONS>
+\end{lstlisting}
+where the input type can be either \inltt{VALUE} or \inltt{FILE} such that the specified entropy and pressure distribution
+(corresponding to the input \inltt{rhoInf}, \inltt{rhoInf*uInf}, \inltt{rhoInf*vInf}, \inltt{rhoInf*wInf}, and \inltt{E})
+will be enforced on the subsonic inflow boundary. 
+If the flow is supersonic, all the conditions are naturelly agreed with the input distribution.
+The following two conditions follows the same rule.
+
+\item Subsonic boundary condition enforcing entropy and velocity:
+\begin{lstlisting}[style=XmlStyle]
+<BOUNDARYCONDITIONS>
+  <REGION REF="0">
+    <D VAR="rho"  USERDEFINEDTYPE="EnforceEntropyVelocity" VALUE="rhoInf" />
+    <D VAR="rhou" USERDEFINEDTYPE="EnforceEntropyVelocity" VALUE="rhoInf*uInf" />
+    <D VAR="rhov" USERDEFINEDTYPE="EnforceEntropyVelocity" VALUE="rhoInf*vInf" />
+    <D VAR="rhov" USERDEFINEDTYPE="EnforceEntropyVelocity" VALUE="rhoInf*wInf" />
+    <D VAR="E"    USERDEFINEDTYPE="EnforceEntropyVelocity" VALUE="pInf/(Gamma-1) + 0.5*rhoInf*(uInf*uInf + vInf*vInf)" />
+  </REGION>
+</BOUNDARYCONDITIONS>
+\end{lstlisting}
+where both tangential and normal velocity components are enforced. Therefore the angle of attack is maintained.
+
+\item Subsonic boundary condition enforcing entropy and total enthalpy:
+\begin{lstlisting}[style=XmlStyle]
+<BOUNDARYCONDITIONS>
+  <REGION REF="0">
+    <D VAR="rho"  USERDEFINEDTYPE="EnforceEntropyTotalEnthalpy" VALUE="rhoInf" />
+    <D VAR="rhou" USERDEFINEDTYPE="EnforceEntropyTotalEnthalpy" VALUE="rhoInf*uInf" />
+    <D VAR="rhov" USERDEFINEDTYPE="EnforceEntropyTotalEnthalpy" VALUE="rhoInf*vInf" />
+    <D VAR="rhov" USERDEFINEDTYPE="EnforceEntropyTotalEnthalpy" VALUE="rhoInf*wInf" />
+    <D VAR="E"    USERDEFINEDTYPE="EnforceEntropyTotalEnthalpy" VALUE="pInf/(Gamma-1) + 0.5*rhoInf*(uInf*uInf + vInf*vInf)" />
+  </REGION>
+</BOUNDARYCONDITIONS>
+\end{lstlisting}
+
+
+
+
 \end{itemize}
 
 \subsection*{Initial conditions and exact solution}
@@ -748,7 +812,6 @@ It should be noted that currently the CFS solver only supports
 \begin{lstlisting}[style=XmlStyle]
 <PARAMETERS>
   <I PROPERTY="EQTYPE"                        VALUE="NavierStokesImplicitCFE" />
-  <I PROPERTY="TimeIntegrationMethod"         VALUE="DIRKOrder2"              />
 </PARAMETERS>
 \end{lstlisting}
 

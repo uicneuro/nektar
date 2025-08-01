@@ -34,11 +34,10 @@
 
 #include <ADRSolver/EquationSystems/Projection.h>
 
-using namespace std;
-
 namespace Nektar
 {
-string Projection::className =
+
+std::string Projection::className =
     GetEquationSystemFactory().RegisterCreatorFunction("Projection",
                                                        Projection::create);
 
@@ -55,15 +54,11 @@ void Projection::v_InitObject(bool DeclareFields)
     GetFunction("Forcing")->Evaluate(m_session->GetVariables(), m_fields);
 }
 
-Projection::~Projection()
-{
-}
-
 void Projection::v_DoSolve()
 {
     for (int i = 0; i < m_fields.size(); ++i)
     {
-        // Zero field so initial conditions are zero
+        // Zero initial guess
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
         m_fields[i]->FwdTrans(m_fields[i]->GetPhys(),
                               m_fields[i]->UpdateCoeffs());
@@ -76,11 +71,12 @@ void Projection::v_GenerateSummary(SolverUtils::SummaryList &s)
     EquationSystem::SessionSummary(s);
     for (int i = 0; i < m_fields.size(); ++i)
     {
-        stringstream name;
+        std::stringstream name;
         name << "Forcing func [" << i << "]";
         SolverUtils::AddSummaryItem(
             s, name.str(),
             m_session->GetFunction("Forcing", i)->GetExpression());
     }
 }
+
 } // namespace Nektar

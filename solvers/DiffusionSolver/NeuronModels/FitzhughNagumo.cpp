@@ -85,7 +85,7 @@ void FitzhughNagumo::v_Update(
                                                         const NekDouble time,
                                                         const NekDouble var_membrane__Tc)
 {
-    boost::ignore_unused(RvNodeZone, var_membrane__Tc);
+    boost::ignore_unused(RvNodeZone, var_membrane__Tc, time);
 
     NekDouble m_gamma = 0.5;
 

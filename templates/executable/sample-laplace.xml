@@ -35,7 +35,7 @@
         </PARAMETERS>
 
         <SOLVERINFO>
-            <I PROPERTY="EQTYPE"                VALUE="Helmholtz"    />
+            <I PROPERTY="EQTYPE"                VALUE="Laplace"    />
             <I PROPERTY="Projection"            VALUE="Continuous" />
             <I PROPERTY="DiffusionAdvancement"  VALUE="Implicit"   />
         </SOLVERINFO>
@@ -59,12 +59,8 @@
             </REGION>
         </BOUNDARYCONDITIONS>
 
-        <FUNCTION NAME="Forcing">
-            <E VAR="u" VALUE="-(Lambda + 2*PI*PI)*sin(PI*x)*sin(PI*y)" />
-        </FUNCTION>
-
         <FUNCTION NAME="ExactSolution">
-            <E VAR="u" VALUE="sinh(PI*x)*sin(PI*y)/sinh(4*PI)" />
+            <E VAR="u" VALUE="sinh(2*PI*x)*sin(2*PI*y)/sinh(4*PI)" />
         </FUNCTION>
     </CONDITIONS>
 </NEKTAR>

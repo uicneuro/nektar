@@ -5,6 +5,7 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/tests/Tester.cpp.in
 SET(TESTER_SOURCES
   Metric.cpp
   MetricEigenvalue.cpp
+  MetricExecutionTime.cpp
   MetricFile.cpp
   MetricFileExists.cpp
   MetricL2.cpp
@@ -21,6 +22,7 @@ SET(TESTER_SOURCES
 SET(TESTER_HEADERS
   Metric.h
   MetricEigenvalue.h
+  MetricExecutionTime.h
   MetricFile.h
   MetricFileExists.h
   MetricL2.h
@@ -34,24 +36,26 @@ SET(TESTER_HEADERS
   sha1.h
 )
 
-ADD_DEFINITIONS(-DBUILD_PATH="${CMAKE_BINARY_DIR}")
-
 IF(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-  ADD_DEFINITIONS(-DRELWITHDEBINFO)
+    ADD_DEFINITIONS(-DRELWITHDEBINFO)
 ENDIF()
 
 
 ADD_NEKTAR_EXECUTABLE(Tester COMPONENT tests SOURCES ${TESTER_SOURCES})
 
 TARGET_LINK_LIBRARIES(Tester
-  ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
-  ${Boost_REGEX_LIBRARY}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  ${Boost_THREAD_LIBRARY}
+  ${Boost_FILESYSTEM_LIBRARY}
   optimized ${TINYXML_LIBRARY} debug ${TINYXML_LIBRARY}
 )
 ADD_DEPENDENCIES(Tester boost tinyxml-2.6.2)
+
+
+# Older gcc versions (6 <= version < 9) require libstdc++fs.
+IF (DEFINED NEKTAR_FILESYSTEM_LIBRARY)
+    TARGET_LINK_LIBRARIES(Tester ${NEKTAR_FILESYSTEM_LIBRARY})
+ENDIF()
 
 IF( ${CMAKE_SYSTEM} MATCHES "Linux.*")
   TARGET_LINK_LIBRARIES(Tester optimized rt debug rt)

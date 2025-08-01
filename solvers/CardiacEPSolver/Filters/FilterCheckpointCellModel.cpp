@@ -42,24 +42,16 @@ std::string FilterCheckpointCellModel::className =
 
 FilterCheckpointCellModel::FilterCheckpointCellModel(
     const LibUtilities::SessionReaderSharedPtr &pSession,
-    const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+    const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
     const ParamMap &pParams)
     : Filter(pSession, pEquation)
 {
     // OutputFile
-    auto it = pParams.find("OutputFile");
-    if (it == pParams.end())
-    {
-        m_outputFile = m_session->GetSessionName();
-    }
-    else
-    {
-        ASSERTL0(it->second.length() > 0, "Missing parameter 'OutputFile'.");
-        m_outputFile = it->second;
-    }
+    std::string ext = "";
+    m_outputFile    = Filter::SetupOutput(ext, pParams);
 
     // OutputFrequency
-    it = pParams.find("OutputFrequency");
+    auto it = pParams.find("OutputFrequency");
     ASSERTL0(it != pParams.end(), "Missing parameter 'OutputFrequency'.");
     LibUtilities::Equation equ(m_session->GetInterpreter(), it->second);
     m_outputFrequency = floor(equ.Evaluate());
@@ -75,9 +67,8 @@ FilterCheckpointCellModel::~FilterCheckpointCellModel()
 
 void FilterCheckpointCellModel::v_Initialise(
     const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-    const NekDouble &time)
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(time);
     ASSERTL0(m_cell.get(),
              "Cell model has not been set by EquationSystem "
              "class. Use SetCellModel on this filter to achieve this.");
@@ -97,8 +88,13 @@ void FilterCheckpointCellModel::v_Update(
         return;
     }
 
-    std::stringstream vOutputFilename;
-    vOutputFilename << m_outputFile << "_" << m_outputIndex << ".chk";
+    std::stringstream vTmpFilename;
+    std::string vOutputFilename;
+    std::string ext = ".chk";
+
+    vTmpFilename << fs::path(m_outputFile).replace_extension("").string() << "_"
+                 << m_outputIndex << ext;
+    vOutputFilename = Filter::SetupOutput(ext, vTmpFilename.str());
 
     SpatialDomains::MeshGraphSharedPtr vGraph = pFields[0]->GetGraph();
 
@@ -127,15 +123,15 @@ void FilterCheckpointCellModel::v_Update(
     LibUtilities::FieldMetaDataMap fieldMetaDataMap;
     fieldMetaDataMap["Time"] = boost::lexical_cast<std::string>(time);
 
-    m_fld->Write(vOutputFilename.str(), FieldDef, FieldData, fieldMetaDataMap);
+    m_fld->Write(vOutputFilename, FieldDef, FieldData, fieldMetaDataMap);
     m_outputIndex++;
 }
 
 void FilterCheckpointCellModel::v_Finalise(
-    const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-    const NekDouble &time)
+    [[maybe_unused]] const Array<OneD, const MultiRegions::ExpListSharedPtr>
+        &pFields,
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(pFields, time);
 }
 
 bool FilterCheckpointCellModel::v_IsTimeDependent()

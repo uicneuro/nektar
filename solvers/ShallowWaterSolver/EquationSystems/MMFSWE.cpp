@@ -363,7 +363,7 @@ void MMFSWE::v_DoSolve()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         m_time += m_timestep;
@@ -2120,12 +2120,12 @@ void MMFSWE::WallBoundary2D(int bcRegion, int cnt,
 /**
  *
  */
-void MMFSWE::v_DoInitialise()
+void MMFSWE::v_DoInitialise(bool dumpInitialConditions)
 {
     // Compute m_depth and m_Derivdepth
     EvaluateWaterDepth();
     EvaluateCoriolis();
-    SetInitialConditions();
+    SetInitialConditions(0.0, dumpInitialConditions);
     PrimitiveToConservative();
 
     // transfer the initial conditions to modal values
@@ -3454,7 +3454,7 @@ void MMFSWE::ConservativeToPrimitive(
 {
     int nq = GetTotPoints();
 
-    if (physin[0].get() == physout[0].get())
+    if (physin[0].data() == physout[0].data())
     {
         // copy indata and work with tmp array
         Array<OneD, Array<OneD, NekDouble>> tmp(3);
@@ -3494,7 +3494,7 @@ void MMFSWE::PrimitiveToConservative(
 
     int nq = GetTotPoints();
 
-    if (physin[0].get() == physout[0].get())
+    if (physin[0].data() == physout[0].data())
     {
         // copy indata and work with tmp array
         Array<OneD, Array<OneD, NekDouble>> tmp(3);

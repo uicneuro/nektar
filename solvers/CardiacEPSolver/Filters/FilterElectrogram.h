@@ -49,7 +49,7 @@ public:
     /// Creates an instance of this class
     static SolverUtils::FilterSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
-        const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+        const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
         const ParamMap &pParams)
     {
         SolverUtils::FilterSharedPtr p =
@@ -64,27 +64,28 @@ public:
     /// Electrogram filter constructor
     FilterElectrogram(
         const LibUtilities::SessionReaderSharedPtr &pSession,
-        const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+        const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
         const ParamMap &pParams);
 
     /// Electrogram filter destructor
-    virtual ~FilterElectrogram();
+    ~FilterElectrogram() override;
 
 protected:
     /// Initialises the electrogram filter and open output file.
-    virtual void v_Initialise(
+    void v_Initialise(
         const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
         const NekDouble &time) override;
     /// Compute extracellular potential at egm points at current time.
-    virtual void v_Update(
+    void v_Update(
         const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
         const NekDouble &time) override;
     /// Finalise the electrogram filter and close output file.
-    virtual void v_Finalise(
+    void v_Finalise(
         const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
         const NekDouble &time) override;
     /// Filter is time-dependent and should be called at each time-step.
-    virtual bool v_IsTimeDependent() override;
+    bool v_IsTimeDependent() override;
+    SpatialDomains::EntityHolder m_holder;
 
 private:
     /// Gradient of the radius from each electrogram point in x-direction
@@ -94,7 +95,7 @@ private:
     /// Gradient of the radius from each electrogram point in z-direction
     Array<OneD, Array<OneD, NekDouble>> m_grad_R_z;
     /// List of electrogram points
-    SpatialDomains::PointGeomVector m_electrogramPoints;
+    std::vector<SpatialDomains::PointGeom *> m_electrogramPoints;
     /// Counts number of calls to update (number of timesteps)
     unsigned int m_index;
     /// Number of timesteps between outputs

@@ -37,10 +37,9 @@
 #include <IncNavierStokesSolver/Forcing/ForcingMovingBody.h>
 #include <MultiRegions/ExpList.h>
 
-using namespace std;
-
 namespace Nektar
 {
+
 std::string ForcingMovingBody::className =
     SolverUtils::GetForcingFactory().RegisterCreatorFunction(
         "MovingBody", ForcingMovingBody::create, "Moving Body Forcing");
@@ -54,10 +53,9 @@ ForcingMovingBody::ForcingMovingBody(
 
 void ForcingMovingBody::v_InitObject(
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
-    const unsigned int &pNumForcingFields, const TiXmlElement *pForce)
+    [[maybe_unused]] const unsigned int &pNumForcingFields,
+    const TiXmlElement *pForce)
 {
-    boost::ignore_unused(pNumForcingFields);
-
     // Just 3D homogenous 1D problems can use this techinque
     ASSERTL0(pFields[0]->GetExpType() == MultiRegions::e3DH1D,
              "Moving body implemented just for 3D Homogenous 1D expansions.");
@@ -103,11 +101,10 @@ void ForcingMovingBody::v_InitObject(
 
 void ForcingMovingBody::v_Apply(
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
-    const Array<OneD, Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble &time)
+    [[maybe_unused]] const Array<OneD, Array<OneD, NekDouble>> &inarray,
+    [[maybe_unused]] Array<OneD, Array<OneD, NekDouble>> &outarray,
+    const NekDouble &time)
 {
-    boost::ignore_unused(inarray, outarray);
-
     // Update the forces from the calculation of fluid field, which is
     // implemented in the movingbody filter
     Array<OneD, NekDouble> Hydroforces(2 * m_np, 0.0);
@@ -228,10 +225,8 @@ void ForcingMovingBody::v_Apply(
  */
 void ForcingMovingBody::EvaluateStructDynModel(
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
-    Array<OneD, NekDouble> &Hydroforces, NekDouble time)
+    Array<OneD, NekDouble> &Hydroforces, [[maybe_unused]] NekDouble time)
 {
-    boost::ignore_unused(time);
-
     LibUtilities::CommSharedPtr vcomm = pFields[0]->GetComm();
     size_t colrank                    = vcomm->GetColumnComm()->GetRank();
     size_t nproc                      = vcomm->GetColumnComm()->GetSize();
@@ -345,7 +340,7 @@ void ForcingMovingBody::EvaluateStructDynModel(
 
             // only consider second order approximation for fictitious variables
             size_t intOrder = 2;
-            size_t nint     = min(m_movingBodyCalls + 1, intOrder);
+            size_t nint     = std::min(m_movingBodyCalls + 1, intOrder);
             size_t nlevels  = m_fV[0].size();
 
             for (size_t i = 0; i < m_motion.size(); ++i)
@@ -553,11 +548,9 @@ void ForcingMovingBody::EvaluateStructDynModel(
  *
  */
 void ForcingMovingBody::Newmark_betaSolver(
-    const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
+    [[maybe_unused]] const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
     Array<OneD, NekDouble> &HydroForces, Array<OneD, NekDouble> &BodyMotions)
 {
-    boost::ignore_unused(pFields);
-
     std::string supptype = m_session->GetSolverInfo("SupportType");
 
     size_t npts = HydroForces.size();
@@ -683,11 +676,9 @@ void ForcingMovingBody::Newmark_betaSolver(
  *
  */
 void ForcingMovingBody::InitialiseCableModel(
-    const LibUtilities::SessionReaderSharedPtr &pSession,
-    const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields)
+    [[maybe_unused]] const LibUtilities::SessionReaderSharedPtr &pSession,
+    [[maybe_unused]] const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields)
 {
-    boost::ignore_unused(pSession, pFields);
-
     m_movingBodyCalls = 0;
     m_session->LoadParameter("Kinvis", m_kinvis);
     m_session->LoadParameter("TimeStep", m_timestep, 0.01);
@@ -750,7 +741,7 @@ void ForcingMovingBody::InitialiseCableModel(
         m_session->LoadParameter("Strip_Z", nstrips);
         m_lhom = nstrips * DistStrip;
         m_FFT  = LibUtilities::GetNektarFFTFactory().CreateInstance("NekFFTW",
-                                                                   nstrips);
+                                                                    nstrips);
     }
 
     // load the structural dynamic parameters from xml file
@@ -828,17 +819,17 @@ void ForcingMovingBody::InitialiseCableModel(
                 // Import the motion variables from the file
                 for (size_t n = 0; n < nzpoints; n++)
                 {
-                    inputStream >> setprecision(6) >> time;
-                    inputStream >> setprecision(6) >> z_cds;
-                    inputStream >> setprecision(8) >> m_MotionVars[0][n];
-                    inputStream >> setprecision(8) >>
+                    inputStream >> std::setprecision(6) >> time;
+                    inputStream >> std::setprecision(6) >> z_cds;
+                    inputStream >> std::setprecision(8) >> m_MotionVars[0][n];
+                    inputStream >> std::setprecision(8) >>
                         m_MotionVars[0][n + nzpoints];
-                    inputStream >> setprecision(8) >>
+                    inputStream >> std::setprecision(8) >>
                         m_MotionVars[0][n + 2 * nzpoints];
-                    inputStream >> setprecision(8) >> m_MotionVars[1][n];
-                    inputStream >> setprecision(8) >>
+                    inputStream >> std::setprecision(8) >> m_MotionVars[1][n];
+                    inputStream >> std::setprecision(8) >>
                         m_MotionVars[1][n + nzpoints];
-                    inputStream >> setprecision(8) >>
+                    inputStream >> std::setprecision(8) >>
                         m_MotionVars[1][n + 2 * nzpoints];
                 }
                 // Close inputstream for cable motions
@@ -949,10 +940,8 @@ void ForcingMovingBody::InitialiseCableModel(
  *
  */
 void ForcingMovingBody::SetDynEqCoeffMatrix(
-    const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields)
+    [[maybe_unused]] const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields)
 {
-    boost::ignore_unused(pFields);
-
     size_t nplanes;
 
     bool homostrip;
@@ -1253,7 +1242,7 @@ void ForcingMovingBody::InitialiseFilter(
     // fluid forces and write both the aerodynamic forces and motion variables
     // into the output files
     m_MovBodyfilter = MemoryManager<FilterMovingBody>::AllocateSharedPtr(
-        pSession, m_equ, vParams);
+        pSession, m_equ.lock(), vParams);
 
     // Initialise the object of MovingBody filter
     m_MovBodyfilter->Initialise(pFields, 0.0);

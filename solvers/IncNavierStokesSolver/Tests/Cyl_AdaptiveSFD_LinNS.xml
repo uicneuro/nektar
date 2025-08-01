@@ -8,10 +8,13 @@
             <I PROPERTY="SolverType" VALUE="VelocityCorrectionScheme"/>
             <I PROPERTY="EQTYPE" VALUE="UnsteadyNavierStokes"/>
             <I PROPERTY="Projection" VALUE="Galerkin"/>
-            <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXOrder2"/>
             <I PROPERTY="Driver" VALUE="SteadyState"/>
             <I PROPERTY="EvolutionOperator" VALUE="AdaptiveSFD"/>
         </SOLVERINFO>
+        <TIMEINTEGRATIONSCHEME>
+            <METHOD> IMEX </METHOD>
+            <ORDER> 2 </ORDER>
+        </TIMEINTEGRATIONSCHEME>
         <PARAMETERS>
             <P> TimeStep = 0.01   </P>
             <P> NumSteps = 1.0/TimeStep    </P>
@@ -52,7 +55,8 @@
             </REGION>
         </BOUNDARYCONDITIONS>
         <FUNCTION NAME="InitialConditions">
-            <F VAR="u,v,p" FILE="Cyl_AdaptiveSFD_Eig.rst"/>
+            <F VAR="u,v" FILE="Cyl_AdaptiveSFD_Eig.rst"/>
+            <E VAR="p" VALUE="0.0"/>
         </FUNCTION>
         <FUNCTION NAME="BaseFlow">
             <E VAR="u" VALUE="1.0"/>

@@ -49,29 +49,16 @@ std::string FilterElectrogram::className =
  */
 FilterElectrogram::FilterElectrogram(
     const LibUtilities::SessionReaderSharedPtr &pSession,
-    const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+    const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
     const ParamMap &pParams)
     : Filter(pSession, pEquation)
 {
     // OutputFile
-    auto it = pParams.find("OutputFile");
-    if (it == pParams.end())
-    {
-        m_outputFile = m_session->GetSessionName();
-    }
-    else
-    {
-        ASSERTL0(it->second.length() > 0, "Missing parameter 'OutputFile'.");
-        m_outputFile = it->second;
-    }
-    if (!(m_outputFile.length() >= 4 &&
-          m_outputFile.substr(m_outputFile.length() - 4) == ".ecg"))
-    {
-        m_outputFile += ".ecg";
-    }
+    std::string ext = ".ecg";
+    m_outputFile    = Filter::SetupOutput(ext, pParams);
 
     // OutputFrequency
-    it = pParams.find("OutputFrequency");
+    auto it = pParams.find("OutputFrequency");
     if (it == pParams.end())
     {
         m_outputFrequency = 1;
@@ -119,11 +106,12 @@ void FilterElectrogram::v_Initialise(
         m_electrogramStream >> gloCoord[0] >> gloCoord[1] >> gloCoord[2];
         if (!m_electrogramStream.fail())
         {
-            SpatialDomains::PointGeomSharedPtr vert =
-                MemoryManager<SpatialDomains::PointGeom>::AllocateSharedPtr(
+            SpatialDomains::PointGeomUniquePtr vert =
+                ObjPoolManager<SpatialDomains::PointGeom>::AllocateUniquePtr(
                     dim, i, gloCoord[0], gloCoord[1], gloCoord[2]);
 
-            m_electrogramPoints.push_back(vert);
+            m_electrogramPoints.push_back(vert.get());
+            m_holder.m_pointVec.push_back(std::move(vert));
             ++i;
         }
     }
@@ -258,10 +246,8 @@ void FilterElectrogram::v_Update(
  */
 void FilterElectrogram::v_Finalise(
     const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-    const NekDouble &time)
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(time);
-
     if (pFields[0]->GetComm()->GetRank() == 0)
     {
         m_outputStream.close();

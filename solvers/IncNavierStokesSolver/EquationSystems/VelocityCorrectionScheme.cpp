@@ -43,15 +43,18 @@
 
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
-
 namespace Nektar
 {
+
 using namespace MultiRegions;
 
-string VelocityCorrectionScheme::className =
+std::string VelocityCorrectionScheme::className =
     SolverUtils::GetEquationSystemFactory().RegisterCreatorFunction(
         "VelocityCorrectionScheme", VelocityCorrectionScheme::create);
+
+std::string VelocityCorrectionScheme::solverTypeLookupId =
+    LibUtilities::SessionReader::RegisterEnumValue(
+        "SolverType", "VelocityCorrectionScheme", eVelocityCorrectionScheme);
 
 /**
  * Constructor. Creates ...
@@ -162,7 +165,11 @@ void VelocityCorrectionScheme::SetUpExtrapolation()
 
         m_extrapolation->SetForcing(m_forcing);
         m_extrapolation->SubSteppingTimeIntegration(m_intScheme);
+        m_extrapolation->GenerateBndElmtExpansion();
         m_extrapolation->GenerateHOPBCMap(m_session);
+        m_IncNavierStokesBCs =
+            MemoryManager<IncBoundaryConditions>::AllocateSharedPtr();
+        m_IncNavierStokesBCs->Initialize(m_session, m_fields);
     }
 }
 
@@ -366,7 +373,7 @@ void VelocityCorrectionScheme::SetupFlowrate(NekDouble aii_dt)
         if (m_HomogeneousType == eHomogeneous1D)
         {
             Array<OneD, NekDouble> inTmp2(nqTot);
-            m_fields[i]->HomogeneousFwdTrans(inTmp[i], inTmp2);
+            m_fields[i]->HomogeneousFwdTrans(nqTot, inTmp[i], inTmp2);
             m_fields[i]->SetWaveSpace(true);
             inTmp[i] = inTmp2;
         }
@@ -396,7 +403,7 @@ void VelocityCorrectionScheme::SetupFlowrate(NekDouble aii_dt)
     // solution. We set m_greenFlux to maximum numeric limit, which signals
     // to SolveUnsteadyStokesSystem that we don't need to apply a flowrate
     // force.
-    m_greenFlux     = numeric_limits<NekDouble>::max();
+    m_greenFlux     = std::numeric_limits<NekDouble>::max();
     m_flowrateAiidt = aii_dt;
 
     //  Save the number of convective field in case it is not set
@@ -414,10 +421,10 @@ void VelocityCorrectionScheme::SetupFlowrate(NekDouble aii_dt)
         std::string filename = m_session->GetSessionName();
         filename += ".prs";
         m_flowrateStream.open(filename.c_str());
-        m_flowrateStream.setf(ios::scientific, ios::floatfield);
-        m_flowrateStream << "# step      time            dP" << endl
+        m_flowrateStream.setf(std::ios::scientific, std::ios::floatfield);
+        m_flowrateStream << "# step      time            dP" << std::endl
                          << "# -------------------------------------------"
-                         << endl;
+                         << std::endl;
     }
 
     // Replace pressure BCs with those evaluated from advection step
@@ -488,7 +495,7 @@ NekDouble VelocityCorrectionScheme::MeasureFlowrate(
     }
     else
     {
-        m_comm->AllReduce(flowrate, LibUtilities::ReduceSum);
+        m_comm->GetSpaceComm()->AllReduce(flowrate, LibUtilities::ReduceSum);
     }
     return flowrate / m_flowrateArea;
 }
@@ -499,19 +506,12 @@ bool VelocityCorrectionScheme::v_PostIntegrate(int step)
     {
         if (m_comm->GetRank() == 0 && (step + 1) % m_flowrateSteps == 0)
         {
-            m_flowrateStream << setw(8) << step << setw(16) << m_time
-                             << setw(16) << m_alpha << endl;
+            m_flowrateStream << std::setw(8) << step << std::setw(16) << m_time
+                             << std::setw(16) << m_alpha << std::endl;
         }
     }
 
     return IncNavierStokes::v_PostIntegrate(step);
-}
-
-/**
- * Destructor
- */
-VelocityCorrectionScheme::~VelocityCorrectionScheme(void)
-{
 }
 
 /**
@@ -529,17 +529,17 @@ void VelocityCorrectionScheme::v_GenerateSummary(SolverUtils::SummaryList &s)
                                     m_extrapolation->GetSubStepName());
     }
 
-    string dealias = m_homogen_dealiasing ? "Homogeneous1D" : "";
+    std::string dealias = m_homogen_dealiasing ? "Homogeneous1D" : "";
     if (m_specHP_dealiasing)
     {
-        dealias += (dealias == "" ? "" : " + ") + string("spectral/hp");
+        dealias += (dealias == "" ? "" : " + ") + std::string("spectral/hp");
     }
     if (dealias != "")
     {
         SolverUtils::AddSummaryItem(s, "Dealiasing", dealias);
     }
 
-    string smoothing = m_useSpecVanVisc ? "spectral/hp" : "";
+    std::string smoothing = m_useSpecVanVisc ? "spectral/hp" : "";
     if (smoothing != "")
     {
         if (m_svvVarDiffCoeff == NullNekDouble1DArray)
@@ -547,9 +547,9 @@ void VelocityCorrectionScheme::v_GenerateSummary(SolverUtils::SummaryList &s)
             SolverUtils::AddSummaryItem(
                 s, "Smoothing-SpecHP",
                 "SVV (" + smoothing + " Exp Kernel(cut-off = " +
-                    boost::lexical_cast<string>(m_sVVCutoffRatio) +
+                    boost::lexical_cast<std::string>(m_sVVCutoffRatio) +
                     ", diff coeff = " +
-                    boost::lexical_cast<string>(m_sVVDiffCoeff) + "))");
+                    boost::lexical_cast<std::string>(m_sVVDiffCoeff) + "))");
         }
         else
         {
@@ -558,9 +558,9 @@ void VelocityCorrectionScheme::v_GenerateSummary(SolverUtils::SummaryList &s)
                 SolverUtils::AddSummaryItem(
                     s, "Smoothing-SpecHP",
                     "SVV (" + smoothing + " Power Kernel (Power ratio =" +
-                        boost::lexical_cast<string>(m_sVVCutoffRatio) +
+                        boost::lexical_cast<std::string>(m_sVVCutoffRatio) +
                         ", diff coeff = " +
-                        boost::lexical_cast<string>(m_sVVDiffCoeff) +
+                        boost::lexical_cast<std::string>(m_sVVDiffCoeff) +
                         "*Uh/p))");
             }
             else
@@ -568,7 +568,7 @@ void VelocityCorrectionScheme::v_GenerateSummary(SolverUtils::SummaryList &s)
                 SolverUtils::AddSummaryItem(
                     s, "Smoothing-SpecHP",
                     "SVV (" + smoothing + " DG Kernel (diff coeff = " +
-                        boost::lexical_cast<string>(m_sVVDiffCoeff) +
+                        boost::lexical_cast<std::string>(m_sVVDiffCoeff) +
                         "*Uh/p))");
             }
         }
@@ -579,9 +579,9 @@ void VelocityCorrectionScheme::v_GenerateSummary(SolverUtils::SummaryList &s)
         SolverUtils::AddSummaryItem(
             s, "Smoothing-Homo1D",
             "SVV (Homogeneous1D - Exp Kernel(cut-off = " +
-                boost::lexical_cast<string>(m_sVVCutoffRatioHomo1D) +
+                boost::lexical_cast<std::string>(m_sVVCutoffRatioHomo1D) +
                 ", diff coeff = " +
-                boost::lexical_cast<string>(m_sVVDiffCoeffHomo1D) + "))");
+                boost::lexical_cast<std::string>(m_sVVDiffCoeffHomo1D) + "))");
     }
 
     if (m_useGJPStabilisation)
@@ -604,7 +604,7 @@ void VelocityCorrectionScheme::v_GenerateSummary(SolverUtils::SummaryList &s)
 /**
  *
  */
-void VelocityCorrectionScheme::v_DoInitialise(void)
+void VelocityCorrectionScheme::v_DoInitialise(bool dumpInitialConditions)
 {
     m_F = Array<OneD, Array<OneD, NekDouble>>(m_nConvectiveFields);
 
@@ -615,7 +615,7 @@ void VelocityCorrectionScheme::v_DoInitialise(void)
 
     m_flowrateAiidt = 0.0;
 
-    AdvectionSystem::v_DoInitialise();
+    AdvectionSystem::v_DoInitialise(dumpInitialConditions);
 
     // Set up Field Meta Data for output files
     m_fieldMetaDataMap["Kinvis"] = boost::lexical_cast<std::string>(m_kinvis);
@@ -626,6 +626,18 @@ void VelocityCorrectionScheme::v_DoInitialise(void)
     // correction are imposed before they are imposed on initial
     // field below
     SetBoundaryConditions(m_time);
+    std::map<std::string, NekDouble> params;
+    params["Time"] = m_time;
+    for (size_t i = 0; i < m_strFrameData.size(); ++i)
+    {
+        if (std::fabs(m_movingFrameData[i + 21]) != 0.)
+        {
+            params[m_strFrameData[i]] = m_movingFrameData[i + 21];
+        }
+    }
+    Array<OneD, Array<OneD, NekDouble>> fields;
+    Array<OneD, Array<OneD, NekDouble>> Adv;
+    m_IncNavierStokesBCs->Update(fields, Adv, params);
 
     // Ensure the initial conditions have correct BCs
     for (size_t i = 0; i < m_fields.size(); ++i)
@@ -716,7 +728,18 @@ void VelocityCorrectionScheme::v_EvaluateAdvection_SetPressureBCs(
 
     // Calculate High-Order pressure boundary conditions
     timer.Start();
+    std::map<std::string, NekDouble> params;
+    params["Kinvis"] = m_kinvis;
+    params["Time"]   = time + m_timestep;
+    for (size_t i = 0; i < m_strFrameData.size(); ++i)
+    {
+        if (std::fabs(m_movingFrameData[i + 21]) != 0.)
+        {
+            params[m_strFrameData[i]] = m_movingFrameData[i + 21];
+        }
+    }
     m_extrapolation->EvaluatePressureBCs(inarray, outarray, m_kinvis);
+    m_IncNavierStokesBCs->Update(inarray, outarray, params);
     timer.Stop();
     timer.AccumulateRegion("Pressure BCs");
 }
@@ -724,13 +747,11 @@ void VelocityCorrectionScheme::v_EvaluateAdvection_SetPressureBCs(
 /**
  * Implicit part of the method - Poisson + nConv*Helmholtz
  */
-void VelocityCorrectionScheme::SolveUnsteadyStokesSystem(
+void VelocityCorrectionScheme::v_SolveUnsteadyStokesSystem(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble aii_Dt)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time, const NekDouble aii_Dt)
 {
-    boost::ignore_unused(time);
-
     // Set up flowrate if we're starting for the first time or the value of
     // aii_Dt has changed.
     if (m_flowrate > 0.0 && (aii_Dt != m_flowrateAiidt))
@@ -769,7 +790,8 @@ void VelocityCorrectionScheme::SolveUnsteadyStokesSystem(
     timer.AccumulateRegion("Viscous Solve");
 
     // Apply flowrate correction
-    if (m_flowrate > 0.0 && m_greenFlux != numeric_limits<NekDouble>::max())
+    if (m_flowrate > 0.0 &&
+        m_greenFlux != std::numeric_limits<NekDouble>::max())
     {
         NekDouble currentFlux = MeasureFlowrate(outarray);
         m_alpha               = (m_flowrate - currentFlux) / m_greenFlux;
@@ -882,40 +904,12 @@ void VelocityCorrectionScheme::v_SolveViscous(
     MultiRegions::VarFactorsMap varFactorsMap = MultiRegions::NullVarFactorsMap;
 
     AppendSVVFactors(factors, varFactorsMap);
-
-    // Calculate Normal velocity at Trace for GJP explicit stabiliation
-    if (m_useGJPNormalVel)
-    {
-        MultiRegions::ContFieldSharedPtr cfield =
-            std::dynamic_pointer_cast<MultiRegions::ContField>(m_fields[0]);
-
-        MultiRegions::GJPStabilisationSharedPtr GJPData =
-            cfield->GetGJPForcing();
-
-        int nTracePts = GJPData->GetNumTracePts();
-        Array<OneD, NekDouble> unorm(nTracePts, 1.0);
-        Array<OneD, NekDouble> Fwd(nTracePts), Bwd(nTracePts);
-        Array<OneD, Array<OneD, NekDouble>> traceNormals =
-            GJPData->GetTraceNormals();
-
-        m_fields[0]->GetFwdBwdTracePhys(inarray[0], Fwd, Bwd, true, true);
-        Vmath::Vmul(nTracePts, Fwd, 1, traceNormals[0], 1, unorm, 1);
-
-        // Evaluate u.n on trace
-        for (int f = 1; f < m_fields[0]->GetCoordim(0); ++f)
-        {
-            m_fields[0]->GetFwdBwdTracePhys(inarray[f], Fwd, Bwd, true, true);
-            Vmath::Vvtvp(nTracePts, Fwd, 1, traceNormals[f], 1, unorm, 1, unorm,
-                         1);
-        }
-        Vmath::Vabs(nTracePts, unorm, 1, unorm, 1);
-        varCoeffMap[StdRegions::eVarCoeffGJPNormVel] = unorm;
-    }
+    ComputeGJPNormalVelocity(inarray, varCoeffMap);
 
     // Solve Helmholtz system and put in Physical space
     for (int i = 0; i < m_nConvectiveFields; ++i)
     {
-        // test by adding GJP implicit
+        // Add diffusion coefficient to GJP matrix operator (Implicit part)
         if (m_useGJPStabilisation)
         {
             factors[StdRegions::eFactorGJP] = m_GJPJumpScale / m_diffCoeff[i];
@@ -941,6 +935,8 @@ void VelocityCorrectionScheme::SetUpSVV(void)
     }
     else
     {
+        m_useHomo1DSpecVanVisc = false;
+
         m_session->MatchSolverInfo("SpectralVanishingViscositySpectralHP",
                                    "PowerKernel", m_useSpecVanVisc, false);
     }
@@ -978,14 +974,14 @@ void VelocityCorrectionScheme::SetUpSVV(void)
         {
             if (m_comm->GetRank() == 0)
             {
-                cout << "Seting up SVV velocity from "
-                        "SVVVelocityMagnitude section in session file"
-                     << endl;
+                std::cout << "Seting up SVV velocity from "
+                             "SVVVelocityMagnitude section in session file"
+                          << std::endl;
             }
             size_t nvel    = m_velocity.size();
             size_t phystot = m_fields[0]->GetTotPoints();
             SVVVelFields   = Array<OneD, Array<OneD, NekDouble>>(nvel);
-            vector<string> vars;
+            std::vector<std::string> vars;
             for (size_t i = 0; i < nvel; ++i)
             {
                 SVVVelFields[i] = Array<OneD, NekDouble>(phystot);
@@ -1141,14 +1137,14 @@ void VelocityCorrectionScheme::SVVVarDiffCoeff(
         size_t nEdge = exp->GetGeom()->GetNumEdges();
         for (size_t i = 0; i < nEdge; ++i)
         {
-            h = max(h, exp->GetGeom()->GetEdge(i)->GetVertex(0)->dist(
-                           *(exp->GetGeom()->GetEdge(i)->GetVertex(1))));
+            h = std::max(h, exp->GetGeom()->GetEdge(i)->GetVertex(0)->dist(
+                                *(exp->GetGeom()->GetEdge(i)->GetVertex(1))));
         }
 
         int p = 0;
         for (int i = 0; i < m_expdim; ++i)
         {
-            p = max(p, exp->GetBasisNumModes(i) - 1);
+            p = std::max(p, exp->GetBasisNumModes(i) - 1);
         }
 
         diffcoeff[e] *= h / p;
@@ -1177,6 +1173,45 @@ void VelocityCorrectionScheme::AppendSVVFactors(
                     m_svvVarDiffCoeff;
             }
         }
+    }
+}
+
+/*
+ * Calculate Normal velocity on Trace (boundary of elements)
+ * for GJP stabilisation.
+ * We only use this for explicit stabilisation. The Semi-Implicit
+ * operator uses a constant u_{norm} = 1.0
+ */
+void VelocityCorrectionScheme::ComputeGJPNormalVelocity(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    StdRegions::VarCoeffMap &varcoeffs)
+{
+    if (m_useGJPNormalVel)
+    {
+        MultiRegions::ContFieldSharedPtr cfield =
+            std::dynamic_pointer_cast<MultiRegions::ContField>(m_fields[0]);
+
+        MultiRegions::GJPStabilisationSharedPtr GJPData =
+            cfield->GetGJPForcing();
+
+        int nTracePts = GJPData->GetNumTracePts();
+        Array<OneD, NekDouble> unorm(nTracePts, 1.0);
+        Array<OneD, NekDouble> Fwd(nTracePts), Bwd(nTracePts);
+        Array<OneD, Array<OneD, NekDouble>> traceNormals =
+            GJPData->GetTraceNormals();
+
+        m_fields[0]->GetFwdBwdTracePhys(inarray[0], Fwd, Bwd, true, true);
+        Vmath::Vmul(nTracePts, Fwd, 1, traceNormals[0], 1, unorm, 1);
+
+        // Evaluate u.n on trace
+        for (int f = 1; f < m_fields[0]->GetCoordim(0); ++f)
+        {
+            m_fields[0]->GetFwdBwdTracePhys(inarray[f], Fwd, Bwd, true, true);
+            Vmath::Vvtvp(nTracePts, Fwd, 1, traceNormals[f], 1, unorm, 1, unorm,
+                         1);
+        }
+        Vmath::Vabs(nTracePts, unorm, 1, unorm, 1);
+        varcoeffs[StdRegions::eVarCoeffGJPNormVel] = unorm;
     }
 }
 } // namespace Nektar

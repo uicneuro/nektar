@@ -42,6 +42,7 @@
 
 namespace Nektar
 {
+
 /**
  *
  *
@@ -63,8 +64,6 @@ public:
     }
     // Name of class
     static std::string className;
-
-    virtual ~NavierStokesCFE();
 
 protected:
     std::string m_ViscosityType;
@@ -96,6 +95,8 @@ protected:
     NavierStokesCFE(const LibUtilities::SessionReaderSharedPtr &pSession,
                     const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
+    ~NavierStokesCFE() override = default;
+
     void GetViscousFluxVectorConservVar(
         const size_t nDim, const Array<OneD, Array<OneD, NekDouble>> &inarray,
         const TensorOfArray3D<NekDouble> &qfields,
@@ -122,9 +123,9 @@ protected:
 
     void InitObject_Explicit();
 
-    virtual void v_InitObject(bool DeclareField = true) override;
+    void v_InitObject(bool DeclareField = true) override;
 
-    virtual void v_DoDiffusion(
+    void v_DoDiffusion(
         const Array<OneD, Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray,
         const Array<OneD, Array<OneD, NekDouble>> &pFwd,
@@ -166,13 +167,12 @@ protected:
                              Array<OneD, NekDouble> &div,
                              Array<OneD, NekDouble> &curlSquare);
 
-    virtual void v_ExtraFldOutput(
-        std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
-        std::vector<std::string> &variables) override;
+    void v_ExtraFldOutput(std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
+                          std::vector<std::string> &variables) override;
 
     template <class T, typename = typename std::enable_if<
-                           std::is_floating_point<T>::value ||
-                           tinysimd::is_vector_floating_point<T>::value>::type>
+                           std::is_floating_point_v<T> ||
+                           tinysimd::is_vector_floating_point_v<T>>::type>
     inline void GetViscosityAndThermalCondFromTempKernel(const T &temperature,
                                                          T &mu, T &thermalCond)
     {
@@ -182,8 +182,8 @@ protected:
     }
 
     template <class T, typename = typename std::enable_if<
-                           std::is_floating_point<T>::value ||
-                           tinysimd::is_vector_floating_point<T>::value>::type>
+                           std::is_floating_point_v<T> ||
+                           tinysimd::is_vector_floating_point_v<T>>::type>
     inline void GetViscosityFromTempKernel(const T &temperature, T &mu)
     {
         // Variable viscosity through the Sutherland's law
@@ -206,8 +206,8 @@ protected:
      * outarray[nvars] flux
      */
     template <class T, typename = typename std::enable_if<
-                           std::is_floating_point<T>::value ||
-                           tinysimd::is_vector_floating_point<T>::value>::type>
+                           std::is_floating_point_v<T> ||
+                           tinysimd::is_vector_floating_point_v<T>>::type>
     inline void GetViscousFluxBilinearFormKernel(
         const unsigned short nDim, const unsigned short FluxDirection,
         const unsigned short DerivDirection,
@@ -561,7 +561,7 @@ protected:
         }
     }
 
-    virtual bool v_SupportsShockCaptType(const std::string type) const override;
+    bool v_SupportsShockCaptType(const std::string type) const override;
 };
 
 } // namespace Nektar

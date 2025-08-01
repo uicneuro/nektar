@@ -33,12 +33,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include <ShallowWaterSolver/RiemannSolvers/LinearAverageSolver.h>
 
 namespace Nektar
 {
+
 std::string LinearAverageSolver::solverName =
     SolverUtils::GetRiemannSolverFactory().RegisterCreatorFunction(
         "LinearAverage", LinearAverageSolver::create,
@@ -66,19 +65,16 @@ LinearAverageSolver::LinearAverageSolver(
  * @param uf     Computed Riemann flux for x-momentum component
  * @param vf     Computed Riemann flux for y-momentum component
  */
-void LinearAverageSolver::v_PointSolve(NekDouble etaL, NekDouble uL,
-                                       NekDouble vL, NekDouble dL,
-                                       NekDouble etaR, NekDouble uR,
-                                       NekDouble vR, NekDouble dR,
-                                       NekDouble &etaf, NekDouble &uf,
-                                       NekDouble &vf)
+void LinearAverageSolver::v_PointSolve(
+    NekDouble etaL, NekDouble uL, [[maybe_unused]] NekDouble vL, NekDouble dL,
+    NekDouble etaR, NekDouble uR, [[maybe_unused]] NekDouble vR, NekDouble dR,
+    NekDouble &etaf, NekDouble &uf, NekDouble &vf)
 {
-    boost::ignore_unused(vL, vR);
-
     static NekDouble g = m_params["gravity"]();
 
     etaf = 0.5 * (dL * uL + dR * uR);
     uf   = 0.5 * (g * etaL + g * etaR);
     vf   = 0.0;
 }
+
 } // namespace Nektar

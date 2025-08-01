@@ -35,7 +35,7 @@
 #ifndef NEKTAR_SOLVERS_COMPRESSIBLEFLOWSOLVER_PRECONCFSBRJ
 #define NEKTAR_SOLVERS_COMPRESSIBLEFLOWSOLVER_PRECONCFSBRJ
 
-#include <CompressibleFlowSolver/Preconditioner/PreconCfsOp.h>
+#include <CompressibleFlowSolver/Preconditioner/PreconCfs.h>
 
 namespace Nektar
 {
@@ -46,18 +46,18 @@ using namespace tinysimd;
  * Block Relaxed(weighted) Jacobi iterative (BRJ) Preconditioner for CFS
  *
  */
-class PreconCfsBRJ : public PreconCfsOp
+class PreconCfsBRJ : public PreconCfs
 {
 public:
     friend class MemoryManager<PreconCfsBRJ>;
 
     /// Creates an instance of this class
-    static PreconCfsOpSharedPtr create(
+    static PreconCfsSharedPtr create(
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
         const LibUtilities::SessionReaderSharedPtr &pSession,
         const LibUtilities::CommSharedPtr &vComm)
     {
-        PreconCfsOpSharedPtr p = MemoryManager<PreconCfsBRJ>::AllocateSharedPtr(
+        PreconCfsSharedPtr p = MemoryManager<PreconCfsBRJ>::AllocateSharedPtr(
             pFields, pSession, vComm);
         return p;
     }
@@ -68,23 +68,20 @@ public:
     PreconCfsBRJ(const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
                  const LibUtilities::SessionReaderSharedPtr &pSession,
                  const LibUtilities::CommSharedPtr &vComm);
-    ~PreconCfsBRJ(){};
-
-    virtual bool v_UpdatePreconMatCheck(const Array<OneD, const NekDouble> &res,
-                                        const NekDouble dtLambda) override;
+    ~PreconCfsBRJ() override = default;
 
 protected:
     int m_PreconItsStep;
     int m_BRJRelaxParam;
 
     Array<OneD, Array<OneD, SNekBlkMatSharedPtr>> m_PreconMatVarsSingle;
-    
+
     unsigned int m_max_nblocks;
     unsigned int m_max_nElmtDof;
     std::vector<simd<NekSingle>, tinysimd::allocator<simd<NekSingle>>>
         m_sBlkDiagMat;
     std::vector<int> m_inputIdx;
-    
+
     Array<OneD, SNekBlkMatSharedPtr> m_TraceJacSingle;
     TensorOfArray4D<NekSingle> m_TraceJacArraySingle;
     Array<OneD, SNekBlkMatSharedPtr> m_TraceJacDerivSingle;
@@ -92,40 +89,39 @@ protected:
     Array<OneD, Array<OneD, NekSingle>> m_TraceJacDerivSignSingle;
     TensorOfArray5D<NekSingle> m_TraceIPSymJacArraySingle;
 
-    PrecType m_PreconMatStorage;
+    void v_InitObject() override;
 
-    virtual void v_InitObject() override;
-
-private:
-    virtual void v_DoPreconCfs(
+    void v_DoPreconCfs(
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
         const Array<OneD, NekDouble> &pInput, Array<OneD, NekDouble> &pOutput,
         const bool &flag) override;
 
-    virtual void v_BuildPreconCfs(
+    void v_BuildPreconCfs(
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
         const Array<OneD, const Array<OneD, NekDouble>> &intmp,
         const NekDouble time, const NekDouble lambda) override;
 
+    bool v_UpdatePreconMatCheck(const Array<OneD, const NekDouble> &res,
+                                const NekDouble dtLambda) override;
+
+private:
+    void DoNullPrecon(const Array<OneD, NekDouble> &pInput,
+                      Array<OneD, NekDouble> &pOutput, const bool &flag);
+
     void PreconBlkDiag(
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
-        const Array<OneD, NekDouble> &inarray, Array<OneD, NekDouble> &outarray);
+        const Array<OneD, NekDouble> &inarray,
+        Array<OneD, NekDouble> &outarray);
 
     template <typename DataType>
     void MinusOffDiag2Rhs(
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
         const size_t nvariables, const size_t nCoeffs,
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, bool flagUpdateDervFlux,
-        Array<OneD, Array<OneD, NekDouble>> &FwdFluxDeriv,
-        Array<OneD, Array<OneD, NekDouble>> &BwdFluxDeriv,
-        TensorOfArray3D<NekDouble> &qfield,
+        Array<OneD, Array<OneD, NekDouble>> &outarray,
         TensorOfArray3D<NekDouble> &wspTrace,
         Array<OneD, Array<OneD, DataType>> &wspTraceDataType,
-        const TensorOfArray4D<DataType> &TraceJacArray,
-        const TensorOfArray4D<DataType> &TraceJacDerivArray,
-        const Array<OneD, const Array<OneD, DataType>> &TraceJacDerivSign,
-        const TensorOfArray5D<DataType> &TraceIPSymJacArray);
+        const TensorOfArray4D<DataType> &TraceJacArray);
 
     template <typename TypeNekBlkMatSharedPtr>
     void AllocatePreconBlkDiagCoeff(
@@ -201,10 +197,10 @@ private:
                         m_inputIdx[cnt1++] = inOffset + i;
                     }
                 }
-		else
-		{
-		     i = 0; 
-		}
+                else
+                {
+                    i = 0;
+                }
 
                 // load up other vectors in variable that fit into vector
                 // width

@@ -27,7 +27,13 @@ IF( NEKTAR_SOLVER_SHALLOW_WATER )
 
     ADD_SOLVER_EXECUTABLE(ShallowWaterSolver SOURCES ${ShallowWaterSolverSource})
 
-    #MMF Shallow Water
+    IF(NEKTAR_BUILD_SOLVER_LIBS)
+        MESSAGE(WARNING, "Solver library build not set up for ShallowWaterSolver - skipping.")
+    ENDIF()
+
+    ADD_NEKTAR_PERFORMANCE_TEST(Perf_TestMMFSWEPlane)
+
+    # MMF Shallow Water
     ADD_NEKTAR_TEST(TestMMFSWEPlane)
     ADD_NEKTAR_TEST(TestMMFSWEZonalSphere)
     ADD_NEKTAR_TEST(TestMMFSWERossbySphere)
@@ -40,4 +46,6 @@ IF( NEKTAR_SOLVER_SHALLOW_WATER )
     ADD_NEKTAR_TEST(LinearSWE_StandingWave_PeriodicBC_DG_P8)
     ADD_NEKTAR_TEST(NonlinearSWE_RossbyModon_CG_P9)
     ADD_NEKTAR_TEST(NonlinearSWE_RossbyModon_DG_P9)
-ENDIF( NEKTAR_SOLVER_SHALLOW_WATER )
+    ADD_NEKTAR_TEST(NonlinearSWE_Peregrine_SolitaryWave_DG_P6)
+    ADD_NEKTAR_TEST(NonlinearSWE_Peregrine_SolitaryWave_DG_P6_implicit)
+ENDIF(NEKTAR_SOLVER_SHALLOW_WATER)

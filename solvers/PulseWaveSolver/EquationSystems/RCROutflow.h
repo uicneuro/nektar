@@ -52,6 +52,8 @@ typedef std::shared_ptr<RCROutflow> RCROutflowSharedPtr;
 class RCROutflow : public PulseWaveBoundary
 {
 public:
+    friend class MemoryManager<RCROutflow>;
+
     // Creates an instance of this class
     static PulseWaveBoundarySharedPtr create(
         Array<OneD, MultiRegions::ExpListSharedPtr> &pVessel,
@@ -65,26 +67,26 @@ public:
     // Name of class
     static std::string className;
 
+protected:
+    NekDouble m_timestep;
+    NekDouble m_pc = 0.0;
+
     RCROutflow(Array<OneD, MultiRegions::ExpListSharedPtr> pVessel,
                const LibUtilities::SessionReaderSharedPtr pSession,
                PulseWavePressureAreaSharedPtr pressureArea);
 
-    virtual ~RCROutflow();
+    ~RCROutflow() override = default;
 
-protected:
-    virtual void v_DoBoundary(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &A_0,
-        Array<OneD, Array<OneD, NekDouble>> &beta,
-        Array<OneD, Array<OneD, NekDouble>> &alpha, const NekDouble time,
-        int omega, int offset, int n) override;
+    void v_DoBoundary(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                      Array<OneD, Array<OneD, NekDouble>> &A_0,
+                      Array<OneD, Array<OneD, NekDouble>> &beta,
+                      Array<OneD, Array<OneD, NekDouble>> &alpha,
+                      const NekDouble time, int omega, int offset,
+                      int n) override;
 
     void R_RiemannSolver(NekDouble R, NekDouble A_l, NekDouble u_l,
                          NekDouble A_0, NekDouble beta, NekDouble alpha,
                          NekDouble POut, NekDouble &A_u, NekDouble &u_u);
-
-    NekDouble m_timestep;
-    NekDouble m_pc = 0.0;
 
 private:
 };

@@ -34,10 +34,9 @@
 
 #include "CFSBndCond.h"
 
-using namespace std;
-
 namespace Nektar
 {
+
 CFSBndCondFactory &GetCFSBndCondFactory()
 {
     static CFSBndCondFactory instance;
@@ -48,9 +47,11 @@ CFSBndCond::CFSBndCond(
     const LibUtilities::SessionReaderSharedPtr &pSession,
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
     const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+    const Array<OneD, Array<OneD, NekDouble>> &pGridVelocity,
     const int pSpaceDim, const int bcRegion, const int cnt)
     : m_session(pSession), m_fields(pFields), m_traceNormals(pTraceNormals),
-      m_spacedim(pSpaceDim), m_bcRegion(bcRegion), m_offset(cnt)
+      m_gridVelocityTrace(pGridVelocity), m_spacedim(pSpaceDim),
+      m_bcRegion(bcRegion), m_offset(cnt)
 {
     m_velInf = Array<OneD, NekDouble>(m_spacedim, 0.0);
     m_session->LoadParameter("Gamma", m_gamma, 1.4);
@@ -71,20 +72,10 @@ CFSBndCond::CFSBndCond(
                                                                     m_spacedim);
 
     m_diffusionAveWeight = 1.0;
-}
 
-/**
- * @param   bcRegion      id of the boundary region
- * @param   cnt
- * @param   Fwd
- * @param   physarray
- * @param   time
- */
-void CFSBndCond::Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
-                       Array<OneD, Array<OneD, NekDouble>> &physarray,
-                       const NekDouble &time)
-{
-    v_Apply(Fwd, physarray, time);
+    // Load parameter for the wall rotational BC
+    // @TODO: Move LoadParameter in to WallRotationalBC.cpp
+    m_session->LoadParameter("AngVel", m_angVel, 0);
 }
 
 /**
@@ -96,11 +87,10 @@ void CFSBndCond::Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
  */
 void CFSBndCond::v_ApplyBwdWeight()
 {
-    NekDouble weight  = m_diffusionAveWeight;
     size_t nVariables = m_fields.size();
     for (int i = 0; i < nVariables; ++i)
     {
-        m_fields[i]->SetBndCondBwdWeight(m_bcRegion, weight);
+        m_fields[i]->SetBndCondBwdWeight(m_bcRegion, m_diffusionAveWeight);
     }
 }
 

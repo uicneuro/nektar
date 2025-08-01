@@ -39,6 +39,7 @@
 
 namespace Nektar
 {
+
 class RoeSolver : public CompressibleSolver
 {
 public:
@@ -58,20 +59,18 @@ protected:
 
     using ND = NekDouble;
 
-    virtual void v_PointSolve(ND rhoL, ND rhouL, ND rhovL, ND rhowL, ND EL,
-                              ND rhoR, ND rhouR, ND rhovR, ND rhowR, ND ER,
-                              ND &rhof, ND &rhouf, ND &rhovf, ND &rhowf,
-                              ND &Ef) override final;
+    void v_PointSolve(ND rhoL, ND rhouL, ND rhovL, ND rhowL, ND EL, ND rhoR,
+                      ND rhouR, ND rhovR, ND rhowR, ND ER, ND &rhof, ND &rhouf,
+                      ND &rhovf, ND &rhowf, ND &Ef) final;
 
-    virtual void v_ArraySolve(
-        const Array<OneD, const Array<OneD, ND>> &Fwd,
-        const Array<OneD, const Array<OneD, ND>> &Bwd,
-        Array<OneD, Array<OneD, ND>> &flux) override final;
+    void v_ArraySolve(const Array<OneD, const Array<OneD, ND>> &Fwd,
+                      const Array<OneD, const Array<OneD, ND>> &Bwd,
+                      Array<OneD, Array<OneD, ND>> &flux) final;
 };
 
 template <class T, typename = typename std::enable_if<
-                       std::is_floating_point<T>::value ||
-                       tinysimd::is_vector_floating_point<T>::value>::type>
+                       std::is_floating_point_v<T> ||
+                       tinysimd::is_vector_floating_point_v<T>>::type>
 inline void RoeKernel(T &rhoL, T &rhouL, T &rhovL, T &rhowL, T &EL, T &rhoR,
                       T &rhouR, T &rhovR, T &rhowR, T &ER, T &rhof, T &rhouf,
                       T &rhovf, T &rhowf, T &Ef, NekDouble gamma)

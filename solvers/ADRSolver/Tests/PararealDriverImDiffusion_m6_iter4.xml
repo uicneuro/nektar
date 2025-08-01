@@ -27,18 +27,32 @@
         <SOLVERINFO>
             <I PROPERTY="EQTYPE"                VALUE="UnsteadyDiffusion" />
             <I PROPERTY="Projection"            VALUE="Continuous"        />
-            <I PROPERTY="TimeIntegrationMethod" VALUE="BackwardEuler"     />
             <I PROPERTY="DiffusionAdvancement"  VALUE="Implicit"          />
             <I PROPERTY="Driver"                VALUE="Parareal"          />
         </SOLVERINFO>
 
+        <TIMEINTEGRATIONSCHEME>
+            <METHOD> Euler </METHOD>
+            <ORDER> 1 </ORDER>
+            <VARIANT> Backward </VARIANT>
+        </TIMEINTEGRATIONSCHEME>
+
         <PARAMETERS>
-            <P> TimeStep        = 0.0001 </P> <!-- Time step -->
-            <P> NumSteps        = 3200   </P> <!-- Number of time step -->
-            <P> epsilon         = 0.05   </P> <!-- Diffusion coefficent   -->
-            <P> IO_InfoSteps    = 0      </P> <!-- Frequency of printing information for the user -->
-            <P> IO_CheckSteps   = 0      </P> <!-- Frequency of writing the checkpoints, the results -->
-            <P> PararealIterMax = 4      </P> <!-- Max number of Parareal iteration -->
+            <TIMELEVEL VALUE="0">
+                <P> TimeStep        = 0.0001 </P> <!-- Time step -->
+                <P> NumSteps        = 3200   </P> <!-- Number of time step -->
+                <P> epsilon         = 0.05   </P> <!-- Diffusion coefficent   -->
+                <P> IO_InfoSteps    = 0      </P> <!-- Frequency of printing information for the user -->
+                <P> IO_CheckSteps   = 0      </P> <!-- Frequency of writing the checkpoints, the results -->
+                <P> PITIterMax      = 4      </P> <!-- Max number of Parareal iteration -->
+                <P> PITToler        = 1e-15  </P> <!-- Parareal iteration tolerance -->
+                <P> NumWindows      = 2      </P> <!-- Number of Parareal windows -->
+            </TIMELEVEL>
+            <TIMELEVEL VALUE="1">
+                <P> TimeStep        = 0.01   </P> <!-- Time step -->
+                <P> NumSteps        = 32     </P> <!-- Number of time step -->
+                <P> epsilon         = 0.05   </P> <!-- Diffusion coefficent   -->
+            </TIMELEVEL>
         </PARAMETERS>
 
         <!-- setting the variable -->

@@ -34,8 +34,6 @@
 
 #include "NonSmoothShockCapture.h"
 
-using namespace std;
-
 namespace Nektar
 {
 
@@ -51,10 +49,14 @@ NonSmoothShockCapture::NonSmoothShockCapture(
     : ArtificialDiffusion(pSession, pFields, spacedim)
 {
     m_session->LoadParameter("SensorOffset", m_offset, 1);
+
     // init h/p
     m_varConv->SetElmtMinHP(m_fields);
 }
 
+/**
+ *
+ */
 void NonSmoothShockCapture::v_GetArtificialViscosity(
     const Array<OneD, Array<OneD, NekDouble>> &physfield,
     Array<OneD, NekDouble> &mu)
@@ -91,4 +93,5 @@ void NonSmoothShockCapture::v_GetArtificialViscosity(
                     tmp = mu + physOffset, 1);
     }
 }
+
 } // namespace Nektar

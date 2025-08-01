@@ -34,10 +34,10 @@
 
 #include "CompressibleSolver.h"
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/core/ignore_unused.hpp>
 
 namespace Nektar
 {
+
 CompressibleSolver::CompressibleSolver(
     const LibUtilities::SessionReaderSharedPtr &pSession)
     : RiemannSolver(pSession), m_pointSolve(true)
@@ -58,6 +58,9 @@ CompressibleSolver::CompressibleSolver()
     m_requiresRotation = true;
 }
 
+/**
+ *
+ */
 void CompressibleSolver::v_Solve(
     const int nDim, const Array<OneD, const Array<OneD, NekDouble>> &Fwd,
     const Array<OneD, const Array<OneD, NekDouble>> &Bwd,
@@ -104,13 +107,15 @@ void CompressibleSolver::v_Solve(
     }
 }
 
+/**
+ *
+ */
 NekDouble CompressibleSolver::GetRoeSoundSpeed(
-    NekDouble rhoL, NekDouble pL, NekDouble eL, NekDouble HL, NekDouble srL,
-    NekDouble rhoR, NekDouble pR, NekDouble eR, NekDouble HR, NekDouble srR,
-    NekDouble HRoe, NekDouble URoe2, NekDouble srLR)
+    NekDouble rhoL, NekDouble pL, NekDouble eL, [[maybe_unused]] NekDouble HL,
+    [[maybe_unused]] NekDouble srL, NekDouble rhoR, NekDouble pR, NekDouble eR,
+    [[maybe_unused]] NekDouble HR, [[maybe_unused]] NekDouble srR,
+    NekDouble HRoe, NekDouble URoe2, [[maybe_unused]] NekDouble srLR)
 {
-    boost::ignore_unused(HL, srL, HR, srR, srLR);
-
     static NekDouble gamma = m_params["gamma"]();
     NekDouble cRoe;
     if (m_idealGas)

@@ -44,6 +44,7 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
+
 class UpwindPulseSolver : public RiemannSolver
 {
 public:
@@ -56,23 +57,24 @@ public:
     static std::string solverName;
 
 protected:
-    UpwindPulseSolver(const LibUtilities::SessionReaderSharedPtr &pSession);
-
     LibUtilities::SessionReaderSharedPtr m_session;
     int m_nVariables;
     Array<OneD, MultiRegions::ExpListSharedPtr> m_vessels;
     PulseWavePressureAreaSharedPtr m_pressureArea;
 
-    virtual void v_Solve(const int nDim,
-                         const Array<OneD, const Array<OneD, NekDouble>> &Fwd,
-                         const Array<OneD, const Array<OneD, NekDouble>> &Bwd,
-                         Array<OneD, Array<OneD, NekDouble>> &flux) override;
+    UpwindPulseSolver(const LibUtilities::SessionReaderSharedPtr &pSession);
+
+    void v_Solve(const int nDim,
+                 const Array<OneD, const Array<OneD, NekDouble>> &Fwd,
+                 const Array<OneD, const Array<OneD, NekDouble>> &Bwd,
+                 Array<OneD, Array<OneD, NekDouble>> &flux) override;
 
     void RiemannSolverUpwind(NekDouble AL, NekDouble uL, NekDouble AR,
                              NekDouble uR, NekDouble &Aflux, NekDouble &uflux,
                              NekDouble A0, NekDouble beta, NekDouble n,
                              NekDouble alpha = 0.5);
 };
+
 } // namespace Nektar
 
 #endif

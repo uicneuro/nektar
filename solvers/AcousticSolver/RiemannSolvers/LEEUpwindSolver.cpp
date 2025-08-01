@@ -33,11 +33,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include <AcousticSolver/RiemannSolvers/LEEUpwindSolver.h>
-
-using namespace std;
 
 namespace Nektar
 {
@@ -87,13 +83,14 @@ LEEUpwindSolver::LEEUpwindSolver(
 void LEEUpwindSolver::v_PointSolve(
     NekDouble pL, NekDouble rhoL, NekDouble rhouL, NekDouble rhovL,
     NekDouble rhowL, NekDouble pR, NekDouble rhoR, NekDouble rhouR,
-    NekDouble rhovR, NekDouble rhowR, NekDouble c0sqL, NekDouble rho0L,
-    NekDouble u0L, NekDouble v0L, NekDouble w0L, NekDouble c0sqR,
-    NekDouble rho0R, NekDouble u0R, NekDouble v0R, NekDouble w0R, NekDouble &pF,
-    NekDouble &rhoF, NekDouble &rhouF, NekDouble &rhovF, NekDouble &rhowF)
+    NekDouble rhovR, NekDouble rhowR, NekDouble c0sqL,
+    [[maybe_unused]] NekDouble rho0L, NekDouble u0L,
+    [[maybe_unused]] NekDouble v0L, [[maybe_unused]] NekDouble w0L,
+    NekDouble c0sqR, [[maybe_unused]] NekDouble rho0R, NekDouble u0R,
+    [[maybe_unused]] NekDouble v0R, [[maybe_unused]] NekDouble w0R,
+    NekDouble &pF, NekDouble &rhoF, NekDouble &rhouF, NekDouble &rhovF,
+    NekDouble &rhowF)
 {
-    boost::ignore_unused(rho0L, v0L, w0L, rho0R, v0R, w0R);
-
     // Speed of sound
     NekDouble c0L = sqrt(c0sqL);
     NekDouble c0R = sqrt(c0sqR);
@@ -153,4 +150,5 @@ void LEEUpwindSolver::v_PointSolve(
         rhouF = rhouF + 0.5 * (c0R + u0R) * (rhouR * c0R + pR) / c0R;
     }
 }
+
 } // namespace Nektar

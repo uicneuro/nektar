@@ -34,11 +34,10 @@
 
 #include <CompressibleFlowSolver/EquationSystems/NavierStokesImplicitCFE.h>
 
-using namespace std;
-
 namespace Nektar
 {
-string NavierStokesImplicitCFE::className =
+
+std::string NavierStokesImplicitCFE::className =
     SolverUtils::GetEquationSystemFactory().RegisterCreatorFunction(
         "NavierStokesImplicitCFE", NavierStokesImplicitCFE::create,
         "NavierStokes equations in conservative variables.");
@@ -49,10 +48,6 @@ NavierStokesImplicitCFE::NavierStokesImplicitCFE(
     : UnsteadySystem(pSession, pGraph),
       CompressibleFlowSystem(pSession, pGraph),
       NavierStokesCFE(pSession, pGraph), CFSImplicit(pSession, pGraph)
-{
-}
-
-NavierStokesImplicitCFE::~NavierStokesImplicitCFE()
 {
 }
 
@@ -156,6 +151,8 @@ void NavierStokesImplicitCFE::v_DoDiffusionCoeff(
     }
     else
     {
+        ASSERTL1(false, "LDGNS not yet validated for implicit compressible "
+                        "flow solver");
         Array<OneD, Array<OneD, NekDouble>> inarrayDiff{nvariables - 1};
         Array<OneD, Array<OneD, NekDouble>> inFwd{nvariables - 1};
         Array<OneD, Array<OneD, NekDouble>> inBwd{nvariables - 1};
@@ -166,10 +163,6 @@ void NavierStokesImplicitCFE::v_DoDiffusionCoeff(
             inFwd[i]       = Array<OneD, NekDouble>{nTracePts};
             inBwd[i]       = Array<OneD, NekDouble>{nTracePts};
         }
-
-        // Extract pressure
-        //    (use inarrayDiff[0] as a temporary storage for the pressure)
-        m_varConv->GetPressure(inarray, inarrayDiff[0]);
 
         // Extract temperature
         m_varConv->GetTemperature(inarray, inarrayDiff[nvariables - 2]);
@@ -186,9 +179,6 @@ void NavierStokesImplicitCFE::v_DoDiffusionCoeff(
         }
         else
         {
-            m_varConv->GetPressure(pFwd, inFwd[0]);
-            m_varConv->GetPressure(pBwd, inBwd[0]);
-
             m_varConv->GetTemperature(pFwd, inFwd[nvariables - 2]);
             m_varConv->GetTemperature(pBwd, inBwd[nvariables - 2]);
 
@@ -197,12 +187,12 @@ void NavierStokesImplicitCFE::v_DoDiffusionCoeff(
         }
 
         // Diffusion term in physical rhs form
-        m_diffusion->Diffuse(nvariables, m_fields, inarrayDiff, outarrayDiff,
-                             inFwd, inBwd);
+        m_diffusion->DiffuseCoeffs(nvariables, m_fields, inarrayDiff,
+                                   outarrayDiff, inFwd, inBwd);
 
         for (int i = 0; i < nvariables; ++i)
         {
-            Vmath::Vadd(npoints, outarrayDiff[i], 1, outarray[i], 1,
+            Vmath::Vadd(ncoeffs, outarrayDiff[i], 1, outarray[i], 1,
                         outarray[i], 1);
         }
 
@@ -1295,8 +1285,6 @@ void NavierStokesImplicitCFE::v_CalcPhysDeriv(
 {
     int nConvectiveFields = m_fields.size();
     int npoints           = GetTotPoints();
-    const Array<OneD, Array<OneD, NekDouble>> pFwd;
-    const Array<OneD, Array<OneD, NekDouble>> pBwd;
     if (!qfield.size())
     {
         qfield = TensorOfArray3D<NekDouble>(m_spacedim);
@@ -1309,7 +1297,30 @@ void NavierStokesImplicitCFE::v_CalcPhysDeriv(
             }
         }
     }
-    m_diffusion->DiffuseCalcDerivative(m_fields, inarray, qfield, pFwd, pBwd);
+    if (m_is_diffIP)
+    {
+        const Array<OneD, Array<OneD, NekDouble>> pFwd;
+        const Array<OneD, Array<OneD, NekDouble>> pBwd;
+        m_diffusion->DiffuseCalcDerivative(m_fields, inarray, qfield, pFwd,
+                                           pBwd);
+    }
+    else
+    {
+        // For LDGNS, the array size should be nConvectiveFields - 1
+        // pFwd must also be allocated.
+        ASSERTL1(false, "LDGNS not yet validated for implicit compressible "
+                        "flow solver");
+        Array<OneD, Array<OneD, NekDouble>> inarrayDiff(nConvectiveFields - 1);
+        Array<OneD, Array<OneD, NekDouble>> pFwd(nConvectiveFields - 1);
+        const Array<OneD, Array<OneD, NekDouble>> pBwd;
+        for (int i = 0; i < nConvectiveFields - 1; ++i)
+        {
+            inarrayDiff[i] = inarray[i];
+            pFwd[i]        = Array<OneD, NekDouble>(2 * npoints, 0.0);
+        }
+        m_diffusion->DiffuseCalcDerivative(m_fields, inarrayDiff, qfield, pFwd,
+                                           pBwd);
+    }
 }
 
 void NavierStokesImplicitCFE::v_CalcMuDmuDT(

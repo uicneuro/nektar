@@ -37,6 +37,7 @@
 namespace Nektar
 {
 std::string LaxFriedrichsSolver::solverName =
+
     SolverUtils::GetRiemannSolverFactory().RegisterCreatorFunction(
         "LaxFriedrichs", LaxFriedrichsSolver::create,
         "Lax-Friedrichs Riemann solver");
@@ -83,6 +84,7 @@ void LaxFriedrichsSolver::v_PointSolve(double rhoL, double rhouL, double rhovL,
     // Internal energy (per unit mass)
     NekDouble eL = (EL - 0.5 * (rhouL * uL + rhovL * vL + rhowL * wL)) / rhoL;
     NekDouble eR = (ER - 0.5 * (rhouR * uR + rhovR * vR + rhowR * wR)) / rhoR;
+
     // Pressure
     NekDouble pL = m_eos->GetPressure(rhoL, eL);
     NekDouble pR = m_eos->GetPressure(rhoR, eR);
@@ -103,7 +105,7 @@ void LaxFriedrichsSolver::v_PointSolve(double rhoL, double rhouL, double rhovL,
     NekDouble URoe2 = uRoe * uRoe + vRoe * vRoe + wRoe * wRoe;
     NekDouble HRoe  = (srL * HL + srR * HR) / srLR;
     NekDouble cRoe  = GetRoeSoundSpeed(rhoL, pL, eL, HL, srL, rhoR, pR, eR, HR,
-                                      srR, HRoe, URoe2, srLR);
+                                       srR, HRoe, URoe2, srLR);
 
     // Maximum eigenvalue
     NekDouble URoe = fabs(uRoe) + cRoe;
@@ -115,4 +117,5 @@ void LaxFriedrichsSolver::v_PointSolve(double rhoL, double rhouL, double rhovL,
     rhowf = 0.5 * (rhouL * wL + rhouR * wR - URoe * (rhowR - rhowL));
     Ef    = 0.5 * (uL * (EL + pL) + uR * (ER + pR) - URoe * (ER - EL));
 }
+
 } // namespace Nektar

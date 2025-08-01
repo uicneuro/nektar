@@ -42,7 +42,6 @@
 #define BOOST_ALLOW_DEPRECATED_HEADERS
 #endif
 
-#include <boost/core/ignore_unused.hpp>
 #include <boost/random/mersenne_twister.hpp>
 
 #include <SolverUtils/Advection/Advection.h>
@@ -62,9 +61,6 @@ class AcousticSystem : public AdvectionSystem
 public:
     friend class MemoryManager<AcousticSystem>;
 
-    /// Destructor
-    virtual ~AcousticSystem();
-
 protected:
     /// indices of the fields
     int m_ip, m_irho, m_iu;
@@ -83,7 +79,9 @@ protected:
     AcousticSystem(const LibUtilities::SessionReaderSharedPtr &pSession,
                    const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject(bool DeclareFields = true) override;
+    ~AcousticSystem() override = default;
+
+    void v_InitObject(bool DeclareFields = true) override;
 
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
@@ -93,33 +91,43 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
+    virtual void v_AddLinTerm(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray) = 0;
+
     virtual void v_GetFluxVector(
         const Array<OneD, Array<OneD, NekDouble>> &physfield,
         Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &flux) = 0;
 
-    virtual void v_AddLinTerm(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray)
-    {
-        boost::ignore_unused(inarray, outarray);
-    }
+    virtual void v_RiemannInvariantBC(
+        int bcRegion, int cnt, Array<OneD, Array<OneD, NekDouble>> &Fwd,
+        Array<OneD, Array<OneD, NekDouble>> &BfFwd,
+        Array<OneD, Array<OneD, NekDouble>> &physarray) = 0;
 
-    virtual bool v_PreIntegrate(int step) override;
+    bool v_PreIntegrate(int step) override;
 
-    virtual void v_Output() override;
+    void v_Output() override;
 
-    virtual Array<OneD, NekDouble> v_GetMaxStdVelocity(
+    Array<OneD, NekDouble> v_GetMaxStdVelocity(
         const NekDouble SpeedSoundFactor) override;
 
-    virtual void v_ExtraFldOutput(
-        std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
-        std::vector<std::string> &variables) override;
+    void v_ExtraFldOutput(std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
+                          std::vector<std::string> &variables) override;
 
-    const Array<OneD, const Array<OneD, NekDouble>> &GetNormals();
+    const Array<OneD, const Array<OneD, NekDouble>> &GetNormals()
+    {
+        return m_traceNormals;
+    }
 
-    const Array<OneD, const Array<OneD, NekDouble>> &GetVecLocs();
+    const Array<OneD, const Array<OneD, NekDouble>> &GetVecLocs()
+    {
+        return m_vecLocs;
+    }
 
-    const Array<OneD, const Array<OneD, NekDouble>> &GetBasefieldFwdBwd();
+    const Array<OneD, const Array<OneD, NekDouble>> &GetBasefieldFwdBwd()
+    {
+        return m_bfFwdBwd;
+    }
 
 private:
     std::map<int, boost::mt19937> m_rng;
@@ -134,11 +142,6 @@ private:
     void WallBC(int bcRegion, int cnt, Array<OneD, Array<OneD, NekDouble>> &Fwd,
                 Array<OneD, Array<OneD, NekDouble>> &physarray);
 
-    virtual void v_RiemannInvariantBC(
-        int bcRegion, int cnt, Array<OneD, Array<OneD, NekDouble>> &Fwd,
-        Array<OneD, Array<OneD, NekDouble>> &BfFwd,
-        Array<OneD, Array<OneD, NekDouble>> &physarray) = 0;
-
     void WhiteNoiseBC(int bcRegion, int cnt,
                       Array<OneD, Array<OneD, NekDouble>> &Fwd,
                       Array<OneD, Array<OneD, NekDouble>> &BfFwd,
@@ -149,6 +152,7 @@ private:
 
     void UpdateBasefieldFwdBwd();
 };
+
 } // namespace Nektar
 
 #endif

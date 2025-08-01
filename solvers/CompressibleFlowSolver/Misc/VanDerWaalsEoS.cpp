@@ -32,11 +32,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include "VanDerWaalsEoS.h"
-
-using namespace std;
 
 namespace Nektar
 {
@@ -102,9 +98,8 @@ NekDouble VanDerWaalsEoS::v_GetDPDrho_e(const NekDouble &rho,
 }
 
 NekDouble VanDerWaalsEoS::v_GetDPDe_rho(const NekDouble &rho,
-                                        const NekDouble &e)
+                                        [[maybe_unused]] const NekDouble &e)
 {
-    boost::ignore_unused(e);
     return (m_gamma - 1) / (1.0 / rho - m_b);
 }
 
@@ -147,10 +142,10 @@ NekDouble VanDerWaalsEoS::v_GetRhoFromPT(const NekDouble &p, const NekDouble &T)
     }
     if (cnt == maxIter)
     {
-        cout << "Newton-Raphson in VanDerWaalsEoS::v_GetRhoFromPT did not "
-                "converge in "
-             << maxIter << " iterations (residual = " << residual << ")"
-             << endl;
+        std::cout << "Newton-Raphson in VanDerWaalsEoS::v_GetRhoFromPT did not "
+                     "converge in "
+                  << maxIter << " iterations (residual = " << residual << ")"
+                  << std::endl;
     }
 
     // Now calculate rho = p/(ZRT)

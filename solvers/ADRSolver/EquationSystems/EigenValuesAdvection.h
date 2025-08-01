@@ -62,8 +62,6 @@ public:
     /// Name of class
     static std::string className;
 
-    virtual ~EigenValuesAdvection();
-
 protected:
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
     Array<OneD, Array<OneD, NekDouble>> m_velocity;
@@ -73,12 +71,14 @@ protected:
     EigenValuesAdvection(const LibUtilities::SessionReaderSharedPtr &pSession,
                          const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
+    ~EigenValuesAdvection() override = default;
+
+    void v_InitObject(bool DeclareFields = true) override;
+    void v_DoInitialise(bool dumpInitialConditions = false) override;
+    void v_DoSolve() override;
+
     /// Get the normal velocity
     Array<OneD, NekDouble> &GetNormalVelocity();
-
-    virtual void v_InitObject(bool DeclareFields = true) override;
-    virtual void v_DoInitialise() override;
-    virtual void v_DoSolve() override;
 
     // DG Advection routines
     void GetFluxVector(const Array<OneD, Array<OneD, NekDouble>> &physfield,

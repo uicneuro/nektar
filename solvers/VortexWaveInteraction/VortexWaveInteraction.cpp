@@ -35,7 +35,8 @@
 #include <IncNavierStokesSolver/EquationSystems/IncNavierStokes.h>
 #include <MultiRegions/ExpList.h>
 #include <MultiRegions/GlobalLinSysKey.h>
-#include <SolverUtils/Driver.h>
+#include <SolverUtils/DriverModifiedArnoldi.h>
+#include <SpatialDomains/MeshGraphIO.h>
 #include <VortexWaveInteraction/VortexWaveInteraction.h>
 
 using namespace std;
@@ -157,7 +158,7 @@ VortexWaveInteraction::VortexWaveInteraction(int argc, char *argv[])
     // Create Incompressible NavierStokesSolver session reader.
     m_sessionRoll = LibUtilities::SessionReader::CreateInstance(
         argc, argv, IncNSFilenames, m_sessionVWI->GetComm());
-    m_graphRoll           = SpatialDomains::MeshGraph::Read(m_sessionRoll);
+    m_graphRoll           = SpatialDomains::MeshGraphIO::Read(m_sessionRoll);
     std::string vEquation = m_sessionRoll->GetSolverInfo("SolverType");
     m_solverRoll          = GetEquationSystemFactory().CreateInstance(
         vEquation, m_sessionRoll, m_graphRoll);
@@ -191,7 +192,7 @@ VortexWaveInteraction::VortexWaveInteraction(int argc, char *argv[])
     // Create AdvDiffusion session reader.
     m_sessionStreak = LibUtilities::SessionReader::CreateInstance(
         argc, argv, AdvDiffFilenames, m_sessionVWI->GetComm());
-    m_graphStreak = SpatialDomains::MeshGraph::Read(m_sessionStreak);
+    m_graphStreak = SpatialDomains::MeshGraphIO::Read(m_sessionStreak);
 
     // Initialise LinNS solver
     std::string LinNSCondFile(argv[argc - 1]);
@@ -203,7 +204,7 @@ VortexWaveInteraction::VortexWaveInteraction(int argc, char *argv[])
     // Create Linearised NS stability session reader.
     m_sessionWave = LibUtilities::SessionReader::CreateInstance(
         argc, argv, LinNSFilenames, m_sessionVWI->GetComm());
-    m_graphWave = SpatialDomains::MeshGraph::Read(m_sessionWave);
+    m_graphWave = SpatialDomains::MeshGraphIO::Read(m_sessionWave);
 
     // Set the initial beta value in stability to be equal to VWI file
     std::string LZstr("LZ");
@@ -281,7 +282,7 @@ VortexWaveInteraction::VortexWaveInteraction(int argc, char *argv[])
             break;
             case eFixedAlphaWaveForcing:
             {
-                string nstr = boost::lexical_cast<std::string>(m_iterStart);
+                string nstr = std::to_string(m_iterStart);
                 cout << "Restarting from iteration " << m_iterStart << endl;
                 std::string rstfile = "cp -f Save/" + m_sessionName + ".rst." +
                                       nstr + " " + m_sessionName + ".rst";
@@ -548,8 +549,10 @@ void VortexWaveInteraction::ExecuteWave(void)
     std::string vDriverModule;
     m_sessionWave->LoadSolverInfo("Driver", vDriverModule, "ModifiedArnoldi");
     cout << "Setting up linearised NS Solver" << endl;
-    DriverSharedPtr solverWave = GetDriverFactory().CreateInstance(
-        vDriverModule, m_sessionWave, m_graphWave);
+    std::shared_ptr<DriverArnoldi> solverWave =
+        std::dynamic_pointer_cast<SolverUtils::DriverArnoldi>(
+            GetDriverFactory().CreateInstance(vDriverModule, m_sessionWave,
+                                              m_graphWave));
 
     /// Do linearised NavierStokes Session  with Modified Arnoldi
     cout << "Executing wave solution " << endl;
@@ -1064,7 +1067,6 @@ void VortexWaveInteraction::CalcNonLinearWaveForce(void)
 
 void VortexWaveInteraction::CalcL2ToLinfPressure(void)
 {
-
     ExecuteWave();
 
     m_wavePressure->GetPlane(0)->BwdTrans(
@@ -1120,9 +1122,8 @@ void VortexWaveInteraction::SaveFile(string file, string dir, int n)
         opendir[dir] = 1;
     }
 
-    string savefile =
-        dir + "/" + file + "." + boost::lexical_cast<std::string>(n);
-    string syscall = "cp -f " + file + " " + savefile;
+    string savefile = dir + "/" + file + "." + std::to_string(n);
+    string syscall  = "cp -f " + file + " " + savefile;
 
     ASSERTL0(system(syscall.c_str()) == 0, syscall.c_str());
 }
@@ -1140,9 +1141,8 @@ void VortexWaveInteraction::MoveFile(string file, string dir, int n)
         opendir[dir] = 1;
     }
 
-    string savefile =
-        dir + "/" + file + "." + boost::lexical_cast<std::string>(n);
-    string syscall = "mv -f " + file + " " + savefile;
+    string savefile = dir + "/" + file + "." + std::to_string(n);
+    string syscall  = "mv -f " + file + " " + savefile;
 
     ASSERTL0(system(syscall.c_str()) == 0, syscall.c_str());
 }
@@ -2052,9 +2052,7 @@ Array<OneD, int> VortexWaveInteraction::GetReflectionIndex(void)
     //-> Dermine the point which is on coordinate (x -> -x + Lx/2, y-> -y)
     m_waveVelocities[0]->GetPlane(0)->GetCoords(coord_x, coord_y);
     NekDouble xmax = Vmath::Vmax(npts, coord_x, 1);
-    // NekDouble tol =
-    // NekConstants::kGeomFactorsTol*NekConstants::kGeomFactorsTol;
-    NekDouble tol = 1e-5;
+    NekDouble tol  = 1e-5;
     NekDouble xnew, ynew;
 
     int start = npts - 1;

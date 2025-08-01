@@ -35,7 +35,7 @@
 
 #ifndef NEKTAR_SOLVERS_INCNAVIERSTOKES_H
 #define NEKTAR_SOLVERS_INCNAVIERSTOKES_H
-
+#include <IncNavierStokesSolver/BoundaryConditions/IncBoundaryConditions.h>
 #include <IncNavierStokesSolver/EquationSystems/Extrapolate.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <LibUtilities/BasicUtils/VmathArray.hpp>
@@ -50,6 +50,19 @@
 namespace Nektar
 {
 namespace bnu = boost::numeric::ublas;
+
+enum SolverType
+{
+    eNoSolverType,
+    eCoupledLinearisedNS,
+    eSmoothedProfileMethod,
+    eVCSMapping,
+    eVelocityCorrectionScheme,
+    eVCSWeakPressure,
+    eWeakPressure,
+    eVCSImplicit,
+    eImplicit,
+};
 
 enum EquationType
 {
@@ -134,11 +147,6 @@ class IncNavierStokes : public SolverUtils::AdvectionSystem,
                         public SolverUtils::FluidInterface
 {
 public:
-    // Destructor
-    virtual ~IncNavierStokes();
-
-    virtual void v_InitObject(bool DeclareField = true) override;
-
     int GetNConvectiveFields(void)
     {
         return m_nConvectiveFields;
@@ -146,43 +154,12 @@ public:
 
     void AddForcing(const SolverUtils::ForcingSharedPtr &pForce);
 
-    virtual void v_GetPressure(
-        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
-        Array<OneD, NekDouble> &pressure) override;
-
-    virtual void v_GetDensity(
-        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
-        Array<OneD, NekDouble> &density) override;
-
-    virtual bool v_HasConstantDensity() override
-    {
-        return true;
-    }
-
-    virtual void v_GetVelocity(
-        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
-        Array<OneD, Array<OneD, NekDouble>> &velocity) override;
-
-    virtual void v_SetMovingFrameVelocities(
-        const Array<OneD, NekDouble> &vFrameVels) override;
-    virtual void v_GetMovingFrameVelocities(
-        Array<OneD, NekDouble> &vFrameVels) override;
-    virtual void v_SetMovingFrameAngles(
-        const Array<OneD, NekDouble> &vFrameTheta) override;
-    virtual void v_GetMovingFrameAngles(
-        Array<OneD, NekDouble> &vFrameTheta) override;
-    virtual void v_SetMovingFrameProjectionMat(
-        const bnu::matrix<NekDouble> &vProjMat) override;
-    virtual void v_GetMovingFrameProjectionMat(
-        bnu::matrix<NekDouble> &vProjMat) override;
-
     bool DefinedForcing(const std::string &sForce);
-    void GetPivotPoint(Array<OneD, NekDouble> &vPivotPoint);
 
 protected:
     // pointer to the extrapolation class for sub-stepping and HOPBS
-
     ExtrapolateSharedPtr m_extrapolation;
+    IncBoundaryConditionsSharedPtr m_IncNavierStokesBCs;
 
     /// modal energy file
     std::ofstream m_mdlFile;
@@ -221,19 +198,49 @@ protected:
     /// pressure boundary conditions.
     int m_intSteps;
 
-    // pivot point for moving reference frame
-    // TODO: relocate this variable
+    /// pivot point for moving reference frame
     Array<OneD, NekDouble> m_pivotPoint;
+    Array<OneD, NekDouble> m_aeroForces;
+
+    static std::string eqTypeLookupIds[];
 
     /// Constructor.
     IncNavierStokes(const LibUtilities::SessionReaderSharedPtr &pSession,
                     const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    EquationType GetEquationType(void)
+    ~IncNavierStokes() override = default;
+
+    void v_InitObject(bool DeclareField = true) override;
+
+    void v_GetPressure(
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, NekDouble> &pressure) override;
+
+    void v_GetDensity(
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, NekDouble> &density) override;
+
+    bool v_HasConstantDensity() override
     {
-        return m_equationType;
+        return true;
     }
-    static std::string eqTypeLookupIds[];
+
+    void v_GetVelocity(
+        const Array<OneD, const Array<OneD, NekDouble>> &physfield,
+        Array<OneD, Array<OneD, NekDouble>> &velocity) override;
+
+    void v_SetMovingFrameVelocities(const Array<OneD, NekDouble> &vFrameVels,
+                                    const int step) override;
+    bool v_GetMovingFrameVelocities(Array<OneD, NekDouble> &vFrameVels,
+                                    const int step) override;
+    void v_SetMovingFrameDisp(const Array<OneD, NekDouble> &vFrameDisp,
+                              const int step) override;
+    void v_SetMovingFramePivot(
+        const Array<OneD, NekDouble> &vFramePivot) override;
+    bool v_GetMovingFrameDisp(Array<OneD, NekDouble> &vFrameDisp,
+                              const int step) override;
+    void v_SetAeroForce(Array<OneD, NekDouble> forces) override;
+    void v_GetAeroForce(Array<OneD, NekDouble> forces) override;
 
     void EvaluateAdvectionTerms(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -256,35 +263,30 @@ protected:
     /// Set Up Womersley details
     void SetUpWomersley(const int fldid, const int bndid, std::string womstr);
 
-    /// Set the moving reference frame boundary conditions
-    void SetMovingReferenceFrameBCs(const NekDouble &time);
-    void SetMRFWallBCs(const NekDouble &time);
-    void SetMRFDomainVelBCs(const NekDouble &time);
-
     /// Womersley parameters if required
     std::map<int, std::map<int, WomersleyParamsSharedPtr>> m_womersleyParams;
 
-    virtual MultiRegions::ExpListSharedPtr v_GetPressure() override
+    MultiRegions::ExpListSharedPtr v_GetPressure() override
     {
         return m_pressure;
     }
 
-    virtual void v_TransCoeffToPhys(void) override
+    void v_TransCoeffToPhys(void) override
     {
         ASSERTL0(false, "This method is not defined in this class");
     }
 
-    virtual void v_TransPhysToCoeff(void) override
+    void v_TransPhysToCoeff(void) override
     {
         ASSERTL0(false, "This method is not defined in this class");
     }
 
     virtual int v_GetForceDimension() = 0;
 
-    virtual Array<OneD, NekDouble> v_GetMaxStdVelocity(
+    Array<OneD, NekDouble> v_GetMaxStdVelocity(
         const NekDouble SpeedSoundFactor) override;
 
-    virtual bool v_PreIntegrate(int step) override;
+    bool v_PreIntegrate(int step) override;
 
 private:
 };

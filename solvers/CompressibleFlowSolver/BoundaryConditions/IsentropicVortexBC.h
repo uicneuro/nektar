@@ -53,11 +53,13 @@ public:
         const LibUtilities::SessionReaderSharedPtr &pSession,
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
         const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+        const Array<OneD, Array<OneD, NekDouble>> &pGridVelocity,
         const int pSpaceDim, const int bcRegion, const int cnt)
     {
         CFSBndCondSharedPtr p =
             MemoryManager<IsentropicVortexBC>::AllocateSharedPtr(
-                pSession, pFields, pTraceNormals, pSpaceDim, bcRegion, cnt);
+                pSession, pFields, pTraceNormals, pGridVelocity, pSpaceDim,
+                bcRegion, cnt);
         return p;
     }
 
@@ -65,24 +67,25 @@ public:
     static std::string className;
 
 protected:
-    virtual void v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
-                         Array<OneD, Array<OneD, NekDouble>> &physarray,
-                         const NekDouble &time) override;
+    void v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
+                 Array<OneD, Array<OneD, NekDouble>> &physarray,
+                 const NekDouble &time) override;
 
 private:
     IsentropicVortexBC(
         const LibUtilities::SessionReaderSharedPtr &pSession,
         const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
         const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+        const Array<OneD, Array<OneD, NekDouble>> &pGridVelocity,
         const int pSpaceDim, const int bcRegion, const int cnt);
+
+    ~IsentropicVortexBC(void) override = default;
 
     void EvaluateIsentropicVortex(const Array<OneD, NekDouble> &x,
                                   const Array<OneD, NekDouble> &y,
                                   const Array<OneD, NekDouble> &z,
                                   Array<OneD, Array<OneD, NekDouble>> &u,
                                   NekDouble time, const int o = 0);
-
-    virtual ~IsentropicVortexBC(void){};
 };
 
 } // namespace Nektar

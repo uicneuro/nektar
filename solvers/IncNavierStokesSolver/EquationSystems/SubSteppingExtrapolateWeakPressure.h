@@ -51,6 +51,8 @@ typedef std::shared_ptr<SubSteppingExtrapolateWeakPressure>
 class SubSteppingExtrapolateWeakPressure : public SubSteppingExtrapolate
 {
 public:
+    friend class MemoryManager<SubSteppingExtrapolateWeakPressure>;
+
     /// Creates an instance of this class
     static ExtrapolateSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -70,22 +72,21 @@ public:
     /// Name of class
     static std::string className;
 
+protected:
     SubSteppingExtrapolateWeakPressure(
         const LibUtilities::SessionReaderSharedPtr pSession,
         Array<OneD, MultiRegions::ExpListSharedPtr> pFields,
         MultiRegions::ExpListSharedPtr pPressure, const Array<OneD, int> pVel,
         const SolverUtils::AdvectionSharedPtr advObject);
 
-    virtual ~SubSteppingExtrapolateWeakPressure();
+    ~SubSteppingExtrapolateWeakPressure() override = default;
 
-protected:
-    virtual void v_SubStepSetPressureBCs(
+    void v_SubStepSetPressureBCs(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         NekDouble Aii_Dt, NekDouble kinvis) override;
 
-    virtual void v_AddNormVelOnOBC(
-        const int nbcoeffs, const int nreg,
-        Array<OneD, Array<OneD, NekDouble>> &u) override;
+    void v_AddNormVelOnOBC(const int nbcoeffs, const int nreg,
+                           Array<OneD, Array<OneD, NekDouble>> &u) override;
 };
 } // namespace Nektar
 #endif

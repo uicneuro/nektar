@@ -39,12 +39,10 @@
 #include <LibUtilities/BasicUtils/Timer.h>
 #include <PulseWaveSolver/EquationSystems/PulseWavePropagation.h>
 
-using namespace std;
-
 namespace Nektar
 {
 
-string PulseWavePropagation::className =
+std::string PulseWavePropagation::className =
     GetEquationSystemFactory().RegisterCreatorFunction(
         "PulseWavePropagation", PulseWavePropagation::create,
         "Pulse Wave Propagation equation.");
@@ -69,10 +67,8 @@ PulseWavePropagation::PulseWavePropagation(
 {
 }
 
-void PulseWavePropagation::v_InitObject(bool DeclareField)
+void PulseWavePropagation::v_InitObject([[maybe_unused]] bool DeclareField)
 {
-    boost::ignore_unused(DeclareField);
-
     // Will set up an array of vessels/fields in PulseWaveSystem::v_InitObject
     // so set DeclareField to false so that the fields are not set up in
     // EquationSystem unnecessarily. Note the number of fields in Equation
@@ -102,8 +98,8 @@ void PulseWavePropagation::v_InitObject(bool DeclareField)
     }
 
     // Create advection object
-    string advName;
-    string riemName;
+    std::string advName;
+    std::string riemName;
     switch (m_upwindTypePulse)
     {
         case eUpwindPulse:
@@ -133,10 +129,6 @@ void PulseWavePropagation::v_InitObject(bool DeclareField)
 
     m_advObject->SetRiemannSolver(m_riemannSolver);
     m_advObject->InitObject(m_session, m_fields);
-}
-
-PulseWavePropagation::~PulseWavePropagation()
-{
 }
 
 /**
@@ -179,7 +171,7 @@ void PulseWavePropagation::DoOdeRhs(
         timer.Start();
         for (i = 0; i < m_nVariables; ++i)
         {
-            physarray[i] = inarray[i] + cnt;
+            physarray[i] = inarray[i] + cnt; // note this is doing a hidden copy
             out[i]       = outarray[i] + cnt;
         }
 
@@ -202,14 +194,16 @@ void PulseWavePropagation::DoOdeRhs(
 
 void PulseWavePropagation::DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time)
 {
-    boost::ignore_unused(time);
-
     // Just copy over array
-    for (size_t i = 0; i < m_nVariables; ++i)
+    if (inarray != outarray)
     {
-        Vmath::Vcopy(inarray[i].size(), inarray[i], 1, outarray[i], 1);
+        for (size_t i = 0; i < m_nVariables; ++i)
+        {
+            Vmath::Vcopy(inarray[i].size(), inarray[i], 1, outarray[i], 1);
+        }
     }
 }
 
@@ -220,11 +214,10 @@ void PulseWavePropagation::DoOdeProjection(
  */
 void PulseWavePropagation::SetPulseWaveBoundaryConditions(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+    [[maybe_unused]] Array<OneD, Array<OneD, NekDouble>> &outarray,
+    const NekDouble time)
 
 {
-    boost::ignore_unused(outarray);
-
     size_t omega;
 
     Array<OneD, MultiRegions::ExpListSharedPtr> vessel(2);
@@ -320,13 +313,13 @@ void PulseWavePropagation::GetFluxVector(
 
     LibUtilities::Timer timer;
 
+    timer.Start();
     for (size_t j = 0; j < nq; ++j)
     {
-        timer.Start();
         flux[0][0][j] = physfield[0][j] * physfield[1][j];
-        timer.Stop();
-        timer.AccumulateRegion("PulseWavePropagation:GetFluxVector-flux", 3);
     }
+    timer.Stop();
+    timer.AccumulateRegion("PulseWavePropagation:GetFluxVector-flux", 3);
 
     // d/dx of AU, for the viscoelastic tube law and extra fields
     m_fields[0]->PhysDeriv(flux[0][0], dAUdx);

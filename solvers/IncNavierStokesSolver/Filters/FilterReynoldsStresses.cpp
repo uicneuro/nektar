@@ -34,10 +34,9 @@
 
 #include <IncNavierStokesSolver/Filters/FilterReynoldsStresses.h>
 
-namespace Nektar
+namespace Nektar::SolverUtils
 {
-namespace SolverUtils
-{
+
 std::string FilterReynoldsStresses::className =
     GetFilterFactory().RegisterCreatorFunction("ReynoldsStresses",
                                                FilterReynoldsStresses::create);
@@ -65,7 +64,7 @@ std::string FilterReynoldsStresses::className =
  */
 FilterReynoldsStresses::FilterReynoldsStresses(
     const LibUtilities::SessionReaderSharedPtr &pSession,
-    const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+    const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
     const std::map<std::string, std::string> &pParams)
     : FilterFieldConvert(pSession, pEquation, pParams)
 {
@@ -137,10 +136,6 @@ FilterReynoldsStresses::FilterReynoldsStresses(
     ASSERTL0(m_alpha > 0 && m_alpha < 1, "Alpha out of bounds.");
 }
 
-FilterReynoldsStresses::~FilterReynoldsStresses()
-{
-}
-
 void FilterReynoldsStresses::v_Initialise(
     const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
     const NekDouble &time)
@@ -148,6 +143,7 @@ void FilterReynoldsStresses::v_Initialise(
     size_t dim          = pFields.size() - 1;
     size_t nExtraFields = (dim + 1) * dim / 2;
     size_t origFields   = pFields.size();
+    size_t nqtot        = pFields[0]->GetTotPoints();
 
     // Allocate storage
     m_fields.resize(origFields + nExtraFields);
@@ -155,11 +151,11 @@ void FilterReynoldsStresses::v_Initialise(
 
     for (size_t n = 0; n < m_fields.size(); ++n)
     {
-        m_fields[n] = Array<OneD, NekDouble>(pFields[0]->GetTotPoints(), 0.0);
+        m_fields[n] = Array<OneD, NekDouble>(nqtot, 0.0);
     }
     for (size_t n = 0; n < m_delta.size(); ++n)
     {
-        m_delta[n] = Array<OneD, NekDouble>(pFields[0]->GetTotPoints(), 0.0);
+        m_delta[n] = Array<OneD, NekDouble>(nqtot, 0.0);
     }
 
     // Initialise output arrays
@@ -173,7 +169,8 @@ void FilterReynoldsStresses::v_Initialise(
             pFields[0]->BwdTrans(m_outFields[j], m_fields[j]);
             if (pFields[0]->GetWaveSpace())
             {
-                pFields[0]->HomogeneousBwdTrans(m_fields[j], m_fields[j]);
+                pFields[0]->HomogeneousBwdTrans(nqtot, m_fields[j],
+                                                m_fields[j]);
             }
         }
     }
@@ -203,10 +200,9 @@ void FilterReynoldsStresses::v_FillVariablesName(
 
 void FilterReynoldsStresses::v_ProcessSample(
     const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-    std::vector<Array<OneD, NekDouble>> &fieldcoeffs, const NekDouble &time)
+    [[maybe_unused]] std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(fieldcoeffs, time);
-
     size_t i, j, n;
     size_t nq          = pFields[0]->GetTotPoints();
     size_t dim         = pFields.size() - 1;
@@ -245,7 +241,7 @@ void FilterReynoldsStresses::v_ProcessSample(
     {
         if (waveSpace)
         {
-            pFields[n]->HomogeneousBwdTrans(pFields[n]->GetPhys(), vel);
+            pFields[n]->HomogeneousBwdTrans(nq, pFields[n]->GetPhys(), vel);
         }
         else
         {
@@ -279,14 +275,11 @@ void FilterReynoldsStresses::v_ProcessSample(
 
 void FilterReynoldsStresses::v_PrepareOutput(
     const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-    const NekDouble &time)
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(time);
-
     size_t dim = pFields.size() - 1;
 
-    m_fieldMetaData["NumberOfFieldDumps"] =
-        boost::lexical_cast<std::string>(m_numSamples);
+    m_fieldMetaData["NumberOfFieldDumps"] = std::to_string(m_numSamples);
 
     // Set wavespace to false, as calculations were performed in physical space
     bool waveSpace = pFields[0]->GetWaveSpace();
@@ -317,5 +310,4 @@ NekDouble FilterReynoldsStresses::v_GetScale()
     }
 }
 
-} // namespace SolverUtils
-} // namespace Nektar
+} // namespace Nektar::SolverUtils

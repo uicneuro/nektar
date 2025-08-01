@@ -38,13 +38,16 @@
 
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
-
 namespace Nektar
 {
-string VCSWeakPressure::className =
+
+std::string VCSWeakPressure::className =
     SolverUtils::GetEquationSystemFactory().RegisterCreatorFunction(
         "VCSWeakPressure", VCSWeakPressure::create);
+
+std::string VCSWeakPressure::solverTypeLookupId =
+    LibUtilities::SessionReader::RegisterEnumValue(
+        "SolverType", "VCSWeakPressure", eVCSWeakPressure);
 
 /**
  * Constructor. Creates ...
@@ -57,13 +60,6 @@ VCSWeakPressure::VCSWeakPressure(
     const SpatialDomains::MeshGraphSharedPtr &pGraph)
     : UnsteadySystem(pSession, pGraph),
       VelocityCorrectionScheme(pSession, pGraph)
-{
-}
-
-/**
- * Destructor
- */
-VCSWeakPressure::~VCSWeakPressure(void)
 {
 }
 
@@ -83,29 +79,46 @@ void VCSWeakPressure::v_GenerateSummary(SolverUtils::SummaryList &s)
                                     m_extrapolation->GetSubStepName());
     }
 
-    string dealias = m_homogen_dealiasing ? "Homogeneous1D" : "";
+    std::string dealias = m_homogen_dealiasing ? "Homogeneous1D" : "";
     if (m_specHP_dealiasing)
     {
-        dealias += (dealias == "" ? "" : " + ") + string("spectral/hp");
+        dealias += (dealias == "" ? "" : " + ") + std::string("spectral/hp");
     }
     if (dealias != "")
     {
         SolverUtils::AddSummaryItem(s, "Dealiasing", dealias);
     }
 
-    string smoothing = m_useSpecVanVisc ? "spectral/hp" : "";
+    std::string smoothing = m_useSpecVanVisc ? "spectral/hp" : "";
     if (m_useHomo1DSpecVanVisc && (m_HomogeneousType == eHomogeneous1D))
     {
-        smoothing += (smoothing == "" ? "" : " + ") + string("Homogeneous1D");
+        smoothing +=
+            (smoothing == "" ? "" : " + ") + std::string("Homogeneous1D");
     }
     if (smoothing != "")
     {
         SolverUtils::AddSummaryItem(
             s, "Smoothing",
             "SVV (" + smoothing + " SVV (cut-off = " +
-                boost::lexical_cast<string>(m_sVVCutoffRatio) +
+                boost::lexical_cast<std::string>(m_sVVCutoffRatio) +
                 ", diff coeff = " +
-                boost::lexical_cast<string>(m_sVVDiffCoeff) + ")");
+                boost::lexical_cast<std::string>(m_sVVDiffCoeff) + ")");
+    }
+
+    if (m_useGJPStabilisation)
+    {
+        SolverUtils::AddSummaryItem(
+            s, "GJP Stab. Impl.    ",
+            m_session->GetSolverInfo("GJPStabilisation"));
+        SolverUtils::AddSummaryItem(s, "GJP Stab. JumpScale", m_GJPJumpScale);
+
+        if (boost::iequals(m_session->GetSolverInfo("GJPStabilisation"),
+                           "Explicit"))
+        {
+            SolverUtils::AddSummaryItem(
+                s, "GJP Normal Velocity",
+                m_session->GetSolverInfo("GJPNormalVelocity"));
+        }
     }
 }
 
@@ -116,9 +129,9 @@ void VCSWeakPressure::v_SetUpPressureForcing(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     Array<OneD, Array<OneD, NekDouble>> &Forcing, const NekDouble aii_Dt)
 {
-    int ncoeffs = m_fields[0]->GetNcoeffs();
+    int ncoeffs = m_pressure->GetNcoeffs();
 
-    m_fields[0]->IProductWRTDerivBase(fields, Forcing[0]);
+    m_pressure->IProductWRTDerivBase(fields, Forcing[0]);
 
     // aii required since time integration scheme normalises against aii
     Vmath::Smul(ncoeffs, -1.0 / aii_Dt, Forcing[0], 1, Forcing[0], 1);

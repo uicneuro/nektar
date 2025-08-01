@@ -33,7 +33,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <IncNavierStokesSolver/EquationSystems/MappingExtrapolate.h>
-#include <LibUtilities/Communication/Comm.h>
 
 namespace Nektar
 {
@@ -63,10 +62,6 @@ MappingExtrapolate::MappingExtrapolate(
     // Relaxation parameter for pressure system
     m_session->LoadParameter("MappingPressureRelaxation", m_pressureRelaxation,
                              1.0);
-}
-
-MappingExtrapolate::~MappingExtrapolate()
-{
 }
 
 /**
@@ -117,7 +112,7 @@ void MappingExtrapolate::v_CorrectPressureBCs(
                                    gradP[i]);
             if (m_fields[0]->GetWaveSpace())
             {
-                m_fields[0]->HomogeneousBwdTrans(gradP[i], wk[i]);
+                m_fields[0]->HomogeneousBwdTrans(physTot, gradP[i], wk[i]);
             }
             else
             {
@@ -145,7 +140,8 @@ void MappingExtrapolate::v_CorrectPressureBCs(
         {
             for (size_t i = 0; i < nvel; ++i)
             {
-                m_pressure->HomogeneousFwdTrans(correction[i], correction[i]);
+                m_pressure->HomogeneousFwdTrans(physTot, correction[i],
+                                                correction[i]);
             }
         }
         // p_i - alpha*J*div(G(p))
@@ -248,7 +244,7 @@ void MappingExtrapolate::v_CalcNeumannPressureBCs(
         {
             if (m_fields[0]->GetWaveSpace())
             {
-                m_fields[0]->HomogeneousBwdTrans(N[i], N_new[i]);
+                m_fields[0]->HomogeneousBwdTrans(physTot, N[i], N_new[i]);
             }
             else
             {
@@ -257,7 +253,7 @@ void MappingExtrapolate::v_CalcNeumannPressureBCs(
             Vmath::Vmul(physTot, Jac, 1, N_new[i], 1, N_new[i], 1);
             if (m_fields[0]->GetWaveSpace())
             {
-                m_fields[0]->HomogeneousFwdTrans(N_new[i], N_new[i]);
+                m_fields[0]->HomogeneousFwdTrans(physTot, N_new[i], N_new[i]);
             }
         }
 
@@ -266,7 +262,8 @@ void MappingExtrapolate::v_CalcNeumannPressureBCs(
         {
             if (m_fields[0]->GetWaveSpace())
             {
-                m_fields[0]->HomogeneousBwdTrans(fields[i], fields_new[i]);
+                m_fields[0]->HomogeneousBwdTrans(physTot, fields[i],
+                                                 fields_new[i]);
             }
             else
             {
@@ -302,8 +299,10 @@ void MappingExtrapolate::v_CalcNeumannPressureBCs(
             Vmath::Vmul(physTot, Jac, 1, Q_field[i], 1, Q_field[i], 1);
             if (m_fields[0]->GetWaveSpace())
             {
-                m_fields[0]->HomogeneousFwdTrans(fields_new[i], fields_new[i]);
-                m_fields[0]->HomogeneousFwdTrans(Q_field[i], Q_field[i]);
+                m_fields[0]->HomogeneousFwdTrans(physTot, fields_new[i],
+                                                 fields_new[i]);
+                m_fields[0]->HomogeneousFwdTrans(physTot, Q_field[i],
+                                                 Q_field[i]);
             }
         }
 
@@ -366,4 +365,5 @@ void MappingExtrapolate::v_CalcNeumannPressureBCs(
     }
     m_bcCorrection = Array<OneD, NekDouble>(m_numHBCDof, 0.0);
 }
+
 } // namespace Nektar

@@ -36,6 +36,7 @@
 
 namespace Nektar
 {
+
 std::string HLLCSolver::solverName =
     SolverUtils::GetRiemannSolverFactory().RegisterCreatorFunction(
         "HLLC", HLLCSolver::create, "HLLC Riemann solver");
@@ -83,21 +84,33 @@ void HLLCSolver::v_PointSolve(NekDouble hL, NekDouble huL, NekDouble hvL,
 
     // Compute SL
     if (hstar > hL)
+    {
         SL = uL - cL * sqrt(0.5 * ((hstar * hstar + hstar * hL) / (hL * hL)));
+    }
     else
+    {
         SL = uL - cL;
+    }
 
     // Compute SR
     if (hstar > hR)
+    {
         SR = uR + cR * sqrt(0.5 * ((hstar * hstar + hstar * hR) / (hR * hR)));
+    }
     else
+    {
         SR = uR + cR;
+    }
 
     if (fabs(hR * (uR - SR) - hL * (uL - SL)) <= 1.0e-10)
+    {
         Sstar = ustar;
+    }
     else
+    {
         Sstar = (SL * hR * (uR - SR) - SR * hL * (uL - SL)) /
                 (hR * (uR - SR) - hL * (uL - SL));
+    }
 
     if (SL >= 0)
     {
@@ -138,4 +151,5 @@ void HLLCSolver::v_PointSolve(NekDouble hL, NekDouble huL, NekDouble hvL,
                  "SR, SL and Sstar");
     }
 }
+
 } // namespace Nektar

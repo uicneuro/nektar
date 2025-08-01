@@ -39,6 +39,7 @@
 
 namespace Nektar
 {
+
 std::string RoeSolverSIMD::solverName =
     SolverUtils::GetRiemannSolverFactory().RegisterCreatorFunction(
         "RoeOpt", RoeSolverSIMD::create, "Roe Riemann solver opt");
@@ -56,13 +57,15 @@ RoeSolverSIMD::RoeSolverSIMD() : CompressibleSolver()
     m_requiresRotation = false;
 }
 
+/**
+ *
+ */
 void RoeSolverSIMD::v_Solve(
-    const int nDim, const Array<OneD, const Array<OneD, NekDouble>> &fwd,
+    [[maybe_unused]] const int nDim,
+    const Array<OneD, const Array<OneD, NekDouble>> &fwd,
     const Array<OneD, const Array<OneD, NekDouble>> &bwd,
     Array<OneD, Array<OneD, NekDouble>> &flux)
 {
-    boost::ignore_unused(nDim);
-
     static auto gamma      = m_params["gamma"]();
     static size_t nVars    = fwd.size();
     static size_t spaceDim = nVars - 2;
@@ -80,14 +83,7 @@ void RoeSolverSIMD::v_Solve(
 
     // get normal, vellocs
     ASSERTL1(CheckVectors("N"), "N not defined.");
-    // ASSERTL1(CheckAuxVec("vecLocs"), "vecLocs not defined.");
     const Array<OneD, const Array<OneD, NekDouble>> normals = m_vectors["N"]();
-    // const Array<OneD, const Array<OneD, NekDouble> > vecLocs =
-    // m_auxVec["vecLocs"]();
-
-    // const unsigned int vx = (int)vecLocs[0][0];
-    // const unsigned int vy = (int)vecLocs[0][1];
-    // const unsigned int vz = (int)vecLocs[0][2];
 
     // Generate matrices if they don't already exist.
     if (m_rotMat.size() == 0)

@@ -34,12 +34,10 @@
 
 #include <IncNavierStokesSolver/AdvectionTerms/AlternateSkewAdvection.h>
 
-using namespace std;
-
 namespace Nektar
 {
 
-string AlternateSkewAdvection::className =
+std::string AlternateSkewAdvection::className =
     SolverUtils::GetAdvectionFactory().RegisterCreatorFunction(
         "AlternateSkew", AlternateSkewAdvection::create,
         "Alternating Skew Symmetric");
@@ -54,16 +52,10 @@ AlternateSkewAdvection::AlternateSkewAdvection() : Advection()
 {
 }
 
-AlternateSkewAdvection::~AlternateSkewAdvection()
-{
-}
-
 void AlternateSkewAdvection::v_InitObject(
     LibUtilities::SessionReaderSharedPtr pSession,
-    Array<OneD, MultiRegions::ExpListSharedPtr> fields)
+    [[maybe_unused]] Array<OneD, MultiRegions::ExpListSharedPtr> fields)
 {
-    boost::ignore_unused(fields);
-
     pSession->MatchSolverInfo("ModeType", "SingleMode", m_SingleMode, false);
     pSession->MatchSolverInfo("ModeType", "HalfMode", m_HalfMode, false);
 }
@@ -73,12 +65,11 @@ void AlternateSkewAdvection::v_Advect(
     const Array<OneD, MultiRegions::ExpListSharedPtr> &fields,
     const Array<OneD, Array<OneD, NekDouble>> &advVel,
     const Array<OneD, Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble &time,
-    const Array<OneD, Array<OneD, NekDouble>> &pFwd,
-    const Array<OneD, Array<OneD, NekDouble>> &pBwd)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble &time,
+    [[maybe_unused]] const Array<OneD, Array<OneD, NekDouble>> &pFwd,
+    [[maybe_unused]] const Array<OneD, Array<OneD, NekDouble>> &pBwd)
 {
-    boost::ignore_unused(time, pFwd, pBwd);
-
     // use dimension of Velocity vector to dictate dimension of operation
     int ndim       = advVel.size();
     int nPointsTot = fields[0]->GetNpoints();
@@ -88,7 +79,7 @@ void AlternateSkewAdvection::v_Advect(
         if (fields[i]->GetWaveSpace() && !m_SingleMode && !m_HalfMode)
         {
             velocity[i] = Array<OneD, NekDouble>(nPointsTot, 0.0);
-            fields[i]->HomogeneousBwdTrans(advVel[i], velocity[i]);
+            fields[i]->HomogeneousBwdTrans(nPointsTot, advVel[i], velocity[i]);
         }
         else
         {
@@ -163,14 +154,14 @@ void AlternateSkewAdvection::v_Advect(
                         // names may be misleading
                         fields[0]->PhysDeriv(inarray[n], gradV0, gradV1,
                                              gradV2);
-                        fields[0]->HomogeneousBwdTrans(gradV0, tmp);
+                        fields[0]->HomogeneousBwdTrans(nPointsTot, gradV0, tmp);
                         Vmath::Vmul(nPointsTot, tmp, 1, velocity[0], 1,
                                     outarray[n], 1); // + u*du/dx
-                        fields[0]->HomogeneousBwdTrans(gradV1, tmp);
+                        fields[0]->HomogeneousBwdTrans(nPointsTot, gradV1, tmp);
                         Vmath::Vvtvp(nPointsTot, tmp, 1, velocity[1], 1,
                                      outarray[n], 1, outarray[n],
                                      1); // + v*du/dy
-                        fields[0]->HomogeneousBwdTrans(gradV2, tmp);
+                        fields[0]->HomogeneousBwdTrans(nPointsTot, gradV2, tmp);
                         Vmath::Vvtvp(nPointsTot, tmp, 1, velocity[2], 1,
                                      outarray[n], 1, outarray[n],
                                      1); // + w*du/dz
@@ -178,7 +169,8 @@ void AlternateSkewAdvection::v_Advect(
                     else
                     {
                         Up = Array<OneD, NekDouble>(nPointsTot);
-                        fields[0]->HomogeneousBwdTrans(inarray[n], Up);
+                        fields[0]->HomogeneousBwdTrans(nPointsTot, inarray[n],
+                                                       Up);
                         Vmath::Vmul(nPointsTot, Up, 1, velocity[0], 1, gradV0,
                                     1);
                         Vmath::Vmul(nPointsTot, Up, 1, velocity[1], 1, gradV1,
@@ -202,7 +194,8 @@ void AlternateSkewAdvection::v_Advect(
 
                     Vmath::Smul(nPointsTot, 1.0, outarray[n], 1, tmp,
                                 1); // must be mult by 0.5????
-                    fields[0]->HomogeneousFwdTrans(tmp, outarray[n]);
+                    fields[0]->HomogeneousFwdTrans(nPointsTot, tmp,
+                                                   outarray[n]);
                 }
                 else
                 {

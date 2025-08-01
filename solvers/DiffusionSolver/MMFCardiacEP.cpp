@@ -45,6 +45,7 @@
 #include <CardiacEPSolver/Filters/FilterCellHistoryPoints.h>
 #include <CardiacEPSolver/Filters/FilterCheckpointCellModel.h>
 
+#include <SpatialDomains/MeshGraphIO.h>
 #include <SolverUtils/Driver.h>
 #include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
 
@@ -1112,7 +1113,7 @@ void MMFCardiacEP::DoSolveTimeMap()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         // Excitation according to TimeMap
@@ -1347,7 +1348,7 @@ void MMFCardiacEP::DoSolveMMFFirst()
 
         // field time integration
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         m_time += m_timestep;
@@ -1615,7 +1616,7 @@ void MMFCardiacEP::DoSolveMMF()
 
         // field time integration
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         m_time += m_timestep;
@@ -2824,7 +2825,7 @@ int main(int argc, char *argv[])
         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
 
         // Create MeshGraph
-        graph = SpatialDomains::MeshGraph::Read(session);
+        graph = SpatialDomains::MeshGraphIO::Read(session);
 
         // Create driver
         session->LoadSolverInfo("Driver", vDriverModule, "Standard");

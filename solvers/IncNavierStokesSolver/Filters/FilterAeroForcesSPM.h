@@ -40,13 +40,16 @@
 
 namespace Nektar
 {
+
 class FilterAeroForcesSPM : public SolverUtils::Filter
 {
 public:
+    friend class MemoryManager<FilterAeroForcesSPM>;
+
     /// Creates an instance of this class
     static SolverUtils::FilterSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
-        const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+        const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
         const std::map<std::string, std::string> &pParams)
     {
         SolverUtils::FilterSharedPtr p =
@@ -57,13 +60,6 @@ public:
 
     /// Name of the class
     static std::string className;
-
-    FilterAeroForcesSPM(
-        const LibUtilities::SessionReaderSharedPtr &pSession,
-        const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
-        const std::map<std::string, std::string> &pParams);
-
-    virtual ~FilterAeroForcesSPM();
 
     // Calculates the forces and fills the array 'm_Forces' up
     void CalculateForces(const Array<OneD, Array<OneD, NekDouble>> &pIntVel,
@@ -85,24 +81,32 @@ protected:
     /// Array storing the last value of the aerodynamic forces
     Array<OneD, NekDouble> m_Forces;
 
-    virtual void v_Initialise(
+    FilterAeroForcesSPM(
+        const LibUtilities::SessionReaderSharedPtr &pSession,
+        const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
+        const std::map<std::string, std::string> &pParams);
+
+    ~FilterAeroForcesSPM() override = default;
+
+    void v_Initialise(
         const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
         const NekDouble &time) override;
 
-    virtual void v_Update(
+    void v_Update(
         const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
         const NekDouble &time) override;
 
-    virtual void v_Finalise(
+    void v_Finalise(
         const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
         const NekDouble &time) override;
 
-    virtual bool v_IsTimeDependent() override;
+    bool v_IsTimeDependent() override;
 
 private:
 };
 
 typedef std::shared_ptr<FilterAeroForcesSPM> FilterAeroForcesSPMSharedPtr;
+
 } // namespace Nektar
 
 #endif /* NEKTAR_INCNAVIERSTOKES_FILTERS_FILTERAEROFORCESSPM_H */

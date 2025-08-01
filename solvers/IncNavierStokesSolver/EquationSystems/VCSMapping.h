@@ -40,9 +40,12 @@
 
 namespace Nektar
 {
+
 class VCSMapping : public VelocityCorrectionScheme
 {
 public:
+    friend class MemoryManager<VCSMapping>;
+
     /// Creates an instance of this class
     static SolverUtils::EquationSystemSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -57,22 +60,15 @@ public:
     /// Name of class
     static std::string className;
 
-    /// Constructor.
-    VCSMapping(const LibUtilities::SessionReaderSharedPtr &pSession,
-               const SpatialDomains::MeshGraphSharedPtr &pGraph);
-
-    //
     void ApplyIncNSMappingForcing(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray);
 
-    virtual ~VCSMapping();
-
-    virtual void v_InitObject(bool DeclareField = true) override;
-
 protected:
     // Mapping object
     GlobalMapping::MappingSharedPtr m_mapping;
+
+    static std::string solverTypeLookupId;
 
     bool m_verbose;
 
@@ -91,29 +87,35 @@ protected:
     // Pressure gradient (to avoid duplicate calculations)
     Array<OneD, Array<OneD, NekDouble>> m_gradP;
 
-    // Virtual functions
-    virtual void v_DoInitialise(void) override;
+    VCSMapping(const LibUtilities::SessionReaderSharedPtr &pSession,
+               const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_SetUpPressureForcing(
+    ~VCSMapping() override = default;
+
+    void v_InitObject(bool DeclareField = true) override;
+
+    // Virtual functions
+    void v_DoInitialise(bool dumpInitialConditions = true) override;
+
+    void v_SetUpPressureForcing(
         const Array<OneD, const Array<OneD, NekDouble>> &fields,
         Array<OneD, Array<OneD, NekDouble>> &Forcing,
         const NekDouble aii_Dt) override;
 
-    virtual void v_SetUpViscousForcing(
+    void v_SetUpViscousForcing(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &Forcing,
         const NekDouble aii_Dt) override;
 
-    virtual void v_SolvePressure(
-        const Array<OneD, NekDouble> &Forcing) override;
+    void v_SolvePressure(const Array<OneD, NekDouble> &Forcing) override;
 
-    virtual void v_SolveViscous(
+    void v_SolveViscous(
         const Array<OneD, const Array<OneD, NekDouble>> &Forcing,
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray,
         const NekDouble aii_Dt) override;
 
-    virtual void v_EvaluateAdvection_SetPressureBCs(
+    void v_EvaluateAdvection_SetPressureBCs(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray,
         const NekDouble time) override;

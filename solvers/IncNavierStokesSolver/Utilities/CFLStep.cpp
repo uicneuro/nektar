@@ -37,6 +37,7 @@
 
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <SolverUtils/Driver.h>
+#include <SpatialDomains/MeshGraphIO.h>
 
 #include <IncNavierStokesSolver/EquationSystems/IncNavierStokes.h>
 
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
     if (argc != 2)
     {
         fprintf(stderr, "Usage: ./CflStep file.xml \n");
-        fprintf(stderr, "\t Method will read intiial conditions section of "
+        fprintf(stderr, "\t Method will read initial conditions section of "
                         ".xml file for input \n");
         exit(1);
     }
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
 
         // Create MeshGraph.
-        graph = SpatialDomains::MeshGraph::Read(session);
+        graph = SpatialDomains::MeshGraphIO::Read(session);
 
         // Create driver
         session->LoadSolverInfo("Driver", vDriverModule, "Standard");

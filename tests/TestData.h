@@ -35,7 +35,6 @@
 #ifndef NEKTAR_TESTER_TESTDATA
 #define NEKTAR_TESTER_TESTDATA
 
-#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
 #include <string>
@@ -43,7 +42,8 @@
 
 #include <tinyxml.h>
 
-namespace fs = boost::filesystem;
+#include <LibUtilities/BasicUtils/Filesystem.hpp>
+
 namespace po = boost::program_options;
 
 namespace Nektar
@@ -54,13 +54,26 @@ struct DependentFile
     std::string m_filename;
 };
 
+enum CommandType
+{
+    eNone,
+    eSequential,
+    eParallel
+};
+
 struct Command
 {
     fs::path m_executable;
     std::string m_parameters;
     unsigned int m_processes;
     bool m_pythonTest;
+    CommandType m_commandType;
 };
+
+/**
+ * @brief The TestData class is responsible for parsing a test XML file and
+ * storing the data.
+ */
 
 class TestData
 {
@@ -80,6 +93,8 @@ public:
     DependentFile GetDependentFile(unsigned int pId) const;
     unsigned int GetNumDependentFiles() const;
 
+    unsigned int GetNumRuns() const;
+
     void SaveFile();
 
 private:
@@ -89,6 +104,8 @@ private:
     TiXmlDocument *m_doc;
     std::vector<TiXmlElement *> m_metrics;
     std::vector<DependentFile> m_files;
+    /// @brief The number of times to run the test.
+    unsigned int m_runs;
 
     void Parse(TiXmlDocument *pDoc);
     Command ParseCommand(TiXmlElement *pElmt) const;

@@ -35,14 +35,13 @@
 #include <CardiacEPSolver/CellModels/CellModel.h>
 #include <CardiacEPSolver/Stimuli/Stimulus.h>
 #include <MultiRegions/ExpList.h>
-#include <SpatialDomains/MeshComponents.h>
 
 using namespace std;
 using namespace Nektar;
 
 int main(int argc, char *argv[])
 {
-    SpatialDomains::PointGeomSharedPtr vPoint;
+    SpatialDomains::PointGeomUniquePtr vPoint;
     MultiRegions::ExpListSharedPtr vExp;
     LibUtilities::SessionReaderSharedPtr vSession;
     std::string vCellModel;
@@ -61,9 +60,10 @@ int main(int argc, char *argv[])
     try
     {
         // Construct a field consisting of a single vertex
-        vPoint = MemoryManager<SpatialDomains::PointGeom>::AllocateSharedPtr(
+        vPoint = ObjPoolManager<SpatialDomains::PointGeom>::AllocateUniquePtr(
             3, 0, 0.0, 0.0, 0.0);
-        vExp = MemoryManager<MultiRegions::ExpList>::AllocateSharedPtr(vPoint);
+        vExp = MemoryManager<MultiRegions::ExpList>::AllocateSharedPtr(
+            vPoint.get());
 
         // Get cell model name and create it
         vSession->LoadSolverInfo("CELLMODEL", vCellModel, "");

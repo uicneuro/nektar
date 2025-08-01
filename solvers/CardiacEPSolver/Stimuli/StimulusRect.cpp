@@ -64,12 +64,8 @@ StimulusRect::StimulusRect(const LibUtilities::SessionReaderSharedPtr &pSession,
     m_session = pSession;
     m_field   = pField;
     m_nq      = pField->GetTotPoints();
-
-    NekDouble chi, Cm;
-    m_session->LoadParameter("Chi", chi, 28.0);
-    m_session->LoadParameter("Cm", Cm, 0.125);
-
-    m_chiCapMembrane = chi * Cm;
+    m_chiCapMembrane =
+        m_session->GetParameter("chi") * m_session->GetParameter("Cm");
 
     if (!pXml)
     {
@@ -78,7 +74,6 @@ StimulusRect::StimulusRect(const LibUtilities::SessionReaderSharedPtr &pSession,
 
     const TiXmlElement *pXmlparameter;
 
-    // Get the dimension of the expansion
     pXmlparameter = pXml->FirstChildElement("p_x1");
     m_px1         = atof(pXmlparameter->GetText());
 
@@ -122,17 +117,8 @@ void StimulusRect::v_Update(Array<OneD, Array<OneD, NekDouble>> &outarray,
         return;
     }
 
-    // int dim = m_field->GetShapeDimension();
-    int dim;
-    NekDouble Tol=1.0e-7;
-    if(fabs(m_pz1-m_pz2)<Tol)
-    {
-        dim = 2;
-        if(fabs(m_py1-m_py2)<Tol)
-        {
-            dim = 1;
-        }
-    }
+    // Get the dimension of the expansion
+    int dim = m_field->GetCoordim(0);
 
     // Retrieve coordinates of quadrature points
     int nq = m_field->GetNpoints();
@@ -183,8 +169,8 @@ void StimulusRect::v_Update(Array<OneD, Array<OneD, NekDouble>> &outarray,
 /**
  *
  */
-void StimulusRect::v_GenerateSummary(SolverUtils::SummaryList &s)
+void StimulusRect::v_GenerateSummary(
+    [[maybe_unused]] SolverUtils::SummaryList &s)
 {
-    boost::ignore_unused(s);
 }
 } // namespace Nektar

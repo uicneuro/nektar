@@ -128,7 +128,7 @@ namespace Nektar
 
         NekDouble var_membrane_V, var_current_m, var_current_n, var_current_h, var_current_p;
 
-        NekDouble E, d_dt_membrane__V = 0.0;
+        NekDouble E; //, d_dt_membrane__V = 0.0;
 
         NekDouble Q10Tpow = 0.1*(var_membrane__Tc-20.0);
         NekDouble Q10T = pow(3.0, Q10Tpow);

@@ -52,6 +52,8 @@ typedef std::shared_ptr<QInflow> QInflowSharedPtr;
 class QInflow : public PulseWaveBoundary
 {
 public:
+    friend class MemoryManager<QInflow>;
+
     // Creates an instance of this class
     static PulseWaveBoundarySharedPtr create(
         Array<OneD, MultiRegions::ExpListSharedPtr> &pVessel,
@@ -65,19 +67,19 @@ public:
     /// Name of class
     static std::string className;
 
+protected:
     QInflow(Array<OneD, MultiRegions::ExpListSharedPtr> pVessel,
             const LibUtilities::SessionReaderSharedPtr pSession,
             PulseWavePressureAreaSharedPtr pressureArea);
 
-    virtual ~QInflow();
+    ~QInflow() override = default;
 
-protected:
-    virtual void v_DoBoundary(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &A_0,
-        Array<OneD, Array<OneD, NekDouble>> &beta,
-        Array<OneD, Array<OneD, NekDouble>> &alpha, const NekDouble time,
-        int omega, int offset, int n) override;
+    void v_DoBoundary(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                      Array<OneD, Array<OneD, NekDouble>> &A_0,
+                      Array<OneD, Array<OneD, NekDouble>> &beta,
+                      Array<OneD, Array<OneD, NekDouble>> &alpha,
+                      const NekDouble time, int omega, int offset,
+                      int n) override;
 
 private:
     void Q_RiemannSolver(NekDouble Q, NekDouble A_r, NekDouble u_r,

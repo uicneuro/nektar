@@ -124,7 +124,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
     }
 
     // int dim = m_field->GetShapeDimension();
-    int dim;
+    int dim=3;
     NekDouble Tol=1.0e-7;
     if(fabs(m_pz1-m_pz2)<Tol)
     {

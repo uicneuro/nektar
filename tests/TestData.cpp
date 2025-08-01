@@ -43,6 +43,18 @@ using namespace std;
 
 namespace Nektar
 {
+
+/**
+ * @brief TestData constructor.
+ *
+ * The class is constructed with the path to the test XML file and a
+ * `po::variables_map` object containing the command-line options passed to the
+ * program.
+ *
+ * @param pFilename
+ * @param pVm
+ */
+
 TestData::TestData(const fs::path &pFilename, po::variables_map &pVm)
     : m_cmdoptions(pVm)
 {
@@ -63,6 +75,7 @@ TestData::TestData(const TestData &pSrc)
     boost::ignore_unused(pSrc);
 }
 
+/// Returns the description of a test.
 const std::string &TestData::GetDescription() const
 {
     return m_description;
@@ -80,6 +93,7 @@ unsigned int TestData::GetNumCommands() const
     return m_commands.size();
 }
 
+/// Returns the type of metric to be collected for a given metric ID.
 std::string TestData::GetMetricType(unsigned int pId) const
 {
     ASSERTL0(pId < m_metrics.size(), "Metric ID out of range.");
@@ -91,17 +105,21 @@ std::string TestData::GetMetricType(unsigned int pId) const
     return boost::to_upper_copy(string(m_metrics[pId]->Attribute("type")));
 }
 
+/// Returns the number of metrics to be collected for the test.
 unsigned int TestData::GetNumMetrics() const
 {
     return m_metrics.size();
 }
 
+/// Returns a pointer to the `TiXmlElement` object representing the metric for a
+/// given metric ID.
 TiXmlElement *TestData::GetMetric(unsigned int pId)
 {
     ASSERTL0(pId < m_metrics.size(), "Metric index out of range.");
     return m_metrics[pId];
 }
 
+/// Returns the ID of the metric for a given metric ID.
 unsigned int TestData::GetMetricId(unsigned int pId)
 {
     ASSERTL0(pId < m_metrics.size(), "Metric index out of range.");
@@ -116,9 +134,16 @@ DependentFile TestData::GetDependentFile(unsigned int pId) const
     return m_files[pId];
 }
 
+/// Returns the number of dependent files required for the test.
 unsigned int TestData::GetNumDependentFiles() const
 {
     return m_files.size();
+}
+
+/// Returns the number of runs to be performed for the test.
+unsigned int TestData::GetNumRuns() const
+{
+    return m_runs;
 }
 
 Command TestData::ParseCommand(TiXmlElement *elmt) const
@@ -128,13 +153,31 @@ Command TestData::ParseCommand(TiXmlElement *elmt) const
 
     cmd.m_pythonTest = false;
 
+    std::string commandType = "none";
+    if (elmt->Attribute("type"))
+    {
+        commandType = elmt->Attribute("type");
+
+        if (commandType == "none")
+        {
+            cmd.m_commandType = eNone;
+        }
+        else if (commandType == "parallel")
+        {
+            cmd.m_commandType = eParallel;
+        }
+        else if (commandType == "sequential")
+        {
+            cmd.m_commandType = eSequential;
+        }
+    }
+
     // Parse executable tag. Do not enforce a check because this might be
     // overridden on the command line.
     if (elmt->FirstChildElement("executable"))
     {
         tmp              = elmt->FirstChildElement("executable");
         cmd.m_executable = fs::path(tmp->GetText());
-
         // Test to see if this test requires Python
         std::string needsPython;
         tmp->QueryStringAttribute("python", &needsPython);
@@ -169,12 +212,19 @@ Command TestData::ParseCommand(TiXmlElement *elmt) const
     return cmd;
 }
 
+/// Parse the test file and populate member variables for the test.
 void TestData::Parse(TiXmlDocument *pDoc)
 {
     TiXmlHandle handle(pDoc);
     TiXmlElement *testElement, *tmp, *metrics, *files;
     testElement = handle.FirstChildElement("test").Element();
     ASSERTL0(testElement, "Cannot find 'test' root element.");
+
+    // Find the desired number of test runs
+    unsigned int runs = 1;
+    testElement->QueryUnsignedAttribute("runs", &runs);
+    ASSERTL0(runs > 0, "Number of runs must be greater than zero.");
+    m_runs = runs;
 
     // Find description tag.
     tmp = testElement->FirstChildElement("description");
@@ -202,6 +252,12 @@ void TestData::Parse(TiXmlDocument *pDoc)
         {
             m_commands.push_back(ParseCommand(tmp));
             tmp = tmp->NextSiblingElement("segment");
+        }
+
+        for (int i = 1; i < m_commands.size(); ++i)
+        {
+            ASSERTL0(m_commands[i].m_commandType == m_commands[0].m_commandType,
+                     "All segment commands should be of the same type.");
         }
     }
 

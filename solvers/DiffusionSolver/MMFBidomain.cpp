@@ -41,6 +41,7 @@
 #include <DiffusionSolver/Filters/FilterCellHistoryPoints.h>
 #include <DiffusionSolver/Filters/FilterCheckpointCellModel.h>
 #include <SolverUtils/Driver.h>
+#include <SpatialDomains/MeshGraphIO.h>
 
 #include <LibUtilities/BasicUtils/Timer.h>
 
@@ -455,7 +456,7 @@ void MMFBidomain::v_DoSolve()
     {
         timer.Start();
         fields = m_intScheme->TimeIntegrateMMF(step, m_timestep, m_intSoln,
-                                               MF1st, m_ode);
+                                               MF1st);
         timer.Stop();
 
         m_time += m_timestep;
@@ -774,7 +775,7 @@ int main(int argc, char *argv[])
         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
 
         // Create MeshGraph
-        graph = SpatialDomains::MeshGraph::Read(session);
+        graph = SpatialDomains::MeshGraphIO::Read(session);
 
         // Create driver
         session->LoadSolverInfo("Driver", vDriverModule, "Standard");

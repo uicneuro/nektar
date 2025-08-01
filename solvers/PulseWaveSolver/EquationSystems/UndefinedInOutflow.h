@@ -52,6 +52,8 @@ typedef std::shared_ptr<UndefinedInOutflow> UndefinedInOutflowSharedPtr;
 class UndefinedInOutflow : public PulseWaveBoundary
 {
 public:
+    friend class MemoryManager<UndefinedInOutflow>;
+
     /// Creates an instance of this class
     static PulseWaveBoundarySharedPtr create(
         Array<OneD, MultiRegions::ExpListSharedPtr> &pVessel,
@@ -65,19 +67,19 @@ public:
     /// Name of class
     static std::string className;
 
+protected:
     UndefinedInOutflow(Array<OneD, MultiRegions::ExpListSharedPtr> pVessel,
                        const LibUtilities::SessionReaderSharedPtr pSession,
                        PulseWavePressureAreaSharedPtr pressureArea);
 
-    virtual ~UndefinedInOutflow();
+    ~UndefinedInOutflow() override = default;
 
-protected:
-    virtual void v_DoBoundary(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &A_0,
-        Array<OneD, Array<OneD, NekDouble>> &beta,
-        Array<OneD, Array<OneD, NekDouble>> &alpha, const NekDouble time,
-        int omega, int offset, int n) override;
+    void v_DoBoundary(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                      Array<OneD, Array<OneD, NekDouble>> &A_0,
+                      Array<OneD, Array<OneD, NekDouble>> &beta,
+                      Array<OneD, Array<OneD, NekDouble>> &alpha,
+                      const NekDouble time, int omega, int offset,
+                      int n) override;
 
 private:
 };

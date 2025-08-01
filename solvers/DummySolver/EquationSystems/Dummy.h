@@ -60,21 +60,20 @@ public:
         p->InitObject();
         return p;
     }
+
     /// Name of class
     static std::string className;
-
-    /// Destructor
-    virtual ~Dummy();
 
 protected:
     SolverUtils::CouplingSharedPtr m_coupling;
     std::vector<SolverUtils::ForcingSharedPtr> m_forcing;
 
-    /// Initialises UnsteadySystem class members.
     Dummy(const LibUtilities::SessionReaderSharedPtr &pSession,
           const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject(bool DeclareFields = true) override;
+    ~Dummy() override = default;
+
+    void v_InitObject(bool DeclareFields = true) override;
 
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
@@ -84,17 +83,18 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    virtual bool v_PreIntegrate(int step) override;
+    bool v_PreIntegrate(int step) override;
 
-    virtual bool v_PostIntegrate(int step) override;
+    bool v_PostIntegrate(int step) override;
 
-    virtual void v_Output() override;
+    void v_Output() override;
 
-    virtual bool v_RequireFwdTrans() override
+    bool v_RequireFwdTrans() override
     {
         return false;
     }
 };
+
 } // namespace Nektar
 
 #endif

@@ -43,6 +43,7 @@
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
 #include <SolverUtils/Driver.h>
+#include <SpatialDomains/MeshGraphIO.h>
 
 #include <boost/math/special_functions/spherical_harmonic.hpp>
 using namespace std;
@@ -142,8 +143,10 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
                 // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
 
                 Anisotropy[0][i] = sqrt(m_d00vec[i]);
-                m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
+              //  m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
             }
+
+            m_varcoeffXYZ[StdRegions::eVarCoeffD00] = m_d00vec;
 
         for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
             {
@@ -1639,7 +1642,7 @@ void MMFDiffusion::v_DoSolve()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         m_time += m_timestep;
@@ -1742,7 +1745,7 @@ int main(int argc, char *argv[])
         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
 
         // Create MeshGraph
-        graph = SpatialDomains::MeshGraph::Read(session);
+        graph = SpatialDomains::MeshGraphIO::Read(session);
 
         // Create driver
         session->LoadSolverInfo("Driver", vDriverModule, "Standard");

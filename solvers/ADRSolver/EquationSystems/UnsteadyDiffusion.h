@@ -42,6 +42,7 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
+
 class UnsteadyDiffusion : public UnsteadySystem
 {
 public:
@@ -58,31 +59,29 @@ public:
         p->InitObject();
         return p;
     }
+
     /// Name of class
     static std::string className;
 
-    /// Destructor
-    virtual ~UnsteadyDiffusion();
-
 protected:
+    NekDouble m_epsilon;
+    NekDouble m_d00 = 1.0, m_d11 = 1.0, m_d22 = 1.0;
     bool m_useSpecVanVisc;
-    NekDouble
-        m_sVVCutoffRatio; // cut off ratio from which to start decayhing modes
-    NekDouble m_sVVDiffCoeff; // Diffusion coefficient of SVV modes
+    // cut off ratio from which to start decayhing modes
+    NekDouble m_sVVCutoffRatio;
+    // Diffusion coefficient of SVV modes
+    NekDouble m_sVVDiffCoeff;
+    StdRegions::VarCoeffMap m_varcoeff;
     SolverUtils::DiffusionSharedPtr m_diffusion;
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
-
-    virtual void v_GenerateSummary(SummaryList &s) override;
 
     UnsteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
                       const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject(bool DeclareFields = true) override;
+    ~UnsteadyDiffusion() override = default;
 
-    void GetFluxVector(
-        const Array<OneD, Array<OneD, NekDouble>> &inarray,
-        const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
-        Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor);
+    void v_InitObject(bool DeclareFields = true) override;
+
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
@@ -93,12 +92,14 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, NekDouble time,
         NekDouble lambda);
+    void GetFluxVector(
+        const Array<OneD, Array<OneD, NekDouble>> &inarray,
+        const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
+        Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor);
 
-private:
-    NekDouble m_waveFreq;
-    NekDouble m_epsilon;
-    StdRegions::VarCoeffMap m_varcoeff;
+    void v_GenerateSummary(SummaryList &s) override;
 };
+
 } // namespace Nektar
 
 #endif

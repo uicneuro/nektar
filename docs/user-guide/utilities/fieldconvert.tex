@@ -7,10 +7,7 @@ post-processing software, primarily Paraview/VisIt (in unstructured VTK
 \inltt{.vtu} format) or Tecplot/VisIt (in ASCII \inltt{.dat} or binary
 \inltt{.plt} formats). FieldConvert also allows the user to manipulate the
 \nekpp output binary files by using some additional modules which can be called
-with the option \inltt{-m} which stands for \inltt{m}odule. Note that another
-flag, \inltt{-r} (which stand for \inltt{r}ange) allows the user to specify a
-sub-range of the domain on which the conversion or manipulation of the \nekpp
-output binary files will be performed.
+with the option \inltt{-m} which stands for \inltt{m}odule.
 
 Almost all of the FieldConvert functionalities can be run in parallel if \nekpp
 is compiled using MPI (see the installation documentation for additional info on
@@ -119,9 +116,10 @@ recommended for full functionality because this is the minimum version which all
 for high-order VTK output. Versions older than this are supported but the high-order
 VTK output will be disabled.
 
-Using the VTK library automatically enables file compression on the output .vtu file
-which can substantially reduce file sizes. This can be turned off with the
-command line option \inltt{uncompress} when using \inltt{FieldConvert}.
+Using the  VTK library automatically  enables file compression  on the
+output .vtu file  which can substantially reduce file  sizes. This can
+be turned  off with  the command  line option  \inltt{uncompress} when
+using \inltt{FieldConvert}.
 
 \begin{lstlisting}[style=BashInputStyle]
 FieldConvert session.xml field.fld output.vtu:vtu:uncompress
@@ -265,37 +263,34 @@ format by issuing the command
 FieldConvert in.fld out.fld:fld:format=Hdf5
 \end{lstlisting}
 %
-\section{Range option \textit{-r}}
-The Fieldconvert range option \inltt{-r} allows the user to specify
-a sub-range of the mesh (computational domain) by using an
-additional flag, \inltt{-r} (which stands for \inltt{r}ange and either
-convert or manipulate the \nekpp output binary files.
-Taking as an example the conversion of the \nekpp binary files
-(.chk or .fld) shown before and wanting to convert just the 2D
-sub-range defined by $-2\leq x \leq 3$, $-1\leq y \leq 2$ the
-additional flag \inltt{-r} can be used as follows:
+\section{Specifying a sub-range of the mesh}
+Fieldconvert allows for a sub-range of the mesh (computational
+domain) by using an xml input option and either convert or manipulate
+the \nekpp output binary files.  Taking as an example the conversion
+of the \nekpp binary files (.chk or .fld) shown before and wanting to
+convert just the 2D sub-range defined by $-2\leq x \leq 3$, $-1\leq y
+\leq 2$ the additional flag \inltt{-r} can be used as follows:
 %
 \begin{itemize}
 \item Paraview or VisIt (.vtu format)
 %
 \begin{lstlisting}[style=BashInputStyle]
-FieldConvert -r -2,3,-1,2 test.xml test.fld test.vtu
+FieldConvert test.xml:xml:range=''-2,3,-1,2''  test.fld test.vtu
 \end{lstlisting}
 %
 \item Tecplot (.dat format)
 %
 \begin{lstlisting}[style=BashInputStyle]
-FieldConvert -r 2,3,-1,2 test.xml test.fld test.dat
+FieldConvert  test.xml:xml:range=''2,3,-1,2'' test.fld test.dat
 \end{lstlisting}
 %
 \end{itemize}
-where \inltt{-r} defines the range option of the FieldConvert
-utility, the two first numbers define the range in $x$ direction
-and the the third and fourth number specify the $y$ range.
-A sub-range of a 3D domain can also be specified.
-For doing so, a third set of numbers has to be provided
-to define the $z$ range.
-%
+where the \inltt{range} information defines the range option of
+\inltt{xml} input module, the two first numbers define the range in
+$x$ direction and the the third and fourth number specify the $y$
+range.  A sub-range of a 3D domain can also be specified.  For doing
+so, a third set of numbers has to be provided to define the $z$ range.
+
 %
 %
 
@@ -359,7 +354,7 @@ directory containing the mesh partitioned into 2.
 import sys
 from NekPy.FieldUtils import *
 
-field = Field(sys.argv, nparts=2, forceoutput=True, error=True)
+field = Field(sys.argv, nparts=2, force_output=True, error=True)
 
 inputxml   = InputModule.Create("xml",   field, "session_xml")
 inputfld   = InputModule.Create("fld",   field, "field.fld")
@@ -376,9 +371,19 @@ for part in range(2):
 OutputModule.Create("info", field, "field_wss_b0.fld", nparts=2).Run()
 \end{lstlisting}
 
-The number of partitions is looped over, with \verb+NewPartition+ called at
-the start of each. When using \verb+OutputModule+, the \verb+info+ module
-must be used in order to obtain the correct result.
+The sub-range can also be specified by using the \inltt{xml} input module options  in the following manner: 
+
+\begin{lstlisting}[style=C++Style, language=Python]
+import sys
+from NekPy.FieldUtils import *
+
+field = Field(sys.argv)
+
+inputxml   = InputModule.Create("xml",   field, , session.xml, range="-1,1,-1,1").Run()
+inputfld   = InputModule.Create("fld",   field, "field.fld").Run()
+processwss = ProcessModule.Create("wss", field,  bnd="2").Run()
+outputfld  = OutputModule.Create("fld",  field, "field_wss.fld").Run()
+\end{lstlisting}
 
 \section{FieldConvert modules \textit{-m}}
 FieldConvert allows the user to manipulate the \nekpp output
@@ -422,16 +427,18 @@ possibly also Reynolds stresses) into single file;
 \item \inltt{scalargrad}: Computes scalar gradient field;
 \item \inltt{scaleinputfld}: Rescale input field by a constant factor;
 \item \inltt{shear}: Computes time-averaged shear stress metrics: TAWSS, OSI, transWSS, TAAFI, TACFI, WSSG;
-\item \inltt{streamfunction}: Calculates stream function of a 2D incompressible flow.
-\item \inltt{surfdistance}: Computes height of a prismatic boundary layer mesh and projects onto the surface (for e.g. $y^+$ calculation).
-\item \inltt{vorticity}: Computes the vorticity field.
-\item \inltt{wss}: Computes wall shear stress field.
+\item \inltt{streamfunction}: Calculates stream function of a 2D incompressible flow;
+\item \inltt{surfdistance}: Computes height of a prismatic boundary layer mesh and projects onto the surface (for e.g. $y^+$ calculation);
+\item \inltt{vorticity}: Computes the vorticity field;
+\item \inltt{wss}: Computes wall shear stress field;
 \item \inltt{phifile}: Computes the $\Phi$ function representing a body defined
-  in an \inltt{.stl} file. Useful for the Smoothed Profile Method solver.
-\item \inltt{wallNormalData}: Interpolate values for a set of points in the wall-normal direction (for e.g. extract boundary layer profiles).
-\item inltt{bodyFittedVelocity}: Generate a body-fitted coordinate system and then 
-  project the velocity components from Cartesian coordinate system into the new 
-  coordinate system.
+  in an \inltt{.stl} file. Useful for the Smoothed Profile Method solver;
+\item \inltt{wallNormalData}: Interpolate values for a set of points in the wall-normal direction (for e.g. extract boundary layer profiles);
+\item \inltt{bodyFittedVelocity}: Generate a body-fitted coordinate system and then  project the velocity components from Cartesian coordinate system into the new coordinate system;
+\item \inltt{localStabilityAnalysis}: Perform local (linear) stability analysis for 1D profiles, which is extracted using \inltt{wallNormalData} and \inltt{bodyFittedVelocity} modules.
+\item \inltt{averagefld}: Compute the averaging of several field files;
+\item \inltt{powerspectrum}: Compute power spectrum at given regions from a 3DH1D expansion;
+\item \inltt{zero-homo-plane}: Zero a specfied homogeneous plane in wavespace.
 \end{enumerate}
 The module list above can be seen by running the command
 %
@@ -572,7 +579,7 @@ the result either in Tecplot, Paraview or VisIt.
 To sum two .fld files one can use the \inltt{addFld} module of FieldConvert
 %
 \begin{lstlisting}[style=BashInputStyle]
-  FieldConvert -m addfld:fromfld=file1.fld:scale=-1:fromxml=file1.xml file2.fld \
+  FieldConvert -m addfld:fromfld=file1.fld:scale=-1 file1.xml file2.fld \
   file3.fld
 \end{lstlisting}
 %
@@ -633,7 +640,7 @@ FieldConvert -m dof file.xml file.fld out.stdout
 This module interpolates the output data to a truly equispaced set of
 points (not equispaced along the collapsed coordinate
 system). Therefore a tetrahedron is represented by a tetrahedral
-number of poinst. This produces much smaller output files. The points
+number of points. This produces much smaller output files. The points
 are then connected together by simplices (triangles and tetrahedrons).
 
 \begin{lstlisting}[style=BashInputStyle]
@@ -643,7 +650,7 @@ FieldConvert -m equispacedoutput test.xml test.fld test.dat
 or
 
 \begin{lstlisting}[style=BashInputStyle]
-FieldConvert -m equispacedouttput test.xml test.fld test.vtu
+FieldConvert -m equispacedoutput test.xml test.fld test.vtu
 \end{lstlisting}
 
 
@@ -671,7 +678,7 @@ outputted. To process this file you will need an xml file of the same region.
 This can be generated using the command:
 %
 \begin{lstlisting}[style=BashInputStyle]
-NekMesh -m extract:surf=5  test.xml test\_b0.xml
+NekMesh -m extract:surf=5  test.xml test_b0.xml
 \end{lstlisting}
 %
 The surface to be extracted in this command is the composite
@@ -679,7 +686,7 @@ number and so needs to correspond to the boundary region
 of interest. Finally to process the surface file one can use
 %
 \begin{lstlisting}[style=BashInputStyle]
-FieldConvert  test\_b0.xml test\_b0.fld test\_b0.dat
+FieldConvert  test_b0.xml test_b0.fld test_b0.dat
 \end{lstlisting}
 %
 This will obviously generate a Tecplot output if a .dat file
@@ -1188,7 +1195,7 @@ FieldConvert file.xml file.dat
 \end{lstlisting}
 
 In this case the pointdatatofld module should be used without the
-\inltt{--noequispaced} option. However this can lead to problems when
+\inltt{--no-equispaced} option. However this can lead to problems when
 peforming an elemental forward projection/transform since the mass
 matrix in a deformed element can be singular as the equispaced points
 do not have a sufficiently accurate quadrature rule that spans the
@@ -1196,7 +1203,7 @@ polynomial space. Therefore it is advisable to use the set of points
 given by
 
 \begin{lstlisting}[style=BashInputStyle]
-FieldConvert --noequispaced file.xml file.dat
+FieldConvert --no-equispaced file.xml file.dat
 \end{lstlisting}
 
 which produces a set of points at the gaussian collapsed
@@ -1353,12 +1360,10 @@ are extracted to different fields. The \inltt{addnormals} is an optional command
 argument which, when turned on, outputs the normal vector of the extracted boundary
 region as well as the shear stress vector and magnitude. This option is off by default.
 To process the output file(s) you will need an xml file of the same region.\\
-The output fields are wall shear stress in streamwise direction (\inltt{Shear\_s}),
-normal direction (\inltt{Shear\_n}) and magnitude of the wall shear stress vector 
+The output fields are the wall shear stress in the streamwise direction
+(\inltt{Shear\_x}), the vertical direction (\inltt{Shear\_y}) and its magnitude
 (\inltt{Shear\_mag}) for 2D simulations. For 3D simulations, wall shear stress in
 the spanwise direction (\inltt{Shear\_z}) is also included in the output fileds.
-Note that the streamwise and normal directions are local at each point on the 
-corresponding boundary.
 %
 %
 %
@@ -1460,6 +1465,30 @@ and save the result in test.pts.
     points to be interpolated.}
   \end{center}
 \end{figure}
+
+In practice, it is convenient to use this module interactively to find/visualize/adjust profile distributions.
+This can be achieved by using the NekPy interface. A sample Pyhton script is provieded in the following
+\begin{lstlisting}[style=C++Style, language=Python]
+import sys
+from NekPy.FieldUtils import *
+
+field = Field(sys.argv, forceoutput=True, error=True)
+InputModule.Create("xml", field, "mesh.xml","session.xml").Run()
+InputModule.Create("fld", field, "field.fld").Run() # e.g. x,y,u,v,p
+ProcessModule.Create("wallNormalData", field,
+                    bnd=str(bnd), xorig=str(xorig), projDir=str(projDir),
+                    maxDist=str(maxDist), distH=str(distH), nptsH=str(nptsH),
+                    d=str(d)).Run()
+
+# Get data arrays from interpolation
+y  = field.GetPts(1) 
+u  = field.GetPts(2)
+\end{lstlisting}
+
+
+
+
+
 %
 %
 %
@@ -1507,6 +1536,124 @@ filter to process data. See \ref{filters:BodyFittedVelocity}.
 %
 %
 
+\subsection{Perform local stability analysis: 
+\textit{localStabilityAnalysis} module}
+\label{s:utilities:fieldconvert:sub:localStabilityAnalysis}
+
+When studying flow/hydrodynamic instabilities for boundary layers or channel 
+flows, local stability analysis is always necessary. To perform the analysis 
+for compressible flows the users can run:  
+\begin{lstlisting}[style=BashInputStyle]
+  FieldConvert -m localStabilityAnalysis mesh.xml session.xml field.fld
+\end{lstlisting}
+
+In the first run the global analysis is performed where a spertra of eigenmodes 
+are sought, and the most unstable modes are saves in a file named PSEMULTF.DAT. 
+If the users run the command again, with the presence of PSEMULTF.DAT, local 
+analysis, which computes a more accurate eigenfunction, will be performed.
+If the user would like to run the analysis with sidderent freqnency/wavenumber, 
+PSEMULTF.DAT needs to be removed.
+
+Before running the above terminal command several parameters need to be set in
+the session.xml, for example
+\begin{lstlisting}[style=XmlStyle]
+  <PARAMETERS>
+    <P> INEUTRL             = 0                          </P>
+    <P> NGLOBAL             = 101                        </P>
+    <P> NLOCAL              = 221                        </P>
+    <P> ITOLRAY             = 5                          </P>
+    <P> BETALIN             = 0.0                        </P>
+    <P> FREQLIN             = 20000.0                    </P>
+    <P> RGAS                = 287.0                      </P>
+    <P> GAMMA               = 1.4                        </P>
+    <P> PRANDTL             = 0.72                       </P>
+  </PARAMETERS>
+  \end{lstlisting}
+  \begin{itemize}
+  \item \inltt{INEUTRL} is the flag for performing LST at a single point or sweep the parameters. 
+        \inltt{INEUTRL} = 1 to sweep.
+  \item \inltt{NGLOBAL} is the number of point to perform global analysis. By default $25$.
+  \item \inltt{NLOCAL} is the number of point to perform global analysis. By default $121$.
+  \item \inltt{ITOLRAY} is the order tolerance in Rayleigh iteration. \inltt{ITOLRAY} = $5$ means convergence to the $5$th digit.
+  \item \inltt{BETALIN} is the spanwise wavenumber in physical unit 1/m. It is set $0$ by default for two-dimensional analysis.
+  \item \inltt{FREQLIN} is the frequency of disturbances. It must be explicitly set in physical unit 1/s.
+  \item \inltt{RGAS} is the gas constant. By default $287.0$ J/(kg $\cdot$K).
+  \item \inltt{GAMMA} is the specific heat ratio. By default $1.4$
+  \item \inltt{PRANDTL} is the Prandtl number. By default $0.72$.
+  \end{itemize}
+
+Note that a baseflow profile in PSEMEAN.PRO file is necessary for local stability analysis. The baseflow data can be ontabined using the \inltt{wallNormalData} module (and \inltt{bodyFittedVelocity} module if the gemetry is curved).
+It is convenient to use \inltt{wallNormalData} module in NekPy interface, and then saving the profile data to the following format is easy.
+PSEMEAN.PRO takes the format:
+\begin{lstlisting}
+  Line 1: Title
+  line 2: Uo, Mo, Ro, To, c, Sweep, Wo
+  Line 3: 1
+  Line 4: 1, Npoint, x, 0, 0, 0, 0, 0, 0, 0, 0
+  Line 5: Ue, Me, Re, Te, Delta, Pe, 0
+  Line 6: Y, U, DUDY, D2UDYY, 0, 0, 0, 0, W, DWDY, D2WDYY, 0, 0, 0, T, DTDY, D2TDYY, 0, 0, 0, 0, 0, 0 
+  Line 7: ...
+  Line 8: ...
+  \end{lstlisting}
+In the above, Line 1-5 are flow conditions in physical units. Line 6 is the data for the first point of the baseflow profile (on the wall). 
+From Line 7 are the data for the following points (Npoint data lines including Line 6). The commas are not displayed. 
+In addition, the definitions for the rest parameters are
+  \begin{itemize}
+  \item \inltt{Uo} free-stream velocity (m/s) normal to wing.
+  \item \inltt{Mo} free-stream Mach no., normal to wing.
+  \item \inltt{Ro} free-stream Reynolds no. based on chord c and Uo.
+  \item \inltt{To} free-stream temperature (K).
+  \item \inltt{c} reference length scale. (m).
+  \item \inltt{Sweep} wing sweep in degrees.
+  \item \inltt{Uo} free-stream velocity (m/s) in spanwise direction.
+  \item \inltt{Npoint} no. of boundary-layer points normal to surface.
+  \item \inltt{x} non-dimensional chordwise position (dimensionalised with c).
+  \item \inltt{Ue} local velocity at edge of boundary-layer (m/s).
+  \item \inltt{Me} local Mach No. at edge of boundary-layer.
+  \item \inltt{Re} local Reynolds no. based on Delta.
+  \item \inltt{Te} local edge temperature (K).
+  \item \inltt{Delta} boundary-layer thickness (m). It is used a reference length.
+  \item \inltt{Pe} local edge pressure (dimensionalised with Ue and edge density);
+  \end{itemize}
+
+In cases when the users need to sweep a renge of parameters, i.e. frqeuencies 
+and spanwise wavenumberes, the following commands can be used, where 
+\inltt{opt}=6 for frequency sweep, =7 for spanwise wavenumber sweep, =8 for 
+frequency and wavenumber sweep.
+
+\begin{lstlisting}[style=BashInputStyle]
+  FieldConvert -m localStabilityAnalysis:opt=6:finVal1=0.05:numStep1=200 mesh.xml session.xml field.fld
+\end{lstlisting}
+
+\begin{lstlisting}[style=BashInputStyle]
+  FieldConvert -m localStabilityAnalysis:opt=8:finVal1=0.6:numStep1=50:finVal2=0.3:numStep2=100 mesh.xml session.xml field.fld
+\end{lstlisting}
+
+In the above, the paramtric sweep will start from the frequency and spanwise 
+wavenumber specified in the session.xml, and \inltt{finVal1} is the final
+value, \inltt{numStep1} is the number of the steps. When sweeping frequency and
+spanwise wavenumber at the same time (\inltt{opt=8}), \inltt{finVal1} is for 
+frequency and \inltt{finVal2} is for spanwise wavenumber. Only in the last case
+\inltt{finVal2} and \inltt{numStep2} should be set.
+
+
+\subsection{Zero a homogeneous plane in wavespace: \textit{zero-homo-plane} module}
+\label{s:utilities:fieldconvert:sub:zero-homo-plane}
+In cases the users would like to visualize the fluctuations in a 3DH1D flow
+field, the mean mode is expected to be removed (in the Fourier space). This can 
+be achieved by running the current module:
+\begin{lstlisting}[style=BashInputStyle]
+FieldConvert -m zero-homo-plane:planeid=0 mesh.xml session.xml field.fld \
+    field-zeroMean.fld
+\end{lstlisting}
+
+In general, \inltt{planeid} can be any meaningful plane id, which is 0 by 
+default. 
+
+%
+%
+%
+
 \subsection{Manipulating meshes with FieldConvert}
 FieldConvert has support for two modules that can be used in conjunction with
 the linear elastic solver, as shown in chapter~\ref{s:elasticity}. To do this,
@@ -1550,6 +1697,40 @@ LinearElasticSolver mesh-linear.xml conditions.xml
 FieldConvert-g -m deform mesh-linear.xml mesh-linear.fld mesh-deformed.xml
 \end{lstlisting}
 
+\subsection{Field averaging module}
+To obtain the averaged field of several field files, the user can run:
+\begin{lstlisting}[style=BashInputStyle]
+FieldConvert -m averagefld:inputfld=chan3DH1D_%d.chk:range=0,1,4 chan3DH1D.xml phaseavg.fld
+\end{lstlisting}
+The option \inltt{inputfld} specifies the format of field file name. The option \inltt{range=start,skip,end} specifies the range of \%d in the input file name.
+
+\subsection{Computing the spanwise power spectrum module}
+To obtain the spanwise power spectrum of a 3DH1D field in a specific domain, the user can run:
+\begin{lstlisting}[style=BashInputStyle]
+FieldConvert -m powerspectrum:vars=u,v,w:box=0,0.5,0,0.5 chan3DH1D.xml chan3DH1D_0.chk chan3DH1D.plt
+\end{lstlisting}
+The option \inltt{vars=u,v,w} specifies the variables used to calculate the power spectrum. Both the number and variable name can be used. The option \inltt{box=xmin,xmax,ymin,ymax} specifies the domain where the power spectrum is computed.
+
+\subsection{Computing the velocity field induced by vortex filaments}
+To obtain the vortex-induced velocity, the user can run:
+\begin{lstlisting}[style=BashInputStyle]
+FieldConvert -m vortexinducedvelocity:vortex=vortexfilament.dat  Helmholtz.xml Helmholtz.plt
+\end{lstlisting}
+The Lamb-Oseen vortex model is used to avoid the singularity at the vortex center. In the cylindrical coordinate, the vorticity and velocity are
+\[
+\omega_z(r) = \frac{\Gamma}{2\pi\sigma^2}\exp\left(-\frac{r^2}{2\sigma^2}\right)
+\]
+\[
+v_r(r) = \frac{\Gamma}{2\pi r}\left[1 - \exp\left(-\frac{r^2}{2\sigma^2}\right)\right]
+\]
+The option \inltt{vortex} specifies the filename that defines the vortex filaments. The format of one vortex segment is: xstart, ystart, zstart, is half infinity (true is 1); xend, yend, zend, is half infinity; $\sigma$, $\Gamma$. The format to define a uniform flow is: u, v, w.
+One example of \inltt{vortexfilament.dat} that defines two-counter rotating Lamb-Oseen vortices with a uniform background flow  is
+\begin{lstlisting}[style=C++Style]
+0 0.159154943091895 0
+-0.5 0 -1 1; -0.5 0 1 1; 0.1 -1
+0.5 0 -1 1;  0.5 0 1 1; 0.1 1
+\end{lstlisting}
+
 \section{FieldConvert in parallel}
 To run FieldConvert in parallel the user needs to compile
 \nekpp with MPI support and can employ the following
@@ -1565,7 +1746,7 @@ or
 mpirun -np <nprocs> FieldConvert test.xml test.fld test.vtu
 \end{lstlisting}
 replacing \inltt{<nprocs>} with the number of processors. For the
-\inltt{.dat} and \inltt{.plt} outputs the current version will proudce
+\inltt{.dat} and \inltt{.plt} outputs the current version will produce
 a single output file.  However it is also sometimes useful to produce
 multiple output files, one for each partition, and this
 can be done by using the \inltt{writemultiplefiles} option, i.e.
@@ -1589,6 +1770,25 @@ also be created when running in parallel. In this case when producing
 a .fld file a directory called \inltt{test.fld} (or the specified
 output name) is created with the standard parallel field files placed
 within the directory.
+%
+%
+%
+\section{FieldConvert for parallel-in-time}
+To run FieldConvert in parallel the user needs to compile
+\nekpp with MPI support and can employ the following
+command
+\begin{lstlisting}[style=BashInputStyle]
+  mpirun -np <nprocs> FieldConvert --npt <nprocs> test.xml \
+                 in/test_<n>.fld out/test_<n>.vtu
+\end{lstlisting}
+\begin{lstlisting}[style=BashInputStyle]
+  mpirun -np <nprocs> FieldConvert --npt <nprocs> test.xml \
+                 in/test_<n>.fld out/test_<n>.dat
+\end{lstlisting}
+replacing \inltt{<nprocs>} with the number of processors and \inltt{<n>} 
+by the starting time index while the subdirectories \inltt{in} and \inltt{out} 
+are optional. FieldConvert will then process in parallel 
+time solutions \inltt{test\_<n>}.dat to \inltt{test\_<n>+<nprocs>}.dat.
 %
 %
 %
@@ -1636,7 +1836,7 @@ using the \inltt{--part-only} option you can now run the
 \inltt{FieldConvert} option using the \inltt{nparts}  command line
 option, that is
 \begin{lstlisting}[style=BashInputStyle]
-FieldConvert --nparts 10  file1\_xml:xml file1.fld file1.vtu
+FieldConvert --nparts 10  file1_xml:xml file1.fld file1.vtu
 \end{lstlisting}
 
 Note the form \inltt{file1\_xml:xml} option tells the code it is a
@@ -1672,9 +1872,9 @@ take a while for many partitions. You can however run this option in
 parallel using a smaller number of cores than the nparts.
 
 For the example of creating a vtu file above you can use 4 processor
-concurrently wiht the command line:
+concurrently with the command line:
 \begin{lstlisting}[style=BashInputStyle]
-mpirun -n 4 FieldConvert --nparts 10   file1\_xml:xml file1.fld file1.vtu
+mpirun -n 4 FieldConvert --nparts 10   file1_xml:xml file1.fld file1.vtu
 \end{lstlisting}
 
 Obviously the executable will have to have been compiled with the MPI

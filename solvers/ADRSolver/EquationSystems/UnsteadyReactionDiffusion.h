@@ -35,15 +35,14 @@
 #ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYREACTIONDIFFUSION_H
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYREACTIONDIFFUSION_H
 
-#include <SolverUtils/Diffusion/Diffusion.h>
+#include <ADRSolver/EquationSystems/UnsteadyDiffusion.h>
 #include <SolverUtils/Forcing/Forcing.h>
-#include <SolverUtils/UnsteadySystem.h>
 
 using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-class UnsteadyReactionDiffusion : public UnsteadySystem
+class UnsteadyReactionDiffusion : public UnsteadyDiffusion
 {
 public:
     friend class MemoryManager<UnsteadyReactionDiffusion>;
@@ -59,32 +58,24 @@ public:
         p->InitObject();
         return p;
     }
+
     /// Name of class
     static std::string className;
-
-    /// Destructor
-    virtual ~UnsteadyReactionDiffusion();
 
 protected:
     UnsteadyReactionDiffusion(
         const LibUtilities::SessionReaderSharedPtr &pSession,
         const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject(bool DeclareFields = true) override;
+    ~UnsteadyReactionDiffusion() override = default;
+
+    void v_InitObject(bool DeclareFields = true) override;
 
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
-    void DoOdeProjection(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-    void DoImplicitSolve(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, NekDouble time,
-        NekDouble lambda);
 
 private:
-    NekDouble m_epsilon;
     /// Forcing terms
     std::vector<SolverUtils::ForcingSharedPtr> m_forcing;
 };

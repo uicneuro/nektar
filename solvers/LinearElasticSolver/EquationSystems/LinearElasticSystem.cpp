@@ -53,12 +53,10 @@
 #include <MultiRegions/GlobalLinSysPETScStaticCond.h>
 #endif
 
-using namespace std;
-
 namespace Nektar
 {
 
-string LinearElasticSystem::className =
+std::string LinearElasticSystem::className =
     GetEquationSystemFactory().RegisterCreatorFunction(
         "LinearElasticSystem", LinearElasticSystem::create);
 
@@ -72,7 +70,7 @@ string LinearElasticSystem::className =
  * @param x   co-ordinates of triangle/tetrahedron
  * @param xf  components of mapping
  */
-inline DNekMat MappingIdealToRef(SpatialDomains::GeometrySharedPtr geom)
+inline DNekMat MappingIdealToRef(SpatialDomains::Geometry *geom)
 {
     int n = geom->GetNumVerts(), i, j;
 
@@ -201,9 +199,9 @@ void LinearElasticSystem::v_InitObject(bool DeclareFields)
     m_BinvD = MemoryManager<DNekScalBlkMat>::AllocateSharedPtr(sizeBnd, sizeInt,
                                                                blkmatStorage);
     m_C     = MemoryManager<DNekScalBlkMat>::AllocateSharedPtr(sizeInt, sizeBnd,
-                                                           blkmatStorage);
+                                                               blkmatStorage);
     m_Dinv  = MemoryManager<DNekScalBlkMat>::AllocateSharedPtr(sizeInt, sizeInt,
-                                                              blkmatStorage);
+                                                               blkmatStorage);
 }
 
 /**
@@ -283,8 +281,8 @@ void LinearElasticSystem::BuildMatrixSystem()
 
             if (verbose && root)
             {
-                cout << "\rBuilding matrix system: " << (int)(100.0 * n / nEl)
-                     << "%" << flush;
+                std::cout << "\rBuilding matrix system: "
+                          << (int)(100.0 * n / nEl) << "%" << std::flush;
             }
         }
     }
@@ -341,15 +339,15 @@ void LinearElasticSystem::BuildMatrixSystem()
 
             if (verbose && root)
             {
-                cout << "\rBuilding matrix system: " << (int)(100.0 * n / nEl)
-                     << "%" << flush;
+                std::cout << "\rBuilding matrix system: "
+                          << (int)(100.0 * n / nEl) << "%" << std::flush;
             }
         }
     }
 
     if (verbose && root)
     {
-        cout << "\rBuilding matrix system: done." << endl;
+        std::cout << "\rBuilding matrix system: done." << std::endl;
     }
 }
 
@@ -442,7 +440,7 @@ void LinearElasticSystem::v_DoSolve()
     GetFunction("Forcing")->Evaluate(forcing);
 
     // Add temperature term
-    string tempEval;
+    std::string tempEval;
     m_session->LoadSolverInfo("Temperature", tempEval, "None");
 
     if (tempEval == "Jacobian")
@@ -482,15 +480,16 @@ void LinearElasticSystem::v_DoSolve()
     }
     else if (tempEval == "Metric")
     {
-        ASSERTL0((m_fields[0]->GetCoordim(0) == 2 &&
-                  m_graph->GetAllQuadGeoms().size() == 0) ||
-                     (m_fields[0]->GetCoordim(0) == 3 &&
-                      m_graph->GetAllPrismGeoms().size() == 0 &&
-                      m_graph->GetAllPyrGeoms().size() == 0 &&
-                      m_graph->GetAllHexGeoms().size() == 0),
-                 "LinearIdealMetric temperature only implemented for "
-                 "two-dimensional triangular meshes or three-dimensional "
-                 "tetrahedral meshes.");
+        ASSERTL0(
+            (m_fields[0]->GetCoordim(0) == 2 &&
+             m_graph->GetGeomMap<SpatialDomains::QuadGeom>().size() == 0) ||
+                (m_fields[0]->GetCoordim(0) == 3 &&
+                 m_graph->GetGeomMap<SpatialDomains::PrismGeom>().size() == 0 &&
+                 m_graph->GetGeomMap<SpatialDomains::PyrGeom>().size() == 0 &&
+                 m_graph->GetGeomMap<SpatialDomains::HexGeom>().size() == 0),
+            "LinearIdealMetric temperature only implemented for "
+            "two-dimensional triangular meshes or three-dimensional "
+            "tetrahedral meshes.");
 
         m_temperature = Array<OneD, Array<OneD, NekDouble>>(nVel);
         m_stress      = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(nVel);
@@ -830,8 +829,7 @@ void LinearElasticSystem::v_ExtraFldOutput(
         Array<OneD, NekDouble> tFwd(nCoeffs);
         m_fields[i]->FwdTrans(m_temperature[i], tFwd);
         fieldcoeffs.push_back(tFwd);
-        variables.push_back("ThermStressDiv" +
-                            boost::lexical_cast<std::string>(i));
+        variables.push_back("ThermStressDiv" + std::to_string(i));
     }
 
     if (m_stress.size() == 0)
@@ -846,9 +844,8 @@ void LinearElasticSystem::v_ExtraFldOutput(
             Array<OneD, NekDouble> tFwd(nCoeffs);
             m_fields[i]->FwdTrans(m_stress[i][j], tFwd);
             fieldcoeffs.push_back(tFwd);
-            variables.push_back("ThermStress" +
-                                boost::lexical_cast<std::string>(i) +
-                                boost::lexical_cast<std::string>(j));
+            variables.push_back("ThermStress" + std::to_string(i) +
+                                std::to_string(j));
         }
     }
 }

@@ -173,18 +173,17 @@ void Monodomain::v_InitObject(bool DeclareField)
                 GetFunction("AnisotropicConductivity")
                     ->Evaluate(aniso_var[i], vTemp_i);
 
-                Vmath::Vmul(nq, vTemp_i, 1, vTemp_j, 1,
-                            m_vardiff[varCoeffEnum[k]], 1);
+                Array<OneD, NekDouble> tmp(vTemp_i.size());
 
-                Vmath::Smul(nq, o_max - o_min, m_vardiff[varCoeffEnum[k]], 1,
-                            m_vardiff[varCoeffEnum[k]], 1);
+                Vmath::Vmul(nq, vTemp_i, 1, vTemp_j, 1, tmp, 1);
+                Vmath::Smul(nq, o_max - o_min, tmp, 1, tmp, 1);
 
                 if (i == j)
                 {
-                    Vmath::Sadd(nq, o_min, m_vardiff[varCoeffEnum[k]], 1,
-                                m_vardiff[varCoeffEnum[k]], 1);
+                    Vmath::Sadd(nq, o_min, tmp, 1, tmp, 1);
                 }
 
+                m_vardiff[varCoeffEnum[k]] = tmp;
                 ++k;
             }
         }
@@ -196,8 +195,9 @@ void Monodomain::v_InitObject(bool DeclareField)
         NekDouble o_max = m_session->GetParameter("o_max");
         for (int i = 0; i < nVarDiffCmpts; ++i)
         {
-            Vmath::Smul(nq, o_max, m_vardiff[varCoeffEnum[i]], 1,
-                        m_vardiff[varCoeffEnum[i]], 1);
+            Array<OneD, NekDouble> tmp(m_vardiff[varCoeffEnum[i]].GetValue());
+            Vmath::Smul(nq, o_max, tmp, 1, tmp, 1);
+            m_vardiff[varCoeffEnum[i]] = tmp;
         }
     }
 
@@ -243,8 +243,9 @@ void Monodomain::v_InitObject(bool DeclareField)
         // Scale anisotropic conductivity values
         for (int i = 0; i < nVarDiffCmpts; ++i)
         {
-            Vmath::Vmul(nq, vTemp, 1, m_vardiff[varCoeffEnum[i]], 1,
-                        m_vardiff[varCoeffEnum[i]], 1);
+            Array<OneD, NekDouble> tmp = m_vardiff[varCoeffEnum[i]].GetValue();
+            Vmath::Vmul(nq, vTemp, 1, tmp, 1, tmp, 1);
+            m_vardiff[varCoeffEnum[i]] = tmp;
         }
     }
 
@@ -255,8 +256,9 @@ void Monodomain::v_InitObject(bool DeclareField)
         for (int i = 0; i < j + 1; ++i)
         {
             // Transform variable coefficient and write out to file.
-            m_fields[0]->FwdTransLocalElmt(m_vardiff[varCoeffEnum[k]],
-                                           m_fields[0]->UpdateCoeffs());
+            m_fields[0]->FwdTransLocalElmt(
+                m_vardiff[varCoeffEnum[k]].GetValue(),
+                m_fields[0]->UpdateCoeffs());
             std::stringstream filename;
             filename << "Conductivity_" << varCoeffString[k] << ".fld";
             WriteFld(filename.str());
@@ -291,6 +293,7 @@ void Monodomain::v_InitObject(bool DeclareField)
         m_ode.DefineImplicitSolve(&Monodomain::DoImplicitSolve, this);
     }
     m_ode.DefineOdeRhs(&Monodomain::DoOdeRhs, this);
+    m_ode.DefineProjection(&Monodomain::DoDummyProjection, this);
 }
 
 /**
@@ -308,11 +311,9 @@ Monodomain::~Monodomain()
  */
 void Monodomain::DoImplicitSolve(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time, const NekDouble lambda)
 {
-    boost::ignore_unused(time);
-
     int nvariables = inarray.size();
     int nq         = m_fields[0]->GetNpoints();
     StdRegions::ConstFactorMap factors;

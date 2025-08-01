@@ -39,6 +39,7 @@
 
 namespace Nektar
 {
+
 class LaxFriedrichsSolver : public CompressibleSolver
 {
 public:
@@ -53,13 +54,12 @@ public:
 protected:
     LaxFriedrichsSolver(const LibUtilities::SessionReaderSharedPtr &pSession);
 
-    virtual void v_PointSolve(double rhoL, double rhouL, double rhovL,
-                              double rhowL, double EL, double rhoR,
-                              double rhouR, double rhovR, double rhowR,
-                              double ER, double &rhof, double &rhouf,
-                              double &rhovf, double &rhowf,
-                              double &Ef) override;
+    void v_PointSolve(double rhoL, double rhouL, double rhovL, double rhowL,
+                      double EL, double rhoR, double rhouR, double rhovR,
+                      double rhowR, double ER, double &rhof, double &rhouf,
+                      double &rhovf, double &rhowf, double &Ef) override;
 };
+
 } // namespace Nektar
 
 #endif

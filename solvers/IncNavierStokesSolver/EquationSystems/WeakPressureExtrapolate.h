@@ -35,6 +35,7 @@
 #ifndef NEKTAR_SOLVERS_WEAKPRESSUREEXTRAPOLATE_H
 #define NEKTAR_SOLVERS_WEAKPRESSUREEXTRAPOLATE_H
 
+#include <IncNavierStokesSolver/EquationSystems/IncNavierStokes.h>
 #include <IncNavierStokesSolver/EquationSystems/StandardExtrapolate.h>
 #include <LibUtilities/BasicUtils/NekFactory.hpp>
 #include <LibUtilities/BasicUtils/SessionReader.h>
@@ -57,6 +58,8 @@ typedef std::shared_ptr<WeakPressureExtrapolate>
 class WeakPressureExtrapolate : public StandardExtrapolate
 {
 public:
+    friend class MemoryManager<WeakPressureExtrapolate>;
+
     /// Creates an instance of this class
     static ExtrapolateSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -73,27 +76,27 @@ public:
     /// Name of class
     static std::string className;
 
+protected:
     WeakPressureExtrapolate(const LibUtilities::SessionReaderSharedPtr pSession,
                             Array<OneD, MultiRegions::ExpListSharedPtr> pFields,
                             MultiRegions::ExpListSharedPtr pPressure,
                             const Array<OneD, int> pVel,
                             const SolverUtils::AdvectionSharedPtr advObject);
 
-    virtual ~WeakPressureExtrapolate();
+    ~WeakPressureExtrapolate() override = default;
 
-protected:
-    virtual void v_EvaluatePressureBCs(
+    void v_EvaluatePressureBCs(
         const Array<OneD, const Array<OneD, NekDouble>> &fields,
         const Array<OneD, const Array<OneD, NekDouble>> &N,
         NekDouble kinvis) override;
 
-    virtual void v_MountHOPBCs(
-        int HBCdata, NekDouble kinvis, Array<OneD, NekDouble> &Q,
-        Array<OneD, const NekDouble> &Advection) override;
+    void v_MountHOPBCs(int HBCdata, NekDouble kinvis, Array<OneD, NekDouble> &Q,
+                       Array<OneD, const NekDouble> &Advection) override;
 
-    virtual void v_AddNormVelOnOBC(
-        const int nbcoeffs, const int nreg,
-        Array<OneD, Array<OneD, NekDouble>> &u) override;
+    void v_AddNormVelOnOBC(const int nbcoeffs, const int nreg,
+                           Array<OneD, Array<OneD, NekDouble>> &u) override;
+
+    static std::string solverTypeLookupId;
 };
 
 } // namespace Nektar

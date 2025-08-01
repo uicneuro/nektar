@@ -51,6 +51,8 @@ typedef std::shared_ptr<MappingExtrapolate> MappingExtrapolateSharedPtr;
 class MappingExtrapolate : public StandardExtrapolate
 {
 public:
+    friend class MemoryManager<MappingExtrapolate>;
+
     /// Creates an instance of this class
     static ExtrapolateSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -67,20 +69,6 @@ public:
     /// Name of class
     static std::string className;
 
-    virtual void v_CorrectPressureBCs(const Array<OneD, NekDouble> &pressure);
-
-    virtual void v_CalcNeumannPressureBCs(
-        const Array<OneD, const Array<OneD, NekDouble>> &fields,
-        const Array<OneD, const Array<OneD, NekDouble>> &N, NekDouble kinvis);
-
-    MappingExtrapolate(const LibUtilities::SessionReaderSharedPtr pSession,
-                       Array<OneD, MultiRegions::ExpListSharedPtr> pFields,
-                       MultiRegions::ExpListSharedPtr pPressure,
-                       const Array<OneD, int> pVel,
-                       const SolverUtils::AdvectionSharedPtr advObject);
-
-    virtual ~MappingExtrapolate();
-
 protected:
     // Mapping object
     GlobalMapping::MappingSharedPtr m_mapping;
@@ -94,6 +82,21 @@ protected:
     // Relaxation parameters for pressure
     //       system (when solved iteratively)
     NekDouble m_pressureRelaxation;
+
+    MappingExtrapolate(const LibUtilities::SessionReaderSharedPtr pSession,
+                       Array<OneD, MultiRegions::ExpListSharedPtr> pFields,
+                       MultiRegions::ExpListSharedPtr pPressure,
+                       const Array<OneD, int> pVel,
+                       const SolverUtils::AdvectionSharedPtr advObject);
+
+    ~MappingExtrapolate() override = default;
+
+    void v_CorrectPressureBCs(const Array<OneD, NekDouble> &pressure) override;
+
+    void v_CalcNeumannPressureBCs(
+        const Array<OneD, const Array<OneD, NekDouble>> &fields,
+        const Array<OneD, const Array<OneD, NekDouble>> &N,
+        NekDouble kinvis) override;
 };
 } // namespace Nektar
 

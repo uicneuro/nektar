@@ -35,11 +35,12 @@
 #ifndef NEKTAR_SOLVERS_COMPRESSIBLEFLOWSOLVER_RIEMANNSOLVER_AUSM3SOLVER
 #define NEKTAR_SOLVERS_COMPRESSIBLEFLOWSOLVER_RIEMANNSOLVER_AUSM3SOLVER
 
-#include <CompressibleFlowSolver/RiemannSolvers/CompressibleSolver.h>
+#include <CompressibleFlowSolver/RiemannSolvers/AUSM0Solver.h>
 
 namespace Nektar
 {
-class AUSM3Solver : public CompressibleSolver
+
+class AUSM3Solver : public AUSM0Solver
 {
 public:
     static RiemannSolverSharedPtr create(
@@ -53,18 +54,14 @@ public:
 protected:
     AUSM3Solver(const LibUtilities::SessionReaderSharedPtr &pSession);
 
-    virtual void v_PointSolve(double rhoL, double rhouL, double rhovL,
-                              double rhowL, double EL, double rhoR,
-                              double rhouR, double rhovR, double rhowR,
-                              double ER, double &rhof, double &rhouf,
-                              double &rhovf, double &rhowf,
-                              double &Ef) override;
+    void v_PointSolve(double rhoL, double rhouL, double rhovL, double rhowL,
+                      double EL, double rhoR, double rhouR, double rhovR,
+                      double rhowR, double ER, double &rhof, double &rhouf,
+                      double &rhovf, double &rhowf, double &Ef) override;
 
-    double M1Function(int A, double M);
-    double M2Function(int A, double M);
-    double M4Function(int A, double beta, double M);
-    double P5Function(int A, double alpha, double M);
+    NekDouble m_Mco;
 };
+
 } // namespace Nektar
 
 #endif

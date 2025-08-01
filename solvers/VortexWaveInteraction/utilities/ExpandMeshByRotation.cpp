@@ -36,7 +36,7 @@
 #include <LibUtilities/BasicConst/NektarUnivTypeDefs.hpp>
 #include <LibUtilities/BasicUtils/ParseUtils.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
-#include <SpatialDomains/MeshGraph.h>
+#include <SpatialDomains/MeshGraphIO.h>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
@@ -78,18 +78,17 @@ int main(int argc, char *argv[])
     // Read in mesh from input file
     string meshfile(argv[argc - 2]);
     SpatialDomains::MeshGraphSharedPtr graphShPt =
-        SpatialDomains::MeshGraph::Read(vSession);
+        SpatialDomains::MeshGraphIO::Read(vSession);
     SpatialDomains::CompositeSharedPtr composite;
     composite = graphShPt->GetComposite(300);
     std::map<int, int> jointEdges, jointVerts, newVerts, newEdges;
     int compsize = composite->m_geomVec.size();
     for (i = 0; i < compsize; ++i)
     {
-        SpatialDomains::Geometry1DSharedPtr tmp1 =
-            std::dynamic_pointer_cast<SpatialDomains::Geometry1D>(
-                composite->m_geomVec[i]);
-        SpatialDomains::Geometry1DSharedPtr tmp2 =
-            std::dynamic_pointer_cast<SpatialDomains::Geometry1D>(
+        SpatialDomains::Geometry1D *tmp1 =
+            dynamic_cast<SpatialDomains::Geometry1D *>(composite->m_geomVec[i]);
+        SpatialDomains::Geometry1D *tmp2 =
+            dynamic_cast<SpatialDomains::Geometry1D *>(
                 composite->m_geomVec[compsize - 1 - i]);
         jointEdges[tmp1->GetGlobalID()] = tmp2->GetGlobalID();
         jointVerts[tmp1->GetVid(0)]     = tmp2->GetVid(1);
@@ -128,7 +127,6 @@ void ExpandVertices(TiXmlElement *mesh, map<int, int> jointVerts,
     TiXmlElement *vertex = element->FirstChildElement("V");
 
     int indx;
-    int nextVertexNumber = -1;
     int err; /// Error value returned by TinyXML.
 
     vector<NekDouble> xpts, ypts, zpts;
@@ -137,8 +135,6 @@ void ExpandVertices(TiXmlElement *mesh, map<int, int> jointVerts,
     NekDouble yoffset = 0.0;
     while (vertex)
     {
-        nextVertexNumber++;
-
         TiXmlAttribute *vertexAttr = vertex->FirstAttribute();
         std::string attrName(vertexAttr->Name());
 
@@ -237,13 +233,10 @@ void ExpandEdges(TiXmlElement *mesh, map<int, int> &newVerts,
     /// missing element numbers due to the text block format.
     std::string edgeStr;
     int indx;
-    int nextEdgeNumber = -1;
 
     map<int, int> edgeVert0, edgeVert1;
     while (edge)
     {
-        nextEdgeNumber++;
-
         int err = edge->QueryIntAttribute("ID", &indx);
         ASSERTL0(err == TIXML_SUCCESS, "Unable to read edge attribute ID.");
 
@@ -309,8 +302,6 @@ void ExpandElmts(TiXmlElement *mesh, map<int, int> &newEdges, int &nelmts)
 
     ASSERTL0(field, "Unable to find ELEMENT tag in file.");
 
-    int nextElementNumber = -1;
-
     /// All elements are of the form: "<? ID="#"> ... </?>", with
     /// ? being the element type.
 
@@ -325,9 +316,6 @@ void ExpandElmts(TiXmlElement *mesh, map<int, int> &newEdges, int &nelmts)
         ASSERTL0(
             elementType == "Q" || elementType == "T",
             (std::string("Unknown 2D element type: ") + elementType).c_str());
-
-        /// These should be ordered.
-        nextElementNumber++;
 
         /// Read id attribute.
         int indx;
@@ -504,16 +492,12 @@ void ExpandComposites(TiXmlElement *mesh, map<int, int> newEdges,
     TiXmlElement *field = mesh->FirstChildElement("COMPOSITE");
     ASSERTL0(field, "Unable to find COMPOSITE tag in file.");
 
-    int nextCompositeNumber = -1;
-
     /// All elements are of the form: "<C ID = "N"> ... </C>".
     /// Read the ID field first.
     TiXmlElement *composite = field->FirstChildElement("C");
 
     while (composite)
     {
-        nextCompositeNumber++;
-
         int indx;
         int err = composite->QueryIntAttribute("ID", &indx);
         ASSERTL0(err == TIXML_SUCCESS, "Unable to read attribute ID.");

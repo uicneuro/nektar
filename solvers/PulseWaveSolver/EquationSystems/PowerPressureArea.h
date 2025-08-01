@@ -52,6 +52,8 @@ typedef std::shared_ptr<PowerPressureArea> PowerPressureAreaSharedPtr;
 class PowerPressureArea : public PulseWavePressureArea
 {
 public:
+    friend class MemoryManager<PowerPressureArea>;
+
     // Creates an instance of this class
     static PulseWavePressureAreaSharedPtr create(
         Array<OneD, MultiRegions::ExpListSharedPtr> &pVessel,
@@ -64,51 +66,46 @@ public:
     // Name of class
     static std::string className;
 
+protected:
     PowerPressureArea(Array<OneD, MultiRegions::ExpListSharedPtr> pVessel,
                       const LibUtilities::SessionReaderSharedPtr pSession);
 
-    virtual ~PowerPressureArea();
+    ~PowerPressureArea() override = default;
 
-protected:
-    virtual void v_GetPressure(NekDouble &P, const NekDouble &beta,
-                               const NekDouble &A, const NekDouble &A0,
-                               const NekDouble &dAUdx,
-                               const NekDouble &gamma = 0,
-                               const NekDouble &alpha = 0.5) override;
+    void v_GetPressure(NekDouble &P, const NekDouble &beta, const NekDouble &A,
+                       const NekDouble &A0, const NekDouble &dAUdx,
+                       const NekDouble &gamma = 0,
+                       const NekDouble &alpha = 0.5) override;
 
-    virtual void v_GetC(NekDouble &c, const NekDouble &beta, const NekDouble &A,
-                        const NekDouble &A0,
-                        const NekDouble &alpha = 0.5) override;
+    void v_GetC(NekDouble &c, const NekDouble &beta, const NekDouble &A,
+                const NekDouble &A0, const NekDouble &alpha = 0.5) override;
 
-    virtual void v_GetW1(NekDouble &W1, const NekDouble &u,
-                         const NekDouble &beta, const NekDouble &A,
-                         const NekDouble &A0,
+    void v_GetW1(NekDouble &W1, const NekDouble &u, const NekDouble &beta,
+                 const NekDouble &A, const NekDouble &A0,
+                 const NekDouble &alpha = 0.5) override;
+
+    void v_GetW2(NekDouble &W2, const NekDouble &u, const NekDouble &beta,
+                 const NekDouble &A, const NekDouble &A0,
+                 const NekDouble &alpha = 0.5) override;
+
+    void v_GetAFromChars(NekDouble &A, const NekDouble &W1, const NekDouble &W2,
+                         const NekDouble &beta, const NekDouble &A0,
                          const NekDouble &alpha = 0.5) override;
 
-    virtual void v_GetW2(NekDouble &W2, const NekDouble &u,
-                         const NekDouble &beta, const NekDouble &A,
-                         const NekDouble &A0,
-                         const NekDouble &alpha = 0.5) override;
+    void v_GetUFromChars(NekDouble &u, const NekDouble &W1,
+                         const NekDouble &W2) override;
 
-    virtual void v_GetAFromChars(NekDouble &A, const NekDouble &W1,
-                                 const NekDouble &W2, const NekDouble &beta,
-                                 const NekDouble &A0,
-                                 const NekDouble &alpha = 0.5) override;
+    void v_GetCharIntegral(NekDouble &I, const NekDouble &beta,
+                           const NekDouble &A, const NekDouble &A0,
+                           const NekDouble &alpha = 0.5) override;
 
-    virtual void v_GetUFromChars(NekDouble &u, const NekDouble &W1,
-                                 const NekDouble &W2) override;
-
-    virtual void v_GetCharIntegral(NekDouble &I, const NekDouble &beta,
-                                   const NekDouble &A, const NekDouble &A0,
-                                   const NekDouble &alpha = 0.5) override;
-
-    virtual void v_GetJacobianInverse(NekMatrix<NekDouble> &invJ,
-                                      const Array<OneD, NekDouble> &Au,
-                                      const Array<OneD, NekDouble> &uu,
-                                      const Array<OneD, NekDouble> &beta,
-                                      const Array<OneD, NekDouble> &A0,
-                                      const Array<OneD, NekDouble> &alpha,
-                                      const std::string &type) override;
+    void v_GetJacobianInverse(NekMatrix<NekDouble> &invJ,
+                              const Array<OneD, NekDouble> &Au,
+                              const Array<OneD, NekDouble> &uu,
+                              const Array<OneD, NekDouble> &beta,
+                              const Array<OneD, NekDouble> &A0,
+                              const Array<OneD, NekDouble> &alpha,
+                              const std::string &type) override;
 
     void GetC0(NekDouble &c0, const NekDouble &beta, const NekDouble &A0);
 

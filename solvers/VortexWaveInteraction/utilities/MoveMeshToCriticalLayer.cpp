@@ -38,7 +38,7 @@
 
 #include <LibUtilities/BasicUtils/ParseUtils.h>
 #include <MultiRegions/ExpList.h>
-#include <SpatialDomains/MeshGraph.h>
+#include <SpatialDomains/MeshGraphIO.h>
 #include <tinyxml.h>
 
 using namespace std;
@@ -78,7 +78,7 @@ void GetNewVertexLocation(TiXmlElement *doc,
                           Array<OneD, NekDouble> &vertx,
                           Array<OneD, NekDouble> &verty, int maxiter);
 
-void TurnOffEdges(TiXmlElement *doc, SpatialDomains::SegGeomMap &meshedges,
+void TurnOffEdges(TiXmlElement *doc, SpatialDomains::MeshGraphSharedPtr &mesh,
                   Array<OneD, MoveVerts> &verts);
 
 void RedefineVertices(TiXmlElement *doc, Array<OneD, NekDouble> &dvertx,
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
     LibUtilities::SessionReaderSharedPtr vSession =
         LibUtilities::SessionReader::CreateInstance(2, argv);
     SpatialDomains::MeshGraphSharedPtr mesh =
-        SpatialDomains::MeshGraph::Read(vSession);
+        SpatialDomains::MeshGraphIO::Read(vSession);
 
     //-------------------------------------------------------------
     // Read in mesh from input file
@@ -231,12 +231,10 @@ void GetNewVertexLocation(TiXmlElement *doc,
     int i, j, k;
     int nverts = mesh->GetNvertices();
 
-    SpatialDomains::SegGeomMap meshedges = mesh->GetAllSegGeoms();
-
     Array<OneD, MoveVerts> Verts(nverts);
 
     // loop mesh edges and fill in verts info
-    SpatialDomains::PointGeomSharedPtr v0, v1;
+    SpatialDomains::PointGeom *v0, *v1;
     SpatialDomains::PointGeom dist;
 
     int vid0, vid1;
@@ -244,13 +242,13 @@ void GetNewVertexLocation(TiXmlElement *doc,
     NekDouble x, y, x1, y1, z1, x2, y2, z2;
 
     // Setup intiial spring and verts
-    for (auto &segIter : meshedges)
+    for (auto [id, seg] : mesh->GetGeomMap<SpatialDomains::SegGeom>())
     {
-        vid0 = (segIter.second)->GetVid(0);
-        vid1 = (segIter.second)->GetVid(1);
+        vid0 = seg->GetVid(0);
+        vid1 = seg->GetVid(1);
 
-        v0 = (segIter.second)->GetVertex(0);
-        v1 = (segIter.second)->GetVertex(1);
+        v0 = seg->GetVertex(0);
+        v1 = seg->GetVertex(1);
 
         kspring = 1.0 / v0->dist(*v1);
 
@@ -278,14 +276,14 @@ void GetNewVertexLocation(TiXmlElement *doc,
     }
 
     // Turn off all edges defined by composite lists of correct dimension
-    TurnOffEdges(doc, meshedges, Verts);
+    TurnOffEdges(doc, mesh, Verts);
 
     NekDouble z, h0, h1, h2;
     // Set interface vertices to lie on critical layer
     for (i = 0; i < InterfaceVerts.size(); ++i)
     {
         Verts[InterfaceVerts[i]].solve = eNoSolve;
-        mesh->GetVertex(InterfaceVerts[i])->GetCoords(x, y, z);
+        mesh->GetPointGeom(InterfaceVerts[i])->GetCoords(x, y, z);
 
         for (j = 0; j < xstreak.size() - 1; ++j)
         {
@@ -317,24 +315,24 @@ void GetNewVertexLocation(TiXmlElement *doc,
     }
 
     // shift quads in critical layer to move more or less rigidly
-    SpatialDomains::QuadGeomMap quadgeom = mesh->GetAllQuadGeoms();
-    for (auto &quadIter : quadgeom)
+    for (auto [id, quad] : mesh->GetGeomMap<SpatialDomains::QuadGeom>())
     {
         for (i = 0; i < 4; ++i)
         {
-            vid0 = (quadIter.second)->GetVid(i);
+            vid0 = quad->GetVid(i);
 
             switch (Verts[vid0].solve)
             {
                 case eSolveXY:
                 {
-                    mesh->GetVertex(vid0)->GetCoords(x, y, z);
+                    mesh->GetPointGeom(vid0)->GetCoords(x, y, z);
 
                     // find nearest interface vert
-                    mesh->GetVertex(InterfaceVerts[0])->GetCoords(x1, y1, z1);
+                    mesh->GetPointGeom(InterfaceVerts[0])
+                        ->GetCoords(x1, y1, z1);
                     for (j = 0; j < InterfaceVerts.size() - 1; ++j)
                     {
-                        mesh->GetVertex(InterfaceVerts[j + 1])
+                        mesh->GetPointGeom(InterfaceVerts[j + 1])
                             ->GetCoords(x2, y2, z2);
                         if ((x >= x1) && (x < x2))
                         {
@@ -355,8 +353,9 @@ void GetNewVertexLocation(TiXmlElement *doc,
                 break;
                 case eSolveY:
                 {
-                    mesh->GetVertex(vid0)->GetCoords(x, y, z);
-                    mesh->GetVertex(InterfaceVerts[0])->GetCoords(x1, y1, z1);
+                    mesh->GetPointGeom(vid0)->GetCoords(x, y, z);
+                    mesh->GetPointGeom(InterfaceVerts[0])
+                        ->GetCoords(x1, y1, z1);
 
                     if (fabs(x - x1) < 1e-6)
                     {
@@ -459,13 +458,11 @@ void GetNewVertexLocation(TiXmlElement *doc,
 
 // Read Composites from xml document and turn off verts that are along edge
 // composites.
-void TurnOffEdges(TiXmlElement *doc, SpatialDomains::SegGeomMap &meshedges,
+void TurnOffEdges(TiXmlElement *doc, SpatialDomains::MeshGraphSharedPtr &mesh,
                   Array<OneD, MoveVerts> &Verts)
 {
     TiXmlElement *field = doc->FirstChildElement("COMPOSITE");
     ASSERTL0(field, "Unable to find COMPOSITE tag in file.");
-
-    int nextCompositeNumber = -1;
 
     /// All elements are of the form: "<C ID = "N"> ... </C>".
     /// Read the ID field first.
@@ -473,8 +470,6 @@ void TurnOffEdges(TiXmlElement *doc, SpatialDomains::SegGeomMap &meshedges,
 
     while (composite)
     {
-        nextCompositeNumber++;
-
         int indx;
         int err = composite->QueryIntAttribute("ID", &indx);
         ASSERTL0(err == TIXML_SUCCESS, "Unable to read attribute ID.");
@@ -537,12 +532,11 @@ void TurnOffEdges(TiXmlElement *doc, SpatialDomains::SegGeomMap &meshedges,
 
                     for (int i = 0; i < seqlen; ++i)
                     {
-                        meshedges[seqVector[i]]->GetVertex(0)->GetCoords(x0, y0,
-                                                                         z0);
-                        meshedges[seqVector[i]]->GetVertex(1)->GetCoords(x1, y1,
-                                                                         z1);
-                        vid0 = meshedges[seqVector[i]]->GetVid(0);
-                        vid1 = meshedges[seqVector[i]]->GetVid(1);
+                        auto seg = mesh->GetSegGeom(seqVector[i]);
+                        seg->GetVertex(0)->GetCoords(x0, y0, z0);
+                        seg->GetVertex(1)->GetCoords(x1, y1, z1);
+                        vid0 = seg->GetVid(0);
+                        vid1 = seg->GetVid(1);
 
                         if (fabs(x0 - x1) < 1e-8)
                         {
@@ -627,7 +621,6 @@ void RedefineVertices(TiXmlElement *doc, Array<OneD, NekDouble> &dvertx,
     TiXmlElement *vertex = element->FirstChildElement("V");
 
     int indx;
-    int nextVertexNumber = -1;
     int err; /// Error value returned by TinyXML.
 
     vector<NekDouble> xpts, ypts, zpts;
@@ -635,8 +628,6 @@ void RedefineVertices(TiXmlElement *doc, Array<OneD, NekDouble> &dvertx,
 
     while (vertex)
     {
-        nextVertexNumber++;
-
         TiXmlAttribute *vertexAttr = vertex->FirstAttribute();
         std::string attrName(vertexAttr->Name());
 
@@ -704,7 +695,7 @@ void EnforceRotationalSymmetry(SpatialDomains::MeshGraphSharedPtr &mesh,
 
     for (i = 0; i < nverts; ++i)
     {
-        mesh->GetVertex(i)->GetCoords(xval, yval, zval);
+        mesh->GetPointGeom(i)->GetCoords(xval, yval, zval);
         x[i] = xval + dvertx[i];
         y[i] = yval + dverty[i];
     }
@@ -734,7 +725,7 @@ void EnforceRotationalSymmetry(SpatialDomains::MeshGraphSharedPtr &mesh,
     // average points and recalcualte dvertx, dverty
     for (i = 0; i < nverts; ++i)
     {
-        mesh->GetVertex(i)->GetCoords(xval, yval, zval);
+        mesh->GetPointGeom(i)->GetCoords(xval, yval, zval);
 
         xrot = 0.5 * (-x[index[i]] + xmax + x[i]);
         yrot = 0.5 * (-y[index[i]] + y[i]);

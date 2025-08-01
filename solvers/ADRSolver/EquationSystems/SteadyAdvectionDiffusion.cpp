@@ -31,13 +31,13 @@
 // Description: Steady advection-diffusion solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
-#include <ADRSolver/EquationSystems/SteadyAdvectionDiffusion.h>
 
-using namespace std;
+#include <ADRSolver/EquationSystems/SteadyAdvectionDiffusion.h>
 
 namespace Nektar
 {
-string SteadyAdvectionDiffusion::className =
+
+std::string SteadyAdvectionDiffusion::className =
     GetEquationSystemFactory().RegisterCreatorFunction(
         "SteadyAdvectionDiffusion", SteadyAdvectionDiffusion::create);
 
@@ -59,6 +59,8 @@ void SteadyAdvectionDiffusion::v_InitObject(bool DeclareFields)
 {
     EquationSystem::v_InitObject(DeclareFields);
 
+    m_session->LoadParameter("epsilon", m_epsilon, 1.0);
+
     std::vector<std::string> vel;
     vel.push_back("Vx");
     vel.push_back("Vy");
@@ -72,30 +74,49 @@ void SteadyAdvectionDiffusion::v_InitObject(bool DeclareFields)
     GetFunction("BaseFlow")->Evaluate(vel, m_velocity);
 }
 
-SteadyAdvectionDiffusion::~SteadyAdvectionDiffusion()
+void SteadyAdvectionDiffusion::v_GenerateSummary(
+    [[maybe_unused]] SolverUtils::SummaryList &s)
 {
 }
 
-void SteadyAdvectionDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
+void SteadyAdvectionDiffusion::v_DoInitialise(
+    [[maybe_unused]] bool dumpInitialConditions)
 {
-    SolverUtils::AddSummaryItem(s, "Lambda", m_lambda);
-}
-
-void SteadyAdvectionDiffusion::v_DoInitialise()
-{
-    // set initial forcing from session file
+    // Set initial forcing from session file
     GetFunction("Forcing")->Evaluate(m_session->GetVariables(), m_fields);
 }
 
 void SteadyAdvectionDiffusion::v_DoSolve()
 {
+    StdRegions::ConstFactorMap factors;
+    StdRegions::VarCoeffMap varcoeffs;
+
+    factors[StdRegions::eFactorLambda] = m_lambda / m_epsilon;
+
+    // Set advection velocities
+    StdRegions::VarCoeffType varcoefftypes[] = {StdRegions::eVarCoeffVelX,
+                                                StdRegions::eVarCoeffVelY,
+                                                StdRegions::eVarCoeffVelZ};
+    for (int i = 0; i < m_spacedim; i++)
+    {
+        // Scale advection velocities by diffusion coefficient
+        Vmath::Smul(m_velocity[i].size(), 1.0 / m_epsilon, m_velocity[i], 1,
+                    m_velocity[i], 1);
+        varcoeffs[varcoefftypes[i]] = m_velocity[i];
+    }
+
+    // Solve for velocity
     for (int i = 0; i < m_fields.size(); ++i)
     {
         // Zero initial guess
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
+        // Scale forcing term by diffusion coefficient
+        Vmath::Smul(m_fields[i]->GetTotPoints(), 1.0 / m_epsilon,
+                    m_fields[i]->GetPhys(), 1, m_fields[i]->UpdatePhys(), 1);
+        // Solve system
         m_fields[i]->LinearAdvectionDiffusionReactionSolve(
-            m_velocity, m_fields[i]->GetPhys(), m_fields[i]->UpdateCoeffs(),
-            m_lambda);
+            m_fields[i]->GetPhys(), m_fields[i]->UpdateCoeffs(), factors,
+            varcoeffs);
         m_fields[i]->SetPhysState(false);
     }
 }

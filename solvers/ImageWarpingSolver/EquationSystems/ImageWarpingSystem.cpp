@@ -32,20 +32,20 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include <ImageWarpingSolver/EquationSystems/ImageWarpingSystem.h>
 #include <MultiRegions/ContField.h>
 
-using namespace std;
-
 namespace Nektar
 {
-string ImageWarpingSystem::className =
+
+std::string ImageWarpingSystem::className =
     GetEquationSystemFactory().RegisterCreatorFunction(
         "ImageWarpingSystem", ImageWarpingSystem::create,
         "Image warping system.");
 
+/**
+ *
+ */
 ImageWarpingSystem::ImageWarpingSystem(
     const LibUtilities::SessionReaderSharedPtr &pSession,
     const SpatialDomains::MeshGraphSharedPtr &pGraph)
@@ -53,6 +53,9 @@ ImageWarpingSystem::ImageWarpingSystem(
 {
 }
 
+/**
+ *
+ */
 void ImageWarpingSystem::v_InitObject(bool DeclareField)
 {
     AdvectionSystem::v_InitObject(DeclareField);
@@ -86,8 +89,8 @@ void ImageWarpingSystem::v_InitObject(bool DeclareField)
         m_traceVn = Array<OneD, NekDouble>(GetTraceNpoints());
     }
 
-    string advName;
-    string riemName;
+    std::string advName;
+    std::string riemName;
     m_session->LoadSolverInfo("AdvectionType", advName, "WeakDG");
     m_advObject =
         SolverUtils::GetAdvectionFactory().CreateInstance(advName, advName);
@@ -112,16 +115,14 @@ void ImageWarpingSystem::v_InitObject(bool DeclareField)
     }
 }
 
-ImageWarpingSystem::~ImageWarpingSystem()
-{
-}
-
+/**
+ *
+ */
 void ImageWarpingSystem::DoOdeRhs(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time)
 {
-    boost::ignore_unused(time);
-
     int npoints = GetNpoints();
     int ncoeffs = inarray[0].size();
     StdRegions::ConstFactorMap factors;
@@ -150,11 +151,11 @@ void ImageWarpingSystem::DoOdeRhs(
     // advection velocity field.
     for (int i = 0; i < 2; ++i)
     {
-        Vmath::Vmul(npoints, &alloc[i * npoints], 1, inarray[1].get(), 1,
-                    m_fields[i + 2]->UpdatePhys().get(), 1);
+        Vmath::Vmul(npoints, &alloc[i * npoints], 1, inarray[1].data(), 1,
+                    m_fields[i + 2]->UpdatePhys().data(), 1);
         Vmath::Smul(npoints, 1 / m_alpha / m_alpha,
-                    m_fields[i + 2]->GetPhys().get(), 1,
-                    m_fields[i + 2]->UpdatePhys().get(), 1);
+                    m_fields[i + 2]->GetPhys().data(), 1,
+                    m_fields[i + 2]->UpdatePhys().data(), 1);
         m_fields[i + 2]->HelmSolve(m_fields[i + 2]->GetPhys(),
                                    m_fields[i + 2]->UpdateCoeffs(), factors);
         m_fields[i + 2]->BwdTrans(m_fields[i + 2]->GetCoeffs(), m_velocity[i]);
@@ -173,8 +174,8 @@ void ImageWarpingSystem::DoOdeRhs(
     m_fields[3]->PhysDeriv(m_velocity[1], dIdx3, dIdx2);
 
     // Calculate RHS = I*div(u) = I*du/dx + I*dv/dy -> dIdx1.
-    Vmath::Vvtvvtp(npoints, dIdx1.get(), 1, inarray[0].get(), 1, dIdx2.get(), 1,
-                   inarray[0].get(), 1, dIdx1.get(), 1);
+    Vmath::Vvtvvtp(npoints, dIdx1.data(), 1, inarray[0].data(), 1, dIdx2.data(),
+                   1, inarray[0].data(), 1, dIdx1.data(), 1);
 
     // Take inner product to get to coefficient space.
     Array<OneD, NekDouble> tmp2(ncoeffs);
@@ -201,11 +202,14 @@ void ImageWarpingSystem::DoOdeProjection(
         case MultiRegions::eDiscontinuous:
         {
             // Just copy over array
-            int npoints = GetNpoints();
-
-            for (int i = 0; i < nvariables; ++i)
+            if (inarray != outarray)
             {
-                Vmath::Vcopy(npoints, inarray[i], 1, outarray[i], 1);
+                int npoints = GetNpoints();
+
+                for (int i = 0; i < nvariables; ++i)
+                {
+                    Vmath::Vcopy(npoints, inarray[i], 1, outarray[i], 1);
+                }
             }
         }
         break;
@@ -240,6 +244,9 @@ Array<OneD, NekDouble> &ImageWarpingSystem::GetNormalVelocity()
     return m_traceVn;
 }
 
+/**
+ *
+ */
 void ImageWarpingSystem::GetFluxVector(
     const Array<OneD, Array<OneD, NekDouble>> &physfield,
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &flux)
@@ -258,6 +265,9 @@ void ImageWarpingSystem::GetFluxVector(
     }
 }
 
+/**
+ *
+ */
 void ImageWarpingSystem::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     AdvectionSystem::v_GenerateSummary(s);

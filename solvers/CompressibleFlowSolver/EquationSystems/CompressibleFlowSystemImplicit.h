@@ -37,10 +37,13 @@
 #define NEKTAR_SOLVERS_COMPRESSIBLEFLOWSOLVER_COMPRESSIBLEFLOWSYSTEMIMPLICIT_H
 
 #include <CompressibleFlowSolver/EquationSystems/CompressibleFlowSystem.h>
-#include <boost/core/ignore_unused.hpp>
+#include <CompressibleFlowSolver/Preconditioner/PreconCfs.h>
+#include <CompressibleFlowSolver/Preconditioner/PreconCfsOp.h>
+#include <LibUtilities/LinearAlgebra/NekNonlinSysIter.h>
 
 namespace Nektar
 {
+
 /**
  *
  */
@@ -51,26 +54,69 @@ public:
     CFSImplicit(const LibUtilities::SessionReaderSharedPtr &pSession,
                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual ~CFSImplicit();
+    ~CFSImplicit() override = default;
 
-    virtual void v_InitObject(bool DeclareFields = true) override;
+protected:
+    bool m_viscousJacFlag;
+    bool m_advectionJacFlag;
+    bool m_flagImplicitItsStatistics;
+
+    int m_nPadding = 1;
+
+    // Flag to control the update of preconditioning matrix.
+    int m_TotNewtonIts = 0;
+    int m_TotLinIts    = 0;
+    int m_TotImpStages = 0;
+
+    /// Estimate the magnitude of each conserved varibles
+    Array<OneD, NekDouble> m_magnitdEstimat;
+
+    Array<OneD, Array<OneD, NekDouble>> m_solutionPhys;
+
+    /// coefff of spacial derivatives(rhs or m_F in GLM) in calculating the
+    /// residual of the whole equation(used in unsteady time integrations)
+    NekDouble m_TimeIntegLambda = 0.0;
+    NekDouble m_inArrayNorm     = -1.0;
+    NekDouble m_jacobiFreeEps;
+
+    TensorOfArray4D<NekSingle> m_stdSMatDataDBB;
+    TensorOfArray5D<NekSingle> m_stdSMatDataDBDB;
+
+    LibUtilities::NekNonlinSysIterSharedPtr m_nonlinsol;
+
+    PreconCfsSharedPtr m_preconCfs;
+
+    // flag to update shock capturing artificial viscosity. this flag is
+    // switched on/off in DoImplicitSolve() to ensure that the AV is only
+    // updated once every stage in a multi-stage time integration scheme
+    bool m_updateShockCaptPhys{true};
+
+    void v_InitObject(bool DeclareFields = true) override;
 
     void InitialiseNonlinSysSolver();
+
+    void v_DoSolve() override;
+
+    void v_PrintStatusInformation(const int step,
+                                  const NekDouble cpuTime) override;
+
+    void v_PrintSummaryStatistics(const NekDouble intTime) override;
+
+    void v_ALEInitObject(
+        int spaceDim,
+        Array<OneD, MultiRegions::ExpListSharedPtr> &fields) override;
 
     void NonlinSysEvaluatorCoeff1D(const Array<OneD, const NekDouble> &inarray,
                                    Array<OneD, NekDouble> &out,
                                    const bool &flag);
 
     void NonlinSysEvaluatorCoeff(
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &out, const bool &flag = true,
-        const Array<OneD, const NekDouble> &source = NullNekDouble1DArray);
-
-    void NonlinSysEvaluatorCoeff(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &out,
-        const Array<OneD, const Array<OneD, NekDouble>> &source =
-            NullNekDoubleArrayOfArray);
+        Array<OneD, Array<OneD, NekDouble>> &out, const bool &flag);
+
+    void DoOdeImplicitRhs(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     void DoOdeRhsCoeff(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                        Array<OneD, Array<OneD, NekDouble>> &outarray,
@@ -79,6 +125,12 @@ public:
     void DoAdvectionCoeff(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const Array<OneD, const Array<OneD, NekDouble>> &pFwd,
+        const Array<OneD, const Array<OneD, NekDouble>> &pBwd);
+
+    void DoDiffusionCoeff(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray,
         const Array<OneD, const Array<OneD, NekDouble>> &pFwd,
         const Array<OneD, const Array<OneD, NekDouble>> &pBwd);
 
@@ -93,30 +145,11 @@ public:
         Array<OneD, NekDouble> &out, const NekDouble time,
         const NekDouble lambda);
 
+    void MatrixMultiplyMatrixFreeCoeff(
+        const Array<OneD, const NekDouble> &inarray,
+        Array<OneD, NekDouble> &out, const bool &centralDifferenceFlag);
+
     void CalcRefValues(const Array<OneD, const NekDouble> &inarray);
-
-protected:
-    bool m_viscousJacFlag;
-    bool m_advectionJacFlag;
-
-    int m_nPadding = 1;
-
-    Array<OneD, Array<OneD, NekDouble>> m_solutionPhys;
-
-    NekDouble m_jacobiFreeEps;
-    NekDouble m_newtonAbsoluteIteTol;
-
-    TensorOfArray4D<NekSingle> m_stdSMatDataDBB;
-    TensorOfArray5D<NekSingle> m_stdSMatDataDBDB;
-
-    LibUtilities::NekNonlinSysSharedPtr m_nonlinsol;
-
-    PreconCfsOpSharedPtr m_preconCfs;
-
-    // flag to update shock capturing artificial viscosity. this flag is
-    // switched on/off in DoImplicitSolve() to ensure that the AV is only
-    // updated once every stage in a multi-stage time integration scheme
-    bool m_updateShockCaptPhys{true};
 
     void PreconCoeff(const Array<OneD, NekDouble> &inarray,
                      Array<OneD, NekDouble> &outarray, const bool &flag);
@@ -180,8 +213,6 @@ protected:
     template <typename DataType, typename TypeNekBlkMatSharedPtr>
     void TransTraceJacMatToArray(
         const Array<OneD, TypeNekBlkMatSharedPtr> &TraceJac,
-        const Array<OneD, TypeNekBlkMatSharedPtr> &TraceJacDeriv,
-        TensorOfArray4D<DataType> &TraceJacArray,
         TensorOfArray4D<DataType> &TraceJacDerivArray);
 
     template <typename DataType, typename TypeNekBlkMatSharedPtr>
@@ -224,7 +255,7 @@ protected:
     template <typename DataType, typename TypeNekBlkMatSharedPtr>
     void MultiplyElmtInvMassPlusSource(
         Array<OneD, Array<OneD, TypeNekBlkMatSharedPtr>> &gmtxarray,
-        const NekDouble dtlamda, const DataType tmpDataType);
+        const NekDouble dtlamda);
 
     void GetFluxVectorJacDirElmt(
         const int nConvectiveFields, const int nElmtPnt,
@@ -306,15 +337,6 @@ protected:
         v_CalcPhysDeriv(inarray, qfield);
     }
 
-    void DoDiffusionCoeff(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray,
-        const Array<OneD, const Array<OneD, NekDouble>> &pFwd,
-        const Array<OneD, const Array<OneD, NekDouble>> &pBwd);
-    void MatrixMultiplyMatrixFreeCoeff(
-        const Array<OneD, const NekDouble> &inarray,
-        Array<OneD, NekDouble> &out, const bool &flag = false);
-
     void CalcMuDmuDT(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                      Array<OneD, NekDouble> &mu, Array<OneD, NekDouble> &DmuDT)
     {
@@ -322,26 +344,27 @@ protected:
     }
 
     virtual void v_DoDiffusionCoeff(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray,
-        const Array<OneD, const Array<OneD, NekDouble>> &pFwd,
-        const Array<OneD, const Array<OneD, NekDouble>> &pBwd)
+        [[maybe_unused]] const Array<OneD, const Array<OneD, NekDouble>>
+            &inarray,
+        [[maybe_unused]] Array<OneD, Array<OneD, NekDouble>> &outarray,
+        [[maybe_unused]] const Array<OneD, const Array<OneD, NekDouble>> &pFwd,
+        [[maybe_unused]] const Array<OneD, const Array<OneD, NekDouble>> &pBwd)
     {
-        boost::ignore_unused(inarray, outarray, pFwd, pBwd);
     }
 
     virtual void v_CalcMuDmuDT(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, NekDouble> &mu, Array<OneD, NekDouble> &DmuDT)
+        [[maybe_unused]] const Array<OneD, const Array<OneD, NekDouble>>
+            &inarray,
+        [[maybe_unused]] Array<OneD, NekDouble> &mu,
+        [[maybe_unused]] Array<OneD, NekDouble> &DmuDT)
     {
-        boost::ignore_unused(inarray, mu, DmuDT);
     }
 
     virtual void v_CalcPhysDeriv(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        TensorOfArray3D<NekDouble> &qfield)
+        [[maybe_unused]] const Array<OneD, const Array<OneD, NekDouble>>
+            &inarray,
+        [[maybe_unused]] TensorOfArray3D<NekDouble> &qfield)
     {
-        boost::ignore_unused(inarray, qfield);
     }
 
     virtual void v_MinusDiffusionFluxJacPoint(
@@ -375,7 +398,8 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, DNekMatSharedPtr>> &ElmtJac);
 
-    virtual bool v_UpdateTimeStepCheck() override;
+    bool v_UpdateTimeStepCheck() override;
 };
+
 } // namespace Nektar
 #endif

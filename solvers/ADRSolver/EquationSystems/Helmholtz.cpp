@@ -34,16 +34,12 @@
 
 #include <ADRSolver/EquationSystems/Helmholtz.h>
 
-using namespace std;
-
 namespace Nektar
 {
-string Helmholtz::className1 =
+
+std::string Helmholtz::className =
     GetEquationSystemFactory().RegisterCreatorFunction("Helmholtz",
                                                        Helmholtz::create);
-string Helmholtz::className2 =
-    GetEquationSystemFactory().RegisterCreatorFunction(
-        "SteadyDiffusionReaction", Helmholtz::create);
 
 Helmholtz::Helmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
                      const SpatialDomains::MeshGraphSharedPtr &pGraph)
@@ -59,21 +55,18 @@ Helmholtz::Helmholtz(const LibUtilities::SessionReaderSharedPtr &pSession,
 void Helmholtz::v_InitObject(bool DeclareFields)
 {
     Poisson::v_InitObject(DeclareFields);
-    std::cout << "Helmholtz " << std::endl;
-}
-
-Helmholtz::~Helmholtz()
-{
 }
 
 void Helmholtz::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     Poisson::v_GenerateSummary(s);
+    SolverUtils::AddSummaryItem(s, "Lambda",
+                                m_factors[StdRegions::eFactorLambda]);
 }
 
 Array<OneD, bool> Helmholtz::v_GetSystemSingularChecks()
 {
-    if (m_factors[StdRegions::eFactorLambda] == 0)
+    if (m_factors[StdRegions::eFactorLambda] == 0.0)
     {
         return Array<OneD, bool>(m_session->GetVariables().size(), true);
     }
@@ -82,4 +75,5 @@ Array<OneD, bool> Helmholtz::v_GetSystemSingularChecks()
         return Array<OneD, bool>(m_session->GetVariables().size(), false);
     }
 }
+
 } // namespace Nektar

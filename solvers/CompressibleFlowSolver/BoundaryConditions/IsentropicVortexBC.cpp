@@ -32,11 +32,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include "IsentropicVortexBC.h"
-
-using namespace std;
 
 namespace Nektar
 {
@@ -50,8 +46,10 @@ IsentropicVortexBC::IsentropicVortexBC(
     const LibUtilities::SessionReaderSharedPtr &pSession,
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
     const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+    const Array<OneD, Array<OneD, NekDouble>> &pGridVelocity,
     const int pSpaceDim, const int bcRegion, const int cnt)
-    : CFSBndCond(pSession, pFields, pTraceNormals, pSpaceDim, bcRegion, cnt)
+    : CFSBndCond(pSession, pFields, pTraceNormals, pGridVelocity, pSpaceDim,
+                 bcRegion, cnt)
 {
 }
 
@@ -100,11 +98,9 @@ void IsentropicVortexBC::v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
 
 void IsentropicVortexBC::EvaluateIsentropicVortex(
     const Array<OneD, NekDouble> &x, const Array<OneD, NekDouble> &y,
-    const Array<OneD, NekDouble> &z, Array<OneD, Array<OneD, NekDouble>> &u,
-    NekDouble time, const int o)
+    [[maybe_unused]] const Array<OneD, NekDouble> &z,
+    Array<OneD, Array<OneD, NekDouble>> &u, NekDouble time, const int o)
 {
-    boost::ignore_unused(z);
-
     int nq = x.size();
 
     // Flow parameters

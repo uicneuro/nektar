@@ -63,12 +63,8 @@ StimulusCirc::StimulusCirc(const LibUtilities::SessionReaderSharedPtr &pSession,
     m_session = pSession;
     m_field   = pField;
     m_nq      = pField->GetTotPoints();
-
-    NekDouble chi, Cm;
-    m_session->LoadParameter("Chi", chi, 28.0);
-    m_session->LoadParameter("Cm", Cm, 0.125);
-
-    m_chiCapMembrane = chi * Cm;
+    m_chiCapMembrane =
+        m_session->GetParameter("chi") * m_session->GetParameter("Cm");
 
     if (!pXml)
     {
@@ -168,8 +164,8 @@ void StimulusCirc::v_Update(Array<OneD, Array<OneD, NekDouble>> &outarray,
 /**
  *
  */
-void StimulusCirc::v_GenerateSummary(SolverUtils::SummaryList &s)
+void StimulusCirc::v_GenerateSummary(
+    [[maybe_unused]] SolverUtils::SummaryList &s)
 {
-    boost::ignore_unused(s);
 }
 } // namespace Nektar

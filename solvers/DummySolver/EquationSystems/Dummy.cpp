@@ -35,18 +35,16 @@
 
 #include <iostream>
 
-#include <boost/core/ignore_unused.hpp>
-
 #include <DummySolver/EquationSystems/Dummy.h>
 #include <LibUtilities/BasicUtils/Timer.h>
 
-using namespace std;
-
 namespace Nektar
 {
-string Dummy::className = GetEquationSystemFactory().RegisterCreatorFunction(
-    "Dummy", Dummy::create,
-    "Dummy Equation System that only sends/receives fields");
+
+std::string Dummy::className =
+    GetEquationSystemFactory().RegisterCreatorFunction(
+        "Dummy", Dummy::create,
+        "Dummy Equation System that only sends/receives fields");
 
 Dummy::Dummy(const LibUtilities::SessionReaderSharedPtr &pSession,
              const SpatialDomains::MeshGraphSharedPtr &pGraph)
@@ -61,8 +59,6 @@ void Dummy::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
 
-    m_nanSteps = 0;
-
     m_ode.DefineOdeRhs(&Dummy::DoOdeRhs, this);
     m_ode.DefineProjection(&Dummy::DoOdeProjection, this);
 
@@ -75,7 +71,7 @@ void Dummy::v_InitObject(bool DeclareFields)
 
         ASSERTL0(vCoupling->Attribute("TYPE"),
                  "Missing TYPE attribute in Coupling");
-        string vType = vCoupling->Attribute("TYPE");
+        std::string vType = vCoupling->Attribute("TYPE");
         ASSERTL0(!vType.empty(),
                  "TYPE attribute must be non-empty in Coupling");
 
@@ -95,10 +91,41 @@ void Dummy::v_InitObject(bool DeclareFields)
 }
 
 /**
- * @brief Destructor for Dummy class.
+ * @brief Compute the right-hand side.
  */
-Dummy::~Dummy()
+void Dummy::DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                     Array<OneD, Array<OneD, NekDouble>> &outarray,
+                     [[maybe_unused]] const NekDouble time)
 {
+    int nVariables = inarray.size();
+    int nq         = GetTotPoints();
+
+    for (int i = 0; i < nVariables; ++i)
+    {
+        Vmath::Zero(nq, outarray[i], 1);
+    }
+}
+
+/**
+ * @brief Compute the projection and call the method for imposing the
+ * boundary conditions in case of discontinuous projection.
+ */
+void Dummy::DoOdeProjection(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time)
+{
+    int nvariables = inarray.size();
+    int nq         = m_fields[0]->GetNpoints();
+
+    // deep copy
+    if (inarray != outarray)
+    {
+        for (int i = 0; i < nvariables; ++i)
+        {
+            Vmath::Vcopy(nq, inarray[i], 1, outarray[i], 1);
+        }
+    }
 }
 
 /**
@@ -113,7 +140,7 @@ bool Dummy::v_PreIntegrate(int step)
         {
             numForceFields += x->GetForces().size();
         }
-        vector<string> varNames;
+        std::vector<std::string> varNames;
         Array<OneD, Array<OneD, NekDouble>> phys(m_fields.size() +
                                                  numForceFields);
         for (int i = 0; i < m_fields.size(); ++i)
@@ -128,7 +155,7 @@ bool Dummy::v_PreIntegrate(int step)
             for (int i = 0; i < x->GetForces().size(); ++i)
             {
                 phys[m_fields.size() + f + i] = x->GetForces()[i];
-                varNames.push_back("F_" + boost::lexical_cast<string>(f) + "_" +
+                varNames.push_back("F_" + std::to_string(f) + "_" +
                                    m_session->GetVariable(i));
             }
             f++;
@@ -166,7 +193,8 @@ bool Dummy::v_PostIntegrate(int step)
         timer1.Stop();
         if (m_session->DefinesCmdLineArgument("verbose"))
         {
-            cout << "Field evaluation time: " << timer1.TimePerTest(1) << endl;
+            std::cout << "Field evaluation time: " << timer1.TimePerTest(1)
+                      << std::endl;
         }
     }
 
@@ -202,7 +230,7 @@ void Dummy::v_Output()
             for (int j = 0; j < npts; ++j)
             {
                 l2err += x->GetForces()[i][j] * x->GetForces()[i][j];
-                linferr = max(linferr, fabs(x->GetForces()[i][j]));
+                linferr = std::max(linferr, fabs(x->GetForces()[i][j]));
             }
 
             m_comm->AllReduce(l2err, LibUtilities::ReduceSum);
@@ -214,56 +242,18 @@ void Dummy::v_Output()
 
             if (m_comm->TreatAsRankZero())
             {
-                cout << "L 2 error (variable "
-                     << "F_" + boost::lexical_cast<string>(f) + "_" +
-                            m_session->GetVariable(i)
-                     << ") : " << l2err << endl;
+                std::cout << "L 2 error (variable "
+                          << "F_" + std::to_string(f) + "_" +
+                                 m_session->GetVariable(i)
+                          << ") : " << l2err << std::endl;
 
-                cout << "L inf error (variable "
-                     << "F_" + boost::lexical_cast<string>(f) + "_" +
-                            m_session->GetVariable(i)
-                     << ") : " << linferr << endl;
+                std::cout << "L inf error (variable "
+                          << "F_" + std::to_string(f) + "_" +
+                                 m_session->GetVariable(i)
+                          << ") : " << linferr << std::endl;
             }
         }
         f++;
-    }
-}
-
-/**
- * @brief Compute the right-hand side.
- */
-void Dummy::DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-                     Array<OneD, Array<OneD, NekDouble>> &outarray,
-                     const NekDouble time)
-{
-    boost::ignore_unused(time);
-
-    int nVariables = inarray.size();
-    int nq         = GetTotPoints();
-
-    for (int i = 0; i < nVariables; ++i)
-    {
-        Vmath::Zero(nq, outarray[i], 1);
-    }
-}
-
-/**
- * @brief Compute the projection and call the method for imposing the
- * boundary conditions in case of discontinuous projection.
- */
-void Dummy::DoOdeProjection(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
-{
-    boost::ignore_unused(time);
-
-    int nvariables = inarray.size();
-    int nq         = m_fields[0]->GetNpoints();
-
-    // deep copy
-    for (int i = 0; i < nvariables; ++i)
-    {
-        Vmath::Vcopy(nq, inarray[i], 1, outarray[i], 1);
     }
 }
 

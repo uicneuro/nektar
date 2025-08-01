@@ -159,10 +159,10 @@ CourtemancheRamirezNattel98::~CourtemancheRamirezNattel98()
 
 void CourtemancheRamirezNattel98::v_Update(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time)
 {
-    boost::ignore_unused(time);
-    ASSERTL0(inarray.get() != outarray.get(),
+    ASSERTL0(inarray.data() != outarray.data(),
              "Must have different arrays for input and output.");
 
     // Variables

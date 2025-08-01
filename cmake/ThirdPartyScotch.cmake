@@ -74,6 +74,14 @@ IF (NEKTAR_USE_SCOTCH)
             SET(SCOTCH_C_COMPILER ${CMAKE_C_COMPILER})
         ENDIF ()
 
+        UNSET(PATCH CACHE)
+        FIND_PROGRAM(PATCH patch)
+        IF(NOT PATCH)
+            MESSAGE(FATAL_ERROR
+                "'patch' tool for modifying files not found. Cannot build boost-numpy.")
+        ENDIF()
+        MARK_AS_ADVANCED(PATCH)
+
         INCLUDE(ExternalProject)
         EXTERNALPROJECT_ADD(
             scotch-6.0.4
@@ -90,12 +98,14 @@ IF (NEKTAR_USE_SCOTCH)
             COMMAND ln -s
                 ${SCOTCH_SRC}/Make.inc/${SCOTCH_MAKE}
                 ${SCOTCH_SRC}/Makefile.inc
+            PATCH_COMMAND ${PATCH} -p0 -f < ${PROJECT_SOURCE_DIR}/cmake/thirdparty-patches/scotch-6_0_4-implicit-function.patch
             BUILD_COMMAND $(MAKE) -C ${SCOTCH_SRC}
                 "CFLAGS=-I${TPDIST}/include ${SCOTCH_CFLAGS}"
                 "LDFLAGS=-L${TPDIST}/lib ${SCOTCH_LDFLAGS}"
                 "CLIBFLAGS=-fPIC"
                 "CCP=${SCOTCH_C_COMPILER}"
                 "CCD=${SCOTCH_C_COMPILER}"
+                "YACC=bison -pscotchyy -y -b y -Wno-yacc"
                 ${SCOTCH_BUILD_TARGET}
             INSTALL_COMMAND $(MAKE) -C ${SCOTCH_SRC}
                 prefix=${TPDIST} install
@@ -110,17 +120,9 @@ IF (NEKTAR_USE_SCOTCH)
         # WHEN THIRD PARTY SCOTCH IS COMPILED WITH FLEX 2.6.3. THE PROBLEM HAS BEEN SOLVED
         # WITH FLEX 2.6.4
         IF (FLEX_VERSION STREQUAL "flex 2.6.3")
-            UNSET(PATCH CACHE)
-            FIND_PROGRAM(PATCH patch)
-            IF(NOT PATCH)
-              MESSAGE(FATAL_ERROR
-                "'patch' tool for modifying files not found. Cannot build boost-numpy.")
-            ENDIF()
-            MARK_AS_ADVANCED(PATCH)
-
             EXTERNALPROJECT_ADD_STEP(scotch-6.0.4 patch-flex
                 WORKING_DIRECTORY ${TPBUILD}/scotch-6.0.4
-                COMMAND ${PATCH} -p0 < ${CMAKE_SOURCE_DIR}/cmake/thirdparty-patches/scotch-6_0_4-flex-2_6_3-yy-compatibility.patch
+                COMMAND ${PATCH} -p0 -f < ${CMAKE_SOURCE_DIR}/cmake/thirdparty-patches/scotch-6_0_4-flex-2_6_3-yy-compatibility.patch
                 DEPENDERS configure
                 DEPENDEES patch)
         ENDIF()
@@ -147,6 +149,8 @@ IF (NEKTAR_USE_SCOTCH)
         ADD_CUSTOM_TARGET(scotch-6.0.4 ALL)
         SET(SCOTCH_CONFIG_INCLUDE_DIR ${SCOTCH_INCLUDE_DIR})
     ENDIF (THIRDPARTY_BUILD_SCOTCH)
+
+    ADD_DEPENDENCIES(thirdparty scotch-6.0.4)
 
     INCLUDE_DIRECTORIES(SYSTEM ${SCOTCH_INCLUDE_DIR} ${PTSCOTCH_INCLUDE_DIR})
 

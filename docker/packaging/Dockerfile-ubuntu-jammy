@@ -10,10 +10,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y \
         packaging-dev cmake git git-buildpackage vim \
-        libboost-thread-dev libboost-iostreams-dev libboost-filesystem-dev \
-            libboost-system-dev libboost-program-options-dev \
-            libboost-python-dev libboost-numpy-dev libboost-regex-dev \
-            libboost-timer-dev \
+        libboost-iostreams-dev libboost-system-dev libboost-program-options-dev \
         libarpack2-dev \
         libfftw3-dev \
         libhdf5-mpi-dev \
@@ -21,7 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
         libtinyxml-dev \
         mpi-default-dev \
         zlib1g-dev \
-        python3-dev python3-numpy \
+        python3-dev python3-numpy python3-pip python3-setuptools \
         libptscotch-dev \
         liboce-foundation-dev liboce-modeling-dev liboce-ocaf-dev libgl-dev \
             libtet1.5-dev libtriangle-dev \

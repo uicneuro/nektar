@@ -256,11 +256,14 @@
             <I PROPERTY="EQTYPE" VALUE="UnsteadyNavierStokes" />
             <I PROPERTY="EvolutionOperator" VALUE="Direct" />
             <I PROPERTY="Projection" VALUE="Galerkin" />
-            <I PROPERTY="TimeIntegrationMethod" VALUE="IMEXOrder3" />
             <I PROPERTY="InitialVector" VALUE="Random" />
             <I PROPERTY="Driver" VALUE="ModifiedArnoldi" />
-
         </SOLVERINFO>
+
+        <TIMEINTEGRATIONSCHEME>
+            <METHOD> IMEX </METHOD>
+            <ORDER> 3 </ORDER>
+        </TIMEINTEGRATIONSCHEME>
 
         <PARAMETERS>
             <P> TimeStep      = 0.007  </P>
@@ -318,18 +321,22 @@
             <E VAR="p" VALUE="0" />
         </FUNCTION>
 
-        <FUNCTION NAME="Unmask0">
+        <FUNCTION NAME="SelectEVCalcDomain0">
             <E VAR="C0" VALUE=" x+2" />
             <E VAR="C1" VALUE="-x-1." />
             <E VAR="C2" VALUE=" y+0.8" />
             <E VAR="C3" VALUE="-y+0.8" />
         </FUNCTION>
 
-        <FUNCTION NAME="Unmask1">
+        <FUNCTION NAME="SelectEVCalcDomain1">
             <E VAR="C0" VALUE=" x-1" />
             <E VAR="C1" VALUE="-x+2." />
             <E VAR="C2" VALUE=" y+0.8" />
             <E VAR="C3" VALUE="-y+0.8" />
+        </FUNCTION>
+
+        <FUNCTION NAME="SelectEVCalcVariables">
+            <E VAR="u" VALUE="1" />
         </FUNCTION>
 
     </CONDITIONS>

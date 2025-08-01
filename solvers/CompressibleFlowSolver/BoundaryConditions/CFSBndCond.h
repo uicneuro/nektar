@@ -44,6 +44,7 @@
 
 namespace Nektar
 {
+
 //  Forward declaration
 class CFSBndCond;
 
@@ -54,6 +55,7 @@ typedef std::shared_ptr<CFSBndCond> CFSBndCondSharedPtr;
 typedef LibUtilities::NekFactory<
     std::string, CFSBndCond, const LibUtilities::SessionReaderSharedPtr &,
     const Array<OneD, MultiRegions::ExpListSharedPtr> &,
+    const Array<OneD, Array<OneD, NekDouble>> &,
     const Array<OneD, Array<OneD, NekDouble>> &, const int, const int,
     const int>
     CFSBndCondFactory;
@@ -69,14 +71,13 @@ CFSBndCondFactory &GetCFSBndCondFactory();
 class CFSBndCond
 {
 public:
-    virtual ~CFSBndCond()
-    {
-    }
-
     /// Apply the boundary condition
     void Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
                Array<OneD, Array<OneD, NekDouble>> &physarray,
-               const NekDouble &time = 0);
+               const NekDouble &time = 0)
+    {
+        v_Apply(Fwd, physarray, time);
+    }
 
     /// Apply the Weight of boundary condition
     void ApplyBwdWeight()
@@ -91,6 +92,8 @@ protected:
     Array<OneD, MultiRegions::ExpListSharedPtr> m_fields;
     /// Trace normals
     Array<OneD, Array<OneD, NekDouble>> m_traceNormals;
+    /// Grid Velocity
+    Array<OneD, Array<OneD, NekDouble>> m_gridVelocityTrace;
     /// Space dimension
     int m_spacedim;
     /// Auxiliary object to convert variables
@@ -104,6 +107,7 @@ protected:
     NekDouble m_pInf;
     NekDouble m_pOut;
     Array<OneD, NekDouble> m_velInf;
+    NekDouble m_angVel;
 
     /// Id of the boundary region
     int m_bcRegion;
@@ -114,7 +118,10 @@ protected:
     CFSBndCond(const LibUtilities::SessionReaderSharedPtr &pSession,
                const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
                const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+               const Array<OneD, Array<OneD, NekDouble>> &pGridVelocity,
                const int pSpaceDim, const int bcRegion, const int cnt);
+
+    virtual ~CFSBndCond() = default;
 
     virtual void v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
                          Array<OneD, Array<OneD, NekDouble>> &physarray,

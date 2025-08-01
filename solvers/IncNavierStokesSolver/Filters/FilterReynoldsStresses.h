@@ -37,10 +37,9 @@
 
 #include <SolverUtils/Filters/FilterFieldConvert.h>
 
-namespace Nektar
+namespace Nektar::SolverUtils
 {
-namespace SolverUtils
-{
+
 class FilterReynoldsStresses : public FilterFieldConvert
 {
 public:
@@ -49,7 +48,7 @@ public:
     /// Creates an instance of this class
     static FilterSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
-        const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
+        const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
         const std::map<std::string, std::string> &pParams)
     {
         FilterSharedPtr p =
@@ -61,39 +60,39 @@ public:
     /// Name of the class
     static std::string className;
 
-    SOLVER_UTILS_EXPORT
-    FilterReynoldsStresses(
-        const LibUtilities::SessionReaderSharedPtr &pSession,
-        const std::weak_ptr<SolverUtils::EquationSystem> &pEquation,
-        const std::map<std::string, std::string> &pParams);
-    SOLVER_UTILS_EXPORT ~FilterReynoldsStresses();
-
 protected:
-    virtual void v_Initialise(
-        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-        const NekDouble &time) override;
-    virtual void v_FillVariablesName(
-        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields)
-        override;
-    virtual void v_ProcessSample(
-        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-        std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
-        const NekDouble &time) override;
-    virtual void v_PrepareOutput(
-        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
-        const NekDouble &time) override;
-    virtual NekDouble v_GetScale() override;
-    virtual std::string v_GetFileSuffix() override
-    {
-        return "_stress";
-    }
-
     std::vector<Array<OneD, NekDouble>> m_fields;
     std::vector<Array<OneD, NekDouble>> m_delta;
     NekDouble m_alpha;
     bool m_movAvg;
+
+    FilterReynoldsStresses(
+        const LibUtilities::SessionReaderSharedPtr &pSession,
+        const std::shared_ptr<SolverUtils::EquationSystem> &pEquation,
+        const std::map<std::string, std::string> &pParams);
+
+    ~FilterReynoldsStresses() override = default;
+
+    void v_Initialise(
+        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
+        const NekDouble &time) override;
+    void v_FillVariablesName(
+        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields)
+        override;
+    void v_ProcessSample(
+        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
+        std::vector<Array<OneD, NekDouble>> &fieldcoeffs,
+        const NekDouble &time) override;
+    void v_PrepareOutput(
+        const Array<OneD, const MultiRegions::ExpListSharedPtr> &pFields,
+        const NekDouble &time) override;
+    NekDouble v_GetScale() override;
+    std::string v_GetFileSuffix() override
+    {
+        return "_stress";
+    }
 };
-} // namespace SolverUtils
-} // namespace Nektar
+
+} // namespace Nektar::SolverUtils
 
 #endif /* NEKTAR_SOLVERUTILS_FILTERS_FILTERREYNOLDSSTRESES_H */

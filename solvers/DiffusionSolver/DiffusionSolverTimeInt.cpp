@@ -34,15 +34,13 @@
 
 #include <cstdlib>
 
-#include <boost/core/ignore_unused.hpp>
-
 #include <LibUtilities/BasicUtils/FieldIO.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <LibUtilities/TimeIntegration/TimeIntegrationSchemeOperators.h>
 
 #include <MultiRegions/ContField.h>
-#include <SpatialDomains/MeshGraph.h>
+#include <SpatialDomains/MeshGraphIO.h>
 
 using namespace std;
 using namespace Nektar;
@@ -87,7 +85,7 @@ Diffusion::Diffusion(int argc, char *argv[])
     session = LibUtilities::SessionReader::CreateInstance(argc, argv);
 
     // Read the geometry and the expansion information
-    graph = SpatialDomains::MeshGraph::Read(session);
+    graph = SpatialDomains::MeshGraphIO::Read(session);
 
     // Create Field I/O object.
     fld = LibUtilities::FieldIO::CreateDefault(session);
@@ -96,14 +94,7 @@ Diffusion::Diffusion(int argc, char *argv[])
     sessionName = session->GetSessionName();
 
     // Create time integration scheme.
-    if (session->DefinesTimeIntScheme())
-    {
-        timeInt = session->GetTimeIntScheme();
-    }
-    else
-    {
-        timeInt.method = session->GetSolverInfo("TimeIntegrationMethod");
-    }
+    timeInt = session->GetTimeIntScheme();
 
     nSteps  = session->GetParameter("NumSteps");
     delta_t = session->GetParameter("TimeStep");
@@ -148,7 +139,7 @@ void Diffusion::TimeIntegrate()
 
     for (int n = 0; n < nSteps; ++n)
     {
-        fields = intScheme->TimeIntegrate(n, delta_t, ode);
+        fields = intScheme->TimeIntegrate(n, delta_t);
     }
 
     Vmath::Vcopy(field->GetNpoints(), fields[0], 1, field->UpdatePhys(), 1);
@@ -159,11 +150,9 @@ void Diffusion::TimeIntegrate()
 
 void Diffusion::DoImplicitSolve(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time, const NekDouble lambda)
 {
-    boost::ignore_unused(time);
-
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorLambda] = 1.0 / lambda / epsilon;
 

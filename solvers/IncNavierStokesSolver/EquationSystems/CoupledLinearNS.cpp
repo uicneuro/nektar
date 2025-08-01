@@ -40,14 +40,16 @@
 #include <MultiRegions/ContField.h>
 #include <MultiRegions/GlobalLinSysDirectStaticCond.h>
 
-using namespace std;
-
 namespace Nektar
 {
 
-string CoupledLinearNS::className =
+std::string CoupledLinearNS::className =
     SolverUtils::GetEquationSystemFactory().RegisterCreatorFunction(
         "CoupledLinearisedNS", CoupledLinearNS::create);
+
+std::string CoupledLinearNS::solverTypeLookupId =
+    LibUtilities::SessionReader::RegisterEnumValue(
+        "SolverType", "CoupledLinearisedNS", eCoupledLinearisedNS);
 
 /**
  *  @class CoupledLinearNS
@@ -1335,7 +1337,7 @@ void CoupledLinearNS::SetUpCoupledMatrix(
             loc_mat = MemoryManager<DNekScalMat>::AllocateSharedPtr(one, Dh));
     }
     timer.Stop();
-    cout << "Matrix Setup Costs: " << timer.TimePerTest(1) << endl;
+    std::cout << "Matrix Setup Costs: " << timer.TimePerTest(1) << std::endl;
 
     timer.Start();
     // Set up global coupled boundary solver.
@@ -1356,35 +1358,13 @@ void CoupledLinearNS::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Solver Type", "Coupled Linearised NS");
 }
 
-void CoupledLinearNS::v_DoInitialise(void)
+void CoupledLinearNS::v_DoInitialise(bool dumpInitialConditions)
 {
     switch (m_equationType)
     {
         case eUnsteadyStokes:
         case eUnsteadyNavierStokes:
         {
-            //                LibUtilities::TimeIntegrationMethod intMethod;
-            //                std::string TimeIntStr =
-            //                m_session->GetSolverInfo("TIMEINTEGRATIONMETHOD");
-            //                int i;
-            //                for(i = 0; i < (int)
-            //                LibUtilities::SIZE_TimeIntegrationMethod; ++i)
-            //                {
-            //                    if(boost::iequals(LibUtilities::TimeIntegrationMethodMap[i],TimeIntStr))
-            //                    {
-            //                        intMethod =
-            //                        (LibUtilities::TimeIntegrationMethod)i;
-            //                        break;
-            //                    }
-            //                }
-            //
-            //                ASSERTL0(i != (int)
-            //                LibUtilities::SIZE_TimeIntegrationMethod, "Invalid
-            //                time integration type.");
-            //
-            //                m_integrationScheme =
-            //                LibUtilities::GetTimeIntegrationWrapperFactory().CreateInstance(LibUtilities::TimeIntegrationMethodMap[intMethod]);
-
             // Could defind this from IncNavierStokes class?
             m_ode.DefineOdeRhs(&CoupledLinearNS::EvaluateAdvection, this);
 
@@ -1393,7 +1373,7 @@ void CoupledLinearNS::v_DoInitialise(void)
 
             // Set initial condition using time t=0
 
-            SetInitialConditions(0.0);
+            SetInitialConditions(0.0, dumpInitialConditions);
             break;
         }
         case eSteadyStokes:
@@ -1458,8 +1438,9 @@ void CoupledLinearNS::v_DoInitialise(void)
                     m_fields[m_velocity[i]]->FwdTransLocalElmt(
                         Restart[i], m_fields[m_velocity[i]]->UpdateCoeffs());
                 }
-                cout << "Saving the RESTART file for m_kinvis = " << m_kinvis
-                     << " (<=> Re = " << 1 / m_kinvis << ")" << endl;
+                std::cout << "Saving the RESTART file for m_kinvis = "
+                          << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
+                          << std::endl;
             }
             else // We solve the Stokes Problem
             {
@@ -1470,14 +1451,15 @@ void CoupledLinearNS::v_DoInitialise(void)
                 // SolveLinearNS(m_ForcingTerm_Coeffs);
                 Solve();
                 m_initialStep = false;
-                cout << "Saving the Stokes Flow for m_kinvis = " << m_kinvis
-                     << " (<=> Re = " << 1 / m_kinvis << ")" << endl;
+                std::cout << "Saving the Stokes Flow for m_kinvis = "
+                          << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
+                          << std::endl;
             }
         }
         break;
         case eSteadyLinearisedNS:
         {
-            SetInitialConditions(0.0);
+            SetInitialConditions(0.0, dumpInitialConditions);
 
             Array<OneD, Array<OneD, NekDouble>> AdvField(m_velocity.size());
             for (size_t i = 0; i < m_velocity.size(); ++i)
@@ -1523,11 +1505,9 @@ void CoupledLinearNS::EvaluateAdvection(
 
 void CoupledLinearNS::SolveUnsteadyStokesSystem(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble aii_Dt)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time, const NekDouble aii_Dt)
 {
-    boost::ignore_unused(time);
-
     size_t i;
     Array<OneD, Array<OneD, NekDouble>> F(m_nConvectiveFields);
     NekDouble lambda = 1.0 / aii_Dt;
@@ -1612,18 +1592,21 @@ void CoupledLinearNS::v_DoSolve(void)
             Checkpoint_Output(Check);
             Check++;
 
-            cout << "We execute INITIALLY SolveSteadyNavierStokes for m_kinvis "
-                    "= "
-                 << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")" << endl;
+            std::cout
+                << "We execute INITIALLY SolveSteadyNavierStokes for m_kinvis "
+                   "= "
+                << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
+                << std::endl;
             SolveSteadyNavierStokes();
 
             while (m_kinvis > m_kinvisMin)
             {
                 if (Check == 1)
                 {
-                    cout << "We execute SolveSteadyNavierStokes for m_kinvis = "
-                         << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
-                         << endl;
+                    std::cout
+                        << "We execute SolveSteadyNavierStokes for m_kinvis = "
+                        << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
+                        << std::endl;
                     SolveSteadyNavierStokes();
                     Checkpoint_Output(Check);
                     Check++;
@@ -1633,9 +1616,10 @@ void CoupledLinearNS::v_DoSolve(void)
 
                 if (m_kinvis > m_kinvisMin)
                 {
-                    cout << "We execute SolveSteadyNavierStokes for m_kinvis = "
-                         << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
-                         << endl;
+                    std::cout
+                        << "We execute SolveSteadyNavierStokes for m_kinvis = "
+                        << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
+                        << std::endl;
                     SolveSteadyNavierStokes();
                     Checkpoint_Output(Check);
                     Check++;
@@ -1643,8 +1627,8 @@ void CoupledLinearNS::v_DoSolve(void)
             }
 
             Generaltimer.Stop();
-            cout << "\nThe total calculation time is : "
-                 << Generaltimer.TimePerTest(1) / 60 << " minute(s). \n\n";
+            std::cout << "\nThe total calculation time is : "
+                      << Generaltimer.TimePerTest(1) / 60 << " minute(s). \n\n";
 
             break;
         }
@@ -1726,9 +1710,10 @@ void CoupledLinearNS::DefineForcingTerm(void)
     }
     else
     {
-        cout << "'ForcingTerm' section has not been defined in the input file "
-                "=> forcing=0"
-             << endl;
+        std::cout
+            << "'ForcingTerm' section has not been defined in the input file "
+               "=> forcing=0"
+            << std::endl;
     }
 }
 
@@ -1757,7 +1742,7 @@ void CoupledLinearNS::SolveSteadyNavierStokes(void)
     L2Norm(delta_velocity_Phys, L2_norm);
 
     // while(max(Inf_norm[0], Inf_norm[1]) > m_tol)
-    while (max(L2_norm[0], L2_norm[1]) > m_tol)
+    while (std::max(L2_norm[0], L2_norm[1]) > m_tol)
     {
         if (m_counter == 1)
         // At the first Newton step, we use the solution of the
@@ -1814,14 +1799,15 @@ void CoupledLinearNS::SolveSteadyNavierStokes(void)
         // InfNorm(delta_velocity_Phys, Inf_norm);
         L2Norm(delta_velocity_Phys, L2_norm);
 
-        if (max(Inf_norm[0], Inf_norm[1]) > 100)
+        if (std::max(Inf_norm[0], Inf_norm[1]) > 100)
         {
-            cout << "\nThe Newton method has failed at m_kinvis = " << m_kinvis
-                 << " (<=> Re = " << 1 / m_kinvis << ")" << endl;
+            std::cout << "\nThe Newton method has failed at m_kinvis = "
+                      << m_kinvis << " (<=> Re = " << 1 / m_kinvis << ")"
+                      << std::endl;
             ASSERTL0(0, "The Newton method has failed... \n");
         }
 
-        cout << "\n";
+        std::cout << "\n";
         m_counter++;
     }
 
@@ -1835,8 +1821,8 @@ void CoupledLinearNS::SolveSteadyNavierStokes(void)
     }
 
     Newtontimer.Stop();
-    cout << "We have done " << m_counter - 1 << " iteration(s) in "
-         << Newtontimer.TimePerTest(1) / 60 << " minute(s). \n\n";
+    std::cout << "We have done " << m_counter - 1 << " iteration(s) in "
+              << Newtontimer.TimePerTest(1) / 60 << " minute(s). \n\n";
 }
 
 void CoupledLinearNS::Continuation(void)
@@ -1846,7 +1832,7 @@ void CoupledLinearNS::Continuation(void)
     Array<OneD, Array<OneD, NekDouble>> RHS(m_velocity.size());
     Array<OneD, Array<OneD, NekDouble>> u_star(m_velocity.size());
 
-    cout << "We apply the continuation method: " << endl;
+    std::cout << "We apply the continuation method: " << std::endl;
 
     for (size_t i = 0; i < m_velocity.size(); ++i)
     {
@@ -1903,7 +1889,7 @@ void CoupledLinearNS::InfNorm(Array<OneD, Array<OneD, NekDouble>> &inarray,
                 outarray[i] = inarray[i][j];
             }
         }
-        cout << "InfNorm[" << i << "] = " << outarray[i] << endl;
+        std::cout << "InfNorm[" << i << "] = " << outarray[i] << std::endl;
     }
 }
 
@@ -1917,8 +1903,8 @@ void CoupledLinearNS::L2Norm(Array<OneD, Array<OneD, NekDouble>> &inarray,
         {
             outarray[i] += inarray[i][j] * inarray[i][j];
         }
-        outarray[i] = sqrt(outarray[i]);
-        cout << "L2Norm[" << i << "] = " << outarray[i] << endl;
+        outarray[i] = std::sqrt(outarray[i]);
+        std::cout << "L2Norm[" << i << "] = " << outarray[i] << std::endl;
     }
 }
 
@@ -2006,7 +1992,7 @@ const SpatialDomains::ExpansionInfoMap &CoupledLinearNS::GenPressureExp(
         // Put new expansion into list.
         SpatialDomains::ExpansionInfoShPtr expansionElementShPtr =
             MemoryManager<SpatialDomains::ExpansionInfo>::AllocateSharedPtr(
-                expMapIter.second->m_geomShPtr, BasisVec);
+                expMapIter.second->m_geomPtr, BasisVec);
         (*returnval)[expMapIter.first] = expansionElementShPtr;
     }
 
@@ -2454,9 +2440,24 @@ void CoupledLinearNS::v_Output(void)
     }
     variables[i] = "p";
 
-    std::string outname = m_sessionName + ".fld";
-
-    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
+    if (!m_comm->IsParallelInTime())
+    {
+        WriteFld(m_sessionName + ".fld", m_fields[0], fieldcoeffs, variables);
+    }
+    else
+    {
+        std::string newdir = m_sessionName + ".pit";
+        if (!fs::is_directory(newdir))
+        {
+            fs::create_directory(newdir);
+        }
+        WriteFld(
+            newdir + "/" + m_sessionName + "_" +
+                std::to_string(m_windowPIT * m_comm->GetTimeComm()->GetSize() +
+                               m_comm->GetTimeComm()->GetRank() + 1) +
+                ".fld",
+            m_fields[0], fieldcoeffs, variables);
+    }
 }
 
 int CoupledLinearNS::v_GetForceDimension()

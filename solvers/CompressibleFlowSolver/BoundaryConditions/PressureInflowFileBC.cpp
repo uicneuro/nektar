@@ -32,11 +32,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include "PressureInflowFileBC.h"
-
-using namespace std;
 
 namespace Nektar
 {
@@ -50,8 +46,10 @@ PressureInflowFileBC::PressureInflowFileBC(
     const LibUtilities::SessionReaderSharedPtr &pSession,
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
     const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+    const Array<OneD, Array<OneD, NekDouble>> &pGridVelocity,
     const int pSpaceDim, const int bcRegion, const int cnt)
-    : CFSBndCond(pSession, pFields, pTraceNormals, pSpaceDim, bcRegion, cnt)
+    : CFSBndCond(pSession, pFields, pTraceNormals, pGridVelocity, pSpaceDim,
+                 bcRegion, cnt)
 {
     int nvariables = m_fields.size();
     // Loop over Boundary Regions for PressureInflowFileBC
@@ -70,10 +68,9 @@ PressureInflowFileBC::PressureInflowFileBC(
 
 void PressureInflowFileBC::v_Apply(
     Array<OneD, Array<OneD, NekDouble>> &Fwd,
-    Array<OneD, Array<OneD, NekDouble>> &physarray, const NekDouble &time)
+    Array<OneD, Array<OneD, NekDouble>> &physarray,
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(time);
-
     int i, j;
     int nTracePts   = m_fields[0]->GetTrace()->GetNpoints();
     int nVariables  = physarray.size();
@@ -128,8 +125,8 @@ void PressureInflowFileBC::v_Apply(
         // Get internal energy
         Array<OneD, NekDouble> tmpPressure(npts, pressure + id2);
         Array<OneD, NekDouble> rho(npts, Fwd[0] + id2);
-        Array<OneD, NekDouble> e(npts);
-        m_varConv->GetEFromRhoP(rho, tmpPressure, e);
+        Array<OneD, NekDouble> Ei(npts);
+        m_varConv->GetEFromRhoP(rho, tmpPressure, Ei);
 
         // Loop on points of m_bcRegion 'e'
         for (i = 0; i < npts; i++)
@@ -157,7 +154,7 @@ void PressureInflowFileBC::v_Apply(
                           m_fieldStorage[0][id1 + i];
                 }
 
-                rhoeb = Fwd[0][pnt] * e[i] + Ek;
+                rhoeb = Fwd[0][pnt] * Ei[i] + Ek;
 
                 (m_fields[nVariables - 1]
                      ->GetBndCondExpansions()[m_bcRegion]

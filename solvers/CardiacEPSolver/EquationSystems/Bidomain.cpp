@@ -92,8 +92,8 @@ void Bidomain::v_InitObject(bool DeclareField)
                                                 StdRegions::eVarCoeffD11,
                                                 StdRegions::eVarCoeffD22};
     std::string varName[3]                   = {"AnisotropicConductivityX",
-                              "AnisotropicConductivityY",
-                              "AnisotropicConductivityZ"};
+                                                "AnisotropicConductivityY",
+                                                "AnisotropicConductivityZ"};
 
     if (m_session->DefinesFunction("IntracellularConductivity") &&
         m_session->DefinesFunction("ExtracellularConductivity"))
@@ -157,6 +157,7 @@ void Bidomain::v_InitObject(bool DeclareField)
         m_ode.DefineImplicitSolve(&Bidomain::DoImplicitSolve, this);
     }
     m_ode.DefineOdeRhs(&Bidomain::DoOdeRhs, this);
+    m_ode.DefineProjection(&Bidomain::DoDummyProjection, this);
 }
 
 /**
@@ -174,11 +175,9 @@ Bidomain::~Bidomain()
  */
 void Bidomain::DoImplicitSolve(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble time, const NekDouble lambda)
 {
-    boost::ignore_unused(time);
-
     int nvariables = inarray.size();
     int nq         = m_fields[0]->GetNpoints();
 

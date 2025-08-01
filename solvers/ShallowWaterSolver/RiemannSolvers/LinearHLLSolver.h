@@ -39,6 +39,7 @@
 
 namespace Nektar
 {
+
 class LinearHLLSolver : public LinearSWESolver
 {
 public:
@@ -53,11 +54,11 @@ public:
 protected:
     LinearHLLSolver(const LibUtilities::SessionReaderSharedPtr &pSession);
 
-    virtual void v_PointSolve(NekDouble etaL, NekDouble uL, NekDouble vL,
-                              NekDouble dL, NekDouble etaR, NekDouble uR,
-                              NekDouble vR, NekDouble dR, NekDouble &etaf,
-                              NekDouble &uf, NekDouble &vf) override;
+    void v_PointSolve(NekDouble etaL, NekDouble uL, NekDouble vL, NekDouble dL,
+                      NekDouble etaR, NekDouble uR, NekDouble vR, NekDouble dR,
+                      NekDouble &etaf, NekDouble &uf, NekDouble &vf) override;
 };
+
 } // namespace Nektar
 
 #endif

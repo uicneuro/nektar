@@ -46,6 +46,7 @@
 #include <CardiacEPSolver/Filters/FilterCellHistoryPoints.h>
 #include <CardiacEPSolver/Filters/FilterCheckpointCellModel.h>
 
+#include <SpatialDomains/MeshGraphIO.h>
 #include <SolverUtils/Driver.h>
 #include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
 
@@ -2277,7 +2278,7 @@ void MMFNeuralEP::DoSolveMMF()
 
         // Time integration
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         m_time += m_timestep;
@@ -2521,12 +2522,12 @@ void MMFNeuralEP::ComputephieTimeMap(
     Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 0.1;
+    constexpr NekDouble Tol = 10.0 + 0.1;
 
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble phie = field[i] + 3.0;
+        const NekDouble phie = field[i] + 10.0;
         if (phie > Tol)
         {
             const NekDouble fint = fieldint[i];
@@ -2545,12 +2546,12 @@ void MMFNeuralEP::ComputerhoTimeMap(
     Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 0.001;
+    constexpr NekDouble Tol = 0.000001;
 
     #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble rho = field[i] + 0.005;
+        const NekDouble rho = field[i] + 0.002;
         if (rho > Tol)
         {
             const NekDouble fint = fieldint[i];
@@ -2908,7 +2909,7 @@ void MMFNeuralEP::DoSolvePoint()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         timer.Start();
-        fields = m_intScheme->TimeIntegrate(step, m_timestep, m_ode);
+        fields = m_intScheme->TimeIntegrate(step, m_timestep);
         timer.Stop();
 
         m_time += m_timestep;
@@ -3864,7 +3865,7 @@ int main(int argc, char *argv[])
         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
 
         // Create MeshGraph
-        graph = SpatialDomains::MeshGraph::Read(session);
+        graph1D = SpatialDomains::MeshGraphIO::Read(session);
 
         // Create driver
         session->LoadSolverInfo("Driver", vDriverModule, "Standard");

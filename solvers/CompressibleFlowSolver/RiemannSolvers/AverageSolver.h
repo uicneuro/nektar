@@ -39,6 +39,7 @@
 
 namespace Nektar
 {
+
 class AverageSolver : public CompressibleSolver
 {
 public:
@@ -53,11 +54,11 @@ public:
 protected:
     AverageSolver(const LibUtilities::SessionReaderSharedPtr &pSession);
 
-    virtual void v_ArraySolve(
-        const Array<OneD, const Array<OneD, NekDouble>> &Fwd,
-        const Array<OneD, const Array<OneD, NekDouble>> &Bwd,
-        Array<OneD, Array<OneD, NekDouble>> &flux) override final;
+    void v_ArraySolve(const Array<OneD, const Array<OneD, NekDouble>> &Fwd,
+                      const Array<OneD, const Array<OneD, NekDouble>> &Bwd,
+                      Array<OneD, Array<OneD, NekDouble>> &flux) final;
 };
+
 } // namespace Nektar
 
 #endif

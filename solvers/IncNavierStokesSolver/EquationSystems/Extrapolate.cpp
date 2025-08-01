@@ -35,10 +35,9 @@
 #include <IncNavierStokesSolver/EquationSystems/Extrapolate.h>
 #include <LibUtilities/Communication/Comm.h>
 
-using namespace std;
-
 namespace Nektar
 {
+
 NekDouble Extrapolate::StifflyStable_Betaq_Coeffs[3][3] = {
     {1.0, 0.0, 0.0}, {2.0, -1.0, 0.0}, {3.0, -3.0, 1.0}};
 NekDouble Extrapolate::StifflyStable_Alpha_Coeffs[3][3] = {
@@ -61,10 +60,6 @@ Extrapolate::Extrapolate(const LibUtilities::SessionReaderSharedPtr pSession,
 {
     m_session->LoadParameter("TimeStep", m_timestep, 0.01);
     m_comm = m_session->GetComm();
-}
-
-Extrapolate::~Extrapolate()
-{
 }
 
 std::string Extrapolate::def =
@@ -130,15 +125,16 @@ void Extrapolate::v_CalcNeumannPressureBCs(
     Array<OneD, Array<OneD, NekDouble>> BndValues(m_bnd_dim);
     Array<OneD, Array<OneD, NekDouble>> Q(m_curl_dim);
 
-    MultiRegions::ExpListSharedPtr BndElmtExp;
+    // Loop all boundary conditions
     for (n = cnt = 0; n < m_PBndConds.size(); ++n)
     {
-        // High order boundary condition;
+        // Detect higher order boundary conditions
         if ((m_hbcType[n] == eHBCNeumann) || (m_hbcType[n] == eConvectiveOBC))
         {
-            m_fields[0]->GetBndElmtExpansion(n, BndElmtExp, false);
-            int nqb = m_PBndExp[n]->GetTotPoints();
-            int nq  = BndElmtExp->GetTotPoints();
+            m_bndElmtExps[n]->SetWaveSpace(m_fields[0]->GetWaveSpace());
+            int nqb     = m_PBndExp[n]->GetTotPoints();
+            int nq      = m_bndElmtExps[n]->GetTotPoints();
+            int ncoeffs = m_PBndExp[n]->GetNcoeffs();
 
             for (int i = 0; i < m_bnd_dim; i++)
             {
@@ -165,7 +161,7 @@ void Extrapolate::v_CalcNeumannPressureBCs(
             }
 
             // CurlCurl
-            BndElmtExp->CurlCurl(Velocity, Q);
+            m_bndElmtExps[n]->CurlCurl(Velocity, Q);
 
             // Mounting advection component into the high-order condition
             for (int i = 0; i < m_bnd_dim; i++)
@@ -185,22 +181,22 @@ void Extrapolate::v_CalcNeumannPressureBCs(
             m_PBndExp[n]->NormVectorIProductWRTBase(BndValues, Pvals);
 
             // Get offset for next terms
-            cnt += m_PBndExp[n]->GetNcoeffs();
+            cnt += ncoeffs;
         }
     }
 }
 
 // do nothing unless otherwise defined.
-void Extrapolate::v_CorrectPressureBCs(const Array<OneD, NekDouble> &pressure)
+void Extrapolate::v_CorrectPressureBCs(
+    [[maybe_unused]] const Array<OneD, NekDouble> &pressure)
 {
-    boost::ignore_unused(pressure);
 }
 
 // do nothing unless otherwise defined.
-void Extrapolate::v_AddNormVelOnOBC(const int nbcoeffs, const int nreg,
-                                    Array<OneD, Array<OneD, NekDouble>> &u)
+void Extrapolate::v_AddNormVelOnOBC(
+    [[maybe_unused]] const int nbcoeffs, [[maybe_unused]] const int nreg,
+    [[maybe_unused]] Array<OneD, Array<OneD, NekDouble>> &u)
 {
-    boost::ignore_unused(nbcoeffs, nreg, u);
 }
 
 void Extrapolate::CalcOutflowBCs(
@@ -212,8 +208,6 @@ void Extrapolate::CalcOutflowBCs(
     }
 
     Array<OneD, Array<OneD, NekDouble>> Velocity(m_curl_dim);
-
-    MultiRegions::ExpListSharedPtr BndElmtExp;
     size_t cnt = 0;
 
     // Evaluate robin primitive coefficient here so they can be
@@ -226,9 +220,9 @@ void Extrapolate::CalcOutflowBCs(
         if ((m_hbcType[n] == eOBC) || (m_hbcType[n] == eConvectiveOBC))
         {
             // Get expansion with element on this boundary
-            m_fields[0]->GetBndElmtExpansion(n, BndElmtExp, false);
+            m_bndElmtExps[n]->SetWaveSpace(m_fields[0]->GetWaveSpace());
             int nqb = m_PBndExp[n]->GetTotPoints();
-            int nq  = BndElmtExp->GetTotPoints();
+            int nq  = m_bndElmtExps[n]->GetTotPoints();
 
             // Get velocity and extrapolate
             for (int i = 0; i < m_curl_dim; i++)
@@ -245,9 +239,10 @@ void Extrapolate::CalcOutflowBCs(
             {
                 for (int i = 0; i < m_curl_dim; i++)
                 {
-                    BndElmtExp->HomogeneousBwdTrans(Velocity[i], Velocity[i]);
+                    m_bndElmtExps[n]->HomogeneousBwdTrans(
+                        Velocity[i].size(), Velocity[i], Velocity[i]);
                 }
-                BndElmtExp->SetWaveSpace(false);
+                m_bndElmtExps[n]->SetWaveSpace(false);
             }
 
             // Get normal vector
@@ -267,12 +262,12 @@ void Extrapolate::CalcOutflowBCs(
             {
                 if (m_curl_dim == 2)
                 {
-                    BndElmtExp->PhysDeriv(Velocity[i], grad[0], grad[1]);
+                    m_bndElmtExps[n]->PhysDeriv(Velocity[i], grad[0], grad[1]);
                 }
                 else
                 {
-                    BndElmtExp->PhysDeriv(Velocity[i], grad[0], grad[1],
-                                          grad[2]);
+                    m_bndElmtExps[n]->PhysDeriv(Velocity[i], grad[0], grad[1],
+                                                grad[2]);
                 }
 
                 for (int j = 0; j < m_curl_dim; j++)
@@ -288,6 +283,12 @@ void Extrapolate::CalcOutflowBCs(
                     Vmath::Vvtvp(nqb, normals[j], 1, bndVal, 1, nGradUn, 1,
                                  nGradUn, 1);
                 }
+            }
+
+            // Reset WaveSpace in m_bndElmtExp[n] for next time step
+            if (m_fields[0]->GetWaveSpace())
+            {
+                m_bndElmtExps[n]->SetWaveSpace(true);
             }
 
             // Obtain u at the boundary
@@ -362,7 +363,7 @@ void Extrapolate::CalcOutflowBCs(
 
                 if (m_PBndExp[n]->GetWaveSpace())
                 {
-                    m_PBndExp[n]->HomogeneousFwdTrans(pbc, bndVal);
+                    m_PBndExp[n]->HomogeneousFwdTrans(nqb, pbc, bndVal);
                     m_PBndExp[n]->FwdTrans(bndVal,
                                            m_PBndExp[n]->UpdateCoeffs());
                 }
@@ -378,7 +379,7 @@ void Extrapolate::CalcOutflowBCs(
                 Array<OneD, NekDouble> bndCoeffs(nbcoeffs, 0.0);
                 if (m_PBndExp[n]->GetWaveSpace())
                 {
-                    m_PBndExp[n]->HomogeneousFwdTrans(pbc, bndVal);
+                    m_PBndExp[n]->HomogeneousFwdTrans(nqb, pbc, bndVal);
                     m_PBndExp[n]->IProductWRTBase(bndVal, bndCoeffs);
                 }
                 else
@@ -445,7 +446,7 @@ void Extrapolate::CalcOutflowBCs(
 
                 if (m_houtflow->m_UBndExp[i][n]->GetWaveSpace())
                 {
-                    m_houtflow->m_UBndExp[i][n]->HomogeneousFwdTrans(divU,
+                    m_houtflow->m_UBndExp[i][n]->HomogeneousFwdTrans(nqb, divU,
                                                                      divU);
                 }
 
@@ -473,14 +474,14 @@ void Extrapolate::AddPressureToOutflowBCs(NekDouble kinvis)
             int nqb = m_PBndExp[n]->GetTotPoints();
             int ncb = m_PBndExp[n]->GetNcoeffs();
 
-            m_pressure->FillBndCondFromField(n);
+            m_pressure->FillBndCondFromField(n, m_pressure->GetCoeffs());
             Array<OneD, NekDouble> pbc(nqb);
 
             m_PBndExp[n]->BwdTrans(m_PBndExp[n]->GetCoeffs(), pbc);
 
             if (m_PBndExp[n]->GetWaveSpace())
             {
-                m_PBndExp[n]->HomogeneousBwdTrans(pbc, pbc);
+                m_PBndExp[n]->HomogeneousBwdTrans(nqb, pbc, pbc);
             }
 
             Array<OneD, NekDouble> wk(nqb);
@@ -499,7 +500,8 @@ void Extrapolate::AddPressureToOutflowBCs(NekDouble kinvis)
 
                 if (m_houtflow->m_UBndExp[i][n]->GetWaveSpace())
                 {
-                    m_houtflow->m_UBndExp[i][n]->HomogeneousFwdTrans(wk, wk);
+                    m_houtflow->m_UBndExp[i][n]->HomogeneousFwdTrans(nqb, wk,
+                                                                     wk);
                 }
                 m_houtflow->m_UBndExp[i][n]->IProductWRTBase(wk, wk1);
 
@@ -607,6 +609,25 @@ void Extrapolate::RollOver(Array<OneD, Array<OneD, NekDouble>> &input)
 }
 
 /**
+ * Initialise boundary expansion lists for each domain boundary
+ * Each boundary expansion list contains all elements that touch the boundary.
+ * Construct for every boundary and not only higher-order pressure BCs.
+ */
+void Extrapolate::GenerateBndElmtExpansion(void)
+{
+    size_t n, nBndElmtExp = m_pressure->GetBndConditions().size();
+
+    // Initialise Array of pointers to BndEltmExpansion(-Lists)
+    m_bndElmtExps = Array<OneD, MultiRegions::ExpListSharedPtr>(nBndElmtExp);
+
+    // Loop n domain boundaries and initialise the boundary expansion list
+    for (n = 0; n < nBndElmtExp; ++n)
+    {
+        m_fields[0]->GetBndElmtExpansion(n, m_bndElmtExps[n], false);
+    }
+}
+
+/**
  * Initialize HOBCs
  */
 void Extrapolate::GenerateHOPBCMap(
@@ -705,8 +726,6 @@ void Extrapolate::GenerateHOPBCMap(
         m_houtflow = MemoryManager<HighOrderOutflow>::AllocateSharedPtr(
             numOutHBCPts, outHBCnumber, m_curl_dim, pSession);
 
-        MultiRegions::ExpListSharedPtr BndElmtExp;
-
         // set up boundary expansions link
         for (int i = 0; i < m_curl_dim; ++i)
         {
@@ -726,9 +745,8 @@ void Extrapolate::GenerateHOPBCMap(
                     Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(
                         m_curl_dim);
 
-                m_fields[0]->GetBndElmtExpansion(n, BndElmtExp, false);
                 int nqb = m_PBndExp[n]->GetTotPoints();
-                int nq  = BndElmtExp->GetTotPoints();
+                int nq  = m_bndElmtExps[n]->GetTotPoints();
                 for (int j = 0; j < m_curl_dim; ++j)
                 {
                     m_houtflow->m_outflowVel[cnt][j] =
@@ -953,9 +971,14 @@ std::string Extrapolate::v_GetSubStepName(void)
  */
 void Extrapolate::ExtrapolateArray(Array<OneD, Array<OneD, NekDouble>> &array)
 {
-    int nint    = min(m_pressureCalls, m_intSteps);
+    int nint    = std::min(m_pressureCalls, m_intSteps);
     int nlevels = array.size();
     int nPts    = array[0].size();
+
+    // Check integer for time levels
+    // Note that ExtrapolateArray assumes m_pressureCalls is >= 1
+    // meaning v_EvaluatePressureBCs has been called previously
+    ASSERTL0(nint > 0, "nint must be > 0 when calling ExtrapolateArray.");
 
     // Update array
     RollOver(array);
@@ -979,7 +1002,7 @@ void Extrapolate::ExtrapolateArray(Array<OneD, Array<OneD, NekDouble>> &array)
  */
 void Extrapolate::EvaluateBDFArray(Array<OneD, Array<OneD, NekDouble>> &array)
 {
-    int nint    = min(m_pressureCalls, m_intSteps);
+    int nint    = std::min(m_pressureCalls, m_intSteps);
     int nlevels = array.size();
     int nPts    = array[0].size();
 
@@ -1017,7 +1040,7 @@ void Extrapolate::v_AccelerationBDF(Array<OneD, Array<OneD, NekDouble>> &array)
         Array<OneD, NekDouble> accelerationTerm(nPts, 0.0);
         if (m_pressureCalls > 2)
         {
-            int acc_order = min(m_pressureCalls - 2, m_intSteps);
+            int acc_order = std::min(m_pressureCalls - 2, m_intSteps);
             Vmath::Smul(nPts, StifflyStable_Gamma0_Coeffs[acc_order - 1],
                         array[0], 1, accelerationTerm, 1);
 
@@ -1046,4 +1069,5 @@ void Extrapolate::CopyPressureHBCsToPbndExp(void)
         }
     }
 }
+
 } // namespace Nektar

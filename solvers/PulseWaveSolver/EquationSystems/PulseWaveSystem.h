@@ -77,9 +77,6 @@ typedef std::shared_ptr<InterfacePoint> InterfacePointShPtr;
 class PulseWaveSystem : public UnsteadySystem
 {
 public:
-    /// Destructor
-    virtual ~PulseWaveSystem();
-
     int GetNdomains()
     {
         return m_nDomains;
@@ -117,6 +114,8 @@ protected:
     // keep local copy so can be reordered in parallle
     std::map<int, SpatialDomains::CompositeMap> m_domain;
     std::vector<int> m_domOrder;
+    std::map<int, std::vector<int>> m_domainToFilterIDs;
+    std::map<int, int> m_filterToVesselID;
 
     Array<OneD, Array<OneD, NekDouble>> m_pressure;
     PulseWavePressureAreaSharedPtr m_pressureArea;
@@ -135,13 +134,15 @@ protected:
     PulseWaveSystem(const LibUtilities::SessionReaderSharedPtr &pSession,
                     const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject(bool DeclareField = false) override;
+    ~PulseWaveSystem() override = default;
+
+    void v_InitObject(bool DeclareField = false) override;
 
     /// Sets up initial conditions.
-    virtual void v_DoInitialise() override;
+    void v_DoInitialise(bool dumpInitialConditions = false) override;
 
     /// Solves an unsteady problem.
-    virtual void v_DoSolve() override;
+    void v_DoSolve() override;
 
     /// Links the subdomains
     void LinkSubdomains(
@@ -168,21 +169,21 @@ protected:
                           Array<OneD, NekDouble> &alpha);
 
     // Ouptut field information
-    virtual void v_Output(void) override;
+    void v_Output(void) override;
 
     // Checkpoint field output
     void CheckPoint_Output(const int n);
 
     /// Compute the L2 error between fields and a given exact solution.
-    virtual NekDouble v_L2Error(
+    NekDouble v_L2Error(
         unsigned int field,
         const Array<OneD, NekDouble> &exactsoln = NullNekDouble1DArray,
         bool Normalised                         = false) override;
 
     /// Compute the L_inf error between fields and a given exact solution.
-    virtual NekDouble v_LinfError(unsigned int field,
-                                  const Array<OneD, NekDouble> &exactsoln =
-                                      NullNekDouble1DArray) override;
+    NekDouble v_LinfError(unsigned int field,
+                          const Array<OneD, NekDouble> &exactsoln =
+                              NullNekDouble1DArray) override;
 
     /// Write input fields to the given filename.
     void WriteVessels(const std::string &outname);

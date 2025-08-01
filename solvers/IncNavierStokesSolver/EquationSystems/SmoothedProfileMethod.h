@@ -41,9 +41,12 @@
 
 namespace Nektar
 {
+
 class SmoothedProfileMethod : public VelocityCorrectionScheme
 {
 public:
+    friend class MemoryManager<SmoothedProfileMethod>;
+
     /// Creates an instance of this class
     static SolverUtils::EquationSystemSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -58,27 +61,6 @@ public:
 
     /// Name of class
     static std::string className;
-
-    // Constructor
-    SmoothedProfileMethod(const LibUtilities::SessionReaderSharedPtr &pSession,
-                          const SpatialDomains::MeshGraphSharedPtr &pGraph);
-
-    // Destructor
-    virtual ~SmoothedProfileMethod();
-
-    virtual void v_InitObject(bool DeclareField = true) override;
-
-    virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
-
-    // Solves the linear part of the velocity correction scheme incluiding
-    // the SPM method calculation for 'fs'
-    void SolveUnsteadyStokesSystem(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-        const NekDouble a_iixDt)
-    {
-        v_SolveUnsteadyStokesSystem(inarray, outarray, time, a_iixDt);
-    }
 
 protected:
     /// Correction pressure field for SPM
@@ -105,11 +87,22 @@ protected:
     /// Position of "AeroForcesSPM" filter in 'm_session->GetFilters()'
     int m_forcesFilter;
 
+    static std::string solverTypeLookupId;
+
+    SmoothedProfileMethod(const LibUtilities::SessionReaderSharedPtr &pSession,
+                          const SpatialDomains::MeshGraphSharedPtr &pGraph);
+
+    ~SmoothedProfileMethod() override = default;
+
+    void v_InitObject(bool DeclareField = true) override;
+
+    void v_GenerateSummary(SolverUtils::SummaryList &s) override;
+
     // Interface for 'v_SolveUnsteadyStokesSystem'
-    virtual void v_SolveUnsteadyStokesSystem(
+    void v_SolveUnsteadyStokesSystem(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, NekDouble time,
-        NekDouble a_iixDt);
+        NekDouble a_iixDt) override;
     // Sets the parameters and BCs for the Poisson equation
     void SetUpCorrectionPressure(
         const Array<OneD, const Array<OneD, NekDouble>> &fields,

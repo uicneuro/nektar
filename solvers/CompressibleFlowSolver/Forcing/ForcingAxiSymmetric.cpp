@@ -32,14 +32,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/core/ignore_unused.hpp>
-
 #include <CompressibleFlowSolver/Forcing/ForcingAxiSymmetric.h>
-
-using namespace std;
 
 namespace Nektar
 {
+
 std::string ForcingAxiSymmetric::className =
     SolverUtils::GetForcingFactory().RegisterCreatorFunction(
         "AxiSymmetric", ForcingAxiSymmetric::create,
@@ -54,10 +51,9 @@ ForcingAxiSymmetric::ForcingAxiSymmetric(
 
 void ForcingAxiSymmetric::v_InitObject(
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
-    const unsigned int &pNumForcingFields, const TiXmlElement *pForce)
+    const unsigned int &pNumForcingFields,
+    [[maybe_unused]] const TiXmlElement *pForce)
 {
-    boost::ignore_unused(pForce);
-
     int spacedim = pFields[0]->GetGraph()->GetSpaceDimension();
     int nPoints  = pFields[0]->GetTotPoints();
 
@@ -88,10 +84,6 @@ void ForcingAxiSymmetric::v_InitObject(
     }
 
     // Project m_geomFactor to solution space
-    Array<OneD, NekDouble> tmpCoeff(pFields[0]->GetNcoeffs(), 0.0);
-    pFields[0]->FwdTransLocalElmt(m_geomFactor, tmpCoeff);
-    pFields[0]->BwdTrans(tmpCoeff, m_geomFactor);
-
     m_Forcing = Array<OneD, Array<OneD, NekDouble>>(m_NumVariable);
     for (int i = 0; i < m_NumVariable; ++i)
     {
@@ -102,10 +94,9 @@ void ForcingAxiSymmetric::v_InitObject(
 void ForcingAxiSymmetric::v_Apply(
     const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
     const Array<OneD, Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble &time)
+    Array<OneD, Array<OneD, NekDouble>> &outarray,
+    [[maybe_unused]] const NekDouble &time)
 {
-    boost::ignore_unused(time);
-
     int nPoints = pFields[0]->GetTotPoints();
 
     // Get (E+p)

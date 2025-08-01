@@ -198,37 +198,43 @@ ENDMACRO()
 #
 # Arguments:
 #   - `name`: target name to construct
-#   - `SUMMARY`: a brief summary of the library
 #   - `DESCRIPTION`: a more detailed description of the library
+#   - `LINK_MODE`: mode in which to link dependencies: accepts public (default) interface or private; case insensitive
+#   - `SUMMARY`: a brief summary of the library
+#   - `TARGET_SUFFIX`: Optional suffix to attach to the target name. Allows different targets to share the same (output) `name`
 #   - `DEPENDS`: a list of components on which this target depends on
 #   - `SOURCES`: a list of source files for this target
 #   - `HEADERS`: a list of header files for this target. These will be
 #     automatically put into a `dev` package.
 #
 MACRO(ADD_NEKTAR_LIBRARY name)
-    CMAKE_PARSE_ARGUMENTS(NEKLIB "" "DESCRIPTION;SUMMARY" "DEPENDS;SOURCES;HEADERS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(NEKLIB "" "DESCRIPTION;LINK_MODE;SUMMARY;TARGET_SUFFIX" "DEPENDS;SOURCES;HEADERS" ${ARGN})
 
-    ADD_LIBRARY(${name} ${NEKTAR_LIBRARY_TYPE} ${NEKLIB_SOURCES} ${NEKLIB_HEADERS})
+    SET (NEKLIB_TARGET_NAME ${name}${NEKLIB_TARGET_SUFFIX})
+    ADD_LIBRARY(${NEKLIB_TARGET_NAME} ${NEKTAR_LIBRARY_TYPE} ${NEKLIB_SOURCES} ${NEKLIB_HEADERS})
 
     # Infer component name from lower-case library name, variables should use
     # upper-case.
-    STRING(TOLOWER ${name} NEKLIB_COMPONENT)
-    STRING(TOUPPER ${name} NEKLIB_COMPVAR)
+    STRING(TOLOWER ${NEKLIB_TARGET_NAME} NEKLIB_COMPONENT)
+    STRING(TOUPPER ${NEKLIB_TARGET_NAME} NEKLIB_COMPVAR)
 
     # Add name to a list so that we know for constructing dependencies.
-    SET(NEKTAR++_LIBRARIES ${NEKTAR++_LIBRARIES} ${name} CACHE INTERNAL "")
+    SET(NEKTAR++_LIBRARIES ${NEKTAR++_LIBRARIES} ${NEKLIB_TARGET_NAME} CACHE INTERNAL "")
 
-    SET_PROPERTY(TARGET ${name} PROPERTY FOLDER ${NEKLIB_COMPONENT})
-    SET_PROPERTY(TARGET ${name} PROPERTY VERSION ${NEKTAR_VERSION})
+    SET_PROPERTY(TARGET ${NEKLIB_TARGET_NAME} PROPERTY FOLDER ${NEKLIB_COMPONENT})
+    SET_PROPERTY(TARGET ${NEKLIB_TARGET_NAME} PROPERTY VERSION ${NEKTAR_VERSION})
+    # Output name is always ${name}, even if a suffix was used for the target name
+    SET_PROPERTY(TARGET ${NEKLIB_TARGET_NAME} PROPERTY OUTPUT_NAME ${name})
 
-    SET_COMMON_PROPERTIES(${name})
+    SET_COMMON_PROPERTIES(${NEKLIB_TARGET_NAME})
 
-    INSTALL(TARGETS ${name}
+    INSTALL(TARGETS ${NEKLIB_TARGET_NAME}
         EXPORT Nektar++Libraries
         RUNTIME DESTINATION ${NEKTAR_BIN_DIR} COMPONENT ${NEKLIB_COMPONENT} OPTIONAL
         ARCHIVE DESTINATION ${NEKTAR_LIB_DIR} COMPONENT ${NEKLIB_COMPONENT} OPTIONAL
         LIBRARY DESTINATION ${NEKTAR_LIB_DIR} COMPONENT ${NEKLIB_COMPONENT} OPTIONAL)
 
+    # Headers always installed in <include_dir>/${name} rather than <include_dir>/${NEKLIB_TARGET_NAME}
     FOREACH(HEADER ${NEKLIB_HEADERS})
         STRING(REGEX MATCH "(.*)[/\\]" DIR ${HEADER})
         INSTALL(FILES ${HEADER}
@@ -238,7 +244,21 @@ MACRO(ADD_NEKTAR_LIBRARY name)
 
     # If we have dependencies then link against them.
     IF(NEKLIB_DEPENDS)
-        TARGET_LINK_LIBRARIES(${name} LINK_PUBLIC ${NEKLIB_DEPENDS})
+        IF (NEKLIB_LINK_MODE)
+            string(TOLOWER "${NEKLIB_LINK_MODE}" link_mode)
+        ELSE()
+            set(link_mode "public")
+        ENDIF()
+
+        IF(link_mode STREQUAL "private")
+            TARGET_LINK_LIBRARIES(${NEKLIB_TARGET_NAME} PRIVATE ${NEKLIB_DEPENDS})
+        ELSEIF(link_mode STREQUAL "interface")
+            TARGET_LINK_LIBRARIES(${NEKLIB_TARGET_NAME} INTERFACE ${NEKLIB_DEPENDS})
+        ELSEIF(link_mode STREQUAL "public")
+            TARGET_LINK_LIBRARIES(${NEKLIB_TARGET_NAME} LINK_PUBLIC ${NEKLIB_DEPENDS})
+        ELSE()
+            message(FATAL_ERROR "ADD_NEKTAR_LIBRARY: Unknown link mode [${NEKLIB_LINK_MODE}] for [${NEKLIB_TARGET_NAME}]")
+        ENDIF()
     ENDIF()
 ENDMACRO()
 
@@ -258,12 +278,31 @@ ENDMACRO()
 MACRO(ADD_NEKTAR_TEST name)
     CMAKE_PARSE_ARGUMENTS(NEKTEST "LENGTHY" "" "" ${ARGN})
 
-    IF (NOT NEKTEST_LENGTHY OR NEKTAR_TEST_ALL)
+    IF ((NEKTAR_BUILD_TESTS) AND (NOT NEKTEST_LENGTHY OR NEKTAR_TEST_ALL))
         GET_FILENAME_COMPONENT(dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
         ADD_TEST(NAME ${dir}_${name}
             COMMAND Tester ${CMAKE_CURRENT_SOURCE_DIR}/Tests/${name}.tst)
     ENDIF()
 ENDMACRO(ADD_NEKTAR_TEST)
+
+#
+# ADD_NEKTAR_PERFORMANCE_TEST
+#
+# Adds a performance test with a given name.  The Test Definition File should be in a
+# subdirectory called Tests relative to the CMakeLists.txt file calling this
+# macros. The test file should be called NAME.tst, where NAME is given as a
+# parameter to this macro.
+#
+# Arguments:
+#   - `name`: name of the test file
+#
+MACRO(ADD_NEKTAR_PERFORMANCE_TEST name)
+    IF (NEKTAR_BUILD_PERFORMANCE_TESTS)
+        GET_FILENAME_COMPONENT(dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+        ADD_TEST(NAME ${dir}_${name}
+            COMMAND Tester ${CMAKE_CURRENT_SOURCE_DIR}/Tests/${name}.tst)
+    ENDIF()
+ENDMACRO(ADD_NEKTAR_PERFORMANCE_TEST)
 
 #
 # ADD_NEKPY_LIBRARY(name SOURCES src1 src2 ...)
@@ -280,16 +319,13 @@ MACRO(ADD_NEKPY_LIBRARY name)
     SET_TARGET_PROPERTIES(_${name} PROPERTIES PREFIX "")
     SET_TARGET_PROPERTIES(_${name} PROPERTIES SUFFIX ".so")
     SET_TARGET_PROPERTIES(_${name} PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/NekPy/${name})
-
-    ADD_DEPENDENCIES(_${name} boost-numpy)
+        LIBRARY_OUTPUT_DIRECTORY ${NEKPY_BASE_DIR}/NekPy/${name})
 
     # Add target link libraries.
-    TARGET_LINK_LIBRARIES(_${name}
-        ${Boost_SYSTEM_LIBRARY}
-        ${BOOST_PYTHON_LIB}
-        ${BOOST_NUMPY_LIB}
-        ${PYTHON_LIBRARIES})
+    TARGET_LINK_LIBRARIES(_${name} ${Python3_LIBRARIES})
+
+    # Make sure we build/install pybind11
+    ADD_DEPENDENCIES(_${name} pybind11)
 
     IF (NEKPY_LIBDEPENDS)
         TARGET_LINK_LIBRARIES(_${name} ${NEKPY_LIBDEPENDS})
@@ -304,7 +340,7 @@ MACRO(ADD_NEKPY_LIBRARY name)
     ENDIF()
     SET(TMPOUT "${TMPOUT}from ._${name} import *")
 
-    FILE(WRITE ${CMAKE_BINARY_DIR}/NekPy/${name}/__init__.py ${TMPOUT})
+    FILE(WRITE ${NEKPY_BASE_DIR}/NekPy/${name}/__init__.py ${TMPOUT})
 ENDMACRO()
 
 #
