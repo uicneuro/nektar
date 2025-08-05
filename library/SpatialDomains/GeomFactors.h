@@ -165,7 +165,19 @@ private:
     SPATIAL_DOMAINS_EXPORT Array<TwoD, NekDouble> ComputeDerivFactors(
         const LibUtilities::PointsKeyVector &keyTgt) const;
 
-    SPATIAL_DOMAINS_EXPORT void ComputeMovingFrames(
+    SPATIAL_DOMAINS_EXPORT void Compute1DMovingFrames(
+        const LibUtilities::PointsKeyVector &keyTgt,
+        const SpatialDomains::GeomMMF MMFdir,
+        const Array<OneD, const NekDouble> &CircCentre,
+        Array<OneD, Array<OneD, NekDouble>> &movingframes);
+
+    SPATIAL_DOMAINS_EXPORT void Compute2DMovingFrames(
+        const LibUtilities::PointsKeyVector &keyTgt,
+        const SpatialDomains::GeomMMF MMFdir,
+        const Array<OneD, const NekDouble> &CircCentre,
+        Array<OneD, Array<OneD, NekDouble>> &movingframes);
+
+    SPATIAL_DOMAINS_EXPORT void Compute3DMovingFrames(
         const LibUtilities::PointsKeyVector &keyTgt,
         const SpatialDomains::GeomMMF MMFdir,
         const Array<OneD, const NekDouble> &CircCentre,
@@ -283,7 +295,30 @@ inline void GeomFactors::GetMovingFrames(
     const Array<OneD, const NekDouble> &CircCentre,
     Array<OneD, Array<OneD, NekDouble>> &outarray)
 {
-    ComputeMovingFrames(keyTgt, MMFdir, CircCentre, outarray);
+    switch(m_expDim)
+    {
+        case 1:
+        {
+            Compute1DMovingFrames(keyTgt, MMFdir, CircCentre, outarray);
+        }
+        break;
+
+        case 2:
+        {
+            Compute2DMovingFrames(keyTgt, MMFdir, CircCentre, outarray);
+        }
+        break;
+
+        case 3:
+        {
+            //To be constructed 
+           // Compute3DMovingFrames(keyTgt, MMFdir, CircCentre, outarray);
+        }
+        break;
+
+        default:
+        break;
+    }
 }
 
 /**

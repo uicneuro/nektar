@@ -249,7 +249,9 @@ void MMFSystem::MMFInitObject(
         m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
         m_MMFdir = FindMMFdir(MMFdirStr);
 
+        std::cout << "Start Setting up moving frames" << std::endl;
         SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes); 
+        std::cout << "Ending Setting up moving frames"<< std::endl;
     }
 
     else
@@ -1097,7 +1099,7 @@ void MMFSystem::SetUpMovingFrames(
         }
     }
 
-   // CheckMovingFrames(movingframes);
+   CheckMovingFrames(movingframes);
 }
 
 SpatialDomains::GeomMMF MMFSystem::FindMMFdir(std::string MMFdirStr)
@@ -11206,6 +11208,11 @@ void MMFSystem::ComputeVarCoeff2D(
         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
         StdRegions::eVarCoeffMF3Mag};
 
+    for (int i=0; i<15; ++i)
+    {
+        varcoeff[MMFCoeffs[i]] = Array<OneD, NekDouble>(nq, 0.0);
+    }
+
     int indx;
     Array<OneD, NekDouble> tmp(nq);
     for (int k = 0; k < m_mfdim; ++k)
@@ -11215,23 +11222,18 @@ void MMFSystem::ComputeVarCoeff2D(
 
         for (int j = 0; j < m_spacedim; ++j)
         {
-            varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1, &tmp[0], 1);
             varcoeff[MMFCoeffs[indx + j]] = tmp;
-            //             &varcoeff[MMFCoeffs[indx + j]][0], 1);
+            std::cout << "k = " << k << ", j = " << j << ", tmp = " << RootMeanSquare(tmp) << std::endl;
         }
 
         // m_DivMF
-        varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-
         Array<OneD, Array<OneD, NekDouble>> DivMF;
         ComputeDivMF(m_DerivType, movingframes, DivMF);
 
         varcoeff[MMFCoeffs[indx + 3]] = DivMF[k];
-        // Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
 
         // \| e^k \|^2
-        varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
         for (int i = 0; i < m_spacedim; ++i)
         {
@@ -11239,15 +11241,13 @@ void MMFSystem::ComputeVarCoeff2D(
                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
         }
 
-        // Vmath::Vsqrt(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
-        // Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
         varcoeff[MMFCoeffs[indx + 4]] = tmp;
 
-    // std::cout << "k = " << k << ", m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[indx]])
-    //           << " , " << RootMeanSquare(varcoeff[MMFCoeffs[indx+1]]) << " , "
-    //           << RootMeanSquare(varcoeff[MMFCoeffs[indx+2]]) << " , "
-    //           << RootMeanSquare(varcoeff[MMFCoeffs[indx+3]]) << " , "
-    //           << RootMeanSquare(varcoeff[MMFCoeffs[indx+4]]) << " ) " << std::endl;
+       std::cout << "k = " << k << ", m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[indx]].GetValue())
+              << " , " << RootMeanSquare(varcoeff[MMFCoeffs[indx+1]].GetValue()) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[indx+2]].GetValue()) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[indx+3]].GetValue()) << " , "
+              << RootMeanSquare(varcoeff[MMFCoeffs[indx+4]].GetValue()) << " ) " << std::endl;
 
     }
 

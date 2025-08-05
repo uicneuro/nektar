@@ -620,6 +620,7 @@ void EquationSystem::v_InitObject(bool DeclareFields)
                         firstfield = MemoryManager<MultiRegions::DisContField>::
                             AllocateSharedPtr(m_session, m_graph,
                                               m_session->GetVariable(i));
+
                         m_fields[0] = firstfield;
                         for (i = 1; i < m_fields.size(); i++)
                         {

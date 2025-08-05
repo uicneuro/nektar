@@ -114,6 +114,7 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, NekDouble time,
         NekDouble lambda);
 
+        
     /// Computes the reaction terms \f$f(u,v)\f$ and \f$g(u,v)\f$.
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,

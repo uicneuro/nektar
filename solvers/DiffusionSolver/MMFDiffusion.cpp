@@ -36,7 +36,6 @@
 #include <iostream>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/core/ignore_unused.hpp>
 
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
@@ -85,22 +84,6 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
     Array<OneD, NekDouble> x2(nq);
 
     m_fields[0]->GetCoords(x0, x1, x2);
-
-    // m_epsvec = Array<OneD, NekDouble>(nq);
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     if(x1[i]<0)
-    //     {
-    //         m_epsvec[i] = 1.0;
-    //     }
-
-    //     else
-    //     {
-    //         m_epsvec[i] = 4.0;
-    //     }
-    // }
-
-    // std::cout << "m_epsvec = " << RootMeanSquare(m_epsvec) << std::endl;
 
     m_session->LoadParameter("d00", m_d00, 1.0);
     m_session->LoadParameter("d11", m_d11, 1.0);
@@ -261,7 +244,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         std::cout << "Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
     }
 
-    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
+    ComputeVarCoeff2D(m_movingframes, m_varcoeff);
 
     if(m_TestType==eTestPlaneEmbed)
     {
@@ -721,6 +704,8 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
 
             TestPlaneProblem(initialtime, m_varcoeff, u);
             m_fields[0]->SetPhys(u);
+
+            std::cout << "initial u = " << RootMeanSquare(u) << std::endl;
         }
         break;
 
@@ -871,11 +856,10 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
 
     m_fields[0]->GetCoords(x, y, z);
 
-    Array<OneD, NekDouble> d00(nq);
-    Array<OneD, NekDouble> d11(nq);
+    Array<OneD, NekDouble> d00(varcoeff[MMFCoeffs[4]].GetValue());
+    Array<OneD, NekDouble> d11(varcoeff[MMFCoeffs[9]].GetValue());
 
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+    std::cout << "d00 = " << RootMeanSquare(d00) << ", d11 = " << RootMeanSquare(d11) << std::endl;
 
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
@@ -1418,67 +1402,6 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
     }
 }
 
-// void MMFDiffusion::ComputeVarCoeff2D(
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-//     StdRegions::VarCoeffMap &varcoeff)
-// {
-//     int nq = GetTotPoints();
-
-//     StdRegions::VarCoeffType MMFCoeffs[15] = {
-//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-//         StdRegions::eVarCoeffMF3Mag};
-
-//     int indx;
-//     Array<OneD, NekDouble> tmp(nq);
-//     for (int k = 0; k < m_expdim; ++k)
-//     {
-//         // For Moving Frames
-//         indx = 5 * k;
-
-//         for (int j = 0; j < m_spacedim; ++j)
-//         {
-//             varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
-//             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
-//                          &varcoeff[MMFCoeffs[indx + j]][0], 1);
-//         }
-
-//         // m_DivMF
-//         varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-
-//         Array<OneD, Array<OneD, NekDouble>> DivMF;
-//         // ComputeDivMF(eCovariant, movingframes, DivMF);
-
-//         ComputeEuclideanDivMF(movingframes, DivMF);
-
-//         Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
-//         // \| e^k \|
-//         varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-//         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
-//         for (int i = 0; i < m_spacedim; ++i)
-//         {
-//             Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
-//                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-//         }
-
-//         Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
-//     }
-
-//     std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
-//               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
-
-//     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
-//               << std::endl;
-// }
-
 void MMFDiffusion::GetFluxVector(
     const Array<OneD, Array<OneD, NekDouble>> &inarray,
     const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
@@ -1643,6 +1566,7 @@ void MMFDiffusion::v_DoSolve()
     {
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep);
+        std::cout << "time = " << m_time << ", fields = " << RootMeanSquare(fields[0]) << std::endl;
         timer.Stop();
 
         m_time += m_timestep;

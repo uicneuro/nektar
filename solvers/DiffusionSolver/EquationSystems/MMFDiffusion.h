@@ -43,7 +43,7 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-
+    
 enum TestType
 {
     eTestLineX,
@@ -214,6 +214,9 @@ protected:
                                     
     void TestPlaneProblem(const NekDouble time,
                           StdRegions::VarCoeffMap &varcoeff,
+                          Array<OneD, NekDouble> &outfield);
+
+    void TestPlaneProblem(const NekDouble time,
                           Array<OneD, NekDouble> &outfield);
 
     void TestPlaneEmbedProblem(const NekDouble time,
