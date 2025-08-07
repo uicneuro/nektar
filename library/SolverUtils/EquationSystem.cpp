@@ -628,11 +628,15 @@ void EquationSystem::v_InitObject(bool DeclareFields)
                                     m_session->GetVariable(0),
                                     m_session->GetVariable(i)))
                             {
+                                                        std::cout << "HERE 3" << std::endl;
+
                                 m_fields[i] =
                                     MemoryManager<MultiRegions::DisContField>::
                                         AllocateSharedPtr(
                                             *firstfield, m_graph,
                                             m_session->GetVariable(i));
+                                      std::cout << "HERE 4" << std::endl;
+
                             }
                             else
                             {
@@ -641,6 +645,8 @@ void EquationSystem::v_InitObject(bool DeclareFields)
                                         AllocateSharedPtr(
                                             m_session, m_graph,
                                             m_session->GetVariable(i));
+                             std::cout << "HERE 5" << std::endl;
+
                             }
                         }
                     }

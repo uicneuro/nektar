@@ -1,0 +1,438 @@
+\changetocdepth {2}
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{Introduction}{xii}{chapter*.2}%
+\contentsline {part}{\partnumberline {I}Getting Started}{1}{part.1}%
+\contentsline {chapter}{\chapternumberline {1}Installation}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Installing Debian/Ubuntu Packages}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Installing Redhat/Fedora Packages}{3}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Installing from Source}{3}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Obtaining the source code}{3}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Linux}{4}{subsection.1.3.2}%
+\contentsline {subsubsection}{\numberline {1.3.2.1}Prerequisites}{4}{subsubsection.1.3.2.1}%
+\contentsline {subsubsection}{\numberline {1.3.2.2}Quick Start}{5}{subsubsection.1.3.2.2}%
+\contentsline {subsubsection}{\numberline {1.3.2.3}Detailed instructions}{5}{subsubsection.1.3.2.3}%
+\contentsline {subsection}{\numberline {1.3.3}OS X}{7}{subsection.1.3.3}%
+\contentsline {subsubsection}{\numberline {1.3.3.1}Prerequisites}{7}{subsubsection.1.3.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.3.2}Quick Start}{8}{subsubsection.1.3.3.2}%
+\contentsline {subsubsection}{\numberline {1.3.3.3}Detailed instructions}{9}{subsubsection.1.3.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Windows}{10}{subsection.1.3.4}%
+\contentsline {subsubsection}{\numberline {1.3.4.1}Detailed instructions}{11}{subsubsection.1.3.4.1}%
+\contentsline {subsection}{\numberline {1.3.5}CMake Option Reference}{14}{subsection.1.3.5}%
+\contentsline {subsubsection}{\numberline {1.3.5.1}Components}{14}{subsubsection.1.3.5.1}%
+\contentsline {chapter}{\chapternumberline {2}Mathematical Formulation}{20}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Background}{20}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Methods overview}{21}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The finite element method (FEM)}{21}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}High-order finite element methods}{21}{subsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.2.1}h-version FEM}{22}{subsubsection.2.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2.2}p-version FEM}{22}{subsubsection.2.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.2.3}hp-version FEM}{22}{subsubsection.2.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.2.4}The spectral method}{23}{subsubsection.2.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.2.5}The spectral element method}{23}{subsubsection.2.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.2.6}The spectral/hp element method}{23}{subsubsection.2.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.3}The Galerkin formulation}{23}{subsection.2.2.3}%
+\contentsline {chapter}{\chapternumberline {3}XML Session File}{25}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Geometry}{26}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Vertices}{27}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Edges}{28}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Faces}{28}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Element}{28}{subsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.1.5}Curved Edges and Faces}{29}{subsection.3.1.5}%
+\contentsline {subsection}{\numberline {3.1.6}Composites}{29}{subsection.3.1.6}%
+\contentsline {subsection}{\numberline {3.1.7}Domain}{30}{subsection.3.1.7}%
+\contentsline {section}{\numberline {3.2}Expansions}{30}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Refinements}{31}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Conditions}{33}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Parameters}{33}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Time Integration Scheme}{33}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Solver Information}{34}{subsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.3.1}Drivers}{34}{subsubsection.3.4.3.1}%
+\contentsline {subsection}{\numberline {3.4.4}Variables}{35}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}Global System Solution Algorithm}{35}{subsection.3.4.5}%
+\contentsline {subsubsection}{\numberline {3.4.5.1}\texttt {GlobalSysSoln} options}{36}{subsubsection.3.4.5.1}%
+\contentsline {subsubsection}{\numberline {3.4.5.2}Iterative options}{37}{subsubsection.3.4.5.2}%
+\contentsline {subsubsection}{\numberline {3.4.5.3}Preconditioner options}{37}{subsubsection.3.4.5.3}%
+\contentsline {subsubsection}{\numberline {3.4.5.4}SuccessiveRHS options}{38}{subsubsection.3.4.5.4}%
+\contentsline {subsubsection}{\numberline {3.4.5.5}PETSc options and configuration}{40}{subsubsection.3.4.5.5}%
+\contentsline {subsection}{\numberline {3.4.6}Boundary Regions and Conditions}{41}{subsection.3.4.6}%
+\contentsline {subsubsection}{\numberline {3.4.6.1}Dirichlet (essential) condition}{42}{subsubsection.3.4.6.1}%
+\contentsline {subsubsection}{\numberline {3.4.6.2}Neumann (natural) condition}{42}{subsubsection.3.4.6.2}%
+\contentsline {subsubsection}{\numberline {3.4.6.3}Periodic condition}{43}{subsubsection.3.4.6.3}%
+\contentsline {subsubsection}{\numberline {3.4.6.4}Time-dependent boundary conditions}{44}{subsubsection.3.4.6.4}%
+\contentsline {subsubsection}{\numberline {3.4.6.5}Boundary conditions from file}{44}{subsubsection.3.4.6.5}%
+\contentsline {subsection}{\numberline {3.4.7}Functions}{45}{subsection.3.4.7}%
+\contentsline {subsubsection}{\numberline {3.4.7.1}Remapping variable names}{46}{subsubsection.3.4.7.1}%
+\contentsline {subsubsection}{\numberline {3.4.7.2}Time-dependent file-based functions}{46}{subsubsection.3.4.7.2}%
+\contentsline {subsection}{\numberline {3.4.8}Quasi-3D approach}{47}{subsection.3.4.8}%
+\contentsline {section}{\numberline {3.5}Filters}{48}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Phase sampling}{49}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Aerodynamic forces}{49}{subsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.2.1}Extension for the SPM formulation}{50}{subsubsection.3.5.2.1}%
+\contentsline {subsection}{\numberline {3.5.3}Benchmark}{51}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Cell history points}{52}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Checkpoint cell model}{52}{subsection.3.5.5}%
+\contentsline {subsection}{\numberline {3.5.6}Checkpoint fields}{53}{subsection.3.5.6}%
+\contentsline {subsection}{\numberline {3.5.7}Electrogram}{54}{subsection.3.5.7}%
+\contentsline {subsection}{\numberline {3.5.8}Offset Phase}{54}{subsection.3.5.8}%
+\contentsline {subsection}{\numberline {3.5.9}Hilbert Transform Phase based on FFTW}{55}{subsection.3.5.9}%
+\contentsline {subsection}{\numberline {3.5.10}Error}{56}{subsection.3.5.10}%
+\contentsline {subsection}{\numberline {3.5.11}Integral}{57}{subsection.3.5.11}%
+\contentsline {subsection}{\numberline {3.5.12}Integral}{57}{subsection.3.5.12}%
+\contentsline {subsection}{\numberline {3.5.13}FieldConvert checkpoints}{58}{subsection.3.5.13}%
+\contentsline {subsection}{\numberline {3.5.14}History points}{59}{subsection.3.5.14}%
+\contentsline {subsection}{\numberline {3.5.15}Kinetic energy and enstrophy}{61}{subsection.3.5.15}%
+\contentsline {subsection}{\numberline {3.5.16}Mean values}{62}{subsection.3.5.16}%
+\contentsline {subsection}{\numberline {3.5.17}Modal energy}{62}{subsection.3.5.17}%
+\contentsline {subsection}{\numberline {3.5.18}Moving body}{63}{subsection.3.5.18}%
+\contentsline {subsection}{\numberline {3.5.19}Moving average of fields}{63}{subsection.3.5.19}%
+\contentsline {subsection}{\numberline {3.5.20}One-dimensional energy}{64}{subsection.3.5.20}%
+\contentsline {subsection}{\numberline {3.5.21}Reynolds stresses}{64}{subsection.3.5.21}%
+\contentsline {subsection}{\numberline {3.5.22}Time-averaged fields}{65}{subsection.3.5.22}%
+\contentsline {subsection}{\numberline {3.5.23}ThresholdMax}{66}{subsection.3.5.23}%
+\contentsline {subsection}{\numberline {3.5.24}ThresholdMin value}{66}{subsection.3.5.24}%
+\contentsline {subsection}{\numberline {3.5.25}Maximun/minimun fields}{66}{subsection.3.5.25}%
+\contentsline {subsection}{\numberline {3.5.26}Python script}{67}{subsection.3.5.26}%
+\contentsline {subsection}{\numberline {3.5.27}Body-fitted velocity fields}{69}{subsection.3.5.27}%
+\contentsline {subsection}{\numberline {3.5.28}Lagrangian points Tracking}{71}{subsection.3.5.28}%
+\contentsline {section}{\numberline {3.6}Forcing}{71}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Absorption}{72}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Body}{72}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Synthetic turbulence generator}{72}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}MovingReferenceFrame}{74}{subsection.3.6.4}%
+\contentsline {subsection}{\numberline {3.6.5}Programmatic}{77}{subsection.3.6.5}%
+\contentsline {subsection}{\numberline {3.6.6}Noise}{77}{subsection.3.6.6}%
+\contentsline {section}{\numberline {3.7}Coupling}{78}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}File}{78}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}Cwipi}{79}{subsection.3.7.2}%
+\contentsline {section}{\numberline {3.8}Expressions}{80}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}Variables and coordinate systems}{81}{subsection.3.8.1}%
+\contentsline {subsubsection}{\numberline {3.8.1.1}Time dependence}{83}{subsubsection.3.8.1.1}%
+\contentsline {subsubsection}{\numberline {3.8.1.2}Syntax of expressions}{83}{subsubsection.3.8.1.2}%
+\contentsline {subsubsection}{\numberline {3.8.1.3}Examples}{85}{subsubsection.3.8.1.3}%
+\contentsline {subsection}{\numberline {3.8.2}Performance considerations}{86}{subsection.3.8.2}%
+\contentsline {subsubsection}{\numberline {3.8.2.1}Pre-evaluation details}{86}{subsubsection.3.8.2.1}%
+\contentsline {subsubsection}{\numberline {3.8.2.2}Preparing expression}{87}{subsubsection.3.8.2.2}%
+\contentsline {subsubsection}{\numberline {3.8.2.3}Vectorized evaluation}{87}{subsubsection.3.8.2.3}%
+\contentsline {section}{\numberline {3.9}Movement}{88}{section.3.9}%
+\contentsline {subsection}{\numberline {3.9.1}Non-conformal meshes}{88}{subsection.3.9.1}%
+\contentsline {subsection}{\numberline {3.9.2}Sliding Mesh}{89}{subsection.3.9.2}%
+\contentsline {part}{\partnumberline {II}Preprocessing \& Postprocessing}{91}{part.2}%
+\contentsline {chapter}{\chapternumberline {4}NekMesh}{92}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Exporting a mesh from \texttt {Gmsh}\xspace }{93}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Defining physical surfaces and volumes}{93}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Converting the MSH to Nektar++ format}{94}{section.4.3}%
+\contentsline {section}{\numberline {4.4}NekMesh in NekPy}{95}{section.4.4}%
+\contentsline {section}{\numberline {4.5}NekMesh modules}{97}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Input modules}{98}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Output modules}{100}{subsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.2.1}HDF5 format}{102}{subsubsection.4.5.2.1}%
+\contentsline {subsection}{\numberline {4.5.3}Extract surfaces from a mesh}{102}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Negative Jacobian detection and histogram visualisation}{103}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Spherigon patches}{105}{subsection.4.5.5}%
+\contentsline {subsection}{\numberline {4.5.6}Periodic boundary condition alignment}{105}{subsection.4.5.6}%
+\contentsline {subsection}{\numberline {4.5.7}Boundary layer splitting}{107}{subsection.4.5.7}%
+\contentsline {subsection}{\numberline {4.5.8}High-order cylinder generation}{109}{subsection.4.5.8}%
+\contentsline {subsection}{\numberline {4.5.9}Linearisation}{109}{subsection.4.5.9}%
+\contentsline {subsection}{\numberline {4.5.10}Extracting interface between tetrahedra and prismatic elements}{110}{subsection.4.5.10}%
+\contentsline {subsection}{\numberline {4.5.11}Boundary identification}{110}{subsection.4.5.11}%
+\contentsline {subsection}{\numberline {4.5.12}Scalar function curvature}{110}{subsection.4.5.12}%
+\contentsline {subsection}{\numberline {4.5.13}Link Checking}{111}{subsection.4.5.13}%
+\contentsline {subsection}{\numberline {4.5.14}2D mesh extrusion}{111}{subsection.4.5.14}%
+\contentsline {subsection}{\numberline {4.5.15}2D mesh revolution}{111}{subsection.4.5.15}%
+\contentsline {subsection}{\numberline {4.5.16}3D mesh scaling}{111}{subsection.4.5.16}%
+\contentsline {subsection}{\numberline {4.5.17}Variational Optimisation}{112}{subsection.4.5.17}%
+\contentsline {subsection}{\numberline {4.5.18}\emph {r}-adaptation: interpolation file}{112}{subsection.4.5.18}%
+\contentsline {subsection}{\numberline {4.5.19}\emph {r}-adaptation: CAD curves}{113}{subsection.4.5.19}%
+\contentsline {subsection}{\numberline {4.5.20}Mesh Curving}{113}{subsection.4.5.20}%
+\contentsline {subsection}{\numberline {4.5.21}Mesh combine}{114}{subsection.4.5.21}%
+\contentsline {section}{\numberline {4.6}Mesh generation}{114}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Methodology}{115}{subsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.1.1}CAD Interaction}{115}{subsubsection.4.6.1.1}%
+\contentsline {subsubsection}{\numberline {4.6.1.2}Automatic specification of the mesh}{116}{subsubsection.4.6.1.2}%
+\contentsline {subsubsection}{\numberline {4.6.1.3}Linear Mesh Generation}{116}{subsubsection.4.6.1.3}%
+\contentsline {subsubsection}{\numberline {4.6.1.4}High-order Surface Generation}{117}{subsubsection.4.6.1.4}%
+\contentsline {subsubsection}{\numberline {4.6.1.5}Mesh Correction}{117}{subsubsection.4.6.1.5}%
+\contentsline {subsection}{\numberline {4.6.2}Mesh generation manual}{117}{subsection.4.6.2}%
+\contentsline {subsubsection}{\numberline {4.6.2.1}Handling 3D geometries with voids}{119}{subsubsection.4.6.2.1}%
+\contentsline {subsubsection}{\numberline {4.6.2.2}GEO format}{120}{subsubsection.4.6.2.2}%
+\contentsline {subsubsection}{\numberline {4.6.2.3}CCM format}{121}{subsubsection.4.6.2.3}%
+\contentsline {chapter}{\chapternumberline {5}FieldConvert}{123}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Basic usage}{123}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Input formats}{124}{subsection.5.1.1}%
+\contentsline {section}{\numberline {5.2}Convert .fld / .chk files into Paraview, VisIt or Tecplot format}{124}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Using the VTK library for output}{125}{subsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.1.1}High-order output}{126}{subsubsection.5.2.1.1}%
+\contentsline {subsubsection}{\numberline {5.2.1.2}Multi-block output}{126}{subsubsection.5.2.1.2}%
+\contentsline {subsubsection}{\numberline {5.2.1.3}Improved FieldConvert filter}{126}{subsubsection.5.2.1.3}%
+\contentsline {section}{\numberline {5.3}Convert field files between XML and HDF5 format}{127}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Specifying a sub-range of the mesh}{127}{section.5.4}%
+\contentsline {section}{\numberline {5.5}FieldConvert in NekPy}{128}{section.5.5}%
+\contentsline {section}{\numberline {5.6}FieldConvert modules \textit {-m}}{129}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Smooth the data: \textit {C0Projection} module}{132}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Calculate CFL number: \textit {CFL} module}{132}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}Calculate Q-Criterion: \textit {QCriterion} module}{133}{subsection.5.6.3}%
+\contentsline {subsection}{\numberline {5.6.4}Calculate $\lambda _2$: \textit {L2Criterion} module}{133}{subsection.5.6.4}%
+\contentsline {subsection}{\numberline {5.6.5}Add composite ID: \textit {addcompositeid} module}{133}{subsection.5.6.5}%
+\contentsline {subsection}{\numberline {5.6.6}Add new field: \textit {fieldfromstring} module}{133}{subsection.5.6.6}%
+\contentsline {subsection}{\numberline {5.6.7}Sum two .fld files: \textit {addFld} module}{134}{subsection.5.6.7}%
+\contentsline {subsection}{\numberline {5.6.8}Combine two .fld files containing time averages: \textit {combineAvg} module}{134}{subsection.5.6.8}%
+\contentsline {subsection}{\numberline {5.6.9}Concatenate two files: \textit {concatenate} module}{134}{subsection.5.6.9}%
+\contentsline {subsection}{\numberline {5.6.10}Count the number of DOF: \textit {dof} module}{135}{subsection.5.6.10}%
+\contentsline {subsection}{\numberline {5.6.11}Equi-spaced output of data: \textit {equispacedoutput} module}{135}{subsection.5.6.11}%
+\contentsline {subsection}{\numberline {5.6.12}Extract a boundary region: \textit {extract} module}{135}{subsection.5.6.12}%
+\contentsline {subsection}{\numberline {5.6.13}Calculate divergence: \textit {divergence} module}{136}{subsection.5.6.13}%
+\contentsline {subsection}{\numberline {5.6.14}Compute the gradient of a field: \textit {gradient} module}{136}{subsection.5.6.14}%
+\contentsline {subsection}{\numberline {5.6.15}Convert HalfMode expansion to SingleMode for further processing: \textit {halfmodetofourier} module}{136}{subsection.5.6.15}%
+\contentsline {subsection}{\numberline {5.6.16}Extract a plane from 3DH1D expansion: \textit {homplane} module}{137}{subsection.5.6.16}%
+\contentsline {subsection}{\numberline {5.6.17}Stretch a 3DH1D expansion: \textit {homstretch} module}{137}{subsection.5.6.17}%
+\contentsline {subsection}{\numberline {5.6.18}Inner Product of a single or series of fields with respect to a single or series of fields: \textit {innerproduct} module}{137}{subsection.5.6.18}%
+\contentsline {subsection}{\numberline {5.6.19}Interpolate one field to another: \textit {interpfield} module}{138}{subsection.5.6.19}%
+\contentsline {subsection}{\numberline {5.6.20}Interpolate scattered point data to a field: \textit {interppointdatatofld} module}{139}{subsection.5.6.20}%
+\contentsline {subsection}{\numberline {5.6.21}Interpolate a field to a series of points: \textit {interppoints} module}{140}{subsection.5.6.21}%
+\contentsline {subsection}{\numberline {5.6.22}Interpolate a set of points to another: \textit {interpptstopts} module}{141}{subsection.5.6.22}%
+\contentsline {subsection}{\numberline {5.6.23}Isocontour extraction: \textit {iscontour} module}{142}{subsection.5.6.23}%
+\contentsline {subsection}{\numberline {5.6.24}Show high frequency energy of the Jacobian: \textit {jacobianenergy} module}{143}{subsection.5.6.24}%
+\contentsline {subsection}{\numberline {5.6.25}Calculate mesh quality: \textit {qualitymetric} module}{143}{subsection.5.6.25}%
+\contentsline {subsection}{\numberline {5.6.26}Evaluate the mean of variables on the domain: \textit {mean} module}{144}{subsection.5.6.26}%
+\contentsline {subsection}{\numberline {5.6.27}Extract mean mode of 3DH1D expansion: \textit {meanmode} module}{144}{subsection.5.6.27}%
+\contentsline {subsection}{\numberline {5.6.28} Project point data to a field: \textit {pointdatatofld} module}{144}{subsection.5.6.28}%
+\contentsline {subsection}{\numberline {5.6.29}Print L2 and LInf norms: \textit {printfldnorms} module}{145}{subsection.5.6.29}%
+\contentsline {subsection}{\numberline {5.6.30}Removes one or more fields from .fld files: \textit {removefield} module}{145}{subsection.5.6.30}%
+\contentsline {subsection}{\numberline {5.6.31}Computes the scalar gradient: \textit {scalargrad} module}{146}{subsection.5.6.31}%
+\contentsline {subsection}{\numberline {5.6.32}Scale a given .fld: \textit {scaleinputfld} module}{146}{subsection.5.6.32}%
+\contentsline {subsection}{\numberline {5.6.33}Time-averaged shear stress metrics: \textit {shear} module}{146}{subsection.5.6.33}%
+\contentsline {subsection}{\numberline {5.6.34}Stream function of a 2D incompressible flow: \textit {streamfunction} module}{147}{subsection.5.6.34}%
+\contentsline {subsection}{\numberline {5.6.35}Boundary layer height calculation: \textit {surfdistance} module}{147}{subsection.5.6.35}%
+\contentsline {subsection}{\numberline {5.6.36}Calculate vorticity: \textit {vorticity} module}{147}{subsection.5.6.36}%
+\contentsline {subsection}{\numberline {5.6.37}Computing the wall shear stress: \textit {wss} module}{148}{subsection.5.6.37}%
+\contentsline {subsection}{\numberline {5.6.38}Calculating the shape function $\Phi $ for an SPM case: \textit {phifile} module}{148}{subsection.5.6.38}%
+\contentsline {subsection}{\numberline {5.6.39}Interpolate values for a point array: \textit {wallNormalData} module}{149}{subsection.5.6.39}%
+\contentsline {subsection}{\numberline {5.6.40}Project velocity into body-fitted coordinate system: \textit {bodyFittedVelocity} module}{151}{subsection.5.6.40}%
+\contentsline {subsection}{\numberline {5.6.41}Perform local stability analysis: \textit {localStabilityAnalysis} module}{152}{subsection.5.6.41}%
+\contentsline {subsection}{\numberline {5.6.42}Zero a homogeneous plane in wavespace: \textit {zero-homo-plane} module}{154}{subsection.5.6.42}%
+\contentsline {subsection}{\numberline {5.6.43}Manipulating meshes with FieldConvert}{154}{subsection.5.6.43}%
+\contentsline {subsection}{\numberline {5.6.44}Field averaging module}{155}{subsection.5.6.44}%
+\contentsline {subsection}{\numberline {5.6.45}Computing the spanwise power spectrum module}{155}{subsection.5.6.45}%
+\contentsline {subsection}{\numberline {5.6.46}Computing the velocity field induced by vortex filaments}{156}{subsection.5.6.46}%
+\contentsline {section}{\numberline {5.7}FieldConvert in parallel}{156}{section.5.7}%
+\contentsline {section}{\numberline {5.8}FieldConvert for parallel-in-time}{157}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Processing large files in serial}{157}{section.5.9}%
+\contentsline {subsection}{\numberline {5.9.1}Using the \textit { part-only} and \textit { part-only-overlapping} options}{157}{subsection.5.9.1}%
+\contentsline {subsection}{\numberline {5.9.2}Using the \textit {nparts} options}{158}{subsection.5.9.2}%
+\contentsline {subsection}{\numberline {5.9.3}Running in parallel with the \textit { nparts} option}{159}{subsection.5.9.3}%
+\contentsline {part}{\partnumberline {III}Solver Applications}{160}{part.3}%
+\contentsline {chapter}{\chapternumberline {6}Acoustic Solver}{161}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Synopsis}{161}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Linearized Euler Equations}{161}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Acoustic Perturbation Equations}{162}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}Usage}{163}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Session file configuration}{163}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Time Integration Scheme}{164}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Solver Info}{164}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Variables}{164}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Functions}{165}{subsection.6.3.4}%
+\contentsline {subsection}{\numberline {6.3.5}Boundary Conditions}{165}{subsection.6.3.5}%
+\contentsline {section}{\numberline {6.4}Examples}{166}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Wave Propagation in a Sheared Base Flow}{166}{subsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.1.1}Input file}{166}{subsubsection.6.4.1.1}%
+\contentsline {subsubsection}{\numberline {6.4.1.2}Running the code}{167}{subsubsection.6.4.1.2}%
+\contentsline {subsubsection}{\numberline {6.4.1.3}Results}{167}{subsubsection.6.4.1.3}%
+\contentsline {chapter}{\chapternumberline {7}Advection-Diffusion-Reaction Solver}{169}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Synopsis}{169}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Usage}{170}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Session file configuration}{170}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Time Integration Scheme}{170}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Solver Info}{170}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Parameters}{171}{subsection.7.3.3}%
+\contentsline {subsection}{\numberline {7.3.4}Functions}{171}{subsection.7.3.4}%
+\contentsline {section}{\numberline {7.4}Examples}{172}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Projection: 2D Problem}{172}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Helmholtz: Two-dimensional octagonal plane}{172}{subsection.7.4.2}%
+\contentsline {subsubsection}{\numberline {7.4.2.1}Helmholtz equation}{172}{subsubsection.7.4.2.1}%
+\contentsline {subsubsection}{\numberline {7.4.2.2}Input file}{172}{subsubsection.7.4.2.2}%
+\contentsline {subsubsection}{\numberline {7.4.2.3}Running the code}{174}{subsubsection.7.4.2.3}%
+\contentsline {subsubsection}{\numberline {7.4.2.4}Post-processing}{174}{subsubsection.7.4.2.4}%
+\contentsline {subsection}{\numberline {7.4.3}SteadyAdvectionDiffusion: 2D Problem}{174}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}SteadyAdvectionDiffusionReaction: 2D Problem}{174}{subsection.7.4.4}%
+\contentsline {subsection}{\numberline {7.4.5}UnsteadyAdvection: 1D Advection equation}{174}{subsection.7.4.5}%
+\contentsline {subsubsection}{\numberline {7.4.5.1}Advection equation}{175}{subsubsection.7.4.5.1}%
+\contentsline {subsubsection}{\numberline {7.4.5.2}Input file}{175}{subsubsection.7.4.5.2}%
+\contentsline {subsubsection}{\numberline {7.4.5.3}Running the code}{176}{subsubsection.7.4.5.3}%
+\contentsline {subsection}{\numberline {7.4.6}UnsteadyAdvectionDiffusion: Advection dominated mass transport in a pipe}{176}{subsection.7.4.6}%
+\contentsline {subsubsection}{\numberline {7.4.6.1}Background}{176}{subsubsection.7.4.6.1}%
+\contentsline {subsubsection}{\numberline {7.4.6.2}Input file}{177}{subsubsection.7.4.6.2}%
+\contentsline {subsubsection}{\numberline {7.4.6.3}Results}{179}{subsubsection.7.4.6.3}%
+\contentsline {subsection}{\numberline {7.4.7}UnsteadyDiffusion: 2D Anisotropic diffusion problem}{180}{subsection.7.4.7}%
+\contentsline {subsubsection}{\numberline {7.4.7.1}Unsteady diffusion equation}{180}{subsubsection.7.4.7.1}%
+\contentsline {subsubsection}{\numberline {7.4.7.2}Input file}{180}{subsubsection.7.4.7.2}%
+\contentsline {subsubsection}{\numberline {7.4.7.3}Running the code}{182}{subsubsection.7.4.7.3}%
+\contentsline {subsection}{\numberline {7.4.8}UnsteadyReactionDiffusion: Unsteady reaction-diffusion systems}{182}{subsection.7.4.8}%
+\contentsline {subsubsection}{\numberline {7.4.8.1}Unsteady reaction-diffusion equation}{182}{subsubsection.7.4.8.1}%
+\contentsline {subsubsection}{\numberline {7.4.8.2}Input file}{182}{subsubsection.7.4.8.2}%
+\contentsline {subsubsection}{\numberline {7.4.8.3}Running the code}{184}{subsubsection.7.4.8.3}%
+\contentsline {subsection}{\numberline {7.4.9}UnsteadyInviscidBurgers: 2D Problem}{184}{subsection.7.4.9}%
+\contentsline {subsection}{\numberline {7.4.10}UnsteadyViscousBurgers: 2D Problem}{184}{subsection.7.4.10}%
+\contentsline {chapter}{\chapternumberline {8}Cardiac Electrophysiology Solver}{185}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Synopsis}{185}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Bidomain Model}{185}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Monodomain Model}{185}{subsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.1.3}Cell Models}{186}{subsection.8.1.3}%
+\contentsline {section}{\numberline {8.2}Usage}{186}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Session file configuration}{186}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Solver Info}{186}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Parameters}{187}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Functions}{188}{subsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.3.4}Filters}{188}{subsection.8.3.4}%
+\contentsline {subsection}{\numberline {8.3.5}Stimuli}{188}{subsection.8.3.5}%
+\contentsline {subsubsection}{\numberline {8.3.5.1}Stimulus types}{188}{subsubsection.8.3.5.1}%
+\contentsline {subsubsection}{\numberline {8.3.5.2}Protocols}{189}{subsubsection.8.3.5.2}%
+\contentsline {chapter}{\chapternumberline {9}Compressible Flow Solver}{191}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Synopsis}{191}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}Euler equations}{191}{subsection.9.1.1}%
+\contentsline {subsection}{\numberline {9.1.2}Compressible Navier-Stokes equations}{192}{subsection.9.1.2}%
+\contentsline {subsection}{\numberline {9.1.3}Numerical discretisation}{192}{subsection.9.1.3}%
+\contentsline {section}{\numberline {9.2}Usage}{193}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Session file configuration}{193}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Examples}{203}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}Shock capturing}{203}{subsection.9.4.1}%
+\contentsline {subsubsection}{\numberline {9.4.1.1}Non-smooth artificial viscosity model}{203}{subsubsection.9.4.1.1}%
+\contentsline {subsubsection}{\numberline {9.4.1.2}Modal sensor}{203}{subsubsection.9.4.1.2}%
+\contentsline {subsection}{\numberline {9.4.2}Variable polynomial order}{204}{subsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.4.3}De-Aliasing Techniques}{205}{subsection.9.4.3}%
+\contentsline {subsection}{\numberline {9.4.4}Implicit solver}{206}{subsection.9.4.4}%
+\contentsline {chapter}{\chapternumberline {10}Dummy Solver}{208}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Synopsis}{208}{section.10.1}%
+\contentsline {chapter}{\chapternumberline {11}Incompressible Navier-Stokes Solver}{209}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Synopsis}{209}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}Velocity Correction Scheme}{210}{subsection.11.1.1}%
+\contentsline {subsubsection}{\numberline {11.1.1.1}Velocity Correction Scheme with a Weak Pressure formulation}{210}{subsubsection.11.1.1.1}%
+\contentsline {subsubsection}{\numberline {11.1.1.2}Implicit Velocity Correction Scheme}{211}{subsubsection.11.1.1.2}%
+\contentsline {subsubsection}{\numberline {11.1.1.3}Coordinate Transformation}{212}{subsubsection.11.1.1.3}%
+\contentsline {subsubsection}{\numberline {11.1.1.4}Substepping/subcycling the Velocity Correction Scheme}{212}{subsubsection.11.1.1.4}%
+\contentsline {subsection}{\numberline {11.1.2}Immersed Boundary Methods: Smoothed Profile Method}{213}{subsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.1.3}Linear Stability Analysis}{215}{subsection.11.1.3}%
+\contentsline {subsubsection}{\numberline {11.1.3.1}Direct stability analysis}{216}{subsubsection.11.1.3.1}%
+\contentsline {subsubsection}{\numberline {11.1.3.2}Adjoint Stability Analysis}{217}{subsubsection.11.1.3.2}%
+\contentsline {subsubsection}{\numberline {11.1.3.3}Transient Growth Analysis}{218}{subsubsection.11.1.3.3}%
+\contentsline {subsection}{\numberline {11.1.4}Steady-state solver using Selective Frequency Damping}{219}{subsection.11.1.4}%
+\contentsline {subsection}{\numberline {11.1.5}Direct solver (coupled approach)}{219}{subsection.11.1.5}%
+\contentsline {section}{\numberline {11.2}Usage}{220}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Setting up the Simulation}{222}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}Expansions and Approximation Spaces}{222}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Governing Equation}{224}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}Solution Algorithms}{224}{subsection.11.3.3}%
+\contentsline {subsection}{\numberline {11.3.4}TimeIntegrationScheme}{225}{subsection.11.3.4}%
+\contentsline {subsection}{\numberline {11.3.5}Stabilisation Techniques}{227}{subsection.11.3.5}%
+\contentsline {subsubsection}{\numberline {11.3.5.1}Dealiasing}{228}{subsubsection.11.3.5.1}%
+\contentsline {subsubsection}{\numberline {11.3.5.2}Spectral Vanishing Viscousity}{228}{subsubsection.11.3.5.2}%
+\contentsline {subsubsection}{\numberline {11.3.5.3}GJPStabilisation}{229}{subsubsection.11.3.5.3}%
+\contentsline {subsection}{\numberline {11.3.6}Simulation Parameters}{230}{subsection.11.3.6}%
+\contentsline {subsection}{\numberline {11.3.7}Boundary conditions}{231}{subsection.11.3.7}%
+\contentsline {subsubsection}{\numberline {11.3.7.1}Pressure boundary conditions}{231}{subsubsection.11.3.7.1}%
+\contentsline {subsubsection}{\numberline {11.3.7.2}Outflow boundary conditions}{231}{subsubsection.11.3.7.2}%
+\contentsline {subsubsection}{\numberline {11.3.7.3}Womersley Boundary Condition}{233}{subsubsection.11.3.7.3}%
+\contentsline {subsection}{\numberline {11.3.8}Forcing}{235}{subsection.11.3.8}%
+\contentsline {subsubsection}{\numberline {11.3.8.1}MovingBody}{235}{subsubsection.11.3.8.1}%
+\contentsline {subsection}{\numberline {11.3.9}Filters}{237}{subsection.11.3.9}%
+\contentsline {section}{\numberline {11.4}Smoothed Profile Method: Session file configuration}{237}{section.11.4}%
+\contentsline {section}{\numberline {11.5}Session file configuration: Linear stability analysis}{239}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}Solver Info}{239}{subsection.11.5.1}%
+\contentsline {subsection}{\numberline {11.5.2}Parameters}{240}{subsection.11.5.2}%
+\contentsline {subsection}{\numberline {11.5.3}Functions}{241}{subsection.11.5.3}%
+\contentsline {section}{\numberline {11.6}Session file configuration: Steady-state solver}{242}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}Execution of the classical steady-state solver}{243}{subsection.11.6.1}%
+\contentsline {subsubsection}{\numberline {11.6.1.1}Solver Info}{243}{subsubsection.11.6.1.1}%
+\contentsline {subsubsection}{\numberline {11.6.1.2}Parameters}{243}{subsubsection.11.6.1.2}%
+\contentsline {subsection}{\numberline {11.6.2}Execution of the adaptive steady-state solver}{243}{subsection.11.6.2}%
+\contentsline {section}{\numberline {11.7}Session file configuration: Coordinate transformations}{244}{section.11.7}%
+\contentsline {subsection}{\numberline {11.7.1}Solver Info}{244}{subsection.11.7.1}%
+\contentsline {subsection}{\numberline {11.7.2}Parameters}{245}{subsection.11.7.2}%
+\contentsline {subsection}{\numberline {11.7.3}Mapping}{245}{subsection.11.7.3}%
+\contentsline {subsection}{\numberline {11.7.4}Functions}{246}{subsection.11.7.4}%
+\contentsline {subsection}{\numberline {11.7.5}Boundary conditions}{246}{subsection.11.7.5}%
+\contentsline {section}{\numberline {11.8}Session file configuration: Adaptive polynomial order}{247}{section.11.8}%
+\contentsline {subsection}{\numberline {11.8.1}Solver Info}{247}{subsection.11.8.1}%
+\contentsline {subsection}{\numberline {11.8.2}Parameters}{247}{subsection.11.8.2}%
+\contentsline {subsection}{\numberline {11.8.3}Functions}{248}{subsection.11.8.3}%
+\contentsline {subsection}{\numberline {11.8.4}Restarting the simulation}{248}{subsection.11.8.4}%
+\contentsline {section}{\numberline {11.9}Advecting extra scalar fields}{248}{section.11.9}%
+\contentsline {section}{\numberline {11.10}Imposing a constant flowrate}{251}{section.11.10}%
+\contentsline {section}{\numberline {11.11}Examples}{252}{section.11.11}%
+\contentsline {subsection}{\numberline {11.11.1}Kovasznay Flow 2D}{252}{subsection.11.11.1}%
+\contentsline {subsubsection}{\numberline {11.11.1.1}Input file}{252}{subsubsection.11.11.1.1}%
+\contentsline {subsubsection}{\numberline {11.11.1.2}Running the simulation}{254}{subsubsection.11.11.1.2}%
+\contentsline {subsection}{\numberline {11.11.2}Kovasznay Flow 2D using high-order outflow boundary conditions}{255}{subsection.11.11.2}%
+\contentsline {subsubsection}{\numberline {11.11.2.1}Running the simulation}{256}{subsubsection.11.11.2.1}%
+\contentsline {subsection}{\numberline {11.11.3}Laminar Channel Flow 2D}{257}{subsection.11.11.3}%
+\contentsline {subsubsection}{\numberline {11.11.3.1}Input file}{257}{subsubsection.11.11.3.1}%
+\contentsline {subsubsection}{\numberline {11.11.3.2}Running the solver}{258}{subsubsection.11.11.3.2}%
+\contentsline {subsection}{\numberline {11.11.4}Laminar Channel Flow 3D}{258}{subsection.11.11.4}%
+\contentsline {subsection}{\numberline {11.11.5}Laminar Channel Flow Quasi-3D}{260}{subsection.11.11.5}%
+\contentsline {subsubsection}{\numberline {11.11.5.1}Input file}{261}{subsubsection.11.11.5.1}%
+\contentsline {subsubsection}{\numberline {11.11.5.2}Running the solver}{261}{subsubsection.11.11.5.2}%
+\contentsline {subsection}{\numberline {11.11.6}2D biglobal/direct stability analysis of the channel flow}{262}{subsection.11.11.6}%
+\contentsline {subsection}{\numberline {11.11.7}2D adjoint stability analysis of the channel flow}{266}{subsection.11.11.7}%
+\contentsline {subsection}{\numberline {11.11.8}2D Transient Growth analysis of a flow past a backward-facing step}{270}{subsection.11.11.8}%
+\contentsline {chapter}{\chapternumberline {12}Linear elasticity solver}{274}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Synopsis}{274}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}The linear elasticity equations}{274}{subsection.12.1.1}%
+\contentsline {section}{\numberline {12.2}Usage}{275}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Session file configuration}{275}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}Solver Info}{275}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}Parameters}{276}{subsection.12.3.2}%
+\contentsline {section}{\numberline {12.4}Examples}{276}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}L-shaped domain}{276}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}Boundary layer deformation}{277}{subsection.12.4.2}%
+\contentsline {chapter}{\chapternumberline {13}Pulse Wave Solver}{279}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Synopsis}{279}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Usage}{280}{section.13.2}%
+\contentsline {section}{\numberline {13.3}Session file configuration}{280}{section.13.3}%
+\contentsline {subsection}{\numberline {13.3.1}Pulse Wave Solver mesh connectivity}{280}{subsection.13.3.1}%
+\contentsline {subsection}{\numberline {13.3.2}Time Integration Scheme}{282}{subsection.13.3.2}%
+\contentsline {subsection}{\numberline {13.3.3}Session Info}{282}{subsection.13.3.3}%
+\contentsline {subsection}{\numberline {13.3.4}Parameters}{283}{subsection.13.3.4}%
+\contentsline {subsection}{\numberline {13.3.5}Boundary conditions}{283}{subsection.13.3.5}%
+\contentsline {paragraph}{\numberline {13.3.5.0.1}Inlet boundary condition:~}{284}{paragraph.13.3.5.0.1}%
+\contentsline {paragraph}{\numberline {13.3.5.0.2}Terminal boundary conditions:~}{284}{paragraph.13.3.5.0.2}%
+\contentsline {subsection}{\numberline {13.3.6}Functions}{284}{subsection.13.3.6}%
+\contentsline {section}{\numberline {13.4}Examples}{285}{section.13.4}%
+\contentsline {subsection}{\numberline {13.4.1}Human Vascular Network}{285}{subsection.13.4.1}%
+\contentsline {subsection}{\numberline {13.4.2}Stented Artery}{290}{subsection.13.4.2}%
+\contentsline {paragraph}{\numberline {13.4.2.0.1}Geometry:~}{291}{paragraph.13.4.2.0.1}%
+\contentsline {paragraph}{\numberline {13.4.2.0.2}Expansion:~}{292}{paragraph.13.4.2.0.2}%
+\contentsline {paragraph}{\numberline {13.4.2.0.3}Time Integration Scheme:~}{292}{paragraph.13.4.2.0.3}%
+\contentsline {paragraph}{\numberline {13.4.2.0.4}Solver Information:~}{292}{paragraph.13.4.2.0.4}%
+\contentsline {paragraph}{\numberline {13.4.2.0.5}Parameters:~}{292}{paragraph.13.4.2.0.5}%
+\contentsline {paragraph}{\numberline {13.4.2.0.6}Boundary conditions:~}{293}{paragraph.13.4.2.0.6}%
+\contentsline {paragraph}{\numberline {13.4.2.0.7}Functions:~}{294}{paragraph.13.4.2.0.7}%
+\contentsline {subsubsection}{\numberline {13.4.2.1}Simulation}{294}{subsubsection.13.4.2.1}%
+\contentsline {subsubsection}{\numberline {13.4.2.2}Results}{294}{subsubsection.13.4.2.2}%
+\contentsline {section}{\numberline {13.5}Further Information}{295}{section.13.5}%
+\contentsline {section}{\numberline {13.6}Future Development}{295}{section.13.6}%
+\contentsline {section}{\numberline {13.7}References}{296}{section.13.7}%
+\contentsline {chapter}{\chapternumberline {14}Shallow Water Solver}{297}{chapter.14}%
+\contentsline {section}{\numberline {14.1}Synopsis}{297}{section.14.1}%
+\contentsline {subsection}{\numberline {14.1.1}The Shallow Water Equations}{297}{subsection.14.1.1}%
+\contentsline {section}{\numberline {14.2}Usage}{298}{section.14.2}%
+\contentsline {section}{\numberline {14.3}Session file configuration}{298}{section.14.3}%
+\contentsline {subsection}{\numberline {14.3.1}Time Integration Scheme}{298}{subsection.14.3.1}%
+\contentsline {subsection}{\numberline {14.3.2}Solver Info}{298}{subsection.14.3.2}%
+\contentsline {subsection}{\numberline {14.3.3}Parameters}{298}{subsection.14.3.3}%
+\contentsline {subsection}{\numberline {14.3.4}Functions}{298}{subsection.14.3.4}%
+\contentsline {section}{\numberline {14.4}Examples}{299}{section.14.4}%
+\contentsline {subsection}{\numberline {14.4.1}Rossby modon case}{299}{subsection.14.4.1}%
+\contentsline {subsubsection}{\numberline {14.4.1.1}Input Options}{299}{subsubsection.14.4.1.1}%
+\contentsline {subsubsection}{\numberline {14.4.1.2}Running the code}{300}{subsubsection.14.4.1.2}%
+\contentsline {subsubsection}{\numberline {14.4.1.3}Post-proceesing}{300}{subsubsection.14.4.1.3}%
+\contentsline {part}{\partnumberline {IV}Reference}{301}{part.4}%
+\contentsline {chapter}{\chapternumberline {15}Optimisation}{302}{chapter.15}%
+\contentsline {section}{\numberline {15.1}Collections and MatrixFree operations}{302}{section.15.1}%
+\contentsline {subsection}{\numberline {15.1.1}Automatic tuning and the --write-opt-file command line option}{303}{subsection.15.1.1}%
+\contentsline {subsection}{\numberline {15.1.2}Manually selecting the COLLECTIONS section}{304}{subsection.15.1.2}%
+\contentsline {subsubsection}{\numberline {15.1.2.1}Default implementation}{304}{subsubsection.15.1.2.1}%
+\contentsline {subsubsection}{\numberline {15.1.2.2}Auto-tuning}{304}{subsubsection.15.1.2.2}%
+\contentsline {subsection}{\numberline {15.1.3}Collection size}{305}{subsection.15.1.3}%
+\contentsline {chapter}{\chapternumberline {16}Command-line Options}{306}{chapter.16}%
+\contentsline {chapter}{\chapternumberline {17}Frequently Asked Questions}{309}{chapter.17}%
+\contentsline {section}{\numberline {17.1}Compilation and Testing}{309}{section.17.1}%
+\contentsline {section}{\numberline {17.2}Usage}{311}{section.17.2}%

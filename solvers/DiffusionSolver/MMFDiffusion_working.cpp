@@ -35,13 +35,12 @@
 #include <iomanip>
 #include <iostream>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/core/ignore_unused.hpp>
-
 #include <LibUtilities/BasicUtils/FieldIO.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <MultiRegions/ContField.h>
 #include <SpatialDomains/MeshGraphIO.h>
+
+#include <boost/algorithm/string.hpp>
 
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
@@ -50,13 +49,12 @@
 
 #include <boost/math/special_functions/spherical_harmonic.hpp>
 using namespace std;
-using namespace Nektar::SolverUtils;
 using namespace Nektar;
 
 namespace Nektar
 {
 string MMFDiffusion::className =
-    SolverUtils::GetEquationSystemFactory().RegisterCreatorFunction(
+      GetEquationSystemFactory().RegisterCreatorFunction(
         "MMFDiffusion", MMFDiffusion::create, "MMFDiffusion equation.");
 
 MMFDiffusion::MMFDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
@@ -68,14 +66,25 @@ MMFDiffusion::MMFDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
 void MMFDiffusion::v_InitObject(bool DeclareFields)
 {
     UnsteadySystem::v_InitObject(DeclareFields);
-    
-    int nq    = m_fields[0]->GetNpoints();
-    int nvar  = m_fields.size();
 
-    // AniStrength for e^1 and e^2
+    const int nq            = m_fields[0]->GetNpoints();
+
+    // Step 1: Load parameters
     m_session->LoadParameter("AniStrength", m_AniStrength, 1.0);
     m_session->LoadParameter("Helmtau", m_Helmtau, 1.0);
     m_session->LoadParameter("EmbededPlane", m_EmbededPlane, 0);
+    m_session->LoadParameter("d00", m_d00, 1.0);
+    m_session->LoadParameter("d11", m_d11, 1.0);
+    m_session->LoadParameter("d22", m_d22, 1.0);
+    m_session->LoadParameter("frequency", m_frequency, m_pi);
+    m_session->LoadParameter("InitPtx", m_InitPtx, 0.0);
+    m_session->LoadParameter("InitPty", m_InitPty, 0.0);
+    m_session->LoadParameter("InitPtz", m_InitPtz, 0.0);
+
+    // Dummy anisotropy setup
+    Array<OneD, Array<OneD, NekDouble>> dummyAniso(2);
+    dummyAniso[0] = Array<OneD, NekDouble>(1, 1.0);
+    dummyAniso[1] = Array<OneD, NekDouble>(1, 1.0);
 
     // Diffusivity coefficient for e^j
     m_epsilon = Array<OneD, NekDouble>(m_spacedim);
@@ -89,74 +98,62 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
 
     m_fields[0]->GetCoords(x0, x1, x2);
 
-    // m_epsvec = Array<OneD, NekDouble>(nq);
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     if(x1[i]<0)
-    //     {
-    //         m_epsvec[i] = 1.0;
-    //     }
+    m_d00vec = Array<OneD, NekDouble>(nq, m_d00);
+    m_d11vec = Array<OneD, NekDouble>(nq, m_d11);
 
-    //     else
-    //     {
-    //         m_epsvec[i] = 4.0;
-    //     }
-    // }
-
-    // std::cout << "m_epsvec = " << RootMeanSquare(m_epsvec) << std::endl;
-
-    m_session->LoadParameter("d00", m_d00, 1.0);
-    m_session->LoadParameter("d11", m_d11, 1.0);
-    m_session->LoadParameter("d22", m_d22, 1.0);
-
-    // Diffusivity coefficient for u^j
-    m_epsu = Array<OneD, NekDouble>(nvar + 1);
-    m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
-    m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
-
-    m_session->LoadParameter("frequency", m_frequency, m_pi);
-
-    m_session->LoadParameter("InitPtx", m_InitPtx, 0.0);
-    m_session->LoadParameter("InitPty", m_InitPty, 0.0);
-    m_session->LoadParameter("InitPtz", m_InitPtz, 0.0);
-
-    int shapedim = m_fields[0]->GetShapeDimension();
-    Array<OneD, Array<OneD, NekDouble>> Anisotropy(shapedim);
-    for (int j = 0; j < shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> Anisotropy(2);
+    Anisotropy[0] = Array<OneD, NekDouble>(nq);
+    Anisotropy[1] = Array<OneD, NekDouble>(nq);
+    for (int i = 0; i < nq; ++i)
     {
-        Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
+        Anisotropy[0][i] = sqrt(m_d00vec[i]);
+        Anisotropy[1][i] = sqrt(m_d11vec[i]);
     }
 
-    if (m_session->DefinesParameter("d00"))
-    {
-        Array<OneD, NekDouble> x0(nq);
-        Array<OneD, NekDouble> x1(nq);
-        Array<OneD, NekDouble> x2(nq);
+    // Diffusivity coefficient for u^j
+    // m_epsu = Array<OneD, NekDouble>(nvar + 1);
+    // m_session->LoadParameter("epsu0", m_epsu[0], 1.0);
+    // m_session->LoadParameter("epsu1", m_epsu[1], 1.0);
 
-        m_fields[0]->GetCoords(x0, x1, x2);
+    // int shapedim = m_fields[0]->GetShapeDimension();
+    // Array<OneD, Array<OneD, NekDouble>> Anisotropy(shapedim);
+    // for (int j = 0; j < shapedim; ++j)
+    // {
+    //     Anisotropy[j] = Array<OneD, NekDouble>(nq, 1.0);
+    // }
 
-        // m_varcoeffXYZ[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
-        m_d00vec = Array<OneD, NekDouble>(nq);
+    // if (m_session->DefinesParameter("d00"))
+    // {
+    //     Array<OneD, NekDouble> x0(nq);
+    //     Array<OneD, NekDouble> x1(nq);
+    //     Array<OneD, NekDouble> x2(nq);
 
-        int index;
+    //     m_fields[0]->GetCoords(x0, x1, x2);
 
-            for (int i=0; i<nq; ++i)
-            {
-                m_d00vec[i] = m_d00;
-                // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
+    //    //  m_varcoeffXYZ[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq);
+    //     m_d00vec = Array<OneD, NekDouble>(nq);
 
-                Anisotropy[0][i] = sqrt(m_d00vec[i]);
-             //   m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
-            }
+    //     int index = 0;
 
-        for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
-            {
-                for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-                    {
-                        index = m_fields[0]->GetPhys_Offset(i) + j;
-                    }
-                    std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
-            }
+    //         for (int i=0; i<nq; ++i)
+    //         {
+    //             m_d00vec[i] = m_d00;
+    //             // m_d00vec[i] = sqrt(m_d00) * ( 2.0 + sin(m_frequency * x0[i]) );
+
+    //             Anisotropy[0][i] = sqrt(m_d00vec[i]);
+    //           //  m_varcoeffXYZ[StdRegions::eVarCoeffD00][i] = m_d00vec[i];
+    //         }
+
+    //       //  m_varcoeffXYZ[StdRegions::eVarCoeffD00] = m_d00vec;
+
+    //     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
+    //         {
+    //             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+    //                 {
+    //                     index = m_fields[0]->GetPhys_Offset(i) + j;
+    //                 }
+    //                 std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
+    //         }
 
 
         // for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
@@ -185,84 +182,76 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         //             std::cout << "elemid = " << i << ", x = " << x0[index] << ", Anisotropy[0] = " << m_d00vec[index] << std::endl;
         //     }
 
-    }
-    if (m_session->DefinesParameter("d11"))
-    {
-      // m_varcoeffXYZ[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq);
-        m_d11vec = Array<OneD, NekDouble>(nq);
+    // }
+    // if (m_session->DefinesParameter("d11"))
+    // {
+    //    // m_varcoeffXYZ[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq);
+    //     m_d11vec = Array<OneD, NekDouble>(nq);
 
-        Vmath::Fill(nq, m_d11, &m_d11vec[0], 1);
+    //     Vmath::Fill(nq, m_d11, &m_d11vec[0], 1);
 
-        Vmath::Vsqrt(nq, m_d11vec, 1, Anisotropy[1], 1);
-       // m_varcoeffXYZ[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, m_d11);
-    }
-    if (m_session->DefinesParameter("d22"))
-    {
-      //  m_varcoeffXYZ[StdRegions::eVarCoeffD22] = Array<OneD, NekDouble>(nq);
-        Vmath::Fill(nq, sqrt(m_d22), &Anisotropy[2][0], 1);
-    }
+    //     Vmath::Vsqrt(nq, m_d11vec, 1, Anisotropy[1], 1);
+    //   //  m_varcoeffXYZ[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, m_d11);
+    // }
+    // if (m_session->DefinesParameter("d22"))
+    // {
+    //    //  m_varcoeffXYZ[StdRegions::eVarCoeffD22] = Array<OneD, NekDouble>(nq);
+    //     Vmath::Fill(nq, sqrt(m_d22), &Anisotropy[2][0], 1);
+    // }
 
     MMFSystem::MMFInitObject(Anisotropy);
 
+    // if (m_session->DefinesSolverInfo("INITWAVETYPE"))
+    // {
+    //     std::string InitWaveTypeStr = m_session->GetSolverInfo("INITWAVETYPE");
+    //     for (int i = 0; i < (int)SIZE_TestType; ++i)
+    //     {
+    //         if (boost::iequals(InitWaveTypeMap[i], InitWaveTypeStr))
+    //         {
+    //             m_InitWaveType = (InitWaveType)i;
+    //             break;
+    //         }
+    //     }
+    // }
+    // else
+    // {
+    //     m_InitWaveType = (InitWaveType)0;
+    // }
+
+    // if(m_TestType==eTestPlaneEmbed)
+    // {
+    //     // Let the moving frames outside the domain be of magnitude zero.
+    //     int index, cnt = 0;
+    //     for (int i = m_EmbededPlane; i < m_fields[0]->GetExpSize(); ++i)
+    //     {
+    //         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
+    //         {
+    //             index = m_fields[0]->GetPhys_Offset(i) + j;
+    //             for (int k=0; k<m_mfdim; ++k)
+    //             {
+    //                 m_movingframes[k][index] = 0.0;
+    //                 m_movingframes[k][index+nq] = 0.0;
+    //                 m_movingframes[k][index+2*nq] = 0.0;
+    //             }
+    //             cnt++;
+    //         }
+    //     }
+
+    //     std::cout << "Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
+    // }
+
+    ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
     // Define ProblemType
-    if (m_session->DefinesSolverInfo("TESTTYPE"))
+    std::string testTypeStr = m_session->GetSolverInfo("TESTTYPE");
+    for (int i = 0; i < (int)SIZE_TestType; ++i)
     {
-        std::string TestTypeStr = m_session->GetSolverInfo("TESTTYPE");
-        int i;
-        for (i = 0; i < (int)SIZE_TestType; ++i)
+        if (boost::iequals(TestTypeMap[i], testTypeStr))
         {
-            if (boost::iequals(TestTypeMap[i], TestTypeStr))
-            {
-                m_TestType = (TestType)i;
-                break;
-            }
+            m_TestType = (TestType)i;
+            break;
         }
     }
-    else
-    {
-        m_TestType = (TestType)0;
-    }
-
-    if (m_session->DefinesSolverInfo("INITWAVETYPE"))
-    {
-        std::string InitWaveTypeStr = m_session->GetSolverInfo("INITWAVETYPE");
-        for (int i = 0; i < (int)SIZE_TestType; ++i)
-        {
-            if (boost::iequals(InitWaveTypeMap[i], InitWaveTypeStr))
-            {
-                m_InitWaveType = (InitWaveType)i;
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_InitWaveType = (InitWaveType)0;
-    }
-
-    if(m_TestType==eTestPlaneEmbed)
-    {
-        // Let the moving frames outside the domain be of magnitude zero.
-        int index, cnt = 0;
-        for (int i = m_EmbededPlane; i < m_fields[0]->GetExpSize(); ++i)
-        {
-            for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
-            {
-                index = m_fields[0]->GetPhys_Offset(i) + j;
-                for (int k=0; k<m_mfdim; ++k)
-                {
-                    m_movingframes[k][index] = 0.0;
-                    m_movingframes[k][index+nq] = 0.0;
-                    m_movingframes[k][index+2*nq] = 0.0;
-                }
-                cnt++;
-            }
-        }
-
-        std::cout << "Moving frames " << cnt << " / " << nq << " ( " << 100.0*cnt/nq << " % ) are removed" << std::endl;
-    }
-
-    ComputeVarCoeff2D(m_movingframes,m_varcoeff);
 
     if(m_TestType==eTestPlaneEmbed)
     {
@@ -722,6 +711,8 @@ void MMFDiffusion::v_SetInitialConditions(NekDouble initialtime,
 
             TestPlaneProblem(initialtime, m_varcoeff, u);
             m_fields[0]->SetPhys(u);
+
+            std::cout << "initial u = " << RootMeanSquare(u) << std::endl;
         }
         break;
 
@@ -872,11 +863,10 @@ void MMFDiffusion::TestPlaneProblem(const NekDouble time,
 
     m_fields[0]->GetCoords(x, y, z);
 
-    Array<OneD, NekDouble> d00(nq);
-    Array<OneD, NekDouble> d11(nq);
+    Array<OneD, NekDouble> d00(varcoeff[MMFCoeffs[4]].GetValue());
+    Array<OneD, NekDouble> d11(varcoeff[MMFCoeffs[9]].GetValue());
 
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[4]][0], 1, &d00[0], 1);
-    Vmath::Vcopy(nq, &varcoeff[MMFCoeffs[9]][0], 1, &d11[0], 1);
+    std::cout << "d00 = " << RootMeanSquare(d00) << ", d11 = " << RootMeanSquare(d11) << std::endl;
 
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)
@@ -1419,67 +1409,6 @@ void MMFDiffusion::v_EvaluateExactSolution(unsigned int field,
     }
 }
 
-// void MMFDiffusion::ComputeVarCoeff2D(
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-//     StdRegions::VarCoeffMap &varcoeff)
-// {
-//     int nq = GetTotPoints();
-
-//     StdRegions::VarCoeffType MMFCoeffs[15] = {
-//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-//         StdRegions::eVarCoeffMF3Mag};
-
-//     int indx;
-//     Array<OneD, NekDouble> tmp(nq);
-//     for (int k = 0; k < m_expdim; ++k)
-//     {
-//         // For Moving Frames
-//         indx = 5 * k;
-
-//         for (int j = 0; j < m_spacedim; ++j)
-//         {
-//             varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
-//             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
-//                          &varcoeff[MMFCoeffs[indx + j]][0], 1);
-//         }
-
-//         // m_DivMF
-//         varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-
-//         Array<OneD, Array<OneD, NekDouble>> DivMF;
-//         // ComputeDivMF(eCovariant, movingframes, DivMF);
-
-//         ComputeEuclideanDivMF(movingframes, DivMF);
-
-//         Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
-//         // \| e^k \|
-//         varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-//         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
-//         for (int i = 0; i < m_spacedim; ++i)
-//         {
-//             Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
-//                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-//         }
-
-//         Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
-//     }
-
-//     std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
-//               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
-
-//     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
-//               << std::endl;
-// }
-
 void MMFDiffusion::GetFluxVector(
     const Array<OneD, Array<OneD, NekDouble>> &inarray,
     const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
@@ -1644,6 +1573,7 @@ void MMFDiffusion::v_DoSolve()
     {
         timer.Start();
         fields = m_intScheme->TimeIntegrate(step, m_timestep);
+        std::cout << "time = " << m_time << ", fields = " << RootMeanSquare(fields[0]) << std::endl;
         timer.Stop();
 
         m_time += m_timestep;
@@ -1732,6 +1662,112 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
     }
 }
 } // namespace Nektar
+
+// int main(int argc, char *argv[])
+// {
+//     LibUtilities::SessionReaderSharedPtr session;
+//     LibUtilities::FieldIOSharedPtr fld;
+//     SpatialDomains::MeshGraphSharedPtr graph;
+//     MultiRegions::ContFieldSharedPtr field;
+//     LibUtilities::EquationSharedPtr icond, ex_sol;
+//     StdRegions::ConstFactorMap factors;
+
+//     try
+//     {
+//         // Create session reader.
+//         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
+
+//         // Read the geometry and the expansion information
+//         graph = SpatialDomains::MeshGraphIO::Read(session);
+
+//         // Create Field I/O object.
+//         fld = LibUtilities::FieldIO::CreateDefault(session);
+
+//         // Get some information about the session
+//         string sessionName  = session->GetSessionName();
+//         string outFile      = sessionName + ".fld";
+//         unsigned int nSteps = session->GetParameter("NumSteps");
+//         NekDouble delta_t   = session->GetParameter("TimeStep");
+//         NekDouble epsilon   = 1.0;
+
+//         // Create field
+//         field = MemoryManager<MultiRegions::ContField>::AllocateSharedPtr(
+//             session, graph, session->GetVariable(0));
+
+//         // Get coordinates of physical points
+//         unsigned int nq = field->GetNpoints();
+//         Array<OneD, NekDouble> x0(nq), x1(nq), x2(nq);
+//         field->GetCoords(x0, x1, x2);
+
+//         // Evaluate initial condition at these points
+//         icond = session->GetFunction("InitialConditions", "u");
+//         icond->Evaluate(x0, x1, x2, 0.0, field->UpdatePhys());
+
+//         // Compute lambda in the Helmholtz problem
+//         factors[StdRegions::eFactorLambda] = 1.0 / delta_t / epsilon;
+
+//         // Zero field coefficients for initial guess for linear solver.
+//         Vmath::Zero(field->GetNcoeffs(), field->UpdateCoeffs(), 1);
+
+//         // Time integrate using backward Euler
+//         for (unsigned int n = 0; n < nSteps; ++n)
+//         {
+//             Vmath::Smul(nq, -1.0 / delta_t / epsilon, field->GetPhys(), 1,
+//                         field->UpdatePhys(), 1);
+
+//             field->HelmSolve(field->GetPhys(), field->UpdateCoeffs(), factors);
+
+//             field->BwdTrans(field->GetCoeffs(), field->UpdatePhys());
+//         }
+
+//         // Write solution to file
+//         std::vector<LibUtilities::FieldDefinitionsSharedPtr> FieldDef =
+//             field->GetFieldDefinitions();
+//         std::vector<std::vector<NekDouble>> FieldData(FieldDef.size());
+//         for (int i = 0; i < FieldDef.size(); ++i)
+//         {
+//             FieldDef[i]->m_fields.push_back("u");
+//             field->AppendFieldData(FieldDef[i], FieldData[i]);
+//         }
+//         fld->Write(outFile, FieldDef, FieldData);
+
+//         // Check for exact solution
+//         ex_sol = session->GetFunction("ExactSolution", 0);
+//         if (ex_sol)
+//         {
+//             // Allocate storage
+//             Array<OneD, NekDouble> exact(nq);
+
+//             //----------------------------------------------
+//             // Evaluate exact solution
+//             ex_sol->Evaluate(x0, x1, x2, (nSteps)*delta_t, exact);
+
+//             //--------------------------------------------
+//             // Calculate errors
+//             cout << "L inf error:      " << field->Linf(field->GetPhys(), exact)
+//                  << endl;
+//             cout << "L 2 error:        " << field->L2(field->GetPhys(), exact)
+//                  << endl;
+//             cout << "H 1 error:        " << field->H1(field->GetPhys(), exact)
+//                  << endl;
+//             //--------------------------------------------
+//         }
+
+//         // Finalise session
+//         session->Finalise();
+//     }
+//     catch (const std::runtime_error &e)
+//     {
+//         return 1;
+//     }
+//     catch (const std::string &eStr)
+//     {
+//         cout << "Error: " << eStr << endl;
+//     }
+
+//     return 0;
+// }
+
 
 int main(int argc, char *argv[])
 {
