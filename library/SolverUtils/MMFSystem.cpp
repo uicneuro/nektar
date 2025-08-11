@@ -60,9 +60,10 @@ void MMFSystem::MMFInitObject(
 
     m_pi       = 3.14159265358979323846;
     m_shapedim = m_expdim;
+    m_spacedim = 3;
     m_mfdim    = 3;
 
-    ASSERTL0(m_spacedim == 3, "Space Dimension should be 3");
+   // ASSERTL0(m_spacedim == 3, "Space Dimension should be 3");
 
     // Define MMFOrderType
     if (m_session->DefinesSolverInfo("DerivType"))

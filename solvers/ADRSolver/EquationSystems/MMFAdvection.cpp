@@ -54,7 +54,6 @@ MMFAdvection::MMFAdvection(const LibUtilities::SessionReaderSharedPtr &pSession,
     : UnsteadySystem(pSession, pGraph), MMFSystem(pSession, pGraph),
       AdvectionSystem(pSession, pGraph)
 {
-    m_planeNumber = 0;
 }
 
 /**
@@ -63,7 +62,9 @@ MMFAdvection::MMFAdvection(const LibUtilities::SessionReaderSharedPtr &pSession,
 void MMFAdvection::v_InitObject(bool DeclareFields)
 {
     // Call to the initialisation object
+    std::cout << "Start v_InitObject" << std::endl;
     UnsteadySystem::v_InitObject(DeclareFields);
+    std::cout << "End UnsteadySystem" << std::endl;
 
     int nq       = m_fields[0]->GetNpoints();
     int shapedim = m_fields[0]->GetShapeDimension();
@@ -73,7 +74,9 @@ void MMFAdvection::v_InitObject(bool DeclareFields)
         AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
     }
 
+        std::cout << "Start MMFInint" << std::endl;
     MMFSystem::MMFInitObject(AniStrength);
+        std::cout << "End MMFInint" << std::endl;
 
     // Define TestType
     ASSERTL0(m_session->DefinesSolverInfo("TESTTYPE"),

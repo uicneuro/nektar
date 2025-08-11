@@ -1736,6 +1736,7 @@ void MMFDiffusion::v_GenerateSummary(SolverUtils::SummaryList &s)
 int main(int argc, char *argv[])
 {
     LibUtilities::SessionReaderSharedPtr session;
+    LibUtilities::FieldIOSharedPtr fld;
     SpatialDomains::MeshGraphSharedPtr graph;
     std::string vDriverModule;
     DriverSharedPtr drv;
@@ -1747,6 +1748,9 @@ int main(int argc, char *argv[])
 
         // Create MeshGraph
         graph = SpatialDomains::MeshGraphIO::Read(session);
+
+        // Create Field I/O object.
+        fld = LibUtilities::FieldIO::CreateDefault(session);
 
         // Create driver
         session->LoadSolverInfo("Driver", vDriverModule, "Standard");

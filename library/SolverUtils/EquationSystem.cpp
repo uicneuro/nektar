@@ -437,11 +437,13 @@ void EquationSystem::v_InitObject(bool DeclareFields)
                     {
                         i = 0;
                         MultiRegions::ContFieldSharedPtr firstfield;
+
                         firstfield = MemoryManager<MultiRegions::ContField>::
                             AllocateSharedPtr(m_session, m_graph,
                                               m_session->GetVariable(i),
                                               DeclareCoeffPhysArrays,
                                               m_checkIfSystemSingular[0]);
+                         
                         m_fields[0] = firstfield;
                         for (i = 1; i < m_fields.size(); i++)
                         {

@@ -448,7 +448,17 @@ public:
         // separate copy required for operator
         for (int i = 0; i < m_coordim; i++)
         {
-            m_advVel[i] = m_varcoeffs.find(advVelTypes[i])->second.GetValue();
+           // m_advVel[i] = m_varcoeffs.find(advVelTypes[i])->second.GetValue();
+            auto it = m_varcoeffs.find(advVelTypes[i]);
+            if (it != m_varcoeffs.end())
+            {
+                m_advVel[i] = it->second.GetValue();
+            }
+            else
+            {
+                // Missing component (e.g., Z for 2D surface) → fill with zeros
+                m_advVel[i] = Array<OneD, NekDouble>(m_stdExp->GetTotPoints(), 0.0);
+            }
         }
     }
 

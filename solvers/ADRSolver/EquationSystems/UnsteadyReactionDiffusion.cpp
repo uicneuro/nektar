@@ -56,7 +56,9 @@ UnsteadyReactionDiffusion::UnsteadyReactionDiffusion(
  */
 void UnsteadyReactionDiffusion::v_InitObject(bool DeclareFields)
 {
+    std::cout << "Start v_InitObject" << std::endl;
     UnsteadyDiffusion::v_InitObject(DeclareFields);
+    std::cout << "End UnsteadySystem" << std::endl;
 
     // Forcing terms
     m_forcing = SolverUtils::Forcing::Load(m_session, shared_from_this(),
