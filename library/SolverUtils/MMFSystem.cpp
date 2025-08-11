@@ -11187,8 +11187,7 @@ void MMFSystem::ComputeVarCoeff1D(
     }
 
     varcoeff[StdRegions::eVarCoeffD00] = tmp;
-    // Vmath::Vcopy(nq, &tmp, 1, varcoeff[StdRegions::eVarCoeffD00], 1);
-        
+
     std::cout << " ::::: 1D Varcoeff is Successfully Created ::::: "
               << std::endl;
 }
@@ -11225,7 +11224,6 @@ void MMFSystem::ComputeVarCoeff2D(
         {
             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1, &tmp[0], 1);
             varcoeff[MMFCoeffs[indx + j]] = tmp;
-            std::cout << "k = " << k << ", j = " << j << ", tmp = " << RootMeanSquare(tmp) << std::endl;
         }
 
         // m_DivMF

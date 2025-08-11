@@ -848,12 +848,13 @@ void StdExpansion::WeakDirectionalDerivMatrixOp_MatFree(
 {
     int nq = GetTotPoints();
 
+    std::cout << "StdExpansion::WeakDirectionalDerivMatrixOp_MatFree" << std::endl;
+
     Array<OneD, NekDouble> tmp(nq), Dtmp(nq);
     Array<OneD, NekDouble> Mtmp(nq), Mout(m_ncoeffs);
 
     v_BwdTrans(inarray, tmp);
-    v_PhysDirectionalDeriv(tmp, mkey.GetVarCoeff(eVarCoeffMF), Dtmp);
-
+    v_PhysDirectionalDeriv(mkey.GetVarCoeff(eVarCoeffMF), tmp, Dtmp);
     v_IProductWRTBase(Dtmp, outarray);
 
     // Compte M_{div tv}

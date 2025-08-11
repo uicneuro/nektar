@@ -67,6 +67,8 @@ protected:
     //-------------------------------
     LOCAL_REGIONS_EXPORT NekDouble
     v_Integral(const Array<OneD, const NekDouble> &inarray) override;
+    
+    NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
 
     //----------------------------
     // Differentiation Methods
@@ -79,8 +81,8 @@ protected:
         const int dir, const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &outarray) override;
     LOCAL_REGIONS_EXPORT void v_PhysDirectionalDeriv(
-        const Array<OneD, const NekDouble> &inarray,
         const Array<OneD, const NekDouble> &direction,
+        const Array<OneD, const NekDouble> &inarray,
         Array<OneD, NekDouble> &out) override;
 
     //---------------------------------------

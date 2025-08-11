@@ -38,7 +38,7 @@
 #include <StdRegions/StdNodalTriExp.h>
 #include <SolverUtils/MMFSystem.h>
 
-#include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
+// #include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
 
 //#include <LibUtilities/LinearAlgebra/Blas.hpp>
 

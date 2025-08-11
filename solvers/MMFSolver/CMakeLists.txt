@@ -2,9 +2,9 @@ CMAKE_DEPENDENT_OPTION(NEKTAR_SOLVER_MMF
     "Build the ADR Solver." ON
     "NEKTAR_BUILD_SOLVERS" OFF)
 
-IF( NEKTAR_SOLVER_MMF )
-    ADD_SOLVER_EXECUTABLE(MMFSolver SOURCES
-       ./MMFSolver.cpp
+IF(NEKTAR_SOLVER_MMF)
+    ADD_SOLVER_EXECUTABLE(MMFSolver SOURCES MMFSolver.cpp
+        LIBRARY_SOURCES
         ./EquationSystems/MMFDiffusion.cpp
         ./EquationSystems/MMFMaxwell.cpp)
 

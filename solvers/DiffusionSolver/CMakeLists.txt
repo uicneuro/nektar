@@ -9,11 +9,6 @@ ENDIF()
 IF(NEKTAR_SOLVER_DIFFUSION)
     ADD_SOLVER_EXECUTABLE(DiffusionSolver SOURCES DiffusionSolver.cpp)
     ADD_SOLVER_EXECUTABLE(DiffusionSolverTimeInt SOURCES DiffusionSolverTimeInt.cpp COMPONENT diffusionsolver)
-    ADD_SOLVER_EXECUTABLE(MMFDiffusion SOURCES 
-         ./MMFDiffusion.cpp
-        ./EquationSystems/MMFHelmholtz.cpp
-        ./EquationSystems/MMFLaplace.cpp
-        ./EquationSystems/MMFPoisson.cpp)
 
     ADD_SOLVER_EXECUTABLE(MMFCardiacEP SOURCES MMFCardiacEP.cpp
         LIBRARY_SOURCES
