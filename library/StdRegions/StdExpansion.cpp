@@ -782,23 +782,41 @@ void StdExpansion::LaplacianMatrixOp_MatFree_GenericImpl(
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
     const int dim = GetCoordim();
+    const int ncoeffs  = GetNcoeffs(); // or GetNcoeffs() if you prefer
+    const auto &vcmap  = mkey.GetVarCoeffs();
 
-    int i, j;
+    auto hasMF = [&](StdRegions::VarCoeffType t){ return vcmap.find(t) != vcmap.end(); };
+    const bool mmf =
+        hasMF(StdRegions::eVarCoeffMF1x) || hasMF(StdRegions::eVarCoeffMF1y) ||
+        hasMF(StdRegions::eVarCoeffMF1z) || hasMF(StdRegions::eVarCoeffMF2x) ||
+        hasMF(StdRegions::eVarCoeffMF2y) || hasMF(StdRegions::eVarCoeffMF2z) ||
+        hasMF(StdRegions::eVarCoeffMF3x) || hasMF(StdRegions::eVarCoeffMF3y) ||
+        hasMF(StdRegions::eVarCoeffMF3z);
 
-    Array<OneD, NekDouble> store(m_ncoeffs);
-    Array<OneD, NekDouble> store2(m_ncoeffs, 0.0);
+    Array<OneD, NekDouble> store(ncoeffs);
+    Array<OneD, NekDouble> store2(ncoeffs, 0.0);
+    
+    if(mmf)
+    {
+        for (int i = 0; i < dim; i++)
+        {
+            LaplacianMatrixMMFOp(i, inarray, store, mkey);
+            Vmath::Vadd(ncoeffs, store, 1, store2, 1, store2, 1);
+        }
+    }
 
-    if ((mkey.GetNVarCoeff() == 0 &&
+    else if ((mkey.GetNVarCoeff() == 0 &&
          !mkey.ConstFactorExists(eFactorCoeffD00)) ||
         mkey.ConstFactorExists(eFactorSVVDiffCoeff))
     {
         // just call diagonal matrix form of laplcian operator
-        for (i = 0; i < dim; ++i)
+        for (int i = 0; i < dim; ++i)
         {
             LaplacianMatrixOp(i, i, inarray, store, mkey);
-            Vmath::Vadd(m_ncoeffs, store, 1, store2, 1, store2, 1);
+            Vmath::Vadd(ncoeffs, store, 1, store2, 1, store2, 1);
         }
     }
+
     else
     {
         const MatrixType mtype[3][3] = {
@@ -807,19 +825,89 @@ void StdExpansion::LaplacianMatrixOp_MatFree_GenericImpl(
             {eLaplacian20, eLaplacian21, eLaplacian22}};
         StdMatrixKeySharedPtr mkeyij;
 
-        for (i = 0; i < dim; i++)
+        for (int i = 0; i < dim; i++)
         {
-            for (j = 0; j < dim; j++)
+            for (int j = 0; j < dim; j++)
             {
                 mkeyij = MemoryManager<StdMatrixKey>::AllocateSharedPtr(
                     mkey, mtype[i][j]);
                 LaplacianMatrixOp(i, j, inarray, store, *mkeyij);
-                Vmath::Vadd(m_ncoeffs, store, 1, store2, 1, store2, 1);
+                Vmath::Vadd(ncoeffs, store, 1, store2, 1, store2, 1);
             }
         }
     }
 
-    Vmath::Vcopy(m_ncoeffs, store2.data(), 1, outarray.data(), 1);
+   Vmath::Vcopy(ncoeffs, store2.data(), 1, outarray.data(), 1);
+}
+
+void StdExpansion::LaplacianMatrixMMFOp_MatFree(
+    const int dir, const Array<OneD, const NekDouble> &inarray,
+    Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
+{
+    ASSERTL1(dir >= 0 && dir < 3, "dir must be 0, 1, or 2 (MF1/MF2/MF3).");
+    ASSERTL1(coordim >= 1 && coordim <= 3, "coordim must be 1, 2 or 3.");
+
+    const int coordim = v_GetCoordim();
+    const int nq = GetTotPoints();
+
+    Array<OneD, NekDouble> phys(nq);
+    Array<OneD, NekDouble> dtmp(nq,0.0);
+    Array<OneD, NekDouble> Dx(nq), Dy(nq), Dz(nq);         
+    
+    // compute ∇ once
+    static constexpr StdRegions::VarCoeffType MMFCoeffs[15] = {
+    StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+    StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+    StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+    StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+    StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+    StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+    StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+    StdRegions::eVarCoeffMF3Mag
+    };
+
+    v_BwdTrans(inarray, phys);
+    v_PhysDeriv(phys, Dx, Dy, Dz);
+
+    // PhysDirectionalDeriv = dirx * Dx + diry * Dy + dirz * Dz
+    // 3) Build dir vector field and accumulate dtmp = (dir · ∇) phys
+    Array<OneD, NekDouble> dirvec(coordim * nq);
+    auto getCoeffOrZero = [&](StdRegions::VarCoeffType t) -> const NekDouble*
+    {
+        // If your StdMatrixKey doesn't have a HasVarCoeff(), you can
+        // ensure the VarCoeffMap is populated with zeros at assembly time.
+        if (mkey.HasVarCoeff(t))
+        {
+            const auto &a = mkey.GetVarCoeff(t);
+            return &a[0];
+        }
+        static thread_local Array<OneD, NekDouble> zeros;
+        if (zeros.size() != (size_t)nq) { zeros = Array<OneD, NekDouble>(nq, 0.0); }
+        return &zeros[0];
+    };
+
+    // x-component
+    {
+        const NekDouble* vx = getCoeffOrZero(MMFCoeffs[5 * dir + 0]);
+        Vmath::Vcopy(nq, vx, 1, &dirvec[0 * nq], 1);
+        Vmath::Vvtvp(nq, vx, 1, &Dx[0], 1, &dtmp[0], 1, &dtmp[0], 1);
+    }
+
+    if (coordim >= 2)
+    {
+        const NekDouble* vy = getCoeffOrZero(MMFCoeffs[5 * dir + 1]);
+        Vmath::Vcopy(nq, vy, 1, &dirvec[1 * nq], 1);
+        Vmath::Vvtvp(nq, vy, 1, &Dy[0], 1, &dtmp[0], 1, &dtmp[0], 1);
+    }
+
+    if (coordim == 3)
+    {
+        const NekDouble* vz = getCoeffOrZero(MMFCoeffs[5 * dir + 2]);
+        Vmath::Vcopy(nq, vz, 1, &dirvec[2 * nq], 1);
+        Vmath::Vvtvp(nq, vz, 1, &Dz[0], 1, &dtmp[0], 1, &dtmp[0], 1);
+    }
+
+    v_IProductWRTDirectionalDerivBase_SumFac(dirvec, dtmp, outarray);
 }
 
 void StdExpansion::WeakDerivMatrixOp_MatFree(
@@ -847,8 +935,6 @@ void StdExpansion::WeakDirectionalDerivMatrixOp_MatFree(
     Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
 {
     int nq = GetTotPoints();
-
-    std::cout << "StdExpansion::WeakDirectionalDerivMatrixOp_MatFree" << std::endl;
 
     Array<OneD, NekDouble> tmp(nq), Dtmp(nq);
     Array<OneD, NekDouble> Mtmp(nq), Mout(m_ncoeffs);
@@ -1495,6 +1581,15 @@ void StdExpansion::v_LaplacianMatrixOp(
     // If this function is not reimplemented on shape level, the function
     // below will be called
     LaplacianMatrixOp_MatFree(inarray, outarray, mkey);
+}
+
+void StdExpansion::v_LaplacianMatrixMMFOp(
+    const int dir, const Array<OneD, const NekDouble> &inarray,
+    Array<OneD, NekDouble> &outarray, const StdMatrixKey &mkey)
+{
+    // If this function is not reimplemented on shape level, the function
+    // below will be called
+    LaplacianMatrixMMFOp_MatFree(dir, inarray, outarray, mkey);
 }
 
 void StdExpansion::v_SVVLaplacianFilter(

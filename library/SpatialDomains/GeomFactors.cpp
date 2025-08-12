@@ -454,7 +454,6 @@ Array<TwoD, NekDouble> GeomFactors::ComputeDerivFactors(
 void GeomFactors::Compute1DMovingFrames(
     const LibUtilities::PointsKeyVector &keyTgt,
     const SpatialDomains::GeomMMF MMFdir,
-    const Array<OneD, const NekDouble> &factors,
     Array<OneD, Array<OneD, NekDouble>> &movingframes)
 {
     ASSERTL1(keyTgt.size() == m_expDim,

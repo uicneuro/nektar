@@ -318,7 +318,7 @@ void MMFDiffusion::v_InitObject(bool DeclareFields)
         TestPhysDirectionalDeriv(m_movingframes);
         TestHelmholtzSolver();
 
-      //  wait_on_enter();
+        wait_on_enter();
     }
 
     m_ode.DefineOdeRhs(&MMFDiffusion::DoOdeRhs, this);
@@ -979,8 +979,6 @@ void MMFDiffusion::TestHelmholtzProblem(const int type,
 
     d00 = varcoeff[MMFCoeffs[4]].GetValue();
     d11 = varcoeff[MMFCoeffs[9]].GetValue();
-
-    std::cout << "d00 = " << RootMeanSquare(d00) << ", d11 = " << RootMeanSquare(d11) << std::endl;
 
     outfield = Array<OneD, NekDouble>(nq);
     for (int k = 0; k < nq; k++)

@@ -168,7 +168,6 @@ private:
     SPATIAL_DOMAINS_EXPORT void Compute1DMovingFrames(
         const LibUtilities::PointsKeyVector &keyTgt,
         const SpatialDomains::GeomMMF MMFdir,
-        const Array<OneD, const NekDouble> &CircCentre,
         Array<OneD, Array<OneD, NekDouble>> &movingframes);
 
     SPATIAL_DOMAINS_EXPORT void Compute2DMovingFrames(
@@ -299,7 +298,7 @@ inline void GeomFactors::GetMovingFrames(
     {
         case 1:
         {
-            Compute1DMovingFrames(keyTgt, MMFdir, CircCentre, outarray);
+            Compute1DMovingFrames(keyTgt, MMFdir, outarray);
         }
         break;
 
