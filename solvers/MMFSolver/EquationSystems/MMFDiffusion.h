@@ -273,6 +273,11 @@ private:
     Array<OneD, NekDouble> m_epsvec;
     Array<OneD, NekDouble> m_epsilon;
     Array<OneD, NekDouble> m_epsu;
+
+    // Cached coordinates (filled once in v_InitObject and reused)
+    Array<OneD, NekDouble> m_x;
+    Array<OneD, NekDouble> m_y;
+    Array<OneD, NekDouble> m_z;
 };
 
 } // namespace Nektar
