@@ -59,7 +59,7 @@ enum TestType
 };
 
 const char *const TestTypeMap[] = {
-    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneEmbed", "TestPlaneNeumann", "TestRanvierNode",
+    "TestLineX", "TestLineY", "TestPlaneAni", "TestPlane", "TestPlaneEmbed", "TestPlaneNeumann",
     "TestCube", "TestLinearSphere", "TestNonlinearSphere",
 };
 
@@ -99,8 +99,8 @@ enum FluxType
 };
 
 const char *const FluxTypeMap[] = {
-    "qflux",
     "uflux",
+    "qflux",
 };
 
 enum TimeMapType

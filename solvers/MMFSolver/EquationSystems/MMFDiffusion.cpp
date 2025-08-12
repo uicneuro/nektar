@@ -36,17 +36,13 @@
 #include <iostream>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/core/ignore_unused.hpp>
 
 #include <LibUtilities/BasicUtils/FieldIO.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <MultiRegions/ContField.h>
-#include <SpatialDomains/MeshGraphIO.h>
 
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <MMFSolver/EquationSystems/MMFDiffusion.h>
-#include <MultiRegions/AssemblyMap/AssemblyMapDG.h>
-#include <SolverUtils/Driver.h>
 
 #include <boost/math/special_functions/spherical_harmonic.hpp>
 
