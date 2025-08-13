@@ -68,8 +68,6 @@ protected:
     LOCAL_REGIONS_EXPORT NekDouble
     v_Integral(const Array<OneD, const NekDouble> &inarray) override;
     
-    NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray);
-
     //----------------------------
     // Differentiation Methods
     //----------------------------

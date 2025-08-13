@@ -186,157 +186,60 @@ void TriExp::v_PhysDirectionalDeriv(
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &out)
 {
-    int nquad0 = m_base[0]->GetNumPoints();
-    int nquad1 = m_base[1]->GetNumPoints();
-    int nqtot  = nquad0 * nquad1;
+    const int nquad0 = m_base[0]->GetNumPoints();
+    const int nquad1 = m_base[1]->GetNumPoints();
+    const int nqtot  = nquad0 * nquad1;
 
     const Array<TwoD, const NekDouble> &df =
         m_metricinfo->GetDerivFactors(GetPointsKeys());
 
     Array<OneD, NekDouble> diff0(2 * nqtot);
     Array<OneD, NekDouble> diff1(diff0 + nqtot);
-
     StdTriExp::v_PhysDeriv(inarray, diff0, diff1);
 
-    Array<OneD, NekDouble> out_d0(nqtot,0.0);
-    Array<OneD, NekDouble> out_d1(nqtot,0.0);
-    Array<OneD, NekDouble> out_d2(nqtot,0.0);
+    // physical-space gradient components
+    Array<OneD, NekDouble> gx(nqtot), gy(nqtot), gz(nqtot);
 
     if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
     {
-        if (out_d0.size())
-        {
-            Vmath::Vmul(nqtot, df[0], 1, diff0, 1, out_d0, 1);
-            Vmath::Vvtvp(nqtot, df[1], 1, diff1, 1, out_d0, 1, out_d0, 1);
-        }
+        // gx = df0*diff0 + df1*diff1
+        Vmath::Vmul(nqtot, df[0], 1, diff0, 1, gx, 1);
+        Vmath::Vvtvp(nqtot, df[1], 1, diff1, 1, gx, 1, gx, 1);
 
-        if (out_d1.size())
-        {
-            Vmath::Vmul(nqtot, df[2], 1, diff0, 1, out_d1, 1);
-            Vmath::Vvtvp(nqtot, df[3], 1, diff1, 1, out_d1, 1, out_d1, 1);
-        }
+        Vmath::Vmul(nqtot, df[2], 1, diff0, 1, gy, 1);
+        Vmath::Vvtvp(nqtot, df[3], 1, diff1, 1, gy, 1, gy, 1);
 
-        if (out_d2.size())
-        {
-            Vmath::Vmul(nqtot, df[4], 1, diff0, 1, out_d2, 1);
-            Vmath::Vvtvp(nqtot, df[5], 1, diff1, 1, out_d2, 1, out_d2, 1);
-        }
+        Vmath::Vmul(nqtot, df[4], 1, diff0, 1, gz, 1);
+        Vmath::Vvtvp(nqtot, df[5], 1, diff1, 1, gz, 1, gz, 1);
     }
-    else // regular geometry
+    else 
     {
-        if (out_d0.size())
-        {
-            Vmath::Smul(nqtot, df[0][0], diff0, 1, out_d0, 1);
-            Blas::Daxpy(nqtot, df[1][0], diff1, 1, out_d0, 1);
-        }
+        // regular geometry ⇒ each df[i] is constant over the element
+        const NekDouble c0 = df[0][0], c1 = df[1][0];
+        const NekDouble c2 = df[2][0], c3 = df[3][0];
+        const NekDouble c4 = df[4][0], c5 = df[5][0];
 
-        if (out_d1.size())
-        {
-            Vmath::Smul(nqtot, df[2][0], diff0, 1, out_d1, 1);
-            Blas::Daxpy(nqtot, df[3][0], diff1, 1, out_d1, 1);
-        }
+        Vmath::Smul (nqtot, c0, diff0, 1, gx, 1);
+        Blas::Daxpy (nqtot, c1, diff1, 1, gx, 1);
 
-        if (out_d2.size())
-        {
-            Vmath::Smul(nqtot, df[4][0], diff0, 1, out_d2, 1);
-            Blas::Daxpy(nqtot, df[5][0], diff1, 1, out_d2, 1);
-        }
+        Vmath::Smul (nqtot, c2, diff0, 1, gy, 1);
+        Blas::Daxpy (nqtot, c3, diff1, 1, gy, 1);
+
+        Vmath::Smul (nqtot, c4, diff0, 1, gz, 1);
+        Blas::Daxpy (nqtot, c5, diff1, 1, gz, 1);
     }
 
-    out = Array<OneD, NekDouble>(nqtot, 0.0);
-    Array<OneD, NekDouble> tmpx(nqtot), tmpy(nqtot),tmpz(nqtot);
-    Vmath::Vcopy(nqtot, &dirvec[0], 1, &tmpx[0], 1);
-    Vmath::Vcopy(nqtot, &dirvec[nqtot], 1, &tmpy[0], 1);
-    Vmath::Vcopy(nqtot, &dirvec[2*nqtot], 1, &tmpz[0], 1);
+    // out = dir · grad(u) = dx*gx + dy*gy + dz*gz
+    // (operate directly on dirvec without copying)
+    const NekDouble* dx = &dirvec[0];
+    const NekDouble* dy = &dirvec[nqtot];
+    const NekDouble* dz = &dirvec[2 * nqtot];
 
-    std::cout << "dirx = " << RootMeanSquare(tmpx) << ", diry = " << RootMeanSquare(tmpy) << ", dirz = " 
-    << RootMeanSquare(tmpz) << std::endl;
-
-    Vmath::Vmul(nqtot, &dirvec[0], 1, &out_d0[0], 1, &out[0], 1);
-    Vmath::Vvtvp(nqtot, &dirvec[nqtot], 1, &out_d1[0], 1, &out[0], 1, &out[0], 1);
-    Vmath::Vvtvp(nqtot, &dirvec[2*nqtot], 1, &out_d2[0], 1, &out[0], 1, &out[0], 1);
+    // ensure 'out' has capacity nqtot; do not rebind/allocate
+    Vmath::Vmul(nqtot, dx, 1, gx.data(), 1, out.data(), 1);
+    Vmath::Vvtvp(nqtot, dy, 1, gy.data(), 1, out.data(), 1, out.data(), 1);
+    Vmath::Vvtvp(nqtot, dz, 1, gz.data(), 1, out.data(), 1, out.data(), 1);
 }
-
-NekDouble TriExp::RootMeanSquare(const Array<OneD, const NekDouble> &inarray)
-{
-    int nq = inarray.size();
-    int cn = 0;
-
-    NekDouble reval = 0.0;
-    for (int i = 0; i < nq; ++i)
-    {
-        reval += inarray[i] * inarray[i];
-        cn++;
-    }
-    reval = sqrt(reval / cn);
-    return reval;
-}
-
-
-// void TriExp::v_PhysDirectionalDeriv(
-//     const Array<OneD, const NekDouble> &inarray,
-//     const Array<OneD, const NekDouble> &direction, Array<OneD, NekDouble> &out)
-// {
-//     if (!out.size())
-//     {
-//         return;
-//     }
-
-//     int nquad0 = m_base[0]->GetNumPoints();
-//     int nquad1 = m_base[1]->GetNumPoints();
-//     int nqtot  = nquad0 * nquad1;
-
-//     const Array<TwoD, const NekDouble> &df =
-//         m_metricinfo->GetDerivFactors(GetPointsKeys());
-
-//     Array<OneD, NekDouble> diff0(2 * nqtot);
-//     Array<OneD, NekDouble> diff1(diff0 + nqtot);
-
-//     // diff0 = du/d_xi, diff1 = du/d_eta
-//     StdTriExp::v_PhysDeriv(inarray, diff0, diff1);
-
-//     if (m_metricinfo->GetGtype() == SpatialDomains::eDeformed)
-//     {
-//         Array<OneD, Array<OneD, NekDouble>> tangmat(2);
-
-//         // D^v_xi = v_x*d_xi/dx + v_y*d_xi/dy + v_z*d_xi/dz
-//         // D^v_eta = v_x*d_eta/dx + v_y*d_eta/dy + v_z*d_eta/dz
-//         for (int i = 0; i < 2; ++i)
-//         {
-//             tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
-//             for (int k = 0; k < (m_geom->GetCoordim()); ++k)
-//             {
-//                 Vmath::Vvtvp(nqtot, &df[2 * k + i][0], 1, &direction[k * nqtot],
-//                              1, &tangmat[i][0], 1, &tangmat[i][0], 1);
-//             }
-//         }
-
-//         /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
-//         Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
-//         Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
-//                      &out[0], 1);
-//     }
-//     else
-//     {
-//         Array<OneD, Array<OneD, NekDouble>> tangmat(2);
-
-//         for (int i = 0; i < 2; ++i)
-//         {
-//             tangmat[i] = Array<OneD, NekDouble>(nqtot, 0.0);
-//             for (int k = 0; k < (m_geom->GetCoordim()); ++k)
-//             {
-//                 Vmath::Svtvp(nqtot, df[2 * k + i][0], &direction[k * nqtot], 1,
-//                              &tangmat[i][0], 1, &tangmat[i][0], 1);
-//             }
-//         }
-
-//         /// D_v = D^v_xi * du/d_xi + D^v_eta * du/d_eta
-//         Vmath::Vmul(nqtot, &tangmat[0][0], 1, &diff0[0], 1, &out[0], 1);
-
-//         Vmath::Vvtvp(nqtot, &tangmat[1][0], 1, &diff1[0], 1, &out[0], 1,
-//                      &out[0], 1);
-//     }
-// }
 
 void TriExp::v_FwdTrans(const Array<OneD, const NekDouble> &inarray,
                         Array<OneD, NekDouble> &outarray)
@@ -634,56 +537,70 @@ void TriExp::v_IProductWRTDirectionalDerivBase_SumFac(
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray)
 {
-    int i;
-    int shapedim = 2;
-    int nquad0   = m_base[0]->GetNumPoints();
-    int nquad1   = m_base[1]->GetNumPoints();
-    int nqtot    = nquad0 * nquad1;
-    int nmodes0  = m_base[0]->GetNumModes();
-    int wspsize  = max(max(nqtot, m_ncoeffs), nquad1 * nmodes0);
+    const int shapedim = 2;
+    const int nquad0   = m_base[0]->GetNumPoints();
+    const int nquad1   = m_base[1]->GetNumPoints();
+    const int nqtot    = nquad0 * nquad1;
+    const int nmodes0  = m_base[0]->GetNumModes();
+
+    // Workspace size required by kernels / intermediates
+    const int wspsize  = std::max(std::max(nqtot, m_ncoeffs), nquad1 * nmodes0);
 
     const Array<TwoD, const NekDouble> &df =
         m_metricinfo->GetDerivFactors(GetPointsKeys());
 
-    Array<OneD, NekDouble> tmp0(6 * wspsize);
-    Array<OneD, NekDouble> tmp1(tmp0 + wspsize);
-    Array<OneD, NekDouble> tmp2(tmp0 + 2 * wspsize);
-    Array<OneD, NekDouble> tmp3(tmp0 + 3 * wspsize);
-    Array<OneD, NekDouble> gfac0(tmp0 + 4 * wspsize);
-    Array<OneD, NekDouble> gfac1(tmp0 + 5 * wspsize);
+    // Temporary buffers
+    Array<OneD, NekDouble> tmp0(4 * wspsize);                 // [0..wspsize)
+    Array<OneD, NekDouble> tmp1(tmp0 + wspsize);              // [wspsize..2*wspsize)
+    Array<OneD, NekDouble> tmp2(tmp0 + 2 * wspsize);          // [2*wspsize..3*wspsize)
+    Array<OneD, NekDouble> tmp3(tmp0 + 3 * wspsize);          // [3*wspsize..4*wspsize)
+    // (tmp0 is also passed to kernels as scratch workspace)
+
+    // Small geometric factors (separate tiny arrays to improve cache behavior)
+    Array<OneD, NekDouble> gfac_row(nquad1); // 2/(1 - z1[j])
+    Array<OneD, NekDouble> gfac_col(nquad0); // 0.5 * (1 + z0[i])
 
     const Array<OneD, const NekDouble> &z0 = m_base[0]->GetZ();
     const Array<OneD, const NekDouble> &z1 = m_base[1]->GetZ();
 
     // set up geometric factor: 2/(1-z1)
-    for (i = 0; i < nquad1; ++i)
-    {
-        gfac0[i] = 2.0 / (1 - z1[i]);
-    }
-    for (i = 0; i < nquad0; ++i)
-    {
-        gfac1[i] = 0.5 * (1 + z0[i]);
-    }
-    for (i = 0; i < nquad1; ++i)
-    {
-        Vmath::Smul(nquad0, gfac0[i], &inarray[0] + i * nquad0, 1,
-                    &tmp0[0] + i * nquad0, 1);
-    }
-    for (i = 0; i < nquad1; ++i)
-    {
-        Vmath::Vmul(nquad0, &gfac1[0], 1, &tmp0[0] + i * nquad0, 1,
-                    &tmp1[0] + i * nquad0, 1);
-    }
+    for (int j = 0; j < nquad1; ++j) { gfac_row[j] = 2.0 / (1.0 - z1[j]); }
+    for (int i = 0; i < nquad0; ++i) { gfac_col[i] = 0.5 * (1.0 + z0[i]); }
 
     // Compute gmat \cdot e^j
     Array<OneD, Array<OneD, NekDouble>> dfdir(shapedim);
     Expansion::ComputeGmatcdotMF(df, direction, dfdir);
 
-    Vmath::Vmul(nqtot, &dfdir[0][0], 1, &tmp0[0], 1, &tmp0[0], 1);
-    Vmath::Vmul(nqtot, &dfdir[1][0], 1, &tmp1[0], 1, &tmp1[0], 1);
-    Vmath::Vmul(nqtot, &dfdir[1][0], 1, &inarray[0], 1, &tmp2[0], 1);
+    // Row scaling: loop over rows (stride-1 inside each row)
+    for (int j = 0; j < nquad1; ++j)
+    {
+        const int off = j * nquad0;
+        Vmath::Smul(nquad0, gfac_row[j],
+                    &inarray[off], 1,
+                    &tmp0[off], 1);
+    }
 
-    Vmath::Vadd(nqtot, &tmp0[0], 1, &tmp1[0], 1, &tmp1[0], 1);
+    // Column scaling: multiply each row by gfac_col (varies across columns)
+    for (int j = 0; j < nquad1; ++j)
+    {
+        const int off = j * nquad0;
+        Vmath::Vmul(nquad0,
+                    &gfac_col[0], 1,
+                    &tmp0[off], 1,
+                    &tmp1[off], 1);
+    }
+
+    // tmp2 = dfdir[1] .* inarray   (pointwise)
+    Vmath::Vmul(nqtot, dfdir[1], 1, inarray, 1, tmp2, 1);
+
+    // tmp0 = dfdir[0] .* tmp0
+    Vmath::Vmul(nqtot, dfdir[0], 1, tmp0, 1, tmp0, 1);
+
+    // tmp1 = dfdir[1] .* tmp1   <-- restored from original
+    Vmath::Vmul(nqtot, dfdir[1], 1, tmp1, 1, tmp1, 1);
+
+    // tmp1 = tmp0 + dfdir[1].* (gfac_col*gfac_row*inarray)  (already in tmp1)
+    Vmath::Vadd(nqtot, tmp0, 1, tmp1, 1, tmp1, 1);
 
     MultiplyByQuadratureMetric(tmp1, tmp1);
     MultiplyByQuadratureMetric(tmp2, tmp2);

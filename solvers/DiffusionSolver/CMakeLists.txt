@@ -10,27 +10,6 @@ IF(NEKTAR_SOLVER_DIFFUSION)
     ADD_SOLVER_EXECUTABLE(DiffusionSolver SOURCES DiffusionSolver.cpp)
     ADD_SOLVER_EXECUTABLE(DiffusionSolverTimeInt SOURCES DiffusionSolverTimeInt.cpp COMPONENT diffusionsolver)
 
-    ADD_SOLVER_EXECUTABLE(MMFCardiacEP SOURCES MMFCardiacEP.cpp
-        LIBRARY_SOURCES
-        ../CardiacEPSolver/CellModels/CellModel.cpp
-        ../CardiacEPSolver/CellModels/FitzhughNagumo.cpp
-        ../CardiacEPSolver/CellModels/AlievPanfilov.cpp
-        ../CardiacEPSolver/CellModels/CourtemancheRamirezNattel98.cpp
-        ../CardiacEPSolver/CellModels/FentonKarma.cpp
-        ../CardiacEPSolver/CellModels/LuoRudy91.cpp
-        ../CardiacEPSolver/CellModels/Fox02.cpp
-        ../CardiacEPSolver/CellModels/Winslow99.cpp
-        ../CardiacEPSolver/CellModels/TenTusscher06.cpp
-        ../CardiacEPSolver/Stimuli/Stimulus.cpp
-        ../CardiacEPSolver/Stimuli/StimulusCircle.cpp
-        ../CardiacEPSolver/Stimuli/StimulusRect.cpp
-        ../CardiacEPSolver/Stimuli/StimulusPoint.cpp
-        ../CardiacEPSolver/Stimuli/Protocol.cpp
-        ../CardiacEPSolver/Stimuli/ProtocolSingle.cpp
-        ../CardiacEPSolver/Stimuli/ProtocolS1.cpp
-        ../CardiacEPSolver/Stimuli/ProtocolS1S2.cpp
-    )
-
     ADD_SOLVER_EXECUTABLE(MMFNeuralEP SOURCES MMFNeuralEP.cpp
         LIBRARY_SOURCES
         NeuronModels/NeuronModel.cpp
