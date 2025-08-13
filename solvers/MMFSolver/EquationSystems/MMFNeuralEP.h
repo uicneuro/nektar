@@ -50,13 +50,10 @@ using namespace Nektar::SolverUtils;
 namespace Nektar
 {
 
-
 enum NeuralEPType
 {
     eNeuralHelmSolveSingle,
     eNeuralHelmSolveDuo,
-    eNeuralEPPT,
-    eNeuralEP1D,
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
     SIZE_NeuralEPType ///< Length of enum list
@@ -65,8 +62,6 @@ enum NeuralEPType
 const char *const NeuralEPTypeMap[] = {
     "NeuralHelmSolveSingle",
     "NeuralHelmSolveDuo",
-    "NeuralEPPT",
-    "NeuralEP1D",
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
 };
@@ -339,12 +334,6 @@ protected:
     Array<OneD, NekDouble> m_NeuralCmRf;
     Array<OneD, int> m_NodeElement;
 
-    // NeuralEP2D variables
-    // Array<OneD, LibUtilities::TimeIntegrationWrapperSharedPtr>
-    // m_fiberintScheme; Array<OneD,
-    // LibUtilities::TimeIntegrationSchemeOperators> m_fiberode; Array<OneD,
-    // LibUtilities::TimeIntegrationSolutionSharedPtr> m_fiberintSoln;
-
     // Moving frames
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_fibermovingframes;
 
@@ -403,7 +392,6 @@ protected:
                                 const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
                                 const Array<OneD, const NekDouble> &inarray);
 
-    // void DisplayNode1D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
     // void DisplayNode2D(std::string &fulltext, const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
     void CheckNodeZoneMF(
@@ -428,11 +416,6 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoImplicitSolveNeuralEP1D(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-        const NekDouble lambda);
-
     void DoImplicitSolveNeuralEP2Dmono(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
@@ -448,11 +431,6 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    // void DoImplicitSolveNeuralEP2p1Dfiber(
-    //     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    //     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    //     const NekDouble lambda);
-
     void DoImplicitSolveNeuralEP2Dfiber(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
@@ -466,18 +444,6 @@ protected:
     void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                   Array<OneD, Array<OneD, NekDouble>> &outarray,
                   const NekDouble time);
-
-    void DoOdeRhsNeuralEPPT(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-
-    void DoOdeRhsNeuralEP1D(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-
-    void DoOdeRhsNeuralEP2p1D(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     void DoOdeRhsNeuralEP2Dmono(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -497,11 +463,6 @@ protected:
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,
                             Array<OneD, Array<OneD, NekDouble>> &physarray);
 
-    void DoOdeRhsNeuralEP2p1Dfiber(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-
     void DoOdeRhsNeuralEP2Dfiber(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         const Array<OneD, const Array<OneD, NekDouble>> &MF1st,
@@ -510,8 +471,6 @@ protected:
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-
-    // void SetMembraneBoundaryCondition(const NekDouble time = 0.0);
 
     void PlotFHIonCurrent(const Array<OneD, const NekDouble> &inarray,
                           const int nstep);
@@ -543,10 +502,6 @@ protected:
     
     Array<OneD, int> TestRanvierSingleIndex();
     Array<OneD, int> TestRanvierDuoIndex();
-
-    Array<OneD, int> IndexNodeZone1D(
-        const MultiRegions::ExpListSharedPtr &field, const int Nnode, 
-        const int NumelemNode, const int NumelemMyel);
 
     void IndexNodeZone2D(
         const int numfiber, const int totNnode, 
