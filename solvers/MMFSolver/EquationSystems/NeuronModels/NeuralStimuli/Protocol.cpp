@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: ProtocolS1.h
+// File: Protocol.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,61 +28,46 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Protocol S1 stimulus header.
+// Description: Protocol base class.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLS1
-#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLS1
-
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/Protocol.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/Protocol.h>
 
 namespace Nektar
 {
-// Forward declaration
-class ProtocolS1;
-
-/// Protocol base class.
-class ProtocolS1 : public Protocol
+ProtocolFactory &GetProtocolFactory()
 {
-public:
-    /// Creates an instance of this class
-    static ProtocolSharedPtr create(
-        const LibUtilities::SessionReaderSharedPtr &pSession,
-        const TiXmlElement *pXml)
-    {
-        return MemoryManager<ProtocolS1>::AllocateSharedPtr(pSession, pXml);
-    }
+    static ProtocolFactory instance;
+    return instance;
+}
 
-    /// Name of class
-    static std::string className;
+/**
+ * @class Protocol
+ *
+ * The Stimuli class and derived classes implement a range of stimuli.
+ * The stimulus contains input stimuli that can be applied throughout the
+ * domain, on specified regions determined by the derived classes of
+ * Stimulus, at specified frequencies determined by the derived classes of
+ * Protocol.
+ */
 
-    friend class MemoryManager<ProtocolS1>;
+/**
+ * Protocol base class constructor.
+ */
+Protocol::Protocol(const LibUtilities::SessionReaderSharedPtr &pSession,
+                   const TiXmlElement *pXml)
+    : m_session(pSession)
+{
+    // boost::ignore_unused(pXml);
+    static_cast<void>(pXml);
+}
 
-    virtual ~ProtocolS1()
-    {
-    }
-
-    /// Initialise the protocol storage and set initial conditions
-    void Initialise();
-
-protected:
-    NekDouble m_start;
-    NekDouble m_dur;
-    NekDouble m_num_s1;
-    NekDouble m_s1cyclelength;
-
-    virtual NekDouble v_GetAmplitude(const NekDouble time) override;
-
-    virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
-
-    virtual void v_SetInitialConditions();
-
-private:
-    ProtocolS1(const LibUtilities::SessionReaderSharedPtr &pSession,
-               const TiXmlElement *pXml);
-};
+/**
+ * Initialise the protocol. Allocate workspace and variable storage.
+ */
+void Protocol::Initialise()
+{
+}
 
 } // namespace Nektar
-
-#endif /* ProtocolS1_H_ */

@@ -332,9 +332,6 @@ void MMFCardiacEP::v_InitObject(bool DeclareFields)
     {
         m_ode.DefineOdeRhs(&MMFCardiacEP::DoOdeRhsCardiacEP, this);
     }
-
-    // Wait for initialization is done
-    // LibUtilities::CommMpi::v_Block();
 }
 
 /**
@@ -1755,12 +1752,7 @@ void MMFCardiacEP::DoOdeRhsCardiacEPTimeMap(
     // input: inarray
     // output: outarray
     m_cell->TimeIntegrate(inarray, outarray, time);
-
-    // AlievPanfilovReaction(inarray, outarray, time);
-
-    // std::cout << "inarray0 = " << RootMeanSquare(inarray[0]) << ", outarray = " << RootMeanSquare(outarray[0]) << std::endl;
-    // std::cout << "inarray1 = " << RootMeanSquare(inarray[1]) << ", outarray = " << RootMeanSquare(outarray[1]) << std::endl << std::endl;
-
+    
     // Compute I_stim
     for (unsigned int i = 0; i < m_stimulus.size(); ++i)
     {

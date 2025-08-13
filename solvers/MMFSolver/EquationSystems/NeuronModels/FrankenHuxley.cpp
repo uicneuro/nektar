@@ -12,8 +12,7 @@
 
 #include <iostream>
 #include <string>
-//#inc lude <LibUtilities/BasicUtils/Vmath.hpp>
-#include <DiffusionSolver/NeuronModels/FrankenHuxley.h>
+#include <MMFSolver/EquationSystems/NeuronModels/FrankenHuxley.h>
 
 namespace Nektar
 {

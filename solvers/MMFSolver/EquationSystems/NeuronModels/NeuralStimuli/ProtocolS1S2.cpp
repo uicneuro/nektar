@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: ProtocolS1.cpp
+// File: ProtocolS1S2.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,34 +28,32 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: S1 impulse protocol.
+// Description: S1S2 protocol.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/ProtocolS1.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/ProtocolS1S2.h>
 #include <tinyxml.h>
 
 namespace Nektar
 {
-std::string ProtocolS1::className =
+std::string ProtocolS1S2::className =
     GetProtocolFactory().RegisterCreatorFunction(
-        "ProtocolS1", ProtocolS1::create, "S1 stimulus protocol.");
-
+        "ProtocolS1S2", ProtocolS1S2::create, "S1S2 stimulus protocol.");
 /**
- * @class ProtocolS1
+ * @class ProtocolS1S2
  *
  * The Stimuli class and derived classes implement a range of stimuli.
  * The stimulus contains input stimuli that can be applied throughout the
- * domain, on specified regions determined by the derived classes of
- * Stimulus, at specified frequencies determined by the derived classes of
- * Protocol.
+ * domain, on specified regions determined by the derived classes of Stimulus,
+ * at specified frequencies determined by the derived classes of Protocol.
+ *
  */
-
 /**
  * Protocol base class constructor.
  */
-ProtocolS1::ProtocolS1(const LibUtilities::SessionReaderSharedPtr &pSession,
-                       const TiXmlElement *pXml)
+ProtocolS1S2::ProtocolS1S2(const LibUtilities::SessionReaderSharedPtr &pSession,
+                           const TiXmlElement *pXml)
     : Protocol(pSession, pXml)
 {
     m_session = pSession;
@@ -65,12 +63,15 @@ ProtocolS1::ProtocolS1(const LibUtilities::SessionReaderSharedPtr &pSession,
         return;
     }
 
-    // Declare temporary XML element pointer
-    const TiXmlElement *pXmlparameter;
+    const TiXmlElement *pXmlparameter; // Declaring variable called pxml...
+    // See if we have parameters defined.  They are optional so we go on if not.
 
-    // Read each variable, extract text and convert to floating-point
+    // member variables m_* defined in ProtocolS1S2.h
+
     pXmlparameter = pXml->FirstChildElement("START");
-    m_start       = atof(pXmlparameter->GetText());
+    m_start =
+        atof(pXmlparameter->GetText()); // text value within px1, convert to a
+                                        // floating pt and save in m_px1
 
     pXmlparameter = pXml->FirstChildElement("DURATION");
     m_dur         = atof(pXmlparameter->GetText());
@@ -80,19 +81,21 @@ ProtocolS1::ProtocolS1(const LibUtilities::SessionReaderSharedPtr &pSession,
 
     pXmlparameter = pXml->FirstChildElement("NUM_S1");
     m_num_s1      = atof(pXmlparameter->GetText());
+
+    pXmlparameter   = pXml->FirstChildElement("S2CYCLELENGTH");
+    m_s2cyclelength = atof(pXmlparameter->GetText());
+
+    m_s2start = m_s1cyclelength * (m_num_s1 - 1) + m_s2cyclelength + m_start;
 }
 
 /**
  * Initialise the protocol. Allocate workspace and variable storage.
  */
-void ProtocolS1::Initialise()
+void ProtocolS1S2::Initialise()
 {
 }
 
-/**
- *
- */
-NekDouble ProtocolS1::v_GetAmplitude(const NekDouble time)
+NekDouble ProtocolS1S2::v_GetAmplitude(const NekDouble time)
 {
     // Number of complete S1 intervals
     NekDouble a = floor((time - m_start) / m_s1cyclelength);
@@ -100,9 +103,14 @@ NekDouble ProtocolS1::v_GetAmplitude(const NekDouble time)
     // Time since start of most recent S1 interval
     NekDouble time1 = time - a * m_s1cyclelength - m_start;
 
-    // std::cout << "time1 = " << time1 << ", a = " << a << ", time = " << time << ", m_start = " << m_start << std::endl;
+    // S1
+    if ((time1 > 0) && (a < m_num_s1) && (time1 < m_dur))
+    {
+        return 1.0;
+    }
 
-    if ((time1 > 0) && (a>=0) && (a < m_num_s1) && (time1 < m_dur))
+    // S2
+    if ((time > m_s2start) && (time < m_s2start + m_dur))
     {
         return 1.0;
     }
@@ -110,18 +118,12 @@ NekDouble ProtocolS1::v_GetAmplitude(const NekDouble time)
     return 0.0;
 }
 
-/**
- *
- */
-void ProtocolS1::v_GenerateSummary(SolverUtils::SummaryList &s)
+void ProtocolS1S2::v_GenerateSummary(SolverUtils::SummaryList &s)
 {
     static_cast<void>(s);
 }
 
-/**
- *
- */
-void ProtocolS1::v_SetInitialConditions()
+void ProtocolS1S2::v_SetInitialConditions()
 {
 }
 

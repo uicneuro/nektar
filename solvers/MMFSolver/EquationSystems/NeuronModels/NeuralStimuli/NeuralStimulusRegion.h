@@ -36,7 +36,7 @@
 #ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUSREGION
 #define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_NEURALSTIMULUSREGION
 
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulus.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulus.h>
 #include <LibUtilities/BasicUtils/NekFactory.hpp>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 #include <LibUtilities/BasicUtils/SharedArray.hpp>

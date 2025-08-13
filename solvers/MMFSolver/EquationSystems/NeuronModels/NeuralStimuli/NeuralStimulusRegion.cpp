@@ -35,7 +35,7 @@
 #include <iostream>
 #include <tinyxml.h>
 
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulusRegion.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulusRegion.h>
 
 namespace Nektar
 {

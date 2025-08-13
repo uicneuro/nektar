@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File FrankenHuxley.h
+// File HodgkinHuxley.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -33,13 +33,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_FRANKENHUXLEY_H
-#define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_FRANKENHUXLEY_H
+#ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_HODGKINHUXLEY_H
+#define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_HODGKINHUXLEY_H
 
-#include <DiffusionSolver/NeuronModels/NeuronModel.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuronModel.h>
 namespace Nektar
 {
-    class FrankenHuxley : public NeuronModel
+    class HodgkinHuxley : public NeuronModel
     {
 
     public:
@@ -48,32 +48,33 @@ namespace Nektar
                 const LibUtilities::SessionReaderSharedPtr& pSession,
                 const MultiRegions::ExpListSharedPtr& pField)
         {
-            return MemoryManager<FrankenHuxley>::AllocateSharedPtr(pSession, pField);
+            return MemoryManager<HodgkinHuxley>::AllocateSharedPtr(pSession, pField);
         }
 
         /// Name of class
         static std::string className;
 
         /// Constructor
-        FrankenHuxley(const LibUtilities::SessionReaderSharedPtr& pSession,
+        HodgkinHuxley(const LibUtilities::SessionReaderSharedPtr& pSession,
                   const MultiRegions::ExpListSharedPtr& pField);
 
         /// Destructor
-        virtual ~FrankenHuxley() {}
+        virtual ~HodgkinHuxley() {}
 
     protected:
 
-        NekDouble ComputeexpM1(const NekDouble x, const NekDouble y);
-        NekDouble ComputeIon(const NekDouble E, const NekDouble ci, const NekDouble co, const NekDouble Tc);
-        NekDouble efun(const NekDouble z);
+        NekDouble Compute_alpha(const NekDouble membrane_V, const NekDouble alphaA, const NekDouble alphaB, const NekDouble alphaC);
+        NekDouble Compute_beta(const NekDouble membrane_V, const NekDouble betaA, const NekDouble betaB, const NekDouble betaC);
+        NekDouble Compute_beta_h(const NekDouble membrane_V, const NekDouble betaA, const NekDouble betaB, const NekDouble betaC);
+        NekDouble ComputeZfunction(const NekDouble membrane_V, const NekDouble Yexp, const NekDouble Yint, const NekDouble Tc);
+        NekDouble RootMeanSquare(const Array<OneD, const NekDouble> &inarray, const int Ntot = 1);
 
         /// Computes the reaction terms $f(u,v)$ and $g(u,v)$.
         virtual void v_Update(
-                const Array<OneD, const int> &zoneindex,
+                const Array<OneD, const int> &RvNodeZone,
                 const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                       Array<OneD,        Array<OneD, NekDouble> >&outarray,
-                const NekDouble time, 
-                const NekDouble var_membrane__Tc = 24.0);
+                const NekDouble time, const NekDouble Tc);
 
         /// Prints a summary of the model parameters.
         virtual void v_GenerateSummary(SummaryList& s);

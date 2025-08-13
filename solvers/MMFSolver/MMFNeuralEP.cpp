@@ -41,7 +41,7 @@
 #include <boost/core/ignore_unused.hpp>
 #include <boost/math/special_functions/spherical_harmonic.hpp>
 
-#include <DiffusionSolver/EquationSystems/MMFNeuralEP.h>
+#include <MMFSolver/EquationSystems/MMFNeuralEP.h>
 
 #include <CardiacEPSolver/Filters/FilterCellHistoryPoints.h>
 #include <CardiacEPSolver/Filters/FilterCheckpointCellModel.h>

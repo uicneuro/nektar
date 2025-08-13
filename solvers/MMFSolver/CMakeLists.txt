@@ -30,6 +30,21 @@ IF(NEKTAR_SOLVER_MMF)
         ../CardiacEPSolver/Stimuli/ProtocolS1S2.cpp
     )
 
+    ADD_SOLVER_EXECUTABLE(MMFNeuralEP SOURCES MMFNeuralEP.cpp
+        LIBRARY_SOURCES
+        ./EquationSystems/NeuronModels/NeuronModel.cpp
+        ./EquationSystems/NeuronModels/FitzhughNagumo.cpp
+        ./EquationSystems/NeuronModels/HodgkinHuxley.cpp
+        ./EquationSystems/NeuronModels/FrankenHuxley.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulus.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulusRegion.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulusZone.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/Protocol.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/ProtocolSingle.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/ProtocolS1.cpp
+        ./EquationSystems/NeuronModels/NeuralStimuli/ProtocolS1S2.cpp
+    )
+
     IF(NEKTAR_BUILD_SOLVER_LIBS)
         MESSAGE(WARNING, "Solver library build not set up for MMFSolver - skipping.")
     ENDIF()

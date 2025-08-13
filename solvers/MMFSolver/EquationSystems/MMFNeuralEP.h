@@ -41,9 +41,9 @@
 #include <SolverUtils/Diffusion/Diffusion.h>
 
 #include <CardiacEPSolver/CellModels/CellModel.h>
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulus.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulus.h>
 
-#include <DiffusionSolver/NeuronModels/NeuronModel.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuronModel.h>
 
 using namespace Nektar::SolverUtils;
 

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 //#inc lude <LibUtilities/BasicUtils/Vmath.hpp>
-#include <DiffusionSolver/NeuronModels/HodgkinHuxley.h>
+#include <MMFSolver/EquationSystems/NeuronModels/HodgkinHuxley.h>
 
 namespace Nektar
 {

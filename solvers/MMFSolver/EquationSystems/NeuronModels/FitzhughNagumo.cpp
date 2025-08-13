@@ -37,7 +37,7 @@
 #include <string>
 
 #include <LibUtilities/BasicUtils/Vmath.hpp>
-#include <DiffusionSolver/NeuronModels/FitzhughNagumo.h>
+#include <MMFSolver/EquationSystems/NeuronModels/FitzhughNagumo.h>
 
 namespace Nektar
 {

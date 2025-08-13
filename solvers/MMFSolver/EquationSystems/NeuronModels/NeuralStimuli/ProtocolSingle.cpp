@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: Protocol.cpp
+// File: ProtocolSingle.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,19 +28,18 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Protocol base class.
+// Description: Single impulse protocol.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/Protocol.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/ProtocolSingle.h>
+#include <tinyxml.h>
 
 namespace Nektar
 {
-ProtocolFactory &GetProtocolFactory()
-{
-    static ProtocolFactory instance;
-    return instance;
-}
+std::string ProtocolSingle::className =
+    GetProtocolFactory().RegisterCreatorFunction(
+        "ProtocolSingle", ProtocolSingle::create, "Single stimulus protocol.");
 
 /**
  * @class Protocol
@@ -50,23 +49,69 @@ ProtocolFactory &GetProtocolFactory()
  * domain, on specified regions determined by the derived classes of
  * Stimulus, at specified frequencies determined by the derived classes of
  * Protocol.
+ *
  */
 
 /**
  * Protocol base class constructor.
  */
-Protocol::Protocol(const LibUtilities::SessionReaderSharedPtr &pSession,
-                   const TiXmlElement *pXml)
-    : m_session(pSession)
+ProtocolSingle::ProtocolSingle(
+    const LibUtilities::SessionReaderSharedPtr &pSession,
+    const TiXmlElement *pXml)
+    : Protocol(pSession, pXml)
 {
-    // boost::ignore_unused(pXml);
-    static_cast<void>(pXml);
+    m_session = pSession;
+
+    if (!pXml)
+    {
+        return;
+    }
+
+    const TiXmlElement *pXmlparameter;
+
+    pXmlparameter = pXml->FirstChildElement("START");
+    m_start       = atof(pXmlparameter->GetText());
+
+    pXmlparameter = pXml->FirstChildElement("DURATION");
+    m_dur         = atof(pXmlparameter->GetText());
 }
 
 /**
  * Initialise the protocol. Allocate workspace and variable storage.
  */
-void Protocol::Initialise()
+void ProtocolSingle::Initialise()
+{
+}
+
+/**
+ *
+ */
+NekDouble ProtocolSingle::v_GetAmplitude(const NekDouble time)
+{
+   // std::cout << ", time = " << time << ", m_start = " << m_start << std::endl;
+
+    if (time >= m_start && time < (m_start + m_dur))
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+/**
+ *
+ */
+void ProtocolSingle::v_GenerateSummary(SolverUtils::SummaryList &s)
+{
+    static_cast<void>(s);
+}
+
+/**
+ *
+ */
+void ProtocolSingle::v_SetInitialConditions()
 {
 }
 

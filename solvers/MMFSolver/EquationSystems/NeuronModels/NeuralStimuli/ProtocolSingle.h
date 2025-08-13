@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: ProtocolS1S2.h
+// File: ProtocolSingle.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,21 +28,22 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Protocol S1S2 stimulus.
+// Description: Protocol Single stimulus header.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_PROTOCOLS1S2
-#define NEKTAR_SOLVERS_CARDIACEPSOLVER_STIMULI_PROTOCOLS1S2
-#include <CardiacEPSolver/Stimuli/Protocol.h>
+#ifndef NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLSINGLE
+#define NEKTAR_SOLVERS_NEURALSOLVER_STIMULI_PROTOCOLSINGLE
+
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/Protocol.h>
 
 namespace Nektar
 {
 // Forward declaration
-class ProtocolS1S2;
+class ProtocolSingle;
 
 /// Protocol base class.
-class ProtocolS1S2 : public Protocol
+class ProtocolSingle : public Protocol
 {
 public:
     /// Creates an instance of this class
@@ -50,15 +51,15 @@ public:
         const LibUtilities::SessionReaderSharedPtr &pSession,
         const TiXmlElement *pXml)
     {
-        return MemoryManager<ProtocolS1S2>::AllocateSharedPtr(pSession, pXml);
+        return MemoryManager<ProtocolSingle>::AllocateSharedPtr(pSession, pXml);
     }
 
     /// Name of class
     static std::string className;
 
-    friend class MemoryManager<ProtocolS1S2>;
+    friend class MemoryManager<ProtocolSingle>;
 
-    virtual ~ProtocolS1S2()
+    virtual ~ProtocolSingle()
     {
     }
 
@@ -68,10 +69,6 @@ public:
 protected:
     NekDouble m_start;
     NekDouble m_dur;
-    NekDouble m_s1cyclelength;
-    NekDouble m_num_s1;
-    NekDouble m_s2cyclelength;
-    NekDouble m_s2start;
 
     virtual NekDouble v_GetAmplitude(const NekDouble time) override;
 
@@ -80,8 +77,8 @@ protected:
     virtual void v_SetInitialConditions();
 
 private:
-    ProtocolS1S2(const LibUtilities::SessionReaderSharedPtr &pSession,
-                 const TiXmlElement *pXml);
+    ProtocolSingle(const LibUtilities::SessionReaderSharedPtr &pSession,
+                   const TiXmlElement *pXml);
 };
 
 } // namespace Nektar

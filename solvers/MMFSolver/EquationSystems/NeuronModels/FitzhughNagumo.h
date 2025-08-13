@@ -36,7 +36,7 @@
 #ifndef NEKTAR_SOLVERS_ADRSOLVER_FITZHUGHNAGUMO_H
 #define NEKTAR_SOLVERS_ADRSOLVER_FITZHUGHNAGUMO_H
 
-#include <DiffusionSolver/NeuronModels/NeuronModel.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuronModel.h>
 
 namespace Nektar
 {

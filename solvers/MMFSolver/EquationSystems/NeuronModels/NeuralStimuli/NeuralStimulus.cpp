@@ -35,7 +35,7 @@
 #include <LibUtilities/BasicUtils/VmathArray.hpp>
 #include <tinyxml.h>
 
-#include <DiffusionSolver/NeuronModels/NeuralStimuli/NeuralStimulus.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuralStimuli/NeuralStimulus.h>
 
 using namespace std;
 

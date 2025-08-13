@@ -34,7 +34,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <LibUtilities/BasicUtils/VmathArray.hpp>
-#include <DiffusionSolver/NeuronModels/NeuronModel.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuronModel.h>
 #include <StdRegions/StdNodalTriExp.h>
 #include <SolverUtils/MMFSystem.h>
 
