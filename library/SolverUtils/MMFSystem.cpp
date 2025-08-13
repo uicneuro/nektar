@@ -37,6 +37,21 @@
 
 namespace Nektar
 {
+
+namespace {
+// Reuse one canonical table for MF varcoeff indexing everywhere
+static constexpr StdRegions::VarCoeffType kMMFCoeffs[15] = {
+    StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
+    StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
+    StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
+    StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
+    StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
+    StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
+    StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
+    StdRegions::eVarCoeffMF3Mag
+};
+}
+
 namespace SolverUtils
 {
 
@@ -55,233 +70,187 @@ void MMFSystem::MMFInitObject(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
     const Array<OneD, const NekDouble> &AniDirection)
 {
-    std::cout << std::endl;
-    std::cout << "MMFInitObejct Starts: ==============================================" << std::endl;
+    std::cout << "\nMMFInitObject Starts: ==============================================\n";
 
-    m_pi       = 3.14159265358979323846;
+    // Constants & dimensions
+    static constexpr NekDouble PI = 3.14159265358979323846;
+    m_pi       = PI;
     m_shapedim = m_expdim;
     m_spacedim = 3;
     m_mfdim    = 3;
 
-   // ASSERTL0(m_spacedim == 3, "Space Dimension should be 3");
+    // -------- Fixed helpers --------------------------------------------------
+    // Generic loader (handles int, double, etc.)
+    auto loadParam = [&](const char* key, auto &dst, const auto defval)
+    {
+        m_session->LoadParameter(key, dst, defval);
+    };
 
-    // Define MMFOrderType
-    if (m_session->DefinesSolverInfo("DerivType"))
+    // Case-insensitive finder over C-string tables like const char* const[]
+    auto findEnumCI = [](const std::string &key,
+                         const char* const* mapArr, int size,
+                         int defaultIdx = 0) -> int
     {
-        std::string DerivTypeStr = m_session->GetSolverInfo("DerivType");
-        for (int i = 0; i < (int)SIZE_DerivType; ++i)
+        for (int i = 0; i < size; ++i)
         {
-            if (DerivTypeMap[i] == DerivTypeStr)
-            {
-                m_DerivType = (DerivType)i;
-                break;
-            }
+            if (boost::iequals(mapArr[i], key))
+                return i;
         }
-    }
-    else
-    {
-        m_DerivType = (DerivType)0;
-    }           
+        return defaultIdx;
+    };
 
-    // Define SurfaceType
-    if (m_session->DefinesSolverInfo("SURFACETYPE"))
+    auto getSolverInfoOr = [&](const char* key, const char* defval) -> std::string
     {
-        std::string SurfaceTypeStr;
-        SurfaceTypeStr = m_session->GetSolverInfo("SURFACETYPE");
-        for (int i = 0; i < (int)SIZE_SurfaceType; ++i)
-        {
-            if (SurfaceTypeMap[i] == SurfaceTypeStr)
-            {
-                m_surfaceType = (SurfaceType)i;
-                break;
-            }
-        }
+        if (m_session->DefinesSolverInfo(key)) return m_session->GetSolverInfo(key);
+        return std::string(defval);
+    };
+    // ------------------------------------------------------------------------
+
+    // DerivType
+    {
+        const std::string v = getSolverInfoOr("DerivType", DerivTypeMap[0]);
+        m_DerivType = static_cast<DerivType>(
+            findEnumCI(v, DerivTypeMap, static_cast<int>(SIZE_DerivType), 0));
     }
-    else
+
+    // SurfaceType
     {
-        m_surfaceType = (SurfaceType)0;
+        const std::string v = getSolverInfoOr("SURFACETYPE", SurfaceTypeMap[0]);
+        m_surfaceType = static_cast<SurfaceType>(
+            findEnumCI(v, SurfaceTypeMap, static_cast<int>(SIZE_SurfaceType), 0));
     }
 
     if (m_surfaceType == SolverUtils::eEllipsoid)
     {
-        m_session->LoadParameter("Radx", m_Radx, 1.0);
-        m_session->LoadParameter("Rady", m_Rady, 1.0);
-        m_session->LoadParameter("Radz", m_Radz, 1.0);
+        loadParam("Radx", m_Radx, 1.0);
+        loadParam("Rady", m_Rady, 1.0);
+        loadParam("Radz", m_Radz, 1.0);
     }
 
-    // Define Gradient Location Type
-    if (m_session->DefinesSolverInfo("GRADLOCTYPE"))
+    // Gradient Location Type
     {
-        std::string GradLocTypeStr;
-        GradLocTypeStr = m_session->GetSolverInfo("GRADLOCTYPE");
-        for (int i = 0; i < (int)SIZE_GradLocType; ++i)
-        {
-            if (boost::iequals(GradLocTypeMap[i], GradLocTypeStr))
-            {
-                m_GradLocType = (GradLocType)i;
-                break;
-            }
-        }
+        const std::string v = getSolverInfoOr("GRADLOCTYPE", GradLocTypeMap[0]);
+        m_GradLocType = static_cast<GradLocType>(
+            findEnumCI(v, GradLocTypeMap, static_cast<int>(SIZE_GradLocType), 0));
     }
-    else
+
+    // Upwind type (discontinuous Galerkin flux)
+    for (int i = 0; i < static_cast<int>(SIZE_UpwindType); ++i)
     {
-        m_GradLocType = (GradLocType)0;
+        bool match = false;
+        m_session->MatchSolverInfo("UPWINDTYPE", UpwindTypeMap[i], match, false);
+        if (match) { m_upwindType = static_cast<UpwindType>(i); break; }
     }
 
-    // if discontinuous Galerkin determine numerical flux to use
-    for (int i = 0; i < (int)SIZE_UpwindType; ++i)
-    {
-        bool match;
-        m_session->MatchSolverInfo("UPWINDTYPE", UpwindTypeMap[i], match,
-                                   false);
-        if (match)
-        {
-            m_upwindType = (UpwindType)i;
-            break;
-        }
-    }
+    // Common numeric parameters
+    loadParam("SphereExactRadius", m_SphereExactRadius, 1.0);
 
-    m_session->LoadParameter("SphereExactRadius", m_SphereExactRadius, 1.0);
+    loadParam("Initx", m_Initx, 0.0);
+    loadParam("Inity", m_Inity, 0.0);
+    loadParam("Initz", m_Initz, m_SphereExactRadius);
 
-    m_session->LoadParameter("Initx", m_Initx, 0.0);
-    m_session->LoadParameter("Inity", m_Inity, 0.0);
-    m_session->LoadParameter("Initz", m_Initz, m_SphereExactRadius);
+    loadParam("ROIx", m_ROIx, m_Initx);
+    loadParam("ROIy", m_ROIy, m_Inity);
+    loadParam("ROIz", m_ROIz, m_Initz);
 
-    m_session->LoadParameter("ROIx", m_ROIx, m_Initx);
-    m_session->LoadParameter("ROIy", m_ROIy, m_Inity);
-    m_session->LoadParameter("ROIz", m_ROIz, m_Initz);
+    // NOTE: This is an int (your earlier error shows it); generic loader handles it.
+    loadParam("GaussianTimeMap", m_GaussianTimeMap, 0);
+    loadParam("GaussianRadius", m_GaussianRadius, 1.0);
 
-    m_session->LoadParameter("GaussianTimeMap", m_GaussianTimeMap, 0);
-    m_session->LoadParameter("GaussianRadius", m_GaussianRadius, 1.0);
+    loadParam("AdaptNewFramesTol", m_AdaptNewFramesTol, 1.0);
+    loadParam("VelActivateTol",   m_VelActivationTol, 0.1);
+    loadParam("uTol",             m_uTol, 0.1);
+    loadParam("NoAlignInitRadius", m_NoAlignInitRadius, 5.0);
 
-    m_session->LoadParameter("AdaptNewFramesTol", m_AdaptNewFramesTol, 1.0);
-    m_session->LoadParameter("VelActivateTol", m_VelActivationTol, 0.1);
-    m_session->LoadParameter("uTol", m_uTol, 0.1);
-    m_session->LoadParameter("NoAlignInitRadius", m_NoAlignInitRadius, 5.0);
+    loadParam("LDGc11", m_LDGC11, 1.0);
 
-    m_session->LoadParameter("LDGc11", m_LDGC11, 1.0);
+    loadParam("c121", m_c121, 0.0);
+    loadParam("c122", m_c122, 0.0);
+    loadParam("c123", m_c123, 0.0);
 
-    //  if Velmag < ActivationTol, the new alignment is not activated
-    m_session->LoadParameter("c121", m_c121, 0);
-    m_session->LoadParameter("c122", m_c122, 0);
-    m_session->LoadParameter("c123", m_c123, 0);
+    loadParam("Incfreq", m_Incfreq, 1.0);
+    loadParam("SFinit",  m_SFinit,  0.0);
 
-    // Factor for Numerical Flux
-    // m_session->LoadParameter("alpha", m_alpha, 1.0);
+    const int nq = m_fields[0]->GetNpoints();
 
-    // Factor for Numerical Flux
-    m_session->LoadParameter("Incfreq", m_Incfreq, 1.0);
-
-    // SmoothFactor
-    m_session->LoadParameter("SFinit", m_SFinit, 0.0);
-
-    int nq = m_fields[0]->GetNpoints();
-
-    // if 1D, computed trajectory length from the left botom to right top.
+    // If 1D: cumulative arclength
     if (m_expdim == 1)
     {
-        Array<OneD, NekDouble> x0(nq);
-        Array<OneD, NekDouble> x1(nq);
-        Array<OneD, NekDouble> x2(nq);
-
+        Array<OneD, NekDouble> x0(nq), x1(nq), x2(nq);
         m_fields[0]->GetCoords(x0, x1, x2);
 
-        NekDouble xdis, ydis, zdis, totlength = 0.0;
         m_seglength = Array<OneD, NekDouble>(nq, 0.0);
+        NekDouble tot = 0.0;
         for (int i = 1; i < nq; ++i)
         {
-            xdis = x0[i] - x0[i - 1];
-            ydis = x1[i] - x1[i - 1];
-            zdis = x2[i] - x2[i - 1];
-            totlength += sqrt(xdis * xdis + ydis * ydis + zdis * zdis);
-
-            m_seglength[i] = totlength;
+            const NekDouble dx = x0[i] - x0[i - 1];
+            const NekDouble dy = x1[i] - x1[i - 1];
+            const NekDouble dz = x2[i] - x2[i - 1];
+            tot += std::sqrt(dx*dx + dy*dy + dz*dz);
+            m_seglength[i] = tot;
         }
     }
 
+    // Geometry‑dependent frames (and activation)
     switch (m_surfaceType)
     {
         case SolverUtils::eSphere:
-        {
-            // Construct Spherical moving frames
-            ConstructSphericalMF(m_sphereMF, m_MMFActivation);
-        }
-        break;
-
+            ConstructSphericalMF(m_sphereMF, m_MMFActivation); break;
         case SolverUtils::ePseudosphere:
-        {
-            // Construct Spherical moving frames
-            ConstructPseudosphericalMF(m_pseudosphereMF, m_MMFActivation);
-        }
-        break;
-
+            ConstructPseudosphericalMF(m_pseudosphereMF, m_MMFActivation); break;
         case SolverUtils::eEllipsoid:
-        {
-            // Construct Spherical moving frames
-            ConstructEllipticalMF(m_Radx, m_Rady, m_Radz, m_sphereMF,
-                                  m_MMFActivation);
-        }
-        break;
-
+            ConstructEllipticalMF(m_Radx, m_Rady, m_Radz, m_sphereMF, m_MMFActivation); break;
         case SolverUtils::ePolar:
-        {
-            ConstructPolarMF(m_polarMF, m_MMFActivation);
-        }
-        break;
-
+            ConstructPolarMF(m_polarMF, m_MMFActivation); break;
         case SolverUtils::eTorus:
         case SolverUtils::ePlane:
         default:
         {
             m_MMFActivation = Array<OneD, int>(nq, 1);
-
-            int cnt = Vmath::Vsum(nq, m_MMFActivation, 1);
-            std::cout << "MMFActivation = " << cnt
-                    << " /  " << nq << " ( " << cnt/nq*100.0 << " % ) " << std::endl;
-
+            const int cnt = std::accumulate(&m_MMFActivation[0], &m_MMFActivation[0] + nq, 0);
+            const NekDouble pct = (static_cast<NekDouble>(cnt) / static_cast<NekDouble>(nq)) * 100.0;
+            std::cout << "MMFActivation = " << cnt << " / " << nq << " ( " << pct << " % )\n";
         }
         break;
-    }    
-
-    // SetUpMovingFrames: To generate m_movingframes
-    if(AniDirection == NullNekDouble1DArray)
-    {
-        std::string MMFdirStr;
-        m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
-        m_MMFdir = FindMMFdir(MMFdirStr);
-
-        std::cout << "Start Setting up moving frames" << std::endl;
-        SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes); 
-        std::cout << "Ending Setting up moving frames"<< std::endl;
     }
 
+    // Set up moving frames
+    if (AniDirection == NullNekDouble1DArray)
+    {
+        std::string mmfDirStr;
+        m_session->LoadSolverInfo("MMFDir", mmfDirStr, "LOCAL");
+        m_MMFdir = FindMMFdir(mmfDirStr);
+
+        SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes);
+    }
     else
     {
-        // GenerateMFbyAniDirection(AniDreiction, m_movingframes);
+        // TODO: GenerateMFbyAniDirection(AniDirection, m_movingframes);
     }
 
+    // Projection-specific setup
     switch (m_projectionType)
     {
         case MultiRegions::eDiscontinuous:
         {
             ComputeMFtrace(m_movingframes, m_MFtraceFwd, m_MFtraceBwd);
 
-            // Check Movingframes and surfraceNormal
-            // Get: m_ncdotMFFwd,m_ncdotMFBwd,m_nperpcdotMFFwd,m_nperpcdotMFBwd
-            if(m_expdim>1)
+            if (m_expdim > 1)
             {
                 ComputencdotMF(m_movingframes, m_ncdotMFFwd, m_ncdotMFBwd, 1);
             }
-
             else
             {
-                int nTracePointsTot = GetTraceNpoints();
+                const int nTracePointsTot = GetTraceNpoints();
 
                 m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-                m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);            
-                
-                m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
-                m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, AniStrength[0]);
+                m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+
+                const NekDouble fill = (AniStrength.size() > 0 && AniStrength[0].size() > 0)
+                                         ? AniStrength[0][0] : 0.0;
+
+                m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, fill);
+                m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, fill);
                 for (int j = 1; j < m_mfdim; ++j)
                 {
                     m_ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
@@ -290,8 +259,7 @@ void MMFSystem::MMFInitObject(
             }
 
             ComputenperpcdotMF(m_movingframes, m_nperpcdotMFFwd, m_nperpcdotMFBwd);
-
-            ComputeDivMF(m_DerivType, m_movingframes, m_DivMF);
+            ComputeDivMF (m_DerivType, m_movingframes, m_DivMF);
             ComputeCurlMF(m_DerivType, m_movingframes, m_CurlMF);
             break;
         }
@@ -299,19 +267,10 @@ void MMFSystem::MMFInitObject(
         case MultiRegions::eGalerkin:
         case MultiRegions::eMixed_CG_Discontinuous:
         default:
-        break;
+            break;
     }
 
-    std::cout << "MMFInitObject is done ==============================================" << std::endl;
-    std::cout << std::endl;
-    // Connection 2-form
-    // if(m_expdim>1)
-    // {
-    //     Compute2DConnection1form(m_movingframes, m_MFConnection);
-
-    //     // Check the Curvature 2-form of the aligned moving frames
-    //     Compute2DCurvatureForm(m_movingframes, m_MFConnection, m_MFCurvature);
-    // }
+    std::cout << "MMFInitObject is done ==============================================\n\n";
 }
 
 // Check Connection and Curvature for Spherical coordinate system
@@ -937,140 +896,80 @@ void MMFSystem::ComputeCurl(
     }
 }
 
-// void MMFSystem::SetUpMovingFrames(
-//     const Array<OneD, const Array<OneD, NekDouble>> &Anisotropy)
-// {
-//     int nq = m_fields[0]->GetNpoints();
-
-//     // Construct The Moving Frames
-//     m_movingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
-//     for (int j = 0; j < m_spacedim; ++j)
-//     {
-//         m_movingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
-//     }
-
-//     // Read MMF Geom Info
-//     std::string MMFdirStr = "LOCAL";
-//     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "LOCAL");
-//     m_MMFdir = FindMMFdir(MMFdirStr);
-
-//     // (x-x_0)^2/a^2 + (y-y_0)^2/b^2 = 1
-//     // factors[0] = a
-//     // factors[1] = b
-//     // factors[2] = x_0
-//     // factors[3] = y_0
-//     m_MMFfactors = Array<OneD, NekDouble>(4);
-//     m_session->LoadParameter("MMFCircAxisX", m_MMFfactors[0], 1.0);
-//     m_session->LoadParameter("MMFCircAxisY", m_MMFfactors[1], 1.0);
-//     m_session->LoadParameter("MMFCircCentreX", m_MMFfactors[2], 0.0);
-//     m_session->LoadParameter("MMFCircCentreY", m_MMFfactors[3], 0.0);
-
-//     // Get Tangetn vectors from GeomFactors2D, Orthonormalized = true
-//     m_fields[0]->GetMovingFrames(m_MMFdir, m_MMFfactors, m_movingframes);
-
-//     // Multiply Anisotropy to movingframes
-//     for (int j = 0; j < m_shapedim; ++j)
-//     {
-//         for (int k = 0; k < m_spacedim; ++k)
-//         {
-//             Vmath::Vmul(nq, &Anisotropy[j][0], 1, &m_movingframes[j][k * nq], 1,
-//                         &m_movingframes[j][k * nq], 1);
-//         }
-//     }
-//     // Test the moving frames
-//     CheckMovingFrames(m_movingframes);
-// }
-
 void MMFSystem::SetUpMovingFrames(
     const SpatialDomains::GeomMMF MMFdir,
     const Array<OneD, const Array<OneD, NekDouble>> &Anistrength,
     Array<OneD, Array<OneD, NekDouble>> &movingframes)
 {
-    int nq = m_fields[0]->GetNpoints();
+    const int nq        = m_fields[0]->GetNpoints();
+    const int vecSize   = m_spacedim * nq;
+    const int mfDim     = m_mfdim;
 
-    // Construct The Moving Frames
-    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    // Ensure movingframes is allocated once (and reused thereafter).
+    if (movingframes.size() != mfDim)
     {
-        movingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
+        movingframes = Array<OneD, Array<OneD, NekDouble>>(mfDim);
+        for (int j = 0; j < mfDim; ++j)
+        {
+            movingframes[j] = Array<OneD, NekDouble>(vecSize, 0.0);
+        }
+    }
+    else
+    {
+        // If shape is correct, just zero the contents (cheap and predictable).
+        for (int j = 0; j < mfDim; ++j)
+        {
+            Vmath::Zero(vecSize, movingframes[j], 1);
+        }
     }
 
-    // (x-x_0)^2/a^2 + (y-y_0)^2/b^2 = 1
-    // factors[0] = a
-    // factors[1] = b
-    // factors[2] = x_0
-    // factors[3] = y_0
-    m_MMFfactors = Array<OneD, NekDouble>(4);
+    // Load/cached parameters (done every call for simplicity; cache if hot).
+    if (m_MMFfactors.size() != 4)
+    {
+        m_MMFfactors = Array<OneD, NekDouble>(4);
+    }
 
     m_session->LoadParameter("MMFCircAxisX", m_MMFfactors[0], 1.0);
     m_session->LoadParameter("MMFCircAxisY", m_MMFfactors[1], 1.0);
     m_session->LoadParameter("MMFCircCentreX", m_MMFfactors[2], 0.0);
     m_session->LoadParameter("MMFCircCentreY", m_MMFfactors[3], 0.0);
 
-    // Get LOCAL moving frames such that \nabla \cdot e^i is the minimum
-    // m_fields[0]->GetMovingFrames(m_MMFdir, m_MMFfactors, movingframes);
+    // Helper: masked copy from a source MF set into movingframes.
+    auto copyMasked = [&](const Array<OneD, const Array<OneD, NekDouble>> &src)
+    {
+        for (int i = 0; i < nq; ++i)
+        {
+            if (!m_MMFActivation[i]) continue;
+            for (int j = 0; j < mfDim; ++j)
+            {
+                // Copy x,y,(z) components at this point i
+                for (int k = 0; k < m_spacedim; ++k)
+                {
+                    movingframes[j][k * nq + i] = src[j][k * nq + i];
+                }
+            }
+        }
+    };
 
-    // Further alignment of moving frames
+    // Decide how to populate movingframes
     switch (MMFdir)
     {
         case SpatialDomains::eSpherical:
-        {
-            for (int i = 0; i < nq; ++i)
-            {
-                if (m_MMFActivation[i])
-                {
-                    for (int k = 0; k < m_mfdim; ++k)
-                    {
-                        movingframes[k][i]          = m_sphereMF[k][i];
-                        movingframes[k][i + nq]     = m_sphereMF[k][i + nq];
-                        movingframes[k][i + 2 * nq] = m_sphereMF[k][i + 2 * nq];
-                    }
-                }
-            }
-        }
-        break;
+            copyMasked(m_sphereMF);
+            break;
 
         case SpatialDomains::ePolar:
-        {
-            for (int i = 0; i < nq; ++i)
-            {
-                if (m_MMFActivation[i])
-                {
-                    for (int k = 0; k < m_mfdim; ++k)
-                    {
-                        movingframes[k][i]          = m_polarMF[k][i];
-                        movingframes[k][i + nq]     = m_polarMF[k][i + nq];
-                        movingframes[k][i + 2 * nq] = m_polarMF[k][i + 2 * nq];
-                    }
-                }
-            }
-        }
-        break;
+            copyMasked(m_polarMF);
+            break;
 
         case SpatialDomains::ePseudospherical:
-        {
-            for (int i = 0; i < nq; ++i)
-            {
-                if (m_MMFActivation[i])
-                {
-                    for (int k = 0; k < m_mfdim; ++k)
-                    {
-                        movingframes[k][i]      = m_pseudosphereMF[k][i];
-                        movingframes[k][i + nq] = m_pseudosphereMF[k][i + nq];
-                        movingframes[k][i + 2 * nq] =
-                            m_pseudosphereMF[k][i + 2 * nq];
-                    }
-                }
-            }
-        }
-        break;
+            copyMasked(m_pseudosphereMF);
+            break;
 
         case SpatialDomains::eLOCAL:
-        {
-            // GetLOCALMovingframes(movingframes);
+            // Fill directly from field utility
             m_fields[0]->GetMovingFrames(SpatialDomains::eLOCAL1, m_MMFfactors, movingframes);
-        }
-        break;
+            break;
 
         case SpatialDomains::eLOCALSphere:
         case SpatialDomains::eLOCALEllipsoid:
@@ -1081,26 +980,149 @@ void MMFSystem::SetUpMovingFrames(
         break;
 
         default:
-        {
+            // Generic path
             m_fields[0]->GetMovingFrames(MMFdir, m_MMFfactors, movingframes);
-        }
-        break;
+            break;
     }
 
-    // Multiply Anisotropic magnitude to moving frames
-    for (int i = 0; i < nq; ++i)
+    // Apply anisotropy magnitudes: movingframes[j] *= sqrt(Anistrength[j]) at each point (for all components)
+    // Note: components for a given j are at offsets i, i+nq, i+2nq; nq-strided, so keep the small k-loop.
+    for (int j = 0; j < m_shapedim; ++j)
     {
-        for (int j = 0; j < m_shapedim; ++j)
+        const Array<OneD, const NekDouble> &aj = Anistrength[j];
+        Array<OneD, NekDouble> &mfj = movingframes[j];
+
+        for (int i = 0; i < nq; ++i)
         {
+            const NekDouble scale = std::sqrt(aj[i]);
+            // Multiply x, y, (z) components at point i
             for (int k = 0; k < m_spacedim; ++k)
             {
-                movingframes[j][k * nq + i] =
-                    sqrt(Anistrength[j][i]) * movingframes[j][k * nq + i];
+                mfj[k * nq + i] *= scale;
             }
         }
     }
 
    CheckMovingFrames(movingframes);
+}
+
+void MMFSystem::CheckMovingFrames(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
+{
+    const int nq        = m_fields[0]->GetNpoints();
+    const int sdim      = m_spacedim;          // 2 or 3
+    const NekDouble eps = 1e-9;
+    const NekDouble unitTol = 1e-6;
+    const NekDouble orthoTol = 1e-4;
+
+    // Accumulators
+    int cnt1 = 0, cnt2 = 0, cntunit1 = 0, cntunit2 = 0;
+
+    // For average magnitudes (use sum of squared magnitudes, take sqrt at end)
+    NekDouble MFmag1_sq_sum = 0.0;
+    NekDouble MFmag2_sq_sum = 0.0;
+
+    // For orthogonality (accumulate mean sqrt of squared dot-products)
+    NekDouble dot12_sq_sum = 0.0, dot23_sq_sum = 0.0, dot31_sq_sum = 0.0;
+
+    // For printed RMS of each component of each moving frame
+    // sum of squares for components (x,y,(z)) of each frame j=0,1,2
+    NekDouble comp_sq_sum[3][3] = {{0.0}}; // [frame][component], safe since max 3
+
+    // Convenience pointers (avoid repeated operator[] cost)
+    const Array<OneD, NekDouble> &mf0 = movingframes[0];
+    const Array<OneD, NekDouble> &mf1 = movingframes[1];
+    const Array<OneD, NekDouble> &mf2 = movingframes[2];
+
+    for (int i = 0; i < nq; ++i)
+    {
+        // Components at point i for each frame (t1,t2,t3)
+        const NekDouble t1x = mf0[i];
+        const NekDouble t2x = mf1[i];
+        const NekDouble t3x = mf2[i];
+
+        const NekDouble t1y = mf0[i + nq];
+        const NekDouble t2y = mf1[i + nq];
+        const NekDouble t3y = mf2[i + nq];
+
+        // z exists only in 3D
+        const NekDouble t1z = (sdim == 3) ? mf0[i + 2 * nq] : 0.0;
+        const NekDouble t2z = (sdim == 3) ? mf1[i + 2 * nq] : 0.0;
+        const NekDouble t3z = (sdim == 3) ? mf2[i + 2 * nq] : 0.0;
+
+        // |t1| and |t2|
+        const NekDouble t1_sq = t1x*t1x + t1y*t1y + t1z*t1z;
+        const NekDouble t2_sq = t2x*t2x + t2y*t2y + t2z*t2z;
+
+        if (t1_sq > eps*eps) { ++cnt1; MFmag1_sq_sum += t1_sq; }
+        if (t2_sq > eps*eps) { ++cnt2; MFmag2_sq_sum += t2_sq; }
+
+        if (std::fabs(std::sqrt(t1_sq) - 1.0) < unitTol) { ++cntunit1; }
+        if (std::fabs(std::sqrt(t2_sq) - 1.0) < unitTol) { ++cntunit2; }
+
+        // Orthogonality (squared dot products)
+        const NekDouble d12 = t1x*t2x + t1y*t2y + t1z*t2z;
+        const NekDouble d23 = t2x*t3x + t2y*t3y + t2z*t3z;
+        const NekDouble d31 = t3x*t1x + t3y*t1y + t3z*t1z;
+        dot12_sq_sum += d12 * d12;
+        dot23_sq_sum += d23 * d23;
+        dot31_sq_sum += d31 * d31;
+
+        // Component-wise sums for RMS printout
+        comp_sq_sum[0][0] += t1x*t1x; comp_sq_sum[0][1] += t1y*t1y; comp_sq_sum[0][2] += t1z*t1z;
+        comp_sq_sum[1][0] += t2x*t2x; comp_sq_sum[1][1] += t2y*t2y; comp_sq_sum[1][2] += t2z*t2z;
+        comp_sq_sum[2][0] += t3x*t3x; comp_sq_sum[2][1] += t3y*t3y; comp_sq_sum[2][2] += t3z*t3z;
+    }
+
+    // Means
+    const NekDouble dot12 = std::sqrt(dot12_sq_sum / nq);
+    const NekDouble dot23 = std::sqrt(dot23_sq_sum / nq);
+    const NekDouble dot31 = std::sqrt(dot31_sq_sum / nq);
+
+    const NekDouble MFmag1 = (cnt1 > 0) ? std::sqrt(MFmag1_sq_sum / cnt1) : 0.0;
+    const NekDouble MFmag2 = (cnt2 > 0) ? std::sqrt(MFmag2_sq_sum / cnt2) : 0.0; // fixed: divide by cnt2
+
+    // Reports
+    if (cntunit1 == cnt1)
+        std::cout << "*** 1st Moving frames are in unit length ***\n";
+    else
+        std::cout << "*** 1st Moving frames are NOT in unit length, Avg mag. = "
+                  << MFmag1 << " ***\n";
+
+    if (cntunit2 == cnt2)
+        std::cout << "*** 2nd Moving frames are in unit length ***\n";
+    else
+        std::cout << "*** 2nd Moving frames are NOT in unit length, Avg mag. = "
+                  << MFmag2 << " ***\n";
+
+    if ((std::fabs(dot12) + std::fabs(dot23) + std::fabs(dot31)) < orthoTol)
+    {
+        std::cout << "*** Moving frames are Orthogonal\n";
+    }
+    else
+    {
+        std::cout << "dot12 = " << std::fabs(dot12)
+                  << ", dot23 = " << std::fabs(dot23)
+                  << ", dot31 = " << std::fabs(dot31) << "\n"
+                  << "*** Moving frames are NOT Orthogonal\n";
+    }
+
+    // Print RMS of each component of each frame without extra buffers
+    for (int j = 0; j < std::min(3, m_mfdim); ++j)
+    {
+        const NekDouble rmsx = std::sqrt(comp_sq_sum[j][0] / nq);
+        const NekDouble rmsy = std::sqrt(comp_sq_sum[j][1] / nq);
+        const NekDouble rmsz = (sdim == 3) ? std::sqrt(comp_sq_sum[j][2] / nq) : 0.0;
+
+        if (sdim == 3)
+        {
+            std::cout << "*** MF " << j << " = ( " << rmsx << " , " << rmsy << " , " << rmsz << " )\n";
+        }
+        else
+        {
+            std::cout << "*** MF " << j << " = ( " << rmsx << " , " << rmsy << " )\n";
+        }
+    }
 }
 
 SpatialDomains::GeomMMF MMFSystem::FindMMFdir(std::string MMFdirStr)
@@ -1642,144 +1664,6 @@ void MMFSystem::ConstructAnisotropicFrames(
               << e1ProjErr << std::endl;
 }
 
-void MMFSystem::CheckMovingFrames(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-{
-    NekDouble t1x, t1y, t1z, t2x, t2y, t2z, t3x, t3y, t3z;
-    NekDouble mag1, mag2, dot12 = 0.0, dot23 = 0.0, dot31 = 0.0;
-    NekDouble Tol = 0.0001;
-
-    int nq = m_fields[0]->GetNpoints();
-
-    int cntunit1 = 0;
-    int cntunit2 = 0;
-
-    int cnt1         = 0;
-    int cnt2         = 0;
-    NekDouble MFmag1 = 0.0;
-    NekDouble MFmag2 = 0.0;
-
-    for (int i = 0; i < nq; ++i)
-    {
-        t1x = movingframes[0][i];
-        t1y = movingframes[0][i + nq];
-        t1z = movingframes[0][i + 2 * nq];
-
-        t2x = movingframes[1][i];
-        t2y = movingframes[1][i + nq];
-        t2z = movingframes[1][i + 2 * nq];
-
-        t3x = movingframes[2][i];
-        t3y = movingframes[2][i + nq];
-        t3z = movingframes[2][i + 2 * nq];
-
-        mag1 = sqrt(t1x * t1x + t1y * t1y + t1z * t1z);
-        if (mag1 > 0.000000001)
-        {
-            cnt1++;
-            MFmag1 += mag1 * mag1;
-        }
-
-        mag2 = sqrt(t2x * t2x + t2y * t2y + t2z * t2z);
-        if (mag2 > 0.000000001)
-        {
-            cnt2++;
-            MFmag2 += mag2 * mag2;
-        }
-
-        if (abs(mag1 - 1.0) < 0.000001)
-        {
-            cntunit1++;
-        }
-
-        if (abs(mag2 - 1.0) < 0.000001)
-        {
-            cntunit2++;
-        }
-
-        dot12 += (t1x * t2x + t1y * t2y + t1z * t2z) *
-                 (t1x * t2x + t1y * t2y + t1z * t2z);
-        dot23 += (t2x * t3x + t2y * t3y + t2z * t3z) *
-                 (t2x * t3x + t2y * t3y + t2z * t3z);
-        dot31 += (t3x * t1x + t3y * t1y + t3z * t1z) *
-                 (t3x * t1x + t3y * t1y + t3z * t1z);
-    }
-
-    dot12 = sqrt(dot12 / nq);
-    dot23 = sqrt(dot23 / nq);
-    dot31 = sqrt(dot31 / nq);
-
-    MFmag1 = sqrt(MFmag1 / cnt1);
-    MFmag2 = sqrt(MFmag2 / cnt1);
-
-    if (cntunit1 == cnt1)
-    {
-        std::cout << "*** 1st Moving frames are in unit length ***"
-                  << std::endl;
-    }
-
-    else
-    {
-        std::cout << "*** 1st Moving frames are NOT in unit length, Avg mag. = "
-                  << MFmag1 << " *** " << std::endl;
-    }
-
-    if (cntunit2 == cnt2)
-    {
-        std::cout << "*** 2nd Moving frames are in unit length ***"
-                  << std::endl;
-    }
-
-    else
-    {
-        std::cout << "*** 2nd Moving frames are NOT in unit length, Avg mag. = "
-                  << MFmag2 << " *** " << std::endl;
-    }
-
-    if ((fabs(dot12) + fabs(dot23) + fabs(dot31)) < Tol)
-    {
-        std::cout << "*** Moving frames are Orthogonal" << std::endl;
-    }
-
-    else
-    {
-        std::cout << "dot12 = " << fabs(dot12) << ", dot23 = " << fabs(dot23)
-                  << ", dot31 = " << fabs(dot31) << std::endl;
-        std::cout << "*** Moving frames are NOT Orthogonal" << std::endl;
-    }
-
-    Array<OneD, Array<OneD, NekDouble>> tmp(m_spacedim);
-    for (int j = 0; j < m_spacedim; ++j)
-    {
-        tmp[j] = Array<OneD, NekDouble>(nq, 0.0);
-        for (int k = 0; k < m_spacedim; ++k)
-        {
-            Vmath::Vvtvp(nq, &movingframes[j][k * nq], 1,
-                         &movingframes[j][k * nq], 1, &tmp[j][0], 1, &tmp[j][0],
-                         1);
-        }
-        Vmath::Vsqrt(nq, tmp[j], 1, tmp[j], 1);
-    }
-
-    Array<OneD, NekDouble> tmpx(nq), tmpy(nq), tmpz(nq);
-    for (int i = 0; i < m_spacedim; ++i)
-    {
-        Vmath::Vcopy(nq, &movingframes[i][0], 1, &tmpx[0], 1);
-        Vmath::Vcopy(nq, &movingframes[i][nq], 1, &tmpy[0], 1);
-        Vmath::Vcopy(nq, &movingframes[i][2 * nq], 1, &tmpz[0], 1);
-
-        std::cout << "*** MF " << i << " = ( " << RootMeanSquare(tmpx) << " , "
-                  << RootMeanSquare(tmpy) << " , " << RootMeanSquare(tmpz)
-                  << " ) " << std::endl;
-    }
-
-    // for (int i=0; i<nq; ++i)
-    // {
-    //     std::cout << "i = " << i << ", MF1 = ( " << movingframes[0][i] << " , " << movingframes[0][i+nq] << " , " << movingframes[0][i+2*nq] 
-    //     << " ) , MF2 = ( " << movingframes[1][i] << " , " << movingframes[1][i+nq] << " , " << movingframes[1][i+2*nq]  
-    //     << " ) , MF3 = ( " << movingframes[2][i] << " , " << movingframes[2][i+nq] << " , " << movingframes[2][i+2*nq] << " ) " << std::endl; 
-    // }
-}
 
 // 	RebuildMovingFrames(m_K1, m_K2, m_K3, m_distance);
 void MMFSystem::RebuildMovingFrames(
@@ -2833,329 +2717,6 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovCurl(
 
     return outarray;
 }
-
-// Array<OneD, NekDouble> MMFSystem::ComputeCovariantDivergence(
-//     const Array<OneD, const NekDouble> &vellong,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-// {
-//     int nq = m_fields[0]->GetNpoints();
-
-//     Array<OneD, Array<OneD, NekDouble>> velocity(m_spacedim);
-//     for (int k = 0; k < m_spacedim; ++k)
-//     {
-//         velocity[k] = Array<OneD, NekDouble>(nq);
-//         Vmath::Vcopy(nq, &vellong[k * nq], 1, &velocity[k][0], 1);
-//     }
-
-//     Array<OneD, NekDouble> outarray(nq);
-//     outarray = ComputeCovariantDivergence(velocity, movingframes);
-
-//     return outarray;
-// }
-
-// \nabla \cdot \vec{v} = \nabla v_1 \cdot \mathbf{e}^1 - \Gamma^2_{11} v_2
-//                          + \nabla v_2 \cdot \mathbf{e}^2 + \Gamma^2_{21} v_1
-// Array<OneD, NekDouble> MMFSystem::ComputeCovariantDivergence(
-//     const Array<OneD, const Array<OneD, NekDouble>> &velocity,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-// {
-//     int nq = m_fields[0]->GetNpoints();
-
-//     Array<OneD, NekDouble> u1(nq);
-//     Array<OneD, NekDouble> u2(nq);
-
-//     CartesianToMovingframes(velocity[0], velocity[1], velocity[2],
-//     movingframes,
-//                             u1, u2);
-
-//     Array<OneD, NekDouble> du1(nq);
-//     Array<OneD, NekDouble> du2(nq);
-
-//     m_fields[0]->PhysDirectionalDeriv(movingframes[0], u1, du1);
-//     m_fields[0]->PhysDirectionalDeriv(movingframes[1], u2, du2);
-
-//     Array<OneD, NekDouble> outarray(nq, 0.0);
-
-//     Vmath::Vadd(nq, du1, 1, du2, 1, outarray, 1);
-
-//     // Add Christoffel symbol
-//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFConnection;
-//     ComputeConnection1form(movingframes, MFConnection);
-
-//     // \nabla \cdot e^1 = \Gamma^2_{12} = w^2_1 <e^2>
-//     // Vmath::Vcopy(nq, &MFConnection[0][1][0], 1, &DivMF[0][0], 1);
-//     // Vmath::Vvtvp(nq, &MFConnection[0][1][0], 1, &u1[0], 1, &outarray[0],
-//     1,
-//     //          &outarray[0], 1);
-//     Array<OneD, NekDouble> Gammau1(nq);
-
-//     Vmath::Vmul(nq, &MFConnection[0][1][0], 1, &u1[0], 1, &Gammau1[0], 1);
-//     Vmath::Vadd(nq, &Gammau1[0], 1, &outarray[0], 1, &outarray[0], 1);
-
-//     // \nabla \cdot e^2 = \Gamma^1_{21} = -w^2_1 <e^1>
-//     // Vmath::Vcopy(nq, &MFConnection[0][0][0], 1, &DivMF[1][0], 1);
-//     Array<OneD, NekDouble> Gammau2(nq);
-//     Vmath::Vmul(nq, &MFConnection[0][0][0], 1, &u2[0], 1, &Gammau2[0], 1);
-//     Vmath::Neg(nq, Gammau2, 1);
-
-//     Vmath::Vadd(nq, &Gammau2[0], 1, &outarray[0], 1, &outarray[0], 1);
-
-//     return outarray;
-// }
-
-// Compute $ \mathbf{k} \cdot ( \nabla \times \vec{v} )$
-// \nabla \times \vec{v} = \frac{\partial v_2}{\partial x_1} +
-// \Gamma^2_{11} v^1
-//                         - (\frac{\partial v_1}{\partial x_2} +
-//                         \Gamma^1_{22} v^2)
-// Array<OneD, NekDouble> MMFSystem::ComputeCovariantCurl(
-//     const Array<OneD, const NekDouble> &vellong,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-// {
-//     int nq = m_fields[0]->GetNpoints();
-
-//     Array<OneD, Array<OneD, NekDouble>> velocity(m_spacedim);
-//     for (int k = 0; k < m_spacedim; ++k)
-//     {
-//         velocity[k] = Array<OneD, NekDouble>(nq);
-//         Vmath::Vcopy(nq, &vellong[k * nq], 1, &velocity[k][0], 1);
-//     }
-
-//     Array<OneD, NekDouble> rval(nq);
-//     rval = ComputeCovariantCurl(velocity, movingframes);
-
-//     return rval;
-// }
-
-// Array<OneD, NekDouble> MMFSystem::ComputeCovariantCurl(
-//     const Array<OneD, const Array<OneD, NekDouble>> &velocity,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-// {
-//     int nq = m_fields[0]->GetNpoints();
-
-//     Array<OneD, NekDouble> u1(nq);
-//     Array<OneD, NekDouble> u2(nq);
-
-//     Array<OneD, NekDouble> du1dx2(nq);
-//     Array<OneD, NekDouble> du2dx1(nq);
-
-//     Array<OneD, NekDouble> outarray(nq, 0.0);
-
-//     CartesianToMovingframes(velocity[0], velocity[1], velocity[2],
-//     movingframes,
-//                             u1, u2);
-
-//     // Add Christoffel symbol
-//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFConnection;
-//     ComputeConnection1form(movingframes, MFConnection);
-
-//     Array<OneD, NekDouble> tmp(nq);
-
-//     // du1dx2 = Compute \partial u2 / /partial x^1 + \Gamma^2_{12} u2
-//     m_fields[0]->PhysDirectionalDeriv(movingframes[0], u2, du2dx1);
-
-//     Vmath::Vmul(nq, &MFConnection[0][1][0], 1, &u2[0], 1, &tmp[0], 1);
-//     Vmath::Vadd(nq, &du2dx1[0], 1, &tmp[0], 1, &du2dx1[0], 1);
-
-//     // du2dx1 = Compute \partial u2 / /partial x^1 - \Gamma^2_{11} u1
-//     m_fields[0]->PhysDirectionalDeriv(movingframes[1], u1, du1dx2);
-
-//     Vmath::Vmul(nq, &MFConnection[0][0][0], 1, &u1[0], 1, &tmp[0], 1);
-//     Vmath::Vsub(nq, &du1dx2[0], 1, &tmp[0], 1, &du1dx2[0], 1);
-
-//     // \nabla \times \vec{u} = du1dx2 - du2dx1
-//     Vmath::Vsub(nq, du2dx1, 1, du1dx2, 1, outarray, 1);
-
-//     return outarray;
-// }
-
-// Compute Covariant derivative; \nabla_{vec{v}} \vec{u}
-// Array<OneD, NekDouble> MMFSystem::ComputeCovariantDerivative(
-//     const Array<OneD, const Array<OneD, NekDouble>> &velocity,
-//     const Array<OneD, const NekDouble> &direction,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-//     {
-//         int nq = m_fields[0]->GetNpoints();
-
-//         Array<OneD, NekDouble> outarray(m_shapedim * nq, 0.0);
-
-//         Array<OneD, NekDouble> CovDeriv(m_shapedim * nq, 0.0);
-
-//         Array<OneD, NekDouble> u1(nq);
-//         Array<OneD, NekDouble> u2(nq);
-
-//         CartesiantoMovingframes(velocity[0], velocity[1], velocity[2],
-//         movingframes, u1, u2);
-
-//         Array<OneD, NekDouble> uth(nq);
-//         Array<OneD, NekDouble> uphi(nq);
-
-//         MovingframesToSpherical(u1, u2, movingframes, uth, uphi);
-
-//         std::cout << "Velocity: u1 = ( " << RootMeanSquare(u1) << ", u2 = "
-//         << RootMeanSquare(u2)
-//         << ", uth = " << RootMeanSquare(uth) << ", uphi = " <<
-//         RootMeanSquare(uphi) << std::endl;
-
-//         Array<OneD, Array<OneD, NekDouble>> dirvector(m_spacedim);
-//         for (int k=0; k<m_spacedim; ++k)
-//         {
-//             dirvector[k] = Array<OneD, NekDouble>(nq);
-//             Vmath::Vcopy(nq, &direction[k*nq], 1, &dirvector[k][0], 1);
-//         }
-
-//         Array<OneD, Array<OneD, NekDouble>> dirv(m_shapedim);
-//         for (int j=0; j<m_shapedim; ++j)
-//         {
-//             dirv[j] = Array<OneD, NekDouble>(nq);
-//         }
-//         Array<OneD, NekDouble> dirv2(nq);
-
-//         Array<OneD, NekDouble> dirvth(nq);
-//         Array<OneD, NekDouble> dirvphi(nq);
-
-//         CartesiantoMovingframes(dirvector[0], dirvector[1], dirvector[2],
-//         movingframes, dirv[0], dirv[1]); MovingframesToSpherical(dirv[0],
-//         dirv[1], movingframes, dirvth, dirvphi);
-
-//         std::cout << "DirDeriv: vel = ( " << RootMeanSquare(dirv[0]) << " , "
-//         << RootMeanSquare(dirv[1])
-//         << " ), velSph = ( " << RootMeanSquare(dirvth) << " , " <<
-//         RootMeanSquare(dirvphi) << " ) " << std::endl;
-
-//         // \nabla_{e_j} \vec{u}
-//         Array<OneD, NekDouble> tmp1(nq);
-//         Array<OneD, NekDouble> tmp2(nq);
-//         for (int j=0; j<m_shapedim; ++j)
-//         {
-//             // j=0:
-//             // tmp1 = \nabla u^1 \cdot \mathbf{e}_1
-//             // tmp2 = \nabla u^2 \cdot \mathbf{e}_1 - \omega_{21}
-//             (\mathbf{e}_2) u^2
-
-//             // j = 1:
-//             // tmp1 = \nabla u^1 \cdot \mathbf{e}_2 + \omega_{21}
-//             (\mathbf{e}_2) u^2
-//             // tmp2 = \nabla u^2 \cdot \mathbf{e}_2
-
-//             CovDeriv = ComputeCovariantDerivative(j, u1, u2, movingframes);
-
-//             Vmath::Vcopy(nq, &CovDeriv[0], 1, &tmp1[0], 1);
-//             Vmath::Vcopy(nq, &CovDeriv[nq], 1, &tmp2[0], 1);
-
-//             std::cout << "j = " << j << ", ComputeCovDeriv = ( " <<
-//             RootMeanSquare(tmp1, m_MMFActivation) << " , " <<
-//             RootMeanSquare(tmp2, m_MMFActivation) << " ) " << std::endl;
-
-//         // \nabla_{vec{v}} \vec{u} = v^1 \nabla_{e_1} \vec{u}  + v^2
-//         \nabla_{e_2} \vec{u}
-
-//             Vmath::Vvtvp(nq, &dirv[j][0], 1, &CovDeriv[0], 1, &outarray[0],
-//             1, &outarray[0], 1); Vmath::Vvtvp(nq, &dirv[j][0], 1,
-//             &CovDeriv[nq], 1, &outarray[nq], 1, &outarray[nq], 1);
-
-//           //  Vmath::Vmul(nq, &dirv1[0], 1, &CovDeriv[0][j*nq], 1,
-//           &outarray[j*nq], 1);
-//           //  Vmath::Vvtvp(nq, &dirv2[0], 1, &CovDeriv[1][j*nq], 1,
-//           &outarray[j*nq], 1, &outarray[j*nq], 1);
-//         }
-
-//         return outarray;
-//     }
-
-// Compute Covariant derivative; \nabla_{e_i} \vec{u}
-// input: direction i
-// input: velocity: \vec{u} = u^1 \mathbf{e}_1 + u^2 \mathbf{e}_2
-// input: movingframes: e_1
-// output: outarray (m_shapedim * nq): ( \mathbf{e}_1 component, \mathbf{e}_2
-// component ) Array<OneD, NekDouble> MMFSystem::ComputeCovariantDerivative(
-//     const int direction,
-//     const Array<OneD, const NekDouble> &ui,
-//     const Array<OneD, const NekDouble> &u2,
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-// {
-//     int nq = m_fields[0]->GetNpoints();
-
-//     // return vector
-//     Array<OneD, NekDouble> outarray(m_shapedim * nq);
-
-//     Array<OneD, NekDouble> du1dei(nq);
-//     Array<OneD, NekDouble> du2dei(nq);
-
-//     m_fields[0]->PhysDirectionalDeriv(movingframes[0], ui, du1dei);
-//     m_fields[0]->PhysDirectionalDeriv(movingframes[1], ui, du2dei);
-
-//     // Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_shapedim);
-//     // Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_shapedim);
-
-//     // ComputeMFcdotSphericalCoord(movingframes, ThetacdotMF, PhicdotMF);
-
-//     // std::cout << "Theta * e1 = " << RootMeanSquare(ThetacdotMF[0],
-//     m_MMFActivation) << ", Theta * e2 = " << RootMeanSquare(ThetacdotMF[1],
-//     m_MMFActivation)
-//     //    << ", Phi * e1 = " << RootMeanSquare(PhicdotMF[0], m_MMFActivation)
-//     << ", Phi * e2 = " << RootMeanSquare(PhicdotMF[1], m_MMFActivation) <<
-//     std::endl;
-
-//     // Array<OneD, NekDouble> du1dth(nq);
-//     // Array<OneD, NekDouble> du2dphi(nq);
-//     // for (int i=0; i<nq; ++i)
-//     // {
-//     //     du1dth[i] = du1dei[i]*ThetacdotMF[0][i] +
-//     du2dei[i]*ThetacdotMF[1][i];
-//     //     du2dphi[i] = du1dei[i]*PhicdotMF[0][i]  +
-//     du2dei[i]*PhicdotMF[1][i];
-//     // }
-
-//     // std::cout << "du1dei = " << RootMeanSquare(du1dei, m_MMFActivation) <<
-//     ", du2dei = " << RootMeanSquare(du2dei, m_MMFActivation)
-//     // << ". du1dth = " << RootMeanSquare(du1dth, m_MMFActivation) << ",
-//     du2dphi = " << RootMeanSquare(du2dphi, m_MMFActivation) << std::endl;
-
-//     // Add Connection form
-//     // w_{21} <e^1> = Connectionform[0][0];
-//     // w_{21} <e^2> = Connectionform[0][1];
-//     // w_{21} <e^3> = Connectionform[0][2];
-//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFConnection;
-//     ComputeConnection1form(movingframes, MFConnection);
-
-//     Vmath::Vcopy(nq, &du1dei[0], 1, &outarray[0], 1);
-//     Vmath::Vcopy(nq, &du2dei[0], 1, &outarray[nq], 1);
-
-//     Array<OneD, NekDouble> Gamma(nq);
-//     Vmath::Vmul(nq, &MFConnection[0][1][0], 1, &u2[0], 1, &Gamma[0], 1);
-
-//     // Vmath::Vmul(nq, &MFConnection[0][0][0], 1, &u1[0], 1, &tmp[0], 1);
-//     // Vmath::Vvtvp(nq, &MFConnection[0][1][0], 1, &u2[0], 1, &tmp[0], 1,
-//     &tmp[0], 1);
-
-//     switch(direction)
-//     {
-//         case 0:
-//         {
-//             // \nabla_{e_1} \vec{u}
-//             // = ( \nabla u^1 \cdot e_1, \nabla u^2 \cdot e_1 +
-//             \omega_{21}(e_1) u^1 + \omega_{21}(e_2) u^2 ) Vmath::Neg(nq,
-//             Gamma, 1); Vmath::Vadd(nq, &Gamma[0], 1, &outarray[nq], 1,
-//             &outarray[nq], 1);
-//         }
-//         break;
-
-//         case 1:
-//         {
-//             // \nabla_{e_e} \vec{u}
-//             // = ( \nabla u^1 \cdot e_1 - \omega_{21}(e_1) u^1 -
-//             \omega_{21}(e_2) u^2, \nabla u^2 \cdot e_1 ) Vmath::Vadd(nq,
-//             &Gamma[0], 1, &outarray[0], 1, &outarray[0], 1);
-//         }
-//         break;
-
-//         default:
-//         break;
-//     }
-
-//     return outarray;
-// }
 
 Array<OneD, NekDouble> MMFSystem::ComputeCurlSphericalCoord(
     const Array<OneD, const NekDouble> &inarrayphi,
@@ -11196,63 +10757,69 @@ void MMFSystem::ComputeVarCoeff2D(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     StdRegions::VarCoeffMap &varcoeff)
 {
-    int nq = GetTotPoints();
-
-    StdRegions::VarCoeffType MMFCoeffs[15] = {
-        StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-        StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-        StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-        StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-        StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-        StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-        StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-        StdRegions::eVarCoeffMF3Mag};
+    const int nq   = GetTotPoints();
+    const int sdim = m_spacedim;      // 2 or 3
+    const int mfDim = m_mfdim;        // typically 3
 
     for (int i=0; i<15; ++i)
     {
-        varcoeff[MMFCoeffs[i]] = Array<OneD, NekDouble>(nq, 0.0);
+        varcoeff[kMMFCoeffs[i]] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    int indx;
-    Array<OneD, NekDouble> tmp(nq);
-    for (int k = 0; k < m_mfdim; ++k)
+    // m_DivMF
+    Array<OneD, Array<OneD, NekDouble>> DivMF;
+    ComputeDivMF(m_DerivType, movingframes, DivMF);
+
+    for (int k = 0; k < mfDim; ++k)
     {
-        // For Moving Frames
-        indx = 5 * k;
+        const int base = 5 * k;
 
-        for (int j = 0; j < m_spacedim; ++j)
+        // Copy x,y,(z) components into fresh arrays, then assign to varcoeff.
+        for (int j = 0; j < sdim; ++j)
         {
-            Vmath::Vcopy(nq, &movingframes[k][j * nq], 1, &tmp[0], 1);
-            varcoeff[MMFCoeffs[indx + j]] = tmp;
+            Array<OneD, NekDouble> comp(nq, 0.0);
+            Vmath::Vcopy(nq, &movingframes[k][j * nq], 1, &comp[0], 1);
+            varcoeff[kMMFCoeffs[base + j]] = comp; // assign the filled array
+        }
+        // If 2D, base+2 (z) remains zero from the initialization above.
+
+        // Divergence of frame k
+        varcoeff[kMMFCoeffs[base + 3]] = DivMF[k];
+
+        // |e^k|^2 = x^2 + y^2 (+ z^2)
+        {
+            Array<OneD, NekDouble> mag(nq, 0.0);
+            for (int c = 0; c < sdim; ++c)
+            {
+                Vmath::Vvtvp(nq,
+                             &movingframes[k][c * nq], 1,
+                             &movingframes[k][c * nq], 1,
+                             &mag[0], 1,
+                             &mag[0], 1);
+            }
+            varcoeff[kMMFCoeffs[base + 4]] = mag;
         }
 
-        // m_DivMF
-        Array<OneD, Array<OneD, NekDouble>> DivMF;
-        ComputeDivMF(m_DerivType, movingframes, DivMF);
+        // RMS summary (read-only view)
+        const auto &vx   = varcoeff[kMMFCoeffs[base + 0]].GetValue();
+        const auto &vy   = varcoeff[kMMFCoeffs[base + 1]].GetValue();
+        const auto &vz   = varcoeff[kMMFCoeffs[base + 2]].GetValue();
+        const auto &vdiv = varcoeff[kMMFCoeffs[base + 3]].GetValue();
+        const auto &vmag = varcoeff[kMMFCoeffs[base + 4]].GetValue();
 
-        varcoeff[MMFCoeffs[indx + 3]] = DivMF[k];
-
-        // \| e^k \|^2
-        tmp                           = Array<OneD, NekDouble>(nq, 0.0);
-        for (int i = 0; i < m_spacedim; ++i)
-        {
-            Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
-                         &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-        }
-
-        varcoeff[MMFCoeffs[indx + 4]] = tmp;
-
-       std::cout << "k = " << k << ", m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[indx]].GetValue())
-              << " , " << RootMeanSquare(varcoeff[MMFCoeffs[indx+1]].GetValue()) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[indx+2]].GetValue()) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[indx+3]].GetValue()) << " , "
-              << RootMeanSquare(varcoeff[MMFCoeffs[indx+4]].GetValue()) << " ) " << std::endl;
-
+        std::cout << "k = " << k
+                  << ", m_varcoeff = ( "
+                  << RootMeanSquare(vx)   << " , "
+                  << RootMeanSquare(vy)   << " , "
+                  << RootMeanSquare(vz)   << " , "
+                  << RootMeanSquare(vdiv) << " , "
+                  << RootMeanSquare(vmag) << " )\n";
     }
 
-    std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
-              << std::endl << std::endl;
+    std::cout << " ::::: 2D VarCoeff is Successfully Created ::::: \n\n";
 }
+
+
 
 void MMFSystem::ComputeVarCoeff2DDxDyDz(
     const Array<OneD, const NekDouble> &epsilon,
@@ -11269,78 +10836,9 @@ void MMFSystem::ComputeVarCoeff2DDxDyDz(
         varcoeff[MMFCoeffs[j]] = Array<OneD, NekDouble>(nq, epsilon[j]);
     }
 
-    // std::cout << "m_varcoeff = ( " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
-    //           << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-    //           << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " ) " << std::endl;
-
     std::cout << " ::::: 2D [Dx Dy Dz] Varcoeff is Successfully Created ::::: "
               << std::endl << std::endl;
 }
-
-
-
-// StdRegions::VarCoeffMap MMFSystem::ComputeVarCoeff2D(
-//     const Array<OneD, const Array<OneD, NekDouble>> &movingframes)
-// {
-//     int nq = GetTotPoints();
-
-//     StdRegions::VarCoeffMap varcoeff;
-
-//     StdRegions::VarCoeffType MMFCoeffs[15] = {
-//         StdRegions::eVarCoeffMF1x,   StdRegions::eVarCoeffMF1y,
-//         StdRegions::eVarCoeffMF1z,   StdRegions::eVarCoeffMF1Div,
-//         StdRegions::eVarCoeffMF1Mag, StdRegions::eVarCoeffMF2x,
-//         StdRegions::eVarCoeffMF2y,   StdRegions::eVarCoeffMF2z,
-//         StdRegions::eVarCoeffMF2Div, StdRegions::eVarCoeffMF2Mag,
-//         StdRegions::eVarCoeffMF3x,   StdRegions::eVarCoeffMF3y,
-//         StdRegions::eVarCoeffMF3z,   StdRegions::eVarCoeffMF3Div,
-//         StdRegions::eVarCoeffMF3Mag};
-
-//     int indx;
-//     Array<OneD, NekDouble> tmp(nq);
-//     for (int k = 0; k < m_mfdim; ++k)
-//     {
-//         // For Moving Frames
-//         indx = 5 * k;
-
-//         for (int j = 0; j < m_spacedim; ++j)
-//         {
-//             varcoeff[MMFCoeffs[indx + j]] = Array<OneD, NekDouble>(nq, 0.0);
-//             Vmath::Vcopy(nq, &movingframes[k][j * nq], 1,
-//                          &varcoeff[MMFCoeffs[indx + j]][0], 1);
-//         }
-
-//         // m_DivMF
-//         varcoeff[MMFCoeffs[indx + 3]] = Array<OneD, NekDouble>(nq, 0.0);
-
-//         Array<OneD, Array<OneD, NekDouble>> DivMF;
-//         ComputeDivMF(m_DerivType, movingframes, DivMF);
-
-//         Vmath::Vcopy(nq, &DivMF[k][0], 1, &varcoeff[MMFCoeffs[indx + 3]][0], 1);
-
-//         // \| e^k \|
-//         varcoeff[MMFCoeffs[indx + 4]] = Array<OneD, NekDouble>(nq, 0.0);
-//         tmp                           = Array<OneD, NekDouble>(nq, 0.0);
-//         for (int i = 0; i < m_spacedim; ++i)
-//         {
-//             Vmath::Vvtvp(nq, &movingframes[k][i * nq], 1,
-//                          &movingframes[k][i * nq], 1, &tmp[0], 1, &tmp[0], 1);
-//         }
-
-//         Vmath::Vcopy(nq, &tmp[0], 1, &varcoeff[MMFCoeffs[indx + 4]][0], 1);
-//     }
-
-//     std::cout << "m_varcoeff = " << RootMeanSquare(varcoeff[MMFCoeffs[0]])
-//               << " , " << RootMeanSquare(varcoeff[MMFCoeffs[1]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[2]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[3]]) << " , "
-//               << RootMeanSquare(varcoeff[MMFCoeffs[4]]) << std::endl;
-
-//     return varcoeff;
-
-//     std::cout << " ::::: 2D Varcoeff is Successfully Created ::::: "
-//               << std::endl;
-// }
 
 int MMFSystem::CountActivated(const Array<OneD, const int> &ActivatedHistory)
 {
