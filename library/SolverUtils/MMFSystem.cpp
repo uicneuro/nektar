@@ -4183,7 +4183,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeMMFDiffusion(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
     const Array<OneD, const NekDouble> &inarray)
 {
-    int nq = m_fields[0]->GetNpoints();
+    const int nq = m_fields[0]->GetNpoints();
     Array<OneD, NekDouble> outarray(nq, 0.0);
 
     static thread_local Array<OneD, NekDouble> tmp;
