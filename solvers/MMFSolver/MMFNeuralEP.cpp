@@ -3333,8 +3333,6 @@ void MMFNeuralEP::MembraneBoundary2D(
 {
     boost::ignore_unused(physarray);
 
-    int nq = GetTotPoints();
-    //  int nvariables = physarray.size();
     int nTracePts = GetTraceNpoints();
 
     int id1, id2, npts;
