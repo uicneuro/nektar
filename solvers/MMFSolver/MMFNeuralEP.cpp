@@ -705,8 +705,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
                 std::cout << std::endl;
 
-                wait_on_enter();
-
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
 
@@ -3055,6 +3053,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 {
     const int nvar = m_fields.size();
     const int nq   = m_fields[0]->GetNpoints();
+    const NekDouble Cn = m_Cn;
+    const NekDouble Rf = m_Rf;
 
     // Reuse memory if already allocated
     for (int i = 0; i < nvar; ++i)
@@ -3092,34 +3092,34 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     phiecurrent = ComputeMMFDiffusion(m_movingframes, phie);
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
-    #pragma omp parallel for
+    NekDouble factor = Cn * Rf;
     for (int i = 0; i < nq; ++i)
     {
         if (m_intrazone[i] > 0.0)
         {
-            outarray[0][i] += phiecurrent[i] / (m_Cn * m_Rf);
+            outarray[0][i] += phiecurrent[i] / factor;
         }
     }
 
     // 5. Compute \nabla^2 (\nabla^2 \phi_e) = diffusion of extracellular field
-    static thread_local Array<OneD, NekDouble> phiediff, phiediff2;
-    if (phiediff.size() != nq)
-    {
-        phiediff = Array<OneD, NekDouble>(nq);
-        phiediff2 = Array<OneD, NekDouble>(nq);
-    }
+    // static thread_local Array<OneD, NekDouble> phiediff, phiediff2;
+    // if (phiediff.size() != nq)
+    // {
+    //     phiediff = Array<OneD, NekDouble>(nq);
+    //     phiediff2 = Array<OneD, NekDouble>(nq);
+    // }
 
-    phiediff = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
-    phiediff2 = ComputeMMFDiffusion(m_phiediffmovingframes, phiediff);
+    // phiediff = ComputeMMFDiffusion(m_phiediffmovingframes, phie);
+   // phiediff2 = ComputeMMFDiffusion(m_phiediffmovingframes, phiediff);
 
     // Regular diffusivity value for the extracellular space
     // Physiological Review by Syková & Nicholson (2008)
-    const NekDouble Deff = -5e-6; // μm²/ms
-    #pragma omp parallel for
-    for (int i = 0; i < nq; ++i)
-    {
-        outarray[2][i] = Deff * phiediff2[i];
-    }
+    // const NekDouble Deff = -5e-6; // μm²/ms
+    // #pragma omp parallel for
+    // for (int i = 0; i < nq; ++i)
+    // {
+    //     outarray[2][i] = Deff * phiediff2[i];
+    // }
 
     if (m_explicitDiffusion)
     {
