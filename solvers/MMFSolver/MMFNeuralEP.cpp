@@ -39,6 +39,7 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include <SolverUtils/MMFSystem.h>
 #include <MMFSolver/EquationSystems/MMFNeuralEP.h>
 
 #include <CardiacEPSolver/Filters/FilterCellHistoryPoints.h>
@@ -73,6 +74,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     UnsteadySystem::v_InitObject(DeclareFields);
 
     const int nq = m_fields[0]->GetNpoints();
+    static constexpr NekDouble PI = 3.14159265358979323846;
+    m_pi       = PI;
 
     // Get the coordinates
     m_x = Array<OneD, NekDouble>(nq);
@@ -166,6 +169,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
     m_phiefactor = PhieMultFactor / axoncrossA;
+    std::cout << "\n phiefactor = " << m_phiefactor << std::endl;
 
     if( (fabs(m_fiber3left)>0.0) && (fabs(m_fiber3right)>0.0) )
     {
@@ -439,7 +443,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
     SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
 
-    std::cout << "Phie Moving frames are generated with " << phieMMFdirStr 
+    std::cout << "\nPhie Moving frames are generated with " << phieMMFdirStr 
     << " direction ===============" << std::endl;
 
     SetUpMovingFrames(phieMMFdir, m_phieAniStrength, m_phiemovingframes);
@@ -449,8 +453,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "TangentY");
     m_MMFdir = FindMMFdir(MMFdirStr);
 
-    std::cout << std::endl;
-    SetUpMovingFrames(m_MMFdir, phiediffAniStrength, m_phiediffmovingframes);
+    std::cout << "\nPhie Moving frames for rho diffusion are generated with " << phieMMFdirStr 
+    << " direction ===============" << std::endl;
+    SetUpMovingFrames(phieMMFdir, phiediffAniStrength, m_phiediffmovingframes);
 
     Array<OneD, Array<OneD, NekDouble>> sigma_i(m_expdim);
     Array<OneD, Array<OneD, NekDouble>> sigma_e(m_expdim);
@@ -855,7 +860,10 @@ void MMFNeuralEP::ComputeRegionalSigma(
     Array<OneD, Array<OneD, NekDouble>> &sigma_e,
     Array<OneD, Array<OneD, NekDouble>> &sigma_eM)
 {
-    int nq   = GetTotPoints();
+    const int nq   = GetTotPoints();
+    const NekDouble phiefactor = m_phiefactor;
+
+    std::cout << "\nphiefactor = " << m_phiefactor << std::endl;
 
         // Compute sigma_i
         // Node: 1.0, Myelin: m_Cn / m_Cm, Extraspace: 0.0
@@ -885,7 +893,7 @@ void MMFNeuralEP::ComputeRegionalSigma(
                 {
                     sigma_i[j][i] = 0.0;
                     sigma_e[j][i] = 1.0/m_ratio_re_ri;
-                    sigma_eM[j][i] = m_phiefactor/m_ratio_re_ri;
+                    sigma_eM[j][i] = phiefactor/m_ratio_re_ri;
                 }
             }
         }
@@ -908,57 +916,6 @@ void MMFNeuralEP::ComputeRegionalSigma(
                     << ", sigma_e_2 = "
                     << Vmath::Vmin(nq, sigma_e[1], 1) << std::endl;
     }
-
-        // Compute sigma_e
-        // for (int i = 0; i<nq; ++i)
-        // {
-        //     index = zoneindex[i];
-        //     // Node zone
-        //     for (int j = 0; j < m_expdim; ++j)
-        //     {
-        //         if(index>=0)
-        //         {
-        //             sigma_e[j][i] = 1.0/m_ratio_re_ri;
-        //         }
-
-        //         // Myelin zone
-        //         else if (index==-1)
-        //         {
-        //             // sigma_eM[j][i] = m_AnisotropyStrength/m_ratio_re_ri;
-        //             sigma_e[j][i] = 1.0/m_ratio_re_ri;
-        //         }
-
-        //         else if (index==-2)
-        //         {
-        //             sigma_e[j][i] = 1.0/m_ratio_re_ri;
-        //         }
-        //     }
-        // }
-
-        // Compute sigma_e
-        // for (int i = 0; i<nq; ++i)
-        // {
-        //     index = zoneindex[i];
-        //     // Node zone
-        //     for (int j = 0; j < m_expdim; ++j)
-        //     {
-        //         if(index>=0)
-        //         {
-        //             sigma_eM[j][i] = 1.0/m_ratio_re_ri;
-        //         }
-
-        //         // Myelin zone
-        //         else if (index==-1)
-        //         {
-        //             sigma_eM[j][i] = m_AnisotropyStrength/m_ratio_re_ri;
-        //         }
-
-        //         else if (index==-2)
-        //         {
-        //             sigma_eM[j][i] = m_phiefactor/m_ratio_re_ri;
-        //         }
-        //     }
-        // }
 
 void MMFNeuralEP::DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
