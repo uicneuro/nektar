@@ -220,6 +220,9 @@ protected:
     int m_zonestart, m_zoneend;
 
     int m_myeline, m_node, m_external;
+    
+    Array<OneD, NekDouble> m_x, m_y, m_z;
+    Array<OneD, NekDouble> m_xcell, m_ycell, m_zcell;
 
     NekDouble m_pi;
     NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle;
@@ -503,36 +506,23 @@ protected:
     Array<OneD, int> TestRanvierSingleIndex();
     Array<OneD, int> TestRanvierDuoIndex();
 
-    void IndexNodeZone2D(
-        const int numfiber, const int totNnode, 
-        const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup,
-        const Array<OneD, const NekDouble> &fiberleft,
-        const Array<OneD, const NekDouble> &fiberright,
-        const Array<OneD, const int> &fiberorder,
-        Array<OneD, Array<OneD, int>> &outarray);
+    void IndexNodeZone2D(       
+            const Array<OneD, const NekDouble> &fiberleft,
+            const Array<OneD, const NekDouble> &fiberright,
+            const Array<OneD, const int> &fiberorder,
+            Array<OneD, Array<OneD, int>> &zoneindexfiber);
 
     int FiberIndex(FiberType FiberType, const int fibern,
-        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
         const int fiberorder, const NekDouble xi, const NekDouble yi);
 
-    int LinearAlignedFiberIndex(
-        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
+    int LinearAlignedFiberIndex(const int fiberorder, const NekDouble yi);
 
-    int LinearMisAlignedFiberIndex(const int fibern,
-        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, const int fiberorder, const NekDouble yi);
+    int LinearMisAlignedFiberIndex(const int fibern, const NekDouble yi);
 
-    int LinearDivergentFiberIndex(const int fibern,
-        const int totNnode, const NekDouble nodelen, const NekDouble myelinlen,
-        const NekDouble nodeinitdown, const NekDouble nodeinitup, 
-        const int fiberorder, const NekDouble xi, const NekDouble yi);
+    int LinearDivergentFiberIndex(const int fibern, const NekDouble xi, const NekDouble yi);
 
     int ConstantCurvedFiberIndex(const int fibern,  
-        const NekDouble fibercurvature, const int totNnode, const NekDouble nodelen, 
-        const NekDouble myelinlen, const NekDouble xi, const NekDouble yi);
+        const NekDouble fibercurvature, const NekDouble xi, const NekDouble yi);
 
     // Array<OneD, int> SingleLinearIndex(
     //     const NekDouble fiberwidth, 
@@ -548,17 +538,28 @@ protected:
     //     const NekDouble nodeinitdown, const NekDouble nodeinitup,
     //     const NekDouble xi, const NekDouble yi);
 
-    void Getcellavg(
+    void GetCellCoordAvg(
         Array<OneD, NekDouble> &xcell, 
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-void SetUpDomainZone(
+        void SetUpDomainZone(
+        const int numfiber,
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
         Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
         Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
+        Array<OneD, int> &zoneindex,
         Array<OneD, NekDouble> &nodezone,
-        Array<OneD, NekDouble> &myelinzone);
+        Array<OneD, NekDouble> &myelinzone,
+        Array<OneD, NekDouble> &intrazone,
+        Array<OneD, NekDouble> &extrazone,
+        Array<OneD, NekDouble> &outerzone);
+
+        void PlotDomainZone(
+        const Array<OneD, const int> &zoneindex,
+        const Array<OneD, const NekDouble> &intrazone,
+        const Array<OneD, const NekDouble> &extrazone,
+        const Array<OneD, const NekDouble> &outerzone);
 
 void ComputeNeuralTimeMap(const NekDouble time,
                         const Array<OneD, const Array<OneD, int>> &zoneindex,
