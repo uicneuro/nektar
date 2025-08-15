@@ -169,7 +169,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
     m_phiefactor = PhieMultFactor / axoncrossA;
-    std::cout << "\n phiefactor = " << m_phiefactor << std::endl;
+    std::cout << "\nphiefactor = " << m_phiefactor << std::endl;
 
     if( (fabs(m_fiber3left)>0.0) && (fabs(m_fiber3right)>0.0) )
     {
@@ -418,6 +418,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
+            std::cout << "HEre 1" << std::endl;
 
     // Derive AnisotropyStrength.
     // SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
@@ -426,9 +427,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         Vmath::Smul(nq, m_Cn, &m_NeuralCmfiber[0], 1, &m_AniStrength[j][0], 1);
     }
+            std::cout << "HEre 2" << std::endl;
 
     MMFSystem::MMFInitObject(m_AniStrength);
     CheckMovingFrames(m_movingframes);
+            std::cout << "HEre 3" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
     Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(m_expdim);
