@@ -401,21 +401,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {   
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
-            std::cout << "HEre 01" << std::endl;
 
             // Get the first and last index of the excitation zone [1,2]intra
             SetUpDomainZone(m_numfiber, m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, 
                             m_zoneindex, m_nodezone, m_myelinzone,
                             m_intrazone, m_extrazone, m_outerzone);
-            std::cout << "HEre 02" << std::endl;
 
             PlotDomainZone(m_zoneindex, m_intrazone, m_extrazone, m_outerzone);
-            std::cout << "HEre 03" << std::endl;
 
             m_NeuralCmfiber = ComputeConductivity(m_zoneindexfiber);
-                        std::cout << "HEre 04" << std::endl;
-
-
             break;
         }
 
@@ -424,7 +418,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     }
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
-            std::cout << "HEre 1" << std::endl;
 
     // Derive AnisotropyStrength.
     // SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
@@ -433,11 +426,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
         Vmath::Smul(nq, m_Cn, &m_NeuralCmfiber[0], 1, &m_AniStrength[j][0], 1);
     }
-            std::cout << "HEre 2" << std::endl;
 
     MMFSystem::MMFInitObject(m_AniStrength);
     CheckMovingFrames(m_movingframes);
-            std::cout << "HEre 3" << std::endl;
 
     Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
     Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(m_expdim);
