@@ -400,15 +400,20 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dbi:
         {   
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
+            std::cout << "HEre 01" << std::endl;
 
             // Get the first and last index of the excitation zone [1,2]intra
             SetUpDomainZone(m_numfiber, m_zoneindexfiber, m_excitezonefiber, m_intrazonefiber, 
                             m_zoneindex, m_nodezone, m_myelinzone,
                             m_intrazone, m_extrazone, m_outerzone);
+            std::cout << "HEre 02" << std::endl;
 
             PlotDomainZone(m_zoneindex, m_intrazone, m_extrazone, m_outerzone);
+            std::cout << "HEre 03" << std::endl;
 
             m_NeuralCmfiber = ComputeConductivity(m_zoneindexfiber);
+                        std::cout << "HEre 04" << std::endl;
+
 
             break;
         }
