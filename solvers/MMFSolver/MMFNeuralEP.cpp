@@ -74,6 +74,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     UnsteadySystem::v_InitObject(DeclareFields);
 
     const int nq = m_fields[0]->GetNpoints();
+
     static constexpr NekDouble PI = 3.14159265358979323846;
     m_pi       = PI;
 
@@ -1841,6 +1842,10 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
                  const Array<OneD, const int> &zoneindex)
 {
     const int nq   = GetTotPoints();
+    const int npts = m_fields[0]->GetTotPoints(0);
+
+    const NekDouble Cm = m_neuron->GetCapacitanceValue(0);
+    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     Array<OneD, NekDouble> outarray(nq);
 
@@ -1851,28 +1856,28 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
         if ( (zoneindex[i] >= 0) && (zoneindex[i] < 100) )
 
         {
-            outarray[i] = 1.0 / m_Cn;
+            outarray[i] = 1.0 / Cn;
             cntn++;
         }
 
         if ( (zoneindex[i] >= 100) && (zoneindex[i] < 200) )
 
         {
-            outarray[i] = 1.0 / m_Cn;
+            outarray[i] = 1.0 / Cn;
             cntn++;
         }
 
         // Myelin zone
         if (zoneindex[i] == -1) 
         {
-            outarray[i] = 1.0 / m_Cm;
+            outarray[i] = 1.0 / Cm;
             cntm++;
         }
 
         // Myelin zone
         if (zoneindex[i] == -101) 
         {
-            outarray[i] = 1.0 / m_Cm;
+            outarray[i] = 1.0 / Cm;
             cntm++;
         }
 
@@ -1886,8 +1891,8 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
     cnte = nq - cntn - cntm;
 
-    std::cout << "ComputeConductivity: Node = " << cntn/m_npts << ", Myelinf1 = " 
-    << cntm/m_npts << ", extracell = " << cnte/m_npts << std::endl;
+    std::cout << "ComputeConductivity: Node = " << cntn/npts << ", Myelinf1 = " 
+    << cntm/npts << ", extracell = " << cnte/npts << std::endl;
 
     return outarray;
 }
@@ -1896,6 +1901,11 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
                  const Array<OneD, const Array<OneD, int>> &zoneindex)
 {
     int nq   = GetTotPoints();
+
+    const int npts = m_fields[0]->GetTotPoints(0);
+
+    const NekDouble Cm = m_neuron->GetCapacitanceValue(0);
+    const NekDouble Cn = m_neuron->GetCapacitanceValue(1);
 
     Array<OneD, NekDouble> outarray(nq, 0.0); // NeuralCm is zero at indexzone == -2
 
@@ -1910,7 +1920,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
                 // Ranvier node zone for all the fibers
                 if ( index >= 0)
                 {
-                    outarray[i] = 1.0 / m_Cn;
+                    outarray[i] = 1.0 / Cn;
                     cntn++;
                 }
 
@@ -1919,12 +1929,12 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
                 {
                     if (m_MediumType == eAnisotropy)
                     {  
-                        outarray[i] = 1.0 / m_Cm;
+                        outarray[i] = 1.0 / Cm;
                     }
 
                     else
                     {
-                        outarray[i] = 1.0 / m_Cn;
+                        outarray[i] = 1.0 / Cn;
                     }
                     cntm++;
                 }
@@ -1933,8 +1943,8 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
     cnte = nq - cntn - cntm;
 
-    std::cout << "ComputeConductivity_New: Node = " << cntn/m_npts << ", Myelinf1 = " 
-    << cntm/m_npts << ", extracell = " << cnte/m_npts << std::endl;
+    std::cout << "ComputeConductivity_New: Node = " << cntn/npts << ", Myelinf1 = " 
+    << cntm/npts << ", extracell = " << cnte/npts << std::endl;
 
     return outarray;
 }
@@ -3423,7 +3433,6 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "Temperature", m_Temperature);
     SolverUtils::AddSummaryItem(s, "Helmtau", m_Helmtau);
     SolverUtils::AddSummaryItem(s, "nq", nq);
-    SolverUtils::AddSummaryItem(s, "npts", m_npts);
 
     if(nvar==1)
     {
