@@ -1372,6 +1372,7 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
     const NekDouble myelinlen = m_myelinlen;
     const NekDouble nodeinitdown = m_nodeinitdown;
     const NekDouble nodeinitup = m_nodeinitup;
+    const NekDouble fiberlength = m_fiberlength;
     
     NekDouble  nodestart, nodeend;
 
@@ -1388,12 +1389,29 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
 
     beta = m_pi/2 - m_fiberangle;
     gap = nodelen / cos(beta);
-    upperline = tan(beta) * xi + 0.5 * m_fiberlength - yi;
-    lowerline = tan(beta) * xi + 0.5 * m_fiberlength - gap - yi;
+    upperline = tan(beta) * xi + 0.5 * fiberlength - yi;
+    lowerline = tan(beta) * xi + 0.5 * fiberlength - gap - yi;
 
-    if(upperline*lowerline<0)
+    NekDouble x0, y0, sp0, sp;
+
+    x0 = -0.5*fiberlength/sqrt(1 + tan(beta)*tan(beta));
+    y0 = tan(beta) * x0 + 0.5 * fiberlength;
+    sp0 = x0 * sin(beta) + y0 * cos(beta);
+    sp = xi * sin(beta) + yi * cos(beta);
+
+     NekDouble dist = sp - sp0;
+
+    std::cout << "x0 = " << x0 << ", y0 = " << y0 
+    << ", sp0 = " << sp0 << ", sp = " << sp << ", dist = " << sp-sp0 << std::endl;
+
+    if( (upperline*lowerline<0) && ( (sp-sp0)<fiberlength) )
     {
         output = -1;
+        
+        if( (dist>nodeinitdown) && (dist<nodeinitup) )
+        {
+            output = 0;
+        }
     }
 
     return output;
