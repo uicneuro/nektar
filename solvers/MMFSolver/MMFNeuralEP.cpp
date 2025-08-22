@@ -123,10 +123,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("ratio_re_ri", m_ratio_re_ri, 1.0);
     m_session->LoadParameter("AnisotropyStrength", m_AnisotropyStrength, 4.0);
 
-    m_session->LoadParameter("FiberAngle", m_fiberangle, 0.0);
+    m_session->LoadParameter("fiberangle", m_fiberangle, 0.0);
     m_session->LoadParameter("FiberWidth", m_fiberwidth, 0.01);
     m_session->LoadParameter("FiberGap", m_fibergap, 0.01);
     m_session->LoadParameter("FiberCurvature", m_fibercurvature, 0.8);
+    m_session->LoadParameter("FiberAngle", m_fiberangle, m_pi/6.0);
 
     m_session->LoadParameter("NodeLength", m_nodelen, 0.01);
     m_session->LoadParameter("MyelinLength", m_myelinlen, 0.2);
@@ -134,6 +135,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("Total_Number_Node", m_totNode, 3);
     m_session->LoadParameter("nodeinitdown", m_nodeinitdown, 0.01);
     m_session->LoadParameter("nodeinitup", m_nodeinitup, 0.02);
+
+    // Total Fiber Length
+    m_fiberlength = 3*m_nodelen + m_totNode*(m_nodelen+m_myelinlen);
+    std::cout << "\nFiber Length = " << m_fiberlength << std::endl;
 
     m_numfiber = 1;
 
@@ -163,14 +168,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_session->LoadParameter("Diffext", m_Diffext, 1e-6);
 
-    // m_session->LoadParameter("radiusaxon", m_radiusaxon, 0.01);
-
     NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
     NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
 
     // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
     m_phiefactor = PhieMultFactor / axoncrossA;
-    std::cout << "\nphiefactor = " << m_phiefactor << std::endl;
+    std::cout << "phiefactor = " << m_phiefactor << std::endl;
 
     if( (fabs(m_fiber3left)>0.0) && (fabs(m_fiber3right)>0.0) )
     {
@@ -1138,6 +1141,12 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
                 break;
             }
 
+            case eLinearCrossing:
+            {
+                index = LinearCrossingFiberIndex(fibern, fiberorder, xi, yi);                
+                break;
+            }
+
             case eConstantCurved:
             {
                 index = ConstantCurvedFiberIndex(fibern, m_fibercurvature, xi, yi);                
@@ -1352,6 +1361,44 @@ int MMFNeuralEP::LinearMisAlignedFiberIndex(const int fibern, const NekDouble yi
     
     return output;
 }
+
+int MMFNeuralEP::LinearCrossingFiberIndex(
+    const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi)
+{
+    int output;
+
+    const NekDouble totNnode = m_totNode;
+    const NekDouble nodelen = m_nodelen;
+    const NekDouble myelinlen = m_myelinlen;
+    const NekDouble nodeinitdown = m_nodeinitdown;
+    const NekDouble nodeinitup = m_nodeinitup;
+    
+    NekDouble  nodestart, nodeend;
+
+    output = -2 ;  // Default of the first fiber = myelin
+
+    // Excitezone
+    if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
+    {
+        output = LinearAlignedFiberIndex(fiberorder, yi); 
+        return output;
+    }
+
+    NekDouble beta, gap, upperline, lowerline;
+
+    beta = m_pi/2 - m_fiberangle;
+    gap = nodelen / cos(beta);
+    upperline = tan(beta) * xi + 0.5 * m_fiberlength - yi;
+    lowerline = tan(beta) * xi + 0.5 * m_fiberlength - gap - yi;
+
+    if(upperline*lowerline<0)
+    {
+        output = -1;
+    }
+
+    return output;
+}
+
 
 int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern, const NekDouble xi, const NekDouble yi)
 {
