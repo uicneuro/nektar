@@ -403,6 +403,68 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         {   
+            int cnt;
+            NekDouble xi, yi, sp;
+            Array<OneD, NekDouble> dist(nq,0.0);
+            std::cout << "m_nodelen = " << m_nodelen << ", m_myelinlen = " << m_myelinlen << std::endl;
+            for (int n=0; n<m_numfiber; ++n)
+            {
+                cnt = 0;
+
+                NekDouble x0, y0, sp0;
+                NekDouble beta = m_pi/2.0 - m_fiberangle;
+
+                x0 = -0.5 * m_fiberlength / sqrt(1 + tan(beta)*tan(beta));
+                y0 = tan(beta) * x0 + 0.5 * m_fiberlength;
+                sp0 = x0 * cos(beta) + y0 * sin(beta);
+
+                std::cout << "x0 = " << x0 << ", x0 = " << y0 << ", sp0 = " << sp0 << std::endl;
+
+                for (int i=0; i<nq; ++i)
+                {
+                    // xi = m_xcell[i];
+                    // yi = m_ycell[i];
+                    xi = m_x[i];
+                    yi = m_y[i];
+
+                    NekDouble beta, gap, upperline, lowerline;
+
+                    beta = m_pi/2.0 - m_fiberangle;
+                    gap = m_nodelen / cos(beta);
+                    upperline = tan(beta) * xi + 0.5 * m_fiberlength - yi;
+                    lowerline = tan(beta) * xi + 0.5 * m_fiberlength - gap - yi;
+
+                    sp = xi * cos(beta) + yi * sin(beta);
+
+                    if( (upperline * lowerline < 0) && ( (sp-sp0)<m_fiberlength) )
+                    {
+                        dist[i] = sp - sp0;
+                    }
+                }
+            }
+
+            const int nvar    = 1;
+            const int ncoeffs = m_fields[0]->GetNcoeffs();
+
+            std::string outname1 = m_sessionName + "_dist.chk";
+
+            std::vector<std::string> variables(nvar);
+
+            variables[0] = "distance";
+
+            std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+            for (int i = 0; i < nvar; ++i)
+            {
+                fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+            }
+
+            m_fields[0]->FwdTransLocalElmt(dist, fieldcoeffs[0]);
+
+            WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+
+            wait_on_enter();
+
+
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
 
             // Get the first and last index of the excitation zone [1,2]intra
@@ -1396,13 +1458,10 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
 
     x0 = -0.5*fiberlength/sqrt(1 + tan(beta)*tan(beta));
     y0 = tan(beta) * x0 + 0.5 * fiberlength;
-    sp0 = x0 * sin(beta) + y0 * cos(beta);
-    sp = xi * sin(beta) + yi * cos(beta);
+    sp0 = x0 * cos(beta) + y0 * sin(beta);
+    sp = xi * cos(beta) + yi * sin(beta);
 
      NekDouble dist = sp - sp0;
-
-    std::cout << "x0 = " << x0 << ", y0 = " << y0 
-    << ", sp0 = " << sp0 << ", sp = " << sp << ", dist = " << sp-sp0 << std::endl;
 
     if( (upperline*lowerline<0) && ( (sp-sp0)<fiberlength) )
     {
