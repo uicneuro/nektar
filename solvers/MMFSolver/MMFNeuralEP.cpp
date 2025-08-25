@@ -2449,7 +2449,6 @@ NekDouble MMFNeuralEP::DisplayAtNodes(const int fibern, const int nodeindex,
 
     NekDouble output=0.0;
 
-    #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
         if( zoneindexfiber[fibern][i] == nodeindex )
@@ -2477,7 +2476,6 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
     const NekDouble phirest = 80.0;
     const NekDouble dphidtTol = 1.0;
 
-    #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
         bool inZeroZone = false;
@@ -2521,7 +2519,6 @@ void MMFNeuralEP::ComputephieTimeMap(
     const int nq = GetTotPoints();
     constexpr NekDouble Tol = 10.0 + 0.1;
 
-    #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
         const NekDouble phie = field[i] + 10.0;
@@ -3267,7 +3264,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
         WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
 
-        #pragma omp parallel for
         for (int i = 0; i < nq; ++i)
         {
             outarray[0][i] += Laplacian[i] / (m_Cn * m_Rf);
@@ -3327,7 +3323,6 @@ void MMFNeuralEP::Computephie(const Array<OneD, const NekDouble> &phim)
     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
     const NekDouble avg = AvgInt(phimcurrent);
-    #pragma omp parallel for
     for (int i = 0; i < nq; ++i)
     {
         m_fields[1]->UpdatePhys()[i] = phimcurrent[i] - avg;
