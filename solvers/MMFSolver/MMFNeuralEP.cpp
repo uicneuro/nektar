@@ -1395,29 +1395,29 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
 
     else if(fibern==1)
     {
-        NekDouble beta, gap, upperline, lowerline;
         NekDouble nodestart, nodeend;
 
-        beta = m_pi/2 - m_fiberangle;
-        gap = nodelen / cos(beta);
-        upperline = tan(beta) * xi + 0.5 * fiberlength - yi;
-        lowerline = tan(beta) * xi + 0.5 * fiberlength - gap - yi;
+        const NekDouble beta = 0.5 * m_pi - m_fiberangle;
+        const NekDouble tanb = tan(beta);
+        const NekDouble cosb = cos(beta);
+        const NekDouble sinb = sin(beta);
 
-        NekDouble x0, y0, sp0, sp;
+        const NekDouble gap = nodelen / cosb;
+        const NekDouble upperline = tanb * xi + 0.5 * fiberlength - yi;
+        const NekDouble lowerline = tanb * xi + 0.5 * fiberlength - gap - yi;
 
-        x0 = -0.5*fiberlength/sqrt(1 + tan(beta)*tan(beta));
-        y0 = tan(beta) * x0 + 0.5 * fiberlength;
-        sp0 = x0 * cos(beta) + y0 * sin(beta);
-        sp = xi * cos(beta) + yi * sin(beta);
-
-        NekDouble dist = sp - sp0;
+        const NekDouble x0 = -0.5*fiberlength/sqrt(1 + tanb*tanb);
+        const NekDouble y0 = tanb * x0 + 0.5 * fiberlength;
+        const NekDouble sp0 = x0 * cosb + y0 * sinb;
+        const NekDouble sp = xi * cosb + yi * sinb;
+        const NekDouble dist = sp - sp0;
 
         if( (upperline*lowerline < 0) && ( dist < fiberlength) )
         {
             output = -1;
 
             // Excitezone
-            if( (dist>=nodeinitdown) && (dist<=nodeinitup) )
+            if( (dist >= nodeinitdown) && (dist <= nodeinitup) )
             {
                 output = 0;
             }
@@ -1432,13 +1432,9 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
                 }
             }
 
-            if(dist<nodeinitdown)
-            {
-                output = -2;
-            }
-
-            nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
-            if(dist>nodeend)
+            // Before first node or after last node
+            const NekDouble nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+            if (dist < nodeinitdown || dist > nodeend)
             {
                 output = -2;
             }
