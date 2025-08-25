@@ -567,6 +567,12 @@ protected:
         const Array<OneD, const NekDouble> &extrazone,
         const Array<OneD, const NekDouble> &outerzone);
 
+        void PlotDomainZone(
+        const Array<OneD, const int> &zoneindex,
+        const Array<OneD, const NekDouble> &intrazone,
+        const Array<OneD, const NekDouble> &extrazone,
+        const Array<OneD, const NekDouble> &outerzone);
+
 void ComputeNeuralTimeMap(const NekDouble time,
                         const Array<OneD, const Array<OneD, int>> &zoneindex,
                         const Array<OneD, const NekDouble> &field,
