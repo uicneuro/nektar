@@ -560,7 +560,8 @@ protected:
         Array<OneD, NekDouble> &extrazone,
         Array<OneD, NekDouble> &outerzone);
 
-        void PlotDomainZone(
+   void PlotDomainZone(
+        const Array<OneD, const Array<OneD, int>> zoneindexfiber,
         const Array<OneD, const int> &zoneindex,
         const Array<OneD, const NekDouble> &intrazone,
         const Array<OneD, const NekDouble> &extrazone,

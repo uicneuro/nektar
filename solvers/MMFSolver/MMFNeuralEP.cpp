@@ -403,67 +403,66 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         {   
-            int cnt;
-            NekDouble xi, yi, sp;
-            Array<OneD, NekDouble> dist(nq,0.0);
-            std::cout << "m_nodelen = " << m_nodelen << ", m_myelinlen = " << m_myelinlen << std::endl;
-            for (int n=0; n<m_numfiber; ++n)
-            {
-                cnt = 0;
+            // int cnt;
+            // NekDouble xi, yi, sp;
+            // Array<OneD, NekDouble> dist(nq,0.0);
+            // std::cout << "m_nodelen = " << m_nodelen << ", m_myelinlen = " << m_myelinlen << std::endl;
+            // for (int n=0; n<m_numfiber; ++n)
+            // {
+            //     cnt = 0;
 
-                NekDouble x0, y0, sp0;
-                NekDouble beta = m_pi/2.0 - m_fiberangle;
+            //     NekDouble x0, y0, sp0;
+            //     NekDouble beta = m_pi/2.0 - m_fiberangle;
 
-                x0 = -0.5 * m_fiberlength / sqrt(1 + tan(beta)*tan(beta));
-                y0 = tan(beta) * x0 + 0.5 * m_fiberlength;
-                sp0 = x0 * cos(beta) + y0 * sin(beta);
+            //     x0 = -0.5 * m_fiberlength / sqrt(1 + tan(beta)*tan(beta));
+            //     y0 = tan(beta) * x0 + 0.5 * m_fiberlength;
+            //     sp0 = x0 * cos(beta) + y0 * sin(beta);
 
-                std::cout << "x0 = " << x0 << ", x0 = " << y0 << ", sp0 = " << sp0 << std::endl;
+            //     std::cout << "x0 = " << x0 << ", x0 = " << y0 << ", sp0 = " << sp0 << std::endl;
 
-                for (int i=0; i<nq; ++i)
-                {
-                    // xi = m_xcell[i];
-                    // yi = m_ycell[i];
-                    xi = m_x[i];
-                    yi = m_y[i];
+            //     for (int i=0; i<nq; ++i)
+            //     {
+            //         // xi = m_xcell[i];
+            //         // yi = m_ycell[i];
+            //         xi = m_x[i];
+            //         yi = m_y[i];
 
-                    NekDouble beta, gap, upperline, lowerline;
+            //         NekDouble beta, gap, upperline, lowerline;
 
-                    beta = m_pi/2.0 - m_fiberangle;
-                    gap = m_nodelen / cos(beta);
-                    upperline = tan(beta) * xi + 0.5 * m_fiberlength - yi;
-                    lowerline = tan(beta) * xi + 0.5 * m_fiberlength - gap - yi;
+            //         beta = m_pi/2.0 - m_fiberangle;
+            //         gap = m_nodelen / cos(beta);
+            //         upperline = tan(beta) * xi + 0.5 * m_fiberlength - yi;
+            //         lowerline = tan(beta) * xi + 0.5 * m_fiberlength - gap - yi;
 
-                    sp = xi * cos(beta) + yi * sin(beta);
+            //         sp = xi * cos(beta) + yi * sin(beta);
 
-                    if( (upperline * lowerline < 0) && ( (sp-sp0)<m_fiberlength) )
-                    {
-                        dist[i] = sp - sp0;
-                    }
-                }
-            }
+            //         if( (upperline * lowerline < 0) && ( (sp-sp0)<m_fiberlength) )
+            //         {
+            //             dist[i] = sp - sp0;
+            //         }
+            //     }
+            // }
 
-            const int nvar    = 1;
-            const int ncoeffs = m_fields[0]->GetNcoeffs();
+            // const int nvar    = 1;
+            // const int ncoeffs = m_fields[0]->GetNcoeffs();
 
-            std::string outname1 = m_sessionName + "_dist.chk";
+            // std::string outname1 = m_sessionName + "_dist.chk";
 
-            std::vector<std::string> variables(nvar);
+            // std::vector<std::string> variables(nvar);
 
-            variables[0] = "distance";
+            // variables[0] = "distance";
 
-            std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-            for (int i = 0; i < nvar; ++i)
-            {
-                fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-            }
+            // std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+            // for (int i = 0; i < nvar; ++i)
+            // {
+            //     fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+            // }
 
-            m_fields[0]->FwdTransLocalElmt(dist, fieldcoeffs[0]);
+            // m_fields[0]->FwdTransLocalElmt(dist, fieldcoeffs[0]);
 
-            WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+            // WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 
-            wait_on_enter();
-
+            // wait_on_enter();
 
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
 
@@ -472,7 +471,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                             m_zoneindex, m_nodezone, m_myelinzone,
                             m_intrazone, m_extrazone, m_outerzone);
 
-            PlotDomainZone(m_zoneindex, m_intrazone, m_extrazone, m_outerzone);
+            PlotDomainZone(m_zoneindexfiber, m_zoneindex, m_intrazone, m_extrazone, m_outerzone);
 
             m_NeuralCmfiber = ComputeConductivity(m_zoneindexfiber);
             break;
@@ -1075,7 +1074,7 @@ void MMFNeuralEP::IndexNodeZone2D(
                 {
                         if( m_zoneindexfiber[n][i] == -1)
                         {
-                        m_zoneindexfiber[n][i] = 1;
+                            m_zoneindexfiber[n][i] = 1;
                         }
                 }
             }
@@ -1436,40 +1435,66 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
     const NekDouble nodeinitup = m_nodeinitup;
     const NekDouble fiberlength = m_fiberlength;
     
-    NekDouble  nodestart, nodeend;
-
     output = -2 ;  // Default of the first fiber = myelin
 
     // Excitezone
-    if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
+    if(fibern==0)
     {
-        output = LinearAlignedFiberIndex(fiberorder, yi); 
-        return output;
+        if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
+        {
+            output = LinearAlignedFiberIndex(fiberorder, yi); 
+        }
     }
 
-    NekDouble beta, gap, upperline, lowerline;
-
-    beta = m_pi/2 - m_fiberangle;
-    gap = nodelen / cos(beta);
-    upperline = tan(beta) * xi + 0.5 * fiberlength - yi;
-    lowerline = tan(beta) * xi + 0.5 * fiberlength - gap - yi;
-
-    NekDouble x0, y0, sp0, sp;
-
-    x0 = -0.5*fiberlength/sqrt(1 + tan(beta)*tan(beta));
-    y0 = tan(beta) * x0 + 0.5 * fiberlength;
-    sp0 = x0 * cos(beta) + y0 * sin(beta);
-    sp = xi * cos(beta) + yi * sin(beta);
-
-     NekDouble dist = sp - sp0;
-
-    if( (upperline*lowerline<0) && ( (sp-sp0)<fiberlength) )
+    else if(fibern==1)
     {
-        output = -1;
-        
-        if( (dist>nodeinitdown) && (dist<nodeinitup) )
+        NekDouble beta, gap, upperline, lowerline;
+        NekDouble nodestart, nodeend;
+
+        beta = m_pi/2 - m_fiberangle;
+        gap = nodelen / cos(beta);
+        upperline = tan(beta) * xi + 0.5 * fiberlength - yi;
+        lowerline = tan(beta) * xi + 0.5 * fiberlength - gap - yi;
+
+        NekDouble x0, y0, sp0, sp;
+
+        x0 = -0.5*fiberlength/sqrt(1 + tan(beta)*tan(beta));
+        y0 = tan(beta) * x0 + 0.5 * fiberlength;
+        sp0 = x0 * cos(beta) + y0 * sin(beta);
+        sp = xi * cos(beta) + yi * sin(beta);
+
+        NekDouble dist = sp - sp0;
+
+        if( (upperline*lowerline < 0) && ( dist < fiberlength) )
         {
-            output = 0;
+            output = -1;
+
+            // Excitezone
+            if( (dist>=nodeinitdown) && (dist<=nodeinitup) )
+            {
+                output = 0;
+            }
+
+            for (int k=0; k<totNnode; ++k)
+            {
+                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+                if( (dist>=nodestart) && (dist<=nodeend) )
+                {
+                    output = k + 1;
+                }
+            }
+
+            if(dist<nodeinitdown)
+            {
+                output = -2;
+            }
+
+            nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+            if(dist>nodeend)
+            {
+                output = -2;
+            }
         }
     }
 
@@ -1914,29 +1939,26 @@ void MMFNeuralEP::SetUpDomainZone(
 
 // Plotting Domain Zone
 void MMFNeuralEP::PlotDomainZone(
+        const Array<OneD, const Array<OneD, int>> zoneindexfiber,
         const Array<OneD, const int> &zoneindex,
         const Array<OneD, const NekDouble> &intrazone,
         const Array<OneD, const NekDouble> &extrazone,
         const Array<OneD, const NekDouble> &outerzone)
 {
     const int nq   = GetTotPoints();
-    const int nvar    = 4;
+    const int nvar    = 6;
     const int ncoeffs = m_fields[0]->GetNcoeffs();
 
     std::string outname1 = m_sessionName + "_zone.chk";
 
     std::vector<std::string> variables(nvar);
 
-    variables[0] = "zoneindex";
-    variables[1] = "intrazone";
-    variables[2] = "extrazone";
-    variables[3] = "outerzone";
-
-    Array<OneD, NekDouble> zoneindextmp(nq);
-    for (int j=0; j< nq; ++j)
-    {
-        zoneindextmp[j] = 1.0 * zoneindex[j];
-    }
+    variables[0] = "zoneindexfiber1";
+    variables[1] = "zoneindexfiber2";
+    variables[2] = "zoneindex";
+    variables[3] = "intrazone";
+    variables[4] = "extrazone";
+    variables[5] = "outerzone";
 
     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -1944,10 +1966,26 @@ void MMFNeuralEP::PlotDomainZone(
         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
 
-    m_fields[0]->FwdTransLocalElmt(zoneindextmp, fieldcoeffs[0]);
-    m_fields[0]->FwdTransLocalElmt(intrazone, fieldcoeffs[1]);
-    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[2]);
-    m_fields[0]->FwdTransLocalElmt(outerzone, fieldcoeffs[3]);
+    Array<OneD, NekDouble> zoneindextmp(nq);
+    for (int nfib=0; nfib<2; ++nfib)
+    {
+        for (int j=0; j< nq; ++j)
+        {
+            zoneindextmp[j] = 1.0 * zoneindexfiber[nfib][j];
+        }
+
+        m_fields[0]->FwdTransLocalElmt(zoneindextmp, fieldcoeffs[nfib]);
+    }
+
+    for (int j=0; j< nq; ++j)
+    {
+        zoneindextmp[j] = 1.0 * zoneindex[j];
+    }
+
+    m_fields[0]->FwdTransLocalElmt(zoneindextmp, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(intrazone, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(outerzone, fieldcoeffs[5]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
