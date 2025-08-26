@@ -259,27 +259,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_SolverSchemeType = (SolverSchemeType)0;
     }
 
-    // TimeMap: Parameters
-    m_session->LoadParameter("TimeMapStart", m_TimeMapStart, 0.0);
-    m_session->LoadParameter("TimeMapEnd", m_TimeMapEnd, 10000.0);
-    if (m_session->DefinesSolverInfo("TimeMapType"))
-    {
-        std::string TIMEMAPTYPEStr;
-        TIMEMAPTYPEStr = m_session->GetSolverInfo("TimeMapType");
-        for (int i = 0; i < (int)SIZE_TimeMapType; ++i)
-        {
-            if (boost::iequals(TimeMapTypeMap[i], TIMEMAPTYPEStr))
-            {
-                m_TimeMapScheme = (TimeMapType)i;
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_TimeMapScheme = (TimeMapType)0;
-    }
-
     // Either incorporating external current effect or not.
     if (m_session->DefinesSolverInfo("ExtCurrentType"))
     {
@@ -2657,10 +2636,10 @@ void MMFNeuralEP::PlotNeuralEP(
               << ", phie = " << Vmath::Vmax(nq, phie, 1) << '\n';
     
     // variables[4] = "TimeMap_phim";
-    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[3]);
 
     // variables[5] = "TimeMap_phie";
-    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[4]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -3539,9 +3518,6 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
                                 NeuralEPTypeMap[m_NeuralEPType]);
     SolverUtils::AddSummaryItem(s, "ExtCurrentType", ExtCurrentTypeMap[m_ExtCurrentType]);
     SolverUtils::AddSummaryItem(s, "GlobalSysSoln", m_session->GetSolverInfo("GlobalSysSoln"));
-    SolverUtils::AddSummaryItem(s, "TimeMapScheme", TimeMapTypeMap[m_TimeMapScheme]);
-    SolverUtils::AddSummaryItem(s, "TimeMapStart", m_TimeMapStart);
-    SolverUtils::AddSummaryItem(s, "TimeMapEnd", m_TimeMapEnd);
 
     SolverUtils::AddSummaryItem(s, "FiberType", FiberTypeMap[m_FiberType]);
 
