@@ -318,9 +318,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralHelmSolveSingle:
         case eNeuralHelmSolveDuo:
         {
-            // m_zoneindex = Array<OneD, Array<OneD, int>>(1);
-            // m_zoneindex[0] = Array<OneD, int>(nq, 1); 
-
             m_zoneindexfiber = Array<OneD, Array<OneD, int>>(m_numfiber);
             for (int n=0; n<m_numfiber; ++n)
             {
@@ -336,11 +333,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 m_zoneindexfiber[0] = TestRanvierDuoIndex();
             }
-
-            // Setup: excitezone, intrazone, extrazone, followed by ploting the zones.
-
-            // SetUpDomainZone(m_zoneindexfiber, m_excitezonefiber, 
-            //                 m_intrazonefiber, m_nodezone, m_myelinzone);
 
             m_extrazone = Array<OneD, NekDouble>(nq) ;
             m_intrazone = Array<OneD, NekDouble>(nq) ;
@@ -419,6 +411,29 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     MMFSystem::MMFInitObject(m_AniStrength);
     CheckMovingFrames(m_movingframes);
+
+    // Generate individual moving frames for each fiber.
+    if(m_FiberType==eLinearCrossing)
+    {
+        std::cout << "\nGenerating individual moving frames for each fiber =====" << std::endl;
+        int nq3 = m_spacedim * nq;
+
+        m_movingframesfiber = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_numfiber);
+        for (int n=0; n<m_numfiber; ++n)
+        {
+            m_movingframesfiber[n] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+            for (int j = 0; j < m_mfdim; ++j)
+            {
+                m_movingframesfiber[n][j] = Array<OneD, NekDouble>(nq3);
+
+                for (int k = 0; k < m_spacedim; ++k)
+                {
+                    Vmath::Vmul(nq, &m_intrazonefiber[n][0], 1, &m_movingframes[j][k*nq], 1, 
+                        &m_movingframesfiber[n][j][k*nq], 1);
+                }
+            }
+        }
+    }
 
     Array<OneD, Array<OneD, NekDouble>> phieAniStrength(m_expdim);
     Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(m_expdim);
@@ -690,6 +705,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 std::cout << std::endl;
                 std::cout << "Generating m_varcoeff ================================= " << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
+                std::cout << std::endl;
+                std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;   
+                if(m_FiberType==eLinearCrossing)
+                {
+                    m_varcoefffiber = Array<OneD, StdRegions::VarCoeffMap>(m_numfiber);
+                    for (int n=0; n<m_numfiber; ++n)
+                    {
+                        ComputeVarCoeff2D(m_movingframes, m_varcoefffiber[n]);
+                    }
+                }
 
                 std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);

@@ -175,6 +175,7 @@ protected:
 
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::VarCoeffMap m_phievarcoeff;
+    Array<OneD, StdRegions::VarCoeffMap> m_varcoefffiber;
 
     int m_npts, m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd, m_Convectiven;
     int m_numfiber, m_totNode, m_zonestart, m_zoneend, m_myeline, m_node, m_external;
@@ -227,6 +228,8 @@ protected:
 
     Array<OneD, Array<OneD, NekDouble>> m_excitezonefiber;
     Array<OneD, Array<OneD, NekDouble>> m_intrazonefiber;
+
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_movingframesfiber;
 
     Array<OneD, NekDouble> m_nodezone;
     Array<OneD, NekDouble> m_myelinzone;
