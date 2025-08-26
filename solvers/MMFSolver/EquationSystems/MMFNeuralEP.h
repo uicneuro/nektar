@@ -228,6 +228,7 @@ protected:
 
     Array<OneD, Array<OneD, NekDouble>> m_excitezonefiber;
     Array<OneD, Array<OneD, NekDouble>> m_intrazonefiber;
+    Array<OneD, Array<OneD, NekDouble>> m_nodezonefiber;
 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_movingframesfiber;
 
@@ -297,6 +298,11 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
+    void DoImplicitSolveNeuralEP2DbiCrossing(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
     void DoNullSolve(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                      Array<OneD, Array<OneD, NekDouble>> &outarray,
                      const NekDouble time, const NekDouble lambda);
@@ -310,7 +316,12 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
+    void DoOdeRhsNeuralEP2DbiCrossing(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
     void Computephie(const Array<OneD, const NekDouble> &phim);
+    Array<OneD, NekDouble> Computephie(const int n, const Array<OneD, const NekDouble> &phim);
 
     void MembraneBoundary2D(int bcRegion, int cnt,
                             Array<OneD, Array<OneD, NekDouble>> &Fwd,
@@ -353,15 +364,7 @@ protected:
 
     void SetUpDomainZone(
         const int numfiber,
-        const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
-        Array<OneD, Array<OneD, NekDouble>> &excitezonefiber,
-        Array<OneD, Array<OneD, NekDouble>> &intrazonefiber,
-        Array<OneD, int> &zoneindex,
-        Array<OneD, NekDouble> &nodezone,
-        Array<OneD, NekDouble> &myelinzone,
-        Array<OneD, NekDouble> &intrazone,
-        Array<OneD, NekDouble> &extrazone,
-        Array<OneD, NekDouble> &outerzone);
+        const Array<OneD, const Array<OneD, int>> &zoneindexfiber);
 
 void PlotDomainZone(
         const Array<OneD, const Array<OneD, int>> zoneindexfiber,
