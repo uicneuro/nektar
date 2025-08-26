@@ -3228,7 +3228,9 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq,0.0);
-    for (int n=0; n<m_numfiber; ++n)
+    Array<OneD, NekDouble> phiecurrent(nq);
+
+    for (int n = 0; n < m_numfiber; ++n)
     {
         // 1. Reaction Term (FHN or H-H ion current model)
         m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
@@ -3244,10 +3246,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
     m_fields[phievar]->UpdatePhys() = phie;
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
-    Array<OneD, NekDouble> phiecurrent(nq);
+    const Array<OneD, const NekDouble> &phiePhys = m_fields[phievar]->GetPhys();
     for (int n=0; n<m_numfiber; ++n)
     {
-        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], m_fields[phievar]->GetPhys());
+        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], phiePhys);
 
         // Current caused by extracellular potential affects the total current at the nodes and myelin.
         for (int i = 0; i < nq; ++i)
