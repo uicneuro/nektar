@@ -362,17 +362,9 @@ protected:
         Array<OneD, NekDouble> &ycell, 
         Array<OneD, NekDouble> &zcell);
 
-    void SetUpDomainZone(
-        const int numfiber,
-        const Array<OneD, const Array<OneD, int>> &zoneindexfiber);
+    void SetUpDomainZone();
 
-void PlotDomainZone(
-        const Array<OneD, const Array<OneD, int>> zoneindexfiber,
-        const Array<OneD, const int> &zoneindex,
-        const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
-        const Array<OneD, const NekDouble> &intrazone,
-        const Array<OneD, const NekDouble> &extrazone,
-        const Array<OneD, const NekDouble> &outerzone);
+void PlotDomainZone();
 
 void PlotDomainZonefib2(
         const Array<OneD, const Array<OneD, int>> zoneindexfiber,
@@ -426,6 +418,9 @@ void PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep);
+
+void PrintAtNodes(const int nfields, const int numfiber,
+                const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
 void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   const Array<OneD, const NekDouble> &dudt,
