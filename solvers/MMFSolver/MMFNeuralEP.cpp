@@ -690,10 +690,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 std::cout << "Generating m_varcoeff ================================= " << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
 
-                std::cout << std::endl;
-                std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;   
                 if(m_FiberType==eLinearCrossing)
                 {
+                    std::cout << std::endl;
+                    std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;   
+
                     m_varcoefffiber = Array<OneD, StdRegions::VarCoeffMap>(m_numfiber);
                     for (int n = 0; n < m_numfiber; ++n)
                     {
