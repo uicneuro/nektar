@@ -3508,8 +3508,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 void MMFNeuralEP::Computephie(const Array<OneD, const NekDouble> &phim)
 {
     const int nq = m_fields[0]->GetNpoints();
-    const int nvar = m_fields.size();
-    const int phievar = nvar - 1;
+    const int phievar = m_fields.size() - 1;
 
     Array<OneD, NekDouble> outarray(nq);
 
@@ -3566,7 +3565,7 @@ void MMFNeuralEP::Computephie(const Array<OneD, const NekDouble> &phim)
     m_fields[phievar]->BwdTrans(m_fields[phievar]->GetCoeffs(), m_fields[phievar]->UpdatePhys());
 
     // Make it as a value with AvgInt is zero.
-    const NekDouble mean = AvgInt(m_fields[nvar]->GetPhys());
+    const NekDouble mean = AvgInt(m_fields[phievar]->GetPhys());
     Vmath::Sadd(nq, -mean, m_fields[phievar]->GetPhys(), 1, m_fields[phievar]->UpdatePhys(), 1);
 
     m_fields[phievar]->SetPhysState(true);
