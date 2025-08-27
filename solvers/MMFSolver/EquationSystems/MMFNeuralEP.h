@@ -389,7 +389,7 @@ void PlotDomainZonefib1(
         const Array<OneD, const NekDouble> &outerzone);
 
 void ComputeNeuralTimeMap(const NekDouble time,
-                        const Array<OneD, const Array<OneD, int>> &zoneindex,
+                        const Array<OneD, const int> &zoneindex,
                         const Array<OneD, const NekDouble> &field,
                         const Array<OneD, const NekDouble> &dphidt,
                         Array<OneD, NekDouble> &dphidtint,
@@ -417,6 +417,15 @@ void PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep);
 
+    void PlotNeuralEPvar2(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep);
+
+    void PlotNeuralEPvar3(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep);
 
 void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   const Array<OneD, const NekDouble> &dudt,
