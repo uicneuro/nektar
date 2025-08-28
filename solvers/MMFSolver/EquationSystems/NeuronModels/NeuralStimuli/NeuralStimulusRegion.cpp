@@ -114,10 +114,12 @@ void NeuralStimulusRegion::Initialise()
 /**
  *
  */
-void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezone,
+void NeuralStimulusRegion::v_Update(const Array<OneD, const int> &indexzonefiber,
                                 Array<OneD, NekDouble> &outarray,
                                 const NekDouble time)
 {
+    boost::ignore_unused(indexzonefiber);
+
     if (m_field->GetNumElmts() == 0)
     {
         return;
@@ -148,16 +150,12 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
 
     // Get the protocol amplitude
     NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / ( m_chiCapMembrane * var_membrane__cnd );
-
-    Array<OneD, NekDouble> vampzone(nq);
-    Vmath::Smul(nq, v_amp, excitezone, 1, vampzone, 1);
-
     switch (dim)
     {
         case 1:
             for (int j = 0; j < nq; j++)
             {
-                outarray[j] += vampzone[j] * ((tanh(m_pis * (x0[j] - m_px1)) -
+                outarray[j] += v_amp * ((tanh(m_pis * (x0[j] - m_px1)) -
                                             tanh(m_pis * (x0[j] - m_px2))) /
                                            2.0);
             }
@@ -166,7 +164,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
         case 2:
             for (int j = 0; j < nq; j++)
             {
-                outarray[j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
+                outarray[j] += v_amp * (((tanh(m_pis * (x0[j] - m_px1)) -
                                              tanh(m_pis * (x0[j] - m_px2))) *
                                             (tanh(m_pis * (x1[j] - m_py1)) -
                                              tanh(m_pis * (x1[j] - m_py2)))) /
@@ -177,7 +175,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const NekDouble> &excitezo
         case 3:
             for (int j = 0; j < nq; j++)
             {
-                outarray[j] += vampzone[j] * (((tanh(m_pis * (x0[j] - m_px1)) -
+                outarray[j] += v_amp * (((tanh(m_pis * (x0[j] - m_px1)) -
                                              tanh(m_pis * (x0[j] - m_px2))) *
                                             (tanh(m_pis * (x1[j] - m_py1)) -
                                              tanh(m_pis * (x1[j] - m_py2))) *

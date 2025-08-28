@@ -72,11 +72,11 @@ public:
     void Initialise();
 
     /// Updates RHS of outarray by adding a stimulus to it
-    void Update(const Array<OneD, const NekDouble> &excitezone,
+    void Update(const Array<OneD, const int> &indexzonefiber,
                  Array<OneD, NekDouble> &outarray,
                                 const NekDouble time)
     {
-        v_Update(excitezone, outarray, time);
+        v_Update(indexzonefiber, outarray, time);
     }
 
     /// Print a summary of the outarray
@@ -113,7 +113,7 @@ protected:
              const MultiRegions::ExpListSharedPtr &pField,
              const TiXmlElement *pXml);
 
-    virtual void v_Update(const Array<OneD, const NekDouble> &excitezone,
+    virtual void v_Update(const Array<OneD, const int> &indexzonefiber,
                          Array<OneD, NekDouble> &outarray,
                                 const NekDouble time) = 0;
 

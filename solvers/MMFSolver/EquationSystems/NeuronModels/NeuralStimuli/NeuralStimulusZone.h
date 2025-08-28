@@ -74,7 +74,7 @@ protected:
     NekDouble m_strength;
     NekDouble m_chiCapMembrane;
 
-    virtual void v_Update(const Array<OneD, const NekDouble> &excitezone,
+    virtual void v_Update(const Array<OneD, const int> &indexzonefiber,
                           Array<OneD, NekDouble> &outarray,
                           const NekDouble time) override;
 

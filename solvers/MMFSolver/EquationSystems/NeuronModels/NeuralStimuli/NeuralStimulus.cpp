@@ -116,7 +116,6 @@ NeuralStimulus::NeuralStimulus(const LibUtilities::SessionReaderSharedPtr &pSess
 
     pXmlparameter = pXml->FirstChildElement("p_strength");
     m_strength    = atof(pXmlparameter->GetText());
-
 }
 
 /**

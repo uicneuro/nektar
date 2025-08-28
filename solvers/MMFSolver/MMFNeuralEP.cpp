@@ -372,13 +372,16 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         {   
+            // Provide index for nodes and myelins
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
 
-            // Get the first and last index of the excitation zone [1,2]intra
+            // Identifying each domain zone accordingly
             SetUpDomainZone();
 
+            // Plot the indexing of domains
             PlotDomainZone();
 
+            // Compute conductivity accordingly 
             m_NeuralCmfiber = ComputeConductivity(m_zoneindexfiber);
             break;
         }
@@ -386,11 +389,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         default:
             break;
     }
+
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
     // Derive AnisotropyStrength.
-    // SetUpBiAnisotropy(m_zoneindex[0], m_NeuralCm, m_AniStrength);
     for (int j = 0; j < m_expdim; ++j)
     {
         m_AniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
@@ -2182,7 +2185,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
     cnte = nq - cntn - cntm;
 
-    std::cout << "ComputeConductivity_New: Node = " << cntn/npts << ", Myelinf1 = " 
+    std::cout << "ComputeConductivity: Node = " << cntn/npts << ", Myelinf1 = " 
     << cntm/npts << ", extracell = " << cnte/npts << std::endl;
 
     return outarray;
@@ -3237,7 +3240,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dmono(
 
     for (int n=0; n<m_stimulus.size(); ++n)
     {
-        m_stimulus[n]->Update(m_excitezonefiber[n], outarray[0], time);
+        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
 
     if (m_explicitDiffusion)
@@ -3280,7 +3283,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // 2. Apply Stimulus
     for (std::size_t n = 0; n < m_stimulus.size(); ++n)
     {
-        m_stimulus[n]->Update(m_excitezonefiber[n], outarray[0], time);
+        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
 
     // 3. Compute phi_e to satisfy bidomain coupling
@@ -3356,7 +3359,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
         m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
 
         // 2. Apply Stimulus
-        m_stimulus[n]->Update(m_excitezonefiber[n], outarray[n], time);
+        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling
         tmp = Computephie(n, inarray[n]);
