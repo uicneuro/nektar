@@ -3175,12 +3175,9 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing(
 
     for (int n=0; n<m_numfiber; ++n)
     {
-    // std::cout << "n = " << n << ", inarray = " << RootMeanSquare(inarray[n]) 
-    // << ", outarray = " << RootMeanSquare(outarray[n]) << std::endl;
-
         Vmath::Smul(nq, scale, inarray[n], 1, m_fields[n]->UpdatePhys(), 1);
         m_fields[n]->HelmSolve(m_fields[n]->GetPhys(), m_fields[n]->UpdateCoeffs(),
-                            factors, m_varcoeff);
+                            factors, m_varcoefffiber[n]);
         m_fields[n]->BwdTrans(m_fields[n]->GetCoeffs(), outarray[n]);
         m_fields[n]->SetPhysState(true);
     }
