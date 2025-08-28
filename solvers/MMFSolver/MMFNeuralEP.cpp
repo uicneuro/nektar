@@ -3093,9 +3093,9 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
-    boost::ignore_unused(time);
+    (void) time;
 
-    int nq   = m_fields[0]->GetNpoints();
+    const int nq   = m_fields[0]->GetNpoints();
 
     // Set up factors for Helmsolve
     StdRegions::ConstFactorMap factors;
@@ -3123,7 +3123,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
-    boost::ignore_unused(time);
+    (void) time;
+
     const int nq   = m_fields[0]->GetNpoints();
 
     // Set Helmholtz coefficients
@@ -3154,7 +3155,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
-    boost::ignore_unused(time);
+    (void) time;
+
     const int nq   = m_fields[0]->GetNpoints();
 
     // Set Helmholtz coefficients
@@ -3189,10 +3191,11 @@ void MMFNeuralEP::DoNullSolve(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
 {
-    boost::ignore_unused(lambda, time);
+    (void) time;
+    (void) lambda;
 
-    int nvariables = inarray.size();
-    int nq         = m_fields[0]->GetNpoints();
+    const int nvariables = inarray.size();
+    const int nq         = m_fields[0]->GetNpoints();
 
     for (int i = 0; i < nvariables; ++i)
     {
@@ -3205,7 +3208,7 @@ void MMFNeuralEP::GetFluxVector(
     const Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &qfield,
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &viscousTensor)
 {
-    boost::ignore_unused(inarray);
+    (void) inarray;
 
     unsigned int nDim              = qfield.size();
     unsigned int nConvectiveFields = qfield[0].size();
@@ -3548,9 +3551,10 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
                                          bool dumpInitialConditions,
                                          const int domain)
 {
-    boost::ignore_unused(domain, dumpInitialConditions);
-
-    int nq = GetTotPoints();
+    (void) domain;
+    (void) dumpInitialConditions;
+    
+    const int nq = GetTotPoints();
 
     switch (m_NeuralEPType)
     {
@@ -3657,53 +3661,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
     << RootMeanSquare(tmpy) << " , " << RootMeanSquare(tmpz) << " ) " << std::endl; 
 
     return outarray;
-}
-
-// TO DO: IMPLEMENT Nonhomogeneous Neurann boundary conditions
-//----------------------------------------------------
-/**
- * @brief Wall boundary condition.
- */
-void MMFNeuralEP::MembraneBoundary2D(
-    int bcRegion, int cnt, Array<OneD, Array<OneD, NekDouble>> &Fwd,
-    Array<OneD, Array<OneD, NekDouble>> &physarray)
-{
-    boost::ignore_unused(physarray);
-
-    int nTracePts = GetTraceNpoints();
-
-    int id1, id2, npts;
-    int eMax = m_fields[0]->GetBndCondExpansions()[bcRegion]->GetExpSize();
-
-    const Array<OneD, const int> &traceBndMap = m_fields[0]->GetTraceBndMap();
-
-    const Array<OneD, NekDouble> &x0 = m_x;
-    const Array<OneD, NekDouble> &x1 = m_y;
-    const Array<OneD, NekDouble> &x2 = m_z;
-
-    Array<OneD, NekDouble> x0tmp(nTracePts);
-    Array<OneD, NekDouble> x1tmp(nTracePts);
-    Array<OneD, NekDouble> x2tmp(nTracePts);
-
-    m_fields[0]->ExtractTracePhys(x0, x0tmp);
-    m_fields[0]->ExtractTracePhys(x1, x1tmp);
-    m_fields[0]->ExtractTracePhys(x2, x2tmp);
-
-    for (int e = 0; e < eMax; ++e)
-    {
-        npts = m_fields[0]
-                         ->GetBndCondExpansions()[bcRegion]
-                         ->GetExp(e)
-                         ->GetTotPoints();
-        id1 = m_fields[0]->GetBndCondExpansions()[bcRegion]->GetPhys_Offset(e);
-        id2 = m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[cnt + e]);
-
-        // Pure Neumann boundary condtiion
-        Vmath::Vcopy(npts, &Fwd[0][id2], 1,
-                    &(m_fields[0]
-                        ->GetBndCondExpansions()[bcRegion]
-                        ->UpdatePhys())[id1], 1);
-    }
 }
 
 void MMFNeuralEP::PlotPhieMF(
