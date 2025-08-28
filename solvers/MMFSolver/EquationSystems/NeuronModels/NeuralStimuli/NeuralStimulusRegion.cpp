@@ -118,7 +118,7 @@ void NeuralStimulusRegion::v_Update(const Array<OneD, const int> &indexzonefiber
                                 Array<OneD, NekDouble> &outarray,
                                 const NekDouble time)
 {
-    boost::ignore_unused(indexzonefiber);
+    (void) indexzonefiber;
 
     if (m_field->GetNumElmts() == 0)
     {
