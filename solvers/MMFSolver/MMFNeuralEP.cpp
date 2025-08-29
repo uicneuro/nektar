@@ -2428,6 +2428,8 @@ void MMFNeuralEP::DoSolveMMF()
             PlotNeuralEP(fields, m_TimeMap, nchk);
            //  timevec[nchk] = m_time; 
             PrintAtNodes(nvar, m_numfiber, fields);
+
+            Checkpoint_Output(nchk++);
         }
 
         ++step;
