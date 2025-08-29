@@ -3285,7 +3285,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // 2. Apply Stimulus
     for (std::size_t n = 0; n < m_stimulus.size(); ++n)
     {
-        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
+      //  m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
+       m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
 
     // 3. Compute phi_e to satisfy bidomain coupling
@@ -3361,6 +3362,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
         m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
 
         // 2. Apply Stimulus
+        // m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling

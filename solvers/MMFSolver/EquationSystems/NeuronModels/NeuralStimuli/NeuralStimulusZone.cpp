@@ -114,6 +114,28 @@ void NeuralStimulusZone::Initialise()
 /**
  *
  */
+// void NeuralStimulusZone::v_Update(const Array<OneD, const NekDouble> &indexzonefiber,
+//                                 Array<OneD, NekDouble> &outarray,
+//                                 const NekDouble time)
+// {
+//     if (m_field->GetNumElmts() == 0)
+//     {
+//         return;
+//     }
+
+//     const NekDouble var_membrane__cnd = 3.14e-9; 
+
+//     // Retrieve coordinates of quadrature points
+//     int nq = m_field->GetNpoints();
+    
+//     // Get the protocol amplitude
+//     NekDouble v_amp = m_Protocol->GetAmplitude(time) * m_strength / ( m_chiCapMembrane * var_membrane__cnd );
+
+//     Array<OneD, NekDouble> tmp(nq);
+//     Vmath::Smul(nq, v_amp, &indexzonefiber[0], 1, &tmp[0], 1);
+//     Vmath::Vadd(nq, &tmp[0], 1, &outarray[0], 1, &outarray[0], 1);
+// }
+
 void NeuralStimulusZone::v_Update(const Array<OneD, const int> &indexzonefiber,
                                 Array<OneD, NekDouble> &outarray,
                                 const NekDouble time)
@@ -135,12 +157,9 @@ void NeuralStimulusZone::v_Update(const Array<OneD, const int> &indexzonefiber,
     {
         if (indexzonefiber[i]==0)
         {
-            outarray[i] = v_amp;
+            outarray[i] += v_amp;
         }
     }
-    // Array<OneD, NekDouble> tmp(nq);
-    // Vmath::Smul(nq, v_amp, &excitezone[0], 1, &tmp[0], 1);
-    // Vmath::Vadd(nq, &tmp[0], 1, &outarray[0], 1, &outarray[0], 1);
 }
 
 /**
