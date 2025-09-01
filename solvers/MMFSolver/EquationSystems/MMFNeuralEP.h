@@ -177,6 +177,7 @@ protected:
     StdRegions::VarCoeffMap m_phievarcoeff;
     Array<OneD, StdRegions::VarCoeffMap> m_varcoefffiber;
 
+    int m_phievar;
     int m_npts, m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd, m_Convectiven;
     int m_numfiber, m_totNode, m_zonestart, m_zoneend, m_myeline, m_node, m_external;
     int m_fiber2DElemStart, m_fiber2DElemEnd, m_fiber1order, m_fiber2order, m_fiber3order;

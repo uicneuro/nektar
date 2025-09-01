@@ -1,0 +1,316 @@
+\changetocdepth {2}
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{Contents}{8}{section*.2}%
+\contentsline {chapter}{\chapternumberline {1}Preface}{13}{chapter.1}%
+\contentsline {paragraph}{Robert M. (Mike) Kirby}{15}{section*.3}%
+\contentsline {paragraph}{Spencer J. Sherwin}{15}{section*.4}%
+\contentsline {paragraph}{Chris D. Cantwell}{15}{section*.5}%
+\contentsline {paragraph}{David Moxey}{16}{section*.6}%
+\contentsline {paragraph}{Contributors}{16}{section*.7}%
+\contentsline {chapter}{\chapternumberline {2}Introduction}{17}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The {\em Ethos} of Nektar++}{18}{section.2.1}%
+\contentsline {paragraph}{Principles:}{18}{section*.8}%
+\contentsline {paragraph}{Guardrails:}{20}{section*.9}%
+\contentsline {section}{\numberline {2.2}The Structure of Nektar++}{20}{section.2.2}%
+\contentsline {subsubsection}{Bottom-Up Perspective}{22}{section*.10}%
+\contentsline {subsubsection}{Top-Down Perspective}{23}{section*.13}%
+\contentsline {section}{\numberline {2.3}Assumed Proficiencies}{24}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Other Software Implementations and Frameworks}{25}{section.2.4}%
+\contentsline {section}{\numberline {2.5}How to Use This Document}{26}{section.2.5}%
+\contentsline {chapter}{\chapternumberline {3}Preliminaries}{28}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Summary of Development Tools and Best Practices}{28}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}General Resources}{28}{subsection.3.1.1}%
+\contentsline {subsubsection}{Mailing List}{28}{section*.15}%
+\contentsline {subsubsection}{Blog}{28}{section*.16}%
+\contentsline {subsubsection}{Annual Workshop}{28}{section*.17}%
+\contentsline {subsection}{\numberline {3.1.2}Version Control (git)}{29}{subsection.3.1.2}%
+\contentsline {subsubsection}{Anonymous Access}{29}{section*.18}%
+\contentsline {subsubsection}{Collaborative Access}{29}{section*.19}%
+\contentsline {subsubsection}{Managing and Contributing code}{30}{section*.20}%
+\contentsline {subsection}{\numberline {3.1.3}Building (CMake)}{32}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Testing (CTest)}{32}{subsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.1.5}Merge Requests (Gitlab)}{32}{subsection.3.1.5}%
+\contentsline {section}{\numberline {3.2}Documentation and Tutorials}{32}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Dependencies}{32}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Compiling the User Guide}{33}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Developers Guide}{33}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Compiling the code documentation}{34}{subsection.3.2.4}%
+\contentsline {section}{\numberline {3.3}Compiling Tutorials}{34}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Core Nektar++ Programming Concepts}{34}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Namespaces}{35}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}C++ Standard Template Library (STL) }{35}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}typedefs}{36}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Forward Declarations}{36}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}Templated Classes and Specialization}{37}{subsection.3.4.5}%
+\contentsline {subsection}{\numberline {3.4.6}Multiple Inheritance and the \lstinline {virtual} Keyword}{38}{subsection.3.4.6}%
+\contentsline {subsection}{\numberline {3.4.7}Virtual Functions and Inheritance}{38}{subsection.3.4.7}%
+\contentsline {subsection}{\numberline {3.4.8}Const keyword}{38}{subsection.3.4.8}%
+\contentsline {subsection}{\numberline {3.4.9}Function pointers and bind}{38}{subsection.3.4.9}%
+\contentsline {subsection}{\numberline {3.4.10}Memory Pools and NekArray}{39}{subsection.3.4.10}%
+\contentsline {section}{\numberline {3.5}Design Patterns}{40}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Template pattern}{40}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Abstract Factory Pattern}{40}{subsection.3.5.2}%
+\contentsline {subsubsection}{Implementing the factory pattern}{41}{section*.21}%
+\contentsline {subsubsection}{Creating a concept (base class)}{41}{section*.22}%
+\contentsline {subsubsection}{Creating a specific implementation (derived class)}{42}{section*.23}%
+\contentsline {subsubsection}{Instantiating classes}{44}{section*.24}%
+\contentsline {section}{\numberline {3.6}Software Testing Approaches}{44}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Unit Tests}{44}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Integration, System and Regression Tests}{45}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Continuous Integration}{45}{subsection.3.6.3}%
+\contentsline {part}{\partnumberline {I}Building-Blocks of Our Framework (Inside the Library)}{46}{part.1}%
+\contentsline {chapter}{\chapternumberline {4}Inside the Library: LibUtilities}{47}{chapter.4}%
+\contentsline {section}{\numberline {4.1}BasicConst}{47}{section.4.1}%
+\contentsline {section}{\numberline {4.2}BasicUtils}{48}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Communication}{48}{section.4.3}%
+\contentsline {section}{\numberline {4.4}FFT}{49}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Foundations}{49}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Points}{50}{subsection.4.5.1}%
+\contentsline {paragraph}{Electrostatic Points: }{52}{section*.27}%
+\contentsline {paragraph}{Fekete Points: }{52}{section*.29}%
+\contentsline {paragraph}{Building Lagrange Interpolating Polynomials: }{52}{section*.30}%
+\contentsline {paragraph}{Finding Integration Weights: }{54}{section*.31}%
+\contentsline {subsection}{\numberline {4.5.2}Basis}{54}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}Interpreter}{55}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Kernel}{55}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Linear Algebra}{56}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Memory}{57}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Polylib}{57}{section.4.10}%
+\contentsline {paragraph}{Points and Weights: }{58}{section*.34}%
+\contentsline {paragraph}{Derivative Matrices: }{58}{section*.35}%
+\contentsline {paragraph}{Lagrange Interpolants: }{59}{section*.36}%
+\contentsline {paragraph}{Interpolation Operators: }{59}{section*.37}%
+\contentsline {paragraph}{Polynomial Evaluation: }{59}{section*.38}%
+\contentsline {section}{\numberline {4.11}SIMDLib}{59}{section.4.11}%
+\contentsline {paragraph}{A simple example: }{60}{section*.39}%
+\contentsline {paragraph}{A realistic example: }{60}{section*.40}%
+\contentsline {paragraph}{Usage with matrix free operators: }{61}{section*.41}%
+\contentsline {paragraph}{General optimization guidelines: }{62}{section*.42}%
+\contentsline {section}{\numberline {4.12}Time Integration}{62}{section.4.12}%
+\contentsline {subsection}{\numberline {4.12.1}General Linear Methods}{62}{subsection.4.12.1}%
+\contentsline {subsubsection}{Introduction}{63}{section*.43}%
+\contentsline {subsubsection}{Formulation}{63}{section*.44}%
+\contentsline {subsubsection}{Matrix notation}{64}{section*.45}%
+\contentsline {subsubsection}{General Linear Methods in Nektar++}{64}{section*.46}%
+\contentsline {subsubsection}{Types of GLM time Integration Schemes}{65}{section*.47}%
+\contentsline {subsection}{\numberline {4.12.2}Fractional-in-time Integration Schemes}{66}{subsection.4.12.2}%
+\contentsline {subsection}{\numberline {4.12.3}Usage}{66}{subsection.4.12.3}%
+\contentsline {subsection}{\numberline {4.12.4}Implementation of a time-dependent problem}{68}{subsection.4.12.4}%
+\contentsline {subsubsection}{Definitions}{69}{section*.48}%
+\contentsline {subsubsection}{Initialisations}{69}{section*.49}%
+\contentsline {subsubsection}{Integration}{70}{section*.50}%
+\contentsline {subsection}{\numberline {4.12.5}Strongly imposed essential boundary conditions}{71}{subsection.4.12.5}%
+\contentsline {subsection}{\numberline {4.12.6}How to add a new GLM time-stepping method}{72}{subsection.4.12.6}%
+\contentsline {subsection}{\numberline {4.12.7}Examples of already implemented time stepping schemes}{73}{subsection.4.12.7}%
+\contentsline {subsubsection}{Forward Euler}{73}{section*.51}%
+\contentsline {subsubsection}{Backward Euler}{73}{section*.52}%
+\contentsline {subsubsection}{2$^{nd}$ order Adams-Bashforth compact form}{73}{section*.53}%
+\contentsline {subsubsection}{2$^{nd}$ order Adams-Bashforth classic form}{73}{section*.54}%
+\contentsline {subsubsection}{1$^{st}$ order IMEX Euler-Backward/ Euler-Forward}{73}{section*.55}%
+\contentsline {subsubsection}{2$^{nd}$ order IMEX Backward Different Formula \& Extrapolation}{74}{section*.56}%
+\contentsline {subsubsection}{3rdorder IMEX Backward Different Formula \& Extrapolation}{74}{section*.57}%
+\contentsline {subsubsection}{2$^{nd}$ order Adams-Moulton}{75}{section*.58}%
+\contentsline {subsubsection}{Midpoint Method}{75}{section*.59}%
+\contentsline {subsubsection}{RK4: the standard fourth-order Runge-Kutta scheme}{75}{section*.60}%
+\contentsline {subsubsection}{2$^{nd}$ order Diagonally Implicit Runge-Kutta (DIRK)}{75}{section*.61}%
+\contentsline {subsubsection}{3$^{rd}$ order Diagonally Implicit Runge-Kutta (DIRK)}{75}{section*.62}%
+\contentsline {subsubsection}{3$^{rd}$ order L-stable, three stage IMEX DIRK(3,4,3)}{75}{section*.63}%
+\contentsline {subsubsection}{1$^{st}$ order Lawson Euler Exponential}{76}{section*.64}%
+\contentsline {subsubsection}{1$^{st}$ order N{\o }rsett Euler Exponential}{76}{section*.65}%
+\contentsline {chapter}{\chapternumberline {5}Inside the Library: StdRegions}{77}{chapter.5}%
+\contentsline {section}{\numberline {5.1}The Fundamentals Behind StdRegions}{77}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Reference Element Transformations That Facilitate Separability}{79}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Reference Elements On Primitive Geometric Types}{80}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}The Fundamental Data Structures within StdRegions}{82}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Variables at the Level of StdExpansion}{83}{subsection.5.2.1}%
+\contentsline {paragraph}{Private:}{83}{section*.75}%
+\contentsline {paragraph}{Protected:}{83}{section*.76}%
+\contentsline {paragraph}{Public:}{84}{section*.77}%
+\contentsline {subsection}{\numberline {5.2.2}Variables at the Level of StdExpansion\$D for various Dimensions}{84}{subsection.5.2.2}%
+\contentsline {paragraph}{Private:}{84}{section*.78}%
+\contentsline {paragraph}{Protected:}{84}{section*.79}%
+\contentsline {paragraph}{Public:}{85}{section*.80}%
+\contentsline {subsection}{\numberline {5.2.3}Variables at the Level of Shape-Specific StdExpansions}{85}{subsection.5.2.3}%
+\contentsline {paragraph}{Private:}{85}{section*.81}%
+\contentsline {paragraph}{Protected:}{85}{section*.82}%
+\contentsline {paragraph}{Public:}{85}{section*.83}%
+\contentsline {subsection}{\numberline {5.2.4}General Layout of the Basis Functions in Memory}{85}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}General Layout}{85}{subsection.5.2.5}%
+\contentsline {subsubsection}{A Note Concerning Adjustments For $C_0$ Continuity}{86}{section*.84}%
+\contentsline {subsection}{\numberline {5.2.6}2D Geometries}{86}{subsection.5.2.6}%
+\contentsline {subsubsection}{Quadrilateral Element Memory Organization}{86}{section*.85}%
+\contentsline {subsubsection}{Triangle Element Memory Organization}{87}{section*.86}%
+\contentsline {subsection}{\numberline {5.2.7}3D Geometries}{87}{subsection.5.2.7}%
+\contentsline {subsubsection}{Hexahedral Element Memory Organization}{87}{section*.87}%
+\contentsline {subsubsection}{Prismatic Element Memory Organization}{88}{section*.88}%
+\contentsline {subsubsection}{Tetrahedral Element Memory Organization}{88}{section*.89}%
+\contentsline {subsubsection}{Pyramidic Element Memory Organization}{89}{section*.90}%
+\contentsline {section}{\numberline {5.3}The Fundamental Algorithms within StdRegions}{89}{section.5.3}%
+\contentsline {paragraph}{Question:}{89}{section*.91}%
+\contentsline {chapter}{\chapternumberline {6}Inside the Library: SpatialDomains}{90}{chapter.6}%
+\contentsline {section}{\numberline {6.1}The Fundamentals Behind SpatialDomains}{91}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Vertex and Curvature Mapping Information}{92}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Regular Mappings: Geometric Factors}{95}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Deformed Mappings: Geometric Factors}{96}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}The Fundamental Data Structures within SpatialDomains}{97}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Variables at the Level of Geometry}{98}{subsection.6.2.1}%
+\contentsline {paragraph}{Private:}{98}{section*.95}%
+\contentsline {paragraph}{Protected:}{98}{section*.96}%
+\contentsline {paragraph}{Public:}{98}{section*.97}%
+\contentsline {subsection}{\numberline {6.2.2}Variables at the Level of Geometry\$D for various Dimensions}{98}{subsection.6.2.2}%
+\contentsline {paragraph}{Private:}{98}{section*.98}%
+\contentsline {paragraph}{Protected:}{98}{section*.99}%
+\contentsline {paragraph}{Public:}{98}{section*.100}%
+\contentsline {subsection}{\numberline {6.2.3}Variables at the Level of Shape-Specific Geometry Information}{98}{subsection.6.2.3}%
+\contentsline {paragraph}{Private:}{98}{section*.101}%
+\contentsline {paragraph}{Protected:}{98}{section*.102}%
+\contentsline {paragraph}{Public:}{98}{section*.103}%
+\contentsline {subsection}{\numberline {6.2.4}Reference to World-Space Mapping}{98}{subsection.6.2.4}%
+\contentsline {subsubsection}{Geometry}{98}{section*.104}%
+\contentsline {subsubsection}{GeomFactors}{98}{section*.105}%
+\contentsline {subsection}{\numberline {6.2.5}MeshGraph}{98}{subsection.6.2.5}%
+\contentsline {section}{\numberline {6.3}The Fundamental Algorithms within SpatialDomains}{98}{section.6.3}%
+\contentsline {paragraph}{Question:}{99}{section*.106}%
+\contentsline {chapter}{\chapternumberline {7}Inside the Library: LocalRegions}{100}{chapter.7}%
+\contentsline {section}{\numberline {7.1}The Fundamentals Behind LocalRegions}{100}{section.7.1}%
+\contentsline {section}{\numberline {7.2}The Fundamental Data Structures within LocalRegions}{100}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Variables at the Level of Expansion}{101}{subsection.7.2.1}%
+\contentsline {paragraph}{Private:}{101}{section*.109}%
+\contentsline {paragraph}{Protected:}{101}{section*.110}%
+\contentsline {paragraph}{Public:}{102}{section*.111}%
+\contentsline {subsection}{\numberline {7.2.2}Variables at the Level of Expansion\$D for various Dimensions}{102}{subsection.7.2.2}%
+\contentsline {paragraph}{Private:}{102}{section*.112}%
+\contentsline {paragraph}{Protected:}{102}{section*.113}%
+\contentsline {paragraph}{Public:}{102}{section*.114}%
+\contentsline {subsection}{\numberline {7.2.3}Variables at the Level of Shape-Specific Expansions}{102}{subsection.7.2.3}%
+\contentsline {paragraph}{Private:}{102}{section*.115}%
+\contentsline {paragraph}{Protected:}{102}{section*.116}%
+\contentsline {paragraph}{Public:}{102}{section*.117}%
+\contentsline {section}{\numberline {7.3}The Fundamental Algorithms within LocalRegions}{102}{section.7.3}%
+\contentsline {paragraph}{Question:}{103}{section*.118}%
+\contentsline {chapter}{\chapternumberline {8}Inside the Library: Collections}{104}{chapter.8}%
+\contentsline {section}{\numberline {8.1}The Fundamentals Behind Collections}{104}{section.8.1}%
+\contentsline {section}{\numberline {8.2}The Fundamental Data Structures within Collections}{105}{section.8.2}%
+\contentsline {section}{\numberline {8.3}The Fundamental Algorithms within Collections}{105}{section.8.3}%
+\contentsline {paragraph}{Question:}{106}{section*.119}%
+\contentsline {chapter}{\chapternumberline {9}Inside the Library: MultiRegions}{107}{chapter.9}%
+\contentsline {section}{\numberline {9.1}The Fundamentals Behind MultiRegions}{107}{section.9.1}%
+\contentsline {paragraph}{Assembly Map}{108}{figure.caption.122}%
+\contentsline {section}{\numberline {9.2}The Fundamental Data Structures within MultiRegions}{109}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}Variables at the Level of ExpList}{110}{subsection.9.2.1}%
+\contentsline {paragraph}{Private:}{110}{section*.124}%
+\contentsline {paragraph}{Protected:}{110}{section*.125}%
+\contentsline {paragraph}{Public:}{110}{section*.126}%
+\contentsline {subsection}{\numberline {9.2.2}Variables at the Level of ExpList\$D for various Dimensions}{110}{subsection.9.2.2}%
+\contentsline {paragraph}{Private:}{110}{section*.127}%
+\contentsline {paragraph}{Protected:}{110}{section*.128}%
+\contentsline {paragraph}{Public:}{110}{section*.129}%
+\contentsline {subsection}{\numberline {9.2.3}Variables at the Level of Discontinuous Field Expansions}{111}{subsection.9.2.3}%
+\contentsline {paragraph}{Private:}{111}{section*.130}%
+\contentsline {paragraph}{Protected:}{111}{section*.131}%
+\contentsline {paragraph}{Public:}{111}{section*.132}%
+\contentsline {subsection}{\numberline {9.2.4}Variables at the Level of Continuous Field Expansions}{111}{subsection.9.2.4}%
+\contentsline {paragraph}{Private:}{111}{section*.133}%
+\contentsline {paragraph}{Protected:}{111}{section*.134}%
+\contentsline {section}{\numberline {9.3}The Fundamental Algorithms within MultiRegions}{111}{section.9.3}%
+\contentsline {paragraph}{Question:}{111}{section*.135}%
+\contentsline {section}{\numberline {9.4}Preconditioners}{111}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}Mathematical formulation}{112}{subsection.9.4.1}%
+\contentsline {subsubsection}{$C^0$ formulation}{112}{section*.136}%
+\contentsline {subsubsection}{HDG formulation}{113}{section*.137}%
+\contentsline {subsection}{\numberline {9.4.2}Preconditioners}{113}{subsection.9.4.2}%
+\contentsline {subsubsection}{Diagonal}{114}{section*.138}%
+\contentsline {subsubsection}{Linear space}{114}{section*.139}%
+\contentsline {subsubsection}{Block}{115}{section*.140}%
+\contentsline {subsection}{\numberline {9.4.3}Low energy}{115}{subsection.9.4.3}%
+\contentsline {chapter}{\chapternumberline {10}Inside the Library: GlobalMapping}{118}{chapter.10}%
+\contentsline {section}{\numberline {10.1}The Fundamentals Behind GlobalMapping}{118}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}Divergence operator}{119}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}Laplacian operator}{120}{subsection.10.1.2}%
+\contentsline {subsection}{\numberline {10.1.3}Anisotropic diffusion}{121}{subsection.10.1.3}%
+\contentsline {subsection}{\numberline {10.1.4}Anisotropic Laplacian operator}{121}{subsection.10.1.4}%
+\contentsline {section}{\numberline {10.2}The Fundamental Data Structures within GlobalMapping}{121}{section.10.2}%
+\contentsline {section}{\numberline {10.3}The Fundamental Algorithms within GlobalMapping}{121}{section.10.3}%
+\contentsline {chapter}{\chapternumberline {11}Inside the Library: FieldUtils}{122}{chapter.11}%
+\contentsline {section}{\numberline {11.1}The Fundamentals Behind FieldUtils}{122}{section.11.1}%
+\contentsline {section}{\numberline {11.2}The Fundamental Data Structures within FieldUtils}{122}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}Overview of how modules work}{123}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}\texttt {Module}}{124}{subsection.11.2.2}%
+\contentsline {paragraph}{Member variables}{124}{section*.142}%
+\contentsline {paragraph}{Member functions}{124}{section*.143}%
+\contentsline {subsection}{\numberline {11.2.3}\texttt {InputModule}}{125}{subsection.11.2.3}%
+\contentsline {paragraph}{Member variables}{125}{section*.144}%
+\contentsline {paragraph}{Member functions}{125}{section*.145}%
+\contentsline {subsection}{\numberline {11.2.4}\texttt {ProcessModule}}{125}{subsection.11.2.4}%
+\contentsline {paragraph}{Member functions}{125}{section*.146}%
+\contentsline {subsection}{\numberline {11.2.5}\texttt {OutputModule}}{125}{subsection.11.2.5}%
+\contentsline {paragraph}{Member variables}{125}{section*.147}%
+\contentsline {paragraph}{Member functions}{125}{section*.148}%
+\contentsline {subsection}{\numberline {11.2.6}\texttt {ConfigOption}}{126}{subsection.11.2.6}%
+\contentsline {paragraph}{Member variables}{126}{section*.149}%
+\contentsline {paragraph}{Member functions}{126}{section*.150}%
+\contentsline {subsection}{\numberline {11.2.7}The \texttt {Field} struct}{126}{subsection.11.2.7}%
+\contentsline {paragraph}{Member variables}{126}{section*.151}%
+\contentsline {paragraph}{Member functions}{127}{section*.152}%
+\contentsline {section}{\numberline {11.3}The Fundamental Algorithms within FieldUtils}{128}{section.11.3}%
+\contentsline {chapter}{\chapternumberline {12}Inside the Library: SolverUtils}{129}{chapter.12}%
+\contentsline {section}{\numberline {12.1}The Fundamentals Behind SolverUtils}{129}{section.12.1}%
+\contentsline {section}{\numberline {12.2}The Fundamental Data Structures within SolverUtils}{129}{section.12.2}%
+\contentsline {section}{\numberline {12.3}The Fundamental Algorithms within SolverUtils}{129}{section.12.3}%
+\contentsline {part}{\partnumberline {II}Solvers}{130}{part.2}%
+\contentsline {chapter}{\chapternumberline {13}ADRSolver: Solving the Advection-Reaction-Diffusion Equation}{132}{chapter.13}%
+\contentsline {chapter}{\chapternumberline {14}IncNavierStokesSolver: Solving the Incompressible Navier-Stokes Equations}{133}{chapter.14}%
+\contentsline {chapter}{\chapternumberline {15}CompressibleFlowSolver: Solving the Compressible Navier-Stokes Equations}{134}{chapter.15}%
+\contentsline {section}{\numberline {15.1}Fundamental Theories of CompressibleFlowSolver}{134}{section.15.1}%
+\contentsline {subsection}{\numberline {15.1.1}{Governing equations}}{134}{subsection.15.1.1}%
+\contentsline {subsection}{\numberline {15.1.2}{Discretization}}{134}{subsection.15.1.2}%
+\contentsline {subsubsection}{{Spatial discretization}}{134}{section*.154}%
+\contentsline {subsubsection}{{Time discretization}}{135}{section*.155}%
+\contentsline {subsubsection}{{Jacobian-free Newton-Krylov method}}{136}{section*.156}%
+\contentsline {section}{\numberline {15.2}Functions of the implementation}{137}{section.15.2}%
+\contentsline {section}{\numberline {15.3}Data Structure of CompressibleFlowSolver}{137}{section.15.3}%
+\contentsline {section}{\numberline {15.4}Flow Chart of CompressibleFlowSolver}{139}{section.15.4}%
+\contentsline {part}{\partnumberline {III}Utilities}{141}{part.3}%
+\contentsline {chapter}{\chapternumberline {16}FieldConvert}{143}{chapter.16}%
+\contentsline {chapter}{\chapternumberline {17}NekMesh}{148}{chapter.17}%
+\contentsline {part}{\partnumberline {IV}NekPy: Python interface to \emph {Nektar++}{}}{149}{part.4}%
+\contentsline {chapter}{\chapternumberline {18}Introduction}{150}{chapter.18}%
+\contentsline {section}{\numberline {18.1}Features and functionality}{150}{section.18.1}%
+\contentsline {chapter}{\chapternumberline {19}Installing NekPy}{152}{chapter.19}%
+\contentsline {section}{\numberline {19.1}Compiling and installing Nektar++}{152}{section.19.1}%
+\contentsline {subsection}{\numberline {19.1.1}macOS}{152}{subsection.19.1.1}%
+\contentsline {subsubsection}{Homebrew}{152}{section*.167}%
+\contentsline {subsubsection}{MacPorts}{153}{section*.168}%
+\contentsline {subsection}{\numberline {19.1.2}Linux: Ubuntu/Debian}{153}{subsection.19.1.2}%
+\contentsline {subsection}{\numberline {19.1.3}Compiling the wrappers}{153}{subsection.19.1.3}%
+\contentsline {section}{\numberline {19.2}Using the bindings}{153}{section.19.2}%
+\contentsline {subsection}{\numberline {19.2.1}Examples}{154}{subsection.19.2.1}%
+\contentsline {chapter}{\chapternumberline {20}Package structure}{155}{chapter.20}%
+\contentsline {chapter}{\chapternumberline {21}NekPy wrapping guide}{157}{chapter.21}%
+\contentsline {section}{\numberline {21.1}Defining a library}{157}{section.21.1}%
+\contentsline {section}{\numberline {21.2}Basic class wrapping}{158}{section.21.2}%
+\contentsline {subsection}{\numberline {21.2.1}\texttt {py::class\_<>}}{159}{subsection.21.2.1}%
+\contentsline {subsection}{\numberline {21.2.2}Wrapping member functions}{159}{subsection.21.2.2}%
+\contentsline {subsubsection}{Thin wrappers}{160}{section*.170}%
+\contentsline {subsubsection}{Dealing with references}{160}{section*.171}%
+\contentsline {subsubsection}{Dealing with \texttt {Array<OneD, >}}{160}{section*.172}%
+\contentsline {subsection}{\numberline {21.2.3}Inheritance}{161}{subsection.21.2.3}%
+\contentsline {subsection}{\numberline {21.2.4}Wrapping enums}{162}{subsection.21.2.4}%
+\contentsline {chapter}{\chapternumberline {22}Documentation}{163}{chapter.22}%
+\contentsline {chapter}{\chapternumberline {23}Memory management in NekPy}{165}{chapter.23}%
+\contentsline {section}{\numberline {23.1}Memory management in C++ and Python}{165}{section.23.1}%
+\contentsline {subsection}{\numberline {23.1.1}C++}{165}{subsection.23.1.1}%
+\contentsline {subsubsection}{Python}{166}{section*.174}%
+\contentsline {section}{\numberline {23.2}Passing C++ memory to Python}{166}{section.23.2}%
+\contentsline {subsubsection}{Converter method}{167}{section*.176}%
+\contentsline {subsubsection}{Testing}{170}{section*.178}%
+\contentsline {subsection}{\numberline {23.2.1}Passing Python data to C++}{171}{subsection.23.2.1}%
+\contentsline {subsubsection}{Modifications to \texttt {Array<OneD, const DataType>} class template}{172}{section*.179}%
+\contentsline {subsubsection}{Creation of new arrays}{174}{section*.180}%
+\contentsline {subsubsection}{Array deletion}{175}{section*.181}%
+\contentsline {subsubsection}{Converter method}{175}{section*.182}%
+\contentsline {subsubsection}{Testing}{177}{section*.185}%
+\contentsline {chapter}{\chapternumberline {24}FieldConvert in NekPy}{179}{chapter.24}%
+\contentsline {section}{\numberline {24.1}Idea and motivation}{179}{section.24.1}%
+\contentsline {subsection}{\numberline {24.1.1}Bindings}{179}{subsection.24.1.1}%
+\contentsline {chapter}{Bibliography}{181}{chapter*.186}%

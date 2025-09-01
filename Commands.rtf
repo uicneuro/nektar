@@ -1,0 +1,486 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2706
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 Monaco;
+\f3\froman\fcharset0 Times-Roman;\f4\fnil\fcharset0 LucidaGrande;\f5\fswiss\fcharset0 ArialMT;
+\f6\fnil\fcharset129 AppleSDGothicNeo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red76\green77\blue82;
+\red232\green232\blue241;\red22\green21\blue22;\red246\green246\blue246;\red27\green29\blue31;\red222\green224\blue226;
+\red31\green31\blue31;\red239\green239\blue239;\red39\green123\blue69;\red255\green255\blue255;\red36\green38\blue41;
+\red235\green236\blue237;\red0\green0\blue0;\red38\green38\blue38;\red231\green240\blue245;\red104\green26\blue29;
+\red43\green39\blue19;\red26\green26\blue26;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c100000;\cssrgb\c36863\c37647\c39608;
+\cssrgb\c92941\c92941\c95686;\cssrgb\c11373\c10980\c11373;\cssrgb\c97255\c97255\c97255;\cssrgb\c14118\c15294\c16078;\cssrgb\c89412\c90196\c90980;
+\cssrgb\c16078\c16078\c16078;\cssrgb\c94902\c94902\c94902;\cssrgb\c18039\c54510\c34118;\cssrgb\c100000\c100000\c100000;\cssrgb\c18824\c20000\c21176;
+\cssrgb\c93725\c94118\c94510;\cssrgb\c0\c0\c0;\cssrgb\c20000\c20000\c20000;\cssrgb\c92549\c95294\c96863;\cssrgb\c49020\c15294\c15294;
+\cssrgb\c22353\c20000\c9412;\cssrgb\c13333\c13333\c13333;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{lower-alpha\}}{\leveltext\leveltemplateid1\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww18540\viewh11800\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \cb3 \CocoaLigature0 \
+cedrus: 114.207.79.218\
+olea: 114.207.79.219\
+macpro: 219.250.99.162
+\fs28\fsmilli14222 \cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 * theta\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf0 \cb1 \expnd0\expndtw0\kerning0
+\CocoaLigature1 1) add -DCMAKE_C_FLAGS=\'93-no-multibyte-chars\'94 -DCMAKE_CXX_FLAGS=\'93-no-multibyte-chars"\
+2) see if same cmake/locale issues with gnu compiler \'93module switch PrgEnv-intel PrgEnv-gnu\'94\
+\
+\
+I managed to successfully build nektar++ with the following simple cmake command: cmake -DCMAKE_INSTALL_PREFIX=/home/knight/public/nektar++/build_theta ..
+\f0\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs30 \cf6 \cb7 \expnd0\expndtw0\kerning0
+\CocoaLigature1 nohup 
+\fs24 \cf0 \cb1 mpirun -np 20 
+\fs30 \cf6 \cb7 ../MMFNeuralEP Fiber1DSimulation.xml </devn/null > runFiber1DSimulation.out 2>&1 &\cb1 \
+\
+\cb7 nohup
+\fs24 \cf0 \cb1  
+\fs30 \cf6 \cb7 ../MMFNeuralEP 
+\f0\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 ThinLine2DTest
+\f1\fs30 \cf6 \cb7 \expnd0\expndtw0\kerning0
+\CocoaLigature1 .xml > run
+\f0\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 ThinLine2DTest
+\f1\fs30 \cf6 \cb7 \expnd0\expndtw0\kerning0
+\CocoaLigature1 .out 2>&1 &\cb1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs28\fsmilli14222 \cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 ssh-keygen -R willow.uic.yonsei.ac.kr\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+=====================================================================================\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs26 \cf8 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 * github\
+\
+1. git add .\
+2. \cf10 \cb11 git commit -m \'93Comments\'94\
+3. git push origin main\cf8 \cb9 \
+\
+========================================================================\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 rsync -avu /Users/schun/nektarMMF/library/ /Users/schun/nektarMMFgit/library/
+\fs26 \cf8 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+
+\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 rsync -avu /Users/schun/nektarMMF/solvers/ /Users/schun/nektarMMFgit/solvers/
+\fs26 \cf8 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \
+========================================================================\
+\
+\
+arch -x86_64\
+\
+du -h --max-depth=1\
+\
+df -h\
+\
+du -sh /*\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 For t In \{1:5\}\
+\
+  x += 0.166;\
+  z += 0.166;\
+\
+  Physical Volume (t) = thehole;\
+\
+EndFor
+\f2\fs23\fsmilli11700 \cf12 \cb13 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf12 \
+\{Abs(Var)\}=abs(\{var\})
+\f1\fs26 \cf14 \cb15 \
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs24 \cf16 \cb1 \{theta\}=asin(0.1*\{z\})\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs26 \cf14 \cb15 \
+\pard\pardeftab720\partightenfactor0
+
+\f4 \cf17 \cb18 <greek>m</greek>
+\f1 \cf14 \cb15 \
+\
+nohup /home/schun/myprog -arg1 -arg2 > /home/schun/output.txt \cf19 2\cf14 >&\cf19 1\cf14  &\cf20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf20 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf0 \cb1 mpirun -np 40 ./MMFSolver-g ELF2DNonconvexh04.xml\
+nohup mpirun -np 20 ../MMFDiffusion MMFFirst_atrium_p6
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 _MFZero
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 .xml > runMMFFirstatriump6Zero.out 2>&1 &\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 ps -f -u schun
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf8 \cb15 % rsync -avu /local/directory/ host:/remote/directory/\
+\pard\pardeftab720\partightenfactor0
+
+\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\\scp *.xml *.sh schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Neural1D/\
+\pard\pardeftab720\partightenfactor0
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\\scp *.xml *.sh schun@olive.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/ShallowWaterSolver/Unsteady\
+\
+\
+\pard\pardeftab720\partightenfactor0
+baobab: 
+\f5\fs26 \cf21 \cb13 \expnd0\expndtw0\kerning0
+\CocoaLigature1 vnc://1.233.216.159/\'a0\
+mac pro home: vnc://192.168.0.148   (192.168.0.148)
+\f0\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\
+\
+nektar5.3.0 ++++++++++\
+% sync From PC To cedrus\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+rsync -avu /Users/schun/nektar/solvers/ schun@cedrus.uic.yonsei.ac.kr:/home/schun/nektar530/solvers/\
+rsync -avu /Users/schun/nektar/library/ schun@cedrus.uic.yonsei.ac.kr:/home/schun/nektar530/library/\
+\pard\pardeftab720\partightenfactor0
+\
+% sync From PC To olea\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+rsync -avu /Users/schun/nektar/solvers/ schun@olea.uic.yonsei.ac.kr:/Users/schun/nektar530/solvers/\
+rsync -avu /Users/schun/nektar/library/ schun@olea.uic.yonsei.ac.kr:/Users/schun/nektar530/library/\
+\pard\pardeftab720\partightenfactor0
+\
+++++++++\
+\
+\
+% sync From PC To cedrus\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+rsync -avu /Users/schun/nektarMMF/solvers/ schun@cedrus.uic.yonsei.ac.kr:/home/schun/nektarMMF/solvers/\
+rsync -avu /Users/schun/nektarMMF/library/ schun@cedrus.uic.yonsei.ac.kr:/home/schun/nektarMMF/library/\
+\
+\
+% sync From cedrus To PC\
+rsync -avu schun@cedrus.uic.yonsei.ac.kr:/home/schun/nektarMMF/solvers/ /Users/schun/nektarMMF/solvers/ \
+rsync -avu schun@cedrus.uic.yonsei.ac.kr:/home/schun/nektarMMF/library/ /Users/schun/nektarMMF/library/\
+\pard\pardeftab720\partightenfactor0
+\
+\
+% sync From PC To olea\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+rsync -avu /Users/schun/nektarMMF/solvers/ schun@olea.uic.yonsei.ac.kr:/Users/schun/nektarMMF/solvers/\
+rsync -avu /Users/schun/nektarMMF/library/ schun@olea.uic.yonsei.ac.kr:/Users/schun/nektarMMF/library/\
+\
+\
+% sync From olea To PC\
+rsync -avu schun@olea.uic.yonsei.ac.kr:/Users/schun/nektarMMF/solvers/ /Users/schun/nektarMMF/solvers/ \
+rsync -avu schun@olea.uic.yonsei.ac.kr:/Users/schun/nektarMMF/library/ /Users/schun/nektarMMF/library/\
+\pard\pardeftab720\partightenfactor0
+\
+\
+\
+ \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+ \
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+nektar++-5.0.0/build/solvers/DiffusionSolver\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Atrium\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Atrium\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TimeMap\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TSM1D\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TSM2D\
+\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/
+\f6 ShallowWater
+\f0 Solver/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/
+\f6 ShallowWater
+\f0 Solver/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@olive.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/
+\f6 ShallowWater
+\f0 Solver/*.out ./\
+\pard\pardeftab720\partightenfactor0
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\\scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Bidomain/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Bidomain/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Bunny/*.out ./\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Bunny/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/HHD/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/HHD/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Atrium/*.out ./\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/Atrium/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TimeMap/*.out ./\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TimeMap/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TSM1D/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TSM1D/*.dat ./\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TSM2D/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/solvers/DiffusionSolver/TSM2D/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs29\fsmilli14667 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 =========== MATLAB  =========== =========== =========== =========== =========== =========== 
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\\scp *.m schun@cedar.uic.yonsei.ac.kr:/home/schun/MATLAB/FHNTimeMap/\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+nohup matlab -nodisplay -nosplash <SolveFrankenHuxley.m> SolveFrankenHuxley.txt &\
+nohup matlab -nodisplay -nosplash <SolveFrankenHuxleyNode.m> SolveFrankenHuxleyNode.txt &\
+\\scp schun@cedar.uic.yonsei.ac.kr:/home/schun/MATLAB/FHNTimeMap/\\*.mat ./ \
+\pard\pardeftab720\partightenfactor0
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs29\fsmilli14667 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 =========== Version 5.0.0b  =========== =========== =========== =========== =========== =========== 
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+rsync -avu /Users/schun/nektar++-5.0.0b/solvers/ schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/solvers/\
+rsync -avu /Users/schun/nektar++-5.0.0b/library/ schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/library/\
+\pard\pardeftab720\partightenfactor0
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/Atrium\
+\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/Anitest/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/Anitest/*.dat ./\
+\pard\pardeftab720\partightenfactor0
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/Atrium/*.out ./\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0b/build/solvers/DiffusionSolver/Atrium/*.dat ./\
+\
+\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-5.0.0/build/utilities/NekMesh/*.xml ./\
+\
+\pard\pardeftab720\partightenfactor0
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs29\fsmilli14667 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 =========== Version 4.5.0  =========== =========== =========== =========== =========== =========== \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+rsync -avu /Users/schun/nektar++-4.5.0/solvers/ schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/solvers/\
+rsync -avu /Users/schun/nektar++-4.5.0/library/ schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/library/\
+rsync -avu /Users/schun/nektar++-4.5.0/utilities/ schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/utilities/\
+\
+\
+rsync -avu /Users/schun/Desktop/NekMesh/ schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/utilities/NekMesh/\
+\
+\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/MMFSolver\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/Atrium\
+schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/IrregNonconv\
+\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 scp  schun@cedar.uic.yonsei.ac.kr:
+\f0\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 /home/schun/nektar++-4.5.0/build/utilities/NekMesh/*.xml ./\
+\pard\pardeftab720\partightenfactor0
+\cb1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/MMFSolver/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/MMFSolver/*.dat ./\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/ShallowWaterSolver/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/ShallowWaterSolver/*.dat ./\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/*.dat ./\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/Atrium/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/Atrium/*.dat ./\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/IrregNonconv/*.out ./\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/solvers/DiffusionSolver/IrregNonconv/*.
+\f6 dat
+\f0  ./\
+\
+\
+scp schun@cedar.uic.yonsei.ac.kr:/home/schun/nektar++-4.5.0/build/utilities/NekMesh/*.xml ./\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 FieldConvert FHNPlaneLeftGap.xml FHNPlaneLeftGap_MF_10.chk FHNPlaneLeftGap_MF_10.dat\
+FieldConvert FHNPlaneLeftGap.xml FHNPlaneLeftGap_Connection_10.chk FHNPlaneLeftGap_Connection_10.dat\
+FieldConvert FHNPlaneLeftGap.xml FHNPlaneLeftGap_Riemann_10.chk FHNPlaneLeftGap_Riemann_10.dat\
+FieldConvert FHNPlaneLeftGap.xml FHNPlaneLeftGap_Ricci_10.chk FHNPlaneLeftGap_Ricci_10.dat\
+\
+FieldConvert FHNIrregularR20L3.xml FHNIrregularR20L3_MF_100.chk FHNIrregularR20L3_MF_100.dat\
+FieldConvert FHNIrregularR20L3.xml FHNIrregularR20L3_Connection_100.chk FHNIrregularR20L3_Connection_100.dat\
+FieldConvert FHNIrregularR20L3.xml FHNIrregularR20L3_Riemann_100.chk FHNIrregularR20L3_Riemann_100.dat\
+FieldConvert FHNIrregularR20L3.xml FHNIrregularR20L3_Ricci_100.chk FHNIrregularR20L3_Ricci_100.dat\
+\
+\
+FieldConvert FHNNonconvexR20L3.xml FHNNonconvexR20L3_MF_100.chk FHNNonconvexR20L_MF_100.dat\
+FieldConvert FHNNonconvexR20L3.xml FHNNonconvexR20L3_Connection_100.chk FHNNonconvexR20L_Connection_100.dat\
+FieldConvert FHNNonconvexR20L3.xml FHNNonconvexR20L3_Riemann_100.chk FHNNonconvexR20L_Riemann_100.dat\
+FieldConvert FHNNonconvexR20L3.xml FHNNonconvexR20L3_Ricci_100.chk FHNNonconvexR20L_Ricci_100.dat\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 cp FHNSpherePR10WFp3.xml FHNSpherePR10EXWFp3.xml
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 cp FHNSpherePR10WFp4.xml FHNSpherePR10EXWFp4.xml
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 cp FHNSpherePR10WFp5.xml FHNSpherePR10EXWFp5.xml
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 cp FHNSpherePR10WFp6.xml FHNSpherePR10EXWFp6.xml
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+
+\f0\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 cp FHNSpherePR10WFp7.xml FHNSpherePR10EXWFp7.xml
+\f1\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf0 ====================================================================================================\
+*** VS Code command ***\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs26 \cf8 \cb15 Edit multiple files with multi tab: \'94workbench.editor.enablePreviewFromQuickOpen": false\
+\
+\
+\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\fs29\fsmilli14667 \cf0 \cb1 \kerning1\expnd0\expndtw0 {\listtext	a	}\expnd0\expndtw0\kerning0
+brew install homebrew/science/oce\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 {\listtext	b	}\expnd0\expndtw0\kerning0
+port install oce\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 {\listtext	c	}\expnd0\expndtw0\kerning0
+sudo apt-get install liboce-foundation-dev liboce-modeling-dev\
+\pard\tx566\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf0 file.xml:xml:uncompress\
+\
+\
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs26 \cf8 \cb15 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf0 \cb1 \
+\
+}
