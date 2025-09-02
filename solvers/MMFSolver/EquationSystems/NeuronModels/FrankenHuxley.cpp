@@ -65,7 +65,7 @@ namespace Nektar
                                                            const NekDouble time,
                                                            const NekDouble var_membrane__Tc)
     {
-        boost::ignore_unused(time);
+        (void) time;
 
         // nodal capacitance
         const NekDouble var_membrane__cnd = 3.14e-9;  // (F/cm) Waxman 1978, Same

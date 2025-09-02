@@ -38,10 +38,6 @@
 #include <StdRegions/StdNodalTriExp.h>
 #include <SolverUtils/MMFSystem.h>
 
-// #include <DiffusionSolver/EquationSystems/MMFDiffusion.h>
-
-//#include <LibUtilities/LinearAlgebra/Blas.hpp>
-
 using namespace std;
 
 namespace Nektar
@@ -94,7 +90,7 @@ NeuronModel::NeuronModel(const LibUtilities::SessionReaderSharedPtr &pSession,
 void NeuronModel::Initialise()
 {
     ASSERTL1(m_nvar > 0, "Neuron model must have at least 1 variable.");
-
+    
     m_NeuronSol = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
     m_wsp     = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
     for (unsigned int i = 0; i < m_nvar; ++i)
@@ -102,6 +98,7 @@ void NeuronModel::Initialise()
         m_NeuronSol[i] = Array<OneD, NekDouble>(m_nq);
         m_wsp[i]     = Array<OneD, NekDouble>(m_nq);
     }
+
     m_gates_tau = Array<OneD, Array<OneD, NekDouble>>(m_gates.size());
     for (unsigned int i = 0; i < m_gates.size(); ++i)
     {

@@ -3177,7 +3177,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing(
     {
         Vmath::Smul(nq, scale, inarray[n], 1, m_fields[n]->UpdatePhys(), 1);
         m_fields[n]->HelmSolve(m_fields[n]->GetPhys(), m_fields[n]->UpdateCoeffs(),
-                            factors, m_varcoefffiber[1]);
+                            factors, m_varcoefffiber[n]);
         m_fields[n]->BwdTrans(m_fields[n]->GetCoeffs(), outarray[n]);
         m_fields[n]->SetPhysState(true);
     }
@@ -3353,19 +3353,33 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq,0.0);
 
-    for (int n = 0; n < numfiber; ++n)
-    {
-        // 1. Reaction Term (FHN or H-H ion current model)
-        m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
+    int n;
 
-        // 2. Apply Stimulus
-        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
+    n=1;
+    m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
+    m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
+    tmp = Computephie(n, inarray[n]);
+    Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
 
-        // 3. Compute phi_e to satisfy bidomain coupling
-        tmp = Computephie(n, inarray[n]);
+    n=0;
+    m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
+    m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
+    tmp = Computephie(n, inarray[n]);
+    Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
 
-        Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
-    }
+    // for (int n = 0; n < numfiber; ++n)
+    // {
+    //     // 1. Reaction Term (FHN or H-H ion current model)
+    //     m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
+
+    //     // 2. Apply Stimulus
+    //     m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
+
+    //     // 3. Compute phi_e to satisfy bidomain coupling
+    //     tmp = Computephie(n, inarray[n]);
+
+    //     Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
+    // }
 
     m_fields[phievar]->UpdatePhys() = phie;
     

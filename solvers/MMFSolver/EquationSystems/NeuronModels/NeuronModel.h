@@ -44,7 +44,6 @@
 #include <SolverUtils/MMFSystem.h>
 #include <StdRegions/StdNodalTetExp.h>
 #include <StdRegions/StdNodalTriExp.h>
-
 #include <SolverUtils/UnsteadySystem.h>
 
 namespace Nektar
