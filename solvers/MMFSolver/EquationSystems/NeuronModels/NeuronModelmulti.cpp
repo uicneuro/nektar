@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File NeuronModel.cpp
+// File NeuronModelmulti.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -34,7 +34,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <LibUtilities/BasicUtils/VmathArray.hpp>
-#include <MMFSolver/EquationSystems/NeuronModels/NeuronModel.h>
+#include <MMFSolver/EquationSystems/NeuronModels/NeuronModelmulti.h>
 #include <StdRegions/StdNodalTriExp.h>
 #include <SolverUtils/MMFSystem.h>
 
@@ -42,16 +42,16 @@ using namespace std;
 
 namespace Nektar
 {
-NeuronModelFactory &GetNeuronModelFactory()
+NeuronModelmultiFactory &GetNeuronModelmultiFactory()
 {
-    static NeuronModelFactory instance;
+    static NeuronModelmultiFactory instance;
     return instance;
 }
 
 /**
- * @class NeuronModel
+ * @class NeuronModelmulti
  *
- * The NeuronModel class and derived classes implement a range of Neuron model
+ * The NeuronModelmulti class and derived classes implement a range of Neuron model
  * ODE systems. A Neuron model comprises a system of ion concentration
  * variables and zero or more gating variables. Gating variables are
  * time-integrated using the Rush-Larsen method and for each variable y,
@@ -62,7 +62,7 @@ NeuronModelFactory &GetNeuronModelFactory()
 /**
  * Neuron model base class constructor.
  */
-NeuronModel::NeuronModel(const LibUtilities::SessionReaderSharedPtr &pSession,
+NeuronModelmulti::NeuronModelmulti(const LibUtilities::SessionReaderSharedPtr &pSession,
                      const MultiRegions::ExpListSharedPtr &pField)
 {
     m_session  = pSession;
@@ -87,7 +87,7 @@ NeuronModel::NeuronModel(const LibUtilities::SessionReaderSharedPtr &pSession,
 /**
  * Initialise the Neuron model. Allocate workspace and variable storage.
  */
-void NeuronModel::Initialise()
+void NeuronModelmulti::Initialise()
 {
     ASSERTL1(m_nvar > 0, "Neuron model must have at least 1 variable.");
     
@@ -105,56 +105,15 @@ void NeuronModel::Initialise()
         m_gates_tau[i] = Array<OneD, NekDouble>(m_nq);
     }
 
-    if (m_session->DefinesFunction("NeuronModelInitialConditions"))
+    if (m_session->DefinesFunction("NeuronModelmultiInitialConditions"))
     {
-      //  LoadNeuronModel();
+      //  LoadNeuronModelmulti();
     }
     else
     {
        v_SetInitialConditions();
     }
 }
-
-/**
- * Initialise the Neuron Multi model. Allocate workspace and variable storage.
- */
-void NeuronModel::InitialiseMulti(const int numfiber)
-{
-    ASSERTL1(m_nvar > 0, "Neuron model must have at least 1 variable.");
-
-    m_NeuronmultiSol = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
-    m_wspmulti     = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
-    for (unsigned int j = 0; j < numfiber; ++j)
-    {
-        m_NeuronmultiSol[j] = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
-        m_wspmulti[j] = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
-        for (unsigned int i = 0; i < m_nvar; ++i)
-        {
-            m_NeuronmultiSol[j][i] = Array<OneD, NekDouble>(m_nq);
-            m_wspmulti[j][i]     = Array<OneD, NekDouble>(m_nq);
-        }
-    } 
-
-    m_gatesmulti_tau = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
-    for (unsigned int j = 0; j < numfiber; ++j)
-    {
-        m_gatesmulti_tau[j] = Array<OneD, Array<OneD, NekDouble>>(m_gates.size());
-        for (unsigned int i = 0; i < m_gates.size(); ++i)
-        {
-            m_gatesmulti_tau[j][i] = Array<OneD, NekDouble>(m_nq);
-        }
-    }
-
-    if (m_session->DefinesFunction("NeuronModelInitialConditions"))
-    {
-      //  LoadNeuronModel();
-    }
-    else
-    {
-       v_SetInitialConditionsMulti(numfiber);
-    }
-}
-
 
 /**
  * Integrates the Neuron model for one PDE time-step. Neuron model is
@@ -164,7 +123,7 @@ void NeuronModel::InitialiseMulti(const int numfiber)
  * Euler, while gating variables are integrated using the Rush-Larsen
  * scheme.
  */
-void NeuronModel::TimeIntegrate(
+void NeuronModelmulti::TimeIntegrate(
     const Array<OneD, const int> &zoneindex,
     const Array<OneD, const NekDouble> &inarray,
     Array<OneD, NekDouble> &outarray, 
@@ -211,7 +170,7 @@ void NeuronModel::TimeIntegrate(
 }
 
 
-Array<OneD, NekDouble> NeuronModel::GetNeuronSolutionCoeffs(unsigned int idx)
+Array<OneD, NekDouble> NeuronModelmulti::GetNeuronSolutionCoeffs(unsigned int idx)
 {
     ASSERTL0(idx < m_nvar, "Index out of range for Neuron model.");
 
@@ -222,15 +181,15 @@ Array<OneD, NekDouble> NeuronModel::GetNeuronSolutionCoeffs(unsigned int idx)
     return outarray;
 }
 
-Array<OneD, NekDouble> NeuronModel::GetNeuronSolution(unsigned int idx)
+Array<OneD, NekDouble> NeuronModelmulti::GetNeuronSolution(unsigned int idx)
 {
     return m_NeuronSol[idx];
 }
 
-void NeuronModel::LoadNeuronModel()
+void NeuronModelmulti::LoadNeuronModelmulti()
 {
     const bool root           = (m_session->GetComm()->GetRank() == 0);
-    const std::string fncName = "NeuronModelInitialConditions";
+    const std::string fncName = "NeuronModelmultiInitialConditions";
     const int nvar            = m_NeuronSol[0].size();
     std::string varName;
     Array<OneD, NekDouble> coeffs(m_field->GetNcoeffs());

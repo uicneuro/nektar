@@ -232,6 +232,19 @@ namespace Nektar
         Vmath::Fill(m_nq, 0.0049,    m_NeuronSol[4],  1);
     }
 
+    void FrankenHuxley::v_SetInitialConditionsMulti(const int numfiber)
+    {
+        for (int j = 0; j < numfiber; ++j)
+        {
+            Vmath::Fill(m_nq, 0.0,       m_NeuronmultiSol[j][0],  1);
+            Vmath::Fill(m_nq, 0.0005,    m_NeuronmultiSol[j][1],  1);
+            Vmath::Fill(m_nq, 0.0268,    m_NeuronmultiSol[j][2],  1);
+            Vmath::Fill(m_nq, 0.8249,    m_NeuronmultiSol[j][3],  1);
+            Vmath::Fill(m_nq, 0.0049,    m_NeuronmultiSol[j][4],  1);
+        }
+    }
+
+
     // Compute x/ (exp x/y -1.0)
     NekDouble FrankenHuxley::ComputeexpM1(const NekDouble x, const NekDouble y)
     {

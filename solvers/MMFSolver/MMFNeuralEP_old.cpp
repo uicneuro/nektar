@@ -3156,14 +3156,13 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing(
     (void) time;
 
     const int nq   = m_fields[0]->GetNpoints();
-    const int numfiber = m_numfiber;
 
     // Set Helmholtz coefficients
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorTau] = m_Helmtau;
     factors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
 
-    for (int n = 0; n < numfiber; ++n)
+    for (int n=0; n<m_numfiber; ++n)
     {
         if (outarray[n].size() != nq)
         {
@@ -3173,7 +3172,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing(
 
     // Multiply 1.0/timestep
     const NekDouble scale = -factors[StdRegions::eFactorLambda];
-    for (int n = 0; n < numfiber; ++n)
+
+    for (int n=0; n<m_numfiber; ++n)
     {
         Vmath::Smul(nq, scale, inarray[n], 1, m_fields[n]->UpdatePhys(), 1);
         m_fields[n]->HelmSolve(m_fields[n]->GetPhys(), m_fields[n]->UpdateCoeffs(),
@@ -3330,10 +3330,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
     const int nvar = m_fields.size();
+    const int phievar = nvar -1;
     const int nq   = m_fields[0]->GetNpoints();
-    const int phievar = m_phievar;
-    const int numfiber = m_numfiber;
-
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
 
@@ -3352,12 +3350,14 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq,0.0);
-    for (int n = 0; n < numfiber; ++n)
+
+    for (int n = 0; n < m_numfiber; ++n)
     {
         // 1. Reaction Term (FHN or H-H ion current model)
         m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
 
         // 2. Apply Stimulus
+        // m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling
@@ -3365,12 +3365,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
-
     m_fields[phievar]->UpdatePhys() = phie;
-    
+
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
+    // const Array<OneD, const NekDouble> &phiePhys = m_fields[phievar]->GetPhys();
     Array<OneD, NekDouble> phiecurrent(nq);
-    for (int n=0; n < numfiber; ++n)
+    for (int n=0; n<m_numfiber; ++n)
     {
         phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], phie);
 
@@ -3412,7 +3412,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 {
     const int nq = m_fields[nfib]->GetNpoints();
     const int nvar = m_fields.size();
-    const int phievar = m_phievar;
+    const int phievar = nvar - 1;
 
     Array<OneD, NekDouble> outarray(nq);
 
@@ -3586,27 +3586,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             // }
 
             m_fields[0]->SetPhys(initialcondition);
-            break;
-        }
-
-        case eNeuralEP2DbiMulti:
-        {
-            m_neuron->InitialiseMulti(m_numfiber);
-
-            // Read initial condition from xml file
-            EquationSystem::v_SetInitialConditions(initialtime, false);
-
-            Array<OneD, Array<OneD, NekDouble>> tmp(1);
-            tmp[0] = Array<OneD, NekDouble>(nq);
-
-            Array<OneD, NekDouble> initialcondition(nq, 0.0);
-            for (int n=0; n<m_numfiber; ++n)
-            {
-               // Vmath::Svtvp(nq, 100.0, m_excitezone[n], 1, initialcondition, 1, initialcondition, 1);
-            }
-
-            m_fields[0]->SetPhys(initialcondition);
-            m_fields[1]->SetPhys(initialcondition);
             break;
         }
 

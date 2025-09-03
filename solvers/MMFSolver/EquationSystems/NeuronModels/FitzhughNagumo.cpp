@@ -126,4 +126,13 @@ void FitzhughNagumo::v_SetInitialConditions()
     Vmath::Fill(m_nq, 0.0, m_NeuronSol[1], 1);
 }
 
+void FitzhughNagumo::v_SetInitialConditionsMulti(const int numfiber)
+{
+    for (int j=0; j< numfiber; ++j)
+    {
+        Vmath::Fill(m_nq, 0.0, m_NeuronmultiSol[j][0], 1);
+        Vmath::Fill(m_nq, 0.0, m_NeuronmultiSol[j][1], 1);
+    }
+}
+
 } // namespace Nektar

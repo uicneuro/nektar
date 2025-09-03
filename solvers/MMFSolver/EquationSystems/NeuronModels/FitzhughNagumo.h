@@ -79,6 +79,9 @@ protected:
 
     virtual void v_SetInitialConditions();
 
+    /// Set initial conditions for the Neuron model
+    virtual void v_SetInitialConditionsMulti(const int numfiber);
+
 private:
     NekDouble m_beta;
     NekDouble m_epsilon;

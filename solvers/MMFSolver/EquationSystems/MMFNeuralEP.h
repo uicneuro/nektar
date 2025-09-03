@@ -56,6 +56,7 @@ enum NeuralEPType
     eNeuralHelmSolveDuo,
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
+    eNeuralEP2DbiMulti,
     SIZE_NeuralEPType ///< Length of enum list
 };
 
@@ -64,6 +65,7 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralHelmSolveDuo",
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
+    "NeuralEP2DbiMulti",
 };
 
 enum SolverSchemeType

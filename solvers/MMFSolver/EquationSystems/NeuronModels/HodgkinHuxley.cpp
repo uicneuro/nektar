@@ -172,5 +172,15 @@ NekDouble HodgkinHuxley::RootMeanSquare(const Array<OneD, const NekDouble> &inar
         Vmath::Fill(m_nq, 0.35,    m_NeuronSol[3],  1);
     }
 
+    void HodgkinHuxley::v_SetInitialConditionsMulti(const int numfiber)
+    {
+        for (int j = 0; j < numfiber; ++j)
+        {
+            Vmath::Fill(m_nq, -0.065,  m_NeuronmultiSol[j][0],  1);
+            Vmath::Fill(m_nq, 0.05,    m_NeuronmultiSol[j][1],  1);
+            Vmath::Fill(m_nq, 0.5,     m_NeuronmultiSol[j][2],  1);
+            Vmath::Fill(m_nq, 0.35,    m_NeuronmultiSol[j][3],  1);
+        }
+    }
 }
         

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File NeuronModel.h
+// File NeuronModelmulti.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -29,12 +29,12 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Neuron model base class.
+// Description: Neuron model multi base class.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef NEKTAR_SOLVERS_ADRSOLVER_NeuronMODELS_NeuronMODEL
-#define NEKTAR_SOLVERS_ADRSOLVER_NeuronMODELS_NeuronMODEL
+#ifndef NEKTAR_SOLVERS_ADRSOLVER_NeuronMODELS_NeuronMODELmulti
+#define NEKTAR_SOLVERS_ADRSOLVER_NeuronMODELS_NeuronMODELmulti
 
 #include <LibUtilities/BasicUtils/NekFactory.hpp>
 #include <LibUtilities/BasicUtils/SessionReader.h>
@@ -49,35 +49,33 @@
 namespace Nektar
 {
 // Forward declaration
-class NeuronModel;
+class NeuronModelmulti;
 
 typedef std::vector<std::pair<std::string, std::string>> SummaryList;
 
 /// A shared pointer to an EquationSystem object
-typedef std::shared_ptr<NeuronModel> NeuronModelSharedPtr;
+typedef std::shared_ptr<NeuronModelmulti> NeuronModelmultiSharedPtr;
 /// Datatype of the NekFactory used to instantiate classes derived from
 /// the EquationSystem class.
-typedef LibUtilities::NekFactory<std::string, NeuronModel,
+typedef LibUtilities::NekFactory<std::string, NeuronModelmulti,
                                  const LibUtilities::SessionReaderSharedPtr &,
                                  const MultiRegions::ExpListSharedPtr &>
-    NeuronModelFactory;
-NeuronModelFactory &GetNeuronModelFactory();
+    NeuronModelmultiFactory;
+NeuronModelmultiFactory &GetNeuronModelmultiFactory();
 
 /// Neuron model base class.
-class NeuronModel
+class NeuronModelmulti
 {
 public:
-    NeuronModel(const LibUtilities::SessionReaderSharedPtr &pSession,
+    NeuronModelmulti(const LibUtilities::SessionReaderSharedPtr &pSession,
               const MultiRegions::ExpListSharedPtr &pField);
 
-    virtual ~NeuronModel()
+    virtual ~NeuronModelmulti()
     {
     }
 
     /// Initialise the Neuron model storage and set initial conditions
     void Initialise();
-
-    void InitialiseMulti(const int numfiber);
 
     void TimeIntegrate( const Array<OneD, const int> &zoneindex,
                         const Array<OneD, const NekDouble> &inarray,
@@ -170,36 +168,23 @@ protected:
     /// Neuron model solution variables
     Array<OneD, Array<OneD, NekDouble>> m_NeuronSol;
     
-    /// Neuron Multi model solution variables
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_NeuronmultiSol;
-
     /// Neuron model integration workspace
     Array<OneD, Array<OneD, NekDouble>> m_wsp;
 
-    /// Neuron Multi model integration workspace
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_wspmulti;
-
     /// Flag indicating whether nodal projection in use
     bool m_useNodal;
-
     /// StdNodalTri for Neuron model calculations
     StdRegions::StdNodalTriExpSharedPtr m_nodalTri;
     StdRegions::StdNodalTetExpSharedPtr m_nodalTet;
-
     /// Temporary array for nodal projection
     Array<OneD, Array<OneD, NekDouble>> m_nodalTmp;
 
     /// Indices of Neuron model variables which are concentrations
     std::vector<int> m_concentrations;
-
     /// Indices of Neuron model variables which are gates
     std::vector<int> m_gates;
-
     /// Storage for gate tau values
     Array<OneD, Array<OneD, NekDouble>> m_gates_tau;
-
-    /// Storage for gate tau values
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_gatesmulti_tau;
 
     virtual void v_Update(
         const Array<OneD, const int> &zoneindex,
@@ -216,9 +201,7 @@ protected:
 
     virtual void v_SetInitialConditions() = 0;
 
-    virtual void v_SetInitialConditionsMulti(const int number) = 0;
-
-    void LoadNeuronModel();
+    void LoadNeuronModelmulti();
 };
 
 } // namespace Nektar

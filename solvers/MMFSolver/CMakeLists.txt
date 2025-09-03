@@ -33,6 +33,7 @@ IF(NEKTAR_SOLVER_MMF)
     ADD_SOLVER_EXECUTABLE(MMFNeuralEP SOURCES MMFNeuralEP.cpp
         LIBRARY_SOURCES
         ./EquationSystems/NeuronModels/NeuronModel.cpp
+        ./EquationSystems/NeuronModels/NeuronModelmulti.cpp
         ./EquationSystems/NeuronModels/FitzhughNagumo.cpp
         ./EquationSystems/NeuronModels/HodgkinHuxley.cpp
         ./EquationSystems/NeuronModels/FrankenHuxley.cpp
