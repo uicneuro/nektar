@@ -71,7 +71,8 @@ namespace Nektar
         virtual void v_Update(
                 const Array<OneD, const int> &zoneindex,
                 const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
-                      Array<OneD,        Array<OneD, NekDouble> >&outarray,
+                      Array<OneD,        Array<OneD, NekDouble>> &gates_tau,
+                      Array<OneD,        Array<OneD, NekDouble>> &outarray,
                 const NekDouble time, 
                 const NekDouble var_membrane__Tc = 24.0);
 

@@ -96,9 +96,10 @@ public:
     void Update(const Array<OneD, const int> &zoneindex,
                 const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                 Array<OneD, Array<OneD, NekDouble>> &outarray,
+                Array<OneD, Array<OneD, NekDouble>> &gates_tau,
                 const NekDouble time, const NekDouble Tc)
     {
-        v_Update(zoneindex, inarray, outarray, time, Tc);
+        v_Update(zoneindex, inarray, gates_tau, outarray, time, Tc);
     }
 
     /// Print a summary of the Neuron model
@@ -212,6 +213,7 @@ protected:
     virtual void v_Update(
         const Array<OneD, const int> &zoneindex,
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &gates_tau,
         Array<OneD, Array<OneD, NekDouble>> &outarray,
         const NekDouble time, const NekDouble Tc) = 0;
 

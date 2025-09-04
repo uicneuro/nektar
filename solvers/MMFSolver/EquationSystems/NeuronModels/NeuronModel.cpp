@@ -182,7 +182,7 @@ void NeuronModel::TimeIntegrate(
 
     // Perform final Neuron model step : m_wsp is the Reaction function from
     // m_NeuronSol[0] of membrane potential.
-    Update(zoneindex, m_NeuronSol, m_wsp, time, Tc);
+    Update(zoneindex, m_NeuronSol, m_gates_tau, m_wsp, time, Tc);
 
     // Output dV/dt from last step but integrate remaining Neuron model vars
     // Transform Neuron model I_total from nodal to modal space
@@ -232,7 +232,7 @@ void NeuronModel::TimeIntegrateMulti(
 
         // Perform final Neuron model step : m_wsp is the Reaction function from
         // m_NeuronSol[0] of membrane potential.
-        Update(zoneindexfiber[n], m_NeuronMultiSol[n], m_wspMulti[n], time, Tc);
+        Update(zoneindexfiber[n], m_NeuronMultiSol[n], m_gatesMulti_tau[n], m_wspMulti[n], time, Tc);
 
         // Output dV/dt from last step but integrate remaining Neuron model vars
         // Transform Neuron model I_total from nodal to modal space
@@ -245,7 +245,7 @@ void NeuronModel::TimeIntegrateMulti(
                         m_NeuronMultiSol[n][m_concentrations[j]], 1,
                         m_NeuronMultiSol[n][m_concentrations[j]], 1);
         }
-    
+
         // Gating variables: Rush-Larsen scheme:
         // y_i = y_i^{infty} - ( y_i^{\infty} - y_i (0) ) * exp (-dt / tau_i ) 
         // m_wsp = _inf,  m_NeuronSol = y_i (0)

@@ -62,6 +62,7 @@ namespace Nektar
                      const Array<OneD, const int> &zoneindex,
                      const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
                            Array<OneD,        Array<OneD, NekDouble> >&outarray,
+                           Array<OneD,        Array<OneD, NekDouble>> &gates_tau,
                                                            const NekDouble time,
                                                            const NekDouble var_membrane__Tc)
     {
@@ -205,16 +206,14 @@ namespace Nektar
             // gate variable 3: h
             // gate variable 4: p
             outarray[1][i] = m_inf;
-            m_gates_tau[0][i] = m_tau;
-
             outarray[2][i] = n_inf;
-            m_gates_tau[1][i] = n_tau; 
-
             outarray[3][i] = h_inf;
-            m_gates_tau[2][i] = h_tau;
-
             outarray[4][i] = p_inf;
-            m_gates_tau[3][i] = p_tau;
+
+            gates_tau[0][i] = m_tau;
+            gates_tau[1][i] = n_tau; 
+            gates_tau[2][i] = h_tau;
+            gates_tau[3][i] = p_tau;
         }
     }
 

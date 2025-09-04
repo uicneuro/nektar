@@ -40,6 +40,7 @@ namespace Nektar
     void HodgkinHuxley::v_Update(
                         const Array<OneD, const int> &RvNodeZone,
                      const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
+                           Array<OneD,        Array<OneD, NekDouble>> &gates_tau,
                            Array<OneD,        Array<OneD, NekDouble> >&outarray,
                                                            const NekDouble time, 
                                                            const NekDouble Tc)
@@ -117,13 +118,13 @@ namespace Nektar
             outarray[0][i] = d_dt_membrane__V ;
 
             outarray[1][i] = m_inf;
-            m_gates_tau[0][i] = m_tau;
+            gates_tau[0][i] = m_tau;
 
             outarray[2][i] = h_inf;
-            m_gates_tau[2][i] = h_tau;
+            gates_tau[2][i] = h_tau;
 
             outarray[3][i] = n_inf;
-            m_gates_tau[1][i] = n_tau; 
+            gates_tau[1][i] = n_tau; 
         }
     }
 

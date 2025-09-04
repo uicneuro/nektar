@@ -3382,7 +3382,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
     }
 
     m_fields[phievar]->UpdatePhys() = phie;
-    
+
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
     for (int n=0; n < numfiber; ++n)

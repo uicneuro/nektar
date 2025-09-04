@@ -64,16 +64,11 @@ public:
 protected:
     virtual void v_Update(
             const Array<OneD, const int> &RvNodeZone,
-            const Array<OneD, const  Array<OneD, NekDouble> >&inarray,
-                    Array<OneD,        Array<OneD, NekDouble> >&outarray,
+            const Array<OneD, const  Array<OneD, NekDouble>> &inarray,
+                    Array<OneD,        Array<OneD, NekDouble>> &gates_tau,
+                    Array<OneD,        Array<OneD, NekDouble>> &outarray,
             const NekDouble time, 
             const NekDouble Tc);
-
-    // virtual void v_Update(
-    //     const Array<OneD, const int> &RvNodeZone,
-    //     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    //     Array<OneD, Array<OneD, NekDouble>> &outarray,
-    //     const NekDouble time);
 
     virtual void v_GenerateSummary(SummaryList &s);
 
