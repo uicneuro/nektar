@@ -386,6 +386,24 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             break;
         }
 
+        case eNeuralEP2DbiMulti:
+        {   
+            ASSERTL0(m_fields.size()==3, "Number of Variable should be 3");
+
+            // Provide index for nodes and myelins
+            IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
+
+            // Identifying each domain zone accordingly
+            SetUpDomainZone();
+
+            // Plot the indexing of domains
+            PlotDomainZone();
+
+            // Compute conductivity accordingly 
+            m_NeuralCmfiber = ComputeConductivity(m_zoneindexfiber);
+            break;
+        }
+
         default:
             break;
     }
@@ -403,21 +421,17 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     MMFSystem::MMFInitObject(m_AniStrength);
     CheckMovingFrames(m_movingframes);
 
-    // Generate individual moving frames for each fiber.
-    if(m_FiberType==eLinearCrossing)
+    if(m_NeuralEPType==eNeuralEP2DbiMulti)
     {
-        ASSERTL0(m_fields.size()==3, "Number of Variable should be 3");
-
-        std::cout << "\nGenerating individual moving frames for each fiber =====" << std::endl;
-        int nq3 = m_spacedim * nq;
+        std::cout << "\nGenerating individual moving frames for #fiber = " << m_numfiber << std::endl;
 
         m_movingframesfiber = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_numfiber);
-        for (int n=0; n<m_numfiber; ++n)
+        for (int n = 0; n < m_numfiber; ++n)
         {
             m_movingframesfiber[n] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
             for (int j = 0; j < m_mfdim; ++j)
             {
-                m_movingframesfiber[n][j] = Array<OneD, NekDouble>(nq3);
+                m_movingframesfiber[n][j] = Array<OneD, NekDouble>(m_spacedim * nq);
 
                 for (int k = 0; k < m_spacedim; ++k)
                 {
@@ -473,6 +487,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralHelmSolveSingle:
         case eNeuralHelmSolveDuo:
         case eNeuralEP2Dbi:
+        case eNeuralEP2DbiMulti:
         {
             ComputeRegionalSigma(m_zoneindex, sigma_i, sigma_e, sigma_eM);
             break;            
@@ -693,35 +708,35 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 std::cout << "Generating m_varcoeff ================================= " << std::endl;
                 ComputeVarCoeff2D(m_movingframes, m_varcoeff);
 
-                if(m_FiberType==eLinearCrossing)
-                {
-                    std::cout << std::endl;
-                    std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;   
+                std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
+                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
 
-                    m_varcoefffiber = Array<OneD, StdRegions::VarCoeffMap>(m_numfiber);
-                    for (int n = 0; n < m_numfiber; ++n)
-                    {
-                        ComputeVarCoeff2D(m_movingframesfiber[n], m_varcoefffiber[n]);
-                    }
+                m_ode.DefineImplicitSolve(
+                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
+            }
+
+            case eNeuralEP2DbiMulti:
+            {
+                std::cout << std::endl;
+                std::cout << "Generating m_varcoeff ================================= " << std::endl;
+                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
+                std::cout << std::endl;
+                std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;   
+
+                m_varcoefffiber = Array<OneD, StdRegions::VarCoeffMap>(m_numfiber);
+                for (int n = 0; n < m_numfiber; ++n)
+                {
+                    ComputeVarCoeff2D(m_movingframesfiber[n], m_varcoefffiber[n]);
                 }
 
                 std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
                 ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-                std::cout << std::endl;
 
-                if(m_FiberType==eLinearCrossing)
-                {
-                    m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing, this); 
-                    m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing, this);
-                }
-
-                else{
-                    m_ode.DefineImplicitSolve(
-                        &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
-                    m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
-                }
-                break;
+                m_ode.DefineImplicitSolve(
+                &MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti, this); 
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti, this);
             }
 
             default:
@@ -931,7 +946,6 @@ void MMFNeuralEP::DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
-    int i;
     int nvariables = inarray.size();
     SetBoundaryConditions(time);
 
@@ -942,7 +956,7 @@ void MMFNeuralEP::DoOdeProjection(
             // Just copy over array
             int npoints = GetNpoints();
 
-            for (i = 0; i < nvariables; ++i)
+            for (int i = 0; i < nvariables; ++i)
             {
                 Vmath::Vcopy(npoints, inarray[i], 1, outarray[i], 1);
             }
@@ -953,7 +967,7 @@ void MMFNeuralEP::DoOdeProjection(
         {
             Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
 
-            for (i = 0; i < nvariables; ++i)
+            for (int i = 0; i < nvariables; ++i)
             {
                 m_fields[i]->FwdTrans(inarray[i], coeffs);
                 m_fields[i]->BwdTrans(coeffs, outarray[i]);
@@ -3148,7 +3162,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
 }
 
 // Implicit solve for NeuralEP 2D solver
-void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCrossing(
+void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
@@ -3288,7 +3302,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // 3. Compute phi_e to satisfy bidomain coupling
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    Computephie(inarray[0]);
+    ComputePhie(inarray[0]);
     // const Array<OneD, NekDouble> &phie = m_fields[1]->GetPhys();
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
@@ -3325,7 +3339,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 // var = 0: phim_1 = phim in fiber 1
 // var = 1: phim_2 = phim in fiber 2
 // var = 2: phie
-void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
+void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
@@ -3352,16 +3366,17 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq,0.0);
+
+    // 1. Reaction Term (FHN or H-H ion current model)
+    m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
+
     for (int n = 0; n < numfiber; ++n)
     {
-        // 1. Reaction Term (FHN or H-H ion current model)
-        m_neuron->TimeIntegrate(m_zoneindexfiber[n], inarray[n], outarray[n], time, Temp);
-
         // 2. Apply Stimulus
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling
-        tmp = Computephie(n, inarray[n]);
+        tmp = ComputePhie(n, inarray[n]);
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
@@ -3406,12 +3421,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCrossing(
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-Array<OneD, NekDouble> MMFNeuralEP::Computephie(
+Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
                                     const int nfib, 
                                     const Array<OneD, const NekDouble> &phim)
 {
     const int nq = m_fields[nfib]->GetNpoints();
-    const int nvar = m_fields.size();
+    // const int nvar = m_fields.size();
     const int phievar = m_phievar;
 
     Array<OneD, NekDouble> outarray(nq);
@@ -3479,7 +3494,7 @@ Array<OneD, NekDouble> MMFNeuralEP::Computephie(
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-void MMFNeuralEP::Computephie(const Array<OneD, const NekDouble> &phim)
+void MMFNeuralEP::ComputePhie(const Array<OneD, const NekDouble> &phim)
 {
     const int nq = m_fields[0]->GetNpoints();
     const int phievar = m_fields.size() - 1;
@@ -3591,7 +3606,9 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
 
         case eNeuralEP2DbiMulti:
         {
-            m_neuron->InitialiseMulti(m_numfiber);
+            int numfiber = m_numfiber;
+
+            m_neuron->InitialiseMulti(numfiber);
 
             // Read initial condition from xml file
             EquationSystem::v_SetInitialConditions(initialtime, false);
@@ -3600,13 +3617,11 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             tmp[0] = Array<OneD, NekDouble>(nq);
 
             Array<OneD, NekDouble> initialcondition(nq, 0.0);
-            for (int n=0; n<m_numfiber; ++n)
+            for (int n=0; n < numfiber; ++n)
             {
-               // Vmath::Svtvp(nq, 100.0, m_excitezone[n], 1, initialcondition, 1, initialcondition, 1);
+               m_fields[n]->SetPhys(initialcondition);
             }
 
-            m_fields[0]->SetPhys(initialcondition);
-            m_fields[1]->SetPhys(initialcondition);
             break;
         }
 

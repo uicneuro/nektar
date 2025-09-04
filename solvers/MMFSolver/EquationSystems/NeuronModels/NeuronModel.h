@@ -85,6 +85,14 @@ public:
                         const NekDouble time,
                         const NekDouble Tc = 24.0);
 
+    void TimeIntegrateMulti(
+        const int numfiber,
+        const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, 
+        const NekDouble time,
+        const NekDouble Tc);
+
     void Update(const Array<OneD, const int> &zoneindex,
                 const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                 Array<OneD, Array<OneD, NekDouble>> &outarray,
@@ -171,13 +179,13 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_NeuronSol;
     
     /// Neuron Multi model solution variables
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_NeuronmultiSol;
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_NeuronMultiSol;
 
     /// Neuron model integration workspace
     Array<OneD, Array<OneD, NekDouble>> m_wsp;
 
     /// Neuron Multi model integration workspace
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_wspmulti;
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_wspMulti;
 
     /// Flag indicating whether nodal projection in use
     bool m_useNodal;
@@ -199,7 +207,7 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_gates_tau;
 
     /// Storage for gate tau values
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_gatesmulti_tau;
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_gatesMulti_tau;
 
     virtual void v_Update(
         const Array<OneD, const int> &zoneindex,

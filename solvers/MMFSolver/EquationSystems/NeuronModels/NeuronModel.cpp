@@ -122,26 +122,26 @@ void NeuronModel::InitialiseMulti(const int numfiber)
 {
     ASSERTL1(m_nvar > 0, "Neuron model must have at least 1 variable.");
 
-    m_NeuronmultiSol = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
-    m_wspmulti     = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
+    m_NeuronMultiSol = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
+    m_wspMulti     = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
     for (unsigned int j = 0; j < numfiber; ++j)
     {
-        m_NeuronmultiSol[j] = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
-        m_wspmulti[j] = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
+        m_NeuronMultiSol[j] = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
+        m_wspMulti[j] = Array<OneD, Array<OneD, NekDouble>>(m_nvar);
         for (unsigned int i = 0; i < m_nvar; ++i)
         {
-            m_NeuronmultiSol[j][i] = Array<OneD, NekDouble>(m_nq);
-            m_wspmulti[j][i]     = Array<OneD, NekDouble>(m_nq);
+            m_NeuronMultiSol[j][i] = Array<OneD, NekDouble>(m_nq);
+            m_wspMulti[j][i]     = Array<OneD, NekDouble>(m_nq);
         }
     } 
 
-    m_gatesmulti_tau = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
+    m_gatesMulti_tau = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
     for (unsigned int j = 0; j < numfiber; ++j)
     {
-        m_gatesmulti_tau[j] = Array<OneD, Array<OneD, NekDouble>>(m_gates.size());
+        m_gatesMulti_tau[j] = Array<OneD, Array<OneD, NekDouble>>(m_gates.size());
         for (unsigned int i = 0; i < m_gates.size(); ++i)
         {
-            m_gatesmulti_tau[j][i] = Array<OneD, NekDouble>(m_nq);
+            m_gatesMulti_tau[j][i] = Array<OneD, NekDouble>(m_nq);
         }
     }
 
@@ -210,6 +210,56 @@ void NeuronModel::TimeIntegrate(
     m_lastTime = time;
 }
 
+
+
+void NeuronModel::TimeIntegrateMulti(
+    const int numfiber,
+    const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, 
+    const NekDouble time,
+    const NekDouble Tc)
+{
+    // int phys_offset = 0;
+    // int coef_offset = 0;
+    NekDouble delta_t = (time - m_lastTime) / m_substeps;
+
+    Array<OneD, NekDouble> tmp;
+    for (int n=0; n < numfiber; ++n)
+    {
+        // Copy new transmembrane potential into Neuron model
+        Vmath::Vcopy(m_nq, inarray[n], 1, m_NeuronMultiSol[n][0], 1);
+
+        // Perform final Neuron model step : m_wsp is the Reaction function from
+        // m_NeuronSol[0] of membrane potential.
+        Update(zoneindexfiber[n], m_NeuronMultiSol[n], m_wspMulti[n], time, Tc);
+
+        // Output dV/dt from last step but integrate remaining Neuron model vars
+        // Transform Neuron model I_total from nodal to modal space
+        Vmath::Vcopy(m_nq, m_wspMulti[n][0], 1, outarray[n], 1);
+
+        // Ion concentrations
+        for (unsigned int j = 0; j < m_concentrations.size(); ++j)
+        {
+            Vmath::Svtvp(m_nq, delta_t, m_wspMulti[n][m_concentrations[j]], 1,
+                        m_NeuronMultiSol[n][m_concentrations[j]], 1,
+                        m_NeuronMultiSol[n][m_concentrations[j]], 1);
+        }
+    
+        // Gating variables: Rush-Larsen scheme:
+        // y_i = y_i^{infty} - ( y_i^{\infty} - y_i (0) ) * exp (-dt / tau_i ) 
+        // m_wsp = _inf,  m_NeuronSol = y_i (0)
+        for (unsigned int j = 0; j < m_gates.size(); ++j)
+        {
+            Vmath::Sdiv(m_nq, -delta_t, m_gatesMulti_tau[n][j], 1, m_gatesMulti_tau[n][j], 1);
+            Vmath::Vexp(m_nq, m_gatesMulti_tau[n][j], 1, m_gatesMulti_tau[n][j], 1);
+            Vmath::Vsub(m_nq, m_NeuronMultiSol[n][m_gates[j]], 1, m_wspMulti[n][m_gates[j]], 1, m_NeuronMultiSol[n][m_gates[j]], 1);
+            Vmath::Vvtvp(m_nq, m_NeuronMultiSol[n][m_gates[j]], 1, m_gatesMulti_tau[n][j], 1, m_wspMulti[n][m_gates[j]], 1, m_NeuronMultiSol[n][m_gates[j]], 1);
+        }
+    }
+
+    m_lastTime = time;
+}
 
 Array<OneD, NekDouble> NeuronModel::GetNeuronSolutionCoeffs(unsigned int idx)
 {

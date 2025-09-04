@@ -130,8 +130,8 @@ void FitzhughNagumo::v_SetInitialConditionsMulti(const int numfiber)
 {
     for (int j=0; j< numfiber; ++j)
     {
-        Vmath::Fill(m_nq, 0.0, m_NeuronmultiSol[j][0], 1);
-        Vmath::Fill(m_nq, 0.0, m_NeuronmultiSol[j][1], 1);
+        Vmath::Fill(m_nq, 0.0, m_NeuronMultiSol[j][0], 1);
+        Vmath::Fill(m_nq, 0.0, m_NeuronMultiSol[j][1], 1);
     }
 }
 

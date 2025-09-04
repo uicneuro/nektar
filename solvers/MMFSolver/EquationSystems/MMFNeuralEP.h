@@ -301,7 +301,7 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoImplicitSolveNeuralEP2DbiCrossing(
+    void DoImplicitSolveNeuralEP2DbiMulti(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
@@ -319,12 +319,13 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void DoOdeRhsNeuralEP2DbiCrossing(
+    void DoOdeRhsNeuralEP2DbiMulti(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void Computephie(const Array<OneD, const NekDouble> &phim);
-    Array<OneD, NekDouble> Computephie(const int n, const Array<OneD, const NekDouble> &phim);
+    void ComputePhie(const Array<OneD, const NekDouble> &phim);
+    
+    Array<OneD, NekDouble> ComputePhie(const int n, const Array<OneD, const NekDouble> &phim);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,

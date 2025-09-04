@@ -236,11 +236,11 @@ namespace Nektar
     {
         for (int j = 0; j < numfiber; ++j)
         {
-            Vmath::Fill(m_nq, 0.0,       m_NeuronmultiSol[j][0],  1);
-            Vmath::Fill(m_nq, 0.0005,    m_NeuronmultiSol[j][1],  1);
-            Vmath::Fill(m_nq, 0.0268,    m_NeuronmultiSol[j][2],  1);
-            Vmath::Fill(m_nq, 0.8249,    m_NeuronmultiSol[j][3],  1);
-            Vmath::Fill(m_nq, 0.0049,    m_NeuronmultiSol[j][4],  1);
+            Vmath::Fill(m_nq, 0.0,       m_NeuronMultiSol[j][0],  1);
+            Vmath::Fill(m_nq, 0.0005,    m_NeuronMultiSol[j][1],  1);
+            Vmath::Fill(m_nq, 0.0268,    m_NeuronMultiSol[j][2],  1);
+            Vmath::Fill(m_nq, 0.8249,    m_NeuronMultiSol[j][3],  1);
+            Vmath::Fill(m_nq, 0.0049,    m_NeuronMultiSol[j][4],  1);
         }
     }
 
