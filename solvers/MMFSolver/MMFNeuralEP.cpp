@@ -3352,8 +3352,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
 
-    std::cout << "OdeRhs: HERE 1" << std::endl;
-
     // Reuse memory if already allocated
     for (int i = 0; i < nvar; ++i)
     {
@@ -3366,12 +3364,9 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
             Vmath::Zero(nq, outarray[i], 1);
         }
     }
-    std::cout << "OdeRhs: HERE 2" << std::endl;
-
 
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
-        std::cout << "OdeRhs: HERE 3" << std::endl;
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq,0.0);
@@ -3379,15 +3374,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
     {
         // 2. Apply Stimulus
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
-        std::cout << "OdeRhs: HERE 3a" << std::endl;
 
         // 3. Compute phi_e to satisfy bidomain coupling
         tmp = ComputePhie(n, inarray[n]);
-        std::cout << "OdeRhs: HERE 3b" << std::endl;
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
-    std::cout << "OdeRhs: HERE 4" << std::endl;
 
     m_fields[phievar]->UpdatePhys() = phie;
 
@@ -3406,7 +3398,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
             }
         }
     }
-    std::cout << "OdeRhs: HERE 5" << std::endl;
 
     if (m_explicitDiffusion)
     {
