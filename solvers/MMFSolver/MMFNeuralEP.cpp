@@ -3379,9 +3379,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
     {
         // 2. Apply Stimulus
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
+        std::cout << "OdeRhs: HERE 3a" << std::endl;
 
         // 3. Compute phi_e to satisfy bidomain coupling
         tmp = ComputePhie(n, inarray[n]);
+        std::cout << "OdeRhs: HERE 3b" << std::endl;
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
