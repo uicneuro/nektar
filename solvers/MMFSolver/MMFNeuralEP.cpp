@@ -714,6 +714,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 m_ode.DefineImplicitSolve(
                     &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
+                break;
             }
 
             case eNeuralEP2DbiMulti:
@@ -3364,12 +3365,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
         }
     }
 
-    Array<OneD, NekDouble> tmp(nq);
-    Array<OneD, NekDouble> phie(nq,0.0);
 
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
-
+    
+    Array<OneD, NekDouble> tmp(nq);
+    Array<OneD, NekDouble> phie(nq,0.0);
     for (int n = 0; n < numfiber; ++n)
     {
         // 2. Apply Stimulus
