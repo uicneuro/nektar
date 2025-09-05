@@ -3346,7 +3346,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 {
     const int nvar = m_fields.size();
     const int nq   = m_fields[0]->GetNpoints();
-    const int phievar = m_phievar;
+    const int phievar = nvar - 1;
     const int numfiber = m_numfiber;
 
     const NekDouble factor = m_Cn * m_Rf;
