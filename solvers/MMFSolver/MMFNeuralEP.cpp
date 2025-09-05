@@ -3435,8 +3435,8 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
                                     const Array<OneD, const NekDouble> &phim)
 {
     const int nq = m_fields[nfib]->GetNpoints();
-    // const int nvar = m_fields.size();
-    const int phievar = m_phievar;
+    const int nvar = m_fields.size();
+    const int phievar = nvar - 1;
 
     Array<OneD, NekDouble> outarray(nq);
 
