@@ -381,7 +381,6 @@ void PlotDomainZonefib1(
         const Array<OneD, const NekDouble> &outerzone);
 
 void ComputeNeuralTimeMap(const NekDouble time,
-                        const Array<OneD, const int> &zoneindex,
                         const Array<OneD, const NekDouble> &field,
                         const Array<OneD, const NekDouble> &dphidt,
                         Array<OneD, NekDouble> &dphidtint,
