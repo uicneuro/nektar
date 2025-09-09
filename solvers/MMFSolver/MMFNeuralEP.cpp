@@ -2438,7 +2438,7 @@ void MMFNeuralEP::DoSolveMMF()
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
             PlotNeuralEP(fields, m_TimeMap, nchk);
-           //  timevec[nchk] = m_time; 
+
             PrintAtNodes(nvar, m_numfiber, fields);
 
             Checkpoint_Output(nchk++);
@@ -2840,8 +2840,8 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[1]);
     m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[2]);
 
-    //     variables[1] = "phi_e";
-    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[3]);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, tmp, 1);
+    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[3]);
 
     // Max values and indices
     const NekDouble Maxphim1  = Vmath::Vmax(nq, fields[0], 1);
