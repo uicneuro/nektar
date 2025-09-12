@@ -387,10 +387,10 @@ void ComputeNeuralTimeMap(const NekDouble time,
                         Array<OneD, NekDouble> &TimeMap);
 
 
-void ComputephieTimeMap(const NekDouble time,
-                        const Array<OneD, const NekDouble> &field,
-                        Array<OneD, NekDouble> &fieldint,
-                        Array<OneD, NekDouble> &TimeMap);
+void ComputephieTimeMap(
+        const NekDouble dt,
+        const Array<OneD, const NekDouble> &field,
+        Array<OneD, NekDouble> &TimeMap);
 
 void ComputerhoTimeMap(const NekDouble time,
                         const Array<OneD, const NekDouble> &field,

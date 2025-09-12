@@ -2423,7 +2423,8 @@ void MMFNeuralEP::DoSolveMMF()
         {
             ComputeNeuralTimeMap(m_time, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
         }
-        ComputephieTimeMap(m_time, fields[phievar], dphidtint[phievar], m_TimeMap[phievar]);
+
+        ComputephieTimeMap(m_timestep, fields[phievar], m_TimeMap[phievar]);
 
         // Info output
         if ((step + 1) % m_infosteps == 0 && m_session->GetComm()->GetRank() == 0)
@@ -2607,27 +2608,48 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 }
 
 void MMFNeuralEP::ComputephieTimeMap(
-    const NekDouble time,
-    const Array<OneD, const NekDouble> &field,
-    Array<OneD, NekDouble> &fieldint,
-    Array<OneD, NekDouble> &TimeMap)
+        const NekDouble dt,
+        const Array<OneD, const NekDouble> &field,
+        Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 10.0 + 0.1;
+    constexpr NekDouble Tol = 0.01;
 
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble phie = field[i] + 10.0;
+        const NekDouble phie = field[i] + 1.0;
         if (phie > Tol)
         {
-            const NekDouble fint = fieldint[i];
-            const NekDouble fnewsum = phie + fint;
-
-            TimeMap[i] = (phie * time + fint * TimeMap[i]) / fnewsum;
-            fieldint[i] += phie;
+            TimeMap[i] += phie * dt;
         }
     }
 }
+
+
+
+
+// void MMFNeuralEP::ComputephieTimeMap(
+//     const NekDouble time,
+//     const Array<OneD, const NekDouble> &field,
+//     Array<OneD, NekDouble> &fieldint,
+//     Array<OneD, NekDouble> &TimeMap)
+// {
+//     const int nq = GetTotPoints();
+//     constexpr NekDouble Tol = 0.01;
+
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         const NekDouble phie = field[i] + 1.0;
+//         if (phie > Tol)
+//         {
+//             const NekDouble fint = fieldint[i];
+//             const NekDouble fnewsum = phie + fint;
+
+//             TimeMap[i] = (phie * time + fint * TimeMap[i]) / fnewsum;
+//             fieldint[i] += phie;
+//         }
+//     }
+// }
 
 // void MMFNeuralEP::ComputerhoTimeMap(
 //     const NekDouble time,
@@ -2810,7 +2832,7 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
-    const int nvar    = 8;
+    const int nvar    = 9;
     const int nq      = m_fields[0]->GetTotPoints();
     const int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -2824,24 +2846,32 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "phi_m";
-    variables[1] = "phi_m1";
-    variables[2] = "phi_m2";
-    variables[3] = "phi_e";
-    variables[4] = "TimeMap_phim";
-    variables[5] = "TimeMap_phim1";
-    variables[6] = "TimeMap_phim2";
-    variables[7] = "TimeMap_phie";
+    variables[0] = "field";
+    variables[1] = "phi_m";
+    variables[2] = "phi_e";
+    variables[3] = "phi_m1";
+    variables[4] = "phi_m2";
+    variables[5] = "TimeMap_phim";
+    variables[6] = "TimeMap_phim1";
+    variables[7] = "TimeMap_phim2";
+    variables[8] = "TimeMap_phie";
 
-    Array<OneD, NekDouble> tmp(nq);
-    Vmath::Vadd(nq, fields[0], 1, fields[1], 1, tmp, 1);
+    Array<OneD, NekDouble> phim(nq);
+    Vmath::Vadd(nq, fields[0], 1, fields[1], 1, phim, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phim, 1, phim, 1);
 
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[0]);
-    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[1]);
-    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[2]);
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, phie, 1);
 
-    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, tmp, 1);
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[3]);
+    Array<OneD, NekDouble> totfield(nq);
+    Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
+
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
+    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[4]);
 
     // Max values and indices
     const NekDouble Maxphim1  = Vmath::Vmax(nq, fields[0], 1);
@@ -2866,12 +2896,12 @@ void MMFNeuralEP::PlotNeuralEPvar3(
                 << ", phim2 = " << Vmath::Vmax(nq, TimeMap[1], 1) << ", phie = " << Vmath::Vmax(nq, TimeMap[2], 1) << std::endl;
     
     // variables[4] = "TimeMap_phim";
-    Vmath::Vadd(nq, TimeMap[0], 1, TimeMap[1], 1, tmp, 1);
-    m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[4]);
+    Vmath::Vadd(nq, TimeMap[0], 1, TimeMap[1], 1, totfield, 1);
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[5]);
 
-    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[5]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[6]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[8]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
