@@ -2825,8 +2825,6 @@ void MMFNeuralEP::PlotNeuralEPvar2(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-
-
 void MMFNeuralEP::PlotNeuralEPvar3(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
@@ -2863,12 +2861,14 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     Array<OneD, NekDouble> phie(nq);
     Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, phie, 1);
 
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
     Array<OneD, NekDouble> totfield(nq);
+    Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
     Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
     m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
 
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
 
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[3]);
     m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[4]);
