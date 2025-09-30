@@ -432,6 +432,15 @@ void PrintDuoCurrent(const Array<OneD, const Array<OneD, NekDouble>> &field);
         const Array<OneD, const NekDouble> &TmapGrad,
         const Array<OneD, const NekDouble> &TmapGradMag);
 
+void ComputephieMF(
+            Array<OneD, Array<OneD, NekDouble>> &phiemovingframes, 
+            Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes);
+
+void Computemovingframesfiber(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber);
+
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
                                         bool dumpInitialConditions,
