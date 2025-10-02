@@ -215,12 +215,14 @@ protected:
     Array<OneD, NekDouble> ComputeConductivity(
                  const Array<OneD, const int> &zoneindex);
 
-    Array<OneD, NekDouble> ComputeConductivity(
-                 const Array<OneD, const Array<OneD, int>> &zoneindex);
+    void ComputeConductivity(
+    const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+    Array<OneD, Array<OneD, NekDouble>> &outarrayfiber);
 
     // other moving frames neede for NeuralEP
     Array<OneD, Array<OneD, NekDouble>> m_phiediffmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_phiemovingframesfiber;
 
     SpatialDomains::GeomMMF m_phieMMFdir;
 
@@ -241,10 +243,16 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
     Array<OneD, NekDouble> m_outerzone;
 
-    Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
-    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_AniStrengthfiber;
+    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrengthfiber;
 
     void ComputeRegionalSigma(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, Array<OneD, NekDouble>> &sigma_i,
+        Array<OneD, Array<OneD, NekDouble>> &sigma_e,
+        Array<OneD, Array<OneD, NekDouble>> &sigma_eM);
+            
+    void ComputeRegionalSigmaMulti(
         const Array<OneD, const int> &zoneindex,
         Array<OneD, Array<OneD, NekDouble>> &sigma_i,
         Array<OneD, Array<OneD, NekDouble>> &sigma_e,
@@ -252,7 +260,7 @@ protected:
 
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
-    Array<OneD, NekDouble> m_NeuralCmfiber;
+    Array<OneD, Array<OneD, NekDouble>> m_NeuralCmfiber;
 
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
     Array<OneD, Array<OneD, NekDouble>> m_PhieCurrent;
@@ -326,7 +334,7 @@ protected:
     void ComputePhie(const Array<OneD, const NekDouble> &phim);
     
     Array<OneD, NekDouble> ComputePhie(const int n, const Array<OneD, const NekDouble> &phim);
-
+ 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -435,6 +443,10 @@ void PrintDuoCurrent(const Array<OneD, const Array<OneD, NekDouble>> &field);
 void ComputephieMF(
             Array<OneD, Array<OneD, NekDouble>> &phiemovingframes, 
             Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes);
+
+void ComputephieMFMulti(
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phiemovingframesfiber, 
+    Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes);
 
 void Computemovingframesfiber(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
