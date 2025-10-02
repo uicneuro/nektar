@@ -395,9 +395,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
-    // Derive AnisotropyStrength.
-
-    // Derive AnisotropyStrength.
+    // Derive AnisotropyStrengthfiber.
     m_AniStrengthfiber = Array<OneD, Array<OneD, NekDouble>> (m_numfiber);
     m_phieAniStrengthfiber = Array<OneD, Array<OneD, NekDouble>> (m_numfiber);
     for (int j = 0; j < m_numfiber; ++j)
@@ -406,6 +404,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_phieAniStrengthfiber[j] = Array<OneD, NekDouble>(nq, 1.0);
         Vmath::Smul(nq, m_Cn, &m_NeuralCmfiber[j][0], 1, &m_AniStrengthfiber[j][0], 1);
     }
+
+    // Construct 
+    m_AniStrength = Array<OneD, NekDouble>(nq, 1.0);
+    m_phieAniStrength = Array<OneD, NekDouble>(nq, 1.0);
 
     Array<OneD, Array<OneD, NekDouble>> m_UnitAniStrength(m_mfdim);
     for (int j = 0; j < m_mfdim; ++j)
@@ -424,6 +426,12 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         {
+            // Computer moving frames along each fiber  
+            Computemovingframesfiber(m_movingframes, m_AniStrengthfiber, m_movingframesfiber);
+
+            // Rescale movingframes
+            RescaleMovingFrames(m_movingframes, m_AniStrengthfiber);
+
             // Compute moving frmaes for phi_e
             std::cout << "Constructing phiemovingframes" << std::endl;
             ComputephieMF(m_phiemovingframes,m_phiediffmovingframes);
@@ -440,7 +448,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2DbiMulti:
         {
             // Computer moving frames along each fiber  
-            Computemovingframesfiber(m_movingframes, m_intrazonefiber, m_movingframesfiber);
+            Computemovingframesfiber(m_movingframes, m_AniStrengthfiber, m_movingframesfiber);
+
+            // Rescale movingframes
+            RescaleMovingFrames(m_movingframes, m_AniStrengthfiber);
 
             // Compute moving frmaes for phi_e
             std::cout << "Constructing phiemovingframes" << std::endl;
@@ -792,9 +803,41 @@ MMFNeuralEP::~MMFNeuralEP()
 }
 
 
+void MMFNeuralEP::RescaleMovingFrames(
+    const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber,
+     Array<OneD, Array<OneD, NekDouble>> &movingframes)
+{
+    const int numfiber = m_numfiber;
+    const int mfdim = m_mfdim;
+    const int nq = GetTotPoints();
+
+    NekDouble tmp = 0.0;
+
+    Array<OneD, NekDouble> AniStrength(nq, -2.0);
+    for (int i = 0; i < nq; ++i) 
+    {
+        for (int n = 0; n < numfiber; ++n)
+        {
+            tmp = AniStrengthfiber[n][i];
+            if(tmp > AniStrength[i])
+            {
+                AniStrength[i] = tmp;
+            }
+        }
+    }
+
+    for (int j = 0; j < mfdim; ++j)
+    {
+        for (int i = 0; i < nq; ++i) 
+        {
+            movingframes[j][i] = sqrt(AniStrength[i]) * movingframes[j][i];
+        }
+    }
+}
+
 void MMFNeuralEP::Computemovingframesfiber(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
+    const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber,
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber)
 {
     const int numfiber = m_numfiber;
@@ -802,8 +845,7 @@ void MMFNeuralEP::Computemovingframesfiber(
     const int spacedim = m_spacedim;
     const int nq = GetTotPoints();
 
-    std::cout << "\nGenerating individual moving frames for #fiber = " << numfiber << std::endl;
-
+    Array<OneD, NekDouble> tmp(nq, 0.0);
     m_movingframesfiber = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(numfiber);
     for (int n = 0; n < numfiber; ++n)
     {
@@ -814,7 +856,9 @@ void MMFNeuralEP::Computemovingframesfiber(
 
             for (int k = 0; k < spacedim; ++k)
             {
-                Vmath::Vmul(nq, &intrazonefiber[n][0], 1, &movingframes[j][k*nq], 1, 
+                Vmath::Vsqrt(nq, &AniStrengthfiber[n][0], 1, &tmp[0], 1);
+                Vmath::Vmul(nq, &m_intrazonefiber[n][0], 1, &tmp[0], 1, &tmp[0], 1);
+                Vmath::Vmul(nq, &tmp[0], 1, &movingframes[j][k*nq], 1, 
                     &movingframesfiber[n][j][k*nq], 1);
             }
         }
@@ -823,6 +867,7 @@ void MMFNeuralEP::Computemovingframesfiber(
         CheckMovingFrames(movingframesfiber[n]);
     }
 }
+
 
 void MMFNeuralEP::ComputephieMF(
     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes, 

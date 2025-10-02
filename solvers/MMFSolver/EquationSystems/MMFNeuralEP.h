@@ -246,6 +246,9 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_AniStrengthfiber;
     Array<OneD, Array<OneD, NekDouble>> m_phieAniStrengthfiber;
 
+    Array<OneD, NekDouble> m_AniStrength;
+    Array<OneD, NekDouble> m_phieAniStrength;
+
     void ComputeRegionalSigma(
         const Array<OneD, const int> &zoneindex,
         Array<OneD, Array<OneD, NekDouble>> &sigma_i,
@@ -257,6 +260,10 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &sigma_i,
         Array<OneD, Array<OneD, NekDouble>> &sigma_e,
         Array<OneD, Array<OneD, NekDouble>> &sigma_eM);
+
+    void RescaleMovingFrames(
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber,
+            Array<OneD, Array<OneD, NekDouble>> &movingframes);
 
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
