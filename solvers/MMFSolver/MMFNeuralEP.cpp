@@ -101,9 +101,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     
     // Resting potential     NekDouble m_phimrest, m_phimTol, m_dudtTol;
     m_session->LoadParameter("phimrest", m_phimrest, 80.0);
-    // m_session->LoadParameter("phimTol", m_phimTol, 10.0);
-    // m_session->LoadParameter("phieTol", m_phieTol, 10.0);
-    // m_session->LoadParameter("dphimdtTol", m_dphimdtTol, 1.0);
 
     // NeuralEP paramter on temperature
     m_session->LoadParameter("Temperature", m_Temperature, 24.0);
@@ -132,12 +129,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_numfiber = 1;
 
-    m_session->LoadParameter("fiber1order", m_fiber1order, 1); // 0: down to up, 1: up to down
-    m_session->LoadParameter("fiber1left", m_fiber1left, 0.01);
+    m_session->LoadParameter("fiber1order", m_fiber1order, 1);  
     m_session->LoadParameter("fiber1right", m_fiber1right, 0.02);
 
-    m_session->LoadParameter("fiber2order", m_fiber2order, 1); // 0: down to up, 1: up to down
-    m_session->LoadParameter("fiber2left", m_fiber2left, 0.0);
+    m_session->LoadParameter("fiber2order", m_fiber2order, 1);  
     m_session->LoadParameter("fiber2right", m_fiber2right, 0.0);
 
     if( (fabs(m_fiber2left)>0.0) && (fabs(m_fiber2right)>0.0) )
@@ -145,7 +140,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         m_numfiber = 2;
     }
 
-    m_session->LoadParameter("fiber3order", m_fiber3order, 1); // 0: down to up, 1: up to down
+    m_session->LoadParameter("fiber3order", m_fiber3order, 1);  
     m_session->LoadParameter("fiber3left", m_fiber3left, 0.0);
     m_session->LoadParameter("fiber3right", m_fiber3right, 0.0);
 
@@ -158,10 +153,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_session->LoadParameter("Diffext", m_Diffext, 1e-6);
 
-    NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
-    NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
-
     // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
+    NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
+    NekDouble phietmp = m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle;
+    NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/phietmp;
     m_phiefactor = PhieMultFactor / axoncrossA;
     std::cout << "phiefactor = " << m_phiefactor << std::endl;
 
@@ -301,6 +296,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_AnisotropyStrength = m_Cn / m_Cm;
 
+    if(m_NeuralEPType==eNeuralEP2DbiMulti)
+    {   
+        ASSERTL0(m_fields.size()==3, "Number of Variable should be 3");
+    }
+
    switch (m_NeuralEPType)
     {
         case eNeuralHelmSolveSingle:
@@ -329,11 +329,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Array<OneD, NekDouble> allone(nq, 1.0);
             Vmath::Vsub(nq, allone, 1, m_myelinzone, 1, m_extrazone, 1);
 
-            // m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
-            // m_NeuralCm[0] = Array<OneD, NekDouble>(nq, 1.0 / m_Cm);
-            m_NeuralCm    = Array<OneD, Array<OneD, NekDouble>>(1);
-            m_NeuralCm[0] = Array<OneD, NekDouble>(nq,0.0);
-
             for (int i = 0; i < nq; ++i)
             {
                 // Ranvier node zone
@@ -361,30 +356,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
-        {   
-            // Provide index for nodes and myelins
-            IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
-
-            // Identifying each domain zone accordingly
-            SetUpDomainZone();
-
-            // Compute conductivity accordingly 
-            ComputeConductivity(m_zoneindexfiber, m_NeuralCmfiber);
-            break;
-        }
-
         case eNeuralEP2DbiMulti:
         {   
-            ASSERTL0(m_fields.size()==3, "Number of Variable should be 3");
-
             // Provide index for nodes and myelins
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
 
             // Identifying each domain zone accordingly
             SetUpDomainZone();
-
-            // Compute conductivity accordingly 
-            ComputeConductivity(m_zoneindexfiber, m_NeuralCmfiber);
             break;
         }
 
@@ -394,20 +372,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
+    
+    // Compute conductivity accordingly 
+    ComputeAniStrengthfiber(m_zoneindexfiber, m_AniStrengthfiber);
+    m_AniStrength = ComputeGlobalAniStrength(m_AniStrengthfiber);
 
-    // Derive AnisotropyStrengthfiber.
-    m_AniStrengthfiber = Array<OneD, Array<OneD, NekDouble>> (m_numfiber);
-    m_phieAniStrengthfiber = Array<OneD, Array<OneD, NekDouble>> (m_numfiber);
-    for (int j = 0; j < m_numfiber; ++j)
-    {
-        m_AniStrengthfiber[j] = Array<OneD, NekDouble>(nq, 1.0);
-        m_phieAniStrengthfiber[j] = Array<OneD, NekDouble>(nq, 1.0);
-        Vmath::Smul(nq, m_Cn, &m_NeuralCmfiber[j][0], 1, &m_AniStrengthfiber[j][0], 1);
-    }
-
-    // Construct 
-    m_AniStrength = Array<OneD, NekDouble>(nq, 1.0);
-    m_phieAniStrength = Array<OneD, NekDouble>(nq, 1.0);
+    ComputePhieAniStrengthfiber(m_zoneindexfiber, m_phiediffAniStrength, m_phieAniStrengthfiber);
+    m_phieAniStrength = ComputeGlobalAniStrength(m_phieAniStrengthfiber);
 
     Array<OneD, Array<OneD, NekDouble>> m_UnitAniStrength(m_mfdim);
     for (int j = 0; j < m_mfdim; ++j)
@@ -417,7 +388,18 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     // Create moving frames in unit length
     MMFSystem::MMFInitObject(m_UnitAniStrength);
-    CheckMovingFrames(m_movingframes);
+
+    // Construct phiemovingframes in unit length
+    std::string phieMMFdirStr;
+    m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
+    SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+    SetUpMovingFrames(phieMMFdir, m_UnitAniStrength, m_phiemovingframes);
+
+    // Construct phiediffmovingframes in unit length
+    // std::string phiediffMMFdirStr;
+    // m_session->LoadSolverInfo("phiediffMMFdirStr", phiediffMMFdirStr, "TangentY");
+    // SpatialDomains::GeomMMF phiediffMMFdirStr = FindMMFdir(phiediffMMFdirStr);
+    // SetUpMovingFrames(phiediffMMFdirStr, m_phieAniStrength, phiediffmovingframes);
     
     switch (m_NeuralEPType)
     {
@@ -430,18 +412,27 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Computemovingframesfiber(m_movingframes, m_AniStrengthfiber, m_movingframesfiber);
 
             // Rescale movingframes
-            RescaleMovingFrames(m_movingframes, m_AniStrengthfiber);
+            RescaleMovingFrames(m_AniStrength, m_movingframes);
+            CheckMovingFrames(m_movingframes);
 
             // Compute moving frmaes for phi_e
             std::cout << "Constructing phiemovingframes" << std::endl;
-            ComputephieMF(m_phiemovingframes,m_phiediffmovingframes);
+          //   ComputephieMF(m_phiemovingframes, m_phiediffmovingframes);
             CheckMovingFrames(m_phiemovingframes);
 
             // Compute moving frmaes for the diffusion in \Omega_e
-            std::cout << "Constructing phiediffmovingframes" << std::endl;
-            CheckMovingFrames(m_phiediffmovingframes);
+            // std::cout << "Constructing phiediffmovingframes" << std::endl;
+            // CheckMovingFrames(m_phiediffmovingframes);
         
-            // PlotAnisotropy(m_AniStrength, m_phieAniStrength);
+           // PlotAnisotropy(m_AniStrength, m_AniStrengthfiber, m_phieAniStrength, m_phieAniStrengthfiber);
+
+            std::cout << std::endl;
+            std::cout << "Generating m_varcoeff ================================= " << std::endl;
+            ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
+            std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
+            ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
+            std::cout << std::endl;
             break;
         }
 
@@ -451,33 +442,41 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             Computemovingframesfiber(m_movingframes, m_AniStrengthfiber, m_movingframesfiber);
 
             // Rescale movingframes
-            RescaleMovingFrames(m_movingframes, m_AniStrengthfiber);
+            RescaleMovingFrames(m_AniStrength, m_movingframes);
+            CheckMovingFrames(m_movingframes);
 
             // Compute moving frmaes for phi_e
             std::cout << "Constructing phiemovingframes" << std::endl;
-            ComputephieMFMulti(m_phiemovingframesfiber,m_phiediffmovingframes);
-            for (int j = 0; j < m_numfiber; ++j)
-            {
-                CheckMovingFrames(m_phiemovingframesfiber[j]);
-            }
+            // ComputephieMFMulti(m_phiemovingframesfiber, m_phiediffmovingframes);
+            // for (int j = 0; j < m_numfiber; ++j)
+            // {
+            //     CheckMovingFrames(m_phiemovingframesfiber[j]);
+            // }
 
             // Compute moving frmaes for the diffusion in \Omega_e
-            std::cout << "Constructing phiediffmovingframes" << std::endl;
-            CheckMovingFrames(m_phiediffmovingframes);
+            // std::cout << "Constructing phiediffmovingframes" << std::endl;
+            // CheckMovingFrames(m_phiediffmovingframes);
         
-            // PlotAnisotropy(m_AniStrengthfiber, m_phieAniStrengthfiber);
+           // PlotAnisotropy(m_AniStrength, m_AniStrengthfiber, m_phieAniStrength, m_phieAniStrengthfiber);
+
+            std::cout << "Generating m_varcoeff ================================= " << std::endl;
+            ComputeVarCoeff2D(m_movingframes, m_varcoeff);
+
+            std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;  
+            std::cout << "Generating m_phievarcoeff ================================= " << std::endl; 
+            m_varcoefffiber = Array<OneD, StdRegions::VarCoeffMap>(m_numfiber);
+            for (int n = 0; n < m_numfiber; ++n)
+            {
+                ComputeVarCoeff2D(m_movingframesfiber[n], m_varcoefffiber[n]);
+                ComputeVarCoeff2D(m_phiemovingframesfiber[n], m_phievarcoefffiber[n]);
+            }
+            std::cout << std::endl;
             break;
         }
 
         default:
         break;
     }
-
-    // Check moving frames
-    // if(m_numfiber==2)
-    // {
-    //     CheckNodeZoneMF(m_movingframes, m_phiemovingframes);
-    // }
 
     if (m_explicitDiffusion)
     {
@@ -492,174 +491,30 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralHelmSolveSingle:
             case eNeuralHelmSolveDuo:
             {
-                std::cout << std::endl;
-                std::cout << "Generating m_varcoeff ================================= " << std::endl;
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-
-                std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
-                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-                std::cout << std::endl;
-
-                 Array<OneD, NekDouble> forcing(nq,0.0);
-                for (int i=0;i<nq; ++i)
-                {
-                    if(m_zoneindexfiber[0][i]>=0)
-                    {
-                        forcing[i] = -100.0;
-                     }
-                }
-
-                // Compute phim
-                StdRegions::ConstFactorMap phimfactors;
-                phimfactors[StdRegions::eFactorTau]    = m_Helmtau;
-
-                NekDouble lambda;
-                m_session->LoadParameter("Helmlambda", lambda, 0.001);
-                phimfactors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
-
-                Array<OneD, NekDouble> phim(nq,0.0);
-
-                NekDouble intforcing = AvgInt(forcing);
-
-                Vmath::Sadd(nq, -1.0 * intforcing, forcing, 1, m_fields[0]->UpdatePhys(), 1);
-                m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(), phimfactors, m_varcoeff);
-                m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), m_fields[0]->UpdatePhys());
-                m_fields[0]->SetPhysState(true);
-
-                phim = m_fields[0]->GetPhys();
-
-                std::cout << "phim, max = " << Vmath::Vmax(nq, phim, 1) << ", min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
-
-                Array<OneD, NekDouble> phimintra(nq);
-                Array<OneD, NekDouble> phimextra(nq);
-
-                NekDouble phim_max = Vmath::Vmax(nq, phim, 1);
-                for (int i=0;i<nq;++i)
-                {
-                    phimextra[i] = (m_zoneindexfiber[0][i]==-2) ? phim[i]/phim_max : 0.0;
-                }
-
-                std::cout << "phm in ex_zone: L2err = " << RootMeanSquare(phimextra) << ", Linf = " << Vmath::Vamax(nq, phimextra, 1) << std::endl;
-
-                // Compute phie
-                StdRegions::ConstFactorMap phiefactors;
-                phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
-                phiefactors[StdRegions::eFactorLambda] = 0.0;
-
-                Array<OneD, NekDouble> phie(nq,0.0);
-
-                Vmath::Sadd(nq, -1.0 * intforcing, forcing, 1, m_fields[1]->UpdatePhys(), 1);
-                m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-                m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), m_fields[1]->UpdatePhys());
-                m_fields[1]->SetPhysState(true);
-
-                phie = m_fields[1]->GetPhys();
-
-                std::cout << "phie, max = " << Vmath::Vmax(nq, phie, 1) << ", min = " << Vmath::Vmin(nq, phie, 1) << std::endl;
-
-                // Plotting the result
-                int nvar = 8;
-                int ncoeffs = m_fields[0]->GetNcoeffs();
-
-                std::string outname;
-                outname = m_sessionName + "_helm.chk";
-
-                std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-                for (int i = 0; i < nvar; ++i)
-                {
-                    fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-                }
-                
-                Array<OneD, Array<OneD, NekDouble>> mfmag(m_spacedim);
-                Array<OneD, Array<OneD, NekDouble>> phiemfmag(m_spacedim);
-
-                for (int j=0; j<m_spacedim; ++j)
-                {
-                    mfmag[j] = Array<OneD, NekDouble>(nq, 0.0);
-                    phiemfmag[j] = Array<OneD, NekDouble>(nq, 0.0);
-
-                    for (int k=0; k<m_spacedim; ++k)
-                    {
-                        Vmath::Vvtvp(nq, &m_movingframes[j][k*nq], 1, &m_movingframes[j][k*nq], 1, &mfmag[j][0], 1, &mfmag[j][0], 1);
-                        Vmath::Vvtvp(nq, &m_phiemovingframes[j][k*nq], 1, &m_phiemovingframes[j][k*nq], 1, &phiemfmag[j][0], 1, &phiemfmag[j][0], 1);
-                    }
-
-                    Vmath::Vsqrt(nq, &mfmag[j][0], 1, &mfmag[j][0], 1);
-                    Vmath::Vsqrt(nq, &phiemfmag[j][0], 1, &mfmag[j][0], 1);
-                }
-
-
-                std::vector<std::string> variables(nvar);
-                variables[0] = "phim";
-                variables[1] = "phimextra";
-                variables[2] = "phie";
-                variables[3] = "forcing";
-                variables[4] = "AniX";
-                variables[5] = "AniY";
-                variables[6] = "phieAniX";
-                variables[7] = "phieAniY";
-
-                m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[0]);
-                m_fields[0]->FwdTransLocalElmt(phimextra, fieldcoeffs[1]);
-                m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
-                m_fields[0]->FwdTransLocalElmt(forcing, fieldcoeffs[3]);
-
-                m_fields[0]->FwdTransLocalElmt(m_AniStrengthfiber[0], fieldcoeffs[4]);
-                m_fields[0]->FwdTransLocalElmt(m_AniStrengthfiber[1], fieldcoeffs[5]);
-                m_fields[0]->FwdTransLocalElmt(m_phieAniStrengthfiber[0], fieldcoeffs[6]);
-                m_fields[0]->FwdTransLocalElmt(m_phieAniStrengthfiber[1], fieldcoeffs[7]);
-
-                WriteFld(outname, m_fields[0], fieldcoeffs, variables);
-
+                TestHelmSolve();
                 wait_on_enter();
-
                 break;
             }
 
             case eNeuralEP2Dmono:
             {
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-                m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
+                m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2Dmono, this);
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dmono, this);
                 break;
             }
 
             case eNeuralEP2Dbi:
             {
-                std::cout << std::endl;
-                std::cout << "Generating m_varcoeff ================================= " << std::endl;
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-
-                std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
-                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-
-                m_ode.DefineImplicitSolve(
-                    &MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
+                m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi, this); 
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
                 break;
             }
 
             case eNeuralEP2DbiMulti:
             {
-                std::cout << std::endl;
-                std::cout << "Generating m_varcoeff ================================= " << std::endl;
-                ComputeVarCoeff2D(m_movingframes, m_varcoeff);
-
-                std::cout << std::endl;
-                std::cout << "Generating m_varcoefffiber for each fiber ================================= " << std::endl;   
-
-                m_varcoefffiber = Array<OneD, StdRegions::VarCoeffMap>(m_numfiber);
-                for (int n = 0; n < m_numfiber; ++n)
-                {
-                    ComputeVarCoeff2D(m_movingframesfiber[n], m_varcoefffiber[n]);
-                }
-
-                std::cout << "Generating m_phievarcoeff ================================= " << std::endl;
-                ComputeVarCoeff2D(m_phiemovingframes, m_phievarcoeff);
-
                 m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti, this); 
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti, this);
+                break;
             }
 
             default:
@@ -802,17 +657,211 @@ MMFNeuralEP::~MMFNeuralEP()
 {
 }
 
+// Compute conductivity accordingly 
+void MMFNeuralEP::ComputeAniStrengthfiber(
+    const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
+    Array<OneD, Array<OneD, NekDouble>> &AniStrengthfiber)
+    {
+        const int numfiber = m_numfiber;
+        const int nq = GetTotPoints();    
+        const NekDouble Cn = m_Cn;
 
-void MMFNeuralEP::RescaleMovingFrames(
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber,
-     Array<OneD, Array<OneD, NekDouble>> &movingframes)
+        Array<OneD, Array<OneD, NekDouble>> NeuralCmfiber(numfiber);
+        for (int j = 0; j < numfiber; ++j)
+        {
+            NeuralCmfiber[j] = Array<OneD, NekDouble>(nq, 1.0);
+        }
+
+        ComputeNeuralCmfiber(zoneindexfiber, NeuralCmfiber);
+
+        AniStrengthfiber = Array<OneD, Array<OneD, NekDouble>>(numfiber);
+        for (int j = 0; j < numfiber; ++j)
+        {
+            AniStrengthfiber[j] = Array<OneD, NekDouble>(nq);
+            Vmath::Smul(nq, Cn, &NeuralCmfiber[j][0], 1, &AniStrengthfiber[j][0], 1);
+        }
+    }
+
+
+void MMFNeuralEP::ComputePhieAniStrengthfiber(
+            const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
+            Array<OneD, NekDouble> &phiediffAniStrength,
+            Array<OneD, Array<OneD, NekDouble>> &phieAniStrengthfiber)
+    {
+        const int numfiber = m_numfiber;
+        const int nq = GetTotPoints();    
+        const int expdim = m_expdim;
+        const NekDouble Cn = m_Cn;
+
+        // Compute phiediffAniStrength
+        Array<OneD, NekDouble> sigma_i(nq);
+        Array<OneD, NekDouble> sigma_e(nq);
+        Array<OneD, NekDouble> sigma_eM(nq);
+    
+        ComputeRegionalSigma(m_zoneindex, sigma_i, sigma_e, sigma_eM);
+        Vmath::Vcopy(nq, sigma_e, 1, phiediffAniStrength, 1);
+
+        // Compute phieAniStrengthfiber
+        Array<OneD, Array<OneD, NekDouble>> sigma_ifiber(numfiber);
+        Array<OneD, Array<OneD, NekDouble>> sigma_efiber(numfiber);
+        Array<OneD, Array<OneD, NekDouble>> sigma_eMfiber(numfiber);
+        for (int j = 0; j < numfiber; ++j)
+        {
+            sigma_ifiber[j] = Array<OneD, NekDouble>(nq);
+            sigma_efiber[j] = Array<OneD, NekDouble>(nq);
+            sigma_eMfiber[j] = Array<OneD, NekDouble>(nq);
+        }
+
+        // Compute sigma_i, sigma_e, sigma_eM
+        for (int j = 0; j < numfiber; ++j)
+        {
+            ComputeRegionalSigma(m_zoneindexfiber[j], sigma_ifiber[j], sigma_efiber[j], sigma_eMfiber[j]);
+            Vmath::Vadd(nq, &sigma_ifiber[j][0], 1, &sigma_eMfiber[j][0], 1, &phieAniStrengthfiber[j][0], 1);
+        }
+    }
+
+void MMFNeuralEP::TestHelmSolve()
 {
-    const int numfiber = m_numfiber;
-    const int mfdim = m_mfdim;
+    const int nq = GetTotPoints();    
+
+    Array<OneD, NekDouble> forcing(nq, 0.0);
+    for (int i = 0; i < nq; ++i)
+    {
+        if (m_zoneindexfiber[0][i] >= 0)
+        {
+            forcing[i] = -100.0;
+        }
+    }
+
+    // Compute phim
+    StdRegions::ConstFactorMap phimfactors;
+    phimfactors[StdRegions::eFactorTau] = m_Helmtau;
+
+    NekDouble lambda;
+    m_session->LoadParameter("Helmlambda", lambda, 0.001);
+    phimfactors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
+
+    Array<OneD, NekDouble> phim(nq, 0.0);
+
+    NekDouble intforcing = AvgInt(forcing);
+
+    Vmath::Sadd(nq, -1.0 * intforcing, forcing, 1,
+                m_fields[0]->UpdatePhys(), 1);
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(),
+                           m_fields[0]->UpdateCoeffs(), phimfactors,
+                           m_varcoeff);
+    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(),
+                          m_fields[0]->UpdatePhys());
+    m_fields[0]->SetPhysState(true);
+
+    phim = m_fields[0]->GetPhys();
+
+    std::cout << "phim, max = " << Vmath::Vmax(nq, phim, 1)
+              << ", min = " << Vmath::Vmin(nq, phim, 1) << std::endl;
+
+    Array<OneD, NekDouble> phimintra(nq);
+    Array<OneD, NekDouble> phimextra(nq);
+
+    NekDouble phim_max = Vmath::Vmax(nq, phim, 1);
+    for (int i = 0; i < nq; ++i)
+    {
+        phimextra[i] =
+            (m_zoneindexfiber[0][i] == -2) ? phim[i] / phim_max : 0.0;
+    }
+
+    std::cout << "phm in ex_zone: L2err = " << RootMeanSquare(phimextra)
+              << ", Linf = " << Vmath::Vamax(nq, phimextra, 1) << std::endl;
+
+    // Compute phie
+    StdRegions::ConstFactorMap phiefactors;
+    phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
+    phiefactors[StdRegions::eFactorLambda] = 0.0;
+
+    Array<OneD, NekDouble> phie(nq, 0.0);
+
+    Vmath::Sadd(nq, -1.0 * intforcing, forcing, 1,
+                m_fields[1]->UpdatePhys(), 1);
+    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(),
+                           m_fields[1]->UpdateCoeffs(), phiefactors,
+                           m_phievarcoeff);
+    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(),
+                          m_fields[1]->UpdatePhys());
+    m_fields[1]->SetPhysState(true);
+
+    phie = m_fields[1]->GetPhys();
+
+    std::cout << "phie, max = " << Vmath::Vmax(nq, phie, 1)
+              << ", min = " << Vmath::Vmin(nq, phie, 1) << std::endl;
+
+    // Plotting the result
+    int nvar    = 8;
+    int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname;
+    outname = m_sessionName + "_helm.chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    Array<OneD, Array<OneD, NekDouble>> mfmag(m_spacedim);
+    Array<OneD, Array<OneD, NekDouble>> phiemfmag(m_spacedim);
+
+    for (int j = 0; j < m_spacedim; ++j)
+    {
+        mfmag[j]     = Array<OneD, NekDouble>(nq, 0.0);
+        phiemfmag[j] = Array<OneD, NekDouble>(nq, 0.0);
+
+        for (int k = 0; k < m_spacedim; ++k)
+        {
+            Vmath::Vvtvp(nq, &m_movingframes[j][k * nq], 1,
+                         &m_movingframes[j][k * nq], 1, &mfmag[j][0], 1,
+                         &mfmag[j][0], 1);
+            Vmath::Vvtvp(nq, &m_phiemovingframes[j][k * nq], 1,
+                         &m_phiemovingframes[j][k * nq], 1,
+                         &phiemfmag[j][0], 1, &phiemfmag[j][0], 1);
+        }
+
+        Vmath::Vsqrt(nq, &mfmag[j][0], 1, &mfmag[j][0], 1);
+        Vmath::Vsqrt(nq, &phiemfmag[j][0], 1, &mfmag[j][0], 1);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "phim";
+    variables[1] = "phimextra";
+    variables[2] = "phie";
+    variables[3] = "forcing";
+    variables[4] = "AniX";
+    variables[5] = "AniY";
+    variables[6] = "phieAniX";
+    variables[7] = "phieAniY";
+
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(phimextra, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(forcing, fieldcoeffs[3]);
+
+    m_fields[0]->FwdTransLocalElmt(m_AniStrengthfiber[0], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(m_AniStrengthfiber[1], fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(m_phieAniStrengthfiber[0],
+                                   fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(m_phieAniStrengthfiber[1],
+                                   fieldcoeffs[7]);
+
+    WriteFld(outname, m_fields[0], fieldcoeffs, variables);
+}
+
+
+// When a node or myeline exist, it is prevalent over the extracellular region
+Array<OneD, NekDouble> MMFNeuralEP::ComputeGlobalAniStrength(
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber)
+{
     const int nq = GetTotPoints();
+    const int numfiber = m_numfiber;
 
-    NekDouble tmp = 0.0;
-
+    NekDouble tmp;
     Array<OneD, NekDouble> AniStrength(nq, -2.0);
     for (int i = 0; i < nq; ++i) 
     {
@@ -826,6 +875,16 @@ void MMFNeuralEP::RescaleMovingFrames(
         }
     }
 
+    return AniStrength;
+}
+
+void MMFNeuralEP::RescaleMovingFrames(
+        const Array<OneD, const NekDouble> &AniStrength,
+        Array<OneD, Array<OneD, NekDouble>> &movingframes)
+{
+    const int mfdim = m_mfdim;
+    const int nq = GetTotPoints();
+
     for (int j = 0; j < mfdim; ++j)
     {
         for (int i = 0; i < nq; ++i) 
@@ -836,9 +895,9 @@ void MMFNeuralEP::RescaleMovingFrames(
 }
 
 void MMFNeuralEP::Computemovingframesfiber(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber,
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber)
+        const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber,
+        Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber)
 {
     const int numfiber = m_numfiber;
     const int mfdim = m_mfdim;
@@ -869,222 +928,205 @@ void MMFNeuralEP::Computemovingframesfiber(
 }
 
 
-void MMFNeuralEP::ComputephieMF(
-    Array<OneD, Array<OneD, NekDouble>> &phiemovingframes, 
-    Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes)
-{
-    const int nq   = GetTotPoints();
-    const int expdim = m_expdim;
-    const int spacedim = m_spacedim;
 
-    Array<OneD, Array<OneD, NekDouble>> phieAniStrength(expdim);
-    Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(expdim);
-    for (int j = 0; j < expdim; ++j)
-    {
-        phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-        phiediffAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-    }
+// void MMFNeuralEP::ComputephieMF(
+//     Array<OneD, Array<OneD, NekDouble>> &phiemovingframes, 
+//     Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes)
+// {
+//     const int nq   = GetTotPoints();
+//     const int expdim = m_expdim;
+//     const int spacedim = m_spacedim;
 
-    // Construct phiemovingframes 
-    std::string phieMMFdirStr;
-    m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
-    SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
-
-    std::cout << "\nPhie Moving frames are generated with " << phieMMFdirStr 
-    << " direction ===============" << std::endl;
-
-    SetUpMovingFrames(phieMMFdir, phieAniStrength, phiemovingframes);
-
-    // Construct phiediffmovingframes
-    std::string MMFdirStr;
-    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "TangentY");
-    m_MMFdir = FindMMFdir(MMFdirStr);
-
-    std::cout << "\nPhie Moving frames for rho diffusion are generated with " << MMFdirStr 
-    << " direction ===============" << std::endl;
-    SetUpMovingFrames(phieMMFdir, phiediffAniStrength, phiediffmovingframes);
-
-    Array<OneD, Array<OneD, NekDouble>> sigma_i(expdim);
-    Array<OneD, Array<OneD, NekDouble>> sigma_e(expdim);
-    Array<OneD, Array<OneD, NekDouble>> sigma_eM(expdim);
-
-    // Compute sigma_i, sigma_e, sigma_eM
-    ComputeRegionalSigma(m_zoneindex, sigma_i, sigma_e, sigma_eM);
-
-    for (int j = 0; j < expdim; ++j)
-    {
-        Vmath::Vadd(nq, sigma_i[j], 1, sigma_eM[j], 1, phieAniStrength[j], 1);
-        Vmath::Vcopy(nq, sigma_e[j], 1, phiediffAniStrength[j], 1);
-    }
-
-    std::cout << "================================================ " << std::endl;
-    std::cout << "Max phieAnistrength_1  = "
-                << Vmath::Vmax(nq, phieAniStrength[0], 1)
-                << ", phieAnistrength_2 = "
-                << Vmath::Vmax(nq, phieAniStrength[1], 1)
-                << ", Min phieAnistrength 1 = "
-                << Vmath::Vmin(nq, phieAniStrength[0], 1)
-                << ", phieAnistrength 2 = "
-                << Vmath::Vmin(nq, phieAniStrength[1], 1) << std::endl;
-    std::cout << "================================================ " << std::endl;
-
-    std::cout << "================================================ " << std::endl;
-    std::cout << "Max phiediffAnistrength_1  = "
-                << Vmath::Vmax(nq, phiediffAniStrength[0], 1)
-                << ", phiediffAnistrength_2 = "
-                << Vmath::Vmax(nq, phiediffAniStrength[1], 1)
-                << ", Min phiediffAnistrength 1 = "
-                << Vmath::Vmin(nq, phiediffAniStrength[0], 1)
-                << ", phiediffAnistrength 2 = "
-                << Vmath::Vmin(nq, phiediffAniStrength[1], 1) << std::endl;
-    std::cout << "================================================ " << std::endl;
-
-    // m_phieMF = \sigma_i + \sigma_e
-    for (int i = 0; i < nq; ++i)
-    {
-        for (int j = 0; j < expdim; ++j)
-        {
-            for (int k = 0; k < spacedim; ++k)
-            {
-                    phiediffmovingframes[j][k * nq + i] = sqrt(phiediffAniStrength[j][i]) * m_phiediffmovingframes[j][k * nq + i];
-                    phiemovingframes[j][k * nq + i] = sqrt(phieAniStrength[j][i]) * m_phiemovingframes[j][k * nq + i];
-            }
-        }
-    }
-}
+//     // Array<OneD, Array<OneD, NekDouble>> phieAniStrength(expdim);
+//     // Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(expdim);
+//     // for (int j = 0; j < expdim; ++j)
+//     // {
+//     //     phieAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+//     //     phiediffAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+//     // }
 
 
-void MMFNeuralEP::ComputephieMFMulti(
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phiemovingframesfiber, 
-    Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes)
-{
-    const int nq   = GetTotPoints();
-    const int expdim = m_expdim;
-    const int spacedim = m_spacedim;
-    const int numfiber = m_numfiber;
 
-    Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(expdim);
-    for (int j = 0; j < expdim; ++j)
-    {
-        phiediffAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
-    }
+//     // Array<OneD, Array<OneD, NekDouble>> sigma_i(expdim);
+//     // Array<OneD, Array<OneD, NekDouble>> sigma_e(expdim);
+//     // Array<OneD, Array<OneD, NekDouble>> sigma_eM(expdim);
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> phieAniStrengthfiber(numfiber);
-    for (int j = 0; j < numfiber; ++j)
-    {
-        phieAniStrengthfiber[j] = Array<OneD, Array<OneD, NekDouble>>(expdim);
-        for (int k = 0; k < expdim; ++k)
-        {
-            phieAniStrengthfiber[j][k] = Array<OneD, NekDouble>(nq, 1.0);
-        }
-    }
+//     // // Compute sigma_i, sigma_e, sigma_eM
+//     // ComputeRegionalSigma(m_zoneindex, sigma_i, sigma_e, sigma_eM);
 
-    // Construct phiemovingframes 
-    std::string phieMMFdirStr;
-    m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
-    SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+//     // for (int j = 0; j < expdim; ++j)
+//     // {
+//     //     Vmath::Vadd(nq, sigma_i[j], 1, sigma_eM[j], 1, phieAniStrength[j], 1);
+//     //     Vmath::Vcopy(nq, sigma_e[j], 1, phiediffAniStrength[j], 1);
+//     // }
 
-    std::cout << "\nPhie Moving frames are generated with " << phieMMFdirStr 
-    << " direction ===============" << std::endl;
+//     // std::cout << "================================================ " << std::endl;
+//     // std::cout << "Max phieAnistrength_1  = "
+//     //             << Vmath::Vmax(nq, phieAniStrength[, 1)
+//     //             << ", phieAnistrength_2 = "
+//     //             << Vmath::Vmax(nq, phieAniStrength[1], 1)
+//     //             << ", Min phieAnistrength 1 = "
+//     //             << Vmath::Vmin(nq, phieAniStrength[0], 1)
+//     //             << ", phieAnistrength 2 = "
+//     //             << Vmath::Vmin(nq, phieAniStrength[1], 1) << std::endl;
+//     // std::cout << "================================================ " << std::endl;
 
-    for (int j = 0; j < numfiber; ++j)
-    {
-        phiemovingframesfiber[j] = Array<OneD, Array<OneD, NekDouble>>(expdim);
-        for (int k = 0; k < expdim; ++k)
-        {
-            phiemovingframesfiber[j][k] = Array<OneD, NekDouble>(spacedim * nq);
-        }
+//     // std::cout << "================================================ " << std::endl;
+//     // std::cout << "Max phiediffAnistrength_1  = "
+//     //             << Vmath::Vmax(nq, phiediffAniStrength[0], 1)
+//     //             << ", phiediffAnistrength_2 = "
+//     //             << Vmath::Vmax(nq, phiediffAniStrength[1], 1)
+//     //             << ", Min phiediffAnistrength 1 = "
+//     //             << Vmath::Vmin(nq, phiediffAniStrength[0], 1)
+//     //             << ", phiediffAnistrength 2 = "
+//     //             << Vmath::Vmin(nq, phiediffAniStrength[1], 1) << std::endl;
+//     // std::cout << "================================================ " << std::endl;
+
+//     // m_phieMF = \sigma_i + \sigma_e
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         for (int j = 0; j < expdim; ++j)
+//         {
+//             for (int k = 0; k < spacedim; ++k)
+//             {
+//                     phiediffmovingframes[j][k * nq + i] = sqrt(phiediffAniStrength[j][i]) * m_phiediffmovingframes[j][k * nq + i];
+//                     phiemovingframes[j][k * nq + i] = sqrt(phieAniStrength[j][i]) * m_phiemovingframes[j][k * nq + i];
+//             }
+//         }
+//     }
+// }
+
+// void MMFNeuralEP::ComputephieMFMulti(
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phiemovingframesfiber, 
+//     Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes)
+// {
+//     const int nq   = GetTotPoints();
+//     const int expdim = m_expdim;
+//     const int spacedim = m_spacedim;
+//     const int numfiber = m_numfiber;
+
+//     Array<OneD, Array<OneD, NekDouble>> phiediffAniStrength(expdim);
+//     for (int j = 0; j < expdim; ++j)
+//     {
+//         phiediffAniStrength[j] = Array<OneD, NekDouble>(nq, 1.0);
+//     }
+
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> phieAniStrengthfiber(numfiber);
+//     for (int j = 0; j < numfiber; ++j)
+//     {
+//         phieAniStrengthfiber[j] = Array<OneD, Array<OneD, NekDouble>>(expdim);
+//         for (int k = 0; k < expdim; ++k)
+//         {
+//             phieAniStrengthfiber[j][k] = Array<OneD, NekDouble>(nq, 1.0);
+//         }
+//     }
+
+//     // Construct phiemovingframes 
+//     std::string phieMMFdirStr;
+//     m_session->LoadSolverInfo("phieMMFDir", phieMMFdirStr, "TangentY");
+//     SpatialDomains::GeomMMF phieMMFdir = FindMMFdir(phieMMFdirStr);
+
+//     std::cout << "\nPhie Moving frames are generated with " << phieMMFdirStr 
+//     << " direction ===============" << std::endl;
+
+//     for (int j = 0; j < numfiber; ++j)
+//     {
+//         phiemovingframesfiber[j] = Array<OneD, Array<OneD, NekDouble>>(expdim);
+//         for (int k = 0; k < expdim; ++k)
+//         {
+//             phiemovingframesfiber[j][k] = Array<OneD, NekDouble>(spacedim * nq);
+//         }
         
-        SetUpMovingFrames(phieMMFdir, phieAniStrengthfiber[j], phiemovingframesfiber[j]);
-    }
+//         SetUpMovingFrames(phieMMFdir, phieAniStrengthfiber[j], phiemovingframesfiber[j]);
+//     }
 
-    // Construct phiediffmovingframes
-    std::string MMFdirStr;
-    m_session->LoadSolverInfo("MMFDir", MMFdirStr, "TangentY");
-    m_MMFdir = FindMMFdir(MMFdirStr);
+//     // Construct phiediffmovingframes
+//     std::string MMFdirStr;
+//     m_session->LoadSolverInfo("MMFDir", MMFdirStr, "TangentY");
+//     m_MMFdir = FindMMFdir(MMFdirStr);
 
-    std::cout << "\nPhie Moving frames for rho diffusion are generated with " << MMFdirStr 
-    << " direction ===============" << std::endl;
-    SetUpMovingFrames(phieMMFdir, phiediffAniStrength, phiediffmovingframes);
+//     std::cout << "\nPhie Moving frames for rho diffusion are generated with " << MMFdirStr 
+//     << " direction ===============" << std::endl;
+//     SetUpMovingFrames(phieMMFdir, phiediffAniStrength, phiediffmovingframes);
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> sigma_ifiber(numfiber);
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> sigma_efiber(numfiber);
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> sigma_eMfiber(numfiber);
-    for (int k = 0; k < numfiber; ++k)
-    {
-        sigma_ifiber[k] = Array<OneD, Array<OneD, NekDouble>>(expdim);
-        sigma_efiber[k] = Array<OneD, Array<OneD, NekDouble>>(expdim);
-        sigma_eMfiber[k] = Array<OneD, Array<OneD, NekDouble>>(expdim);
-    }
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> sigma_ifiber(numfiber);
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> sigma_efiber(numfiber);
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> sigma_eMfiber(numfiber);
+//     for (int k = 0; k < numfiber; ++k)
+//     {
+//         sigma_ifiber[k] = Array<OneD, Array<OneD, NekDouble>>(expdim);
+//         sigma_efiber[k] = Array<OneD, Array<OneD, NekDouble>>(expdim);
+//         sigma_eMfiber[k] = Array<OneD, Array<OneD, NekDouble>>(expdim);
+//     }
 
-    Array<OneD, Array<OneD, NekDouble>> sigma_i(expdim);
-    Array<OneD, Array<OneD, NekDouble>> sigma_e(expdim);
-    Array<OneD, Array<OneD, NekDouble>> sigma_eM(expdim);
+//     Array<OneD, Array<OneD, NekDouble>> sigma_i(expdim);
+//     Array<OneD, Array<OneD, NekDouble>> sigma_e(expdim);
+//     Array<OneD, Array<OneD, NekDouble>> sigma_eM(expdim);
 
-    // Compute sigma_i, sigma_e, sigma_eM
-    for (int k = 0; k < numfiber; ++k)
-    {
-        ComputeRegionalSigma(m_zoneindex, sigma_i, sigma_e, sigma_eM);
-        ComputeRegionalSigma(m_zoneindexfiber[k], sigma_ifiber[k], sigma_efiber[k], sigma_eMfiber[k]);
+//     // Compute sigma_i, sigma_e, sigma_eM
+//     for (int k = 0; k < numfiber; ++k)
+//     {
+//         ComputeRegionalSigma(m_zoneindex, sigma_i, sigma_e, sigma_eM);
+//         ComputeRegionalSigma(m_zoneindexfiber[k], sigma_ifiber[k], sigma_efiber[k], sigma_eMfiber[k]);
 
-        for (int j = 0; j < expdim; ++j)
-        {
-            Vmath::Vcopy(nq, sigma_e[j], 1, phiediffAniStrength[j], 1);
-            Vmath::Vadd(nq, sigma_ifiber[k][j], 1, sigma_eMfiber[k][j], 1, phieAniStrengthfiber[k][j], 1);
-         }
-    }
+//         for (int j = 0; j < expdim; ++j)
+//         {
+//             Vmath::Vcopy(nq, sigma_e[j], 1, phiediffAniStrength[j], 1);
+//             Vmath::Vadd(nq, sigma_ifiber[k][j], 1, sigma_eMfiber[k][j], 1, phieAniStrengthfiber[k][j], 1);
+//          }
+//     }
 
-    // std::cout << "================================================ " << std::endl;
-    // std::cout << "Max phieAnistrength_1  = "
-    //             << Vmath::Vmax(nq, phieAniStrength[0], 1)
-    //             << ", phieAnistrength_2 = "
-    //             << Vmath::Vmax(nq, phieAniStrength[1], 1)
-    //             << ", Min phieAnistrength 1 = "
-    //             << Vmath::Vmin(nq, phieAniStrength[0], 1)
-    //             << ", phieAnistrength 2 = "
-    //             << Vmath::Vmin(nq, phieAniStrength[1], 1) << std::endl;
-    // std::cout << "================================================ " << std::endl;
+//     // std::cout << "================================================ " << std::endl;
+//     // std::cout << "Max phieAnistrength_1  = "
+//     //             << Vmath::Vmax(nq, phieAniStrength[0], 1)
+//     //             << ", phieAnistrength_2 = "
+//     //             << Vmath::Vmax(nq, phieAniStrength[1], 1)
+//     //             << ", Min phieAnistrength 1 = "
+//     //             << Vmath::Vmin(nq, phieAniStrength[0], 1)
+//     //             << ", phieAnistrength 2 = "
+//     //             << Vmath::Vmin(nq, phieAniStrength[1], 1) << std::endl;
+//     // std::cout << "================================================ " << std::endl;
 
-    // std::cout << "================================================ " << std::endl;
-    // std::cout << "Max phiediffAnistrength_1  = "
-    //             << Vmath::Vmax(nq, phiediffAniStrength[0], 1)
-    //             << ", phiediffAnistrength_2 = "
-    //             << Vmath::Vmax(nq, phiediffAniStrength[1], 1)
-    //             << ", Min phiediffAnistrength 1 = "
-    //             << Vmath::Vmin(nq, phiediffAniStrength[0], 1)
-    //             << ", phiediffAnistrength 2 = "
-    //             << Vmath::Vmin(nq, phiediffAniStrength[1], 1) << std::endl;
-    // std::cout << "================================================ " << std::endl;
+//     // std::cout << "================================================ " << std::endl;
+//     // std::cout << "Max phiediffAnistrength_1  = "
+//     //             << Vmath::Vmax(nq, phiediffAniStrength[0], 1)
+//     //             << ", phiediffAnistrength_2 = "
+//     //             << Vmath::Vmax(nq, phiediffAniStrength[1], 1)
+//     //             << ", Min phiediffAnistrength 1 = "
+//     //             << Vmath::Vmin(nq, phiediffAniStrength[0], 1)
+//     //             << ", phiediffAnistrength 2 = "
+//     //             << Vmath::Vmin(nq, phiediffAniStrength[1], 1) << std::endl;
+//     // std::cout << "================================================ " << std::endl;
 
-    // m_phieMF = \sigma_i + \sigma_e
+//     // m_phieMF = \sigma_i + \sigma_e
 
-    for (int k = 0; k < spacedim; ++k)
-    {
-        for (int j = 0; j < expdim; ++j)
-        {
-            for (int i = 0; i < nq; ++i)
-            {
-                phiediffmovingframes[j][k * nq + i] =
-                    sqrt(phiediffAniStrength[j][i]) *
-                    m_phiediffmovingframes[j][k * nq + i];
+//     for (int k = 0; k < spacedim; ++k)
+//     {
+//         for (int j = 0; j < expdim; ++j)
+//         {
+//             for (int i = 0; i < nq; ++i)
+//             {
+//                 phiediffmovingframes[j][k * nq + i] =
+//                     sqrt(phiediffAniStrength[j][i]) *
+//                     m_phiediffmovingframes[j][k * nq + i];
 
-                for (int n = 0; n < numfiber; ++n)
-                {
-                    phiemovingframesfiber[n][j][k * nq + i] =
-                        sqrt(phieAniStrengthfiber[n][j][i]) *
-                        m_phiemovingframesfiber[n][j][k * nq + i];
-                }
-            }
-        }
-    }
+//                 for (int n = 0; n < numfiber; ++n)
+//                 {
+//                     phiemovingframesfiber[n][j][k * nq + i] =
+//                         sqrt(phieAniStrengthfiber[n][j][i]) *
+//                         m_phiemovingframesfiber[n][j][k * nq + i];
+//                 }
+//             }
+//         }
+//     }
 
-}
+// }
 
 void MMFNeuralEP::ComputeRegionalSigma(
     const Array<OneD, const int> &zoneindex,
-    Array<OneD, Array<OneD, NekDouble>> &sigma_i,
-    Array<OneD, Array<OneD, NekDouble>> &sigma_e,
-    Array<OneD, Array<OneD, NekDouble>> &sigma_eM)
+    Array<OneD, NekDouble> &sigma_i,
+    Array<OneD, NekDouble> &sigma_e,
+    Array<OneD, NekDouble> &sigma_eM)
 {
     const int nq   = GetTotPoints();
     const NekDouble phiefactor = m_phiefactor;
@@ -1096,65 +1138,49 @@ void MMFNeuralEP::ComputeRegionalSigma(
 
     std::cout << "\nphiefactor = " << phiefactor << std::endl;
 
-    sigma_i = Array<OneD, Array<OneD, NekDouble>>(expdim);
-    sigma_e = Array<OneD, Array<OneD, NekDouble>>(expdim);
-    sigma_eM = Array<OneD, Array<OneD, NekDouble>>(expdim);
-    for (int j = 0; j < expdim; ++j)
-    {
-        sigma_i[j] = Array<OneD, NekDouble>(nq, 0.0);
-        sigma_e[j] = Array<OneD, NekDouble>(nq, 0.0);
-        sigma_eM[j] = Array<OneD, NekDouble>(nq, 0.0);
-    }
+    sigma_i = Array<OneD, NekDouble>(nq, 0.0);
+    sigma_e = Array<OneD, NekDouble>(nq, 0.0);
+    sigma_eM = Array<OneD, NekDouble>(nq, 0.0);
 
     // Compute sigma_i
     // Node: 1.0, Myelin: m_Cn / m_Cm, Extraspace: 0.0
     for (int i = 0; i < nq; ++i)
     {
         index = zoneindex[i];
-        for (int j = 0; j < m_expdim; ++j)
+
+        // node for all fibers
+        if( index>=0)
         {
-            // node for all fibers
-            if( index>=0)
-            {
-                sigma_i[j][i] = 1.0;
-                sigma_e[j][i] = 1.0 / ratio_re_ri;
-                sigma_eM[j][i] = 1.0 / ratio_re_ri;
-            }
+            sigma_i[i] = 1.0;
+            sigma_e[i] = 1.0 / ratio_re_ri;
+            sigma_eM[i] = 1.0 / ratio_re_ri;
+        }
 
-            // myelin for all fibers
-            else if (index==-1)
-            {
-                sigma_i[j][i] = AnisotropyStrength;
-                sigma_e[j][i] = AnisotropyStrength / ratio_re_ri;
-                sigma_eM[j][i] = AnisotropyStrength / ratio_re_ri;
-            }
+        // myelin for all fibers
+        else if (index==-1)
+        {
+            sigma_i[i] = AnisotropyStrength;
+            sigma_e[i] = AnisotropyStrength / ratio_re_ri;
+            sigma_eM[i] = AnisotropyStrength / ratio_re_ri;
+        }
 
-            else if (index==-2)
-            {
-                sigma_i[j][i] = 0.0;
-                sigma_e[j][i] = 1.0 / ratio_re_ri;
-                sigma_eM[j][i] = phiefactor / ratio_re_ri;
-            }
+        else if (index==-2)
+        {
+            sigma_i[i] = 0.0;
+            sigma_e[i] = 1.0 / ratio_re_ri;
+            sigma_eM[i] = phiefactor / ratio_re_ri;
         }
     }
 
     std::cout << "Max sigma_i_1  = "
-                << Vmath::Vmax(nq, sigma_i[0], 1)
-                << ", sigma_i_2 = "
-                << Vmath::Vmax(nq, sigma_i[1], 1)
-                << ", Min sigma_i_1 = "
-                << Vmath::Vmin(nq, sigma_i[0], 1)
-                << ", sigma_i_2 = "
-                << Vmath::Vmin(nq, sigma_i[1], 1) << std::endl;
+                << Vmath::Vmax(nq, sigma_i, 1)
+                << ", sigma_i_1 = "
+                << Vmath::Vmin(nq, sigma_i, 1) << std::endl;
 
     std::cout << "Max sigma_e_1  = "
-                << Vmath::Vmax(nq, sigma_e[0], 1)
-                << ", sigma_e_2 = "
-                << Vmath::Vmax(nq, sigma_e[1], 1)
-                << ", Min sigma_e_1 = "
-                << Vmath::Vmin(nq, sigma_e[0], 1)
-                << ", sigma_e_2 = "
-                << Vmath::Vmin(nq, sigma_e[1], 1) << std::endl;
+                << Vmath::Vmax(nq, sigma_e, 1)
+                << ", sigma_e_1 = "
+                << Vmath::Vmin(nq, sigma_e, 1) << std::endl;
 }
 
 
@@ -2313,7 +2339,7 @@ void MMFNeuralEP::PlotDomainZonefib1(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
+Array<OneD, NekDouble> MMFNeuralEP::ComputeNeuralCmfiber(
                  const Array<OneD, const int> &zoneindex)
 {
     const int nq   = GetTotPoints();
@@ -2328,14 +2354,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
     for (int i = 0; i < nq; ++i)
     {
         // Ranvier node zone
-        if ( (zoneindex[i] >= 0) && (zoneindex[i] < 100) )
-
-        {
-            outarray[i] = 1.0 / Cn;
-            cntn++;
-        }
-
-        if ( (zoneindex[i] >= 100) && (zoneindex[i] < 200) )
+        if (zoneindex[i] >= 0) 
 
         {
             outarray[i] = 1.0 / Cn;
@@ -2344,13 +2363,6 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
         // Myelin zone
         if (zoneindex[i] == -1) 
-        {
-            outarray[i] = 1.0 / Cm;
-            cntm++;
-        }
-
-        // Myelin zone
-        if (zoneindex[i] == -101) 
         {
             outarray[i] = 1.0 / Cm;
             cntm++;
@@ -2366,13 +2378,13 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeConductivity(
 
     cnte = nq - cntn - cntm;
 
-    std::cout << "ComputeConductivity: Node = " << cntn/npts << ", Myelinf1 = " 
+    std::cout << "ComputeNeuralCmfiber: Node = " << cntn/npts << ", Myelinf1 = " 
     << cntm/npts << ", extracell = " << cnte/npts << std::endl;
 
     return outarray;
 }
 
-void MMFNeuralEP::ComputeConductivity(
+void MMFNeuralEP::ComputeNeuralCmfiber(
                  const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
                  Array<OneD, Array<OneD, NekDouble>> &outarrayfiber)
 {
@@ -3014,8 +3026,8 @@ void MMFNeuralEP::PlotNeuralEPvar2(
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[1]);
 
     //     variables[2] = "CSD";
-    Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
-    m_fields[0]->FwdTransLocalElmt(CSD, fieldcoeffs[2]);
+    // Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
+    // m_fields[0]->FwdTransLocalElmt(CSD, fieldcoeffs[2]);
 
     // Max values and indices
     const NekDouble Maxphim  = Vmath::Vmax(nq, phim, 1);
@@ -3024,8 +3036,8 @@ void MMFNeuralEP::PlotNeuralEPvar2(
     const NekDouble Maxphie  = Vmath::Vmax(nq, phie, 1);
     const int       Maxphieid = Vmath::Imax(nq, phie, 1);
 
-    const NekDouble MaxCSD   = Vmath::Vmax(nq, CSD, 1);
-    const int       MaxCSDid  = Vmath::Imax(nq, CSD, 1);
+    // const NekDouble MaxCSD   = Vmath::Vmax(nq, CSD, 1);
+    // const int       MaxCSDid  = Vmath::Imax(nq, CSD, 1);
 
     // Coordinates
     const Array<OneD, NekDouble> &x0 = m_x;
@@ -3033,7 +3045,7 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     std::cout << "phim: Max = " << Maxphim << " at x = " << x0[Maxphimid] << ", y = " << x1[Maxphimid] << '\n';
     std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << '\n';
-    std::cout << "CSD: Max = " << MaxCSD << " at x = " << x0[MaxCSDid] << ", y = " << x1[MaxCSDid] << '\n';
+   // std::cout << "CSD: Max = " << MaxCSD << " at x = " << x0[MaxCSDid] << ", y = " << x1[MaxCSDid] << '\n';
 
     Vmath::Vmul(nq, m_intrazone, 1, TimeMap[0], 1, phim, 1);
     Vmath::Vmul(nq, m_outerzone, 1, TimeMap[1], 1, phie, 1);
@@ -3132,14 +3144,16 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
-void MMFNeuralEP::PlotAnisotropy(
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
-    const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrength)
+void MMFNeuralEP::PlotAnisotropyfiber(
+    const Array<OneD, const NekDouble> &AniStrength, 
+    const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber, 
+    const Array<OneD, const NekDouble> &phieAniStrength, 
+    const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrengthfiber)
 {
-    int nvar    = 4;
+    int nvar    = m_numfiber * 2 + 2;
     int ncoeffs = m_fields[0]->GetNcoeffs();
 
-    std::string outname1 = m_sessionName + "_Anisotropy.chk";
+    std::string outname1 = m_sessionName + "_Anisotropyfiber.chk";
 
     std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
     for (int i = 0; i < nvar; ++i)
@@ -3148,17 +3162,22 @@ void MMFNeuralEP::PlotAnisotropy(
     }
 
     std::vector<std::string> variables(nvar);
-    variables[0] = "AniStrength1";
-    variables[1] = "AniStrength2";
-    variables[2] = "phieAniStrength1";
-    variables[3] = "phieAniStrength2";
+    variables[0] = "AniStrength";
+    variables[1] = "AniStrengthfiber1";
+    variables[2] = "AniStrengthfiber2";
+
+    variables[3] = "phieAniStrength";
+    variables[4] = "phieAniStrengthfiber1";
+    variables[5] = "phieAniStrengthfiber2";
 
     // Compute the gradient of the time map
-    m_fields[0]->FwdTransLocalElmt(AniStrength[0], fieldcoeffs[0]);
-    m_fields[0]->FwdTransLocalElmt(AniStrength[1], fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(AniStrength, fieldcoeffs[0]);
+    m_fields[0]->FwdTransLocalElmt(AniStrengthfiber[0], fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(AniStrengthfiber[1], fieldcoeffs[2]);
 
-    m_fields[0]->FwdTransLocalElmt(phieAniStrength[0], fieldcoeffs[2]);
-    m_fields[0]->FwdTransLocalElmt(phieAniStrength[1], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(phieAniStrength, fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(phieAniStrengthfiber[1], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(phieAniStrengthfiber[2], fieldcoeffs[5]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
@@ -3390,9 +3409,9 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2Dbi(
 
 // Implicit solve for NeuralEP 2D solver
 void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
+            const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+            Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+            const NekDouble lambda)
 {
     (void) time;
 
@@ -3602,7 +3621,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling
-        tmp = ComputePhie(n, inarray[n]);
+        tmp = ComputePhiefiber(n, inarray[n]);
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
@@ -3647,7 +3666,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
+Array<OneD, NekDouble> MMFNeuralEP::ComputePhiefiber(
                                     const int nfib, 
                                     const Array<OneD, const NekDouble> &phim)
 {
@@ -3706,7 +3725,8 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
         m_fields[phievar]->UpdatePhys()[i] = phimcurrent[i] - avg;
     }
 
-    m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+    m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), 
+                                 phiefactors, m_phievarcoefffiber[nfib]);
     m_fields[phievar]->BwdTrans(m_fields[phievar]->GetCoeffs(), outarray);
 
     // Make it as a value with AvgInt is zero.
