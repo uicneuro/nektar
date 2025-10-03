@@ -75,9 +75,9 @@ void MMFSystem::MMFInitObject(
     // Constants & dimensions
     static constexpr NekDouble PI = 3.14159265358979323846;
     m_pi       = PI;
-    m_shapedim = m_expdim;
     m_spacedim = 3;
-    m_mfdim    = 3;
+    m_mfdim    = m_spacedim;
+    m_shapedim = m_expdim;
 
     // -------- Fixed helpers --------------------------------------------------
     // Generic loader (handles int, double, etc.)
@@ -222,6 +222,7 @@ void MMFSystem::MMFInitObject(
         m_MMFdir = FindMMFdir(mmfDirStr);
 
         SetUpMovingFrames(m_MMFdir, AniStrength, m_movingframes);
+
     }
     else
     {
@@ -243,15 +244,15 @@ void MMFSystem::MMFInitObject(
             {
                 const int nTracePointsTot = GetTraceNpoints();
 
-                m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-                m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+                m_ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+                m_ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
 
                 const NekDouble fill = (AniStrength.size() > 0 && AniStrength[0].size() > 0)
                                          ? AniStrength[0][0] : 0.0;
 
                 m_ncdotMFFwd[0] = Array<OneD, NekDouble>(nTracePointsTot, fill);
                 m_ncdotMFBwd[0] = Array<OneD, NekDouble>(nTracePointsTot, fill);
-                for (int j = 1; j < m_mfdim; ++j)
+                for (int j = 1; j < m_spacedim; ++j)
                 {
                     m_ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
                     m_ncdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
@@ -287,8 +288,8 @@ void MMFSystem::CheckSphereConnection()
     // Test connections of moving frames
     TestSphericalConnection1form(m_sphereMF, m_MMFActivation);
 
-    Array<OneD, Array<OneD, NekDouble>> MF1st(m_mfdim);
-    for (int k = 0; k < m_mfdim; ++k)
+    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
+    for (int k = 0; k < m_spacedim; ++k)
     {
         MF1st[k] = Array<OneD, NekDouble>(m_spacedim * nq);
     }
@@ -324,7 +325,7 @@ void MMFSystem::CheckSphereConnection()
 
         if (m_MMFActivation[i])
         {
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
                 MF1st[k][i]          = m_sphereMF[k][i];
                 MF1st[k][i + nq]     = m_sphereMF[k][i + nq];
@@ -334,7 +335,7 @@ void MMFSystem::CheckSphereConnection()
 
         else
         {
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
                 MF1st[k][i]          = m_movingframes[k][i];
                 MF1st[k][i + nq]     = m_movingframes[k][i + nq];
@@ -357,8 +358,8 @@ void MMFSystem::CheckPolarConnection()
     int nq  = m_fields[0]->GetNpoints();
     int cnt = 0;
 
-    Array<OneD, Array<OneD, NekDouble>> MF1st(m_mfdim);
-    for (int k = 0; k < m_mfdim; ++k)
+    Array<OneD, Array<OneD, NekDouble>> MF1st(m_spacedim);
+    for (int k = 0; k < m_spacedim; ++k)
     {
         MF1st[k] = Array<OneD, NekDouble>(m_spacedim * nq);
     }
@@ -369,7 +370,7 @@ void MMFSystem::CheckPolarConnection()
 
         if (m_MMFActivation[i])
         {
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
                 MF1st[k][i]          = m_polarMF[k][i];
                 MF1st[k][i + nq]     = m_polarMF[k][i + nq];
@@ -384,7 +385,7 @@ void MMFSystem::CheckPolarConnection()
 
         else
         {
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
                 MF1st[k][i]          = m_movingframes[k][i];
                 MF1st[k][i + nq]     = m_movingframes[k][i + nq];
@@ -415,8 +416,8 @@ void MMFSystem::ConstructSphericalMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    SphereMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    SphereMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         SphereMF[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     }
@@ -513,8 +514,8 @@ void MMFSystem::ConstructPseudosphericalMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    PsedoSphereMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    PsedoSphereMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         PsedoSphereMF[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     }
@@ -601,8 +602,8 @@ void MMFSystem::ConstructEllipticalMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    EllipticalMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    EllipticalMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         EllipticalMF[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     }
@@ -711,12 +712,12 @@ void MMFSystem::TestSphericalConnection1form(
     int nq          = m_fields[0]->GetNpoints();
 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> SphereMFConnection(
-        m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+        m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
         SphereMFConnection[i] =
             Array<OneD, Array<OneD, NekDouble>>(Nconnection);
-        for (int j = 0; j < m_mfdim; j++)
+        for (int j = 0; j < m_spacedim; j++)
         {
             SphereMFConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
@@ -737,12 +738,12 @@ void MMFSystem::TestPseudosphericalConnection1form(
     int nq          = m_fields[0]->GetNpoints();
 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> PseudosphereMFConnection(
-        m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+        m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
         PseudosphereMFConnection[i] =
             Array<OneD, Array<OneD, NekDouble>>(Nconnection);
-        for (int j = 0; j < m_mfdim; j++)
+        for (int j = 0; j < m_spacedim; j++)
         {
             PseudosphereMFConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
@@ -763,11 +764,11 @@ void MMFSystem::TestPolarConnection1form(
     int Nconnection = 4;
     int nq          = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> PolarMFConnection(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> PolarMFConnection(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
         PolarMFConnection[i] = Array<OneD, Array<OneD, NekDouble>>(Nconnection);
-        for (int j = 0; j < m_mfdim; j++)
+        for (int j = 0; j < m_spacedim; j++)
         {
             PolarMFConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
@@ -786,8 +787,8 @@ void MMFSystem::ConstructPolarMF(Array<OneD, Array<OneD, NekDouble>> &PolarMF,
 {
     int nq = m_fields[0]->GetNpoints();
 
-    PolarMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    PolarMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         PolarMF[j] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     }
@@ -903,7 +904,7 @@ void MMFSystem::SetUpMovingFrames(
 {
     const int nq        = m_fields[0]->GetNpoints();
     const int vecSize   = m_spacedim * nq;
-    const int mfDim     = m_mfdim;
+    const int mfDim     = m_spacedim;
 
     // Ensure movingframes is allocated once (and reused thereafter).
     if (movingframes.size() != mfDim)
@@ -967,7 +968,7 @@ void MMFSystem::SetUpMovingFrames(
             break;
 
         case SpatialDomains::eLOCAL:
-            // Fill directly from field utility
+
             m_fields[0]->GetMovingFrames(SpatialDomains::eLOCAL1, m_MMFfactors, movingframes);
             break;
 
@@ -980,14 +981,15 @@ void MMFSystem::SetUpMovingFrames(
         break;
 
         default:
-            // Generic path
+        {
             m_fields[0]->GetMovingFrames(MMFdir, m_MMFfactors, movingframes);
             break;
+        }
     }
 
     // Apply anisotropy magnitudes: movingframes[j] *= sqrt(Anistrength[j]) at each point (for all components)
     // Note: components for a given j are at offsets i, i+nq, i+2nq; nq-strided, so keep the small k-loop.
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         const Array<OneD, const NekDouble> &aj = Anistrength[j];
         Array<OneD, NekDouble> &mfj = movingframes[j];
@@ -1002,7 +1004,6 @@ void MMFSystem::SetUpMovingFrames(
             }
         }
     }
-
    CheckMovingFrames(movingframes);
 }
 
@@ -1108,7 +1109,7 @@ void MMFSystem::CheckMovingFrames(
     }
 
     // Print RMS of each component of each frame without extra buffers
-    for (int j = 0; j < std::min(3, m_mfdim); ++j)
+    for (int j = 0; j < std::min(3, m_spacedim); ++j)
     {
         const NekDouble rmsx = std::sqrt(comp_sq_sum[j][0] / nq);
         const NekDouble rmsy = std::sqrt(comp_sq_sum[j][1] / nq);
@@ -1242,8 +1243,8 @@ void MMFSystem::GetLOCALFIBERMovingFrames(
 {
     int fnq = field->GetNpoints();
 
-    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
         movingframes[i] = Array<OneD, NekDouble>(m_spacedim * fnq);
     }
@@ -1263,8 +1264,8 @@ void MMFSystem::GetLOCALMovingframes1D(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
         movingframes[i] = Array<OneD, NekDouble>(m_spacedim * nq);
     }
@@ -1285,17 +1286,17 @@ void MMFSystem::GetLOCALMovingframes3D(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    movingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
         movingframes[i] = Array<OneD, NekDouble>(m_spacedim * nq);
     }
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MF(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MF(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
-        MF[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; ++j)
+        MF[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+        for (int j = 0; j < m_spacedim; ++j)
         {
             MF[i][j] = Array<OneD, NekDouble>(m_spacedim * nq);
         }
@@ -1317,35 +1318,35 @@ void MMFSystem::GetLOCALMovingframes3D(
                                      MF[2]);
     }
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> DivMF(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> DivMF(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
-        DivMF[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; j++)
+        DivMF[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+        for (int j = 0; j < m_spacedim; j++)
         {
             DivMF[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
     }
 
     // Compute Divergence in two different ways
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
         ComputeDivMF(m_DerivType, MF[i], DivMF[i], 0);
     }
 
     // Elementwise comparison
-    Array<OneD, NekDouble> DivMFsum(m_mfdim);
+    Array<OneD, NekDouble> DivMFsum(m_spacedim);
     int MF1cnt = 0, MF2cnt = 0, MF0cnt = 0;
     int MFINDEX = 0, indexj;
     for (int i = 0; i < m_fields[0]->GetExpSize(); ++i)
     {
-        DivMFsum = Array<OneD, NekDouble>(m_mfdim, 0.0);
+        DivMFsum = Array<OneD, NekDouble>(m_spacedim, 0.0);
         for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
         {
             indexj = m_fields[0]->GetPhys_Offset(i) + j;
 
             // For each element, compute \sqrt{Dx^2 + Dy^2}
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
                 for (int l = 0; l < m_spacedim; ++l)
                 {
@@ -1357,7 +1358,7 @@ void MMFSystem::GetLOCALMovingframes3D(
         }
 
         // Get the index for the smallest DivMFsum
-        MFINDEX = Vmath::Imin(m_mfdim, DivMFsum, 1);
+        MFINDEX = Vmath::Imin(m_spacedim, DivMFsum, 1);
         switch (MFINDEX)
         {
             case 0:
@@ -1383,7 +1384,7 @@ void MMFSystem::GetLOCALMovingframes3D(
         }
 
         // Use such Index for the local frames
-        for (int k = 0; k < m_mfdim; ++k)
+        for (int k = 0; k < m_spacedim; ++k)
         {
             for (int j = 0; j < m_fields[0]->GetTotPoints(i); ++j)
             {
@@ -1810,9 +1811,9 @@ void MMFSystem::ComputencdotMF(
     }
 
     // Compute n \times e^i
-    ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    ncdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    ncdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         ncdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
         ncdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
@@ -1852,13 +1853,13 @@ void MMFSystem::ComputentimesMF(
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtraceBwd;
     ComputeMFtrace(movingframes, MFtraceFwd, MFtraceBwd);
 
-    ntimesMFFwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    ntimesMFBwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
+    ntimesMFFwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    ntimesMFBwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
     ntimes_ntimesMFFwd =
-        Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
+        Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
     ntimes_ntimesMFBwd =
-        Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+        Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         ntimesMFFwd[j]        = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
         ntimesMFBwd[j]        = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
@@ -1909,14 +1910,14 @@ void MMFSystem::ComputentimesMF(
 
     ComputeMFtrace(MF1st, MFtraceFwd, MFtraceBwd);
 
-    ntimesMFFwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    ntimesMFBwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    ntimesMFFwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    ntimesMFBwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         ntimesMFFwd[j] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
         ntimesMFBwd[j] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
 
-        for (int k = 0; k < m_mfdim; ++k)
+        for (int k = 0; k < m_spacedim; ++k)
         {
             ntimesMFFwd[j][k] = Array<OneD, NekDouble>(nTracePointsTot);
             ntimesMFBwd[j][k] = Array<OneD, NekDouble>(nTracePointsTot);
@@ -1950,12 +1951,12 @@ void MMFSystem::ComputenperpcdotMF(
     // Compute MFjFwd and MFjBwd
     Array<OneD, NekDouble> tmp(nq);
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtraceFwd(m_shapedim);
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtraceBwd(m_shapedim);
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtraceFwd(m_expdim);
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtraceBwd(m_expdim);
     Array<OneD, Array<OneD, NekDouble>> SurfaceNormalFwd;
     Array<OneD, Array<OneD, NekDouble>> SurfaceNormalBwd;
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         SurfaceNormalFwd = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
         SurfaceNormalBwd = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
@@ -1984,9 +1985,9 @@ void MMFSystem::ComputenperpcdotMF(
     VectorCrossProd(m_traceNormals, SurfaceNormalFwd, TracevectorFwd);
     VectorCrossProd(m_traceNormals, SurfaceNormalBwd, TracevectorBwd);
 
-    nperpcdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    nperpcdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    nperpcdotMFFwd = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    nperpcdotMFBwd = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         nperpcdotMFFwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
         nperpcdotMFBwd[j] = Array<OneD, NekDouble>(nTracePointsTot, 0.0);
@@ -2027,7 +2028,7 @@ void MMFSystem::ComputeMFcdotSphericalCoord(
     Array<OneD, Array<OneD, NekDouble>> SphericalVector;
     ComputeSphericalVector(SphericalVector);
 
-    for (j = 0; j < m_shapedim; ++j)
+    for (j = 0; j < m_expdim; ++j)
     {
         ThetacdotMF[j] = Array<OneD, NekDouble>(nq, 0.0);
         PhicdotMF[j]   = Array<OneD, NekDouble>(nq, 0.0);
@@ -2055,7 +2056,7 @@ void MMFSystem::ComputeMFcdotSphericalCoord(
     Array<OneD, Array<OneD, NekDouble>> SphericalVector;
     ComputeSphericalVector(SphericalVector);
 
-    for (j = 0; j < m_shapedim; ++j)
+    for (j = 0; j < m_expdim; ++j)
     {
         ThetacdotMF[j] = Array<OneD, NekDouble>(nq, 0.0);
         PhicdotMF[j]   = Array<OneD, NekDouble>(nq, 0.0);
@@ -2080,8 +2081,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeMFDivergence(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> inarrayMF(m_mfdim);
-    for (int k = 0; k < m_mfdim; ++k)
+    Array<OneD, Array<OneD, NekDouble>> inarrayMF(m_spacedim);
+    for (int k = 0; k < m_spacedim; ++k)
     {
         inarrayMF[k] = Array<OneD, NekDouble>(nq);
     }
@@ -2125,10 +2126,10 @@ void MMFSystem::ComputeRiemCrv(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> SecCovXYZ(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> SecCovYXZ(m_shapedim);
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> SecCovXYZ(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> SecCovYXZ(m_expdim);
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         SecCovXYZ[j] = Array<OneD, NekDouble>(nq, 0.0);
         SecCovYXZ[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2138,21 +2139,21 @@ void MMFSystem::ComputeRiemCrv(
     ComputeSecondCovDeriv(dirX, dirY, dirZ, movingframes, SecCovXYZ);
     ComputeSecondCovDeriv(dirY, dirX, dirZ, movingframes, SecCovYXZ);
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Vsub(nq, &SecCovXYZ[j][0], 1, &SecCovYXZ[j][0], 1,
                     &outarray[j][0], 1);
     }
 
     // Compute LieBracket term: \nabla_[X,Y] Z
-    Array<OneD, Array<OneD, NekDouble>> LieBracket(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> LieBracket(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         LieBracket[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
     ComputeLieBracket(dirX, dirY, dirZ, movingframes, LieBracket);
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Vsub(nq, &outarray[j][0], 1, &LieBracket[j][0], 1,
                     &outarray[j][0], 1);
@@ -2165,15 +2166,15 @@ void MMFSystem::ComputeRelacc(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv211(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv121(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv211(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv121(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         SecondCovDeriv121[j] = Array<OneD, NekDouble>(nq, 0.0);
         SecondCovDeriv211[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2182,7 +2183,7 @@ void MMFSystem::ComputeRelacc(
     ComputeSecondCovDeriv(1, 0, 0, movingframes, SecondCovDeriv211);
     ComputeSecondCovDeriv(0, 1, 0, movingframes, SecondCovDeriv121);
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Vsub(nq, &SecondCovDeriv211[j][0], 1, &SecondCovDeriv121[j][0],
                     1, &outarray[j][0], 1);
@@ -2195,17 +2196,17 @@ void MMFSystem::ComputeRelaccOmega(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq);
     }
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFConnection(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFConnection(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
-        MFConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; j++)
+        MFConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+        for (int j = 0; j < m_spacedim; j++)
         {
             MFConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
@@ -2244,9 +2245,9 @@ void MMFSystem::ComputeRelaccOmega(
 
 //     Array<OneD, NekDouble> outarray(nq);
 
-//     Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv211(m_shapedim);
-//     Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv121(m_shapedim);
-//     for (int j=0; j<m_shapedim; ++j)
+//     Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv211(m_expdim);
+//     Array<OneD, Array<OneD, NekDouble>> SecondCovDeriv121(m_expdim);
+//     for (int j=0; j<m_expdim; ++j)
 //     {
 //         SecondCovDeriv121[j] = Array<OneD, NekDouble>(nq,0.0);
 //         SecondCovDeriv211[j] = Array<OneD, NekDouble>(nq,0.0);
@@ -2269,16 +2270,16 @@ void MMFSystem::ComputeSecondCovDeriv(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> CovDerivX1(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> CovDerivX2(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> CovDerivX1(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> CovDerivX2(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         CovDeriv[j]   = Array<OneD, NekDouble>(nq, 0.0);
         CovDerivX1[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2340,10 +2341,10 @@ void MMFSystem::ComputeLieBracket(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> coeffXY(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> coeffYX(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> coeffs(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> coeffXY(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> coeffYX(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> coeffs(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         coeffXY[j] = Array<OneD, NekDouble>(nq, 0.0);
         coeffYX[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2353,7 +2354,7 @@ void MMFSystem::ComputeLieBracket(
     // Compute [X, Y] = \nabla_X Y - \nabla_Y X
     ComputeCovDerivMF(dirX, dirY, movingframes, coeffXY);
     ComputeCovDerivMF(dirY, dirX, movingframes, coeffYX);
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Vsub(nq, &coeffXY[j][0], 1, &coeffYX[j][0], 1, &coeffs[j][0], 1);
     }
@@ -2361,9 +2362,9 @@ void MMFSystem::ComputeLieBracket(
     // std::cout << "[dixX, dirY] = ( " << RootMeanSquare(coeffs[0]) << " , " <<
     // RootMeanSquare(coeffs[1]) << " ) " << std::endl;
 
-    Array<OneD, Array<OneD, NekDouble>> CovDeriv1K(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> CovDeriv2K(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDeriv1K(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> CovDeriv2K(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         CovDeriv1K[j] = Array<OneD, NekDouble>(nq, 0.0);
         CovDeriv2K[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2378,14 +2379,14 @@ void MMFSystem::ComputeLieBracket(
     // "CovDeriv2K = ( " << RootMeanSquare(CovDeriv2K[0]) << " , " <<
     // RootMeanSquare(CovDeriv2K[1]) << " ) " << std::endl;
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
     // a \nabla_{e_1} e_K + b \nabla_{e_2} e_K
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Vvtvp(nq, &coeffs[0][0], 1, &CovDeriv1K[j][0], 1,
                      &outarray[j][0], 1, &outarray[j][0], 1);
@@ -2405,14 +2406,14 @@ void MMFSystem::ComputeLieBracket(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         CovDeriv[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -2435,10 +2436,10 @@ void MMFSystem::ComputeLieBracket(
     CartesianToMovingframes(velocity[0], velocity[1], velocity[2], movingframes,
                             u1, u2);
 
-    Array<OneD, Array<OneD, NekDouble>> CovDerivMF(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDerivMF(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
-        CovDerivMF[j] = Array<OneD, NekDouble>(m_shapedim * nq);
+        CovDerivMF[j] = Array<OneD, NekDouble>(m_expdim * nq);
     }
 
     ComputeCovDeriv(u1, u2, movingframes, CovDerivMF);
@@ -2474,8 +2475,8 @@ void MMFSystem::ComputeCovDeriv(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -2487,8 +2488,8 @@ void MMFSystem::ComputeCovDeriv(
         Vmath::Vcopy(nq, &direction[k * nq], 1, &dirvector[k][0], 1);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> dirv(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> dirv(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         dirv[j] = Array<OneD, NekDouble>(nq);
     }
@@ -2496,10 +2497,10 @@ void MMFSystem::ComputeCovDeriv(
     CartesianToMovingframes(dirvector[0], dirvector[1], dirvector[2],
                             movingframes, dirv[0], dirv[1]);
 
-    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
-        CovDeriv[j] = Array<OneD, NekDouble>(m_shapedim * nq);
+        CovDeriv[j] = Array<OneD, NekDouble>(m_expdim * nq);
     }
 
     Array<OneD, NekDouble> u1(nq);
@@ -2509,7 +2510,7 @@ void MMFSystem::ComputeCovDeriv(
                             u1, u2);
     ComputeCovDeriv(u1, u2, movingframes, CovDeriv);
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         Vmath::Vmul(nq, &dirv[0][0], 1, &CovDeriv[0][j * nq], 1,
                     &outarray[j][0], 1);
@@ -2532,10 +2533,10 @@ void MMFSystem::ComputeCovDeriv(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
-        outarray[j] = Array<OneD, NekDouble>(m_shapedim * nq);
+        outarray[j] = Array<OneD, NekDouble>(m_expdim * nq);
     }
 
     // CovDeriv = ComputeCovariantDerivative(0, u1, u2, movingframes);
@@ -2594,8 +2595,8 @@ void MMFSystem::ComputeCovDerivMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -2605,7 +2606,7 @@ void MMFSystem::ComputeCovDerivMF(
 
     if ((dirX == 0) && (dirY == 1))
     {
-        for (int j = 0; j < m_shapedim; ++j)
+        for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Smul(nq, -1.0, &MFConnection[0][j][0], 1, &outarray[j][0],
                         1);
@@ -2614,7 +2615,7 @@ void MMFSystem::ComputeCovDerivMF(
 
     else if ((dirX == 1) && (dirY == 0))
     {
-        for (int j = 0; j < m_shapedim; ++j)
+        for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Vcopy(nq, &MFConnection[0][j][0], 1, &outarray[j][0], 1);
         }
@@ -2654,10 +2655,10 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovDiv(
     CartesianToMovingframes(velocity[0], velocity[1], velocity[2], movingframes,
                             u1, u2);
 
-    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDeriv(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
-        CovDeriv[j] = Array<OneD, NekDouble>(m_shapedim * nq);
+        CovDeriv[j] = Array<OneD, NekDouble>(m_expdim * nq);
     }
 
     ComputeCovDeriv(u1, u2, movingframes, CovDeriv);
@@ -2701,10 +2702,10 @@ Array<OneD, NekDouble> MMFSystem::ComputeCovCurl(
     CartesianToMovingframes(velocity[0], velocity[1], velocity[2], movingframes,
                             u1, u2);
 
-    Array<OneD, Array<OneD, NekDouble>> CovDerivMF(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CovDerivMF(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
-        CovDerivMF[j] = Array<OneD, NekDouble>(m_shapedim * nq);
+        CovDerivMF[j] = Array<OneD, NekDouble>(m_expdim * nq);
     }
 
     ComputeCovDeriv(u1, u2, movingframes, CovDerivMF);
@@ -2907,9 +2908,9 @@ void MMFSystem::ComputeDivMF(
 
     if (Verbose)
     {
-        Array<OneD, Array<OneD, NekDouble>> DivEucMF(m_mfdim);
-        Array<OneD, Array<OneD, NekDouble>> DivCovMF(m_mfdim);
-        for (int j = 0; j < m_mfdim; ++j)
+        Array<OneD, Array<OneD, NekDouble>> DivEucMF(m_spacedim);
+        Array<OneD, Array<OneD, NekDouble>> DivCovMF(m_spacedim);
+        for (int j = 0; j < m_spacedim; ++j)
         {
             DivEucMF[j] = Array<OneD, NekDouble>(nq, 0.0);
             DivCovMF[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2918,7 +2919,7 @@ void MMFSystem::ComputeDivMF(
         ComputeEuclideanDivMF(movingframes, DivEucMF);
         ComputeCovariantDivMF(movingframes, DivCovMF);
 
-        for (int i = 0; i < m_mfdim; ++i)
+        for (int i = 0; i < m_spacedim; ++i)
         {
             Vmath::Vsub(nq, DivEucMF[i], 1, DivCovMF[i], 1, DivCovMF[i], 1);
         }
@@ -2935,8 +2936,8 @@ void MMFSystem::ComputeEuclideanDivMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    DivMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    DivMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         DivMF[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -2945,7 +2946,7 @@ void MMFSystem::ComputeEuclideanDivMF(
     Array<OneD, NekDouble> Dtmp(nq);
 
     // case eEuclidean:
-    for (int j = 0; j < m_mfdim; ++j)
+    for (int j = 0; j < m_spacedim; ++j)
     {
         for (int k = 0; k < m_spacedim; ++k)
         {
@@ -2974,8 +2975,8 @@ void MMFSystem::ComputeCovariantDivMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    DivMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    DivMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         DivMF[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -3014,13 +3015,13 @@ void MMFSystem::ComputeCovariantDivMF(
 // {
 //     int nq = m_fields[0]->GetNpoints();
 
-//     Array<OneD, Array<OneD, NekDouble>> DivMFEuc(m_mfdim);
-//     Array<OneD, Array<OneD, NekDouble>> DivMFCov(m_mfdim);
+//     Array<OneD, Array<OneD, NekDouble>> DivMFEuc(m_spacedim);
+//     Array<OneD, Array<OneD, NekDouble>> DivMFCov(m_spacedim);
 
-//     DivMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-//     DivMFEuc = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-//     DivMFCov = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-//     for (int j = 0; j < m_mfdim; ++j)
+//     DivMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+//     DivMFEuc = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+//     DivMFCov = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+//     for (int j = 0; j < m_spacedim; ++j)
 //     {
 //         DivMF[j] = Array<OneD, NekDouble>(nq, 0.0);
 //         DivMFEuc[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -3031,7 +3032,7 @@ void MMFSystem::ComputeCovariantDivMF(
 //     Array<OneD, NekDouble> Dtmp(nq);
 
 //     // case eEuclidean:
-//     for (int j = 0; j < m_mfdim; ++j)
+//     for (int j = 0; j < m_spacedim; ++j)
 //     {
 //         for (int k = 0; k < m_spacedim; ++k)
 //         {
@@ -3083,7 +3084,7 @@ void MMFSystem::ComputeCovariantDivMF(
 //     // Assign it according to Euclidean or Covariant
 //     if(Dtype==eEuclidean)
 //     {
-//         for (int i=0; i<m_mfdim; ++i)
+//         for (int i=0; i<m_spacedim; ++i)
 //         {
 //             Vmath::Vcopy(nq, DivMFEuc[i], 1, DivMF[i], 1);
 //         }
@@ -3091,7 +3092,7 @@ void MMFSystem::ComputeCovariantDivMF(
 
 //     else if (Dtype==eCovariant)
 //     {
-//         for (int i=0; i<m_mfdim; ++i)
+//         for (int i=0; i<m_spacedim; ++i)
 //         {
 //              Vmath::Vcopy(nq, DivMFCov[i], 1, DivMF[i], 1);
 //         }
@@ -3105,7 +3106,7 @@ void MMFSystem::ComputeCovariantDivMF(
 //                 << RootMeanSquare(m_DivMF[2], m_MMFActivation) << " ) "
 //                 << std::endl ;
 
-//         for (int i=0; i<m_mfdim; ++i)
+//         for (int i=0; i<m_spacedim; ++i)
 //         {
 //             Vmath::Vsub(nq, DivMFEuc[i], 1, DivMFCov[i], 1,  DivMFCov[i], 1);
 //         }
@@ -3331,8 +3332,8 @@ void MMFSystem::ComputeExactDivMF(
 
     NekDouble xp, yp, zp, rad;
 
-    ExactDivMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    ExactDivMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         ExactDivMF[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -3392,8 +3393,8 @@ void MMFSystem::ComputeExactCurlMF(
 
     NekDouble xp, yp, zp, rad;
 
-    ExactCurlMF = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    ExactCurlMF = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         ExactCurlMF[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -3444,9 +3445,9 @@ void MMFSystem::TestDivMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> DivMF(m_mfdim);
-    Array<OneD, Array<OneD, NekDouble>> DivMFCov(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> DivMF(m_spacedim);
+    Array<OneD, Array<OneD, NekDouble>> DivMFCov(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         DivMF[j]    = Array<OneD, NekDouble>(nq, 0.0);
         DivMFCov[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -3456,7 +3457,7 @@ void MMFSystem::TestDivMF(
     ComputeDivMF(eEuclidean, movingframes, DivMF, 1);
     ComputeDivMF(eCovariant, movingframes, DivMFCov, 1);
 
-    Array<OneD, Array<OneD, NekDouble>> ExactDivMF(m_mfdim);
+    Array<OneD, Array<OneD, NekDouble>> ExactDivMF(m_spacedim);
 
     Array<OneD, NekDouble> ErrDivEuc1(nq);
     Array<OneD, NekDouble> ErrDivCov1(nq);
@@ -3537,9 +3538,9 @@ void MMFSystem::TestCurlMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> CurlMF(m_mfdim);
-    Array<OneD, Array<OneD, NekDouble>> CurlMFCov(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> CurlMF(m_spacedim);
+    Array<OneD, Array<OneD, NekDouble>> CurlMFCov(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         CurlMF[j]    = Array<OneD, NekDouble>(nq, 0.0);
         CurlMFCov[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -3553,7 +3554,7 @@ void MMFSystem::TestCurlMF(
     ComputeCurlMF(eEuclidean, movingframes, CurlMF);
     ComputeCurlMF(eCovariant, movingframes, CurlMFCov);
 
-    Array<OneD, Array<OneD, NekDouble>> ExactCurlMF(m_mfdim);
+    Array<OneD, Array<OneD, NekDouble>> ExactCurlMF(m_spacedim);
 
     ComputeExactCurlMF(Activation, ExactCurlMF);
     // if (m_surfaceType == SolverUtils::ePlane)
@@ -3622,10 +3623,10 @@ void MMFSystem::ComputeMFtrace(
     int nq              = GetTotPoints();
     int nTraceNumPoints = GetTraceTotPoints();
 
-    MFtraceFwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    MFtraceBwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
+    MFtraceFwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    MFtraceBwd = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
 
-    for (int j = 0; j < m_mfdim; ++j)
+    for (int j = 0; j < m_spacedim; ++j)
     {
         MFtraceFwd[j] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
         MFtraceBwd[j] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
@@ -3640,7 +3641,7 @@ void MMFSystem::ComputeMFtrace(
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> Fwdtmp(nTraceNumPoints, 0.0);
     Array<OneD, NekDouble> Bwdtmp(nTraceNumPoints, 0.0);
-    for (int j = 0; j < m_mfdim; ++j)
+    for (int j = 0; j < m_spacedim; ++j)
     {
         for (int i = 0; i < m_spacedim; ++i)
         {
@@ -3665,10 +3666,10 @@ void MMFSystem::ComputeMFtimesMF(
 {
     int nq = GetTotPoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmpCurl(m_mfdim);
-    for (int j = 0; j < m_mfdim; ++j)
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MFtmpCurl(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
     {
         outarray[j]  = Array<OneD, NekDouble>(nq * m_spacedim);
         MFtmpCurl[j] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
@@ -3696,7 +3697,7 @@ void MMFSystem::ComputeMFtimesMF(
     VectorCrossProd(MF2tmp, MF3tmp, MFtmpCurl[1]);
     VectorCrossProd(MF1tmp, MF2tmp, MFtmpCurl[2]);
 
-    for (int j = 0; j < m_mfdim; ++j)
+    for (int j = 0; j < m_spacedim; ++j)
     {
         for (int k = 0; k < m_spacedim; ++k)
         {
@@ -3756,11 +3757,11 @@ void MMFSystem::MFDotProd(
 {
     int nq = GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    outarray = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
-        outarray[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; ++j)
+        outarray[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+        for (int j = 0; j < m_spacedim; ++j)
         {
             outarray[i][j] = Array<OneD, NekDouble>(nq, 0.0);
             for (int k = 0; k < m_spacedim; ++k)
@@ -3780,7 +3781,7 @@ void MMFSystem::MFDotProduct(
     int nq = GetNpoints();
 
     outarray = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
-    for (int i = 0; i < m_mfdim; ++i)
+    for (int i = 0; i < m_spacedim; ++i)
     {
         outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
         for (int k = 0; k < m_spacedim; ++k)
@@ -4328,8 +4329,8 @@ void MMFSystem::CartesianToMovingframes(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    outarray = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    outarray = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
         for (int i = 0; i < m_spacedim; ++i)
@@ -4420,7 +4421,7 @@ void MMFSystem::MF_to_Sph(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         outarray[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -4430,7 +4431,7 @@ void MMFSystem::MF_to_Sph(
 
     Array<OneD, NekDouble> ThetacdotMF(nq);
     Array<OneD, NekDouble> PhicdotMF(nq);
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         ThetacdotMF = Array<OneD, NekDouble>(nq, 0.0);
         PhicdotMF   = Array<OneD, NekDouble>(nq, 0.0);
@@ -4515,7 +4516,7 @@ void MMFSystem::MovingframestoCartesian(
     for (int i = 0; i < m_spacedim; ++i)
     {
         outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
-        for (int j = 0; j < m_shapedim; ++j)
+        for (int j = 0; j < m_expdim; ++j)
         {
             Vmath::Vvtvp(nq, &inarray[j][0], 1, &MF1st[j][i * nq], 1,
                          &outarray[i][0], 1, &outarray[i][0], 1);
@@ -4591,7 +4592,7 @@ void MMFSystem::ProjectionOntoMovingFrames(
 // {
 //     int nq = m_fields[0]->GetNpoints();
 
-//     Array<OneD, NekDouble> uvec(m_shapedim * nq);
+//     Array<OneD, NekDouble> uvec(m_expdim * nq);
 //     Vmath::Vcopy(nq, &u1[0], 1, &uvec[0], 1);
 //     Vmath::Vcopy(nq, &u2[0], 1, &uvec[nq], 1);
 
@@ -4614,7 +4615,7 @@ void MMFSystem::ProjectionOntoMovingFrames(
 
 //     outtheta = Array<OneD, NekDouble>(nq, 0.0);
 //     outphi = Array<OneD, NekDouble>(nq, 0.0);
-//     for (int j=0; j<m_shapedim; ++j)
+//     for (int j=0; j<m_expdim; ++j)
 //     {
 //         ThetacdotMF = Array<OneD, NekDouble>(nq, 0.0);
 //         PhicdotMF = Array<OneD, NekDouble>(nq, 0.0);
@@ -4639,7 +4640,7 @@ void MMFSystem::ProjectionOntoMovingFrames(
 
 // Find u^{\theta}, u^{\phi}
 // u^1 e_1 + u^2 e_2 = u^{theta} \theta + u^{\phi} \phi
-// inarray (m_shapedim*nq) = [ u^1 u^2 ]
+// inarray (m_expdim*nq) = [ u^1 u^2 ]
 // outarray: outtheta = u^{\theta}, outphi = u^{\phi}
 void MMFSystem::MovingframesToSpherical(
     const Array<OneD, const NekDouble> &u1,
@@ -4649,8 +4650,8 @@ void MMFSystem::MovingframesToSpherical(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> uvec(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> uvec(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         uvec[j] = Array<OneD, NekDouble>(nq);
     }
@@ -4674,10 +4675,10 @@ void MMFSystem::MovingframesToSpherical(
     // Array<OneD, NekDouble> ThetacdotMF(nq);
     // Array<OneD, NekDouble> PhicdotMF(nq);
 
-    Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_expdim);
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         ThetacdotMF[j] = Array<OneD, NekDouble>(nq, 0.0);
         PhicdotMF[j]   = Array<OneD, NekDouble>(nq, 0.0);
@@ -4974,8 +4975,8 @@ void MMFSystem::ComputeSphericalVector(
 
     m_fields[0]->GetCoords(x0, x1, x2);
 
-    SphericalVector = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    SphericalVector = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
         SphericalVector[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     }
@@ -5020,8 +5021,8 @@ void MMFSystem::ComputeEllipsoidVector(
 
     m_fields[0]->GetCoords(x0, x1, x2);
 
-    EllipsoidVector = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; ++i)
+    EllipsoidVector = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; ++i)
     {
         EllipsoidVector[i] = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     }
@@ -5237,13 +5238,13 @@ void MMFSystem::CopyBoundaryTrace(const Array<OneD, const NekDouble> &Fwd,
 // {
 //     int nq = vector[0].size();
 
-//     Array<OneD, Array<OneD, NekDouble>> tmp(m_mfdim);
-//     for (int i = 0; i < m_mfdim; ++i)
+//     Array<OneD, Array<OneD, NekDouble>> tmp(m_spacedim);
+//     for (int i = 0; i < m_spacedim; ++i)
 //     {
 //         tmp[i] = Array<OneD, NekDouble>(3 * nq, 0.0);
 //     }
 
-//     for (int i = 0; i < m_mfdim; ++i)
+//     for (int i = 0; i < m_spacedim; ++i)
 //     {
 //         Vmath::Vcopy(nq, &vector[i][0], 1, &tmp[0][i * nq], 1);
 //         Vmath::Vcopy(nq, &m_movingframes[2][i * nq], 1, &tmp[2][i * nq], 1);
@@ -5325,11 +5326,11 @@ void MMFSystem::Compute2DConnection1form(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Connectionform = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+    Connectionform = Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
-        Connectionform[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; j++)
+        Connectionform[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+        for (int j = 0; j < m_spacedim; j++)
         {
             Connectionform[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
@@ -5358,10 +5359,10 @@ void MMFSystem::Compute2DConnection1form(
     Array<OneD, Array<OneD, Array<OneD, Array<OneD, NekDouble>>>> MFJacobian;
     ComputeMFJacobian(movingframes, MFJacobian);
 
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
-        Connectionform[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-        for (int j = 0; j < m_mfdim; j++)
+        Connectionform[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+        for (int j = 0; j < m_spacedim; j++)
         {
             Connectionform[i][j] = Array<OneD, NekDouble>(nq, 0.0);
         }
@@ -5523,12 +5524,12 @@ void MMFSystem::GetCurvatureForm(
     // w^l_m \wedge w^m_k (e^i, e^j)
     Array<OneD, NekDouble> wij(nq);
     Array<OneD, NekDouble> dwij(nq);
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
-        for (int j = 0; j < m_mfdim; j++)
+        for (int j = 0; j < m_spacedim; j++)
         {
             Vmath::Vcopy(nq, &Connectionform[i][j][0], 1, &wij[0], 1);
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
                 MMFDirectionalDeriv(movingframes[k], wij, dwij);
                 Vmath::Vadd(nq, &dwij[0], 1, &Curvatureform[i][j][k][0], 1,
@@ -5745,8 +5746,8 @@ void MMFSystem::Compute2DCurvatureForm(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    Curvatureform = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+    Curvatureform = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
         Curvatureform[i] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -5782,7 +5783,7 @@ void MMFSystem::Compute2DCurvatureForm(
     Array<OneD, NekDouble> dwij01(nq);
     Array<OneD, NekDouble> dwij10(nq);
 
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
         Vmath::Vcopy(nq, &Connectionform[i][0][0], 1, &wij0[0], 1);
         Vmath::Vcopy(nq, &Connectionform[i][1][0], 1, &wij1[0], 1);
@@ -5805,27 +5806,27 @@ NekDouble MMFSystem::ComputeVMV(
     int nq = m_fields[0]->GetNpoints();
 
     // Create fjvec
-    Array<OneD, NekDouble> fjvec(m_mfdim);
+    Array<OneD, NekDouble> fjvec(m_spacedim);
     fjvec[0] = movingframes[indexj][knode];
     fjvec[1] = movingframes[indexj][nq + knode];
     fjvec[2] = movingframes[indexj][2 * nq + knode];
 
     // Create fkvec
-    Array<OneD, NekDouble> fkvec(m_mfdim);
+    Array<OneD, NekDouble> fkvec(m_spacedim);
     fkvec[0] = movingframes[indexk][knode];
     fkvec[1] = movingframes[indexk][nq + knode];
     fkvec[2] = movingframes[indexk][2 * nq + knode];
 
     // Create Jacobian Matrix
-    Array<OneD, Array<OneD, NekDouble>> Jacobian(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+    Array<OneD, Array<OneD, NekDouble>> Jacobian(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
-        Jacobian[i] = Array<OneD, NekDouble>(m_mfdim);
+        Jacobian[i] = Array<OneD, NekDouble>(m_spacedim);
     }
 
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
-        for (int j = 0; j < m_mfdim; j++)
+        for (int j = 0; j < m_spacedim; j++)
         {
             Jacobian[i][j] = MFJacobian[indexi][i][j][knode];
         }
@@ -5834,9 +5835,9 @@ NekDouble MMFSystem::ComputeVMV(
     // fj^T * Jacobian^i * fk
     Array<OneD, NekDouble> locsum(3, 0.0);
     NekDouble rval = 0.0;
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
-        for (int j = 0; j < m_mfdim; j++)
+        for (int j = 0; j < m_spacedim; j++)
         {
             locsum[i] = locsum[i] + fjvec[j] * Jacobian[j][i];
         }
@@ -5932,8 +5933,8 @@ void MMFSystem::ComputeMFJacobian(
     // outarray is 3 x 3 x 3 x nq (MF x connection.row x connection.col
     // x numpts)
     outarray =
-        Array<OneD, Array<OneD, Array<OneD, Array<OneD, NekDouble>>>>(m_mfdim);
-    for (int i = 0; i < m_mfdim; i++)
+        Array<OneD, Array<OneD, Array<OneD, Array<OneD, NekDouble>>>>(m_spacedim);
+    for (int i = 0; i < m_spacedim; i++)
     {
         outarray[i] =
             Array<OneD, Array<OneD, Array<OneD, NekDouble>>>(m_spacedim);
@@ -5949,7 +5950,7 @@ void MMFSystem::ComputeMFJacobian(
 
     Array<OneD, NekDouble> dfvec(nq);
     Array<OneD, NekDouble> fvec(nq);
-    for (int i = 0; i < m_mfdim; i++)
+    for (int i = 0; i < m_spacedim; i++)
     {
         for (int j = 0; j < m_spacedim; j++)
         {
@@ -6303,7 +6304,7 @@ void MMFSystem::PlotMovingFrames(
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> mag(nq);
-    for (int i = 0; i < m_mfdim; ++i)
+    for (int i = 0; i < m_spacedim; ++i)
     {
         mag = Array<OneD, NekDouble>(nq, 0.0);
         for (int j = 0; j < m_spacedim; ++j)
@@ -6476,8 +6477,8 @@ void MMFSystem::PlotTrajectoryMF(
 // m_fields[0]->FwdTrans(DivMF[0], fieldcoeffs[7]);
 
 // // Curl of e1
-// Array<OneD, Array<OneD, NekDouble>> CurlMF(m_mfdim);
-// for (int j = 0; j < m_mfdim; ++j)
+// Array<OneD, Array<OneD, NekDouble>> CurlMF(m_spacedim);
+// for (int j = 0; j < m_spacedim; ++j)
 // {
 //     CurlMF[j] = Array<OneD, NekDouble>(nq, 0.0);
 // }
@@ -6988,14 +6989,14 @@ Array<OneD, int> MMFSystem::ComputeZoneActivation(
 //     }
 
 //     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> MF1stVelConnection(
-//         m_mfdim);
-//     Array<OneD, Array<OneD, NekDouble>> MF1stVelCurvature(m_mfdim);
-//     for (int i = 0; i < m_mfdim; i++)
+//         m_spacedim);
+//     Array<OneD, Array<OneD, NekDouble>> MF1stVelCurvature(m_spacedim);
+//     for (int i = 0; i < m_spacedim; i++)
 //     {
 //         MF1stVelCurvature[i] = Array<OneD, NekDouble>(nq, 0.0);
 
-//         MF1stVelConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-//         for (int j = 0; j < m_mfdim; j++)
+//         MF1stVelConnection[i] = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+//         for (int j = 0; j < m_spacedim; j++)
 //         {
 //             MF1stVelConnection[i][j] = Array<OneD, NekDouble>(nq, 0.0);
 //         }
@@ -7508,11 +7509,11 @@ void MMFSystem::Plot2DConnectionForm(
 
     Array<OneD, NekDouble> tmp(nq);
     int i, j, index;
-    for (i = 0; i < m_mfdim; ++i)
+    for (i = 0; i < m_spacedim; ++i)
     {
-        for (j = 0; j < m_shapedim; ++j)
+        for (j = 0; j < m_expdim; ++j)
         {
-            index = m_shapedim * i + j;
+            index = m_expdim * i + j;
             Vmath::Vcopy(nq, &connectionform[i][j][0], 1, &tmp[0], 1);
             m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
         }
@@ -7603,7 +7604,7 @@ void MMFSystem::Plot2DRiemanTensor(
     const Array<OneD, const Array<OneD, NekDouble>> &curvatureform,
     const int nstep)
 {
-    // int nvar = m_mfdim * m_mfdim * m_mfdim;
+    // int nvar = m_spacedim * m_spacedim * m_spacedim;
     int nvar    = 3;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
@@ -7624,7 +7625,7 @@ void MMFSystem::Plot2DRiemanTensor(
     variables[2] = "R3212";
 
     Array<OneD, NekDouble> tmp(nq);
-    for (int i = 0; i < m_mfdim; ++i)
+    for (int i = 0; i < m_spacedim; ++i)
     {
         Vmath::Vcopy(nq, &curvatureform[i][0], 1, &tmp[0], 1);
         m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[i]);
@@ -7646,7 +7647,7 @@ void MMFSystem::PlotRiemannTensor(
         &curvatureform,
     const int nstep)
 {
-    // int nvar = m_mfdim * m_mfdim * m_mfdim;
+    // int nvar = m_spacedim * m_spacedim * m_spacedim;
     int nvar    = 27;
     int nq      = m_fields[0]->GetTotPoints();
     int ncoeffs = m_fields[0]->GetNcoeffs();
@@ -7694,13 +7695,13 @@ void MMFSystem::PlotRiemannTensor(
 
     int index;
     Array<OneD, NekDouble> tmp(nq);
-    for (int i = 0; i < m_mfdim; ++i)
+    for (int i = 0; i < m_spacedim; ++i)
     {
-        for (int j = 0; j < m_mfdim; ++j)
+        for (int j = 0; j < m_spacedim; ++j)
         {
-            for (int k = 0; k < m_mfdim; ++k)
+            for (int k = 0; k < m_spacedim; ++k)
             {
-                index = m_mfdim * m_mfdim * i + m_mfdim * j + k;
+                index = m_spacedim * m_spacedim * i + m_spacedim * j + k;
                 Vmath::Vcopy(nq, &curvatureform[i][j][k][0], 1, &tmp[0], 1);
                 m_fields[0]->FwdTransLocalElmt(tmp, fieldcoeffs[index]);
             }
@@ -7765,8 +7766,8 @@ void MMFSystem::ComputeDirectionVector(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    distance = Array<OneD, Array<OneD, NekDouble>>(m_mfdim);
-    for (int k = 0; k < m_mfdim; ++k)
+    distance = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int k = 0; k < m_spacedim; ++k)
     {
         distance[k] = Array<OneD, NekDouble>(nq);
     }
@@ -7819,7 +7820,7 @@ void MMFSystem::ComputeDirectionVector(
             vz = length * vz / magv;
         }
 
-        for (int k = 0; k < m_mfdim; k++)
+        for (int k = 0; k < m_spacedim; k++)
         {
             distance[k][i] = vx * m_movingframes[k][i] +
                              vy * m_movingframes[k][i + nq] +
@@ -7848,8 +7849,8 @@ void MMFSystem::ComputeDirectionVector(
 //     Activated = Array<OneD, int>(nq, 0);
 
 //     // MFmag = \sqrt{ e1x*e1x + e1y*e1y + e1z*e1z}
-//     Array<OneD, Array<OneD, NekDouble>> MForigmag(m_mfdim);
-//     for (int i = 0; i < m_mfdim; ++i)
+//     Array<OneD, Array<OneD, NekDouble>> MForigmag(m_spacedim);
+//     for (int i = 0; i < m_spacedim; ++i)
 //     {
 //         MForigmag[i] = Array<OneD, NekDouble>(nq, 0.0);
 //         for (int k = 0; k < m_spacedim; ++k)
@@ -7862,7 +7863,7 @@ void MMFSystem::ComputeDirectionVector(
 //         Vmath::Vsqrt(nq, MForigmag[i], 1, MForigmag[i], 1);
 //     }
 
-//     for (int k = 0; k < m_mfdim; ++k)
+//     for (int k = 0; k < m_spacedim; ++k)
 //     {
 //         Vmath::Vcopy(3 * nq, &movingframes[k][0], 1, &MF1st[k][0], 1);
 //     }
@@ -7922,7 +7923,7 @@ void MMFSystem::AlignMFtoVelocity(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    for (int k = 0; k < m_mfdim; ++k)
+    for (int k = 0; k < m_spacedim; ++k)
     {
         Vmath::Vcopy(3 * nq, &movingframes[k][0], 1, &MF1st[k][0], 1);
     }
@@ -7986,7 +7987,7 @@ void MMFSystem::ActivateRegion(
                     Activated[indexk] = 0;
 
                     // Retrieve the original moving frames
-                    for (int m = 0; m < m_mfdim; m++)
+                    for (int m = 0; m < m_spacedim; m++)
                     {
                         MF1stnew[m][indexk]      = MF1st[m][indexk];
                         MF1stnew[m][indexk + nq] = MF1st[m][indexk + nq];
@@ -8017,7 +8018,7 @@ int MMFSystem::UpdatebyLinearTimeIntegration(
         {
             // Averaged Integration
             NekDouble AC = ActivatedHistory[i];
-            for (int j = 0; j < m_mfdim; ++j)
+            for (int j = 0; j < m_spacedim; ++j)
             {
                 ex = MF1st[j][i];
                 ey = MF1st[j][i + nq];
@@ -8065,7 +8066,7 @@ void MMFSystem::UpdateMF1st(
             // Weighted Averaged Integration
             NekDouble Wsum   = VelmagHistory[i];
             NekDouble Weight = velmag[i];
-            for (int j = 0; j < m_mfdim; ++j)
+            for (int j = 0; j < m_spacedim; ++j)
             {
                 ex = MF1st[j][i];
                 ey = MF1st[j][i + nq];
@@ -8167,7 +8168,7 @@ int MMFSystem::NewValueReplacerElementWise(
         if (NewActivated[i])
         {
             // Strengthbased Integration
-            for (int j = 0; j < m_mfdim; ++j)
+            for (int j = 0; j < m_spacedim; ++j)
             {
                 MF1stHistory[j][i]          = MF1st[j][i];
                 MF1stHistory[j][i + nq]     = MF1st[j][i + nq];
@@ -8240,7 +8241,7 @@ int MMFSystem::NewValueReplacerPointWise(
         if (NewActivated[i])
         {
             // Strengthbased Integration
-            for (int j = 0; j < m_mfdim; ++j)
+            for (int j = 0; j < m_spacedim; ++j)
             {
                 MF1stHistory[j][i]          = MF1st[j][i];
                 MF1stHistory[j][i + nq]     = MF1st[j][i + nq];
@@ -8316,7 +8317,7 @@ int MMFSystem::WeakerValueReplacer(
         if (NewActivated[i])
         {
             // Strengthbased Integration
-            for (int j = 0; j < m_mfdim; ++j)
+            for (int j = 0; j < m_spacedim; ++j)
             {
                 MF1stHistory[j][i]          = MF1st[j][i];
                 MF1stHistory[j][i + nq]     = MF1st[j][i + nq];
@@ -8364,7 +8365,7 @@ void MMFSystem::ValidateNewFrames(
                     Activated[indexk] = 0;
 
                     // Retrieve the original moving frames
-                    for (int m = 0; m < m_mfdim; m++)
+                    for (int m = 0; m < m_spacedim; m++)
                     {
                         MF1stnew[m][indexk]      = MF1st[m][indexk];
                         MF1stnew[m][indexk + nq] = MF1st[m][indexk + nq];
@@ -9211,14 +9212,14 @@ void MMFSystem::ComputeWeakDGDivergence(
     Array<OneD, Array<OneD, NekDouble>> veldotMF;
     ComputeveldotMF(movingframes, velocity, veldotMF);
 
-    Array<OneD, Array<OneD, NekDouble>> movingframes_VelMF(m_shapedim);
-    for (int j = 0; j < m_shapedim; j++)
+    Array<OneD, Array<OneD, NekDouble>> movingframes_VelMF(m_expdim);
+    for (int j = 0; j < m_expdim; j++)
     {
         movingframes_VelMF[j] = Array<OneD, NekDouble>(3 * nq);
     }
 
     // CAUTION: Modify e^i as v^i e^i
-    for (int j = 0; j < m_shapedim; j++)
+    for (int j = 0; j < m_expdim; j++)
     {
         for (int k = 0; k < m_spacedim; k++)
         {
@@ -9292,14 +9293,14 @@ void MMFSystem::ComputeWeakDGDivergence(
     Array<OneD, Array<OneD, NekDouble>> veldotMF;
     ComputeveldotMF(movingframes, velocity, veldotMF);
 
-    Array<OneD, Array<OneD, NekDouble>> movingframes_VelMF(m_shapedim);
-    for (int j = 0; j < m_shapedim; j++)
+    Array<OneD, Array<OneD, NekDouble>> movingframes_VelMF(m_expdim);
+    for (int j = 0; j < m_expdim; j++)
     {
         movingframes_VelMF[j] = Array<OneD, NekDouble>(3 * nq);
     }
 
     // CAUTION: Modify e^i as v^i e^i
-    for (int j = 0; j < m_shapedim; j++)
+    for (int j = 0; j < m_expdim; j++)
     {
         for (int k = 0; k < m_spacedim; k++)
         {
@@ -9360,14 +9361,14 @@ void MMFSystem::ComputeWeakDGCurl(
     Array<OneD, Array<OneD, NekDouble>> veldotMF;
     ComputeveldotMF(movingframes, velocity, veldotMF);
 
-    Array<OneD, Array<OneD, NekDouble>> movingframes_VelMF(m_shapedim);
-    for (int j = 0; j < m_shapedim; j++)
+    Array<OneD, Array<OneD, NekDouble>> movingframes_VelMF(m_expdim);
+    for (int j = 0; j < m_expdim; j++)
     {
         movingframes_VelMF[j] = Array<OneD, NekDouble>(3 * nq);
     }
 
     // CAUTION: Modify e^i as v^i e^i
-    for (int j = 0; j < m_shapedim; j++)
+    for (int j = 0; j < m_expdim; j++)
     {
         for (int k = 0; k < m_spacedim; k++)
         {
@@ -9499,13 +9500,13 @@ void MMFSystem::ComputeveldotMF(
 {
     int nq = m_fields[0]->GetNpoints();
 
-    veldotMF = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    veldotMF = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         veldotMF[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
 
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         for (int k = 0; k < m_spacedim; ++k)
         {
@@ -9537,10 +9538,10 @@ void MMFSystem::WeakDGDivergence(
         physfield[i] = InField[i];
     }
 
-    Array<OneD, Array<OneD, NekDouble>> WeakDeriv(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> WeakDeriv(m_expdim);
     for (int i = 0; i < nvariables; ++i)
     {
-        for (int j = 0; j < m_shapedim; ++j)
+        for (int j = 0; j < m_expdim; ++j)
         {
             WeakDeriv[j] = Array<OneD, NekDouble>(ncoeffs, 0.0);
 
@@ -9575,7 +9576,7 @@ void MMFSystem::WeakDGDivergence(
         ComputencdotMF(movingframes, ncdotMF_VelMF_Fwd, ncdotMF_VelMF_Bwd);
 
         OutField[i] = Array<OneD, NekDouble>(ncoeffs, 0.0);
-        for (int j = 0; j < m_shapedim; ++j)
+        for (int j = 0; j < m_expdim; ++j)
         {
             // calculate numflux = (n \cdot MF)*flux
             Vmath::Vmul(nTracePointsTot, &flux[0], 1, &ncdotMF_VelMF_Fwd[j][0],
@@ -9610,7 +9611,7 @@ void MMFSystem::WeakDGDivergence(
 //     // tmp[j] = \nabla \physfield[i] \cdot \mathbf{e}^j
 //     Array<OneD, NekDouble> WeakAdvtmp(m_spacedim*nq);
 //     outarray = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
-//     for (int j = 0; j < m_shapedim; ++j)
+//     for (int j = 0; j < m_expdim; ++j)
 //     {
 //         WeakDGDirectionalDeriv(j, physfield, movingframes, WeakAdvtmp,
 //         SurfaceGradient); Vmath::Vadd(m_spacedim*nq, &WeakAdvtmp[0], 1,
@@ -9632,7 +9633,7 @@ void MMFSystem::WeakDGGradientVector(
     outarray = Array<OneD, NekDouble>(m_spacedim * nq, 0.0);
     // Compute Directional derivation with respect to the j'th moving frame
     // tmp[j] = \nabla \physfield[i] \cdot \mathbf{e}^j
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         WeakDGDirectionalDeriv(j, physfield, movingframes, WeakAdvtmp,
                                SurfaceGradient);
@@ -9863,8 +9864,8 @@ void MMFSystem::WeakDGCurl(
     int nTracePointsTot = GetTraceNpoints();
     int nvar            = 3;
 
-    Array<OneD, Array<OneD, NekDouble>> fluxvector(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> fluxvector(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         fluxvector[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -9876,7 +9877,7 @@ void MMFSystem::WeakDGCurl(
     Array<OneD, NekDouble> tmp(nq, 0.0);
     Array<OneD, NekDouble> tmpc(ncoeffs);
     Array<OneD, NekDouble> OutField(ncoeffs, 0.0);
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         // Directional derivation with respect to the j'th moving frame
         // tmp_j = ( \nabla \phi, fluxvector[j] \mathbf{e}^j )
@@ -9917,7 +9918,7 @@ void MMFSystem::WeakDGCurl(
         Array<OneD, NekDouble> velvector(m_spacedim * nq, 0.0);
         for (int i = 0; i < m_spacedim; ++i)
         {
-            for (int j = 0; j < m_shapedim; ++j)
+            for (int j = 0; j < m_expdim; ++j)
             {
                 Vmath::Vvtvp(nq, &physfield[j][0], 1,
                              &CrossProductMF[j][i * nq], 1, &velvector[i * nq],
@@ -9950,8 +9951,8 @@ void MMFSystem::WeakDGCurl(
     int nTracePointsTot = GetTraceNpoints();
     int nvar            = 3;
 
-    Array<OneD, Array<OneD, NekDouble>> fluxvector(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> fluxvector(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         fluxvector[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -9963,7 +9964,7 @@ void MMFSystem::WeakDGCurl(
     Array<OneD, NekDouble> tmp(nq, 0.0);
     Array<OneD, NekDouble> tmpc(ncoeffs);
     Array<OneD, NekDouble> OutField(ncoeffs, 0.0);
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         // Directional derivation with respect to the j'th moving frame
         // tmp_j = ( \nabla \phi, fluxvector[j] \mathbf{e}^j )
@@ -10225,12 +10226,12 @@ Array<OneD, NekDouble> MMFSystem::ComputeLaplacianSphericalCoord(
 
 //     Array<OneD, NekDouble> qcoeffs(ncoeffs);
 
-//     Array<OneD, Array<OneD, NekDouble>> ufluxFwd(m_shapedim);
-//     Array<OneD, Array<OneD, NekDouble>> ufluxBwd(m_shapedim);
+//     Array<OneD, Array<OneD, NekDouble>> ufluxFwd(m_expdim);
+//     Array<OneD, Array<OneD, NekDouble>> ufluxBwd(m_expdim);
 
-//     Array<OneD, Array<OneD, NekDouble>> qfield(m_shapedim);
+//     Array<OneD, Array<OneD, NekDouble>> qfield(m_expdim);
 
-//     for (int j = 0; j < m_shapedim; ++j)
+//     for (int j = 0; j < m_expdim; ++j)
 //     {
 //         qfield[j]   = Array<OneD, NekDouble>(nq, 0.0);
 //         ufluxFwd[j] = Array<OneD, NekDouble>(nTracePts, 0.0);
@@ -10247,7 +10248,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeLaplacianSphericalCoord(
 
 //     Array<OneD, NekDouble> tmp(nq);
 //     Array<OneD, NekDouble> tmpc(ncoeffs);
-//     for (int j = 0; j < m_shapedim; ++j)
+//     for (int j = 0; j < m_expdim; ++j)
 //     {
 //         // Compute L2 = \int ( \partial phi / \partial x_j) u d x
 //         m_fields[0]->IProductWRTDirectionalDerivBase(MF1st[j], inarray,
@@ -10274,8 +10275,8 @@ Array<OneD, NekDouble> MMFSystem::ComputeLaplacianSphericalCoord(
 //     }
 
 //     // Anisotropy effect
-//     Array<OneD, Array<OneD, NekDouble>> Anicoeff(m_shapedim);
-//     for (int j = 0; j < m_shapedim; ++j)
+//     Array<OneD, Array<OneD, NekDouble>> Anicoeff(m_expdim);
+//     for (int j = 0; j < m_expdim; ++j)
 //     {
 //         Anicoeff[j] = Array<OneD, NekDouble>(nq, 0.0);
 //         for (int k = 0; k < m_spacedim; ++k)
@@ -10291,7 +10292,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeLaplacianSphericalCoord(
 
 //     outarray = Array<OneD, NekDouble>(ncoeffs, 0.0);
 //     // Compute tmp = \int \nabla \varphi \cdot \vec{q}
-//     for (int j = 0; j < m_shapedim; ++j)
+//     for (int j = 0; j < m_expdim; ++j)
 //     {
 //         m_fields[0]->IProductWRTDirectionalDerivBase(MF1st[j], qfield[j],
 //         tmpc); Vmath::Vadd(ncoeffs, tmpc, 1, outarray, 1, outarray, 1);
@@ -10300,7 +10301,7 @@ Array<OneD, NekDouble> MMFSystem::ComputeLaplacianSphericalCoord(
 //         {
 //             Array<OneD, NekDouble> geometricdiv(nq);
 //             Array<OneD, NekDouble> velvector(m_spacedim * nq);
-//             for (int j = 0; j < m_shapedim; ++j)
+//             for (int j = 0; j < m_expdim; ++j)
 //             {
 //                 for (int i = 0; i < m_spacedim; ++i)
 //                 {
@@ -10735,7 +10736,7 @@ void MMFSystem::ComputeVarCoeff1D(
                                              StdRegions::eVarCoeffD11,
                                              StdRegions::eVarCoeffD22};
 
-    for (int k = 0; k < m_mfdim; ++k)
+    for (int k = 0; k < m_spacedim; ++k)
     {
         varcoeff[MMFCoeffs[k]] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -10759,7 +10760,7 @@ void MMFSystem::ComputeVarCoeff2D(
 {
     const int nq   = GetTotPoints();
     const int sdim = m_spacedim;      // 2 or 3
-    const int mfDim = m_mfdim;        // typically 3
+    const int mfDim = m_spacedim;        // typically 3
 
     for (int i=0; i<15; ++i)
     {
@@ -11075,15 +11076,15 @@ void MMFSystem::SphericalToMovingFrames(
 {
     int nq = GetNpoints();
 
-    physfield = Array<OneD, Array<OneD, NekDouble>>(m_shapedim);
+    physfield = Array<OneD, Array<OneD, NekDouble>>(m_expdim);
     // Get the variables in physical space already in physical space
-    for (int i = 0; i < m_shapedim; ++i)
+    for (int i = 0; i < m_expdim; ++i)
     {
         physfield[i] = Array<OneD, NekDouble>(nq);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_expdim);
 
     ComputeMFcdotSphericalCoord(ThetacdotMF, PhicdotMF);
 
@@ -11105,15 +11106,15 @@ void MMFSystem::SphericalToEuclidean(
 {
     int nq = GetNpoints();
 
-    Array<OneD, Array<OneD, NekDouble>> physfield(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> physfield(m_expdim);
     // Get the variables in physical space already in physical space
-    for (int i = 0; i < m_shapedim; ++i)
+    for (int i = 0; i < m_expdim; ++i)
     {
         physfield[i] = Array<OneD, NekDouble>(nq);
     }
 
-    Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_shapedim);
-    Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> ThetacdotMF(m_expdim);
+    Array<OneD, Array<OneD, NekDouble>> PhicdotMF(m_expdim);
 
     ComputeMFcdotSphericalCoord(ThetacdotMF, PhicdotMF);
 
@@ -12138,7 +12139,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG1D(
     Array<OneD, NekDouble> fluxFwd(nTracePts);
     Array<OneD, NekDouble> fluxBwd(nTracePts);
 
-    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_expdim);
     for (int j = 0; j < m_expdim; ++j)
     {
         qfieldMMF[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -12222,7 +12223,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     Array<OneD, NekDouble> fluxFwd(nTracePts);
     Array<OneD, NekDouble> fluxBwd(nTracePts);
 
-    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_expdim);
     for (int j = 0; j < m_expdim; ++j)
     {
         qfieldMMF[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -12301,7 +12302,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFLDG2D(
     Array<OneD, NekDouble> fluxFwd(nTracePts);
     Array<OneD, NekDouble> fluxBwd(nTracePts);
 
-    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_shapedim);
+    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_expdim);
     for (int j = 0; j < m_expdim; ++j)
     {
         qfieldMMF[j] = Array<OneD, NekDouble>(nq, 0.0);
@@ -12414,8 +12415,8 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFirstLDG(
     Array<OneD, Array<OneD, NekDouble>> ncdotMFBwd;
     ComputencdotMF(movingframes, ncdotMFFwd, ncdotMFBwd);
 
-    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_shapedim);
-    for (int j = 0; j < m_shapedim; ++j)
+    Array<OneD, Array<OneD, NekDouble>> qfieldMMF(m_expdim);
+    for (int j = 0; j < m_expdim; ++j)
     {
         qfieldMMF[j] = Array<OneD, NekDouble>(nq, 0.0);
     }
@@ -12424,7 +12425,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFirstLDG(
     flux = ComputeufluxMMF(var, inarray);
 
     // Compute \vec{q} = \nabla u
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         // Compute L2 = \int ( \partial phi / \partial x_j) u d x
         m_fields[0]->IProductWRTDirectionalDerivBase(movingframes[j], inarray,
@@ -12459,7 +12460,7 @@ Array<OneD, NekDouble> MMFSystem::WeakDGMMFirstLDG(
 
     // m_fields[var]->IProductWRTDerivBase(qfield, tmpc);
     qfieldc = Array<OneD, NekDouble>(ncoeffs, 0.0);
-    for (int j = 0; j < m_shapedim; ++j)
+    for (int j = 0; j < m_expdim; ++j)
     {
         m_fields[0]->IProductWRTDirectionalDerivBase(movingframes[j],
                                                      qfieldMMF[j], tmpc);

@@ -225,6 +225,7 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarrayfiber);
 
     void ComputePhieAniStrengthfiber(
+        const Array<OneD, int> &zoneindex, 
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
         Array<OneD, NekDouble> &phiediffAniStrength,
         Array<OneD, Array<OneD, NekDouble>> &phieAniStrengthfiber);
@@ -297,6 +298,8 @@ protected:
     MMFNeuralEP(const LibUtilities::SessionReaderSharedPtr &pSession,
                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
+    void SetUpNeuralCm();
+
     void DoSolveMMF();    
 
     Array<OneD, int> GetInternalBoundaryPoints();
@@ -312,11 +315,11 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber, 
         const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrengthfiber);
 
-        void PlotAnisotropyfiber(
-            const Array<OneD, const NekDouble> &AniStrength, 
-            const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber, 
-            const Array<OneD, const NekDouble> &phieAniStrength, 
-            const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrengthfiber);
+    void PlotAnisotropyfiber(
+        const Array<OneD, const NekDouble> &AniStrength, 
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber, 
+        const Array<OneD, const NekDouble> &phieAniStrength, 
+        const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrengthfiber);
 
     void PlotPhieMF(
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,

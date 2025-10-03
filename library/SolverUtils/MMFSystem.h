@@ -240,8 +240,8 @@ const char *const FaceDirTypeMap[] = {
 class MMFSystem : virtual public UnsteadySystem
 {
 public:
-    int m_shapedim;
     int m_mfdim;
+    int m_shapedim;
 
     SurfaceType m_surfaceType;
     UpwindType m_upwindType;
