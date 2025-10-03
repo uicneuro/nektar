@@ -47,7 +47,6 @@
 
 using namespace Nektar::SolverUtils;
 
-
 namespace Nektar
 {
 
@@ -214,14 +213,25 @@ protected:
     Array<OneD, NekDouble> m_fiberleft;
     Array<OneD, NekDouble> m_fiberright;
     
-    Array<OneD, NekDouble> ComputeConductivity(
+    Array<OneD, NekDouble> ComputeNeuralCmfiber(
                  const Array<OneD, const int> &zoneindex);
 
-    Array<OneD, NekDouble> ComputeConductivity(
-                 const Array<OneD, const Array<OneD, int>> &zoneindex);
+    void ComputeNeuralCmfiber(
+    const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+    Array<OneD, Array<OneD, NekDouble>> &outarrayfiber);
+
+    void ComputeAniStrengthfiber(
+        const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
+        Array<OneD, Array<OneD, NekDouble>> &outarrayfiber);
+
+    void ComputePhieAniStrengthfiber(
+        const Array<OneD, int> &zoneindex, 
+        const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
+        Array<OneD, NekDouble> &phiediffAniStrength,
+        Array<OneD, Array<OneD, NekDouble>> &phieAniStrengthfiber);
 
     // other moving frames neede for NeuralEP
-    Array<OneD, Array<OneD, NekDouble>> m_phiediffmovingframes;
+    Array<OneD, NekDouble> m_phiediffmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_phiemovingframesfiber;
 
@@ -237,12 +247,6 @@ protected:
     Array<OneD, Array<OneD, NekDouble>> m_nodezonefiber;
 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_movingframesfiber;
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_AniStrengthfiber;
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_phieAniStrengthfiber;
-    Array<OneD, Array<OneD, NekDouble>> m_phiediffAniStrength;
-
-    Array<OneD, Array<OneD, NekDouble>> m_AniStrengthglobal;
-    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrengthglobal;
 
     Array<OneD, NekDouble> m_nodezone;
     Array<OneD, NekDouble> m_myelinzone;
@@ -250,18 +254,39 @@ protected:
     Array<OneD, NekDouble> m_extrazone;
     Array<OneD, NekDouble> m_outerzone;
 
-    Array<OneD, Array<OneD, NekDouble>> m_AniStrength;
-    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrength;
+    Array<OneD, Array<OneD, NekDouble>> m_AniStrengthfiber;
+    Array<OneD, Array<OneD, NekDouble>> m_phieAniStrengthfiber;
+    Array<OneD, NekDouble> m_phiediffAniStrength;
+
+    Array<OneD, NekDouble> m_AniStrength;
+    Array<OneD, NekDouble> m_phieAniStrength;
+
+    void TestHelmSolve();
 
     void ComputeRegionalSigma(
         const Array<OneD, const int> &zoneindex,
-        Array<OneD, Array<OneD, NekDouble>> &sigma_i,
-        Array<OneD, Array<OneD, NekDouble>> &sigma_e,
-        Array<OneD, Array<OneD, NekDouble>> &sigma_eM);
+        Array<OneD, NekDouble> &sigma_i,
+        Array<OneD, NekDouble> &sigma_e,
+        Array<OneD, NekDouble> &sigma_eM);
+
+    // void ComputeRegionalSigma(
+    //     const Array<OneD, const int> &zoneindex,
+    //     Array<OneD, Array<OneD, NekDouble>> &sigma_i,
+    //     Array<OneD, Array<OneD, NekDouble>> &sigma_e,
+    //     Array<OneD, Array<OneD, NekDouble>> &sigma_eM);
+            
+    // void ComputeRegionalSigmaMulti(
+    //     const Array<OneD, const int> &zoneindex,
+    //     Array<OneD, Array<OneD, NekDouble>> &sigma_i,
+    //     Array<OneD, Array<OneD, NekDouble>> &sigma_e,
+    //     Array<OneD, Array<OneD, NekDouble>> &sigma_eM);
+
+    void RescaleMovingFrames(
+        const Array<OneD, const NekDouble> &AniStrength,
+        Array<OneD, Array<OneD, NekDouble>> &movingframes);
 
     // Array<OneD, NekDouble> m_NeuralCm;
     Array<OneD, Array<OneD, NekDouble>> m_NeuralCm;
-    Array<OneD, NekDouble> m_NeuralCmfiber;
 
     Array<OneD, Array<OneD, NekDouble>> m_TimeMap;
     Array<OneD, Array<OneD, NekDouble>> m_PhieCurrent;
@@ -273,31 +298,28 @@ protected:
     MMFNeuralEP(const LibUtilities::SessionReaderSharedPtr &pSession,
                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
+    void SetUpNeuralCm();
+
     void DoSolveMMF();    
 
     Array<OneD, int> GetInternalBoundaryPoints();
     
-    void SetUpNeuralCm();
-
-    void ComputeAniStrengthfiber(
+    void ComputeConductivity(
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
-        Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &AniStrengthfiber);
-    
-    Array<OneD, NekDouble> ComputeNeuralCmfiber(
-        const Array<OneD, const int> &zoneindex);
-    
-        void ComputeNeuralCmfiber(
-            const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
-            Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &outarrayfiber);
+        Array<OneD, Array<OneD, NekDouble>> &outarrayfiber);
 
-void ComputeGlobalAniStrength(
-    const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>>
-        &AniStrengthfiber,
-    Array<OneD, Array<OneD, NekDouble>> &outarray);
-        
+    Array<OneD, NekDouble> ComputeGlobalAniStrength(
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber);
+
     void PlotAnisotropy(
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
-    const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrength);
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber, 
+        const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrengthfiber);
+
+    void PlotAnisotropyfiber(
+        const Array<OneD, const NekDouble> &AniStrength, 
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrengthfiber, 
+        const Array<OneD, const NekDouble> &phieAniStrength, 
+        const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrengthfiber);
 
     void PlotPhieMF(
     const Array<OneD, const Array<OneD, NekDouble>> &sigma_i,
@@ -352,8 +374,8 @@ void ComputeGlobalAniStrength(
 
     void ComputePhie(const Array<OneD, const NekDouble> &phim);
     
-    Array<OneD, NekDouble> ComputePhie(const int n, const Array<OneD, const NekDouble> &phim);
-
+    Array<OneD, NekDouble> ComputePhiefiber(const int n, const Array<OneD, const NekDouble> &phim);
+ 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -419,24 +441,11 @@ void ComputephieTimeMap(
         const Array<OneD, const NekDouble> &field,
         Array<OneD, NekDouble> &TimeMap);
 
-void RescaleMovingFrames(
-    const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
-    Array<OneD, Array<OneD, NekDouble>> &movingframes);
-
 void ComputerhoTimeMap(const NekDouble time,
                         const Array<OneD, const NekDouble> &field,
                         Array<OneD, NekDouble> &fieldint,
                         Array<OneD, NekDouble> &TimeMap);                        
 
-void Computemovingframesfiber(
-    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
-    const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>> &AniStrengthfiber,
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber);
-
-void ComputePhieAniStrengthfiber(
-    const Array<OneD, int> &zoneindex, 
-    const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
-    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phieAniStrengthfiber);
 
 void ComputePhieCurrent(const NekDouble time,
                         const NekDouble timestep,
@@ -471,6 +480,19 @@ void PrintDuoCurrent(const Array<OneD, const Array<OneD, NekDouble>> &field);
         const Array<OneD, const NekDouble> &TimeMap,
         const Array<OneD, const NekDouble> &TmapGrad,
         const Array<OneD, const NekDouble> &TmapGradMag);
+
+// void ComputephieMF(
+//             Array<OneD, Array<OneD, NekDouble>> &phiemovingframes, 
+//             Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes);
+
+// void ComputephieMFMulti(
+//     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phiemovingframesfiber, 
+//     Array<OneD, Array<OneD, NekDouble>> &phiediffmovingframes);
+
+void Computemovingframesfiber(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber);
 
     /// Sets a custom initial condition.
     virtual void v_SetInitialConditions(NekDouble initialtime,
