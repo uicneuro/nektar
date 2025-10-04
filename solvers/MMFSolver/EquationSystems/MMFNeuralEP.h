@@ -299,7 +299,7 @@ protected:
         &AniStrengthfiber,
     Array<OneD, Array<OneD, NekDouble>> &outarray);
 
-    void ComputePhieAniStrengthglobal(
+    void ComputeGlobalPhieAniStrength(
         const Array<OneD, const int> &zoneindex,
         Array<OneD, Array<OneD, NekDouble>> &phieAniStrength);
 
