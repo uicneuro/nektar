@@ -178,6 +178,8 @@ protected:
 
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::VarCoeffMap m_phievarcoeff;
+    StdRegions::VarCoeffMap m_phievarcoeffv2;
+
     Array<OneD, StdRegions::VarCoeffMap> m_varcoefffiber;
     Array<OneD, StdRegions::VarCoeffMap> m_phievarcoefffiber;
 
@@ -223,6 +225,8 @@ protected:
     // other moving frames neede for NeuralEP
     Array<OneD, Array<OneD, NekDouble>> m_phiediffmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
+    Array<OneD, Array<OneD, NekDouble>> m_phiemovingframesv2;
+
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_phiemovingframesfiber;
 
     SpatialDomains::GeomMMF m_phieMMFdir;
@@ -286,14 +290,24 @@ protected:
     Array<OneD, NekDouble> ComputeNeuralCmfiber(
         const Array<OneD, const int> &zoneindex);
     
-        void ComputeNeuralCmfiber(
+    void ComputeNeuralCmfiber(
             const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
             Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &outarrayfiber);
 
-void ComputeGlobalAniStrength(
+    void ComputeGlobalAniStrength(
     const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>>
         &AniStrengthfiber,
     Array<OneD, Array<OneD, NekDouble>> &outarray);
+
+    void ComputePhieAniStrengthglobal(
+        const Array<OneD, const int> &zoneindex,
+        Array<OneD, Array<OneD, NekDouble>> &phieAniStrength);
+
+    void PlotAnisotropyfiber(
+        const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
+        const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>> &AniStrengthfiber, 
+        const Array<OneD, const Array<OneD, NekDouble>> &phieAniStrength, 
+        const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>> &phieAniStrengthfiber);
         
     void PlotAnisotropy(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
@@ -393,6 +407,8 @@ void ComputeGlobalAniStrength(
 
 void PlotDomainZone();
 
+void TestHelmSolve();
+
 void PlotDomainZonefib2(
         const Array<OneD, const Array<OneD, int>> zoneindexfiber,
         const Array<OneD, const int> &zoneindex,
@@ -433,8 +449,12 @@ void Computemovingframesfiber(
     const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>> &AniStrengthfiber,
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber);
 
+void Computephiemovingframesfiber(
+    const Array<OneD, const Array<OneD, NekDouble>> &movingframes,
+    const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>> &AniStrengthfiber,
+    Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &movingframesfiber);
+
 void ComputePhieAniStrengthfiber(
-    const Array<OneD, int> &zoneindex, 
     const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phieAniStrengthfiber);
 
