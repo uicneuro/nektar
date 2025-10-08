@@ -75,6 +75,33 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     UnsteadySystem::v_InitObject(DeclareFields);
 
     const int nq = m_fields[0]->GetNpoints();
+    const int nvar = m_fields.size();
+    switch (nvar)
+    {
+        // NeuralEP2Dbi model
+        case 2:
+        {
+            m_phievar = 1;
+            break;
+        }
+
+        // NeuralEP2DbiMulti model for two fibers with a signel phie
+        case 3:
+        {
+            m_phievar = 2;
+            break;
+        }
+
+        // NeuralEP2DbiMulti model for two fibers with two phies
+        case 4:
+        {
+            m_phievar = 2;
+            break;
+        }
+
+        default:
+        break;
+    }
 
     static constexpr NekDouble PI = 3.14159265358979323846;
     m_pi       = PI;
@@ -2472,9 +2499,9 @@ void MMFNeuralEP::DoSolveMMF()
     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
 
     // int i, nchk = 1;
-    const int nq               = GetTotPoints();
-    const int nvar          = m_fields.size();
-    const int phievar = nvar - 1;
+    const int nq      = GetTotPoints();
+    const int nvar    = m_fields.size();
+    const int phievar = m_phievar;
     // const int totsteps = (m_steps + 1) / m_checksteps;
 
     int step = 0, nchk = 1;
@@ -2561,7 +2588,7 @@ void MMFNeuralEP::DoSolveMMF()
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
-            // PlotNeuralEP(fields, m_TimeMap, nchk);
+            PlotNeuralEP(fields, m_TimeMap, nchk);
 
             PrintAtNodes(nvar, m_numfiber, fields);
 
@@ -2868,6 +2895,12 @@ void MMFNeuralEP::PlotNeuralEP(
                 break;
             }
 
+            case 4:
+            {
+                PlotNeuralEPvar4(fields, TimeMap, nstep);
+                break;
+            }
+
             default:
             break;
         }
@@ -2892,6 +2925,7 @@ void MMFNeuralEP::PlotNeuralEPvar2(
         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
 
+    std::cout << "HERE 1" << std::endl;
     std::vector<std::string> variables(nvar);
     variables[0] = "phi_m";
     variables[1] = "phi_e";
@@ -2902,6 +2936,7 @@ void MMFNeuralEP::PlotNeuralEPvar2(
     //     variables[0] = "phi_m";
     Array<OneD, NekDouble> tmp(nq);
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
+    std::cout << "HERE 2" << std::endl;
 
     Array<OneD, NekDouble> phim(nq), phie(nq);
     Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
@@ -2909,10 +2944,12 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     //     variables[1] = "phi_e";
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[1]);
+    std::cout << "HERE 3" << std::endl;
 
     //     variables[2] = "CSD";
-    Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiediffmovingframes, fields[1]);
+    Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiemovingframes, fields[1]);
     m_fields[0]->FwdTransLocalElmt(CSD, fieldcoeffs[2]);
+    std::cout << "HERE 4" << std::endl;
 
     // Max values and indices
     const NekDouble Maxphim  = Vmath::Vmax(nq, phim, 1);
@@ -2923,6 +2960,7 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     const NekDouble MaxCSD   = Vmath::Vmax(nq, CSD, 1);
     const int       MaxCSDid  = Vmath::Imax(nq, CSD, 1);
+    std::cout << "HERE 5" << std::endl;
 
     // Coordinates
     const Array<OneD, NekDouble> &x0 = m_x;
@@ -2934,6 +2972,7 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     Vmath::Vmul(nq, m_intrazone, 1, TimeMap[0], 1, phim, 1);
     Vmath::Vmul(nq, m_outerzone, 1, TimeMap[1], 1, phie, 1);
+    std::cout << "HERE 6" << std::endl;
 
     // TimeMap maxima
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, phim, 1)
@@ -3028,6 +3067,98 @@ void MMFNeuralEP::PlotNeuralEPvar3(
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
+
+void MMFNeuralEP::PlotNeuralEPvar4(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep)
+{
+    const int nvar    = 11;
+    const int nq      = m_fields[0]->GetTotPoints();
+    const int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_field_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "field";
+    variables[1] = "phi_m";
+    variables[2] = "phi_e";
+    variables[3] = "phi_m1";
+    variables[4] = "phi_m2";
+    variables[5] = "phi_e1";
+    variables[6] = "phi_e2";
+    variables[7] = "TimeMap_phim1";
+    variables[8] = "TimeMap_phim2";
+    variables[9] = "TimeMap_phie1";
+    variables[10] = "TimeMap_phie2";
+
+    Array<OneD, NekDouble> phim(nq);
+    Vmath::Vadd(nq, fields[0], 1, fields[1], 1, phim, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phim, 1, phim, 1);
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vadd(nq, fields[2], 1, fields[3], 1, phie, 1);
+    Vmath::Vmul(nq, m_outerzone, 1, phie, 1, phie, 1);
+
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
+    // Multiply 100 to \phi_e for better visualization
+    Array<OneD, NekDouble> totfield(nq);
+    Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
+    Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
+
+    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[4]);
+
+    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(fields[3], fieldcoeffs[6]);
+
+    // Max values and indices
+    const NekDouble Maxphim1  = Vmath::Vmax(nq, fields[0], 1);
+    const int       Maxphim1id = Vmath::Imax(nq, fields[0], 1);
+
+    const NekDouble Maxphim2  = Vmath::Vmax(nq, fields[1], 1);
+    const int       Maxphim2id = Vmath::Imax(nq, fields[1], 1);
+
+    const NekDouble Maxphie1  = Vmath::Vmax(nq, fields[2], 1);
+    const int       Maxphie1id = Vmath::Imax(nq, fields[2], 1);
+
+    const NekDouble Maxphie2  = Vmath::Vmax(nq, fields[3], 1);
+    const int       Maxphie2id = Vmath::Imax(nq, fields[3], 1);
+
+    // Coordinates
+    const Array<OneD, NekDouble> &x0 = m_x;
+    const Array<OneD, NekDouble> &x1 = m_y;
+
+    std::cout << "phim1: Max = " << Maxphim1 << " at x = " << x0[Maxphim1id] << ", y = " << x1[Maxphim1id] << '\n';
+    std::cout << "phim2: Max = " << Maxphim2 << " at x = " << x0[Maxphim2id] << ", y = " << x1[Maxphim2id] << '\n';
+    std::cout << "phie1: Max = " << Maxphie1 << " at x = " << x0[Maxphie1id] << ", y = " << x1[Maxphie1id] << '\n';
+    std::cout << "phie2: Max = " << Maxphie2 << " at x = " << x0[Maxphie2id] << ", y = " << x1[Maxphie2id] << '\n';
+
+    // TimeMap maxima
+    std::cout << "TimeMap: phim1 = " << Vmath::Vmax(nq, TimeMap[0], 1)
+                << ", phim2 = " << Vmath::Vmax(nq, TimeMap[1], 1) 
+                << ", phie1 = " << Vmath::Vmax(nq, TimeMap[2], 1) 
+                << ", phie2 = " << Vmath::Vmax(nq, TimeMap[3], 1)<< std::endl;
+    
+    // variables[4] = "TimeMap_phim";
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[8]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[9]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[3], fieldcoeffs[10]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
 
 void MMFNeuralEP::PlotAnisotropy(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
@@ -3469,7 +3600,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 {
     const int nvar = m_fields.size();
     const int nq   = m_fields[0]->GetNpoints();
-    const int phievar = nvar - 1;
+    const int phievar = m_phievar;
     const int numfiber = m_numfiber;
 
     const NekDouble factor = m_Cn * m_Rf;
@@ -3549,8 +3680,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
                                     const Array<OneD, const NekDouble> &phim)
 {
     const int nq = m_fields[nfib]->GetNpoints();
-    const int nvar = m_fields.size();
-    const int phievar = nvar - 1;
+    const int phievar = m_phievar;
 
     Array<OneD, NekDouble> outarray(nq);
 
@@ -3621,7 +3751,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
 void MMFNeuralEP::ComputePhie(const Array<OneD, const NekDouble> &phim)
 {
     const int nq = m_fields[0]->GetNpoints();
-    const int phievar = m_fields.size() - 1;
+    const int phievar = m_phievar;
 
     Array<OneD, NekDouble> outarray(nq);
 
