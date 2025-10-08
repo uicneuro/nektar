@@ -184,10 +184,11 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
     m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
 
-    m_session->LoadParameter("Diffext", m_Diffext, 1e-6);
+    m_session->LoadParameter("CSDDiff", m_CSDDiff, 1e-6);
 
     NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
-    NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/(m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle);
+    NekDouble PhieMultFactorlower = m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle;
+    NekDouble PhieMultFactor = m_axondiameter*m_axondiameter/PhieMultFactorlower;
 
     // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
     m_phiefactor = PhieMultFactor / axoncrossA;
@@ -346,6 +347,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         case eNeuralEP2DbiMulti:
+        case eNeuralEP2DbiCSD:
         {   
             // Provide index for nodes and myelins
             IndexNodeZone2D(m_fiberleft, m_fiberright, m_fiberorder, m_zoneindexfiber);
@@ -379,6 +381,15 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
    // Create moving frames for phi_m
     MMFSystem::MMFInitObject(UnitAnisotroy);
     CheckMovingFrames(m_movingframes);
+
+    // Setting up moving frames for CSD
+    m_CSDmovingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    for (int j = 0; j < m_spacedim; ++j)
+    {
+        m_CSDmovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
+        Vmath::Vcopy(m_spacedim * nq, &m_movingframes[j][0], 1, &m_CSDmovingframes[j][0], 1);
+    }
+    ComputeVarCoeff2D(m_CSDmovingframes, m_CSDvarcoeff);
 
     // Create moving frames for phi_e
     std::string phieMMFdirStr;
@@ -455,6 +466,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti, this); 
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti, this);
+                break;
+            }
+
+            case eNeuralEP2DbiCSD:
+            {
+                m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD, this); 
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD, this);
                 break;
             }
 
@@ -2891,7 +2909,14 @@ void MMFNeuralEP::PlotNeuralEP(
 
             case 3:
             {
-                PlotNeuralEPvar3(fields, TimeMap, nstep);
+                if(m_NeuralEPType == eNeuralEP2DbiMulti)
+                {
+                    PlotNeuralEPvar3(fields, TimeMap, nstep);
+                }
+                else if(m_NeuralEPType == eNeuralEP2DbiCSD)
+                {
+                    PlotNeuralEPvar3CSD(fields, TimeMap, nstep);
+                }
                 break;
             }
 
@@ -2925,7 +2950,6 @@ void MMFNeuralEP::PlotNeuralEPvar2(
         fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
     }
 
-    std::cout << "HERE 1" << std::endl;
     std::vector<std::string> variables(nvar);
     variables[0] = "phi_m";
     variables[1] = "phi_e";
@@ -2936,7 +2960,6 @@ void MMFNeuralEP::PlotNeuralEPvar2(
     //     variables[0] = "phi_m";
     Array<OneD, NekDouble> tmp(nq);
     m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[0]);
-    std::cout << "HERE 2" << std::endl;
 
     Array<OneD, NekDouble> phim(nq), phie(nq);
     Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
@@ -2944,12 +2967,10 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     //     variables[1] = "phi_e";
     m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[1]);
-    std::cout << "HERE 3" << std::endl;
 
     //     variables[2] = "CSD";
     Array<OneD, NekDouble> CSD = ComputeMMFDiffusion(m_phiemovingframes, fields[1]);
     m_fields[0]->FwdTransLocalElmt(CSD, fieldcoeffs[2]);
-    std::cout << "HERE 4" << std::endl;
 
     // Max values and indices
     const NekDouble Maxphim  = Vmath::Vmax(nq, phim, 1);
@@ -2960,7 +2981,6 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     const NekDouble MaxCSD   = Vmath::Vmax(nq, CSD, 1);
     const int       MaxCSDid  = Vmath::Imax(nq, CSD, 1);
-    std::cout << "HERE 5" << std::endl;
 
     // Coordinates
     const Array<OneD, NekDouble> &x0 = m_x;
@@ -2972,7 +2992,6 @@ void MMFNeuralEP::PlotNeuralEPvar2(
 
     Vmath::Vmul(nq, m_intrazone, 1, TimeMap[0], 1, phim, 1);
     Vmath::Vmul(nq, m_outerzone, 1, TimeMap[1], 1, phie, 1);
-    std::cout << "HERE 6" << std::endl;
 
     // TimeMap maxima
     std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, phim, 1)
@@ -3067,6 +3086,82 @@ void MMFNeuralEP::PlotNeuralEPvar3(
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
+
+void MMFNeuralEP::PlotNeuralEPvar3CSD(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep)
+{
+    const int nvar    = 7;
+    const int nq      = m_fields[0]->GetTotPoints();
+    const int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_field_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "field";
+    variables[1] = "phi_m";
+    variables[2] = "rho";
+    variables[3] = "phi_e";
+    variables[4] = "TimeMap_phim";
+    variables[5] = "TimeMap_rho";
+    variables[6] = "TimeMap_phie";
+
+    Array<OneD, NekDouble> phim(nq);
+    Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
+
+    Array<OneD, NekDouble> rho(nq);
+    Vmath::Vcopy(nq, fields[1], 1, rho, 1);
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[2], 1, phie, 1);
+
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(rho, fieldcoeffs[2]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[3]);
+
+    Array<OneD, NekDouble> totfield(nq);
+    Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
+    Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
+
+    // Max values and indices
+    const NekDouble Maxphim  = Vmath::Vmax(nq, fields[0], 1);
+    const int       Maxphimid = Vmath::Imax(nq, fields[0], 1);
+
+    const NekDouble Maxrho  = Vmath::Vmax(nq, fields[1], 1);
+    const int       Maxrhoid = Vmath::Imax(nq, fields[1], 1);
+
+    const NekDouble Maxphie  = Vmath::Vmax(nq, fields[2], 1);
+    const int       Maxphieid = Vmath::Imax(nq, fields[2], 1);
+
+    // Coordinates
+    const Array<OneD, NekDouble> &x0 = m_x;
+    const Array<OneD, NekDouble> &x1 = m_y;
+
+    std::cout << "phim: Max = " << Maxphim << " at x = " << x0[Maxphimid] << ", y = " << x1[Maxphimid] << '\n';
+    std::cout << "rho: Max = " << Maxrho << " at x = " << x0[Maxrhoid] << ", y = " << x1[Maxrhoid] << '\n';
+    std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << '\n';
+ 
+    // TimeMap maxima
+    std::cout << "TimeMap: phim = " << Vmath::Vmax(nq, TimeMap[0], 1)
+                << ", rho = " << Vmath::Vmax(nq, TimeMap[1], 1) << ", phie = " << Vmath::Vmax(nq, TimeMap[2], 1) << std::endl;
+    
+    // variables[4] = "TimeMap_phim";
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[6]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
 
 void MMFNeuralEP::PlotNeuralEPvar4(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
@@ -3452,6 +3547,51 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti(
     }
 }
 
+// Implicit solve for NeuralEP 2D solver
+void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+    const NekDouble lambda)
+{
+    (void) time;
+
+    const int nq   = m_fields[0]->GetNpoints();
+    const NekDouble CSDfactor = m_CSDDiff;
+
+    // Set Helmholtz coefficients
+    StdRegions::ConstFactorMap factors;
+    factors[StdRegions::eFactorTau] = m_Helmtau;
+    factors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
+
+    if (outarray[0].size() != nq)
+    {
+        outarray[0] = Array<OneD, NekDouble>(nq);
+    }
+
+    // Multiply 1.0/timestep
+    const NekDouble scale = -factors[StdRegions::eFactorLambda];
+    Vmath::Smul(nq, scale, inarray[0], 1, m_fields[0]->UpdatePhys(), 1);
+
+    m_fields[0]->HelmSolve(m_fields[0]->GetPhys(), m_fields[0]->UpdateCoeffs(),
+                        factors, m_varcoeff);
+    m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
+    m_fields[0]->SetPhysState(true);
+
+    // Set CSD Helmholtz coefficients
+    StdRegions::ConstFactorMap CSDfactors;
+    CSDfactors[StdRegions::eFactorTau] = m_Helmtau;
+    CSDfactors[StdRegions::eFactorLambda] = CSDfactor / lambda;
+
+    // Multiply 1.0/timestep
+    const NekDouble CSDscale = -CSDfactors[StdRegions::eFactorLambda];
+    Vmath::Smul(nq, CSDscale, inarray[1], 1, m_fields[1]->UpdatePhys(), 1);
+
+    m_fields[1]->HelmSolve(m_fields[1]->GetPhys(), m_fields[1]->UpdateCoeffs(),
+                        CSDfactors, m_CSDvarcoeff);
+    m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), outarray[1]);
+    m_fields[1]->SetPhysState(true);
+}
+
 // We Return Y[i] = rhs [i] without no Helomsolver
 void MMFNeuralEP::DoNullSolve(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -3528,6 +3668,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 {
     const int nvar = m_fields.size();
     const int nq   = m_fields[0]->GetNpoints();
+    const int phievar = m_phievar;
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
 
@@ -3558,12 +3699,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     ComputePhie(inarray[0]);
-    // const Array<OneD, NekDouble> &phie = m_fields[1]->GetPhys();
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
-    Array<OneD, NekDouble> phiecurrent(nq,0.0);
-    phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[1]->GetPhys());
-  
+    Array<OneD, NekDouble> phiecurrent(nq);
+    phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
+
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
     for (int i = 0; i < nq; ++i)
     {
@@ -3585,7 +3725,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 
         for (int i = 0; i < nq; ++i)
         {
-            outarray[0][i] += Laplacian[i] / (m_Cn * m_Rf);
+            outarray[0][i] += Laplacian[i] / factor;
         }
     }
 }
@@ -3665,7 +3805,79 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 
         for (int i = 0; i < nq; ++i)
         {
-            outarray[0][i] += Laplacian[i] / (m_Cn * m_Rf);
+            outarray[0][i] += Laplacian[i] / factor;
+        }
+    }
+}
+
+void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+{
+    const int nvar = m_fields.size();
+    const int nq   = m_fields[0]->GetNpoints();
+    const NekDouble factor = m_Cn * m_Rf;
+    const NekDouble Temp = m_Temperature;
+    const int phievar = m_phievar;
+
+    // Reuse memory if already allocated
+    for (int i = 0; i < nvar; ++i)
+    {
+        if (outarray[i].size() != nq)
+        {
+            outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
+        }
+        else
+        {
+            Vmath::Zero(nq, outarray[i], 1);
+        }
+    }
+
+    // 1. Reaction Term (FHN or H-H ion current model)
+    m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, Temp);
+
+    // 2. Apply Stimulus
+    for (std::size_t n = 0; n < m_stimulus.size(); ++n)
+    {
+       m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
+    }
+
+    // 3. Compute phi_e to satisfy bidomain coupling
+    // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
+    // (\sigma_i \nabla \phi_m)
+    ComputePhie(inarray[0]);
+
+    // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
+    Array<OneD, NekDouble> phiecurrent(nq);
+    phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
+
+    // Current caused by extracellular potential affects the total current at the nodes and myelin.
+    for (int i = 0; i < nq; ++i)
+    {
+        if (m_intrazone[i] > 0.0)
+        {
+            outarray[0][i] += phiecurrent[i] / factor;
+        }
+    }
+
+    // Compute the charge density at the nodes.
+    Array<OneD, NekDouble> CSD(nq);
+    CSD = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
+    Vmath::Vmul(nq, m_nodezone, 1, CSD, 1, outarray[2], 1);
+
+    if (m_explicitDiffusion)
+    {
+        static thread_local Array<OneD, NekDouble> Laplacian;
+        if (Laplacian.size() != nq)
+        {
+            Laplacian = Array<OneD, NekDouble>(nq);
+        }
+
+        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
+
+        for (int i = 0; i < nq; ++i)
+        {
+            outarray[0][i] += Laplacian[i] / factor;
         }
     }
 }
@@ -3828,6 +4040,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
     {
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
+        case eNeuralEP2DbiCSD:
         {
             m_neuron->Initialise();
 
@@ -3838,22 +4051,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
             tmp[0] = Array<OneD, NekDouble>(nq);
 
             Array<OneD, NekDouble> initialcondition(nq, 0.0);
-            for (int n=0; n<m_numfiber; ++n)
-            {
-               // Vmath::Svtvp(nq, 100.0, m_excitezone[n], 1, initialcondition, 1, initialcondition, 1);
-            }
-
-            // for (int n=0; n<m_numfiber; ++n)
-            // {
-            //    m_stimulus[n]->Update(m_excitezone[n], initialcondition, initialtime);
-            // }
-
-            // Array<OneD, NekDouble> initialcondition(nq, 0.0);
-            // for (int n=0; n<m_numfiber; ++n)
-            // {
-            //     m_stimulus[n]->Update(m_excitezone[n], initialcondition, initialtime);
-            // }
-
             m_fields[0]->SetPhys(initialcondition);
             break;
         }

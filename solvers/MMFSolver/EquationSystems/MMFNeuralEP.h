@@ -58,6 +58,7 @@ enum NeuralEPType
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
     eNeuralEP2DbiMulti,
+    eNeuralEP2DbiCSD,
     SIZE_NeuralEPType ///< Length of enum list
 };
 
@@ -67,6 +68,7 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
     "NeuralEP2DbiMulti",
+    "NeuralEP2DbiCSD",
 };
 
 enum SolverSchemeType
@@ -178,7 +180,7 @@ protected:
 
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::VarCoeffMap m_phievarcoeff;
-    StdRegions::VarCoeffMap m_phievarcoeffv2;
+    StdRegions::VarCoeffMap m_CSDvarcoeff;
 
     Array<OneD, StdRegions::VarCoeffMap> m_varcoefffiber;
     Array<OneD, StdRegions::VarCoeffMap> m_phievarcoefffiber;
@@ -223,9 +225,9 @@ protected:
                  const Array<OneD, const Array<OneD, int>> &zoneindex);
 
     // other moving frames neede for NeuralEP
-    Array<OneD, Array<OneD, NekDouble>> m_phiediffmovingframes;
+    NekDouble m_CSDDiff;
+    Array<OneD, Array<OneD, NekDouble>> m_CSDmovingframes;
     Array<OneD, Array<OneD, NekDouble>> m_phiemovingframes;
-    Array<OneD, Array<OneD, NekDouble>> m_phiemovingframesv2;
 
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> m_phiemovingframesfiber;
 
@@ -347,6 +349,11 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
+    void DoImplicitSolveNeuralEP2DbiCSD(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
     void DoNullSolve(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
                      Array<OneD, Array<OneD, NekDouble>> &outarray,
                      const NekDouble time, const NekDouble lambda);
@@ -361,6 +368,10 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     void DoOdeRhsNeuralEP2DbiMulti(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
+    void DoOdeRhsNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
@@ -477,6 +488,11 @@ void PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep);
+
+    void PlotNeuralEPvar3CSD(
+        const Array<OneD, const Array<OneD, NekDouble>> &fields,
+        const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+        const int nstep);
 
     void PlotNeuralEPvar4(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
