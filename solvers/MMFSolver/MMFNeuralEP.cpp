@@ -81,6 +81,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         // NeuralEP2Dbi model
         case 2:
         {
+            m_phimvar = 0;
             m_phievar = 1;
             break;
         }
@@ -88,6 +89,14 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         // NeuralEP2DbiMulti model for two fibers with a signel phie
         case 3:
         {
+            if(m_NeuralEPType == eNeuralEP2DbiMulti)
+            {
+                m_phimvar = 1;
+            }
+            else if(m_NeuralEPType == eNeuralEP2DbiCSD)
+            {
+                m_phimvar = 0;
+            }
             m_phievar = 2;
             break;
         }
@@ -2587,12 +2596,8 @@ void MMFNeuralEP::DoSolveMMF()
             Vmath::Smul(nq, 1.0 / (m_timestep * maxphi), dphidt[n], 1, dphidt[n], 1);
         }
 
-        for (int n = 0; n < phievar; n++)
-        {
-            ComputeNeuralTimeMap(m_time, fields[n], dphidt[n], dphidtint[n], m_TimeMap[n]);
-        }
-
-        ComputephieTimeMap(m_timestep, fields[phievar], m_TimeMap[phievar]);
+        // Compute neural time map
+        ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
 
         // Info output
         if ((step + 1) % m_infosteps == 0 && m_session->GetComm()->GetRank() == 0)
@@ -2744,7 +2749,29 @@ NekDouble MMFNeuralEP::DisplayAtNodes(const int fibern, const int nodeindex,
     return output;
 }
 
-void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
+void MMFNeuralEP::ComputeNeuralTimeMap(
+    const NekDouble time, 
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &dphidts,
+    Array<OneD, Array<OneD, NekDouble>> &dphidtints, 
+    Array<OneD, Array<OneD, NekDouble>> &TimeMaps)
+{
+    const int phimvar = m_phimvar;
+    const int nvar = m_fields.size();
+
+    // phim time map
+    for (int n = 0; n < (phimvar+1); n++)
+    {
+        ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
+    }
+
+    for (int n = (phimvar+1); n < nvar; n++)
+    {
+        ComputephieTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
+    }
+}   
+
+void MMFNeuralEP::ComputephimTimeMap(const NekDouble time,
                                     const Array<OneD, const NekDouble> &field,
                                     const Array<OneD, const NekDouble> &dphidt,
                                     Array<OneD, NekDouble> &dphidtint,
@@ -2776,19 +2803,26 @@ void MMFNeuralEP::ComputeNeuralTimeMap(const NekDouble time,
 }
 
 void MMFNeuralEP::ComputephieTimeMap(
-        const NekDouble dt,
+        const NekDouble time,
         const Array<OneD, const NekDouble> &field,
+        const Array<OneD, const NekDouble> &dphidt,
+        Array<OneD, NekDouble> &dphidtint,
         Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    constexpr NekDouble Tol = 0.01;
+    const NekDouble dphidtTol = 0.1;
 
+    NekDouble phie;
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble phie = field[i] + 1.0;
-        if (phie > Tol)
+        const NekDouble dphi = dphidt[i];
+        phie = field[i];
+
+        // if the field is rising and is largest by now, time mep is the corresponding time.
+        if ( (dphi > dphidtTol) && (phie > dphidtint[i]) )
         {
-            TimeMap[i] += phie * dt;
+            TimeMap[i] = time;
+            dphidtint[i] = phie;
         }
     }
 }
@@ -3556,7 +3590,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
     (void) time;
 
     const int nq   = m_fields[0]->GetNpoints();
-    const NekDouble CSDfactor = m_CSDDiff;
 
     // Set Helmholtz coefficients
     StdRegions::ConstFactorMap factors;
@@ -3580,7 +3613,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
     // Set CSD Helmholtz coefficients
     StdRegions::ConstFactorMap CSDfactors;
     CSDfactors[StdRegions::eFactorTau] = m_Helmtau;
-    CSDfactors[StdRegions::eFactorLambda] = CSDfactor / lambda;
+    // CSDfactors[StdRegions::eFactorLambda] = m_CSDDiff / lambda;
+    CSDfactors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
 
     // Multiply 1.0/timestep
     const NekDouble CSDscale = -CSDfactors[StdRegions::eFactorLambda];
@@ -3863,6 +3897,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
     // Compute the charge density at the nodes.
     Array<OneD, NekDouble> CSD(nq);
     CSD = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
+    Vmath::Neg(nq, CSD, 1);
     Vmath::Vmul(nq, m_nodezone, 1, CSD, 1, outarray[1], 1);
 
     if (m_explicitDiffusion)

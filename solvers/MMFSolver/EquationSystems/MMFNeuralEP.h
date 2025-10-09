@@ -185,7 +185,7 @@ protected:
     Array<OneD, StdRegions::VarCoeffMap> m_varcoefffiber;
     Array<OneD, StdRegions::VarCoeffMap> m_phievarcoefffiber;
 
-    int m_phievar;
+    int m_phimvar, m_phievar;
     int m_npts, m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd, m_Convectiven;
     int m_numfiber, m_totNode, m_zonestart, m_zoneend, m_myeline, m_node, m_external;
     int m_fiber2DElemStart, m_fiber2DElemEnd, m_fiber1order, m_fiber2order, m_fiber3order;
@@ -434,17 +434,25 @@ void PlotDomainZonefib1(
         const Array<OneD, const NekDouble> &extrazone,
         const Array<OneD, const NekDouble> &outerzone);
 
-void ComputeNeuralTimeMap(const NekDouble time,
+void ComputeNeuralTimeMap(
+    const NekDouble time, 
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &dphidts,
+    Array<OneD, Array<OneD, NekDouble>> &dphidtints, 
+    Array<OneD, Array<OneD, NekDouble>> &TimeMaps);
+
+void ComputephimTimeMap(const NekDouble time,
                         const Array<OneD, const NekDouble> &field,
                         const Array<OneD, const NekDouble> &dphidt,
                         Array<OneD, NekDouble> &dphidtint,
                         Array<OneD, NekDouble> &TimeMap);
 
-
 void ComputephieTimeMap(
-        const NekDouble dt,
-        const Array<OneD, const NekDouble> &field,
-        Array<OneD, NekDouble> &TimeMap);
+    const NekDouble dt,
+    const Array<OneD, const NekDouble> &field,
+    const Array<OneD, const NekDouble> &dphidt,
+    Array<OneD, NekDouble> &dphidtint,
+    Array<OneD, NekDouble> &TimeMap);
 
 void RescaleMovingFrames(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
