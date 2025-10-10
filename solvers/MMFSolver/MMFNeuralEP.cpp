@@ -3126,7 +3126,7 @@ void MMFNeuralEP::PlotNeuralEPvar3CSD(
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
     const int nstep)
 {
-    const int nvar    = 7;
+    const int nvar    = 8;
     const int nq      = m_fields[0]->GetTotPoints();
     const int ncoeffs = m_fields[0]->GetNcoeffs();
 
@@ -3144,9 +3144,10 @@ void MMFNeuralEP::PlotNeuralEPvar3CSD(
     variables[1] = "phi_m";
     variables[2] = "rho";
     variables[3] = "phi_e";
-    variables[4] = "TimeMap_phim";
-    variables[5] = "TimeMap_rho";
-    variables[6] = "TimeMap_phie";
+    variables[4] = "CSDatnode";
+    variables[5] = "TimeMap_phim";
+    variables[6] = "TimeMap_rho";
+    variables[7] = "TimeMap_phie";
 
     Array<OneD, NekDouble> phim(nq);
     Vmath::Vmul(nq, m_intrazone, 1, fields[0], 1, phim, 1);
@@ -3165,6 +3166,13 @@ void MMFNeuralEP::PlotNeuralEPvar3CSD(
     Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
     Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
     m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
+
+    Array<OneD, NekDouble> CSDatnode(nq);
+    CSDatnode = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[2]->GetPhys());
+    Vmath::Vmul(nq, m_nodezone, 1, CSDatnode, 1, CSDatnode, 1);
+    Vmath::Neg(nq, CSDatnode, 1);
+
+    m_fields[0]->FwdTransLocalElmt(CSDatnode, fieldcoeffs[4]);
 
     // Max values and indices
     const NekDouble Maxphim  = Vmath::Vmax(nq, fields[0], 1);
@@ -3189,9 +3197,9 @@ void MMFNeuralEP::PlotNeuralEPvar3CSD(
                 << ", rho = " << Vmath::Vmax(nq, TimeMap[1], 1) << ", phie = " << Vmath::Vmax(nq, TimeMap[2], 1) << std::endl;
     
     // variables[4] = "TimeMap_phim";
-    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[4]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[5]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[6]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[7]);
 
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
