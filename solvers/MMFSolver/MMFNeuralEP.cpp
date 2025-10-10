@@ -2611,7 +2611,7 @@ void MMFNeuralEP::DoSolveMMF()
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
-            PlotNeuralEP(fields, m_TimeMap, nchk);
+            // PlotNeuralEP(fields, m_TimeMap, nchk);
 
             PrintAtNodes(nvar, m_numfiber, fields);
 
