@@ -2621,7 +2621,7 @@ void MMFNeuralEP::DoSolveMMF()
 
             Checkpoint_Output(nchk++);
         }
-        std::cout << "DoSolve: HERE4" << std::endl;
+        std::cout << "DoSolve: HERE 4" << std::endl;
 
         ++step;
     } // namespace Nektar
@@ -3613,6 +3613,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
     {
         outarray[0] = Array<OneD, NekDouble>(nq);
     }
+    std::cout << "CSDIMPLICIT: HERE 1" << std::endl;
 
     // Multiply 1.0/timestep
     const NekDouble scale = -factors[StdRegions::eFactorLambda];
@@ -3622,12 +3623,14 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
                         factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
+    std::cout << "CSDIMPLICIT: HERE 2" << std::endl;
 
     // Set CSD Helmholtz coefficients
     StdRegions::ConstFactorMap CSDfactors;
     CSDfactors[StdRegions::eFactorTau] = m_Helmtau;
     // CSDfactors[StdRegions::eFactorLambda] = m_CSDDiff / lambda;
     CSDfactors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
+    std::cout << "CSDIMPLICIT: HERE 3" << std::endl;
 
     // Multiply 1.0/timestep
     const NekDouble CSDscale = -CSDfactors[StdRegions::eFactorLambda];
@@ -3637,6 +3640,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
                         CSDfactors, m_CSDvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), outarray[1]);
     m_fields[1]->SetPhysState(true);
+    std::cout << "CSDIMPLICIT: HERE 4" << std::endl;
 }
 
 // We Return Y[i] = rhs [i] without no Helomsolver
@@ -3885,24 +3889,29 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
             Vmath::Zero(nq, outarray[i], 1);
         }
     }
+    std::cout << "CSDODE: HERE 1" << std::endl;
 
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, Temp);
+    std::cout << "CSDODE: HERE 2" << std::endl;
 
     // 2. Apply Stimulus
     for (std::size_t n = 0; n < m_stimulus.size(); ++n)
     {
        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
+    std::cout << "CSDODE: HERE 3" << std::endl;
 
     // 3. Compute phi_e to satisfy bidomain coupling
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     ComputePhie(inarray[0]);
+    std::cout << "CSDODE: HERE 4" << std::endl;
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
     phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
+    std::cout << "CSDODE: HERE 5" << std::endl;
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
     for (int i = 0; i < nq; ++i)
@@ -3912,12 +3921,14 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
             outarray[0][i] += phiecurrent[i] / factor;
         }
     }
+    std::cout << "CSDODE: HERE 6" << std::endl;
 
     // Compute the charge density at the nodes.
     Array<OneD, NekDouble> CSD(nq);
     CSD = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
     Vmath::Neg(nq, CSD, 1);
     Vmath::Vmul(nq, m_nodezone, 1, CSD, 1, outarray[1], 1);
+    std::cout << "CSDODE: HERE 7" << std::endl;
 
     if (m_explicitDiffusion)
     {
