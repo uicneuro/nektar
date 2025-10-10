@@ -2587,6 +2587,8 @@ void MMFNeuralEP::DoSolveMMF()
         intTime += elapsed;
         cpuTime += elapsed;
 
+        std::cout << "DoSolve: HERE 1" << std::endl;
+
         // Compute normalized time derivatives
         fields[phievar] = m_fields[phievar]->GetPhys();
         for (int n = 0; n < std::min(nvar, 3); ++n)
@@ -2595,6 +2597,7 @@ void MMFNeuralEP::DoSolveMMF()
             Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
             Vmath::Smul(nq, 1.0 / (m_timestep * maxphi), dphidt[n], 1, dphidt[n], 1);
         }
+        std::cout << "DoSolve: HERE 2" << std::endl;
 
         // Compute neural time map
         ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
@@ -2607,16 +2610,18 @@ void MMFNeuralEP::DoSolveMMF()
                       << ", CPU Time = " << cpuTime / 60.0 << " min.\n\n";
             cpuTime = 0.0;
         }
+        std::cout << "DoSolve: HERE 3" << std::endl;
 
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
-            // PlotNeuralEP(fields, m_TimeMap, nchk);
+            PlotNeuralEP(fields, m_TimeMap, nchk);
 
             PrintAtNodes(nvar, m_numfiber, fields);
 
             Checkpoint_Output(nchk++);
         }
+        std::cout << "DoSolve: HERE4" << std::endl;
 
         ++step;
     } // namespace Nektar
@@ -3714,6 +3719,8 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
 
+    std::cout << "ODE: HERE 1" << std::endl;
+
     // Reuse memory if already allocated
     for (int i = 0; i < nvar; ++i)
     {
@@ -3726,6 +3733,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
             Vmath::Zero(nq, outarray[i], 1);
         }
     }
+    std::cout << "ODE: HERE 2" << std::endl;
 
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, Temp);
@@ -3736,15 +3744,18 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
       //  m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
+    std::cout << "ODE: HERE 3" << std::endl;
 
     // 3. Compute phi_e to satisfy bidomain coupling
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
     ComputePhie(inarray[0]);
+    std::cout << "ODE: HERE 4" << std::endl;
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
     phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
+    std::cout << "ODE: HERE 5" << std::endl;
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
     for (int i = 0; i < nq; ++i)
