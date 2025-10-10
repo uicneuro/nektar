@@ -2615,11 +2615,11 @@ void MMFNeuralEP::DoSolveMMF()
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
-            // PlotNeuralEP(fields, m_TimeMap, nchk);
+            PlotNeuralEP(fields, m_TimeMap, nchk);
 
-            // PrintAtNodes(nvar, m_numfiber, fields);
+            PrintAtNodes(nvar, m_numfiber, fields);
 
-            // Checkpoint_Output(nchk++);
+            Checkpoint_Output(nchk++);
         }
         std::cout << "DoSolve: HERE 4" << std::endl;
 
@@ -3723,8 +3723,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
 
-    std::cout << "ODE: HERE 1" << std::endl;
-
     // Reuse memory if already allocated
     for (int i = 0; i < nvar; ++i)
     {
@@ -3737,7 +3735,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
             Vmath::Zero(nq, outarray[i], 1);
         }
     }
-    std::cout << "ODE: HERE 2" << std::endl;
 
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, Temp);
@@ -3748,18 +3745,15 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
       //  m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
-    std::cout << "ODE: HERE 3" << std::endl;
 
     // 3. Compute phi_e to satisfy bidomain coupling
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    ComputePhie(inarray[0]);
-    std::cout << "ODE: HERE 4" << std::endl;
+    m_fields[phievar]->UpdatePhys() = ComputeFieldPhie(phievar, inarray[0]);
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
     phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
-    std::cout << "ODE: HERE 5" << std::endl;
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
     for (int i = 0; i < nq; ++i)
@@ -3827,7 +3821,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling
-        tmp = ComputePhie(n, inarray[n]);
+        tmp = ComputeFieldPhie(m_phievar, inarray[n], n);
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
@@ -3905,7 +3899,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
     // 3. Compute phi_e to satisfy bidomain coupling
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    ComputePhie(inarray[0]);
+    m_fields[phievar]->UpdatePhys() = ComputeFieldPhie(m_phievar, inarray[0]);
     std::cout << "CSDODE: HERE 4" << std::endl;
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
@@ -3952,12 +3946,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
-                                    const int nfib, 
-                                    const Array<OneD, const NekDouble> &phim)
+Array<OneD, NekDouble> MMFNeuralEP::ComputeFieldPhie(
+                                    const int phievar,
+                                    const Array<OneD, const NekDouble> &phim,
+                                    const int nfiber)
 {
-    const int nq = m_fields[nfib]->GetNpoints();
-    const int phievar = m_phievar;
+    const int nq = m_fields[0]->GetNpoints();
 
     Array<OneD, NekDouble> outarray(nq);
 
@@ -3981,14 +3975,28 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
         Vmath::Zero(nq, phimcurrent, 1);
     }
 
-    phimcurrent = ComputeMMFDiffusion(m_movingframesfiber[nfib], phim);
+    if(nfiber > -1)
+    {
+        phimcurrent = ComputeMMFDiffusion(m_movingframesfiber[nfiber], phim);
+    }
+    else
+    {
+        phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+    }
     Vmath::Neg(nq, phimcurrent, 1);
 
     switch(m_ExtCurrentType)
     {
         case eEphaptic:
         {
-            Vmath::Vmul(nq, m_nodezonefiber[nfib], 1, phimcurrent, 1, phimcurrent, 1);
+            if(nfiber > -1)
+            {
+                Vmath::Vmul(nq, m_nodezonefiber[nfiber], 1, phimcurrent, 1, phimcurrent, 1);
+            }
+            else
+            {
+                Vmath::Vmul(nq, m_nodezone, 1, phimcurrent, 1, phimcurrent, 1);
+            }
             break;
         }
 
@@ -4010,8 +4018,17 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
         m_fields[phievar]->UpdatePhys()[i] = phimcurrent[i] - avg;
     }
 
-    m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), 
-    phiefactors, m_phievarcoefffiber[nfib]);
+    if(nfiber > -1)
+    {
+        m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), 
+        phiefactors, m_phievarcoefffiber[nfiber]);
+    }
+    else
+    {
+        m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), 
+        phiefactors, m_phievarcoeff);
+    }
+
     m_fields[phievar]->BwdTrans(m_fields[phievar]->GetCoeffs(), outarray);
 
     // Make it as a value with AvgInt is zero.
@@ -4025,71 +4042,72 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputePhie(
 // Compute phi_e from the given distribution of phi_m
 // \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
 //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-void MMFNeuralEP::ComputePhie(const Array<OneD, const NekDouble> &phim)
-{
-    const int nq = m_fields[0]->GetNpoints();
-    const int phievar = m_phievar;
+// void MMFNeuralEP::ComputePhie(
+//                     const int phievar,
+//                     const Array<OneD, const NekDouble> &phim)
+// {
+//     const int nq = m_fields[0]->GetNpoints();
 
-    Array<OneD, NekDouble> outarray(nq);
+//     Array<OneD, NekDouble> outarray(nq);
 
-    // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
-    // \sigma_i \nabla phi_m
-    StdRegions::ConstFactorMap phiefactors;
-    phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
-    phiefactors[StdRegions::eFactorLambda] = 0.0;
+//     // Solve the Poisson equation: \nabla (\sigma_e + \sigma_i ) phi_e = \nabla
+//     // \sigma_i \nabla phi_m
+//     StdRegions::ConstFactorMap phiefactors;
+//     phiefactors[StdRegions::eFactorTau]    = m_Helmtau;
+//     phiefactors[StdRegions::eFactorLambda] = 0.0;
 
-    // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
-    // phi_e. This is equivalently achieved by removing all the point sources in
-    // myelinnated fiber region.    
-    // Allocate only once
-    Array<OneD, NekDouble> phimcurrent(nq);
-    if (phimcurrent.size() != nq)
-    {
-        phimcurrent = Array<OneD, NekDouble>(nq, 0.0);
-    }
-    else
-    {
-        Vmath::Zero(nq, phimcurrent, 1);
-    }
+//     // // Compute \nabla \sigma_i \nabla phi_m and use it as point sources for
+//     // phi_e. This is equivalently achieved by removing all the point sources in
+//     // myelinnated fiber region.    
+//     // Allocate only once
+//     Array<OneD, NekDouble> phimcurrent(nq);
+//     if (phimcurrent.size() != nq)
+//     {
+//         phimcurrent = Array<OneD, NekDouble>(nq, 0.0);
+//     }
+//     else
+//     {
+//         Vmath::Zero(nq, phimcurrent, 1);
+//     }
 
-    phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
-    Vmath::Neg(nq, phimcurrent, 1);
+//     phimcurrent = ComputeMMFDiffusion(m_movingframes, phim);
+//     Vmath::Neg(nq, phimcurrent, 1);
 
-    switch(m_ExtCurrentType)
-    {
-        case eEphaptic:
-        {
-            Vmath::Vmul(nq, m_nodezone, 1, phimcurrent, 1, phimcurrent, 1);
-            break;
-        }
+//     switch(m_ExtCurrentType)
+//     {
+//         case eEphaptic:
+//         {
+//             Vmath::Vmul(nq, m_nodezone, 1, phimcurrent, 1, phimcurrent, 1);
+//             break;
+//         }
 
-        case eNoEphaptic:
-        {
-            Vmath::Zero(nq, phimcurrent, 1);
-            break;
-        }
+//         case eNoEphaptic:
+//         {
+//             Vmath::Zero(nq, phimcurrent, 1);
+//             break;
+//         }
 
-        default:
-        break;
-    }
+//         default:
+//         break;
+//     }
 
-    // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
-    //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
-    const NekDouble avg = AvgInt(phimcurrent);
-    for (int i = 0; i < nq; ++i)
-    {
-        m_fields[phievar]->UpdatePhys()[i] = phimcurrent[i] - avg;
-    }
+//     // Compute  \nabla \cdot ( (1 + \rho) \mathbf{e}_1 + \mathbf{e}_2 ) ( \nabla \phi_e ))
+//     //                         = - \nabla \cdot \mathbf{e}_1 \nabla \phi_m
+//     const NekDouble avg = AvgInt(phimcurrent);
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         m_fields[phievar]->UpdatePhys()[i] = phimcurrent[i] - avg;
+//     }
 
-    m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
-    m_fields[phievar]->BwdTrans(m_fields[phievar]->GetCoeffs(), m_fields[phievar]->UpdatePhys());
+//     m_fields[phievar]->HelmSolve(m_fields[phievar]->GetPhys(), m_fields[phievar]->UpdateCoeffs(), phiefactors, m_phievarcoeff);
+//     m_fields[phievar]->BwdTrans(m_fields[phievar]->GetCoeffs(), m_fields[phievar]->UpdatePhys());
 
-    // Make it as a value with AvgInt is zero.
-    const NekDouble mean = AvgInt(m_fields[phievar]->GetPhys());
-    Vmath::Sadd(nq, -mean, m_fields[phievar]->GetPhys(), 1, m_fields[phievar]->UpdatePhys(), 1);
+//     // Make it as a value with AvgInt is zero.
+//     const NekDouble mean = AvgInt(m_fields[phievar]->GetPhys());
+//     Vmath::Sadd(nq, -mean, m_fields[phievar]->GetPhys(), 1, m_fields[phievar]->UpdatePhys(), 1);
 
-    m_fields[phievar]->SetPhysState(true);
-}
+//     m_fields[phievar]->SetPhysState(true);
+// }
 
 
 void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,

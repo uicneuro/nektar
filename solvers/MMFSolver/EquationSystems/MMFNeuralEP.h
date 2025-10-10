@@ -375,9 +375,10 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-    void ComputePhie(const Array<OneD, const NekDouble> &phim);
-    
-    Array<OneD, NekDouble> ComputePhie(const int n, const Array<OneD, const NekDouble> &phim);
+        Array<OneD, NekDouble> ComputeFieldPhie(
+            const int phievar,
+            const Array<OneD, const NekDouble> &phim,
+            const int nfiber = -1);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
