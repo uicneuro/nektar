@@ -481,7 +481,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEP2DbiCSD:
             {
                 m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD, this); 
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD, this);
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
                 break;
             }
 
