@@ -2615,11 +2615,11 @@ void MMFNeuralEP::DoSolveMMF()
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
-            PlotNeuralEP(fields, m_TimeMap, nchk);
+            // PlotNeuralEP(fields, m_TimeMap, nchk);
 
-            PrintAtNodes(nvar, m_numfiber, fields);
+            // PrintAtNodes(nvar, m_numfiber, fields);
 
-            Checkpoint_Output(nchk++);
+            // Checkpoint_Output(nchk++);
         }
         std::cout << "DoSolve: HERE 4" << std::endl;
 
