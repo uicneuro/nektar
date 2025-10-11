@@ -2600,7 +2600,7 @@ void MMFNeuralEP::DoSolveMMF()
         }
 
         // // Compute neural time map
-        // ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
+        ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
 
         // Info output
         if ((step + 1) % m_infosteps == 0 && m_session->GetComm()->GetRank() == 0)
@@ -2780,7 +2780,7 @@ void MMFNeuralEP::ComputephimTimeMap(const NekDouble time,
                                     Array<OneD, NekDouble> &dphidtint,
                                     Array<OneD, NekDouble> &TimeMap)
 {
-    int nq = GetTotPoints();
+    const int nq = GetTotPoints();
 
     const NekDouble phiTol = 10.0;
     const NekDouble phirest = 80.0;
