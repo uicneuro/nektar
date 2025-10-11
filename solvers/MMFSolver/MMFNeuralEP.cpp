@@ -3912,10 +3912,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
         }
     }
 
-    // // Compute the charge density at the nodes.
-    // tmp = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
-    // Vmath::Vmul(nq, m_nodezone, 1, tmp, 1, outarray[1], 1);
-    // Vmath::Neg(nq, outarray[1], 1);
+    // Compute the charge density at the nodes.
+    tmp = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
+    Vmath::Vmul(nq, m_nodezone, 1, tmp, 1, outarray[1], 1);
+    Vmath::Neg(nq, outarray[1], 1);
 
     if (m_explicitDiffusion)
     {
