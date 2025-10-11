@@ -2763,15 +2763,15 @@ void MMFNeuralEP::ComputeNeuralTimeMap(
     const int nvar = m_fields.size();
 
     // phim time map
-    for (int n = 0; n < (phimvar+1); n++)
-    {
-        ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
-    }
-
-    // for (int n = (phimvar+1); n < nvar; n++)
+    // for (int n = 0; n < (phimvar+1); n++)
     // {
-    //     ComputephieTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
+    //     ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
     // }
+
+    for (int n = (phimvar+1); n < nvar; n++)
+    {
+        ComputephieTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
+    }
 }   
 
 void MMFNeuralEP::ComputephimTimeMap(const NekDouble time,
