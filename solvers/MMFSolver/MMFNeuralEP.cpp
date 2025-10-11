@@ -2768,10 +2768,10 @@ void MMFNeuralEP::ComputeNeuralTimeMap(
         ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
     }
 
-    for (int n = (phimvar+1); n < nvar; n++)
-    {
-        ComputephieTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
-    }
+    // for (int n = (phimvar+1); n < nvar; n++)
+    // {
+    //     ComputephieTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
+    // }
 }   
 
 void MMFNeuralEP::ComputephimTimeMap(const NekDouble time,
