@@ -2582,10 +2582,10 @@ void MMFNeuralEP::DoSolveMMF()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save current solution
-        for (int n=0; n<nvariables; ++n)
-        {
-            Vmath::Vcopy(nq, &fields[n][0], 1, &fields_old[n][0], 1);
-        }
+        // for (int n=0; n<phievar; ++n)
+        // {
+        //     Vmath::Vcopy(nq, &fields[n][0], 1, &fields_old[n][0], 1);
+        // }
 
         // Time integration
         timer.Start();
@@ -2597,20 +2597,17 @@ void MMFNeuralEP::DoSolveMMF()
         intTime += elapsed;
         cpuTime += elapsed;
 
-        std::cout << "DoSolve: HERE 1" << std::endl;
-
         // Compute normalized time derivatives
-        fields[phievar] = m_fields[phievar]->GetPhys();
-        for (int n = 0; n < std::min(nvar, 3); ++n)
-        {
-            NekDouble maxphi = Vmath::Vamax(nq, fields[n], 1);
-            Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
-            Vmath::Smul(nq, 1.0 / (m_timestep * maxphi), dphidt[n], 1, dphidt[n], 1);
-        }
-        std::cout << "DoSolve: HERE 2" << std::endl;
+        // fields[phievar] = m_fields[phievar]->GetPhys();
+        // for (int n = 0; n < std::min(nvar, 3); ++n)
+        // {
+        //     NekDouble maxphi = Vmath::Vamax(nq, fields[n], 1);
+        //     Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
+        //     Vmath::Smul(nq, 1.0 / (m_timestep * maxphi), dphidt[n], 1, dphidt[n], 1);
+        // }
 
-        // Compute neural time map
-        ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
+        // // Compute neural time map
+        // ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
 
         // Info output
         if ((step + 1) % m_infosteps == 0 && m_session->GetComm()->GetRank() == 0)
@@ -2620,7 +2617,6 @@ void MMFNeuralEP::DoSolveMMF()
                       << ", CPU Time = " << cpuTime / 60.0 << " min.\n\n";
             cpuTime = 0.0;
         }
-        std::cout << "DoSolve: HERE 3" << std::endl;
 
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
@@ -2631,7 +2627,6 @@ void MMFNeuralEP::DoSolveMMF()
 
             Checkpoint_Output(nchk++);
         }
-        std::cout << "DoSolve: HERE 4" << std::endl;
 
         ++step;
     } // namespace Nektar
@@ -3623,7 +3618,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
     {
         outarray[0] = Array<OneD, NekDouble>(nq);
     }
-    std::cout << "CSDIMPLICIT: HERE 1" << std::endl;
 
     // Multiply 1.0/timestep
     const NekDouble scale = -factors[StdRegions::eFactorLambda];
@@ -3633,14 +3627,12 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
                         factors, m_varcoeff);
     m_fields[0]->BwdTrans(m_fields[0]->GetCoeffs(), outarray[0]);
     m_fields[0]->SetPhysState(true);
-    std::cout << "CSDIMPLICIT: HERE 2" << std::endl;
 
     // Set CSD Helmholtz coefficients
     StdRegions::ConstFactorMap CSDfactors;
     CSDfactors[StdRegions::eFactorTau] = m_Helmtau;
     // CSDfactors[StdRegions::eFactorLambda] = m_CSDDiff / lambda;
     CSDfactors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
-    std::cout << "CSDIMPLICIT: HERE 3" << std::endl;
 
     // Multiply 1.0/timestep
     const NekDouble CSDscale = -CSDfactors[StdRegions::eFactorLambda];
@@ -3650,7 +3642,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
                         CSDfactors, m_CSDvarcoeff);
     m_fields[1]->BwdTrans(m_fields[1]->GetCoeffs(), outarray[1]);
     m_fields[1]->SetPhysState(true);
-    std::cout << "CSDIMPLICIT: HERE 4" << std::endl;
 }
 
 // We Return Y[i] = rhs [i] without no Helomsolver
@@ -3909,23 +3900,22 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
     m_fields[phievar]->UpdatePhys() = ComputeFieldPhie(phievar, inarray[0]);
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
-    Array<OneD, NekDouble> phiecurrent(nq);
-    phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
+    Array<OneD, NekDouble> tmp(nq);
+    tmp = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
     for (int i = 0; i < nq; ++i)
     {
         if (m_intrazone[i] > 0.0)
         {
-            outarray[0][i] += phiecurrent[i] / factor;
+            outarray[0][i] += tmp[i] / factor;
         }
     }
 
-    // Compute the charge density at the nodes.
-    Array<OneD, NekDouble> CSD(nq);
-    CSD = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
-    Vmath::Neg(nq, CSD, 1);
-    Vmath::Vmul(nq, m_nodezone, 1, CSD, 1, outarray[1], 1);
+    // // Compute the charge density at the nodes.
+    // tmp = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
+    // Vmath::Vmul(nq, m_nodezone, 1, tmp, 1, outarray[1], 1);
+    // Vmath::Neg(nq, outarray[1], 1);
 
     if (m_explicitDiffusion)
     {
