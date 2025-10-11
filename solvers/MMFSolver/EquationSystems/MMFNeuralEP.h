@@ -279,8 +279,6 @@ protected:
     MMFNeuralEP(const LibUtilities::SessionReaderSharedPtr &pSession,
                 const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    void DoSolveMMF();    
-
     Array<OneD, int> GetInternalBoundaryPoints();
     
     void SetUpNeuralCm();

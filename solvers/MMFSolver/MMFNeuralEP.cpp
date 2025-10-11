@@ -2504,24 +2504,24 @@ void MMFNeuralEP::CheckNodeZoneMF(
         return outarray;
     }
 
+// void MMFNeuralEP::v_DoSolve()
+// {
+//     switch (m_SolverSchemeType)
+//     {
+//         case eMMFZero:
+//         case eMMFFirst:
+//         case eTimeMap:
+//         {
+//             DoSolveMMF();
+//             break;
+//         }
+
+//         default:
+//          break;
+//     }
+// }
+
 void MMFNeuralEP::v_DoSolve()
-{
-    switch (m_SolverSchemeType)
-    {
-        case eMMFZero:
-        case eMMFFirst:
-        case eTimeMap:
-        {
-            DoSolveMMF();
-            break;
-        }
-
-        default:
-         break;
-    }
-}
-
-void MMFNeuralEP::DoSolveMMF()
 {
     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
 
@@ -2599,7 +2599,7 @@ void MMFNeuralEP::DoSolveMMF()
             Vmath::Smul(nq, factor, dphidt[n], 1, dphidt[n], 1);
         }
 
-        // // Compute neural time map
+        // Compute neural time map
         ComputephimTimeMap(m_time, fields[0], dphidt[0], dphidtint[0], TimeMap[0]);
         for (int n = 1; n < nvar; ++n)
         {
@@ -2618,10 +2618,13 @@ void MMFNeuralEP::DoSolveMMF()
         // Write out checkpoint files
         if ((m_checksteps && step && !((step + 1) % m_checksteps)))
         {
+            // Create .chk files for plotting
             PlotNeuralEP(fields, m_TimeMap, nchk);
 
+            // Print out the values at the nodes
             PrintAtNodes(nvar, m_numfiber, fields);
 
+            // Write out checkpoint files
             Checkpoint_Output(nchk++);
         }
 
@@ -2632,6 +2635,15 @@ void MMFNeuralEP::DoSolveMMF()
     if (m_session->GetComm()->GetRank() == 0)
     {
         std::cout << "Time-integration complete. Total CPU time: " << intTime << "s\n";
+    }
+
+    for (int i = 0; i < nvar; ++i)
+    {
+        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
+        m_fields[m_intVariables[i]]->SetPhysState(true);
+
+        m_fields[m_intVariables[i]]->FwdTrans(m_fields[i]->GetPhys(),
+                                   m_fields[m_intVariables[i]]->UpdateCoeffs());
     }
 
     // std::cout << " timevec: ";
@@ -2680,15 +2692,6 @@ void MMFNeuralEP::DoSolveMMF()
 
     //     std::cout << std::endl;
     // }
-
-    for (int i = 0; i < nvar; ++i)
-    {
-        m_fields[m_intVariables[i]]->SetPhys(fields[i]);
-        m_fields[m_intVariables[i]]->SetPhysState(true);
-
-        m_fields[m_intVariables[i]]->FwdTrans(m_fields[i]->GetPhys(),
-                                   m_fields[m_intVariables[i]]->UpdateCoeffs());
-    }
 } 
 
 void MMFNeuralEP::PrintAtNodes(const int nvar, const int numfiber,
