@@ -2528,16 +2528,7 @@ void MMFNeuralEP::DoSolveMMF()
     // int i, nchk = 1;
     const int nq      = GetTotPoints();
     const int nvar    = m_fields.size();
-    int phievar;
-    if(nvar==2)
-    {
-        phievar = 1;
-    }
-
-    else if(nvar==3)
-    {
-        phievar = 2;
-    }
+    const int phievar = nvar - 1;
 
     // const int totsteps = (m_steps + 1) / m_checksteps;
 
@@ -2582,10 +2573,10 @@ void MMFNeuralEP::DoSolveMMF()
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
     {
         // Save current solution
-        // for (int n=0; n<phievar; ++n)
-        // {
-        //     Vmath::Vcopy(nq, &fields[n][0], 1, &fields_old[n][0], 1);
-        // }
+        for (int n=0; n < nvar; ++n)
+        {
+            Vmath::Vcopy(nq, &fields[n][0], 1, &fields_old[n][0], 1);
+        }
 
         // Time integration
         timer.Start();
@@ -2598,13 +2589,15 @@ void MMFNeuralEP::DoSolveMMF()
         cpuTime += elapsed;
 
         // Compute normalized time derivatives
-        // fields[phievar] = m_fields[phievar]->GetPhys();
-        // for (int n = 0; n < std::min(nvar, 3); ++n)
-        // {
-        //     NekDouble maxphi = Vmath::Vamax(nq, fields[n], 1);
-        //     Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
-        //     Vmath::Smul(nq, 1.0 / (m_timestep * maxphi), dphidt[n], 1, dphidt[n], 1);
-        // }
+        fields[phievar] = m_fields[phievar]->GetPhys();
+        NekDouble factor;
+        for (int n = 0; n < nvar; ++n)
+        {
+            NekDouble maxphi = Vmath::Vamax(nq, fields[n], 1);
+            factor = 1.0 / (m_timestep * maxphi);
+            Vmath::Vsub(nq, fields[n], 1, fields_old[n], 1, dphidt[n], 1);
+            Vmath::Smul(nq, factor, dphidt[n], 1, dphidt[n], 1);
+        }
 
         // // Compute neural time map
         // ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
