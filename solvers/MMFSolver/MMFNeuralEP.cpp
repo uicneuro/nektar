@@ -2600,8 +2600,11 @@ void MMFNeuralEP::DoSolveMMF()
         }
 
         // // Compute neural time map
-        // ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
         ComputephimTimeMap(m_time, fields[0], dphidt[0], dphidtint[0], TimeMap[0]);
+        for (int n = 1; n < nvar; ++n)
+        {
+            ComputephieTimeMap(m_time, fields[n], dphidt[n], dphidtint[n], TimeMap[n]);
+        }
 
         // Info output
         if ((step + 1) % m_infosteps == 0 && m_session->GetComm()->GetRank() == 0)
@@ -2753,27 +2756,6 @@ NekDouble MMFNeuralEP::DisplayAtNodes(const int fibern, const int nodeindex,
     return output;
 }
 
-void MMFNeuralEP::ComputeNeuralTimeMap(
-    const NekDouble time, 
-    const Array<OneD, const Array<OneD, NekDouble>> &fields,
-    const Array<OneD, const Array<OneD, NekDouble>> &dphidts,
-    Array<OneD, Array<OneD, NekDouble>> &dphidtints, 
-    Array<OneD, Array<OneD, NekDouble>> &TimeMaps)
-{
-    const int phimvar = m_phimvar;
-    const int nvar = m_fields.size();
-
-    // phim time map
-    for (int n = 0; n < (phimvar+1); n++)
-    {
-        ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
-    }
-
-    for (int n = (phimvar+1); n < nvar; n++)
-    {
-        ComputephieTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
-    }
-}   
 
 void MMFNeuralEP::ComputephimTimeMap(const NekDouble time,
                                     const Array<OneD, const NekDouble> &field,
@@ -2830,8 +2812,6 @@ void MMFNeuralEP::ComputephieTimeMap(
         }
     }
 }
-
-
 
 
 // void MMFNeuralEP::ComputephieTimeMap(
