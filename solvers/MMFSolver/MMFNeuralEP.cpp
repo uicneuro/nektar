@@ -481,7 +481,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             case eNeuralEP2DbiCSD:
             {
                 m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD, this); 
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2Dbi, this);
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD, this);
                 break;
             }
 
@@ -2528,7 +2528,17 @@ void MMFNeuralEP::DoSolveMMF()
     // int i, nchk = 1;
     const int nq      = GetTotPoints();
     const int nvar    = m_fields.size();
-    const int phievar = m_phievar;
+    int phievar;
+    if(nvar==2)
+    {
+        phievar = 1;
+    }
+
+    else if(nvar==3)
+    {
+        phievar = 2;
+    }
+
     // const int totsteps = (m_steps + 1) / m_checksteps;
 
     int step = 0, nchk = 1;
@@ -3719,7 +3729,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2Dbi(
 {
     const int nvar = m_fields.size();
     const int nq   = m_fields[0]->GetNpoints();
-    const int phievar = m_phievar;
+    const int phievar = nvar - 1;
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
 
@@ -3791,7 +3801,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 {
     const int nvar = m_fields.size();
     const int nq   = m_fields[0]->GetNpoints();
-    const int phievar = m_phievar;
+    const int phievar = nvar - 1;
     const int numfiber = m_numfiber;
 
     const NekDouble factor = m_Cn * m_Rf;
@@ -3821,7 +3831,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
 
         // 3. Compute phi_e to satisfy bidomain coupling
-        tmp = ComputeFieldPhie(m_phievar, inarray[n], n);
+        tmp = ComputeFieldPhie(phievar, inarray[n], n);
 
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
@@ -3866,10 +3876,10 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
     const int nvar = m_fields.size();
+    const int phievar = nvar - 1;
     const int nq   = m_fields[0]->GetNpoints();
     const NekDouble factor = m_Cn * m_Rf;
     const NekDouble Temp = m_Temperature;
-    const int phievar = m_phievar;
 
     // Reuse memory if already allocated
     for (int i = 0; i < nvar; ++i)
@@ -3883,29 +3893,24 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
             Vmath::Zero(nq, outarray[i], 1);
         }
     }
-    std::cout << "CSDODE: HERE 1" << std::endl;
 
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrate(m_zoneindex, inarray[0], outarray[0], time, Temp);
-    std::cout << "CSDODE: HERE 2" << std::endl;
 
     // 2. Apply Stimulus
     for (std::size_t n = 0; n < m_stimulus.size(); ++n)
     {
        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[0], time);
     }
-    std::cout << "CSDODE: HERE 3" << std::endl;
 
     // 3. Compute phi_e to satisfy bidomain coupling
     // \nabla \cdot ( (\signa_e + \sigma_i) \nabla \phi_e) = - \nabla \cdot
     // (\sigma_i \nabla \phi_m)
-    m_fields[phievar]->UpdatePhys() = ComputeFieldPhie(m_phievar, inarray[0]);
-    std::cout << "CSDODE: HERE 4" << std::endl;
+    m_fields[phievar]->UpdatePhys() = ComputeFieldPhie(phievar, inarray[0]);
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
     phiecurrent = ComputeMMFDiffusion(m_movingframes, m_fields[phievar]->GetPhys());
-    std::cout << "CSDODE: HERE 5" << std::endl;
 
     // Current caused by extracellular potential affects the total current at the nodes and myelin.
     for (int i = 0; i < nq; ++i)
@@ -3915,14 +3920,12 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
             outarray[0][i] += phiecurrent[i] / factor;
         }
     }
-    std::cout << "CSDODE: HERE 6" << std::endl;
 
     // Compute the charge density at the nodes.
     Array<OneD, NekDouble> CSD(nq);
     CSD = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
     Vmath::Neg(nq, CSD, 1);
     Vmath::Vmul(nq, m_nodezone, 1, CSD, 1, outarray[1], 1);
-    std::cout << "CSDODE: HERE 7" << std::endl;
 
     if (m_explicitDiffusion)
     {
