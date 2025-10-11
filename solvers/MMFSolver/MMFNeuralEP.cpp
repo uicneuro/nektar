@@ -2600,7 +2600,7 @@ void MMFNeuralEP::DoSolveMMF()
         }
 
         // // Compute neural time map
-        ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
+        // ComputeNeuralTimeMap(m_time, fields, dphidt, dphidtint, m_TimeMap);
 
         // Info output
         if ((step + 1) % m_infosteps == 0 && m_session->GetComm()->GetRank() == 0)
