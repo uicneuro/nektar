@@ -2536,7 +2536,7 @@ void MMFNeuralEP::DoSolveMMF()
 
     NekDouble intTime = 0.0, cpuTime = 0.0;
 
-    const int nvariables = m_intVariables.empty() ? nvar : m_intVariables.size();
+    // const int nvariables = m_intVariables.empty() ? nvar : m_intVariables.size();
     if (m_intVariables.empty())
     {
         for (int i = 0; i < nvar; ++i)
@@ -2546,11 +2546,11 @@ void MMFNeuralEP::DoSolveMMF()
     }
 
     // Set up working arrays
-    Array<OneD, Array<OneD, NekDouble>> fields(nvariables), fields_old(nvariables);
-    Array<OneD, Array<OneD, NekDouble>> dphidt(nvariables), dphidtint(nvariables);
-    Array<OneD, Array<OneD, NekDouble>> TimeMap(nvariables);
+    Array<OneD, Array<OneD, NekDouble>> fields(nvar), fields_old(nvar);
+    Array<OneD, Array<OneD, NekDouble>> dphidt(nvar), dphidtint(nvar);
+    Array<OneD, Array<OneD, NekDouble>> TimeMap(nvar);
 
-    for (int i = 0; i < nvariables; ++i)
+    for (int i = 0; i < nvar; ++i)
     {
         fields[i]     = m_fields[m_intVariables[i]]->GetPhys();
         fields_old[i] = Array<OneD, NekDouble>(nq, 0.0);
@@ -2677,7 +2677,7 @@ void MMFNeuralEP::DoSolveMMF()
     //     std::cout << std::endl;
     // }
 
-    for (int i = 0; i < nvariables; ++i)
+    for (int i = 0; i < nvar; ++i)
     {
         m_fields[m_intVariables[i]]->SetPhys(fields[i]);
         m_fields[m_intVariables[i]]->SetPhysState(true);
@@ -2763,10 +2763,10 @@ void MMFNeuralEP::ComputeNeuralTimeMap(
     const int nvar = m_fields.size();
 
     // phim time map
-    // for (int n = 0; n < (phimvar+1); n++)
-    // {
-    //     ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
-    // }
+    for (int n = 0; n < (phimvar+1); n++)
+    {
+        ComputephimTimeMap(time, fields[n], dphidts[n], dphidtints[n], TimeMaps[n]);
+    }
 
     for (int n = (phimvar+1); n < nvar; n++)
     {
