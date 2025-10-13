@@ -3961,9 +3961,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2(
             Vmath::Zero(nq, outarray[i], 1);
         }
     }
-
+    std::cout << "ODE HERE 1 " << std::endl;
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
+
+    std::cout << "ODE HERE 2 " << std::endl;
 
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq, 0.0);
@@ -3973,9 +3975,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2(
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
     }
 
+    std::cout << "ODE HERE 3 " << std::endl;
+
+
     Array<OneD, NekDouble> phim(nq);
     Vmath::Vadd(nq, inarray[0], 1, inarray[1], 1, phim, 1);
     m_fields[phievar]->UpdatePhys() = ComputeFieldPhiefiberv2(phievar, phim);
+    std::cout << "ODE HERE 4 " << std::endl;
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
@@ -3992,6 +3998,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2(
             }
         }
     }
+    std::cout << "ODE HERE 5 " << std::endl;
 
     if (m_explicitDiffusion)
     {
