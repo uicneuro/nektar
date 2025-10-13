@@ -58,6 +58,7 @@ enum NeuralEPType
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
     eNeuralEP2DbiMulti,
+    eNeuralEP2DbiMultiv2,
     eNeuralEP2DbiCSD,
     SIZE_NeuralEPType ///< Length of enum list
 };
@@ -68,6 +69,7 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
     "NeuralEP2DbiMulti",
+    "NeuralEP2DbiMultiv2",
     "NeuralEP2DbiCSD",
 };
 
@@ -303,6 +305,11 @@ protected:
         const Array<OneD, const int> &zoneindex,
         Array<OneD, Array<OneD, NekDouble>> &phieAniStrength);
 
+    void ComputeGlobalPhieAniStrengthfiber(
+        const Array<OneD, const int> &zoneindex,
+        const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+        Array<OneD, Array<OneD, NekDouble>> &phieAniStrength);
+
     void PlotAnisotropyfiber(
         const Array<OneD, const Array<OneD, NekDouble>> &AniStrength, 
         const Array<OneD, const Array<OneD, Array<OneD, NekDouble>>> &AniStrengthfiber, 
@@ -342,7 +349,12 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-    void DoImplicitSolveNeuralEP2DbiMulti(
+        void DoImplicitSolveNeuralEP2DbiMulti(
+            const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+            Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+            const NekDouble lambda);
+
+    void DoImplicitSolveNeuralEP2DbiMultiv2(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
@@ -369,14 +381,25 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
+    void DoOdeRhsNeuralEP2DbiMultiv2(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
     void DoOdeRhsNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
-        Array<OneD, NekDouble> ComputeFieldPhie(
+    Array<OneD, NekDouble> ComputeFieldPhie(
+        const int phievar,
+        const Array<OneD, const NekDouble> &phim);
+
+    Array<OneD, NekDouble> ComputeFieldPhiefiber(
+        const int phievar, const int nfiber,
+        const Array<OneD, const NekDouble> &phim);
+
+    Array<OneD, NekDouble> ComputeFieldPhiefiberv2(
             const int phievar,
-            const Array<OneD, const NekDouble> &phim,
-            const int nfiber = -1);
+            const Array<OneD, const NekDouble> &phim);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
