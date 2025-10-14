@@ -193,7 +193,8 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("relativefiberratio", m_relfiberratio, 0.8);
     m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
 
-    m_session->LoadParameter("CSDDiff", m_CSDDiff, 1e-6);
+    // CSDDiff is 10 times larger than m_Cn. 
+    m_session->LoadParameter("CSDDiff", m_CSDDiff, 3.14e-7);
 
     NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
     NekDouble PhieMultFactorlower = m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle;
@@ -2561,23 +2562,6 @@ void MMFNeuralEP::CheckNodeZoneMF(
         return outarray;
     }
 
-// void MMFNeuralEP::v_DoSolve()
-// {
-//     switch (m_SolverSchemeType)
-//     {
-//         case eMMFZero:
-//         case eMMFFirst:
-//         case eTimeMap:
-//         {
-//             DoSolveMMF();
-//             break;
-//         }
-
-//         default:
-//          break;
-//     }
-// }
-
 void MMFNeuralEP::v_DoSolve()
 {
     ASSERTL0(m_intScheme != 0, "No time integration scheme.");
@@ -2587,7 +2571,7 @@ void MMFNeuralEP::v_DoSolve()
     const int nvar    = m_fields.size();
     const int phievar = nvar - 1;
 
-    // const int totsteps = (m_steps + 1) / m_checksteps;
+    const int totsteps = (m_steps + 1) / m_checksteps;
 
     int step = 0, nchk = 1;
 
@@ -2620,11 +2604,6 @@ void MMFNeuralEP::v_DoSolve()
 
     m_TimeMap = TimeMap;  // Save reference for external access
     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
-
-   // Prepare diagnostics arrays
-    // Array<OneD, NekDouble> timevec(totsteps, 0.0);
-    // Array<OneD, NekDouble> thredlocf1(totsteps, 0.0), thredlocf2(totsteps, 0.0);
-    // Array<OneD, int> thredlocf1zone(totsteps, 0), thredlocf2zone(totsteps, 0);
 
     LibUtilities::Timer timer;
     while (step < m_steps || m_time < m_fintime - NekConstants::kNekZeroTol)
@@ -2702,53 +2681,6 @@ void MMFNeuralEP::v_DoSolve()
         m_fields[m_intVariables[i]]->FwdTrans(m_fields[i]->GetPhys(),
                                    m_fields[m_intVariables[i]]->UpdateCoeffs());
     }
-
-    // std::cout << " timevec: ";
-    // for (int i=0; i<totsteps; ++i)
-    // {
-    //     std::cout << timevec[i] << ", ";
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << " CSDvecatnode1: ";
-    // for (int i=0; i<totsteps; ++i)
-    // {
-    //     std::cout << CSDvecatnode1[i] << ", ";
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << " thredlocf1: ";
-    // for (int i=0; i<totsteps; ++i)
-    // {
-    //     std::cout << thredlocf1[i] << ", ";
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << " thredlocf1zone: ";
-    // for (int i=0; i<totsteps; ++i)
-    // {
-    //     std::cout << thredlocf1zone[i] << ", ";
-    // }
-    // std::cout << std::endl;
-
-    // if(m_numfiber>1)
-    // {
-    //     std::cout <<  "thredlocf2: ";
-    //     for (int i=0; i<totsteps; ++i)
-    //     {
-    //         std::cout << thredlocf2[i] << ", ";
-    //     }
-
-    //     std::cout << std::endl;
-
-    //     std::cout <<  "thredlocf2zone: ";
-    //     for (int i=0; i<totsteps; ++i)
-    //     {
-    //         std::cout << thredlocf2zone[i] << ", ";
-    //     }
-
-    //     std::cout << std::endl;
-    // }
 } 
 
 void MMFNeuralEP::PrintAtNodes(const int nvar, const int numfiber,
@@ -2856,16 +2788,16 @@ void MMFNeuralEP::ComputephieTimeMap(
         Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    const NekDouble dphidtTol = 0.1;
+    const NekDouble dphidtTol = 0.0;
 
     NekDouble phie;
     for (int i = 0; i < nq; ++i)
     {
         const NekDouble dphi = dphidt[i];
-        phie = field[i];
+        phie = abs(field[i]);
 
         // if the field is rising and is largest by now, time mep is the corresponding time.
-        if ( (dphi > dphidtTol) && (phie > dphidtint[i]) )
+        if ( (dphi < dphidtTol) && (phie < dphidtint[i]) )
         {
             TimeMap[i] = time;
             dphidtint[i] = phie;
@@ -3215,6 +3147,7 @@ void MMFNeuralEP::PlotNeuralEPvar3CSD(
     CSDatnode = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[2]->GetPhys());
     Vmath::Vmul(nq, m_nodezone, 1, CSDatnode, 1, CSDatnode, 1);
     Vmath::Neg(nq, CSDatnode, 1);
+    Vmath::Smul(nq, m_timestep, CSDatnode, 1, CSDatnode, 1);
 
     m_fields[0]->FwdTransLocalElmt(CSDatnode, fieldcoeffs[4]);
 
@@ -3699,8 +3632,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
     // Set CSD Helmholtz coefficients
     StdRegions::ConstFactorMap CSDfactors;
     CSDfactors[StdRegions::eFactorTau] = m_Helmtau;
-    // CSDfactors[StdRegions::eFactorLambda] = m_CSDDiff / lambda;
-    CSDfactors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
+    CSDfactors[StdRegions::eFactorLambda] = m_CSDDiff * m_Rf / lambda;
 
     // Multiply 1.0/timestep
     const NekDouble CSDscale = -CSDfactors[StdRegions::eFactorLambda];
