@@ -3901,7 +3901,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
     Array<OneD, NekDouble> phiecurrent(nq);
     for (int n=0; n < numfiber; ++n)
     {
-        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], phie);
+        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], m_fields[phievar]->GetPhys());
 
         // Current caused by extracellular potential affects the total current at the nodes and myelin.
         for (int i = 0; i < nq; ++i)
@@ -3961,14 +3961,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2(
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
 
-    Array<OneD, NekDouble> tmp(nq);
-    Array<OneD, NekDouble> phie(nq, 0.0);
+    // 2. Apply Stimulus
     for (int n = 0; n < numfiber; ++n)
     {
-        // 2. Apply Stimulus
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
     }
 
+    // Add phim for all fibers to produce the total phim
     Array<OneD, NekDouble> phim(nq);
     Vmath::Vadd(nq, inarray[0], 1, inarray[1], 1, phim, 1);
     m_fields[phievar]->UpdatePhys() = ComputeFieldPhiefiberv2(phievar, phim);
@@ -3977,7 +3976,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2(
     Array<OneD, NekDouble> phiecurrent(nq);
     for (int n=0; n < numfiber; ++n)
     {
-        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], phie);
+        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], m_fields[phievar]->GetPhys());
 
         // Current caused by extracellular potential affects the total current at the nodes and myelin.
         for (int i = 0; i < nq; ++i)
