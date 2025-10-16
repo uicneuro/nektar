@@ -399,7 +399,7 @@ protected:
 
     Array<OneD, NekDouble> ComputeFieldPhiefiberv2(
             const int phievar,
-            const Array<OneD, const NekDouble> &phim);
+            const Array<OneD, const Array<OneD, NekDouble>> &inarray);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
