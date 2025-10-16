@@ -2607,6 +2607,10 @@ void MMFNeuralEP::v_DoSolve()
         m_fields[m_intVariables[i]]->SetPhysState(false);
     }
 
+    if(m_NeuralEPType == eNeuralEP2DbiCSD)
+    {
+        TimeMap[1]    = Array<OneD, NekDouble>(nq, 1000.0);
+    }
 
     m_TimeMap = TimeMap;  // Save reference for external access
     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
