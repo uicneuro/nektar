@@ -194,7 +194,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_session->LoadParameter("radiusfiberbundle", m_radiusfiberbundle, 0.01);
 
     // CSDDiff is 10 times larger than m_Cn. 
-    m_session->LoadParameter("CSDDiff", m_CSDDiff, 3.14e-7);
+    m_session->LoadParameter("CSDDiff", m_CSDDiff, 3.00e-7);
 
     NekDouble axoncrossA = m_pi*m_axondiameter*m_axondiameter;
     NekDouble PhieMultFactorlower = m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle;
@@ -2607,6 +2607,7 @@ void MMFNeuralEP::v_DoSolve()
         m_fields[m_intVariables[i]]->SetPhysState(false);
     }
 
+
     m_TimeMap = TimeMap;  // Save reference for external access
     m_intScheme->InitializeScheme(m_timestep, fields, m_time, m_ode);
 
@@ -2642,9 +2643,23 @@ void MMFNeuralEP::v_DoSolve()
 
         // Compute neural time map
         ComputephimTimeMap(m_time, fields[0], dphidt[0], dphidtint[0], TimeMap[0]);
-        for (int n = 1; n < nvar; ++n)
+        if (nvar == 2)
         {
-            ComputephieTimeMap(m_time, fields[n], dphidt[n], dphidtint[n], TimeMap[n]);
+            ComputephieTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
+        }
+
+        else if (nvar == 3)
+        {
+            ComputephieTimeMap(m_time, fields[phievar], dphidt[phievar], dphidtint[phievar], TimeMap[phievar]);
+
+            if( (m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiMultiv2) )
+            {
+                ComputephimTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
+            }
+            else if(m_NeuralEPType == eNeuralEP2DbiCSD)
+            {
+                ComputerhoTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
+            }
         }
 
         // Info output
@@ -2798,17 +2813,38 @@ void MMFNeuralEP::ComputephieTimeMap(
     NekDouble phie;
     for (int i = 0; i < nq; ++i)
     {
-        const NekDouble dphi = dphidt[i];
-        phie = abs(field[i]);
-
         // if the field is rising and is largest by now, time mep is the corresponding time.
-        if ( (dphi < dphidtTol) && (phie < dphidtint[i]) )
+        if ( abs(field[i]) < dphidtint[i] )
         {
             TimeMap[i] = time;
-            dphidtint[i] = phie;
+            dphidtint[i] = abs(field[i]);
         }
     }
 }
+
+void MMFNeuralEP::ComputerhoTimeMap(
+    const NekDouble time,
+    const Array<OneD, const NekDouble> &field,
+    const Array<OneD, const NekDouble> &rhovec,
+    Array<OneD, NekDouble> &rhovecint,
+    Array<OneD, NekDouble> &TimeMap)
+{
+const int nq = GetTotPoints();
+const NekDouble dphidtTol = 0.0;
+
+NekDouble rho;
+for (int i = 0; i < nq; ++i)
+{
+    // if the field is rising and is largest by now, time mep is the corresponding time.
+    if ( field[i] > rhovecint[i] )
+    {
+        TimeMap[i] = time;
+        rhovecint[i] = field[i];
+    }
+}
+}
+
+
 
 
 // void MMFNeuralEP::ComputephieTimeMap(
@@ -3997,6 +4033,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiCSD(
     // Compute the charge density at the nodes.
     tmp = ComputeMMFDiffusion(m_CSDmovingframes, m_fields[phievar]->GetPhys());
     Vmath::Vmul(nq, m_nodezone, 1, tmp, 1, outarray[1], 1);
+    Vmath::Smul(nq, 0.01, outarray[1], 1, outarray[1], 1);
     Vmath::Neg(nq, outarray[1], 1);
 
     if (m_explicitDiffusion)
@@ -4502,6 +4539,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "FiberGap", m_fibergap);
     SolverUtils::AddSummaryItem(s, "Radiusfiberbundle", m_radiusfiberbundle);
     SolverUtils::AddSummaryItem(s, "FiberCurvature", m_fibercurvature);
+    SolverUtils::AddSummaryItem(s, "CSDDiff", m_CSDDiff);
     SolverUtils::AddSummaryItem(s, "phiefactor", m_phiefactor);
 
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
