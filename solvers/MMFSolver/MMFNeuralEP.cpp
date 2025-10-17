@@ -2727,9 +2727,6 @@ void MMFNeuralEP::ComputephieTimeMap(
         Array<OneD, NekDouble> &TimeMap)
 {
     const int nq = GetTotPoints();
-    const NekDouble dphidtTol = 0.0;
-
-    NekDouble phie;
     for (int i = 0; i < nq; ++i)
     {
         // if the field is rising and is largest by now, time mep is the corresponding time.
@@ -2741,30 +2738,22 @@ void MMFNeuralEP::ComputephieTimeMap(
     }
 }
 
-void MMFNeuralEP::ComputerhoTimeMap(
-    const NekDouble time,
-    const Array<OneD, const NekDouble> &field,
-    const Array<OneD, const NekDouble> &rhovec,
-    Array<OneD, NekDouble> &rhovecint,
-    Array<OneD, NekDouble> &TimeMap)
+void MMFNeuralEP::ComputerhoTimeMap(const NekDouble time,
+                                    const Array<OneD, const NekDouble> &field,
+                                    const Array<OneD, const NekDouble> &rhovec,
+                                    Array<OneD, NekDouble> &rhovecint,
+                                    Array<OneD, NekDouble> &TimeMap)
 {
-const int nq = GetTotPoints();
-const NekDouble dphidtTol = 0.0;
-
-NekDouble rho;
-for (int i = 0; i < nq; ++i)
-{
-    // if the field is rising and is largest by now, time mep is the corresponding time.
-    if ( field[i] > rhovecint[i] )
+    const int nq = GetTotPoints();
+    for (int i = 0; i < nq; ++i)
     {
-        TimeMap[i] = time;
-        rhovecint[i] = field[i];
+        if (field[i] > rhovecint[i])
+        {
+            TimeMap[i]   = time;
+            rhovecint[i] = field[i];
+        }
     }
 }
-}
-
-
-
 
 // void MMFNeuralEP::ComputephieTimeMap(
 //     const NekDouble time,
