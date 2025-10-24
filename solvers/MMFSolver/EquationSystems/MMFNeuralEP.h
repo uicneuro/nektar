@@ -382,6 +382,10 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
+        void DoOdeRhsNeuralEP2DbiMultiv2(
+            const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+            Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
     void DoOdeRhsNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -393,9 +397,9 @@ protected:
     Array<OneD, NekDouble> ComputeFieldPhiefiber(
             const Array<OneD, const Array<OneD, NekDouble>> &inarray);
 
-            Array<OneD, NekDouble> MMFNeuralEP::ComputeFieldPhiefiberv2(
+            Array<OneD, NekDouble> ComputeFieldPhiefiberv2(
                 const int phievar,
-                const Array<OneD, const Array<OneD, NekDouble>> &inarray)
+                const Array<OneD, const Array<OneD, NekDouble>> &inarray);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
