@@ -4388,6 +4388,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         }
 
         case eNeuralEP2DbiMulti:
+        case eNeuralEP2DbiMultiv2:
         {
             int numfiber = m_numfiber;
 
