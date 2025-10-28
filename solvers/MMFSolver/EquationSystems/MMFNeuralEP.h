@@ -472,25 +472,18 @@ void ComputephimTimeMap(const NekDouble time,
 void ComputephieTimeMap(
     const NekDouble dt,
     const Array<OneD, const NekDouble> &field,
-    const Array<OneD, const NekDouble> &dphidt,
     Array<OneD, NekDouble> &dphidtint,
     Array<OneD, NekDouble> &TimeMap);
 
-    void ComputerhoTimeMap(
-        const NekDouble time,
-        const Array<OneD, const NekDouble> &field,
-        const Array<OneD, const NekDouble> &rhovec,
-        Array<OneD, NekDouble> &rhovecint,
-        Array<OneD, NekDouble> &TimeMap);
+void ComputerhoTimeMap(
+    const NekDouble time,
+    const Array<OneD, const NekDouble> &field,
+    Array<OneD, NekDouble> &rhovecint,
+    Array<OneD, NekDouble> &TimeMap);
 
 void RescaleMovingFrames(
     const Array<OneD, const Array<OneD, NekDouble>> &AniStrength,
-    Array<OneD, Array<OneD, NekDouble>> &movingframes);
-
-void ComputerhoTimeMap(const NekDouble time,
-                        const Array<OneD, const NekDouble> &field,
-                        Array<OneD, NekDouble> &fieldint,
-                        Array<OneD, NekDouble> &TimeMap);                        
+    Array<OneD, Array<OneD, NekDouble>> &movingframes);                      
 
 void Computemovingframesfiber(
     const Array<OneD, const Array<OneD, NekDouble>> &movingframes,

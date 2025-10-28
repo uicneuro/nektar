@@ -2587,12 +2587,12 @@ void MMFNeuralEP::v_DoSolve()
         ComputephimTimeMap(m_time, fields[0], dphidt[0], dphidtint[0], TimeMap[0]);
         if (nvar == 2)
         {
-            ComputephieTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
+            ComputephieTimeMap(m_time, fields[1], dphidtint[1], TimeMap[1]);
         }
 
         else if (nvar == 3)
         {
-            ComputephieTimeMap(m_time, fields[phievar], dphidt[phievar], dphidtint[phievar], TimeMap[phievar]);
+            ComputephieTimeMap(m_time, fields[phievar], dphidtint[phievar], TimeMap[phievar]);
 
             if( (m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiMultiv2) )
             {
@@ -2600,7 +2600,7 @@ void MMFNeuralEP::v_DoSolve()
             }
             else if(m_NeuralEPType == eNeuralEP2DbiCSD)
             {
-                ComputerhoTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
+                ComputerhoTimeMap(m_time, fields[1], dphidtint[1], TimeMap[1]);
             }
         }
 
@@ -2745,7 +2745,6 @@ void MMFNeuralEP::ComputephimTimeMap(const NekDouble time,
 void MMFNeuralEP::ComputephieTimeMap(
         const NekDouble time,
         const Array<OneD, const NekDouble> &field,
-        const Array<OneD, const NekDouble> &dphidt,
         Array<OneD, NekDouble> &dphidtint,
         Array<OneD, NekDouble> &TimeMap)
 {
@@ -2763,7 +2762,6 @@ void MMFNeuralEP::ComputephieTimeMap(
 
 void MMFNeuralEP::ComputerhoTimeMap(const NekDouble time,
                                     const Array<OneD, const NekDouble> &field,
-                                    const Array<OneD, const NekDouble> &rhovec,
                                     Array<OneD, NekDouble> &rhovecint,
                                     Array<OneD, NekDouble> &TimeMap)
 {
@@ -2777,53 +2775,6 @@ void MMFNeuralEP::ComputerhoTimeMap(const NekDouble time,
         }
     }
 }
-
-// void MMFNeuralEP::ComputephieTimeMap(
-//     const NekDouble time,
-//     const Array<OneD, const NekDouble> &field,
-//     Array<OneD, NekDouble> &fieldint,
-//     Array<OneD, NekDouble> &TimeMap)
-// {
-//     const int nq = GetTotPoints();
-//     constexpr NekDouble Tol = 0.01;
-
-//     for (int i = 0; i < nq; ++i)
-//     {
-//         const NekDouble phie = field[i] + 1.0;
-//         if (phie > Tol)
-//         {
-//             const NekDouble fint = fieldint[i];
-//             const NekDouble fnewsum = phie + fint;
-
-//             TimeMap[i] = (phie * time + fint * TimeMap[i]) / fnewsum;
-//             fieldint[i] += phie;
-//         }
-//     }
-// }
-
-// void MMFNeuralEP::ComputerhoTimeMap(
-//     const NekDouble time,
-//     const Array<OneD, const NekDouble> &field,
-//     Array<OneD, NekDouble> &fieldint,
-//     Array<OneD, NekDouble> &TimeMap)
-// {
-//     const int nq = GetTotPoints();
-//     constexpr NekDouble Tol = 0.000001;
-
-//     #pragma omp parallel for
-//     for (int i = 0; i < nq; ++i)
-//     {
-//         const NekDouble rho = field[i] + 0.002;
-//         if (rho > Tol)
-//         {
-//             const NekDouble fint = fieldint[i];
-//             const NekDouble fnewsum = rho + fint;
-
-//             TimeMap[i] = (rho * time + fint * TimeMap[i]) / fnewsum;
-//             fieldint[i] += rho;
-//         }
-//     }
-// }
 
 // PhieCurrent[0] = \int \phi_m dt
 // PhieCurrent[1] = \int CSD_e dt
