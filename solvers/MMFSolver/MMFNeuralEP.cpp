@@ -89,7 +89,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         // NeuralEP2DbiMulti model for two fibers with a signel phie
         case 3:
         {
-            if( (m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiMultiv2) )
+            if(m_NeuralEPType == eNeuralEP2DbiMulti)
             {
                 m_phimvar = 1;
             }
@@ -340,7 +340,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
 
     m_AnisotropyStrength = m_Cn / m_Cm;
 
-    if( (m_NeuralEPType==eNeuralEP2DbiMulti) || (m_NeuralEPType==eNeuralEP2DbiMultiv2) )
+    if(m_NeuralEPType==eNeuralEP2DbiMulti)
     {   
         ASSERTL0(m_fields.size()==3, "Number of Variable should be 3");
     }
@@ -357,7 +357,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         case eNeuralEP2DbiMulti:
-        case eNeuralEP2DbiMultiv2:
         case eNeuralEP2DbiCSD:
         {   
             // Provide index for nodes and myelins
@@ -502,13 +501,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             {
                 m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti, this); 
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti, this);
-                break;
-            }
-
-            case eNeuralEP2DbiMultiv2:
-            {
-                m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMultiv2, this); 
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2, this);
                 break;
             }
 
@@ -2594,7 +2586,7 @@ void MMFNeuralEP::v_DoSolve()
         {
             ComputephieTimeMap(m_time, fields[phievar], dphidtint[phievar], TimeMap[phievar]);
 
-            if( (m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiMultiv2) )
+            if(m_NeuralEPType == eNeuralEP2DbiMulti)
             {
                 ComputephimTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
             }
@@ -2842,7 +2834,7 @@ void MMFNeuralEP::PlotNeuralEP(
 
             case 3:
             {
-                if( (m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiMultiv2) )
+                if(m_NeuralEPType == eNeuralEP2DbiMulti)
                 {
                     PlotNeuralEPvar3(fields, TimeMap, nstep);
                 }
@@ -3486,41 +3478,6 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti(
     }
 }
 
-void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMultiv2(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-    const NekDouble lambda)
-{
-    (void) time;
-
-    const int nq   = m_fields[0]->GetNpoints();
-    const int numfiber = m_numfiber;
-
-    // Set Helmholtz coefficients
-    StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorTau] = m_Helmtau;
-    factors[StdRegions::eFactorLambda] = m_Cn * m_Rf / lambda;
-
-    for (int n = 0; n < numfiber; ++n)
-    {
-        if (outarray[n].size() != nq)
-        {
-            outarray[n] = Array<OneD, NekDouble>(nq,0.0);
-        }
-    }
-
-    // Multiply 1.0/timestep
-    const NekDouble scale = -factors[StdRegions::eFactorLambda];
-    for (int n = 0; n < numfiber; ++n)
-    {
-        Vmath::Smul(nq, scale, inarray[n], 1, m_fields[n]->UpdatePhys(), 1);
-        m_fields[n]->HelmSolve(m_fields[n]->GetPhys(), m_fields[n]->UpdateCoeffs(),
-                            factors, m_varcoefffiber[n]);
-        m_fields[n]->BwdTrans(m_fields[n]->GetCoeffs(), outarray[n]);
-        m_fields[n]->SetPhysState(true);
-    }
-}
-
 // Implicit solve for NeuralEP 2D solver
 void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiCSD(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -3822,81 +3779,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 
     // Add phim for all fibers to produce the total phim
     m_fields[phievar]->UpdatePhys() = ComputeFieldPhiefiber(inarray);
-
-    // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
-    Array<OneD, NekDouble> phiecurrent(nq);
-    for (int n=0; n < numfiber; ++n)
-    {
-        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], m_fields[phievar]->GetPhys());
-
-        // Current caused by extracellular potential affects the total current at the nodes and myelin.
-        for (int i = 0; i < nq; ++i)
-        {
-            if (m_intrazonefiber[n][i] > 0.0)
-            {
-                outarray[n][i] += phiecurrent[i] / factor;
-            }
-        }
-    }
-
-    if (m_explicitDiffusion)
-    {
-        static thread_local Array<OneD, NekDouble> Laplacian;
-        if (Laplacian.size() != nq)
-        {
-            Laplacian = Array<OneD, NekDouble>(nq);
-        }
-
-        WeakDGMMFDiffusion(0, inarray[0], Laplacian, time);
-
-        for (int i = 0; i < nq; ++i)
-        {
-            outarray[0][i] += Laplacian[i] / factor;
-        }
-    }
-}
-
-// var = 0: phim_1 = phim in fiber 1
-// var = 1: phim_2 = phim in fiber 2
-// var = 2: phie
-void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMultiv2(
-    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
-{
-    const int nvar = m_fields.size();
-    const int nq   = m_fields[0]->GetNpoints();
-    const int phievar = nvar - 1;
-    const int numfiber = m_numfiber;
-
-    const NekDouble factor = m_Cn * m_Rf;
-    const NekDouble Temp = m_Temperature;
-
-    // Reuse memory if already allocated
-    for (int i = 0; i < nvar; ++i)
-    {
-        if (outarray[i].size() != nq)
-        {
-            outarray[i] = Array<OneD, NekDouble>(nq, 0.0);
-        }
-        else
-        {
-            Vmath::Zero(nq, outarray[i], 1);
-        }
-    }
-
-    // 1. Reaction Term (FHN or H-H ion current model)
-    m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
-
-    // 2. Apply Stimulus
-    for (int n = 0; n < numfiber; ++n)
-    {
-        m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
-    }
-
-    // Add phim for all fibers to produce the total phim
-    Array<OneD, NekDouble> phim(nq);
-    // Vmath::Vadd(nq, inarray[0], 1, inarray[1], 1, phim, 1);
-    m_fields[phievar]->UpdatePhys() = ComputeFieldPhiefiberv2(phievar, inarray);
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> phiecurrent(nq);
@@ -4339,7 +4221,6 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         }
 
         case eNeuralEP2DbiMulti:
-        case eNeuralEP2DbiMultiv2:
         {
             int numfiber = m_numfiber;
 

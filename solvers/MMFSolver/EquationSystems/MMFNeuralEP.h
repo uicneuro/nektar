@@ -58,7 +58,6 @@ enum NeuralEPType
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
     eNeuralEP2DbiMulti,
-    eNeuralEP2DbiMultiv2,
     eNeuralEP2DbiCSD,
     SIZE_NeuralEPType ///< Length of enum list
 };
@@ -69,7 +68,6 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
     "NeuralEP2DbiMulti",
-    "NeuralEP2DbiMultiv2",
     "NeuralEP2DbiCSD",
 };
 
@@ -350,15 +348,10 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
-        void DoImplicitSolveNeuralEP2DbiMulti(
-            const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-            Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-            const NekDouble lambda);
-
-            void DoImplicitSolveNeuralEP2DbiMultiv2(
-                const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-                Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
-                const NekDouble lambda);
+    void DoImplicitSolveNeuralEP2DbiMulti(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
 
     void DoImplicitSolveNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
@@ -381,10 +374,6 @@ protected:
     void DoOdeRhsNeuralEP2DbiMulti(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
-
-        void DoOdeRhsNeuralEP2DbiMultiv2(
-            const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-            Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
     void DoOdeRhsNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
