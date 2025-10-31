@@ -58,6 +58,7 @@ enum NeuralEPType
     eNeuralEP2Dmono,
     eNeuralEP2Dbi,
     eNeuralEP2DbiMulti,
+    eNeuralEP2DbiSuperpose,
     eNeuralEP2DbiCSD,
     SIZE_NeuralEPType ///< Length of enum list
 };
@@ -68,6 +69,7 @@ const char *const NeuralEPTypeMap[] = {
     "NeuralEP2Dmono",
     "NeuralEP2Dbi",
     "NeuralEP2DbiMulti",
+    "NeuralEP2DbiSuperpose",
     "NeuralEP2DbiCSD",
 };
 
@@ -353,6 +355,11 @@ protected:
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
         const NekDouble lambda);
 
+    void DoImplicitSolveNeuralEP2DbiSuperpose(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
+        const NekDouble lambda);
+
     void DoImplicitSolveNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
@@ -375,6 +382,10 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
 
+    void DoOdeRhsNeuralEP2DbiSuperpose(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+
     void DoOdeRhsNeuralEP2DbiCSD(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -384,11 +395,11 @@ protected:
         const Array<OneD, const NekDouble> &phim);
 
     Array<OneD, NekDouble> ComputeFieldPhiefiber(
-            const Array<OneD, const Array<OneD, NekDouble>> &inarray);
+        const int nfib,
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray);
 
-            Array<OneD, NekDouble> ComputeFieldPhiefiberv2(
-                const int phievar,
-                const Array<OneD, const Array<OneD, NekDouble>> &inarray);
+    Array<OneD, NekDouble> ComputeFieldPhiefibersum(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
