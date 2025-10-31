@@ -92,7 +92,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             switch (m_NeuralEPType)
             {
                 case eNeuralEP2DbiMulti:
-                case eNeuralEP2DbiSuperpose:    
+                case eNeuralEP2DbiSupp:    
                 {
                     m_phimvar = 1;
                     break;
@@ -363,7 +363,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
         case eNeuralEP2Dmono:
         case eNeuralEP2Dbi:
         case eNeuralEP2DbiMulti:
-        case eNeuralEP2DbiSuperpose:
+        case eNeuralEP2DbiSupp:
         case eNeuralEP2DbiCSD:
         {   
             // Provide index for nodes and myelins
@@ -512,10 +512,10 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
             }
 
 
-            case eNeuralEP2DbiSuperpose:
+            case eNeuralEP2DbiSupp:
             {
-                m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiSuperpose, this); 
-                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiSuperpose, this);
+                m_ode.DefineImplicitSolve(&MMFNeuralEP::DoImplicitSolveNeuralEP2DbiSupp, this); 
+                m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp, this);
                 break;
             }
 
@@ -2601,7 +2601,7 @@ void MMFNeuralEP::v_DoSolve()
         {
             ComputephieTimeMap(m_time, fields[phievar], dphidtint[phievar], TimeMap[phievar]);
 
-            if((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSuperpose))
+            if((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSupp))
             {
                 ComputephimTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
             }
@@ -2850,7 +2850,7 @@ void MMFNeuralEP::PlotNeuralEP(
 
             case 3:
             {
-                if ((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSuperpose))
+                if ((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSupp))
                 {
                     PlotNeuralEPvar3(fields, TimeMap, nstep);
                 }
@@ -3496,7 +3496,7 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiMulti(
 }
 
 // Implicit solve for NeuralEP 2D solver
-void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiSuperpose(
+void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiSupp(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time,
     const NekDouble lambda)
@@ -3790,7 +3790,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
 // var = 0: phim_1 = phim in fiber 1
 // var = 1: phim_2 = phim in fiber 2
 // var = 2: phie
-void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSuperpose(
+void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
     const Array<OneD, const Array<OneD, NekDouble>> &inarray,
     Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
 {
@@ -3827,7 +3827,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSuperpose(
         tmp = ComputeFieldPhiefiber(n, inarray);
 
         // Add phim for all fibers to produce the total phim
-        Vmath::Vadd(nq, phie, 1, tmp, 1, phie, 1);
+        Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
 
         // Compute \nabla \cdot (\sigma_i \nabla \phi_e)
         phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], tmp);
@@ -4241,6 +4241,7 @@ void MMFNeuralEP::v_SetInitialConditions(NekDouble initialtime,
         }
 
         case eNeuralEP2DbiMulti:
+        case eNeuralEP2DbiSupp:
         {
             int numfiber = m_numfiber;
 
