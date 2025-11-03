@@ -3761,14 +3761,25 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
         phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], m_fields[phievar]->GetPhys());
 
         // Current caused by extracellular potential affects the total current at the nodes and myelin.
+        const auto& fiber = m_intrazonefiber[n];
+        auto& out = outarray[n];
+        
+        #pragma omp simd
         for (int i = 0; i < nq; ++i)
         {
-            if (m_intrazonefiber[n][i] > 0.0)
+            if (fiber[i] > 0.0)
             {
-                outarray[n][i] += phiecurrent[i] / factor;
+                out[i] += phiecurrent[i] / factor;
             }
         }
     }
+        // for (int i = 0; i < nq; ++i)
+        // {
+        //     if (m_intrazonefiber[n][i] > 0.0)
+        //     {
+        //         outarray[n][i] += phiecurrent[i] / factor;
+        //     }
+        // }
 
     if (m_explicitDiffusion)
     {
@@ -3818,29 +3829,56 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
     }
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
-    Array<OneD, NekDouble> phiecurrent(nq);
     Array<OneD, NekDouble> tmp(nq);
     Array<OneD, NekDouble> phie(nq, 0.0);
-    for (int n=0; n < numfiber; ++n)
+    for (int n = 0; n < numfiber; ++n)
     {
         // Add phim for all fibers to produce the total phim
         tmp = ComputeFieldPhiefiber(n, inarray);
 
         // Add phim for all fibers to produce the total phim
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
+    }
 
+    Array<OneD, NekDouble> phiecurrent(nq);
+    for (int n = 0; n < numfiber; ++n)
+    {
         // Compute \nabla \cdot (\sigma_i \nabla \phi_e)
-        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], tmp);
+        phiecurrent = ComputeMMFDiffusion(m_movingframesfiber[n], phie);
 
         // Current caused by extracellular potential affects the total current at the nodes and myelin.
+        const auto& fiber = m_intrazonefiber[n];
+        auto& out = outarray[n];
+        
+        #pragma omp simd
         for (int i = 0; i < nq; ++i)
         {
-            if (m_intrazonefiber[n][i] > 0.0)
+            if (fiber[i] > 0.0)
             {
-                outarray[n][i] += phiecurrent[i] / factor;
+                out[i] += phiecurrent[i] / factor;
             }
         }
     }
+
+        // const auto &fiber = m_intrazonefiber[n];
+        // auto &out         = outarray[n];
+
+        // for (int i = 0; i < nq; ++i)
+        // {
+        //     double f = fiber[i];
+        //     if (f > 0.0)
+        //     {
+        //         out[i] += phiecurrent[i] / factor;
+        //     }
+        // }
+
+        // for (int i = 0; i < nq; ++i)
+        // {
+        //     if (m_intrazonefiber[n][i] > 0.0)
+        //     {
+        //         outarray[n][i] += phiecurrent[i] / factor;
+        //     }
+        // }
 
     // Update phie
     m_fields[phievar]->UpdatePhys() = phie;
