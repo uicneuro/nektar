@@ -195,9 +195,10 @@ protected:
 
     NekDouble m_pi;
     
-    NekDouble m_gratio, m_relfiberratio, m_radiusfiberbundle, m_fibercurvature, m_phiefactor;
+    NekDouble m_gratio, m_relfiberratio, m_fibercurvature, m_phiefactor;
     NekDouble m_axondiameter, m_fiberangle, m_fiberlength, m_nodeinitdown, m_nodeinitup, m_fiberwidth, m_fibergap;
     NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right, m_bundleleft, m_bundleright;
+    NekDouble m_radfibbundle1, m_radfibbundle2, m_radfibbundle3;
 
     NekDouble m_nodelen, m_myelinlen, m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm, m_phimrest, m_Diffext, m_AnisotropyStrength;
@@ -219,7 +220,8 @@ protected:
 
     Array<OneD, NekDouble> m_fiberleft;
     Array<OneD, NekDouble> m_fiberright;
-    
+    Array<OneD, NekDouble> m_phiefactorfiber;
+
     Array<OneD, NekDouble> ComputeConductivity(
                  const Array<OneD, const int> &zoneindex);
 
@@ -264,6 +266,7 @@ protected:
 
     void ComputeRegionalSigma(
         const Array<OneD, const int> &zoneindex,
+        const NekDouble phiefactor,
         Array<OneD, Array<OneD, NekDouble>> &sigma_i,
         Array<OneD, Array<OneD, NekDouble>> &sigma_e,
         Array<OneD, Array<OneD, NekDouble>> &sigma_eM);
@@ -309,6 +312,7 @@ protected:
     void ComputeGlobalPhieAniStrengthfiber(
         const Array<OneD, const int> &zoneindex,
         const Array<OneD, const Array<OneD, int>> &zoneindexfiber,
+        const Array<OneD, const NekDouble> &phiefactorfiber,
         Array<OneD, Array<OneD, NekDouble>> &phieAniStrength);
 
     void PlotAnisotropyfiber(
@@ -497,6 +501,7 @@ void Computephiemovingframesfiber(
 
 void ComputePhieAniStrengthfiber(
     const Array<OneD, const Array<OneD, int>> &zoneindexfiber, 
+    const Array<OneD, const NekDouble> &phiefactorfiber,
     Array<OneD, Array<OneD, Array<OneD, NekDouble>>> &phieAniStrengthfiber);
 
 void ComputePhieCurrent(const NekDouble time,
@@ -537,6 +542,8 @@ void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   NekDouble &thredlocf1);
                                   
 void PrintDuoCurrent(const Array<OneD, const Array<OneD, NekDouble>> &field);
+
+NekDouble ComputePhiefactor(const NekDouble radfib);
 
     Array<OneD, NekDouble> ConvertTMtoVel(
         const Array<OneD, const NekDouble> &TimeMap,
