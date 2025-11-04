@@ -110,6 +110,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                     break;
                 }
             }
+            break;
         }
 
         // NeuralEP2DbiMulti model for two fibers with two phies
@@ -3742,7 +3743,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
         const auto& fiber = m_intrazonefiber[n];
         auto& out = outarray[n];
         
-        #pragma omp simd
         for (int i = 0; i < nq; ++i)
         {
             if (fiber[i] > 0.0)
@@ -3828,7 +3828,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
         const auto& fiber = m_intrazonefiber[n];
         auto& out = outarray[n];
         
-        #pragma omp simd
         for (int i = 0; i < nq; ++i)
         {
             if (fiber[i] > 0.0)
