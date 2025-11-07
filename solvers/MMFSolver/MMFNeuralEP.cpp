@@ -229,7 +229,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     m_fiberleft[0] = m_fiber1left;
     m_fiberright[0] = m_fiber1right;
 
-    m_session->LoadParameter("radfibbundle", m_radfibbundle1, 0.01);
+    m_session->LoadParameter("radfibbundle1", m_radfibbundle1, 0.01);
     m_phiefactorfiber[0] = ComputePhiefactor(m_radfibbundle1);
 
     if(m_numfiber>1)
@@ -237,7 +237,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
        m_fiberorder[1] = m_fiber2order;
        m_fiberleft[1] = m_fiber2left;
        m_fiberright[1] = m_fiber2right;
-       m_session->LoadParameter("radfibbundle", m_radfibbundle2, 0.01);
+       m_session->LoadParameter("radfibbundle2", m_radfibbundle2, 0.01);
        m_phiefactorfiber[1] = ComputePhiefactor(m_radfibbundle2);
     }
 
@@ -386,6 +386,9 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
          break;
     }
 
+    //
+    PlotDomainZone();
+
     // Stimulus
     m_stimulus = NeuralStimulus::LoadStimuli(m_session, m_fields[0]);
 
@@ -493,7 +496,6 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 m_ode.DefineOdeRhs(&MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti, this);
                 break;
             }
-
 
             case eNeuralEP2DbiSupp:
             {
@@ -3751,13 +3753,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiMulti(
             }
         }
     }
-        // for (int i = 0; i < nq; ++i)
-        // {
-        //     if (m_intrazonefiber[n][i] > 0.0)
-        //     {
-        //         outarray[n][i] += phiecurrent[i] / factor;
-        //     }
-        // }
 
     if (m_explicitDiffusion)
     {
@@ -3836,26 +3831,6 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
             }
         }
     }
-
-        // const auto &fiber = m_intrazonefiber[n];
-        // auto &out         = outarray[n];
-
-        // for (int i = 0; i < nq; ++i)
-        // {
-        //     double f = fiber[i];
-        //     if (f > 0.0)
-        //     {
-        //         out[i] += phiecurrent[i] / factor;
-        //     }
-        // }
-
-        // for (int i = 0; i < nq; ++i)
-        // {
-        //     if (m_intrazonefiber[n][i] > 0.0)
-        //     {
-        //         outarray[n][i] += phiecurrent[i] / factor;
-        //     }
-        // }
 
     // Update phie
     m_fields[phievar]->UpdatePhys() = phie;
