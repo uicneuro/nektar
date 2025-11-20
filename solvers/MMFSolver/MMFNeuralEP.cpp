@@ -94,7 +94,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
                 case eNeuralEP2DbiMulti:
                 case eNeuralEP2DbiSupp:    
                 {
-                    m_phimvar = 1;
+                    m_phimvar = nvar-1;
                     break;
                 }
 
@@ -246,7 +246,7 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
        m_fiberorder[2] = m_fiber3order;
        m_fiberleft[2] = m_fiber3left;
        m_fiberright[2] = m_fiber3right;
-       m_session->LoadParameter("radfibbundle", m_radfibbundle3, 0.01);
+       m_session->LoadParameter("radfibbundle3", m_radfibbundle3, 0.01);
        m_phiefactorfiber[2] = ComputePhiefactor(m_radfibbundle3);
     }
 
@@ -1422,6 +1422,12 @@ int MMFNeuralEP::FiberIndex(FiberType FiberType, const int fibern,
                 break;
             }
 
+            case eLinearDoubleCrossing:
+            {
+                index = LinearDoubleCrossingFiberIndex(fibern, fiberorder, xi, yi);                
+                break;
+            }
+
             case eConstantCurved:
             {
                 index = ConstantCurvedFiberIndex(fibern, m_fibercurvature, xi, yi);                
@@ -1639,16 +1645,7 @@ int MMFNeuralEP::LinearMisAlignedFiberIndex(const int fibern, const NekDouble yi
 int MMFNeuralEP::LinearCrossingFiberIndex(
     const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi)
 {
-    int output;
-
-    const NekDouble totNnode = m_totNode;
-    const NekDouble nodelen = m_nodelen;
-    const NekDouble myelinlen = m_myelinlen;
-    const NekDouble nodeinitdown = m_nodeinitdown;
-    const NekDouble nodeinitup = m_nodeinitup;
-    const NekDouble fiberlength = m_fiberlength;
-    
-    output = -2 ;  // Default of the first fiber = myelin
+    int output = -2 ;  // Default of the first fiber = myelin
 
     // Excitezone
     if(fibern==0)
@@ -1661,49 +1658,89 @@ int MMFNeuralEP::LinearCrossingFiberIndex(
 
     else if(fibern==1)
     {
-        NekDouble nodestart, nodeend;
+        output = LinearSlantedFiberIndex(m_fiberangle, xi, yi);
+    }
 
-        const NekDouble beta = 0.5 * m_pi - m_fiberangle;
-        const NekDouble tanb = tan(beta);
-        const NekDouble cosb = cos(beta);
-        const NekDouble sinb = sin(beta);
+    return output;
+}
 
-        const NekDouble gap = nodelen / cosb;
-        const NekDouble upperline = tanb * xi + 0.5 * fiberlength - yi;
-        const NekDouble lowerline = tanb * xi + 0.5 * fiberlength - gap - yi;
+int MMFNeuralEP::LinearDoubleCrossingFiberIndex(
+    const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi)
+{
+    int output = -2 ;  // Default of the first fiber = myelin
 
-        const NekDouble x0 = -0.5*fiberlength/sqrt(1 + tanb*tanb);
-        const NekDouble y0 = tanb * x0 + 0.5 * fiberlength;
-        const NekDouble sp0 = x0 * cosb + y0 * sinb;
-        const NekDouble sp = xi * cosb + yi * sinb;
-        const NekDouble dist = sp - sp0;
+    if(fibern==2)
+    {
+        output = LinearSlantedFiberIndex(m_fiberangle, xi, yi);
+    }
 
-        if( (upperline*lowerline < 0) && ( dist < fiberlength) )
+    else
+    {
+        if((xi>m_fiberleft[fibern]) && (xi<m_fiberright[fibern]))
         {
-            output = -1;
+            output = LinearAlignedFiberIndex(fiberorder, yi); 
+        }
+    }
 
-            // Excitezone
-            if( (dist >= nodeinitdown) && (dist <= nodeinitup) )
-            {
-                output = 0;
-            }
+    return output;
+}
 
-            for (int k=0; k<totNnode; ++k)
-            {
-                nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
-                nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
-                if( (dist>=nodestart) && (dist<=nodeend) )
-                {
-                    output = k + 1;
-                }
-            }
+int MMFNeuralEP::LinearSlantedFiberIndex(
+                    const NekDouble fiberangle, 
+                    const NekDouble xi, 
+                    const NekDouble yi)
+{
+    int output = -2;
 
-            // Before first node or after last node
-            const NekDouble nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
-            if (dist < nodeinitdown || dist > nodeend)
+    const NekDouble totNnode = m_totNode;
+    const NekDouble nodelen = m_nodelen;
+    const NekDouble myelinlen = m_myelinlen;
+    const NekDouble nodeinitdown = m_nodeinitdown;
+    const NekDouble nodeinitup = m_nodeinitup;
+    const NekDouble fiberlength = m_fiberlength;
+
+    const NekDouble beta = 0.5 * m_pi - fiberangle;
+
+    const NekDouble tanb = tan(beta);
+    const NekDouble cosb = cos(beta);
+    const NekDouble sinb = sin(beta);
+
+    const NekDouble gap = nodelen / cosb;
+    const NekDouble upperline = tanb * xi + 0.5 * fiberlength - yi;
+    const NekDouble lowerline = tanb * xi + 0.5 * fiberlength - gap - yi;
+
+    const NekDouble x0 = -0.5*fiberlength/sqrt(1 + tanb*tanb);
+    const NekDouble y0 = tanb * x0 + 0.5 * fiberlength;
+    const NekDouble sp0 = x0 * cosb + y0 * sinb;
+    const NekDouble sp = xi * cosb + yi * sinb;
+    const NekDouble dist = sp - sp0;
+
+    NekDouble nodestart, nodeend;
+    if( (upperline*lowerline < 0) && (dist < fiberlength) )
+    {
+        output = -1;
+
+        // Excitezone
+        if( (dist >= nodeinitdown) && (dist <= nodeinitup) )
+        {
+            output = 0;
+        }
+
+        for (int k=0; k<totNnode; ++k)
+        {
+            nodestart = nodeinitup + myelinlen + k * (myelinlen + nodelen);
+            nodeend = nodeinitup + (k+1) * (myelinlen + nodelen);
+            if( (dist>=nodestart) && (dist<=nodeend) )
             {
-                output = -2;
+                output = k + 1;
             }
+        }
+
+        // Before first node or after last node
+        const NekDouble nodeend = nodeinitup + totNnode * (myelinlen + nodelen);
+        if (dist < nodeinitdown || dist > nodeend)
+        {
+            output = -2;
         }
     }
 
@@ -2156,9 +2193,80 @@ void MMFNeuralEP::PlotDomainZone()
                 break;
             }
 
+            case 3:
+            {
+                PlotDomainZonefib3(m_zoneindexfiber, m_zoneindex, m_intrazonefiber, m_intrazone, m_extrazone, m_outerzone);
+                break;
+            }
+
             default:
             break;
         }
+}
+
+// Plotting Domain Zone
+void MMFNeuralEP::PlotDomainZonefib3(
+    const Array<OneD, const Array<OneD, int>> zoneindexfiber,
+    const Array<OneD, const int> &zoneindex,
+    const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
+    const Array<OneD, const NekDouble> &intrazone,
+    const Array<OneD, const NekDouble> &extrazone,
+    const Array<OneD, const NekDouble> &outerzone)
+{
+    const int numfiber = m_numfiber;
+    const int nq   = GetTotPoints();
+    const int nvar    = 2 * m_numfiber + 4;
+    const int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_zone.chk";
+
+    std::vector<std::string> variables(nvar);
+
+    variables[0] = "zoneindexfiber1";
+    variables[1] = "zoneindexfiber2";
+    variables[2] = "zoneindexfiber3";
+    variables[3] = "zoneindex";
+    variables[4] = "intrazonefiber1";
+    variables[5] = "intrazonefiber2";
+    variables[6] = "intrazonefiber3";
+    variables[7] = "intrazone";
+    variables[8] = "extrazone";
+    variables[9] = "outerzone";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    Array<OneD, NekDouble> zoneindextmp(nq);
+    for (int nfib=0; nfib<numfiber; ++nfib)
+    {
+        for (int j=0; j< nq; ++j)
+        {
+            zoneindextmp[j] = 1.0 * zoneindexfiber[nfib][j];
+        }
+
+        m_fields[0]->FwdTransLocalElmt(zoneindextmp, fieldcoeffs[nfib]);
+    }
+
+    for (int j=0; j< nq; ++j)
+    {
+        zoneindextmp[j] = 1.0 * zoneindex[j];
+    }
+
+    m_fields[0]->FwdTransLocalElmt(zoneindextmp, fieldcoeffs[3]);
+
+    for (int nfib=0; nfib<numfiber; ++nfib)
+    {
+        m_fields[0]->FwdTransLocalElmt(intrazonefiber[nfib], fieldcoeffs[4+nfib]);
+    }
+
+    m_fields[0]->FwdTransLocalElmt(intrazone, fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(extrazone, fieldcoeffs[8]);
+    m_fields[0]->FwdTransLocalElmt(outerzone, fieldcoeffs[9]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
 // Plotting Domain Zone
@@ -2578,13 +2686,16 @@ void MMFNeuralEP::v_DoSolve()
             ComputephieTimeMap(m_time, fields[1], dphidtint[1], TimeMap[1]);
         }
 
-        else if (nvar == 3)
+        else if (nvar >= 3)
         {
             ComputephieTimeMap(m_time, fields[phievar], dphidtint[phievar], TimeMap[phievar]);
 
             if((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSupp))
             {
-                ComputephimTimeMap(m_time, fields[1], dphidt[1], dphidtint[1], TimeMap[1]);
+                for (int i = 1; i < phievar; ++i)
+                {
+                    ComputephimTimeMap(m_time, fields[i], dphidt[i], dphidtint[i], TimeMap[i]);
+                }
             }
 
             else if(m_NeuralEPType == eNeuralEP2DbiCSD)
@@ -2845,7 +2956,10 @@ void MMFNeuralEP::PlotNeuralEP(
 
             case 4:
             {
-                PlotNeuralEPvar4(fields, TimeMap, nstep);
+                if ((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSupp))
+                {
+                    PlotNeuralEPvar4(fields, TimeMap, nstep);
+                }
                 break;
             }
 
@@ -3009,6 +3123,100 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
+void MMFNeuralEP::PlotNeuralEPvar4(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep)
+{
+    const int nvar    = 11;
+    const int nq      = m_fields[0]->GetTotPoints();
+    const int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_field_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "field";
+    variables[1] = "phi_m";
+    variables[2] = "phi_e";
+    variables[3] = "phi_m1";
+    variables[4] = "phi_m2";
+    variables[5] = "phi_m3";
+    variables[6] = "TimeMap_phim";
+    variables[7] = "TimeMap_phim1";
+    variables[8] = "TimeMap_phim2";
+    variables[9] = "TimeMap_phim3";
+    variables[10] = "TimeMap_phie";
+
+    Array<OneD, NekDouble> phim(nq);
+    Vmath::Vadd(nq, fields[0], 1, fields[1], 1, phim, 1);
+    Vmath::Vadd(nq, fields[2], 1, phim, 1, phim, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phim, 1, phim, 1);
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[3], 1, phie, 1);
+
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
+    Array<OneD, NekDouble> totfield(nq);
+    Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
+    Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
+
+    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[5]);
+
+    // Max values and indices
+    const NekDouble Maxphim1  = Vmath::Vmax(nq, fields[0], 1);
+    const int       Maxphim1id = Vmath::Imax(nq, fields[0], 1);
+
+    const NekDouble Maxphim2  = Vmath::Vmax(nq, fields[1], 1);
+    const int       Maxphim2id = Vmath::Imax(nq, fields[1], 1);
+
+    const NekDouble Maxphim3  = Vmath::Vmax(nq, fields[2], 1);
+    const int       Maxphim3id = Vmath::Imax(nq, fields[2], 1);
+
+    const NekDouble Maxphie  = Vmath::Vmax(nq, fields[2], 1);
+    const int       Maxphieid = Vmath::Imax(nq, fields[2], 1);
+
+    // Coordinates
+    const Array<OneD, NekDouble> &x0 = m_x;
+    const Array<OneD, NekDouble> &x1 = m_y;
+
+    std::cout << "phim1: Max = " << Maxphim1 << " at x = " << x0[Maxphim1id] << ", y = " << x1[Maxphim1id] << '\n';
+    std::cout << "phim2: Max = " << Maxphim2 << " at x = " << x0[Maxphim2id] << ", y = " << x1[Maxphim2id] << '\n';
+    std::cout << "phim3: Max = " << Maxphim3 << " at x = " << x0[Maxphim3id] << ", y = " << x1[Maxphim3id] << '\n';
+    std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << '\n';
+ 
+    // TimeMap maxima
+    std::cout << "TimeMap: phim1 = " << Vmath::Vmax(nq, TimeMap[0], 1)
+                << ", phim2 = " << Vmath::Vmax(nq, TimeMap[1], 1) 
+                << ", phim3 = " << Vmath::Vmax(nq, TimeMap[2], 1)
+                << ", phie = " << Vmath::Vmax(nq, TimeMap[2], 1) << std::endl;
+    
+    // variables[4] = "TimeMap_phim";
+    Vmath::Vadd(nq, TimeMap[0], 1, TimeMap[1], 1, totfield, 1);
+    Vmath::Vadd(nq, TimeMap[2], 1, totfield, 1, totfield, 1);
+
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[6]);
+
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[7]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[8]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[9]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[3], fieldcoeffs[10]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
+
 void MMFNeuralEP::PlotNeuralEPvar3CSD(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
@@ -3094,96 +3302,6 @@ void MMFNeuralEP::PlotNeuralEPvar3CSD(
 }
 
 
-void MMFNeuralEP::PlotNeuralEPvar4(
-    const Array<OneD, const Array<OneD, NekDouble>> &fields,
-    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
-    const int nstep)
-{
-    const int nvar    = 11;
-    const int nq      = m_fields[0]->GetTotPoints();
-    const int ncoeffs = m_fields[0]->GetNcoeffs();
-
-    std::string outname1 = m_sessionName + "_field_" +
-                           boost::lexical_cast<std::string>(nstep) + ".chk";
-
-    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
-    for (int i = 0; i < nvar; ++i)
-    {
-        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
-    }
-
-    std::vector<std::string> variables(nvar);
-    variables[0] = "field";
-    variables[1] = "phi_m";
-    variables[2] = "phi_e";
-    variables[3] = "phi_m1";
-    variables[4] = "phi_m2";
-    variables[5] = "phi_e1";
-    variables[6] = "phi_e2";
-    variables[7] = "TimeMap_phim1";
-    variables[8] = "TimeMap_phim2";
-    variables[9] = "TimeMap_phie1";
-    variables[10] = "TimeMap_phie2";
-
-    Array<OneD, NekDouble> phim(nq);
-    Vmath::Vadd(nq, fields[0], 1, fields[1], 1, phim, 1);
-    Vmath::Vmul(nq, m_intrazone, 1, phim, 1, phim, 1);
-
-    Array<OneD, NekDouble> phie(nq);
-    Vmath::Vadd(nq, fields[2], 1, fields[3], 1, phie, 1);
-    Vmath::Vmul(nq, m_outerzone, 1, phie, 1, phie, 1);
-
-    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
-    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
-
-    // Multiply 100 to \phi_e for better visualization
-    Array<OneD, NekDouble> totfield(nq);
-    Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
-    Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
-    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
-
-    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[3]);
-    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[4]);
-
-    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[5]);
-    m_fields[0]->FwdTransLocalElmt(fields[3], fieldcoeffs[6]);
-
-    // Max values and indices
-    const NekDouble Maxphim1  = Vmath::Vmax(nq, fields[0], 1);
-    const int       Maxphim1id = Vmath::Imax(nq, fields[0], 1);
-
-    const NekDouble Maxphim2  = Vmath::Vmax(nq, fields[1], 1);
-    const int       Maxphim2id = Vmath::Imax(nq, fields[1], 1);
-
-    const NekDouble Maxphie1  = Vmath::Vmax(nq, fields[2], 1);
-    const int       Maxphie1id = Vmath::Imax(nq, fields[2], 1);
-
-    const NekDouble Maxphie2  = Vmath::Vmax(nq, fields[3], 1);
-    const int       Maxphie2id = Vmath::Imax(nq, fields[3], 1);
-
-    // Coordinates
-    const Array<OneD, NekDouble> &x0 = m_x;
-    const Array<OneD, NekDouble> &x1 = m_y;
-
-    std::cout << "phim1: Max = " << Maxphim1 << " at x = " << x0[Maxphim1id] << ", y = " << x1[Maxphim1id] << '\n';
-    std::cout << "phim2: Max = " << Maxphim2 << " at x = " << x0[Maxphim2id] << ", y = " << x1[Maxphim2id] << '\n';
-    std::cout << "phie1: Max = " << Maxphie1 << " at x = " << x0[Maxphie1id] << ", y = " << x1[Maxphie1id] << '\n';
-    std::cout << "phie2: Max = " << Maxphie2 << " at x = " << x0[Maxphie2id] << ", y = " << x1[Maxphie2id] << '\n';
-
-    // TimeMap maxima
-    std::cout << "TimeMap: phim1 = " << Vmath::Vmax(nq, TimeMap[0], 1)
-                << ", phim2 = " << Vmath::Vmax(nq, TimeMap[1], 1) 
-                << ", phie1 = " << Vmath::Vmax(nq, TimeMap[2], 1) 
-                << ", phie2 = " << Vmath::Vmax(nq, TimeMap[3], 1)<< std::endl;
-    
-    // variables[4] = "TimeMap_phim";
-    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[7]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[8]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[9]);
-    m_fields[0]->FwdTransLocalElmt(TimeMap[3], fieldcoeffs[10]);
-
-    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
-}
 
 
 void MMFNeuralEP::PlotAnisotropy(
@@ -4399,6 +4517,7 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
 
     SolverUtils::AddSummaryItem(s, "FiberType", FiberTypeMap[m_FiberType]);
 
+    SolverUtils::AddSummaryItem(s, "numfibers", m_numfiber);
     SolverUtils::AddSummaryItem(s, "bundleleft", m_bundleleft);
     SolverUtils::AddSummaryItem(s, "bundleright", m_bundleright);
 
@@ -4409,7 +4528,6 @@ void MMFNeuralEP::v_GenerateSummary(SolverUtils::SummaryList &s)
     SolverUtils::AddSummaryItem(s, "radfibbundle1", m_radfibbundle1);
     SolverUtils::AddSummaryItem(s, "radfibbundle2", m_radfibbundle2);
     SolverUtils::AddSummaryItem(s, "CSDDiff", m_CSDDiff);
-    SolverUtils::AddSummaryItem(s, "phiefactor", m_phiefactor);
 
     SolverUtils::AddSummaryItem(s, "Node Length", m_nodelen);
     SolverUtils::AddSummaryItem(s, "Myelin Length", m_myelinlen);
@@ -4464,45 +4582,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-// int main(int argc, char *argv[])
-// {
-//     LibUtilities::SessionReaderSharedPtr session;
-//     SpatialDomains::MeshGraphSharedPtr graph;
-
-//     LibUtilities::SessionReaderSharedPtr session1D;
-//     SpatialDomains::MeshGraphSharedPtr graph1D;
-
-//     std::string vDriverModule;
-//     DriverSharedPtr drv;
-
-//     try
-//     {
-//         // Create session reader.
-//         session = LibUtilities::SessionReader::CreateInstance(argc, argv);
-
-//         // Create MeshGraph
-//         graph1D = SpatialDomains::MeshGraphIO::Read(session);
-
-//         // Create driver
-//         session->LoadSolverInfo("Driver", vDriverModule, "Standard");
-//         drv = GetDriverFactory().CreateInstance(vDriverModule, session, graph);
-
-//         // Execute driver
-//         drv->Execute();
-
-//         // Finalise session
-//         session->Finalise();
-//     }
-
-//     catch (const std::runtime_error &e)
-//     {
-//         return 1;
-//     }
-//     catch (const std::string &eStr)
-//     {
-//         std::cout << "Error: " << eStr << std::endl;
-//     }
-
-//     return 0;
-// }

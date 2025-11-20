@@ -127,6 +127,7 @@ enum FiberType
     eLinearMisAligned,
     eLinearDivergent,
     eLinearCrossing,
+    eLinearDoubleCrossing,
     eConstantCurved,
     SIZE_FiberType ///< Length of enum list
 };
@@ -136,6 +137,7 @@ const char *const FiberTypeMap[] = {
     "LinearMisAligned",
     "LinearDivergent",
     "LinearCrossing",
+    "LinearDoubleCrossing",
     "ConstantCurved",
 };
 
@@ -426,11 +428,16 @@ protected:
 
     int LinearAlignedFiberIndex(const int fiberorder, const NekDouble yi);
 
+    int LinearSlantedFiberIndex(const NekDouble fiberangle, 
+        const NekDouble xi, const NekDouble yi);
+
     int LinearMisAlignedFiberIndex(const int fibern, const NekDouble yi);
 
     int LinearDivergentFiberIndex(const int fibern, const NekDouble xi, const NekDouble yi);
 
     int LinearCrossingFiberIndex(const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi);
+
+    int LinearDoubleCrossingFiberIndex(const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi);
 
     int ConstantCurvedFiberIndex(const int fibern,  
         const NekDouble fibercurvature, const NekDouble xi, const NekDouble yi);
@@ -445,6 +452,14 @@ protected:
 void PlotDomainZone();
 
 void TestHelmSolve();
+
+void PlotDomainZonefib3(
+    const Array<OneD, const Array<OneD, int>> zoneindexfiber,
+    const Array<OneD, const int> &zoneindex,
+    const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
+    const Array<OneD, const NekDouble> &intrazone,
+    const Array<OneD, const NekDouble> &extrazone,
+    const Array<OneD, const NekDouble> &outerzone);
 
 void PlotDomainZonefib2(
         const Array<OneD, const Array<OneD, int>> zoneindexfiber,
@@ -529,10 +544,10 @@ void PlotNeuralEP(
         const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
         const int nstep);
 
-    void PlotNeuralEPvar4(
-    const Array<OneD, const Array<OneD, NekDouble>> &fields,
-    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
-    const int nstep);
+        void PlotNeuralEPvar4(
+            const Array<OneD, const Array<OneD, NekDouble>> &fields,
+            const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+            const int nstep);
 
 void PrintAtNodes(const int nfields, const int numfiber,
                 const Array<OneD, const Array<OneD, NekDouble>> &fields);
