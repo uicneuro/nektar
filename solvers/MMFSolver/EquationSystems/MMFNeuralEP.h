@@ -128,6 +128,7 @@ enum FiberType
     eLinearDivergent,
     eLinearCrossing,
     eLinearDoubleCrossing,
+    eLinearDoubleCrossingDouble,
     eConstantCurved,
     SIZE_FiberType ///< Length of enum list
 };
@@ -138,6 +139,7 @@ const char *const FiberTypeMap[] = {
     "LinearDivergent",
     "LinearCrossing",
     "LinearDoubleCrossing",
+    "LinearDoubleCrossingDouble",
     "ConstantCurved",
 };
 
@@ -192,15 +194,15 @@ protected:
     int m_phimvar, m_phievar;
     int m_npts, m_nfibers, m_ElemNodeEnd, m_ElemMyelenEnd, m_ElemExtEnd, m_Convectiven;
     int m_numfiber, m_totNode, m_zonestart, m_zoneend, m_myeline, m_node, m_external;
-    int m_fiber2DElemStart, m_fiber2DElemEnd, m_fiber1order, m_fiber2order, m_fiber3order;
+    int m_fiber2DElemStart, m_fiber2DElemEnd, m_fiber1order, m_fiber2order, m_fiber3order, m_fiber4order;
     int m_AnisotropyRegion, m_InnerboxEnd;
 
     NekDouble m_pi;
     
     NekDouble m_gratio, m_relfiberratio, m_fibercurvature, m_phiefactor;
     NekDouble m_axondiameter, m_fiberangle, m_fiberlength, m_nodeinitdown, m_nodeinitup, m_fiberwidth, m_fibergap;
-    NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right, m_bundleleft, m_bundleright;
-    NekDouble m_radfibbundle1, m_radfibbundle2, m_radfibbundle3;
+    NekDouble m_fiber1left, m_fiber1right, m_fiber2left, m_fiber2right, m_fiber3left, m_fiber3right, m_fiber4left, m_fiber4right;
+    NekDouble m_bundleleft, m_bundleright, m_radfibbundle1, m_radfibbundle2, m_radfibbundle3, m_radfibbundle4;
 
     NekDouble m_nodelen, m_myelinlen, m_InitPtx, m_InitPty, m_InitPtz;
     NekDouble m_Rf, m_Cn, m_Cm, m_phimrest, m_Diffext, m_AnisotropyStrength;
@@ -431,6 +433,12 @@ protected:
     int LinearSlantedFiberIndex(const NekDouble fiberangle, 
         const NekDouble xi, const NekDouble yi);
 
+     int LinearSlantedDoubleFiberIndex(
+            const int fibern,
+            const NekDouble fiberangle,
+            const NekDouble xi,
+            const NekDouble yi);
+
     int LinearMisAlignedFiberIndex(const int fibern, const NekDouble yi);
 
     int LinearDivergentFiberIndex(const int fibern, const NekDouble xi, const NekDouble yi);
@@ -438,6 +446,8 @@ protected:
     int LinearCrossingFiberIndex(const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi);
 
     int LinearDoubleCrossingFiberIndex(const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi);
+
+    int LinearDoubleCrossingDoubleFiberIndex(const int fibern, const int fiberorder, const NekDouble xi, const NekDouble yi);
 
     int ConstantCurvedFiberIndex(const int fibern,  
         const NekDouble fibercurvature, const NekDouble xi, const NekDouble yi);
@@ -452,6 +462,14 @@ protected:
 void PlotDomainZone();
 
 void TestHelmSolve();
+
+void PlotDomainZonefib4(
+    const Array<OneD, const Array<OneD, int>> zoneindexfiber,
+    const Array<OneD, const int> &zoneindex,
+    const Array<OneD, const Array<OneD, NekDouble>> &intrazonefiber,
+    const Array<OneD, const NekDouble> &intrazone,
+    const Array<OneD, const NekDouble> &extrazone,
+    const Array<OneD, const NekDouble> &outerzone);
 
 void PlotDomainZonefib3(
     const Array<OneD, const Array<OneD, int>> zoneindexfiber,
