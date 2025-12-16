@@ -1804,8 +1804,6 @@ int MMFNeuralEP::LinearSlantedDoubleFiberIndex(
     const NekDouble sp   = xi * cosb + yi * sinb;
     const NekDouble dist = sp - sp0;
 
-    std::cout << " upperline = " << upperline << ", lowerline = " << lowerline << ", dist = " << dist << std::endl;
-
     NekDouble nodestart, nodeend;
     if ((upperline * lowerline < 0) && (dist < fiberlength))
     {
