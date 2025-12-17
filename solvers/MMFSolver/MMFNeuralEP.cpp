@@ -3003,6 +3003,15 @@ void MMFNeuralEP::PlotNeuralEP(
                 break;
             }
 
+            case 5:
+            {
+                if ((m_NeuralEPType == eNeuralEP2DbiMulti) || (m_NeuralEPType == eNeuralEP2DbiSupp))
+                {
+                    PlotNeuralEPvar5(fields, TimeMap, nstep);
+                }
+                break;
+            }
+
             default:
             break;
         }
@@ -3163,6 +3172,112 @@ void MMFNeuralEP::PlotNeuralEPvar3(
     WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
 }
 
+
+void MMFNeuralEP::PlotNeuralEPvar5(
+    const Array<OneD, const Array<OneD, NekDouble>> &fields,
+    const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+    const int nstep)
+{
+    const int nvar    = 13;
+    const int nq      = m_fields[0]->GetTotPoints();
+    const int ncoeffs = m_fields[0]->GetNcoeffs();
+
+    std::string outname1 = m_sessionName + "_field_" +
+                           boost::lexical_cast<std::string>(nstep) + ".chk";
+
+    std::vector<Array<OneD, NekDouble>> fieldcoeffs(nvar);
+    for (int i = 0; i < nvar; ++i)
+    {
+        fieldcoeffs[i] = Array<OneD, NekDouble>(ncoeffs);
+    }
+
+    std::vector<std::string> variables(nvar);
+    variables[0] = "field";
+    variables[1] = "phi_m";
+    variables[2] = "phi_e";
+    variables[3] = "phi_m1";
+    variables[4] = "phi_m2";
+    variables[5] = "phi_m3";
+    variables[6] = "phi_m4";
+    variables[7] = "TimeMap_phim";
+    variables[8] = "TimeMap_phim1";
+    variables[9] = "TimeMap_phim2";
+    variables[10] = "TimeMap_phim3";
+    variables[11] = "TimeMap_phim4";
+    variables[12] = "TimeMap_phie";
+
+    Array<OneD, NekDouble> phim(nq);
+    Vmath::Vadd(nq, fields[0], 1, fields[1], 1, phim, 1);
+    Vmath::Vadd(nq, fields[2], 1, phim, 1, phim, 1);
+    Vmath::Vadd(nq, fields[3], 1, phim, 1, phim, 1);
+    Vmath::Vmul(nq, m_intrazone, 1, phim, 1, phim, 1);
+
+    Array<OneD, NekDouble> phie(nq);
+    Vmath::Vmul(nq, m_outerzone, 1, fields[4], 1, phie, 1);
+
+    m_fields[0]->FwdTransLocalElmt(phim, fieldcoeffs[1]);
+    m_fields[0]->FwdTransLocalElmt(phie, fieldcoeffs[2]);
+
+    Array<OneD, NekDouble> totfield(nq);
+    Vmath::Smul(nq, 100.0 , phie, 1, phie, 1);
+    Vmath::Vadd(nq, phim, 1, phie, 1, totfield, 1);
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[0]);
+
+    m_fields[0]->FwdTransLocalElmt(fields[0], fieldcoeffs[3]);
+    m_fields[0]->FwdTransLocalElmt(fields[1], fieldcoeffs[4]);
+    m_fields[0]->FwdTransLocalElmt(fields[2], fieldcoeffs[5]);
+    m_fields[0]->FwdTransLocalElmt(fields[3], fieldcoeffs[6]);
+
+    // Max values and indices
+    const NekDouble Maxphim1  = Vmath::Vmax(nq, fields[0], 1);
+    const int       Maxphim1id = Vmath::Imax(nq, fields[0], 1);
+
+    const NekDouble Maxphim2  = Vmath::Vmax(nq, fields[1], 1);
+    const int       Maxphim2id = Vmath::Imax(nq, fields[1], 1);
+
+    const NekDouble Maxphim3  = Vmath::Vmax(nq, fields[2], 1);
+    const int       Maxphim3id = Vmath::Imax(nq, fields[2], 1);
+
+    const NekDouble Maxphim4  = Vmath::Vmax(nq, fields[3], 1);
+    const int       Maxphim4id = Vmath::Imax(nq, fields[3], 1);
+
+    const NekDouble Maxphie  = Vmath::Vmax(nq, fields[4], 1);
+    const int       Maxphieid = Vmath::Imax(nq, fields[4], 1);
+
+    
+    // Coordinates
+    const Array<OneD, NekDouble> &x0 = m_x;
+    const Array<OneD, NekDouble> &x1 = m_y;
+
+    std::cout << "phim1: Max = " << Maxphim1 << " at x = " << x0[Maxphim1id] << ", y = " << x1[Maxphim1id] << '\n';
+    std::cout << "phim2: Max = " << Maxphim2 << " at x = " << x0[Maxphim2id] << ", y = " << x1[Maxphim2id] << '\n';
+    std::cout << "phim3: Max = " << Maxphim3 << " at x = " << x0[Maxphim3id] << ", y = " << x1[Maxphim3id] << '\n';
+    std::cout << "phim4: Max = " << Maxphim4 << " at x = " << x0[Maxphim4id] << ", y = " << x1[Maxphim4id] << '\n';
+    std::cout << "phie: Max = " << Maxphie << " at x = " << x0[Maxphieid] << ", y = " << x1[Maxphieid] << '\n';
+ 
+    // TimeMap maxima
+    std::cout << "TimeMap: phim1 = " << Vmath::Vmax(nq, TimeMap[0], 1)
+                << ", phim2 = " << Vmath::Vmax(nq, TimeMap[1], 1) 
+                << ", phim3 = " << Vmath::Vmax(nq, TimeMap[2], 1)
+                << ", phim4 = " << Vmath::Vmax(nq, TimeMap[3], 1)
+                << ", phie = " << Vmath::Vmax(nq, TimeMap[4], 1) << std::endl;
+    
+    // variables[4] = "TimeMap_phim";
+    Vmath::Vadd(nq, TimeMap[0], 1, TimeMap[1], 1, totfield, 1);
+    Vmath::Vadd(nq, TimeMap[2], 1, totfield, 1, totfield, 1);
+    Vmath::Vadd(nq, TimeMap[3], 1, totfield, 1, totfield, 1);
+
+    m_fields[0]->FwdTransLocalElmt(totfield, fieldcoeffs[7]);
+
+    m_fields[0]->FwdTransLocalElmt(TimeMap[0], fieldcoeffs[8]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[1], fieldcoeffs[9]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[2], fieldcoeffs[10]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[3], fieldcoeffs[11]);
+    m_fields[0]->FwdTransLocalElmt(TimeMap[4], fieldcoeffs[12]);
+
+    WriteFld(outname1, m_fields[0], fieldcoeffs, variables);
+}
+
 void MMFNeuralEP::PlotNeuralEPvar4(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
     const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
@@ -3224,8 +3339,8 @@ void MMFNeuralEP::PlotNeuralEPvar4(
     const NekDouble Maxphim3  = Vmath::Vmax(nq, fields[2], 1);
     const int       Maxphim3id = Vmath::Imax(nq, fields[2], 1);
 
-    const NekDouble Maxphie  = Vmath::Vmax(nq, fields[2], 1);
-    const int       Maxphieid = Vmath::Imax(nq, fields[2], 1);
+    const NekDouble Maxphie  = Vmath::Vmax(nq, fields[3], 1);
+    const int       Maxphieid = Vmath::Imax(nq, fields[3], 1);
 
     // Coordinates
     const Array<OneD, NekDouble> &x0 = m_x;

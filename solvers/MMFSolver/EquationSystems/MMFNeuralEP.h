@@ -562,10 +562,15 @@ void PlotNeuralEP(
         const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
         const int nstep);
 
-        void PlotNeuralEPvar4(
-            const Array<OneD, const Array<OneD, NekDouble>> &fields,
-            const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
-            const int nstep);
+    void PlotNeuralEPvar4(
+        const Array<OneD, const Array<OneD, NekDouble>> &fields,
+        const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+        const int nstep);
+
+    void PlotNeuralEPvar5(
+        const Array<OneD, const Array<OneD, NekDouble>> &fields,
+        const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
+        const int nstep);
 
 void PrintAtNodes(const int nfields, const int numfiber,
                 const Array<OneD, const Array<OneD, NekDouble>> &fields);
