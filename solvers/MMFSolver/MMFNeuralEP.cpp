@@ -3773,6 +3773,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiSupp(
         }
     }
 
+    std::cout << "DoImplicitSolveNeuralEP2DbiSupp: 1" << std::endl;
+    
     // Multiply 1.0/timestep
     const NekDouble scale = -factors[StdRegions::eFactorLambda];
     for (int n = 0; n < numfiber; ++n)
@@ -3783,6 +3785,8 @@ void MMFNeuralEP::DoImplicitSolveNeuralEP2DbiSupp(
         m_fields[n]->BwdTrans(m_fields[n]->GetCoeffs(), outarray[n]);
         m_fields[n]->SetPhysState(true);
     }
+    std::cout << "DoImplicitSolveNeuralEP2DbiSupp: 2" << std::endl;
+
 }
 
 
@@ -4068,11 +4072,13 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
     // 1. Reaction Term (FHN or H-H ion current model)
     m_neuron->TimeIntegrateMulti(numfiber, m_zoneindexfiber, inarray, outarray, time, Temp);
 
+    std::cout << "DoOdeRhsNeuralEP2DbiSupp: 1" << std::endl;
     // 2. Apply Stimulus
     for (int n = 0; n < numfiber; ++n)
     {
         m_stimulus[n]->Update(m_zoneindexfiber[n], outarray[n], time);
     }
+    std::cout << "DoOdeRhsNeuralEP2DbiSupp: 2" << std::endl;
 
     // 4. Compute \nabla \cdot (\sigma_i \nabla \phi_e) and add to membrane current
     Array<OneD, NekDouble> tmp(nq);
@@ -4085,6 +4091,7 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
         // Add phim for all fibers to produce the total phim
         Vmath::Vadd(nq, tmp, 1, phie, 1, phie, 1);
     }
+    std::cout << "DoOdeRhsNeuralEP2DbiSupp: 3" << std::endl;
 
     Array<OneD, NekDouble> phiecurrent(nq);
     for (int n = 0; n < numfiber; ++n)
@@ -4104,9 +4111,11 @@ void MMFNeuralEP::DoOdeRhsNeuralEP2DbiSupp(
             }
         }
     }
+    std::cout << "DoOdeRhsNeuralEP2DbiSupp: 4" << std::endl;
 
     // Update phie
     m_fields[phievar]->UpdatePhys() = phie;
+    std::cout << "DoOdeRhsNeuralEP2DbiSupp: 5" << std::endl;
 
     if (m_explicitDiffusion)
     {
