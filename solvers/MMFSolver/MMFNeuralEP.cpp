@@ -2759,8 +2759,10 @@ void MMFNeuralEP::v_DoSolve()
             // Create .chk files for plotting
             PlotNeuralEP(fields, m_TimeMap, nchk);
 
+            std::cout << "HERE 1" << std::endl;
             // Print out the values at the nodes
             PrintAtNodes(fields);
+            std::cout << "HERE 2" << std::endl;
 
             // Write out checkpoint files
             Checkpoint_Output(nchk++);
@@ -2789,7 +2791,9 @@ void MMFNeuralEP::PrintAtNodes(const Array<OneD, const Array<OneD, NekDouble>> &
 {
     const int totNode = m_totNode;
     const int nfiber = m_numfiber;
+    const int nvar = fields.size();
 
+    std::cout << "nvar = " << nvar << ", nfiber = " << nfiber << std::endl;
     NekDouble phim1, phim2, phim3, phim4,phie;
     for (int n = 0; n<totNode; ++n)
     {
@@ -2798,8 +2802,8 @@ void MMFNeuralEP::PrintAtNodes(const Array<OneD, const Array<OneD, NekDouble>> &
             case 2:
             {
                 phim1 = DisplayAtNodes(0, n, m_zoneindexfiber, fields[0]);
-                phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[0]);
-                phie = DisplayAtNodes(2, n, m_zoneindexfiber, fields[1]);
+                phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[1]);
+                phie = DisplayAtNodes(0, n, m_zoneindexfiber, fields[2]);
                 std::cout << "At node n = " << n << ", phim1 = " << phim1 
                 << ", phim2 = " << phim2
                 << ", phie = " << phie << std::endl;
@@ -2809,9 +2813,9 @@ void MMFNeuralEP::PrintAtNodes(const Array<OneD, const Array<OneD, NekDouble>> &
             case 3:
             {
                 phim1 = DisplayAtNodes(0, n, m_zoneindexfiber, fields[0]);
-                phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[0]);
-                phim3 = DisplayAtNodes(2, n, m_zoneindexfiber, fields[0]);
-                phie = DisplayAtNodes(3, n, m_zoneindexfiber, fields[1]);
+                phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[1]);
+                phim3 = DisplayAtNodes(2, n, m_zoneindexfiber, fields[2]);
+                phie = DisplayAtNodes(0, n, m_zoneindexfiber, fields[3]);
                 std::cout << "At node n = " << n << ", phim1 = " << phim1 
                 << ", phim2 = " << phim2
                 << ", phim3 = " << phim3
@@ -2825,7 +2829,7 @@ void MMFNeuralEP::PrintAtNodes(const Array<OneD, const Array<OneD, NekDouble>> &
                 phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[1]);
                 phim3 = DisplayAtNodes(2, n, m_zoneindexfiber, fields[2]);
                 phim4 = DisplayAtNodes(3, n, m_zoneindexfiber, fields[3]);
-                phie = DisplayAtNodes(4, n, m_zoneindexfiber, fields[4]);
+                phie = DisplayAtNodes(0, n, m_zoneindexfiber, fields[4]);
                 std::cout << "At node n = " << n << ", phim1 = " << phim1 
                 << ", phim2 = " << phim2
                 << ", phim3 = " << phim3
