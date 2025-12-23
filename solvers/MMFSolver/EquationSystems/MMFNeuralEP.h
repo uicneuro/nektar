@@ -572,8 +572,7 @@ void PlotNeuralEP(
         const Array<OneD, const Array<OneD, NekDouble>> &TimeMap,
         const int nstep);
 
-void PrintAtNodes(const int nfields,
-                const Array<OneD, const Array<OneD, NekDouble>> &fields);
+void PrintAtNodes(const Array<OneD, const Array<OneD, NekDouble>> &fields);
 
 void PrintSingleCurrent(const Array<OneD, const NekDouble> &phim,
                                   const Array<OneD, const NekDouble> &dudt,

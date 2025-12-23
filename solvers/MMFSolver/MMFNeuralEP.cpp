@@ -2760,7 +2760,7 @@ void MMFNeuralEP::v_DoSolve()
             PlotNeuralEP(fields, m_TimeMap, nchk);
 
             // Print out the values at the nodes
-            PrintAtNodes(nvar, fields);
+            PrintAtNodes(fields);
 
             // Write out checkpoint files
             Checkpoint_Output(nchk++);
@@ -2785,15 +2785,15 @@ void MMFNeuralEP::v_DoSolve()
     }
 } 
 
-void MMFNeuralEP::PrintAtNodes(const int nvar,
-                               const Array<OneD, const Array<OneD, NekDouble>> &fields)
+void MMFNeuralEP::PrintAtNodes(const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
     const int totNode = m_totNode;
+    const int nfiber = m_numfiber;
 
     NekDouble phim1, phim2, phim3, phim4,phie;
     for (int n = 0; n<totNode; ++n)
     {
-        switch(nvar)
+        switch(nfiber)
         {
             case 2:
             {
