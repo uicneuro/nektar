@@ -2760,7 +2760,7 @@ void MMFNeuralEP::v_DoSolve()
             PlotNeuralEP(fields, m_TimeMap, nchk);
 
             // Print out the values at the nodes
-            PrintAtNodes(nvar, m_numfiber, fields);
+            PrintAtNodes(nvar, fields);
 
             // Write out checkpoint files
             Checkpoint_Output(nchk++);
@@ -2785,44 +2785,58 @@ void MMFNeuralEP::v_DoSolve()
     }
 } 
 
-void MMFNeuralEP::PrintAtNodes(const int nvar, const int numfiber,
+void MMFNeuralEP::PrintAtNodes(const int nvar,
                                const Array<OneD, const Array<OneD, NekDouble>> &fields)
 {
     const int totNode = m_totNode;
 
-    NekDouble phim1, phim2, phie;
+    NekDouble phim1, phim2, phim3, phim4,phie;
     for (int n = 0; n<totNode; ++n)
     {
-        if(numfiber>1)
+        switch(nvar)
         {
-            if(nvar==2)
+            case 2:
             {
                 phim1 = DisplayAtNodes(0, n, m_zoneindexfiber, fields[0]);
                 phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[0]);
+                phie = DisplayAtNodes(2, n, m_zoneindexfiber, fields[1]);
+                std::cout << "At node n = " << n << ", phim1 = " << phim1 
+                << ", phim2 = " << phim2
+                << ", phie = " << phie << std::endl;
+                break;
             }
-
-            else if(nvar==3)
+            
+            case 3:
+            {
+                phim1 = DisplayAtNodes(0, n, m_zoneindexfiber, fields[0]);
+                phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[0]);
+                phim3 = DisplayAtNodes(2, n, m_zoneindexfiber, fields[0]);
+                phie = DisplayAtNodes(3, n, m_zoneindexfiber, fields[1]);
+                std::cout << "At node n = " << n << ", phim1 = " << phim1 
+                << ", phim2 = " << phim2
+                << ", phim3 = " << phim3
+                << ", phie = " << phie << std::endl;
+                break;
+            }
+            
+            case 4:
             {
                 phim1 = DisplayAtNodes(0, n, m_zoneindexfiber, fields[0]);
                 phim2 = DisplayAtNodes(1, n, m_zoneindexfiber, fields[1]);
+                phim3 = DisplayAtNodes(2, n, m_zoneindexfiber, fields[2]);
+                phim4 = DisplayAtNodes(3, n, m_zoneindexfiber, fields[3]);
+                phie = DisplayAtNodes(4, n, m_zoneindexfiber, fields[4]);
+                std::cout << "At node n = " << n << ", phim1 = " << phim1 
+                << ", phim2 = " << phim2
+                << ", phim3 = " << phim3
+                << ", phim4 = " << phim4
+                << ", phie = " << phie << std::endl;
+                break;
             }
-
-            phie = DisplayAtNodes(0, n, m_zoneindexfiber, fields[1]);
-
-            std::cout << "At node n = " << n << ", phim1 = " << phim1 
-            << ", phim2 = " << phim2
-            << ", phie = " << phie << std::endl;
+            
+            default:
+                break;
         }
-
-        else
-        {
-            phim1 = DisplayAtNodes(0, n, m_zoneindexfiber, fields[0]);
-            phie = DisplayAtNodes(0, n, m_zoneindexfiber, fields[1]);
-
-            std::cout << "At node n = " << n << ", phim = " << phim1 
-            << ", phie = " << phie << std::endl;
-        }
-
     }
 }
 
