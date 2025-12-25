@@ -2759,10 +2759,8 @@ void MMFNeuralEP::v_DoSolve()
             // Create .chk files for plotting
             PlotNeuralEP(fields, m_TimeMap, nchk);
 
-            std::cout << "HERE 1" << std::endl;
             // Print out the values at the nodes
             PrintAtNodes(fields);
-            std::cout << "HERE 2" << std::endl;
 
             // Write out checkpoint files
             Checkpoint_Output(nchk++);
