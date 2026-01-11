@@ -198,6 +198,7 @@ protected:
     int m_AnisotropyRegion, m_InnerboxEnd;
 
     NekDouble m_pi;
+    NekDouble m_slantedx0, m_slantedy0;
     
     NekDouble m_gratio, m_relfiberratio, m_fibercurvature, m_phiefactor;
     NekDouble m_axondiameter, m_fiberangle, m_fiberlength, m_nodeinitdown, m_nodeinitup, m_fiberwidth, m_fibergap;
