@@ -1713,8 +1713,8 @@ int MMFNeuralEP::LinearSlantedFiberIndex(
     const NekDouble totNnode = m_totNode;
     const NekDouble nodelen = m_nodelen;
     const NekDouble myelinlen = m_myelinlen;
-    const NekDouble nodeinitdown = m_nodeinitdown;
-    const NekDouble nodeinitup = m_nodeinitup;
+    const NekDouble nodeinitdown = m_nodeinitdown + 0.02;
+    const NekDouble nodeinitup   = m_nodeinitup + 0.02;
     const NekDouble fiberlength = m_fiberlength;
 
     const NekDouble beta = 0.5 * m_pi - fiberangle;
@@ -1723,15 +1723,37 @@ int MMFNeuralEP::LinearSlantedFiberIndex(
     const NekDouble cosb = cos(beta);
     const NekDouble sinb = sin(beta);
 
-    const NekDouble gap = nodelen / cosb;
-    const NekDouble upperline = tanb * xi + 0.5 * fiberlength - yi;
-    const NekDouble lowerline = tanb * xi + 0.5 * fiberlength - gap - yi;
+    const NekDouble x0old   = -0.5 * fiberlength / sqrt(1 + tanb * tanb);
+    const NekDouble y0old   = tanb * x0old + 0.5 * fiberlength;
 
-    const NekDouble x0 = -0.5*fiberlength/sqrt(1 + tanb*tanb);
-    const NekDouble y0 = tanb * x0 + 0.5 * fiberlength;
-    const NekDouble sp0 = x0 * cosb + y0 * sinb;
-    const NekDouble sp = xi * cosb + yi * sinb;
+    const NekDouble x0new = m_slantedx0;
+    const NekDouble y0new = m_slantedy0;
+
+    NekDouble x0diff = x0new - x0old;
+    NekDouble y0diff = y0new - y0old;
+
+    // Translate back to the original coordinate system for easier calculation
+    NekDouble xiold = xi - x0diff;
+    NekDouble yiold = yi - y0diff;
+
+    const NekDouble gap       = nodelen / cosb;
+    const NekDouble upperline = tanb * xiold + 0.5 * fiberlength - yiold;
+    const NekDouble lowerline = tanb * xiold + 0.5 * fiberlength - gap - yiold;
+
+    const NekDouble sp0  = x0old * cosb + y0old * sinb;
+    const NekDouble sp   = xiold * cosb + yiold * sinb;
     const NekDouble dist = sp - sp0;
+
+    // const NekDouble gap = nodelen / cosb;
+    // const NekDouble upperline = tanb * xi + 0.5 * fiberlength - yi;
+    // const NekDouble lowerline = tanb * xi + 0.5 * fiberlength - gap - yi;
+
+   // const NekDouble x0 = -0.5*fiberlength/sqrt(1 + tanb*tanb);
+   // const NekDouble y0 = tanb * x0 + 0.5 * fiberlength;
+
+    // const NekDouble sp0 = x0 * cosb + y0 * sinb;
+    // const NekDouble sp = xi * cosb + yi * sinb;
+    // const NekDouble dist = sp - sp0;
 
     NekDouble nodestart, nodeend;
     if( (upperline*lowerline < 0) && (dist < fiberlength) )
@@ -1849,6 +1871,7 @@ int MMFNeuralEP::LinearSlantedDoubleFiberIndex(
 
     return output;
 }
+
 
 int MMFNeuralEP::LinearDivergentFiberIndex(const int fibern, const NekDouble xi, const NekDouble yi)
 {
