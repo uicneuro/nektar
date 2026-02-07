@@ -431,13 +431,13 @@ void MMFNeuralEP::v_InitObject(bool DeclareFields)
     CheckMovingFrames(m_movingframes);
 
     // Setting up moving frames for CSD
-    m_CSDmovingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
-    for (int j = 0; j < m_spacedim; ++j)
-    {
-        m_CSDmovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
-        Vmath::Vcopy(m_spacedim * nq, &m_movingframes[j][0], 1, &m_CSDmovingframes[j][0], 1);
-    }
-    ComputeVarCoeff2D(m_CSDmovingframes, m_CSDvarcoeff);
+    // m_CSDmovingframes = Array<OneD, Array<OneD, NekDouble>>(m_spacedim);
+    // for (int j = 0; j < m_spacedim; ++j)
+    // {
+    //     m_CSDmovingframes[j] = Array<OneD, NekDouble>(m_spacedim * nq);
+    //     Vmath::Vcopy(m_spacedim * nq, &m_movingframes[j][0], 1, &m_CSDmovingframes[j][0], 1);
+    // }
+    // ComputeVarCoeff2D(m_CSDmovingframes, m_CSDvarcoeff);
 
     // Create moving frames for phi_e
     std::string phieMMFdirStr;
@@ -2973,51 +2973,51 @@ void MMFNeuralEP::ComputerhoTimeMap(const NekDouble time,
 // PhieCurrent[1] = \int CSD_e dt
 // PhieCurrent[2] = \int \phim CSD_e dt / \int \phi_m dt
 // PhieCurrent[3] = \int t CSD_e dt / \int CSD_e dt
-void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
-                                    const NekDouble timestep,
-                                    const Array<OneD, const Array<OneD, NekDouble>> &field,
-                                    Array<OneD, Array<OneD, NekDouble>> &PhieCurrent)
-{
-    int nq = GetTotPoints();
+// void MMFNeuralEP::ComputePhieCurrent(const NekDouble time,
+//                                     const NekDouble timestep,
+//                                     const Array<OneD, const Array<OneD, NekDouble>> &field,
+//                                     Array<OneD, Array<OneD, NekDouble>> &PhieCurrent)
+// {
+//     int nq = GetTotPoints();
 
-    NekDouble Tol = 0.1;
+//     NekDouble Tol = 0.1;
 
-    Array<OneD, NekDouble> phim(nq);
-    Array<OneD, NekDouble> phie(nq);
+//     Array<OneD, NekDouble> phim(nq);
+//     Array<OneD, NekDouble> phie(nq);
 
-    Vmath::Vcopy(nq, &field[0][0], 1, &phim[0], 1);
-    Vmath::Vcopy(nq, &field[1][0], 1, &phie[0], 1);
+//     Vmath::Vcopy(nq, &field[0][0], 1, &phim[0], 1);
+//     Vmath::Vcopy(nq, &field[1][0], 1, &phie[0], 1);
 
-    // CSDe is negative such that it diminishes the total currenty by phi_m
-    Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_movingframes, phie);
+//     // CSDe is negative such that it diminishes the total currenty by phi_m
+//     Array<OneD, NekDouble> CSDe = ComputeMMFDiffusion(m_movingframes, phie);
 
-    Vmath::Vmul(nq, m_intrazone, 1, CSDe, 1, CSDe, 1);
-    Vmath::Smul(nq, -1.0/(m_Cn * m_Rf), CSDe, 1, CSDe, 1);
+//     Vmath::Vmul(nq, m_intrazone, 1, CSDe, 1, CSDe, 1);
+//     Vmath::Smul(nq, -1.0/(m_Cn * m_Rf), CSDe, 1, CSDe, 1);
 
-    NekDouble phimsum, phiecurrentsum;
-    NekDouble dtphim, dtCSDe;
-    for (int i = 0; i < nq; ++i)
-    {
-        dtphim = timestep * phim[i];
-        dtCSDe = timestep * (timestep * CSDe[i]);
+//     NekDouble phimsum, phiecurrentsum;
+//     NekDouble dtphim, dtCSDe;
+//     for (int i = 0; i < nq; ++i)
+//     {
+//         dtphim = timestep * phim[i];
+//         dtCSDe = timestep * (timestep * CSDe[i]);
 
-        // If phi_m is positive, compute phie_weighted_current
-        if (phim[i] > Tol)
-        {
-            phimsum = dtphim + PhieCurrent[0][i];
-            PhieCurrent[2][i] = (dtphim * dtCSDe + PhieCurrent[0][i] * PhieCurrent[1][i]) / phimsum;
-            PhieCurrent[0][i] = phimsum;
-        }
+//         // If phi_m is positive, compute phie_weighted_current
+//         if (phim[i] > Tol)
+//         {
+//             phimsum = dtphim + PhieCurrent[0][i];
+//             PhieCurrent[2][i] = (dtphim * dtCSDe + PhieCurrent[0][i] * PhieCurrent[1][i]) / phimsum;
+//             PhieCurrent[0][i] = phimsum;
+//         }
 
-        // If CSD_e is positive, compute phie_current
-        if( CSDe[i] > Tol )
-        {
-            phiecurrentsum = dtCSDe + PhieCurrent[1][i];
-            PhieCurrent[3][i] = (time * dtCSDe + PhieCurrent[3][i] * PhieCurrent[1][i]) / phiecurrentsum;            
-            PhieCurrent[1][i] = phiecurrentsum;
-        }
-    }
-}
+//         // If CSD_e is positive, compute phie_current
+//         if( CSDe[i] > Tol )
+//         {
+//             phiecurrentsum = dtCSDe + PhieCurrent[1][i];
+//             PhieCurrent[3][i] = (time * dtCSDe + PhieCurrent[3][i] * PhieCurrent[1][i]) / phiecurrentsum;            
+//             PhieCurrent[1][i] = phiecurrentsum;
+//         }
+//     }
+// }
 
 void MMFNeuralEP::PlotNeuralEP(
     const Array<OneD, const Array<OneD, NekDouble>> &fields,
@@ -4424,6 +4424,7 @@ Array<OneD, NekDouble> MMFNeuralEP::ComputeFieldPhiefiber(
     // Allocate only once
     Array<OneD, NekDouble> phimcurrent(nq);
     phimcurrent = ComputeMMFDiffusion(m_movingframesfiber[nfib], inarray[nfib]);
+    
     Vmath::Neg(nq, phimcurrent, 1);
     Vmath::Vmul(nq, m_nodezonefiber[nfib], 1, phimcurrent, 1, phimcurrent, 1);
 
@@ -4525,14 +4526,10 @@ NekDouble MMFNeuralEP::ComputePhiefactor(const NekDouble radfib)
     NekDouble relfiberratio = m_relfiberratio;   
     NekDouble gratio = m_gratio;
 
-    NekDouble axoncrossA = m_pi ;
-    NekDouble PhieMultFactorlower = relfiberratio * gratio * gratio * radfib * radfib;
-    NekDouble PhieMultFactor = 1.0/PhieMultFactorlower;
+    NekDouble PhieMultFactorlower = relfiberratio * gratio * gratio * radfib * radfib * m_pi;
+    NekDouble phiefactor = 1.0 / PhieMultFactorlower ;
 
     // 1.0 /(m_pi * m_relfiberratio*m_gratio*m_gratio*m_radiusfiberbundle*m_radiusfiberbundle)
-    NekDouble phiefactor = PhieMultFactor / axoncrossA;
-
-    // return 1.0 /(m_pi * relfiberratio*gratio*gratio*radiusfiberbundle*radiusfiberbundle);
     return phiefactor;
 }
 
